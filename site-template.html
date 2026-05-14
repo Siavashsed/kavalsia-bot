@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryptoInsights — Algorithmic Trading & Market Analysis</title>
+<meta name="description" content="Expert insights on algorithmic trading, crypto markets, and automated investment strategies. Daily analysis for serious traders.">
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────────────────────────── */
+:root {
+  --bg:       #0a0a0f;
+  --bg2:      #12121a;
+  --bg3:      #1a1a28;
+  --border:   #1e1e2e;
+  --text:     #e8e8f0;
+  --muted:    #6b6b8a;
+  --accent:   #7c6fec;
+  --accent2:  #a78bfa;
+  --gold:     #f0a500;
+  --green:    #22d3a0;
+  --red:      #f05252;
+  --font:     -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── RESET ─────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+a { color: var(--accent2); text-decoration: none; }
+a:hover { color: var(--accent); }
+img { max-width: 100%; display: block; }
+
+/* ── NAVIGATION ────────────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  font-size: 18px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a { font-size: 14px; color: var(--muted); font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  background: var(--accent); color: white; padding: 8px 18px;
+  border-radius: 6px; font-size: 13px; font-weight: 600;
+  transition: opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; color: white; }
+
+/* ── HERO ──────────────────────────────────────────────────────────────── */
+.hero {
+  max-width: 1200px; margin: 0 auto; padding: 96px 24px 80px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--accent2); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent2); }
+.hero h1 {
+  font-size: clamp(32px, 4vw, 54px); font-weight: 700;
+  line-height: 1.15; margin-bottom: 20px; color: var(--text);
+}
+.hero h1 span { color: var(--accent2); }
+.hero p { font-size: 18px; color: var(--muted); line-height: 1.7; margin-bottom: 36px; max-width: 480px; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--accent); color: white; padding: 14px 28px;
+  border-radius: 8px; font-weight: 600; font-size: 15px;
+  transition: opacity 0.2s; display: inline-block;
+}
+.btn-primary:hover { opacity: 0.85; color: white; }
+.btn-secondary {
+  background: transparent; color: var(--text); padding: 14px 28px;
+  border: 1px solid var(--border); border-radius: 8px; font-weight: 600;
+  font-size: 15px; transition: border-color 0.2s; display: inline-block;
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent2); }
+
+/* HERO VISUAL */
+.hero-visual {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px; position: relative; overflow: hidden;
+}
+.hero-visual::before {
+  content: ''; position: absolute; top: -40%; right: -20%;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,111,236,0.15) 0%, transparent 70%);
+}
+.ticker-bar {
+  display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.ticker {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 80px;
+}
+.ticker .symbol { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 1px; }
+.ticker .price { font-size: 16px; font-weight: 700; margin: 2px 0; }
+.ticker .change { font-size: 12px; font-weight: 600; }
+.up { color: var(--green); }
+.down { color: var(--red); }
+.chart-placeholder {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+  height: 120px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.chart-line {
+  position: absolute; bottom: 20px; left: 0; right: 0; height: 60px;
+}
+.chart-line svg { width: 100%; height: 100%; }
+.chart-label { position: absolute; top: 12px; left: 16px; font-size: 12px; color: var(--muted); }
+.chart-value { position: absolute; top: 12px; right: 16px; font-size: 14px; font-weight: 700; color: var(--green); }
+.stat-row { display: flex; gap: 16px; margin-top: 16px; }
+.stat { flex: 1; text-align: center; background: var(--bg3); border-radius: 8px; padding: 12px; border: 1px solid var(--border); }
+.stat .num { font-size: 20px; font-weight: 700; color: var(--accent2); }
+.stat .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── TICKER STRIP ──────────────────────────────────────────────────────── */
+.ticker-strip {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--bg2); padding: 12px 0; overflow: hidden;
+}
+.ticker-scroll {
+  display: flex; gap: 40px; animation: scroll 30s linear infinite; width: max-content;
+}
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.tick-item { font-size: 13px; white-space: nowrap; display: flex; gap: 8px; align-items: center; }
+.tick-item .sym { font-weight: 700; color: var(--text); }
+.tick-item .pct { font-weight: 600; }
+
+/* ── SECTION HEADER ────────────────────────────────────────────────────── */
+.section-header { text-align: center; margin-bottom: 48px; }
+.section-tag {
+  display: inline-block; background: rgba(124,111,236,0.15); color: var(--accent2);
+  font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 100px; margin-bottom: 14px;
+}
+.section-header h2 { font-size: clamp(24px, 3vw, 36px); font-weight: 700; margin-bottom: 12px; }
+.section-header p { color: var(--muted); max-width: 540px; margin: 0 auto; }
+
+/* ── FEATURED POSTS ────────────────────────────────────────────────────── */
+.featured-section { max-width: 1200px; margin: 80px auto; padding: 0 24px; }
+.featured-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.featured-main {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden; transition: border-color 0.2s;
+}
+.featured-main:hover { border-color: var(--accent); }
+.featured-main img { width: 100%; height: 280px; object-fit: cover; }
+.featured-main .content { padding: 28px; }
+.featured-main .cat { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent2); margin-bottom: 10px; }
+.featured-main h3 { font-size: 24px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+.featured-main h3 a { color: var(--text); }
+.featured-main h3 a:hover { color: var(--accent2); }
+.featured-main p { color: var(--muted); font-size: 15px; margin-bottom: 16px; }
+.post-meta { font-size: 12px; color: var(--muted); display: flex; gap: 16px; }
+
+.featured-sidebar { display: flex; flex-direction: column; gap: 16px; }
+.sidebar-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px; transition: border-color 0.2s; display: flex; gap: 14px; align-items: flex-start;
+}
+.sidebar-card:hover { border-color: var(--accent); }
+.sidebar-card img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.sidebar-card .cat { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent2); margin-bottom: 5px; }
+.sidebar-card h4 { font-size: 14px; font-weight: 600; line-height: 1.35; margin-bottom: 4px; }
+.sidebar-card h4 a { color: var(--text); }
+.sidebar-card h4 a:hover { color: var(--accent2); }
+.sidebar-card .meta { font-size: 11px; color: var(--muted); }
+
+/* ── BLOG LISTING ──────────────────────────────────────────────────────── */
+.blog-section { max-width: 1200px; margin: 80px auto; padding: 0 24px; }
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+.blog-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden; transition: transform 0.2s, border-color 0.2s;
+}
+.blog-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.blog-card .thumb { position: relative; }
+.blog-card .thumb img { width: 100%; height: 200px; object-fit: cover; }
+.blog-card .cat-badge {
+  position: absolute; bottom: 12px; left: 12px;
+  background: rgba(10,10,15,0.85); backdrop-filter: blur(6px);
+  color: var(--accent2); font-size: 10px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px;
+  border-radius: 100px; border: 1px solid rgba(124,111,236,0.3);
+}
+.blog-card .body { padding: 22px; }
+.blog-card h3 { font-size: 17px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
+.blog-card h3 a { color: var(--text); }
+.blog-card h3 a:hover { color: var(--accent2); }
+.blog-card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+.blog-card .footer { display: flex; justify-content: space-between; align-items: center; }
+.blog-card .date { font-size: 12px; color: var(--muted); }
+.read-link { font-size: 13px; font-weight: 600; color: var(--accent2); }
+
+/* ── CATEGORIES ────────────────────────────────────────────────────────── */
+.cats-section { max-width: 1200px; margin: 80px auto; padding: 0 24px; }
+.cats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.cat-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 22px; text-align: center; transition: border-color 0.2s, transform 0.2s;
+}
+.cat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.cat-card .icon { font-size: 28px; margin-bottom: 10px; }
+.cat-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.cat-card span { font-size: 12px; color: var(--muted); }
+
+/* ── NEWSLETTER ────────────────────────────────────────────────────────── */
+.newsletter {
+  margin: 80px 24px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--bg3) 0%, rgba(124,111,236,0.1) 100%);
+  border: 1px solid var(--border); padding: 64px 40px; text-align: center;
+  max-width: 1200px; margin-left: auto; margin-right: auto;
+  position: relative; overflow: hidden;
+}
+.newsletter::before {
+  content: ''; position: absolute; top: -80px; right: -80px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,111,236,0.2) 0%, transparent 70%);
+}
+.newsletter h2 { font-size: clamp(22px, 3vw, 36px); font-weight: 700; margin-bottom: 12px; }
+.newsletter p { color: var(--muted); margin-bottom: 28px; font-size: 16px; }
+.newsletter-form { display: flex; gap: 12px; max-width: 440px; margin: 0 auto; }
+.newsletter-form input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  padding: 12px 18px; border-radius: 8px; font-size: 15px; outline: none;
+}
+.newsletter-form input:focus { border-color: var(--accent); }
+.newsletter-form button {
+  background: var(--accent); color: white; border: none; padding: 12px 22px;
+  border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ── FOOTER ────────────────────────────────────────────────────────────── */
+footer {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 60px 24px 32px;
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+.footer-brand p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-top: 12px; max-width: 280px; }
+.footer-col h5 { font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 10px; }
+.footer-col a { color: var(--muted); font-size: 14px; transition: color 0.2s; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom p { font-size: 13px; color: var(--muted); }
+.disclaimer { font-size: 11px; color: var(--muted); opacity: 0.7; max-width: 600px; text-align: right; line-height: 1.5; }
+
+/* ── ARTICLE PAGE ──────────────────────────────────────────────────────── */
+.article-hero {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 60px 24px 0;
+}
+.article-hero-inner { max-width: 800px; margin: 0 auto; }
+.article-breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.article-breadcrumb a { color: var(--muted); }
+.article-breadcrumb span { margin: 0 8px; }
+.article-hero h1 { font-size: clamp(26px, 4vw, 44px); font-weight: 700; line-height: 1.2; margin-bottom: 20px; }
+.article-hero .summary { font-size: 18px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+.article-byline { display: flex; align-items: center; gap: 12px; padding-bottom: 28px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg3); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.byline-info .author { font-size: 14px; font-weight: 600; color: var(--text); }
+.byline-info .date { font-size: 13px; color: var(--muted); }
+.article-img { width: 100%; height: 420px; object-fit: cover; margin-bottom: 0; }
+
+.article-body { max-width: 780px; margin: 0 auto; padding: 48px 24px 80px; }
+.article-body p { margin-bottom: 22px; font-size: 17px; line-height: 1.8; color: #d4d4e8; }
+.article-body h2 { font-size: 26px; font-weight: 700; margin: 44px 0 16px; color: var(--text); }
+.article-body h3 { font-size: 20px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+.article-body ul, .article-body ol { padding-left: 24px; margin-bottom: 22px; }
+.article-body li { margin-bottom: 8px; font-size: 17px; line-height: 1.7; color: #d4d4e8; }
+.article-callout {
+  background: rgba(124,111,236,0.1); border: 1px solid rgba(124,111,236,0.3);
+  border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  padding: 20px 24px; margin: 32px 0; font-size: 16px; color: var(--text);
+}
+.article-tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 40px 0; }
+.tag {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--muted);
+  font-size: 12px; padding: 4px 12px; border-radius: 100px;
+}
+.related-section { max-width: 780px; margin: 0 auto; padding: 0 24px 80px; border-top: 1px solid var(--border); padding-top: 48px; }
+.related-section h3 { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+.related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.related-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; transition: border-color 0.2s;
+}
+.related-card:hover { border-color: var(--accent); }
+.related-card .cat { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent2); margin-bottom: 6px; }
+.related-card h4 { font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--text); }
+
+/* ── RESPONSIVE ────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+  .hero-visual { display: none; }
+  .featured-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .related-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .nav-links { display: none; }
+  .blog-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .newsletter-form { flex-direction: column; }
+  .footer-bottom { flex-direction: column; gap: 12px; }
+  .disclaimer { text-align: center; }
+}
+
+/* ── PAGE SWITCHER (demo only) ─────────────────────────────────────────── */
+.page { display: none; }
+.page.active { display: block; }
+.demo-nav {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.demo-btn {
+  background: var(--accent); color: white; border: none; padding: 10px 18px;
+  border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(124,111,236,0.4);
+}
+</style>
+</head>
+<body>
+
+<!-- ── DEMO NAV (remove in production) ──────────────────────────────────── -->
+<div class="demo-nav">
+  <button class="demo-btn" onclick="showPage('home')">Homepage</button>
+  <button class="demo-btn" onclick="showPage('blog')">Blog List</button>
+  <button class="demo-btn" onclick="showPage('article')">Article</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- PAGE: HOMEPAGE                                                          -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div id="home" class="page active">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo"><div class="dot"></div> CryptoInsights</div>
+      <div class="nav-links">
+        <a href="#">Markets</a>
+        <a href="#">Trading</a>
+        <a href="#">Algorithms</a>
+        <a href="#">Analysis</a>
+        <a href="#" onclick="showPage('blog'); return false;">Blog</a>
+      </div>
+      <a href="#" class="nav-cta">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="hero-eyebrow">Daily Market Intelligence</div>
+      <h1>Trade Smarter With <span>Algorithmic</span> Insights</h1>
+      <p>Expert analysis on crypto markets, automated trading strategies, and the technology reshaping how serious traders operate.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary" onclick="showPage('blog'); return false;">Read Latest Articles</a>
+        <a href="#" class="btn-secondary">Subscribe Free</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="ticker-bar">
+        <div class="ticker">
+          <div class="symbol">BTC</div>
+          <div class="price">$67,420</div>
+          <div class="change up">+2.4%</div>
+        </div>
+        <div class="ticker">
+          <div class="symbol">ETH</div>
+          <div class="price">$3,180</div>
+          <div class="change up">+1.8%</div>
+        </div>
+        <div class="ticker">
+          <div class="symbol">SOL</div>
+          <div class="price">$142</div>
+          <div class="change down">-0.6%</div>
+        </div>
+      </div>
+      <div class="chart-placeholder">
+        <span class="chart-label">BTC / 24H</span>
+        <span class="chart-value up">+2.4%</span>
+        <div class="chart-line">
+          <svg viewBox="0 0 400 60" preserveAspectRatio="none">
+            <polyline points="0,50 40,40 80,45 120,30 160,35 200,20 240,25 280,15 320,22 360,10 400,5"
+              fill="none" stroke="#22d3a0" stroke-width="2"/>
+            <polyline points="0,50 40,40 80,45 120,30 160,35 200,20 240,25 280,15 320,22 360,10 400,5 400,60 0,60"
+              fill="rgba(34,211,160,0.08)" stroke="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">2.4M</div><div class="lbl">Daily Volume</div></div>
+        <div class="stat"><div class="num">847</div><div class="lbl">Articles</div></div>
+        <div class="stat"><div class="num">12k</div><div class="lbl">Readers</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER STRIP -->
+  <div class="ticker-strip">
+    <div class="ticker-scroll">
+      <div class="tick-item"><span class="sym">BTC</span> $67,420 <span class="pct up">+2.4%</span></div>
+      <div class="tick-item"><span class="sym">ETH</span> $3,180 <span class="pct up">+1.8%</span></div>
+      <div class="tick-item"><span class="sym">SOL</span> $142 <span class="pct down">-0.6%</span></div>
+      <div class="tick-item"><span class="sym">BNB</span> $408 <span class="pct up">+0.9%</span></div>
+      <div class="tick-item"><span class="sym">AVAX</span> $38 <span class="pct up">+3.1%</span></div>
+      <div class="tick-item"><span class="sym">MATIC</span> $0.84 <span class="pct down">-1.2%</span></div>
+      <div class="tick-item"><span class="sym">LINK</span> $14.20 <span class="pct up">+4.2%</span></div>
+      <div class="tick-item"><span class="sym">DOT</span> $7.80 <span class="pct down">-0.3%</span></div>
+      <!-- duplicate for seamless loop -->
+      <div class="tick-item"><span class="sym">BTC</span> $67,420 <span class="pct up">+2.4%</span></div>
+      <div class="tick-item"><span class="sym">ETH</span> $3,180 <span class="pct up">+1.8%</span></div>
+      <div class="tick-item"><span class="sym">SOL</span> $142 <span class="pct down">-0.6%</span></div>
+      <div class="tick-item"><span class="sym">BNB</span> $408 <span class="pct up">+0.9%</span></div>
+      <div class="tick-item"><span class="sym">AVAX</span> $38 <span class="pct up">+3.1%</span></div>
+      <div class="tick-item"><span class="sym">MATIC</span> $0.84 <span class="pct down">-1.2%</span></div>
+      <div class="tick-item"><span class="sym">LINK</span> $14.20 <span class="pct up">+4.2%</span></div>
+      <div class="tick-item"><span class="sym">DOT</span> $7.80 <span class="pct down">-0.3%</span></div>
+    </div>
+  </div>
+
+  <!-- FEATURED POSTS -->
+  <section class="featured-section">
+    <div class="section-header">
+      <div class="section-tag">Featured</div>
+      <h2>Latest Analysis</h2>
+      <p>In-depth articles on algorithmic trading, market structure, and crypto strategy.</p>
+    </div>
+    <div class="featured-grid">
+      <div class="featured-main">
+        <img src="https://images.pexels.com/photos/6771900/pexels-photo-6771900.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Algorithmic Trading">
+        <div class="content">
+          <div class="cat">Algorithmic Trading</div>
+          <h3><a href="#" onclick="showPage('article'); return false;">Why Algorithmic Trading Outperforms Emotional Decision-Making</a></h3>
+          <p>The data is clear: traders who remove emotion from their decision-making consistently outperform those who rely on intuition alone. Here's what the research shows.</p>
+          <div class="post-meta">
+            <span>May 11, 2026</span>
+            <span>8 min read</span>
+          </div>
+        </div>
+      </div>
+      <div class="featured-sidebar">
+        <div class="sidebar-card">
+          <img src="https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=200" alt="">
+          <div>
+            <div class="cat">Market Analysis</div>
+            <h4><a href="#">What Happens in Crypto Markets While You Sleep</a></h4>
+            <div class="meta">May 10, 2026 · 5 min</div>
+          </div>
+        </div>
+        <div class="sidebar-card">
+          <img src="https://images.pexels.com/photos/7947541/pexels-photo-7947541.jpeg?auto=compress&cs=tinysrgb&w=200" alt="">
+          <div>
+            <div class="cat">Exchange APIs</div>
+            <h4><a href="#">Comparing Bingx and Bitmart for Bot Trading</a></h4>
+            <div class="meta">May 9, 2026 · 6 min</div>
+          </div>
+        </div>
+        <div class="sidebar-card">
+          <img src="https://images.pexels.com/photos/6770610/pexels-photo-6770610.jpeg?auto=compress&cs=tinysrgb&w=200" alt="">
+          <div>
+            <div class="cat">Strategy</div>
+            <h4><a href="#">The Psychology of FOMO in Crypto Trading</a></h4>
+            <div class="meta">May 8, 2026 · 7 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="cats-section">
+    <div class="section-header">
+      <div class="section-tag">Topics</div>
+      <h2>Browse by Category</h2>
+    </div>
+    <div class="cats-grid">
+      <div class="cat-card"><div class="icon">🤖</div><h4>Algo Trading</h4><span>42 articles</span></div>
+      <div class="cat-card"><div class="icon">📊</div><h4>Market Analysis</h4><span>38 articles</span></div>
+      <div class="cat-card"><div class="icon">🔌</div><h4>Exchange APIs</h4><span>24 articles</span></div>
+      <div class="cat-card"><div class="icon">🧠</div><h4>Trading Psychology</h4><span>19 articles</span></div>
+      <div class="cat-card"><div class="icon">💰</div><h4>Passive Income</h4><span>31 articles</span></div>
+      <div class="cat-card"><div class="icon">🔐</div><h4>Security</h4><span>15 articles</span></div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter" style="margin: 80px auto;">
+    <h2>Get Daily Market Intelligence</h2>
+    <p>Join 12,000+ traders who read our analysis every morning.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="your@email.com">
+      <button>Subscribe</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo"><div class="dot"></div> CryptoInsights</div>
+          <p>Expert analysis on algorithmic trading, crypto markets, and automated investment strategies. Published daily.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Topics</h5>
+          <ul>
+            <li><a href="#">Algo Trading</a></li>
+            <li><a href="#">Market Analysis</a></li>
+            <li><a href="#">Exchange APIs</a></li>
+            <li><a href="#">Trading Psychology</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Site</h5>
+          <ul>
+            <li><a href="#" onclick="showPage('blog'); return false;">All Articles</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Newsletter</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 CryptoInsights. All rights reserved.</p>
+        <p class="disclaimer">This website is for informational purposes only and does not constitute financial advice. Trading cryptocurrencies involves significant risk.</p>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /home -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- PAGE: BLOG LISTING                                                      -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div id="blog" class="page">
+
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo" style="cursor:pointer" onclick="showPage('home')"><div class="dot"></div> CryptoInsights</div>
+      <div class="nav-links">
+        <a href="#" onclick="showPage('home'); return false;">Home</a>
+        <a href="#" style="color:var(--text)">All Articles</a>
+        <a href="#">Markets</a>
+        <a href="#">Trading</a>
+      </div>
+      <a href="#" class="nav-cta">Subscribe</a>
+    </div>
+  </nav>
+
+  <section class="blog-section" style="margin-top:60px;">
+    <div class="section-header">
+      <div class="section-tag">All Articles</div>
+      <h2>Latest Insights</h2>
+      <p>Daily articles on crypto trading, market analysis, and algorithmic strategies.</p>
+    </div>
+    <div class="blog-grid">
+
+      <div class="blog-card">
+        <div class="thumb">
+          <img src="https://images.pexels.com/photos/6771900/pexels-photo-6771900.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+          <span class="cat-badge">Algo Trading</span>
+        </div>
+        <div class="body">
+          <h3><a href="#" onclick="showPage('article'); return false;">Why Algorithmic Trading Outperforms Emotional Decision-Making</a></h3>
+          <p>The data is clear: traders who remove emotion from their decisions consistently outperform those who rely on intuition.</p>
+          <div class="footer">
+            <span class="date">May 11, 2026</span>
+            <a href="#" class="read-link" onclick="showPage('article'); return false;">Read →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="thumb">
+          <img src="https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+          <span class="cat-badge">Market Analysis</span>
+        </div>
+        <div class="body">
+          <h3><a href="#">What Happens in Crypto Markets While You Sleep</a></h3>
+          <p>Bitcoin dropped 8% at 4am Tuesday. Most retail traders missed the recovery. Here's what happened and why it matters.</p>
+          <div class="footer">
+            <span class="date">May 10, 2026</span>
+            <a href="#" class="read-link">Read →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="thumb">
+          <img src="https://images.pexels.com/photos/7947541/pexels-photo-7947541.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+          <span class="cat-badge">Exchange APIs</span>
+        </div>
+        <div class="body">
+          <h3><a href="#">Comparing Bingx and Bitmart for Algorithmic Trading in 2026</a></h3>
+          <p>Two of the most bot-friendly exchanges compared on API limits, fee structures, and trading pair availability.</p>
+          <div class="footer">
+            <span class="date">May 9, 2026</span>
+            <a href="#" class="read-link">Read →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="thumb">
+          <img src="https://images.pexels.com/photos/6770610/pexels-photo-6770610.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+          <span class="cat-badge">Psychology</span>
+        </div>
+        <div class="body">
+          <h3><a href="#">The Psychology of FOMO and How It Destroys Trading Returns</a></h3>
+          <p>Fear of missing out is responsible for more trading losses than any market condition. Here's the research.</p>
+          <div class="footer">
+            <span class="date">May 8, 2026</span>
+            <a href="#" class="read-link">Read →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="thumb">
+          <img src="https://images.pexels.com/photos/8370752/pexels-photo-8370752.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+          <span class="cat-badge">Strategy</span>
+        </div>
+        <div class="body">
+          <h3><a href="#">How to Backtest a Trading Strategy Before Going Live</a></h3>
+          <p>Backtesting is the difference between a strategy built on hope and one built on evidence. Here's the process.</p>
+          <div class="footer">
+            <span class="date">May 7, 2026</span>
+            <a href="#" class="read-link">Read →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="thumb">
+          <img src="https://images.pexels.com/photos/6771985/pexels-photo-6771985.jpeg?auto=compress&cs=tinysrgb&w=600" alt="">
+          <span class="cat-badge">Security</span>
+        </div>
+        <div class="body">
+          <h3><a href="#">API Key Security Best Practices for Exchange Bots</a></h3>
+          <p>API keys are the most valuable and most vulnerable part of any automated trading setup. How to protect them.</p>
+          <div class="footer">
+            <span class="date">May 6, 2026</span>
+            <a href="#" class="read-link">Read →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer style="margin-top:60px;">
+    <div class="footer-inner">
+      <div class="footer-bottom" style="border-top:none; padding-top:0;">
+        <p onclick="showPage('home')" style="cursor:pointer; color:var(--accent2)">← Back to Home</p>
+        <p class="disclaimer">Informational purposes only. Not financial advice.</p>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /blog -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<!-- PAGE: ARTICLE                                                           -->
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+<div id="article" class="page">
+
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo" style="cursor:pointer" onclick="showPage('home')"><div class="dot"></div> CryptoInsights</div>
+      <div class="nav-links">
+        <a href="#" onclick="showPage('home'); return false;">Home</a>
+        <a href="#" onclick="showPage('blog'); return false;">Articles</a>
+        <a href="#">Markets</a>
+      </div>
+      <a href="#" class="nav-cta">Subscribe</a>
+    </div>
+  </nav>
+
+  <div class="article-hero">
+    <div class="article-hero-inner">
+      <div class="article-breadcrumb">
+        <a href="#" onclick="showPage('home'); return false;">Home</a>
+        <span>›</span>
+        <a href="#" onclick="showPage('blog'); return false;">Articles</a>
+        <span>›</span>
+        <span style="color:var(--text)">Algorithmic Trading</span>
+      </div>
+      <h1>Why Algorithmic Trading Outperforms Emotional Decision-Making</h1>
+      <p class="summary">The data is clear: traders who remove emotion from their decisions consistently outperform those who rely on intuition. Here's what decades of research shows — and what it means for retail traders today.</p>
+      <div class="article-byline">
+        <div class="avatar">📊</div>
+        <div class="byline-info">
+          <div class="author">CryptoInsights Editorial</div>
+          <div class="date">May 11, 2026 · 8 min read</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <img class="article-img" src="https://images.pexels.com/photos/6771900/pexels-photo-6771900.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Algorithmic Trading">
+
+  <div class="article-body">
+    <p>Every serious trader knows the feeling: you watch a position move against you, hesitate on the stop-loss, and within minutes the loss has doubled. Or the opposite — you exit a winning trade too early because the fear of giving back profits overrides the logic of your original thesis. These are not character flaws. They are the predictable result of human neurology encountering financial risk.</p>
+
+    <p>Algorithmic trading removes that equation entirely. The algorithm has no fear, no greed, no recency bias, and no ego invested in being right. It executes the strategy you programmed — nothing more, nothing less. And over thousands of trades, that consistency compounds into a measurable edge.</p>
+
+    <h2>The Research on Emotional Trading</h2>
+    <p>A landmark study by Brad Barber and Terrance Odean tracked 66,465 retail brokerage accounts over six years. Their finding: the more actively traders traded, the worse they performed. The most active quintile underperformed the least active by 6.5% annually — not because of transaction costs alone, but because of systematic errors in judgment driven by overconfidence and emotion.</p>
+
+    <div class="article-callout">
+      The most active traders underperformed the market by 6.5% annually. Systematic trading removes the primary source of that underperformance: human judgment applied in real-time under stress.
+    </div>
+
+    <p>The mechanism is well understood. Under stress, the amygdala hijacks rational decision-making. Losses loom larger than equivalent gains (loss aversion). Recent events are weighted too heavily (recency bias). Positions become personal rather than logical. None of this is conscious — it is the operating system of a brain that evolved to survive, not to trade financial instruments.</p>
+
+    <h2>What Algorithms Actually Do</h2>
+    <p>An algorithmic trading system is simply a set of rules, executed with perfect consistency. Buy when condition A is true. Exit when condition B is true. Risk no more than X% per trade. These rules, derived from historical analysis and backtesting, represent the trader's best thinking applied in advance — before stress, before the open, before money is on the line.</p>
+
+    <p>The advantage is not that algorithms are smarter than humans in any intuitive sense. It is that they execute the same strategy every time, without deviation, without fatigue, and without the psychological deterioration that affects human performance over long trading sessions.</p>
+
+    <h2>Exchange APIs and Automation</h2>
+    <p>For retail traders, the barrier to algorithmic trading has fallen significantly over the past five years. Exchanges like Bingx and Bitmart offer REST and WebSocket APIs that allow bots to place orders, monitor positions, and manage risk in real time. A well-configured bot on one of these platforms can execute a tested strategy 24 hours a day, 7 days a week — capturing opportunities in Asian and European sessions that a North American trader would sleep through.</p>
+
+    <h2>The Limits of Algorithmic Trading</h2>
+    <p>Algorithms are only as good as the strategy they encode. Poorly backtested strategies will perform poorly in live markets. Overfitting — where a strategy is optimized too specifically for historical data — is a common failure mode. And algorithms have no ability to interpret novel market conditions that fall outside their training data.</p>
+
+    <p>The practical implication: algorithmic trading does not eliminate the need for trader judgment. It relocates that judgment from the heat of the moment — where it performs worst — to the design phase, where it performs best.</p>
+
+    <div class="article-tags">
+      <span class="tag">Algorithmic Trading</span>
+      <span class="tag">Trading Psychology</span>
+      <span class="tag">Automation</span>
+      <span class="tag">Crypto Strategy</span>
+    </div>
+
+    <p style="font-size:13px; color:var(--muted); border-top:1px solid var(--border); padding-top:20px; margin-top:0;">
+      <em>This article is for informational purposes only and does not constitute financial advice. Trading cryptocurrencies involves significant risk of loss.</em>
+    </p>
+  </div>
+
+  <div class="related-section">
+    <h3>Related Articles</h3>
+    <div class="related-grid">
+      <div class="related-card">
+        <div class="cat">Market Analysis</div>
+        <h4><a href="#">What Happens in Crypto Markets While You Sleep</a></h4>
+      </div>
+      <div class="related-card">
+        <div class="cat">Exchange APIs</div>
+        <h4><a href="#">Comparing Bingx and Bitmart for Bot Trading in 2026</a></h4>
+      </div>
+      <div class="related-card">
+        <div class="cat">Psychology</div>
+        <h4><a href="#">The FOMO Effect: How Fear Destroys Returns</a></h4>
+      </div>
+      <div class="related-card">
+        <div class="cat">Strategy</div>
+        <h4><a href="#">How to Backtest Before Going Live</a></h4>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /article -->
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
