@@ -1,0 +1,1239 @@
+<!-- Kavalsia Network Editor — © 2026 Kavalsia Inc. [Siavash Sadighi] -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kavalsia Network Editor</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c09;--bg2:#0d1410;--bg3:#121b14;--bg4:#172119;--bg5:#1d2b1f;
+  --text:#ffffff;--text2:#b8d4c0;--text3:#4d7059;
+  --accent:#3ecf8e;--accent2:#2eb87d;--glow:#3ecf8e1e;
+  --green:#3ecf8e;--red:#ef4444;--amber:#f59e0b;--blue:#38bdf8;--purple:#a78bfa;
+  --border:#142018;--border2:#1e3024;
+  --r:8px;--font:'Inter',system-ui,sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow:hidden}
+body{background:radial-gradient(ellipse at 50% 0%,#0d2318 0%,#080c09 65%)}
+input,textarea,select{font-family:var(--font);color:var(--text);background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;font-size:13px;outline:none;transition:border-color .15s;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+select option{background:var(--bg3)}
+textarea{resize:vertical;line-height:1.55}
+button{cursor:pointer;font-family:var(--font);font-size:13px;border:none;border-radius:var(--r);padding:8px 16px;transition:all .15s}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:5px;font-weight:500}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::placeholder{color:var(--text3)}
+
+/* ── Shell ── */
+.shell{display:grid;grid-template-columns:260px 1fr;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
+
+/* ── Top bar ── */
+.topbar{
+  grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;padding:0 20px;
+}
+.topbar-logo{font-size:15px;font-weight:900;background:linear-gradient(135deg,#3ecf8e,#2eb87d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-right:6px;white-space:nowrap;letter-spacing:-0.3px}
+.topbar-file{font-size:11px;color:var(--text3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar-status{font-size:11px;padding:3px 10px;border-radius:100px;font-weight:600;white-space:nowrap}
+.status-saved{background:#3ecf8e15;color:var(--green)}
+.status-dirty{background:#f59e0b15;color:var(--amber)}
+.status-err{background:#ef444415;color:var(--red)}
+.btn{background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
+.btn:hover{background:var(--bg5);color:var(--text)}
+.btn-accent{background:var(--accent);color:#000;font-weight:700}
+.btn-accent:hover{background:var(--accent2)}
+.btn-green{background:#3ecf8e20;color:var(--green);border:1px solid #3ecf8e30}
+.btn-green:hover{background:#3ecf8e35}
+.btn-red{background:#ef444420;color:var(--red);border:1px solid #ef444430}
+.btn-red:hover{background:#ef444435}
+.btn-blue{background:#38bdf820;color:var(--blue);border:1px solid #38bdf830}
+.btn-blue:hover{background:#38bdf835}
+.sep{width:1px;height:24px;background:var(--border2);flex-shrink:0}
+
+/* ── Sidebar ── */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-inner{flex:1;overflow-y:auto;padding:14px 10px}
+.sidebar-section{margin-bottom:6px}
+.sidebar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text3);padding:10px 8px 6px;display:block}
+.site-btn{
+  display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;
+  border-radius:var(--r);background:none;border:none;color:var(--text2);
+  text-align:left;transition:all .15s;margin-bottom:2px;
+}
+.site-btn:hover{background:var(--bg3);color:var(--text)}
+.site-btn.active{background:var(--glow);color:var(--accent);font-weight:600}
+.site-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--green)}
+.site-dot.off{background:var(--text3)}
+.site-domain{font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-client-tag{font-size:9px;font-weight:700;background:#a78bfa20;color:var(--purple);padding:2px 6px;border-radius:100px;flex-shrink:0}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:var(--r);background:none;border:none;color:var(--text2);font-size:13px;font-weight:500;text-align:left;transition:all .15s;margin-bottom:2px}
+.nav-btn:hover{background:var(--bg3);color:var(--text)}
+.nav-btn.active{background:var(--glow);color:var(--accent);font-weight:600}
+.nav-icon{font-size:14px;width:20px;text-align:center;flex-shrink:0}
+.add-site-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px;border-radius:var(--r);background:none;border:1px dashed var(--border2);color:var(--text3);font-size:12px;font-weight:600;margin-top:6px;transition:all .15s}
+.add-site-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Main ── */
+.main{overflow-y:auto;display:flex;flex-direction:column}
+.panel{display:none;padding:28px 32px 80px;flex:1}
+.panel.active{display:block}
+
+/* ── Form layout ── */
+.pg-head{margin-bottom:24px}
+.pg-title{font-size:20px;font-weight:800;letter-spacing:-0.3px;color:var(--text);margin-bottom:3px}
+.pg-sub{font-size:13px;color:var(--text2)}
+.form-row{display:grid;gap:14px;margin-bottom:14px}
+.form-row.cols2{grid-template-columns:1fr 1fr}
+.form-row.cols3{grid-template-columns:1fr 1fr 1fr}
+.form-row.cols4{grid-template-columns:1fr 1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column}
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:14px}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title .sticon{font-size:14px}
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+/* ── Toggle ── */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.toggle-info{flex:1}
+.toggle-info strong{display:block;font-size:13px;color:var(--text);font-weight:600}
+.toggle-info span{font-size:12px;color:var(--text2)}
+.toggle{position:relative;display:inline-flex;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg5);border-radius:100px;transition:.2s;cursor:pointer}
+.toggle-slider:before{content:'';position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:var(--text3);border-radius:50%;transition:.2s}
+.toggle input:checked+.toggle-slider{background:var(--green)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(18px);background:#fff}
+
+/* ── Client block ── */
+.client-fields{margin-top:14px;padding:14px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);display:none}
+.client-fields.visible{display:block}
+.freq-row{display:grid;grid-template-columns:1fr 140px;gap:10px;align-items:end}
+.freq-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.freq-preset{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .15s}
+.freq-preset:hover{border-color:var(--accent);color:var(--accent)}
+.freq-preset.sel{background:var(--glow);border-color:var(--accent);color:var(--accent)}
+
+/* ── Topics ── */
+.topics-area{font-size:13px;min-height:180px;line-height:1.7}
+.topics-hint{font-size:11px;color:var(--text3);margin-top:6px}
+
+/* ── Action bar ── */
+.action-bar{display:flex;align-items:center;gap:10px;padding:16px 32px;background:var(--bg2);border-top:1px solid var(--border);position:sticky;bottom:0}
+.action-bar-left{flex:1;font-size:12px;color:var(--text3)}
+
+/* ── Settings panel ── */
+.gh-token-row{display:flex;gap:8px;align-items:flex-end}
+.gh-token-row .form-group{flex:1}
+.info-box{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);padding:12px 16px;font-size:12px;color:var(--text2);line-height:1.7;margin-top:8px}
+.info-box b{color:var(--text)}
+.badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700}
+.badge-purple{background:#a78bfa20;color:var(--purple)}
+.badge-green{background:#3ecf8e20;color:var(--green)}
+.badge-amber{background:#f59e0b20;color:var(--amber)}
+
+/* ── Publish modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:center;justify-content:center;display:none}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:28px;width:480px;max-width:95vw}
+.modal-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+.modal-log{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r);padding:12px;font-size:12px;font-family:monospace;color:var(--text2);min-height:80px;max-height:220px;overflow-y:auto;line-height:1.8}
+.log-ok{color:var(--green)}
+.log-err{color:var(--red)}
+.log-info{color:var(--blue)}
+.modal-btns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+
+/* ── Danger zone ── */
+.danger-zone{background:#ef444408;border:1px solid #ef444425;border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.danger-zone-text strong{font-size:13px;color:var(--red)}
+.danger-zone-text span{font-size:12px;color:var(--text3);display:block}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── Top Bar ─────────────────────────────────────────────────────── -->
+  <div class="topbar">
+    <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia" style="height:32px;width:auto;object-fit:contain;flex-shrink:0;margin-right:2px">
+    <span class="topbar-file" id="filePath">No file loaded — click Load to open network-config.json</span>
+    <span class="topbar-status status-saved" id="statusBadge">Saved</span>
+    <div class="sep"></div>
+    <button class="btn" onclick="loadFile()" title="Open network-config.json from disk">Load</button>
+    <button class="btn" onclick="saveFile()" id="saveBtn" title="Save changes to disk">Save</button>
+    <div class="sep"></div>
+    <button class="btn btn-blue" onclick="openSettings()">⚙ GitHub</button>
+    <button class="btn" onclick="loadFromGitHub()" title="Pull network-config.json from your GitHub bot repo">↓ From GitHub</button>
+    <button class="btn btn-green" onclick="publishConfig()">↑ Publish Config</button>
+    <button class="btn btn-accent" onclick="triggerRun()">▶ Run Now</button>
+    <div class="sep"></div>
+    <nav style="display:flex;gap:3px;flex-shrink:0">
+      <a href="hub.html"       style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#0d1410;border:1px solid #1e3024">Hub</a>
+      <span style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;background:#3ecf8e18;color:#3ecf8e;border:1px solid #3ecf8e35">Editor</span>
+      <a href="dashboard.html" style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#0d1410;border:1px solid #1e3024">Dashboard</a>
+      <a href="launcher.html"  style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#0d1410;border:1px solid #1e3024">Setup</a>
+    </nav>
+  </div>
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
+  <div class="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Navigation</span>
+        <button class="nav-btn active" id="navGlobal" onclick="showPanel('global')">
+          <span class="nav-icon">🌐</span> Global Settings
+        </button>
+        <button class="nav-btn" id="navGhSettings" onclick="showPanel('ghsettings')">
+          <span class="nav-icon">⚙</span> GitHub &amp; Deploy
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Sites</span>
+        <div id="siteList"></div>
+        <button class="add-site-btn" onclick="addSite()">+ Add Site</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main ────────────────────────────────────────────────────────── -->
+  <div class="main">
+
+    <!-- Global Settings -->
+    <div class="panel active" id="panel-global">
+      <div class="pg-head">
+        <div class="pg-title">Global Settings</div>
+        <div class="pg-sub">These apply to all sites unless a site overrides them.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">✍</span> Global Writing Rules</div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Writing Prompt / Style Rules (applied to every article on every site)</label>
+          <textarea id="globalPrompt" rows="6" placeholder="E.g. Write like a seasoned human expert. Use contractions. NEVER use em-dashes..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Global Negative Prompt <span style="color:var(--text3)">(absolute prohibitions — injected at the top of every article prompt)</span></label>
+          <textarea id="globalNegativePrompt" rows="4" placeholder='DO NOT EVER USE " —" (em-dash). NEVER use: delve into, it&apos;s worth noting...' oninput="markDirty()"></textarea>
+          <div style="font-size:11px;color:var(--text3);margin-top:5px">This block appears as a hard rule before everything else. Default includes the em-dash ban and common AI-fingerprint phrases.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">📜</span> Global Scripts <span style="font-size:10px;font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0">(injected into every page on every site)</span></div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Global Header Scripts <span style="color:var(--text3)">(before &lt;/head&gt; on all pages — e.g. Google Analytics, consent banner)</span></label>
+          <textarea id="globalHeaderScripts" rows="4" placeholder="&lt;script async src=&quot;https://www.googletagmanager.com/gtag/js?id=G-XXXXXX&quot;&gt;&lt;/script&gt;" oninput="markDirty()" style="font-family:monospace;font-size:12px"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Global Footer Scripts <span style="color:var(--text3)">(before &lt;/body&gt; on all pages — e.g. chat widget, conversion pixel)</span></label>
+          <textarea id="globalFooterScripts" rows="4" placeholder="&lt;!-- e.g. Intercom, HotJar, Meta Pixel --&gt;" oninput="markDirty()" style="font-family:monospace;font-size:12px"></textarea>
+        </div>
+        <div class="info-box" style="margin-top:8px">
+          <b>Order:</b> Global scripts load first, then site-specific scripts. Site scripts can add to or extend globals — they never replace them.<br>
+          <b>Per-site scripts</b> are set in each site's editor panel below.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">🏢</span> Global Client / Sponsor Posts</div>
+        <div class="toggle-row" style="margin-bottom:14px">
+          <div class="toggle-info">
+            <strong>Enable global client posts</strong>
+            <span>Every site will feature this client unless the site has its own client set</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="globalClientEnabled" onchange="toggleClientFields('global')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="client-fields" id="clientFields-global">
+          <div class="form-row cols2">
+            <div class="form-group">
+              <label>Business Name</label>
+              <input type="text" id="globalClientName" placeholder="e.g. Acme Trading Tools">
+            </div>
+            <div class="form-group">
+              <label>Post Every N Articles <span style="color:var(--text3)">(per site)</span></label>
+              <input type="number" id="globalClientN" min="1" max="365" value="7" style="width:100px">
+            </div>
+          </div>
+          <div class="freq-presets" id="freqPresets-global">
+            <button class="freq-preset" onclick="setFreq('global',2)">Every 2</button>
+            <button class="freq-preset" onclick="setFreq('global',3)">Every 3</button>
+            <button class="freq-preset sel" onclick="setFreq('global',7)">Weekly</button>
+            <button class="freq-preset" onclick="setFreq('global',14)">Bi-weekly</button>
+            <button class="freq-preset" onclick="setFreq('global',30)">Monthly</button>
+          </div>
+          <div class="form-group" style="margin-top:14px">
+            <label>Business Description &amp; Prompt</label>
+            <textarea id="globalClientDesc" rows="5" placeholder="Describe the business: what they do, key products/services, tone for mentions, website URL, any specific angles to take..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <span class="action-bar-left">Changes are saved to your local network-config.json. Click <b>Publish Config</b> in the top bar to push live.</span>
+        <button class="btn btn-accent" onclick="saveGlobal()">Save Global Settings</button>
+      </div>
+    </div>
+
+    <!-- GitHub / Deploy Settings -->
+    <div class="panel" id="panel-ghsettings">
+      <div class="pg-head">
+        <div class="pg-title">GitHub &amp; Deploy</div>
+        <div class="pg-sub">Configure where to publish the config. Token is stored locally and never saved in the JSON file.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">🔑</span> GitHub Token</div>
+        <div class="gh-token-row">
+          <div class="form-group">
+            <label>Personal Access Token (stored in browser only, not in file)</label>
+            <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+          </div>
+          <button class="btn btn-green" style="height:38px;white-space:nowrap" onclick="saveToken()">Save Token</button>
+        </div>
+        <div class="info-box">
+          <b>Required scopes:</b> <code>repo</code> (to push files) and <code>workflow</code> (to trigger runs).<br>
+          Create at: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained or classic.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">📦</span> Bot Source Repository</div>
+        <div class="form-row cols2">
+          <div class="form-group">
+            <label>Bot Repo (contains bot.py &amp; network-config.json)</label>
+            <input type="text" id="botRepo" placeholder="username/repo-name" oninput="markDirty()">
+          </div>
+          <div class="form-group">
+            <label>Branch</label>
+            <input type="text" id="botBranch" value="main" placeholder="main" oninput="markDirty()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Workflow File (for "Run Now")</label>
+          <input type="text" id="workflowFile" value="daily-post.yml" placeholder="daily-post.yml" oninput="markDirty()">
+        </div>
+        <div class="info-box">
+          <b>Publish Config</b> pushes your local <code>network-config.json</code> to this repo so the next scheduled run picks it up.<br>
+          <b>Run Now</b> triggers a <code>workflow_dispatch</code> event on the workflow file above — immediate article generation.
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <span class="action-bar-left"></span>
+        <button class="btn btn-accent" onclick="saveGhSettings()">Save Deploy Settings</button>
+      </div>
+    </div>
+
+    <!-- Site Editor (dynamic) -->
+    <div class="panel" id="panel-site">
+      <div class="pg-head" id="siteHead">
+        <div class="pg-title" id="siteTitle">Site Settings</div>
+        <div class="pg-sub" id="siteSub"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">🌐</span> Site Identity</div>
+        <div class="form-row cols2">
+          <div class="form-group">
+            <label>Domain</label>
+            <input type="text" id="sDomain" placeholder="yourdomain.com" oninput="markDirty()">
+          </div>
+          <div class="form-group">
+            <label>GitHub Repo (username/reponame)</label>
+            <input type="text" id="sRepo" placeholder="username/reponame" oninput="markDirty()">
+          </div>
+        </div>
+        <div class="form-row cols2">
+          <div class="form-group">
+            <label>Category / Niche</label>
+            <input type="text" id="sCategory" placeholder="e.g. Cryptocurrency & Trading" oninput="markDirty()">
+          </div>
+          <div class="form-group">
+            <label>Brevo List ID <span style="color:var(--text3)">(newsletter)</span></label>
+            <input type="text" id="sBrevo" placeholder="Leave blank to disable" oninput="markDirty()">
+          </div>
+        </div>
+        <div class="toggle-row" style="margin-top:8px">
+          <div class="toggle-info">
+            <strong>Site Active</strong>
+            <span>Inactive sites are skipped on every run</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="sActive" checked onchange="markDirty()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">🎨</span> Layout &amp; Theme</div>
+        <div class="form-row cols4">
+          <div class="form-group">
+            <label>Homepage Layout</label>
+            <select id="sLayout" onchange="markDirty()">
+              <option value="newsfeed">Newsfeed</option>
+              <option value="magazine">Magazine</option>
+              <option value="editorial">Editorial</option>
+              <option value="cards">Cards</option>
+              <option value="portfolio">Portfolio</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Article Layout</label>
+            <select id="sArticleLayout" onchange="markDirty()">
+              <option value="standard">Standard</option>
+              <option value="sidebar">Sidebar TOC</option>
+              <option value="magazine">Magazine</option>
+              <option value="minimal">Minimal</option>
+              <option value="immersive">Immersive Hero</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Theme</label>
+            <select id="sTheme" onchange="markDirty()">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+              <option value="minimal">Minimal</option>
+              <option value="bold">Bold</option>
+              <option value="elegant">Elegant</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Date Mode</label>
+            <select id="sDateMode" onchange="markDirty()">
+              <option value="today">Today's date</option>
+              <option value="distributed">Distributed (3yr)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span class="sticon">🖊</span> Voice &amp; Persona</div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Writing Tone / Voice</label>
+          <textarea id="sTone" rows="3" placeholder="Describe the writing style in detail..." oninput="markDirty()"></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Author Persona</label>
+          <input type="text" id="sPersona" placeholder="e.g. Marcus Chen, a former quant trader who..." oninput="markDirty()">
+        </div>
+        <div class="form-group">
+          <label>Site-Specific Writing Prompt <span style="color:var(--text3)">(adds to global rules)</span></label>
+          <textarea id="sSitePrompt" rows="3" placeholder="Extra rules for this site only..." oninput="markDirty()"></textarea>
+        </div>
+      </div>
+
+      <!-- Client / Sponsor -->
+      <div class="section">
+        <div class="section-title"><span class="sticon">🏢</span> Client / Sponsor Posts <span class="badge badge-purple" style="margin-left:4px">SITE</span></div>
+        <div class="toggle-row" style="margin-bottom:14px">
+          <div class="toggle-info">
+            <strong>Enable client posts for this site</strong>
+            <span>Overrides global client for this site. Generates dedicated articles featuring this business.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="sClientEnabled" onchange="toggleClientFields('site')">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="client-fields" id="clientFields-site">
+          <div class="form-row cols2">
+            <div class="form-group">
+              <label>Business Name</label>
+              <input type="text" id="sClientName" placeholder="e.g. Acme Trading Tools" oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label>Post Every N Articles</label>
+              <input type="number" id="sClientN" min="1" max="365" value="7" style="width:100px" oninput="markDirty();updateFreqPresets('site')">
+            </div>
+          </div>
+          <div class="freq-presets" id="freqPresets-site">
+            <button class="freq-preset" onclick="setFreq('site',2)">Every 2</button>
+            <button class="freq-preset" onclick="setFreq('site',3)">Every 3</button>
+            <button class="freq-preset sel" onclick="setFreq('site',7)">Weekly</button>
+            <button class="freq-preset" onclick="setFreq('site',14)">Bi-weekly</button>
+            <button class="freq-preset" onclick="setFreq('site',30)">Monthly</button>
+          </div>
+          <div class="form-group" style="margin-top:14px">
+            <label>Business Description &amp; Prompt</label>
+            <textarea id="sClientDesc" rows="6" placeholder="Describe the business in detail:&#10;- What they do / main product or service&#10;- Target audience&#10;- Key selling points&#10;- Website URL&#10;- Tone for mentions (editorial review? soft plug? sponsored content?)&#10;- Any specific angles, keywords, or calls to action to include" oninput="markDirty()"></textarea>
+          </div>
+          <div class="info-box" style="margin-top:8px">
+            <b>How it works:</b> Every N articles, instead of the next topic in the list, the bot generates an article that naturally features this business — a review, comparison, tutorial, or use-case piece based on the description above.
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Warming -->
+      <div class="section">
+        <div class="section-title"><span class="sticon">🌡</span> Domain Warming <span style="font-size:10px;font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0">(Google spam protection)</span></div>
+        <div class="toggle-row" style="margin-bottom:14px">
+          <div class="toggle-info">
+            <strong>Enable warming schedule</strong>
+            <span>Prevents rapid-content spam signals on new domains. Enforces posting gaps.</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="sWarmingEnabled" onchange="markDirty();toggleWarmingFields()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="warmingFields" style="display:none;padding:12px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--r)">
+          <div class="form-row cols2">
+            <div class="form-group">
+              <label>Domain Live Since (date you first published)</label>
+              <input type="date" id="sWarmingStarted" oninput="markDirty();updateWarmingStatus()">
+            </div>
+            <div class="form-group">
+              <label>Current Phase</label>
+              <div id="warmingStatus" style="padding:9px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);font-size:13px;color:var(--text2)">Set start date to see phase</div>
+            </div>
+          </div>
+          <div class="info-box" style="margin-top:8px;font-size:11px">
+            <b>Schedule:</b> Days 0–13: post every 3 days &nbsp;·&nbsp; Days 14–29: every 2 days &nbsp;·&nbsp; Days 30–59: daily &nbsp;·&nbsp; Day 60+: full speed.<br>
+            Protects against Google's scaled-content and rapid-indexing detection signals.
+          </div>
+        </div>
+      </div>
+
+      <!-- Topics -->
+      <div class="section">
+        <div class="section-title"><span class="sticon">📋</span> Topics</div>
+        <div class="form-group">
+          <label>Article Topics (one per line — the bot cycles through these in order)</label>
+          <textarea class="topics-area" id="sTopics" rows="14" placeholder="Why algorithmic trading beats emotional trading&#10;What happens in crypto markets while retail traders sleep&#10;..." oninput="markDirty()"></textarea>
+        </div>
+        <p class="topics-hint">Topics are used in order then recycled. Claude also auto-expands the list when it runs low. You can also manually add new ones at any time.</p>
+      </div>
+
+      <!-- Affiliate Links -->
+      <div class="section">
+        <div class="section-title"><span class="sticon">🔗</span> Affiliate Links <span style="font-size:10px;font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0">(auto-injected into articles)</span></div>
+        <div id="affiliateList" style="margin-bottom:10px"></div>
+        <button class="btn" onclick="addAffiliateRow()" style="font-size:12px">+ Add Keyword → Link</button>
+        <div class="info-box" style="margin-top:10px">
+          First occurrence of each keyword in an article body is automatically wrapped in an affiliate link (<code>rel="sponsored"</code>). Keywords are case-insensitive. Longest keywords are matched first to prevent partial matches.
+        </div>
+      </div>
+
+      <!-- Social Media -->
+      <div class="section">
+        <div class="section-title"><span class="sticon">📢</span> Social Media Broadcast</div>
+        <div class="toggle-row" style="margin-bottom:14px">
+          <div class="toggle-info">
+            <strong>Auto-post to social when an article publishes</strong>
+            <span>Sends to any enabled channels below (webhook, Twitter/X, LinkedIn)</span>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="sSocialEnabled" onchange="markDirty();toggleSocialFields()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="socialFields" style="display:none">
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Webhook URL <span style="color:var(--text3)">(Make.com / Zapier / n8n — receives full article payload)</span></label>
+            <input type="text" id="sSocialWebhook" placeholder="https://hook.make.com/..." oninput="markDirty()">
+          </div>
+          <div class="divider"></div>
+          <div class="toggle-row" style="margin-bottom:10px">
+            <div class="toggle-info">
+              <strong>Twitter / X</strong>
+              <span>Posts title + excerpt + link as a tweet (Bearer Token required)</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="sSocialTwitterEnabled" onchange="markDirty()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="form-group" style="margin-bottom:14px">
+            <label>Twitter Bearer Token</label>
+            <input type="password" id="sSocialTwitterToken" placeholder="AAAA..." oninput="markDirty()">
+          </div>
+          <div class="divider"></div>
+          <div class="toggle-row" style="margin-bottom:10px">
+            <div class="toggle-info">
+              <strong>LinkedIn</strong>
+              <span>Posts as an organization share (OAuth token + org ID required)</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="sSocialLinkedinEnabled" onchange="markDirty()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="form-row cols2">
+            <div class="form-group">
+              <label>LinkedIn OAuth Token</label>
+              <input type="password" id="sSocialLinkedinToken" placeholder="AQV..." oninput="markDirty()">
+            </div>
+            <div class="form-group">
+              <label>Organization ID</label>
+              <input type="text" id="sSocialLinkedinOrg" placeholder="12345678" oninput="markDirty()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Scripts -->
+      <div class="section">
+        <div class="section-title"><span class="sticon">📜</span> Custom Scripts</div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Header Scripts <span style="color:var(--text3)">(injected before &lt;/head&gt; — analytics, fonts, consent banners)</span></label>
+          <textarea id="sHeaderScripts" rows="4" placeholder="&lt;script async src=&quot;https://cdn.youranalytics.com/...&quot;&gt;&lt;/script&gt;" oninput="markDirty()" style="font-family:monospace;font-size:12px"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Footer Scripts <span style="color:var(--text3)">(injected before &lt;/body&gt; — chat widgets, conversion pixels)</span></label>
+          <textarea id="sFooterScripts" rows="4" placeholder="&lt;script&gt;/* your script */&lt;/script&gt;" oninput="markDirty()" style="font-family:monospace;font-size:12px"></textarea>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <span class="action-bar-left" id="siteActionInfo"></span>
+        <button class="btn btn-red" onclick="deleteSite()" style="margin-right:auto">Delete Site</button>
+        <button class="btn btn-accent" onclick="saveSite()">Save Site</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ── Publish Modal ── -->
+<div class="modal-bg" id="publishModal">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Publishing Config to GitHub</div>
+    <div class="modal-sub" id="modalSub">Pushing network-config.json to your bot repository...</div>
+    <div class="modal-log" id="modalLog"></div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let cfg = null;          // parsed network-config.json
+let dirty = false;
+let fileHandle = null;   // File System Access API handle
+let currentSiteId = null;
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  loadToken();
+  loadDeploySettings();
+  // Try to auto-load from localStorage cache
+  const cached = localStorage.getItem('cfgCache');
+  if (cached) {
+    try {
+      cfg = JSON.parse(cached);
+      renderAll();
+      setStatus('saved', 'Loaded from cache');
+      document.getElementById('filePath').textContent = 'From cache — click Load to sync from disk';
+    } catch(e) { cfg = null; }
+  }
+});
+
+// ── File operations ────────────────────────────────────────────────────────
+async function loadFile() {
+  if (window.showOpenFilePicker) {
+    try {
+      [fileHandle] = await window.showOpenFilePicker({
+        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+        startIn: 'desktop',
+      });
+      const file = await fileHandle.getFile();
+      const text = await file.text();
+      cfg = JSON.parse(text);
+      localStorage.setItem('cfgCache', text);
+      document.getElementById('filePath').textContent = file.name;
+      renderAll();
+      setStatus('saved', 'Loaded');
+      dirty = false;
+    } catch(e) { if (e.name !== 'AbortError') alert('Load error: ' + e.message); }
+  } else {
+    // Fallback: file input
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json';
+    input.onchange = async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const text = await file.text();
+      cfg = JSON.parse(text);
+      localStorage.setItem('cfgCache', text);
+      document.getElementById('filePath').textContent = file.name;
+      renderAll();
+      setStatus('saved', 'Loaded');
+      dirty = false;
+    };
+    input.click();
+  }
+}
+
+async function saveFile() {
+  if (!cfg) { alert('Load a file first.'); return; }
+  collectAll();
+  const text = JSON.stringify(cfg, null, 2);
+  localStorage.setItem('cfgCache', text);
+  if (fileHandle) {
+    try {
+      const writable = await fileHandle.createWritable();
+      await writable.write(text);
+      await writable.close();
+      setStatus('saved', 'Saved to disk');
+      dirty = false;
+      return;
+    } catch(e) { /* fall through to download */ }
+  }
+  // Fallback: download
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+  a.download = 'network-config.json';
+  a.click();
+  setStatus('saved', 'Downloaded');
+  dirty = false;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function renderAll() {
+  if (!cfg) return;
+  renderSiteList();
+  renderGlobal();
+  renderGhSettings();
+}
+
+function renderSiteList() {
+  const list = document.getElementById('siteList');
+  list.innerHTML = '';
+  (cfg.sites || []).forEach(site => {
+    const hasClient = site.client?.enabled;
+    const btn = document.createElement('button');
+    btn.className = 'site-btn' + (site.id === currentSiteId ? ' active' : '');
+    btn.innerHTML = `
+      <span class="site-dot ${site.active === false ? 'off' : ''}"></span>
+      <span class="site-domain">${site.domain || site.id}</span>
+      ${hasClient ? '<span class="site-client-tag">CLIENT</span>' : ''}
+    `;
+    btn.onclick = () => openSite(site.id);
+    list.appendChild(btn);
+  });
+}
+
+function renderGlobal() {
+  if (!cfg) return;
+  document.getElementById('globalPrompt').value = cfg.global_prompt || '';
+  document.getElementById('globalNegativePrompt').value = cfg.global_negative_prompt || 'DO NOT EVER USE " —" (em-dash). NEVER use: delve into, it\'s worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion, in summary, to summarize, it is important to note, as an AI language model.';
+  document.getElementById('globalHeaderScripts').value = cfg.global_header_scripts || '';
+  document.getElementById('globalFooterScripts').value = cfg.global_footer_scripts || '';
+  const gc = cfg.global_client || {};
+  document.getElementById('globalClientEnabled').checked = !!gc.enabled;
+  document.getElementById('globalClientName').value = gc.business_name || '';
+  document.getElementById('globalClientDesc').value = gc.description || '';
+  document.getElementById('globalClientN').value = gc.post_every_n || 7;
+  updateFreqPresets('global');
+  toggleClientFields('global');
+}
+
+function renderGhSettings() {
+  const s = cfg?.settings || {};
+  document.getElementById('botRepo').value = s.bot_repo || '';
+  document.getElementById('botBranch').value = s.branch || 'main';
+  document.getElementById('workflowFile').value = s.workflow_file || 'daily-post.yml';
+}
+
+function openSite(id) {
+  if (!cfg) return;
+  if (dirty && currentSiteId) {
+    if (!confirm('You have unsaved changes. Discard them?')) return;
+  }
+  currentSiteId = id;
+  const site = cfg.sites.find(s => s.id === id);
+  if (!site) return;
+
+  // Update sidebar active state
+  document.querySelectorAll('.site-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  document.getElementById('siteTitle').textContent = site.domain || id;
+  document.getElementById('siteSub').textContent = `ID: ${id} · ${site.category || ''}`;
+  document.getElementById('siteActionInfo').textContent = `Editing: ${site.domain}`;
+
+  document.getElementById('sDomain').value = site.domain || '';
+  document.getElementById('sRepo').value = site.repo || '';
+  document.getElementById('sCategory').value = site.category || '';
+  document.getElementById('sBrevo').value = site.brevo_list_id || '';
+  document.getElementById('sActive').checked = site.active !== false;
+  document.getElementById('sLayout').value = site.layout || 'cards';
+  document.getElementById('sArticleLayout').value = site.article_layout || 'standard';
+  document.getElementById('sTheme').value = site.theme || 'dark';
+  document.getElementById('sDateMode').value = site.date_mode || 'today';
+  document.getElementById('sTone').value = site.tone || '';
+  document.getElementById('sPersona').value = site.persona || '';
+  document.getElementById('sSitePrompt').value = site.site_prompt || '';
+  document.getElementById('sTopics').value = (site.topics || []).join('\n');
+
+  const cl = site.client || {};
+  document.getElementById('sClientEnabled').checked = !!cl.enabled;
+  document.getElementById('sClientName').value = cl.business_name || '';
+  document.getElementById('sClientDesc').value = cl.description || '';
+  document.getElementById('sClientN').value = cl.post_every_n || 7;
+  updateFreqPresets('site');
+  toggleClientFields('site');
+
+  const w = site.warming || {};
+  document.getElementById('sWarmingEnabled').checked = !!w.enabled;
+  document.getElementById('sWarmingStarted').value = w.started || '';
+  toggleWarmingFields();
+  updateWarmingStatus();
+
+  // Affiliate links
+  renderAffiliateRows(site.affiliate_links || {});
+
+  // Social media
+  const sm = site.social_media || {};
+  document.getElementById('sSocialEnabled').checked = !!sm.enabled;
+  document.getElementById('sSocialWebhook').value = sm.webhook_url || '';
+  document.getElementById('sSocialTwitterEnabled').checked = !!sm.twitter_enabled;
+  document.getElementById('sSocialTwitterToken').value = sm.twitter_bearer_token || '';
+  document.getElementById('sSocialLinkedinEnabled').checked = !!sm.linkedin_enabled;
+  document.getElementById('sSocialLinkedinToken').value = sm.linkedin_token || '';
+  document.getElementById('sSocialLinkedinOrg').value = sm.linkedin_org_id || '';
+  toggleSocialFields();
+
+  // Scripts
+  document.getElementById('sHeaderScripts').value = site.header_scripts || '';
+  document.getElementById('sFooterScripts').value = site.footer_scripts || '';
+
+  showPanel('site');
+  dirty = false;
+}
+
+// ── Collect (read form → cfg) ──────────────────────────────────────────────
+function collectAll() {
+  collectGlobal();
+  collectGhSettings();
+  if (currentSiteId) collectSite();
+}
+
+function collectGlobal() {
+  if (!cfg) return;
+  cfg.global_prompt          = document.getElementById('globalPrompt').value;
+  cfg.global_negative_prompt = document.getElementById('globalNegativePrompt').value;
+  cfg.global_header_scripts  = document.getElementById('globalHeaderScripts').value;
+  cfg.global_footer_scripts  = document.getElementById('globalFooterScripts').value;
+  cfg.global_client = {
+    enabled: document.getElementById('globalClientEnabled').checked,
+    business_name: document.getElementById('globalClientName').value,
+    description: document.getElementById('globalClientDesc').value,
+    post_every_n: parseInt(document.getElementById('globalClientN').value) || 7,
+  };
+}
+
+function collectGhSettings() {
+  if (!cfg) return;
+  cfg.settings = cfg.settings || {};
+  cfg.settings.bot_repo = document.getElementById('botRepo').value;
+  cfg.settings.branch = document.getElementById('botBranch').value || 'main';
+  cfg.settings.workflow_file = document.getElementById('workflowFile').value || 'daily-post.yml';
+}
+
+function collectSite() {
+  if (!cfg || !currentSiteId) return;
+  const site = cfg.sites.find(s => s.id === currentSiteId);
+  if (!site) return;
+  site.domain = document.getElementById('sDomain').value;
+  site.repo = document.getElementById('sRepo').value;
+  site.category = document.getElementById('sCategory').value;
+  site.brevo_list_id = document.getElementById('sBrevo').value || null;
+  site.active = document.getElementById('sActive').checked;
+  site.layout = document.getElementById('sLayout').value;
+  site.article_layout = document.getElementById('sArticleLayout').value;
+  site.theme = document.getElementById('sTheme').value;
+  site.date_mode = document.getElementById('sDateMode').value;
+  site.tone = document.getElementById('sTone').value;
+  site.persona = document.getElementById('sPersona').value;
+  site.site_prompt = document.getElementById('sSitePrompt').value;
+  site.topics = document.getElementById('sTopics').value.split('\n').map(t => t.trim()).filter(Boolean);
+  site.client = {
+    enabled: document.getElementById('sClientEnabled').checked,
+    business_name: document.getElementById('sClientName').value,
+    description: document.getElementById('sClientDesc').value,
+    post_every_n: parseInt(document.getElementById('sClientN').value) || 7,
+  };
+  site.warming = {
+    enabled: document.getElementById('sWarmingEnabled').checked,
+    started: document.getElementById('sWarmingStarted').value || '',
+  };
+  site.affiliate_links = collectAffiliateLinks();
+  site.social_media = {
+    enabled: document.getElementById('sSocialEnabled').checked,
+    webhook_url: document.getElementById('sSocialWebhook').value,
+    twitter_enabled: document.getElementById('sSocialTwitterEnabled').checked,
+    twitter_bearer_token: document.getElementById('sSocialTwitterToken').value,
+    linkedin_enabled: document.getElementById('sSocialLinkedinEnabled').checked,
+    linkedin_token: document.getElementById('sSocialLinkedinToken').value,
+    linkedin_org_id: document.getElementById('sSocialLinkedinOrg').value,
+  };
+  site.header_scripts = document.getElementById('sHeaderScripts').value;
+  site.footer_scripts = document.getElementById('sFooterScripts').value;
+}
+
+// ── Save individual sections ───────────────────────────────────────────────
+function saveGlobal() {
+  collectGlobal();
+  persistCache();
+  setStatus('saved', 'Global saved');
+}
+
+function saveGhSettings() {
+  collectGhSettings();
+  saveDeploySettings();
+  persistCache();
+  setStatus('saved', 'Deploy settings saved');
+}
+
+function saveSite() {
+  collectSite();
+  persistCache();
+  renderSiteList();
+  setStatus('saved', 'Site saved');
+  dirty = false;
+}
+
+function persistCache() {
+  if (cfg) localStorage.setItem('cfgCache', JSON.stringify(cfg, null, 2));
+}
+
+// ── Add / Delete site ──────────────────────────────────────────────────────
+function addSite() {
+  if (!cfg) { alert('Load a config file first.'); return; }
+  const id = 'site-' + Date.now();
+  const newSite = {
+    id, active: true,
+    domain: 'yourdomain.com', repo: 'username/reponame',
+    category: '', theme: 'dark', layout: 'cards',
+    article_layout: 'standard', tone: '', persona: '',
+    brevo_list_id: null,
+    client: { enabled: false, business_name: '', description: '', post_every_n: 7 },
+    warming: { enabled: false, started: '', phase: 'new' },
+    social_media: { enabled: false, webhook_url: '', twitter_enabled: false, twitter_bearer_token: '', linkedin_enabled: false, linkedin_token: '', linkedin_org_id: '' },
+    affiliate_links: {},
+    header_scripts: '',
+    footer_scripts: '',
+    topics: [],
+  };
+  cfg.sites.push(newSite);
+  renderSiteList();
+  // auto-open the new site
+  currentSiteId = id;
+  openSiteById(id);
+}
+
+function openSiteById(id) {
+  const btns = document.querySelectorAll('.site-btn');
+  const idx = (cfg.sites || []).findIndex(s => s.id === id);
+  if (btns[idx]) btns[idx].click();
+}
+
+function deleteSite() {
+  if (!cfg || !currentSiteId) return;
+  const site = cfg.sites.find(s => s.id === currentSiteId);
+  if (!confirm(`Delete "${site?.domain || currentSiteId}"? This cannot be undone.`)) return;
+  cfg.sites = cfg.sites.filter(s => s.id !== currentSiteId);
+  currentSiteId = null;
+  persistCache();
+  renderSiteList();
+  showPanel('global');
+  setStatus('dirty', 'Site deleted — save file');
+}
+
+// ── UI helpers ─────────────────────────────────────────────────────────────
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (id === 'global') document.getElementById('navGlobal').classList.add('active');
+  if (id === 'ghsettings') document.getElementById('navGhSettings').classList.add('active');
+}
+
+function openSettings() { showPanel('ghsettings'); }
+
+function markDirty() {
+  dirty = true;
+  setStatus('dirty', 'Unsaved changes');
+}
+
+function setStatus(type, text) {
+  const el = document.getElementById('statusBadge');
+  el.className = 'topbar-status';
+  if (type === 'saved') el.classList.add('status-saved');
+  else if (type === 'dirty') el.classList.add('status-dirty');
+  else el.classList.add('status-err');
+  el.textContent = text;
+}
+
+function toggleClientFields(scope) {
+  const enabled = scope === 'global'
+    ? document.getElementById('globalClientEnabled').checked
+    : document.getElementById('sClientEnabled').checked;
+  const fields = document.getElementById('clientFields-' + scope);
+  fields.classList.toggle('visible', enabled);
+  if (scope === 'site') markDirty();
+}
+
+function setFreq(scope, n) {
+  if (scope === 'global') {
+    document.getElementById('globalClientN').value = n;
+  } else {
+    document.getElementById('sClientN').value = n;
+    markDirty();
+  }
+  updateFreqPresets(scope);
+}
+
+function updateFreqPresets(scope) {
+  const n = parseInt(scope === 'global'
+    ? document.getElementById('globalClientN').value
+    : document.getElementById('sClientN').value);
+  document.querySelectorAll(`#freqPresets-${scope} .freq-preset`).forEach(btn => {
+    const btnN = parseInt(btn.textContent.match(/\d+/)?.[0]) ||
+      (btn.textContent === 'Weekly' ? 7 : btn.textContent === 'Bi-weekly' ? 14 : btn.textContent === 'Monthly' ? 30 : 0);
+    btn.classList.toggle('sel', btnN === n);
+  });
+}
+
+// ── GitHub token (localStorage only) ──────────────────────────────────────
+function saveToken() {
+  const tok = document.getElementById('ghToken').value.trim();
+  if (!tok) { alert('Paste a token first.'); return; }
+  localStorage.setItem('ghToken', tok);
+  alert('Token saved to browser storage.');
+}
+
+function loadToken() {
+  const tok = localStorage.getItem('ghToken');
+  if (tok) document.getElementById('ghToken').value = tok;
+}
+
+function saveDeploySettings() {
+  localStorage.setItem('botRepo', document.getElementById('botRepo').value);
+  localStorage.setItem('botBranch', document.getElementById('botBranch').value);
+  localStorage.setItem('workflowFile', document.getElementById('workflowFile').value);
+}
+
+function loadDeploySettings() {
+  const repo = localStorage.getItem('botRepo');
+  const branch = localStorage.getItem('botBranch');
+  const wf = localStorage.getItem('workflowFile');
+  if (repo) document.getElementById('botRepo').value = repo;
+  if (branch) document.getElementById('botBranch').value = branch;
+  if (wf) document.getElementById('workflowFile').value = wf;
+}
+
+// ── GitHub API helpers ────────────────────────────────────────────────────
+function getToken() { return localStorage.getItem('ghToken') || ''; }
+function getRepo()  { return document.getElementById('botRepo').value.trim() || cfg?.settings?.bot_repo || ''; }
+function getBranch(){ return document.getElementById('botBranch').value.trim() || 'main'; }
+function getWF()    { return document.getElementById('workflowFile').value.trim() || 'daily-post.yml'; }
+
+async function ghPut(repo, path, content, message) {
+  const token = getToken();
+  if (!token) throw new Error('No GitHub token set. Add it in GitHub & Deploy settings.');
+  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+  const headers = { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
+  // Get current SHA if file exists
+  const get = await fetch(url, { headers });
+  let sha = null;
+  if (get.ok) { const d = await get.json(); sha = d.sha; }
+  const body = { message, content: btoa(unescape(encodeURIComponent(content))) };
+  if (sha) body.sha = sha;
+  const put = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+  if (!put.ok) { const err = await put.json(); throw new Error(err.message || put.status); }
+  return put.json();
+}
+
+async function ghDispatch(repo, branch, workflow) {
+  const token = getToken();
+  const url = `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`;
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ref: branch }),
+  });
+  if (!r.ok && r.status !== 204) { const e = await r.json().catch(() => ({})); throw new Error(e.message || r.status); }
+}
+
+// ── Publish Config ────────────────────────────────────────────────────────
+async function publishConfig() {
+  if (!cfg) { alert('Load a config file first.'); return; }
+  const repo = getRepo();
+  if (!repo || repo.includes('YOUR_GITHUB')) { alert('Set your bot repo in GitHub & Deploy settings first.'); openSettings(); return; }
+
+  collectAll();
+  const text = JSON.stringify(cfg, null, 2);
+  localStorage.setItem('cfgCache', text);
+
+  openModal('Publishing Config to GitHub', `Pushing network-config.json to ${repo}...`);
+  log('info', `Repository: ${repo}`);
+  log('info', `Branch: ${getBranch()}`);
+
+  try {
+    await ghPut(repo, 'network-config.json', text, `Config update via editor [${new Date().toISOString().slice(0,10)}]`);
+    log('ok', '✓ network-config.json pushed successfully');
+    log('info', 'Next scheduled run will use this config.');
+    setStatus('saved', 'Published');
+    dirty = false;
+  } catch(e) {
+    log('err', '✗ Error: ' + e.message);
+    setStatus('err', 'Publish failed');
+  }
+}
+
+// ── Trigger Run Now ───────────────────────────────────────────────────────
+async function triggerRun() {
+  if (!cfg) { alert('Load a config file first.'); return; }
+  const repo = getRepo();
+  if (!repo || repo.includes('YOUR_GITHUB')) { alert('Set your bot repo in GitHub & Deploy settings first.'); openSettings(); return; }
+
+  if (!confirm(`Trigger an immediate run on ${repo}? This will generate and publish articles for all active sites.`)) return;
+
+  openModal('Triggering Run', `Dispatching workflow on ${repo}...`);
+  log('info', `Workflow: ${getWF()}`);
+  log('info', `Branch: ${getBranch()}`);
+
+  try {
+    // First push config so the run uses the latest settings
+    log('info', 'Pushing latest config first...');
+    collectAll();
+    const text = JSON.stringify(cfg, null, 2);
+    await ghPut(repo, 'network-config.json', text, `Config update [${new Date().toISOString().slice(0,10)}]`);
+    log('ok', '✓ Config pushed');
+
+    // Dispatch workflow
+    await ghDispatch(repo, getBranch(), getWF());
+    log('ok', '✓ Workflow triggered — check GitHub Actions for progress');
+    log('info', `View: https://github.com/${repo}/actions`);
+  } catch(e) {
+    log('err', '✗ Error: ' + e.message);
+  }
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openModal(title, sub) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalSub').textContent = sub;
+  document.getElementById('modalLog').innerHTML = '';
+  document.getElementById('publishModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('publishModal').classList.remove('open'); }
+
+function log(type, msg) {
+  const el = document.getElementById('modalLog');
+  const span = document.createElement('div');
+  span.className = type === 'ok' ? 'log-ok' : type === 'err' ? 'log-err' : 'log-info';
+  span.textContent = msg;
+  el.appendChild(span);
+  el.scrollTop = el.scrollHeight;
+}
+
+function toggleWarmingFields() {
+  const on = document.getElementById('sWarmingEnabled').checked;
+  document.getElementById('warmingFields').style.display = on ? 'block' : 'none';
+}
+
+function updateWarmingStatus() {
+  const started = document.getElementById('sWarmingStarted').value;
+  const el = document.getElementById('warmingStatus');
+  if (!started) { el.textContent = 'Set start date to see phase'; el.style.color = 'var(--text3)'; return; }
+  const days = Math.floor((Date.now() - new Date(started)) / 86400000);
+  let phase, color;
+  if (days < 14)      { phase = `Day ${days} · Trust-building: post every 3 days`; color = 'var(--red)'; }
+  else if (days < 30) { phase = `Day ${days} · Establishing: post every 2 days`;   color = 'var(--amber)'; }
+  else if (days < 60) { phase = `Day ${days} · Growth: post daily`;                color = 'var(--blue)'; }
+  else                { phase = `Day ${days} · Full speed ✓`;                       color = 'var(--green)'; }
+  el.textContent = phase;
+  el.style.color = color;
+}
+
+// ── Load from GitHub ──────────────────────────────────────────────────────
+async function loadFromGitHub() {
+  const repo = getRepo();
+  if (!repo || repo.includes('YOUR_GITHUB')) {
+    alert('Set your bot repo in GitHub & Deploy settings first.'); openSettings(); return;
+  }
+  const token = getToken();
+  if (!token) {
+    alert('Add your GitHub token in GitHub & Deploy settings first.'); openSettings(); return;
+  }
+  try {
+    setStatus('dirty', 'Loading from GitHub…');
+    const url = `https://api.github.com/repos/${repo}/contents/network-config.json`;
+    const r = await fetch(url, {
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+    const data = await r.json();
+    const text = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+    cfg = JSON.parse(text);
+    localStorage.setItem('cfgCache', text);
+    document.getElementById('filePath').textContent = `From GitHub: ${repo}`;
+    renderAll();
+    setStatus('saved', 'Loaded from GitHub');
+    dirty = false;
+  } catch(e) {
+    setStatus('err', 'Load failed');
+    alert('Failed to load from GitHub: ' + e.message);
+  }
+}
+
+// ── Affiliate link editor ─────────────────────────────────────────────────
+function renderAffiliateRows(affiliateLinks) {
+  const list = document.getElementById('affiliateList');
+  list.innerHTML = '';
+  Object.entries(affiliateLinks || {}).forEach(([kw, url]) => addAffiliateRow(kw, url));
+}
+
+function addAffiliateRow(keyword='', url='') {
+  const list = document.getElementById('affiliateList');
+  const row = document.createElement('div');
+  row.style.cssText = 'display:grid;grid-template-columns:1fr 1.6fr 32px;gap:8px;margin-bottom:8px;align-items:center';
+  row.innerHTML = `
+    <input type="text" placeholder="keyword (e.g. Bitcoin)" value="${keyword.replace(/"/g,'&quot;')}" class="aff-kw" oninput="markDirty()">
+    <input type="text" placeholder="https://affiliate.link" value="${url.replace(/"/g,'&quot;')}" class="aff-url" oninput="markDirty()">
+    <button onclick="this.parentElement.remove();markDirty()" style="background:#ef444415;color:var(--red);border:1px solid #ef444425;border-radius:6px;cursor:pointer;font-size:14px;padding:0;height:34px">×</button>
+  `;
+  list.appendChild(row);
+}
+
+function collectAffiliateLinks() {
+  const result = {};
+  document.querySelectorAll('#affiliateList > div').forEach(row => {
+    const kw  = row.querySelector('.aff-kw')?.value?.trim();
+    const url = row.querySelector('.aff-url')?.value?.trim();
+    if (kw && url) result[kw] = url;
+  });
+  return result;
+}
+
+// ── Social media toggle ───────────────────────────────────────────────────
+function toggleSocialFields() {
+  const on = document.getElementById('sSocialEnabled').checked;
+  document.getElementById('socialFields').style.display = on ? 'block' : 'none';
+}
+
+// Close modal on backdrop click
+document.getElementById('publishModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// Warn on exit with unsaved changes
+window.addEventListener('beforeunload', e => {
+  if (dirty) { e.preventDefault(); e.returnValue = ''; }
+});
+</script>
+</body>
+</html>
