@@ -1,0 +1,2224 @@
+<!-- Content Network Launcher — © 2026 Kavalsia Inc. [Siavash Sadighi] -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Content Network Launcher — Kavalsia Inc.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & base ──────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c09;
+  --bg2:#0d1410;
+  --bg3:#121b14;
+  --bg4:#172119;
+  --text:#ffffff;
+  --text2:#b8d4c0;
+  --text3:#4d7059;
+  --accent:#3ecf8e;
+  --accent2:#2eb87d;
+  --glow:#3ecf8e28;
+  --green:#3ecf8e;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --info:#38bdf8;
+  --border:#142018;
+  --border2:#1e3024;
+  --radius:10px;
+  --font:'Inter',system-ui,sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow:hidden}
+body{background:radial-gradient(ellipse at 50% 0%,#0d2318 0%,#080c09 65%)}
+a{color:var(--accent);text-decoration:none}
+button{cursor:pointer;font-family:var(--font)}
+input,textarea,select{font-family:var(--font)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* ── Shell ─────────────────────────────────────────────────────────────────── */
+.shell{display:grid;grid-template-columns:240px 1fr;height:100vh;overflow:hidden}
+
+/* ── Sidebar ───────────────────────────────────────────────────────────────── */
+.sidebar{
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:0;overflow-y:auto;
+}
+.sidebar-top{padding:24px 20px 20px}
+.logo-mark{
+  font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  display:block;margin-bottom:2px;
+}
+.logo-tagline{font-size:11px;color:var(--text2);font-weight:400;-webkit-text-fill-color:var(--text2)}
+
+.step-nav{flex:1;padding:8px 10px 0}
+.step-btn{
+  display:flex;align-items:center;gap:10px;
+  width:100%;padding:10px 12px;border-radius:8px;
+  background:none;border:none;color:var(--text2);
+  font-size:13px;font-weight:500;text-align:left;
+  transition:all 0.15s ease;margin-bottom:2px;
+}
+.step-btn:hover{background:var(--bg3);color:var(--text)}
+.step-btn.active{background:var(--glow);color:var(--accent);font-weight:700}
+.step-btn.done{color:var(--text)}
+.step-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--bg4);border:1px solid var(--border2);
+  font-size:11px;font-weight:700;color:var(--text2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all 0.2s ease;
+}
+.step-btn.active .step-num{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 8px var(--glow)}
+.step-btn.done .step-num{background:var(--green);border-color:var(--green);color:#fff}
+.step-label{flex:1;line-height:1.2}
+.step-tick{font-size:10px;color:var(--green);opacity:0;transition:opacity 0.2s}
+.step-btn.done .step-tick{opacity:1}
+
+/* progress */
+.sidebar-progress{padding:20px;border-top:1px solid var(--border);margin-top:auto}
+.prog-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.prog-label span{font-size:11px;color:var(--text3)}
+.prog-label b{font-size:11px;color:var(--accent2);font-weight:700}
+.prog-track{height:4px;background:var(--border2);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:100px;transition:width 0.4s ease}
+
+.save-row{display:flex;align-items:center;gap:7px;margin-top:10px}
+.save-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.save-dot.saving{background:var(--amber);animation:blink 0.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.save-label{font-size:11px;color:var(--text3)}
+
+/* ── Main ──────────────────────────────────────────────────────────────────── */
+.main{display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.step-panel{display:none;flex:1;overflow-y:auto;padding:40px 48px 80px;min-height:0}
+.step-panel.active{display:block}
+
+/* ── Step header ───────────────────────────────────────────────────────────── */
+.step-header{margin-bottom:32px}
+.step-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:var(--accent);margin-bottom:8px}
+.step-title{font-size:28px;font-weight:800;letter-spacing:-0.8px;color:var(--text);margin-bottom:8px;line-height:1.15}
+.step-desc{font-size:14px;color:var(--text2);line-height:1.75;max-width:640px}
+
+/* ── Cards ─────────────────────────────────────────────────────────────────── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:14px}
+.card:last-child{margin-bottom:0}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-title{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.card-icon{font-size:16px}
+
+/* ── Form ──────────────────────────────────────────────────────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2)}
+.form-label small{text-transform:none;letter-spacing:0;font-weight:400;color:var(--text3);margin-left:4px}
+.fi,.form-input,.form-select,.form-textarea{
+  background:var(--bg);border:1px solid var(--border2);border-radius:8px;
+  padding:10px 14px;color:var(--text);font-size:13px;outline:none;
+  transition:border-color 0.15s ease,box-shadow 0.15s ease;width:100%;
+}
+.fi:focus,.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px var(--glow);
+}
+.form-textarea{resize:vertical;line-height:1.7;min-height:100px}
+.form-select option{background:var(--bg2);color:var(--text)}
+.form-hint{font-size:11px;color:var(--text3);line-height:1.5;margin-top:4px}
+.input-wrap{display:flex;gap:8px}
+.input-wrap .fi,.input-wrap .form-input{flex:1}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;
+  border:none;cursor:pointer;transition:all 0.15s ease;white-space:nowrap;flex-shrink:0;
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);box-shadow:0 0 16px var(--glow)}
+.btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{color:var(--text);border-color:var(--text3)}
+.btn-green{background:#3ecf8e18;color:var(--green);border:1px solid #3ecf8e44}
+.btn-green:hover{background:#3ecf8e28}
+.btn-amber{background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b44}
+.btn-amber:hover{background:#f59e0b28}
+.btn-info{background:#38bdf818;color:var(--info);border:1px solid #38bdf844}
+.btn-danger{background:#ef444418;color:var(--red);border:1px solid #ef444444}
+.btn-sm{padding:6px 13px;font-size:12px;gap:5px;border-radius:7px}
+.btn-xs{padding:4px 10px;font-size:11px;gap:4px;border-radius:6px}
+.btn-icon{padding:7px;border-radius:7px}
+
+/* ── Pills / badges ────────────────────────────────────────────────────────── */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:600;padding:4px 12px;
+  border-radius:100px;border:1px solid;
+}
+.pill-accent{border-color:var(--accent);color:var(--accent);background:var(--glow)}
+.pill-green{border-color:#3ecf8e44;color:var(--green);background:#3ecf8e11}
+.pill-amber{border-color:#f59e0b44;color:var(--amber);background:#f59e0b11}
+
+/* ── Bottom nav bar ────────────────────────────────────────────────────────── */
+.bottom-bar{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:12px 48px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;gap:16px;
+}
+.bottom-step{font-size:12px;color:var(--text3)}
+.bottom-btns{display:flex;gap:8px}
+
+/* ── API key rows ──────────────────────────────────────────────────────────── */
+.key-grid{display:flex;flex-direction:column;gap:0}
+.key-row{
+  display:grid;grid-template-columns:200px 1fr 100px;
+  gap:14px;align-items:center;padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.key-row:last-child{border-bottom:none}
+.key-name{font-size:12px;font-weight:700;font-family:'Menlo','Courier New',monospace;color:var(--accent2)}
+.key-where{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.4}
+.key-where a{color:var(--accent)}
+.key-price{font-size:10px;font-weight:600;text-transform:uppercase;margin-top:3px}
+.key-price.free{color:var(--green)}
+.key-price.paid{color:var(--amber)}
+.key-status{font-size:11px;font-weight:600;text-align:center;padding:4px 10px;border-radius:100px;border:1px solid}
+.key-status.st-set{color:var(--green);border-color:#3ecf8e44;background:#3ecf8e11}
+.key-status.st-missing{color:var(--text3);border-color:var(--border2)}
+.key-status.st-empty{color:var(--text3);border-color:var(--border2)}
+
+/* cost estimate */
+.cost-card{
+  background:linear-gradient(135deg,var(--glow),#a99ef511);
+  border:1px solid var(--accent);border-radius:var(--radius);
+  padding:20px;margin-top:14px;
+}
+.cost-rows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.cost-row{display:flex;align-items:baseline;justify-content:space-between;font-size:13px}
+.cost-row span{color:var(--text2)}
+.cost-row b{color:var(--text);font-weight:600}
+.cost-total{border-top:1px solid var(--border2);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+.cost-total span{color:var(--accent2)}
+.cost-note{font-size:11px;color:var(--text3);margin-top:8px;font-style:italic}
+
+/* ── Global prompt box ─────────────────────────────────────────────────────── */
+.prompt-box{background:var(--bg);border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+.prompt-box-head{
+  background:var(--bg3);border-bottom:1px solid var(--border);
+  padding:10px 16px;display:flex;align-items:center;justify-content:space-between;
+}
+.prompt-box-head-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2)}
+.prompt-box textarea{
+  border:none;border-radius:0;background:transparent;width:100%;
+  padding:16px;color:var(--text);font-size:13px;line-height:1.75;
+  resize:vertical;min-height:280px;outline:none;
+}
+
+/* ── Info box ──────────────────────────────────────────────────────────────── */
+.info-box{
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.65;
+}
+.info-box.info-accent{border-left:3px solid var(--accent)}
+.info-box.info-green{border-left:3px solid var(--green)}
+.info-box.info-amber{border-left:3px solid var(--amber)}
+.info-box.info-info{border-left:3px solid var(--info)}
+.info-box b{color:var(--text)}
+
+/* section divider */
+.sec-sep{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* ── Sites step ────────────────────────────────────────────────────────────── */
+.sites-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.sites-counter{font-size:13px;background:var(--bg3);border:1px solid var(--border);border-radius:100px;padding:5px 14px;color:var(--text2)}
+.sites-counter b{color:var(--accent)}
+.toolbar-spacer{flex:1}
+
+.sites-accordions{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+
+.site-accordion{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);transition:border-color 0.2s ease}
+.site-accordion.open{border-color:var(--accent);box-shadow:0 0 0 1px var(--glow)}
+
+.site-acc-head{
+  background:var(--bg2);padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;user-select:none;transition:background 0.15s ease;
+}
+.site-acc-head:hover{background:var(--bg3)}
+
+.site-num-badge{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg4);border:1px solid var(--border2);color:var(--text2);
+  transition:all 0.2s ease;
+}
+.site-accordion.open .site-num-badge{background:var(--accent);border-color:var(--accent);color:#fff}
+.site-info{flex:1;min-width:0}
+.site-domain{font-size:14px;font-weight:700;color:var(--text);line-height:1.2}
+.site-cat{font-size:11px;color:var(--text2)}
+.site-mini-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.mb{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:100px;border:1px solid}
+.mb-layout{border-color:#7c6fec55;color:var(--accent)}
+.mb-theme{border-color:#3ecf8e44;color:var(--green)}
+.mb-override{border-color:#f59e0b55;color:var(--amber)}
+.mb-active{border-color:#3ecf8e44;color:var(--green)}
+.site-chevron{color:var(--text3);font-size:11px;transition:transform 0.2s ease;flex-shrink:0}
+.site-accordion.open .site-chevron{transform:rotate(90deg)}
+
+.site-acc-body{display:none;border-top:1px solid var(--border)}
+.site-accordion.open .site-acc-body{display:block}
+
+/* site tabs */
+.site-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border)}
+.site-tab{
+  padding:10px 18px;font-size:12px;font-weight:600;
+  background:none;border:none;color:var(--text3);
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  cursor:pointer;transition:all 0.15s ease;
+}
+.site-tab:hover{color:var(--text2)}
+.site-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.site-tab-panel{display:none;padding:20px;background:var(--bg);gap:14px;flex-direction:column}
+.site-tab-panel.active{display:flex}
+
+/* Design layout cards */
+.layout-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.layout-card{
+  border:2px solid var(--border2);border-radius:8px;padding:10px 8px;
+  cursor:pointer;transition:all 0.15s ease;text-align:center;background:var(--bg2);
+}
+.layout-card:hover{border-color:var(--accent);background:var(--glow)}
+.layout-card.selected{border-color:var(--accent);background:var(--glow)}
+.layout-card-icon{font-size:22px;margin-bottom:5px}
+.layout-card-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text);display:block}
+.layout-card-desc{font-size:9px;color:var(--text3);margin-top:2px;display:block;line-height:1.4}
+
+/* Theme swatches */
+.theme-swatches{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.theme-swatch{
+  display:flex;align-items:center;gap:8px;
+  border:2px solid var(--border2);border-radius:8px;padding:8px 12px;
+  cursor:pointer;transition:all 0.15s ease;background:var(--bg2);
+}
+.theme-swatch:hover{border-color:var(--accent)}
+.theme-swatch.selected{border-color:var(--accent);background:var(--glow)}
+.swatch-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.swatch-name{font-size:11px;font-weight:600;color:var(--text2)}
+.theme-swatch.selected .swatch-name{color:var(--text)}
+
+/* override toggle */
+.override-row{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  cursor:pointer;transition:all 0.2s ease;
+}
+.override-row:hover{border-color:var(--amber)}
+.override-row.on{border-color:var(--amber);background:#f59e0b0d}
+.toggle-knob{
+  width:18px;height:18px;border-radius:4px;border:2px solid var(--border2);
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#fff;flex-shrink:0;transition:all 0.15s ease;
+}
+.override-row.on .toggle-knob{background:var(--amber);border-color:var(--amber)}
+.override-row-text{font-size:13px;color:var(--text2);flex:1}
+.override-row.on .override-row-text{color:var(--amber);font-weight:600}
+.override-inline-prompt{margin-top:10px}
+
+/* empty site slots grid */
+.empty-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+.empty-slot{
+  border:2px dashed var(--border2);border-radius:var(--radius);
+  padding:24px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;transition:all 0.15s ease;background:var(--bg2);
+}
+.empty-slot:hover{border-color:var(--accent);background:var(--glow)}
+.empty-slot-n{font-size:12px;color:var(--text3);font-weight:600}
+.empty-slot-plus{font-size:22px;color:var(--text3)}
+.empty-slot-label{font-size:11px;color:var(--text3)}
+
+/* ── Preview step ──────────────────────────────────────────────────────────── */
+.preview-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px}
+.preview-tab-btn{
+  padding:10px 20px;font-size:13px;font-weight:500;color:var(--text2);
+  background:none;border:none;border-bottom:2px solid transparent;
+  margin-bottom:-1px;cursor:pointer;transition:all 0.15s ease;
+}
+.preview-tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.preview-tab-btn:hover:not(.active){color:var(--text)}
+.preview-panel{display:none}
+.preview-panel.active{display:block}
+
+.frame-shell{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;height:560px}
+.frame-bar{background:var(--bg3);border-bottom:1px solid var(--border);padding:9px 14px;display:flex;align-items:center;gap:10px}
+.tl-group{display:flex;gap:5px}
+.tl{width:11px;height:11px;border-radius:50%}
+.tl.r{background:#ef4444}.tl.y{background:#f59e0b}.tl.g{background:#3ecf8e}
+.frame-url{font-size:11px;color:var(--text3);background:var(--bg4);border:1px solid var(--border);border-radius:4px;padding:3px 10px;flex:1;font-family:'Menlo','Courier New',monospace}
+.frame-iframe{width:100%;height:calc(100% - 40px);border:none;display:block;background:#fff}
+
+.file-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.file-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:10px;transition:border-color 0.15s ease}
+.file-card:hover{border-color:var(--accent)}
+.file-card-icon{font-size:24px}
+.file-card-name{font-size:13px;font-weight:700;color:var(--text);font-family:'Menlo','Courier New',monospace}
+.file-card-desc{font-size:11px;color:var(--text3);line-height:1.5;flex:1}
+.open-all-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.open-all-bar p{font-size:13px;color:var(--text2);flex:1}
+
+/* ── Network map ───────────────────────────────────────────────────────────── */
+.map-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;padding:0}
+.map-canvas-wrap{position:relative;height:480px;background:var(--bg);cursor:grab}
+.map-canvas-wrap:active{cursor:grabbing}
+#map-canvas{width:100%;height:100%;display:block}
+.map-legend{display:flex;align-items:center;gap:16px;padding:12px 20px;border-top:1px solid var(--border);flex-wrap:wrap}
+.map-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
+.map-legend-dot{width:10px;height:10px;border-radius:50%}
+
+.backlink-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
+.backlink-table th{padding:9px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);background:var(--bg3);border-bottom:1px solid var(--border);text-align:left}
+.backlink-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
+.backlink-table td code{font-family:'Menlo','Courier New',monospace;font-size:11px;color:var(--accent2);background:var(--bg4);padding:1px 5px;border-radius:3px}
+.backlink-table td .bar-mini{display:inline-block;height:4px;background:var(--accent);border-radius:2px;vertical-align:middle;margin-left:6px;opacity:0.6}
+
+/* ── Export step ───────────────────────────────────────────────────────────── */
+.export-preview{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:16px;font-family:'Menlo','Courier New',monospace;font-size:11px;
+  line-height:1.75;color:var(--text2);max-height:320px;overflow-y:auto;
+  white-space:pre-wrap;word-break:break-all;
+}
+.export-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
+.secrets-table{width:100%;border-collapse:collapse;font-size:13px}
+.secrets-table th{padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);background:var(--bg3);border-bottom:1px solid var(--border);text-align:left}
+.secrets-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.secrets-table td code{font-family:'Menlo','Courier New',monospace;font-size:11px;color:var(--accent2);background:var(--bg4);padding:2px 7px;border-radius:4px}
+.secret-val{font-family:'Menlo','Courier New',monospace;font-size:12px;color:var(--text3);letter-spacing:2px}
+.secret-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border2);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;transition:all 0.15s ease}
+.secret-check.checked{background:var(--green);border-color:var(--green)}
+
+.deploy-steps{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.deploy-step{display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px}
+.deploy-step-n{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.deploy-step-text{flex:1}
+.deploy-step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.deploy-step-desc{font-size:12px;color:var(--text2);line-height:1.55}
+
+.cost-summary-table{width:100%;border-collapse:collapse;font-size:13px}
+.cost-summary-table th{padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);background:var(--bg3);border-bottom:1px solid var(--border);text-align:left}
+.cost-summary-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+.cost-summary-table .total-row td{color:var(--text);font-weight:700;background:var(--bg4)}
+.cost-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px;border:1px solid}
+.cost-tag.free{color:var(--green);border-color:#3ecf8e44;background:#3ecf8e11}
+.cost-tag.paid{color:var(--amber);border-color:#f59e0b44;background:#f59e0b11}
+
+/* ── Footer ────────────────────────────────────────────────────────────────── */
+.page-footer{padding:16px 48px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);background:var(--bg2);text-align:center;flex-shrink:0}
+
+/* ── Topic ideas output ────────────────────────────────────────────────────── */
+.ideas-output{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:10px;display:none}
+.ideas-output ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.ideas-output li{font-size:12px;color:var(--text2);padding:6px 10px;background:var(--bg3);border-radius:6px;cursor:pointer;transition:all 0.15s ease}
+.ideas-output li:hover{color:var(--text);background:var(--bg4)}
+.ideas-output li::before{content:"→ ";color:var(--accent);font-weight:700}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .step-panel{padding:24px 20px 80px}
+  .form-grid,.form-grid-3{grid-template-columns:1fr}
+  .key-row{grid-template-columns:1fr}
+  .layout-cards{grid-template-columns:repeat(3,1fr)}
+  .empty-slots{grid-template-columns:repeat(2,1fr)}
+  .file-cards-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN WALL ──────────────────────────────────────────────────────── -->
+<div id="auth-wall" style="position:fixed;inset:0;z-index:9999;background:#050a06;display:flex;align-items:center;justify-content:center">
+  <div style="background:#0d1410;border:1px solid #1e3024;border-radius:16px;padding:48px 40px;width:360px;text-align:center;box-shadow:0 0 60px #3ecf8e1e">
+    <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia" style="height:36px;width:auto;object-fit:contain;margin-bottom:20px">
+    <div style="font-size:24px;font-weight:800;color:#ffffff;margin-bottom:4px">Network Setup</div>
+    <div style="font-size:13px;color:#b8d4c0;margin-bottom:32px">Secure Setup Console</div>
+    <input id="auth-user" type="text" placeholder="Username" autocomplete="username"
+      style="width:100%;padding:12px 16px;background:#121b14;border:1px solid #1e3024;border-radius:8px;color:#ffffff;font-size:14px;margin-bottom:10px;outline:none;box-sizing:border-box"
+      onkeydown="if(event.key==='Enter')attemptLogin()">
+    <input id="auth-pass" type="password" placeholder="Password" autocomplete="current-password"
+      style="width:100%;padding:12px 16px;background:#121b14;border:1px solid #1e3024;border-radius:8px;color:#ffffff;font-size:14px;margin-bottom:20px;outline:none;box-sizing:border-box"
+      onkeydown="if(event.key==='Enter')attemptLogin()">
+    <button onclick="attemptLogin()" style="width:100%;padding:13px;background:linear-gradient(135deg,#3ecf8e,#2eb87d);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">Sign In</button>
+    <div id="auth-err" style="margin-top:12px;font-size:13px;color:#ef4444;display:none">Invalid credentials. Try again.</div>
+  </div>
+</div>
+<script>
+(function(){
+  var U='admin',P='2020dalmenD',K='kvs_net_auth';
+  function chk(){var ok=sessionStorage.getItem(K)==='1';document.getElementById('auth-wall').style.display=ok?'none':'flex';}
+  window.attemptLogin=function(){
+    var u=document.getElementById('auth-user').value,p=document.getElementById('auth-pass').value;
+    if(u===U&&p===P){sessionStorage.setItem(K,'1');document.getElementById('auth-wall').style.display='none';}
+    else{document.getElementById('auth-err').style.display='block';}
+  };
+  chk();
+})();
+</script>
+
+<div class="shell">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia" style="height:34px;width:auto;object-fit:contain;display:block;margin-bottom:4px">
+    <span class="logo-tagline">Network Setup</span>
+    <nav style="display:flex;flex-wrap:wrap;gap:3px;margin-top:12px">
+      <a href="hub.html"       style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#121b14;border:1px solid #1e3024">Hub</a>
+      <a href="editor.html"    style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#121b14;border:1px solid #1e3024">Editor</a>
+      <a href="dashboard.html" style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#121b14;border:1px solid #1e3024">Dashboard</a>
+      <span style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:700;background:#3ecf8e18;color:#3ecf8e;border:1px solid #3ecf8e35">Setup</span>
+    </nav>
+  </div>
+
+  <nav class="step-nav">
+    <button class="step-btn active" onclick="goto(1)" id="sb-1">
+      <span class="step-num" id="sn-1">1</span>
+      <span class="step-label">API Keys &amp; Accounts</span>
+      <span class="step-tick" id="tk-1">✓</span>
+    </button>
+    <button class="step-btn" onclick="goto(2)" id="sb-2">
+      <span class="step-num" id="sn-2">2</span>
+      <span class="step-label">Global Settings</span>
+      <span class="step-tick" id="tk-2">✓</span>
+    </button>
+    <button class="step-btn" onclick="goto(3)" id="sb-3">
+      <span class="step-num" id="sn-3">3</span>
+      <span class="step-label">Configure Network Sites</span>
+      <span class="step-tick" id="tk-3">✓</span>
+    </button>
+    <button class="step-btn" onclick="goto(4)" id="sb-4">
+      <span class="step-num" id="sn-4">4</span>
+      <span class="step-label">Preview Designs</span>
+      <span class="step-tick" id="tk-4">✓</span>
+    </button>
+    <button class="step-btn" onclick="goto(5)" id="sb-5">
+      <span class="step-num" id="sn-5">5</span>
+      <span class="step-label">Network Map</span>
+      <span class="step-tick" id="tk-5">✓</span>
+    </button>
+    <button class="step-btn" onclick="goto(6)" id="sb-6">
+      <span class="step-num" id="sn-6">6</span>
+      <span class="step-label">Export &amp; Deploy</span>
+      <span class="step-tick" id="tk-6">✓</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-progress">
+    <div class="prog-label">
+      <span>Setup complete</span>
+      <b id="prog-pct">0%</b>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <div class="save-row">
+      <div class="save-dot" id="save-dot"></div>
+      <span class="save-label" id="save-label">All data saved locally</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MAIN AREA
+══════════════════════════════════════════════════════════════════════ -->
+<div class="main">
+
+<!-- ────────────────────────────────────────────────────────────────────
+     STEP 1: API Keys
+──────────────────────────────────────────────────────────────────── -->
+<section class="step-panel active" id="step-1">
+  <div class="step-header">
+    <div class="step-tag">Step 1 of 6</div>
+    <h1 class="step-title">API Keys &amp; Accounts</h1>
+    <p class="step-desc">All keys stay in your browser only. They appear in Step 6 as GitHub Secrets — never written to any file you share or commit to a repo.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="card-icon">🔑</span> Service Credentials</div>
+    </div>
+    <div class="key-grid">
+
+      <div class="key-row">
+        <div>
+          <div class="key-name">ANTHROPIC_API_KEY</div>
+          <div class="key-where"><a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys</div>
+          <div class="key-price paid">~$15/mo for 20 sites</div>
+        </div>
+        <div class="input-wrap">
+          <input type="password" class="fi" id="key-anthropic" placeholder="sk-ant-api03-..." data-req="1" oninput="onKeyInput(this,'st-anthropic')">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="togglePw('key-anthropic')" title="Show/hide">👁</button>
+        </div>
+        <div class="key-status st-empty" id="st-anthropic">Empty</div>
+      </div>
+
+      <div class="key-row">
+        <div>
+          <div class="key-name">PEXELS_API_KEY</div>
+          <div class="key-where"><a href="https://www.pexels.com/api/" target="_blank">pexels.com/api</a> → Get Started</div>
+          <div class="key-price free">Free</div>
+        </div>
+        <div class="input-wrap">
+          <input type="password" class="fi" id="key-pexels" placeholder="Your Pexels API key" data-req="1" oninput="onKeyInput(this,'st-pexels')">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="togglePw('key-pexels')" title="Show/hide">👁</button>
+        </div>
+        <div class="key-status st-empty" id="st-pexels">Empty</div>
+      </div>
+
+      <div class="key-row">
+        <div>
+          <div class="key-name">GITHUB_TOKEN</div>
+          <div class="key-where">GitHub → Settings → Developer settings → PAT (needs <code style="font-size:10px;color:var(--accent2)">repo</code> scope)</div>
+          <div class="key-price free">Free</div>
+        </div>
+        <div class="input-wrap">
+          <input type="password" class="fi" id="key-github-token" placeholder="ghp_..." data-req="1" oninput="onKeyInput(this,'st-github-token')">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="togglePw('key-github-token')" title="Show/hide">👁</button>
+        </div>
+        <div class="key-status st-empty" id="st-github-token">Empty</div>
+      </div>
+
+      <div class="key-row">
+        <div>
+          <div class="key-name">GITHUB_USERNAME</div>
+          <div class="key-where">Your GitHub handle (e.g. <em>johnsmith</em>)</div>
+          <div class="key-price free">Free</div>
+        </div>
+        <div class="input-wrap">
+          <input type="text" class="fi" id="key-github-user" placeholder="your-github-handle" data-req="1" oninput="onKeyInput(this,'st-github-user')">
+        </div>
+        <div class="key-status st-empty" id="st-github-user">Empty</div>
+      </div>
+
+      <div class="key-row">
+        <div>
+          <div class="key-name">BREVO_API_KEY</div>
+          <div class="key-where"><a href="https://www.brevo.com" target="_blank">brevo.com</a> → Settings → API Keys (300 emails/day free)</div>
+          <div class="key-price free">Free</div>
+        </div>
+        <div class="input-wrap">
+          <input type="password" class="fi" id="key-brevo" placeholder="xkeysib-..." data-req="1" oninput="onKeyInput(this,'st-brevo')">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="togglePw('key-brevo')" title="Show/hide">👁</button>
+        </div>
+        <div class="key-status st-empty" id="st-brevo">Empty</div>
+      </div>
+
+      <div class="key-row">
+        <div>
+          <div class="key-name">TELEGRAM_BOT_TOKEN</div>
+          <div class="key-where">@BotFather on Telegram → /newbot → copy token</div>
+          <div class="key-price free">Free</div>
+        </div>
+        <div class="input-wrap">
+          <input type="password" class="fi" id="key-tg-token" placeholder="1234567890:ABC..." data-req="1" oninput="onKeyInput(this,'st-tg-token')">
+          <button class="btn btn-ghost btn-icon btn-sm" onclick="togglePw('key-tg-token')" title="Show/hide">👁</button>
+        </div>
+        <div class="key-status st-empty" id="st-tg-token">Empty</div>
+      </div>
+
+      <div class="key-row">
+        <div>
+          <div class="key-name">TELEGRAM_CHAT_ID</div>
+          <div class="key-where">api.telegram.org/bot{TOKEN}/getUpdates after first message to your bot</div>
+          <div class="key-price free">Free</div>
+        </div>
+        <div class="input-wrap">
+          <input type="text" class="fi" id="key-tg-chat" placeholder="-100123456789" data-req="1" oninput="onKeyInput(this,'st-tg-chat')">
+        </div>
+        <div class="key-status st-empty" id="st-tg-chat">Empty</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="cost-card">
+    <div class="card-title"><span class="card-icon">💰</span> Estimated Monthly Cost</div>
+    <div class="cost-rows">
+      <div class="cost-row"><span>Claude API (1 article/day × 20 sites × avg token cost)</span><b>~$0.75/site/mo</b></div>
+      <div class="cost-row"><span>Total for all 20 sites</span><b style="color:var(--accent2)">~$15/month</b></div>
+      <div class="cost-row"><span>Pexels (stock images)</span><b style="color:var(--green)">Free</b></div>
+      <div class="cost-row"><span>GitHub (repos + Actions)</span><b style="color:var(--green)">Free</b></div>
+      <div class="cost-row"><span>Cloudflare Pages (hosting)</span><b style="color:var(--green)">Free</b></div>
+      <div class="cost-row"><span>Brevo (300 emails/day)</span><b style="color:var(--green)">Free</b></div>
+      <div class="cost-row"><span>Telegram notifications</span><b style="color:var(--green)">Free</b></div>
+      <div class="cost-row cost-total"><span>Total monthly outlay</span><span>~$15/month</span></div>
+    </div>
+    <div class="cost-note">💡 Cheapest content operation at this scale. One coffee per site per month.</div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────────────
+     STEP 2: Global Settings
+──────────────────────────────────────────────────────────────────── -->
+<section class="step-panel" id="step-2">
+  <div class="step-header">
+    <div class="step-tag">Step 2 of 6</div>
+    <h1 class="step-title">Global Network Settings</h1>
+    <p class="step-desc">These settings apply to all 20 sites. Individual sites can override the writing prompt in Step 3.</p>
+  </div>
+
+  <!-- Card 1: Network Identity -->
+  <div class="card">
+    <div class="card-title"><span class="card-icon">🌐</span> Network Identity</div>
+    <div class="form-grid" style="margin-top:0">
+      <div class="form-group">
+        <label class="form-label">Network Name</label>
+        <input type="text" class="form-input" id="g-network-name" placeholder="Trading &amp; Finance Network" oninput="schedSave()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Network Tagline</label>
+        <input type="text" class="form-input" id="g-network-tagline" placeholder="Daily insights from experts" oninput="schedSave()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contact Email</label>
+        <input type="email" class="form-input" id="g-contact-email" placeholder="hello@yournetwork.com" oninput="schedSave()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Daily Publish Time <small>(UTC)</small></label>
+        <select class="form-select" id="g-publish-time" onchange="schedSave()">
+          <option value="06:00">06:00 UTC</option>
+          <option value="07:00">07:00 UTC</option>
+          <option value="08:00" selected>08:00 UTC</option>
+          <option value="09:00">09:00 UTC</option>
+          <option value="10:00">10:00 UTC</option>
+          <option value="11:00">11:00 UTC</option>
+          <option value="12:00">12:00 UTC</option>
+          <option value="13:00">13:00 UTC</option>
+          <option value="14:00">14:00 UTC</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Articles per Site per Day</label>
+        <select class="form-select" id="g-articles-per-day" onchange="schedSave()">
+          <option value="1" selected>1 article</option>
+          <option value="2">2 articles</option>
+          <option value="3">3 articles</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cross-links per Article</label>
+        <select class="form-select" id="g-crosslinks" onchange="schedSave()">
+          <option value="0">0 — none</option>
+          <option value="1" selected>1 — light</option>
+          <option value="2">2 — moderate</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Global Writing Prompt -->
+  <div class="card">
+    <div class="card-title"><span class="card-icon">✍️</span> Global Writing Prompt</div>
+    <div class="prompt-box">
+      <div class="prompt-box-head">
+        <span class="prompt-box-head-title">Global Writing Prompt</span>
+        <button class="btn btn-ghost btn-xs" onclick="resetGlobalPrompt()">↺ Reset to default</button>
+      </div>
+      <textarea id="g-prompt" oninput="schedSave()"></textarea>
+    </div>
+    <div class="form-hint" style="margin-top:8px">This prompt is injected before every article generation. Individual sites can override it completely in Step 3 → Content tab.</div>
+  </div>
+
+  <!-- Card 3: SEO & Cross-linking -->
+  <div class="card">
+    <div class="card-title"><span class="card-icon">🔗</span> SEO &amp; Cross-linking</div>
+    <div class="info-box info-accent">
+      <b>Cross-linking boosts all sites in the network.</b> Each article will naturally mention 1–2 related sites from your network. Over 20 sites × 6 months = thousands of mutual backlinks. Google treats this as editorial links from topically related domains — one of the strongest signals for domain authority.
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────────────
+     STEP 3: Configure All 20 Sites
+──────────────────────────────────────────────────────────────────── -->
+<section class="step-panel" id="step-3">
+  <div class="step-header">
+    <div class="step-tag">Step 3 of 6</div>
+    <h1 class="step-title">Configure All 20 Sites</h1>
+    <p class="step-desc">Each site can have its own domain, niche, design, and content persona. The first 3 are pre-configured as examples — expand them to explore all options.</p>
+  </div>
+
+  <div class="sites-toolbar">
+    <span class="sites-counter">Sites configured: <b id="sites-configured-count">3</b>/20</span>
+    <button class="btn btn-primary btn-sm" onclick="addSite()">+ Add Site</button>
+    <span class="toolbar-spacer"></span>
+    <button class="btn btn-ghost btn-sm" onclick="expandAll()">Expand All</button>
+    <button class="btn btn-ghost btn-sm" onclick="collapseAll()">Collapse All</button>
+  </div>
+
+  <div class="sites-accordions" id="sites-list">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="sec-sep">Empty Slots (click to add)</div>
+  <div class="empty-slots" id="empty-slots-grid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────────────
+     STEP 4: Preview Designs
+──────────────────────────────────────────────────────────────────── -->
+<section class="step-panel" id="step-4">
+  <div class="step-header">
+    <div class="step-tag">Step 4 of 6</div>
+    <h1 class="step-title">Preview Designs</h1>
+    <p class="step-desc">Preview your dashboard and site templates live. Files open locally — make sure they exist in the same folder as this launcher.</p>
+  </div>
+
+  <div class="preview-tabs">
+    <button class="preview-tab-btn active" onclick="switchPreviewTab('pd','btn-pd')" id="btn-pd">Preview Dashboard</button>
+    <button class="preview-tab-btn" onclick="switchPreviewTab('ps','btn-ps')" id="btn-ps">Preview Site Designs</button>
+    <button class="preview-tab-btn" onclick="switchPreviewTab('of','btn-of')" id="btn-of">Open All Files</button>
+  </div>
+
+  <div class="preview-panel active" id="ppanel-pd">
+    <div class="frame-shell">
+      <div class="frame-bar">
+        <div class="tl-group"><div class="tl r"></div><div class="tl y"></div><div class="tl g"></div></div>
+        <div class="frame-url">dashboard.html</div>
+        <button class="btn btn-ghost btn-xs" onclick="window.open('dashboard.html','_blank')">↗ Open</button>
+      </div>
+      <iframe class="frame-iframe" src="dashboard.html" id="frame-dashboard"></iframe>
+    </div>
+  </div>
+
+  <div class="preview-panel" id="ppanel-ps">
+    <div class="frame-shell">
+      <div class="frame-bar">
+        <div class="tl-group"><div class="tl r"></div><div class="tl y"></div><div class="tl g"></div></div>
+        <div class="frame-url">site-template.html</div>
+        <button class="btn btn-ghost btn-xs" onclick="window.open('site-template.html','_blank')">↗ Open</button>
+      </div>
+      <iframe class="frame-iframe" src="site-template.html" id="frame-site"></iframe>
+    </div>
+  </div>
+
+  <div class="preview-panel" id="ppanel-of">
+    <div class="open-all-bar">
+      <p>Open all project files at once in new browser tabs.</p>
+      <button class="btn btn-primary btn-sm" onclick="openAllFiles()">Open All 5 Files →</button>
+    </div>
+    <div class="file-cards-grid">
+      <div class="file-card">
+        <div class="file-card-icon">🚀</div>
+        <div class="file-card-name">launcher.html</div>
+        <div class="file-card-desc">This file — the master setup launcher. Configure everything here before deploying.</div>
+        <button class="btn btn-ghost btn-sm" onclick="window.open('launcher.html','_blank')">Open ↗</button>
+      </div>
+      <div class="file-card">
+        <div class="file-card-icon">📊</div>
+        <div class="file-card-name">dashboard.html</div>
+        <div class="file-card-desc">Live monitoring dashboard showing article counts, errors, and per-site stats.</div>
+        <button class="btn btn-ghost btn-sm" onclick="window.open('dashboard.html','_blank')">Open ↗</button>
+      </div>
+      <div class="file-card">
+        <div class="file-card-icon">🎨</div>
+        <div class="file-card-name">site-template.html</div>
+        <div class="file-card-desc">Base HTML template used by the bot to generate all 20 sites. Edit to customize global layout.</div>
+        <button class="btn btn-ghost btn-sm" onclick="window.open('site-template.html','_blank')">Open ↗</button>
+      </div>
+      <div class="file-card">
+        <div class="file-card-icon">🤖</div>
+        <div class="file-card-name">bot.py</div>
+        <div class="file-card-desc">Main content bot — reads network-config.json and generates + publishes articles via GitHub API.</div>
+        <button class="btn btn-ghost btn-sm" onclick="window.open('bot.py','_blank')">View ↗</button>
+      </div>
+      <div class="file-card">
+        <div class="file-card-icon">📬</div>
+        <div class="file-card-name">telegram_bot.py</div>
+        <div class="file-card-desc">Notification layer — posts run summaries, errors, and article links to your Telegram chat.</div>
+        <button class="btn btn-ghost btn-sm" onclick="window.open('telegram_bot.py','_blank')">View ↗</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────────────
+     STEP 5: Network Map
+──────────────────────────────────────────────────────────────────── -->
+<section class="step-panel" id="step-5">
+  <div class="step-header">
+    <div class="step-tag">Step 5 of 6</div>
+    <h1 class="step-title">Network Map</h1>
+    <p class="step-desc">Visual representation of your content network. Lines = cross-links. Thicker = more links. Backlinks are added automatically by the bot and this map updates when you refresh.</p>
+  </div>
+
+  <div class="map-wrap card" style="padding:0;margin-bottom:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)">
+      <div class="card-title" style="margin-bottom:0"><span class="card-icon">🗺️</span> Live Network Topology</div>
+      <button class="btn btn-ghost btn-sm" onclick="drawMap()">↺ Refresh Map</button>
+    </div>
+    <div class="map-canvas-wrap">
+      <canvas id="map-canvas"></canvas>
+    </div>
+    <div class="map-legend">
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:#7c6fec"></span> Dark theme</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:#38bdf8"></span> Light theme</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:#3ecf8e"></span> Minimal theme</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:#f59e0b"></span> Bold theme</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:#a99ef5"></span> Elegant theme</span>
+      <span style="flex:1"></span>
+      <span class="map-legend-item" style="font-size:10px;color:var(--text3)">Line thickness = cross-link strength</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="card-icon">📋</span> Backlink Stats (Projected)</div>
+    <div class="info-box info-green" style="margin-bottom:14px">
+      Backlinks are added automatically by the bot. Each article cites 1–2 related network sites. Over 6 months across 20 sites × 1 article/day = <b>3,600+ mutual backlinks</b>.
+    </div>
+    <div style="overflow-x:auto">
+      <table class="backlink-table" id="backlink-table">
+        <thead>
+          <tr>
+            <th>Source Site</th>
+            <th>Links To</th>
+            <th>Est. Links (6mo)</th>
+            <th>Strength</th>
+          </tr>
+        </thead>
+        <tbody id="backlink-tbody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────────────
+     STEP 6: Export & Deploy
+──────────────────────────────────────────────────────────────────── -->
+<section class="step-panel" id="step-6">
+  <div class="step-header">
+    <div class="step-tag">Step 6 of 6</div>
+    <h1 class="step-title">Export &amp; Deploy</h1>
+    <p class="step-desc">Generate your <code style="font-size:12px;color:var(--accent2);background:var(--bg3);padding:2px 6px;border-radius:4px">network-config.json</code>, add GitHub Secrets, and you're live.</p>
+  </div>
+
+  <!-- Card 1: Download config -->
+  <div class="card">
+    <div class="card-title"><span class="card-icon">📄</span> network-config.json</div>
+    <div class="export-preview" id="export-preview">// Click "Generate Config" to preview your configuration JSON</div>
+    <div class="export-actions">
+      <button class="btn btn-primary" onclick="generateConfig()">⚙ Generate Config</button>
+      <button class="btn btn-green" id="btn-download-json" onclick="downloadJSON()" disabled>↓ Download JSON</button>
+      <button class="btn btn-ghost" id="btn-copy-json" onclick="copyJSON()" disabled>⎘ Copy to Clipboard</button>
+    </div>
+    <div class="form-hint" style="margin-top:10px">Place <code style="font-size:10px;color:var(--accent2)">network-config.json</code> in your bot repo root alongside <code style="font-size:10px;color:var(--accent2)">bot.py</code>. The bot reads it automatically on every run.</div>
+  </div>
+
+  <!-- Card 2: GitHub Secrets -->
+  <div class="card">
+    <div class="card-title"><span class="card-icon">🔐</span> GitHub Secrets Checklist</div>
+    <div class="info-box info-amber" style="margin-bottom:14px">
+      Add these as secrets in your <b>bot repo</b>: repo → Settings → Secrets and variables → Actions → New repository secret
+    </div>
+    <table class="secrets-table">
+      <thead>
+        <tr>
+          <th>Secret Name</th>
+          <th>Value</th>
+          <th>Copy</th>
+          <th>Done</th>
+        </tr>
+      </thead>
+      <tbody id="secrets-tbody">
+        <!-- populated by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card 3: Deploy steps -->
+  <div class="card">
+    <div class="card-title"><span class="card-icon">🚀</span> Deployment Checklist</div>
+    <div class="deploy-steps">
+      <div class="deploy-step">
+        <div class="deploy-step-n">1</div>
+        <div class="deploy-step-text">
+          <div class="deploy-step-title">Create the bot GitHub repository</div>
+          <div class="deploy-step-desc">One repo for <code style="font-size:10px;color:var(--accent2)">bot.py</code>, <code style="font-size:10px;color:var(--accent2)">telegram_bot.py</code>, and <code style="font-size:10px;color:var(--accent2)">network-config.json</code>. Name it something like <em>content-network-bot</em>.</div>
+        </div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-step-n">2</div>
+        <div class="deploy-step-text">
+          <div class="deploy-step-title">Create one GitHub repo per site (20 repos)</div>
+          <div class="deploy-step-desc">Each site repo will hold generated HTML. Name them to match the domains in your config (e.g. <em>cryptoinsights-site</em>).</div>
+        </div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-step-n">3</div>
+        <div class="deploy-step-text">
+          <div class="deploy-step-title">Connect each site repo to Cloudflare Pages</div>
+          <div class="deploy-step-desc">Cloudflare Pages → Create project → Connect GitHub → select repo → auto-deploy on every push. Completely free.</div>
+        </div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-step-n">4</div>
+        <div class="deploy-step-text">
+          <div class="deploy-step-title">Add custom domains in Cloudflare</div>
+          <div class="deploy-step-desc">Each Pages project → Custom domains → add your domain. Update DNS CNAME to <code style="font-size:10px;color:var(--accent2)">your-project.pages.dev</code>.</div>
+        </div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-step-n">5</div>
+        <div class="deploy-step-text">
+          <div class="deploy-step-title">Add all 7 GitHub Secrets to the bot repo</div>
+          <div class="deploy-step-desc">Use the checklist in the card above. Each secret must be added individually — no bulk import available.</div>
+        </div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-step-n">6</div>
+        <div class="deploy-step-text">
+          <div class="deploy-step-title">Drop network-config.json in the bot repo</div>
+          <div class="deploy-step-desc">Download from Step 6 above and commit it. This is the only non-secret configuration file the bot needs.</div>
+        </div>
+      </div>
+      <div class="deploy-step">
+        <div class="deploy-step-n">7</div>
+        <div class="deploy-step-text">
+          <div class="deploy-step-title">Push all files and trigger the first run</div>
+          <div class="deploy-step-desc">Push bot.py, telegram_bot.py, and network-config.json to main. The GitHub Action will fire automatically at your configured publish time. Watch Telegram for the first notification.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Cost summary -->
+  <div class="card">
+    <div class="card-title"><span class="card-icon">💸</span> Running Cost Summary</div>
+    <table class="cost-summary-table">
+      <thead>
+        <tr><th>Service</th><th>Usage</th><th>Cost/Month</th><th>Tier</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Anthropic Claude API</td>
+          <td>1 article/day × 20 sites × ~$0.75 avg</td>
+          <td>~$15.00</td>
+          <td><span class="cost-tag paid">Paid</span></td>
+        </tr>
+        <tr>
+          <td>Pexels API (stock photos)</td>
+          <td>Unlimited requests</td>
+          <td>$0</td>
+          <td><span class="cost-tag free">Free</span></td>
+        </tr>
+        <tr>
+          <td>GitHub Repos + Actions</td>
+          <td>21 repos, 2,000 min/mo Actions</td>
+          <td>$0</td>
+          <td><span class="cost-tag free">Free</span></td>
+        </tr>
+        <tr>
+          <td>Cloudflare Pages</td>
+          <td>Unlimited sites + bandwidth</td>
+          <td>$0</td>
+          <td><span class="cost-tag free">Free</span></td>
+        </tr>
+        <tr>
+          <td>Brevo Email</td>
+          <td>300 emails/day</td>
+          <td>$0</td>
+          <td><span class="cost-tag free">Free</span></td>
+        </tr>
+        <tr>
+          <td>Telegram Notifications</td>
+          <td>Unlimited</td>
+          <td>$0</td>
+          <td><span class="cost-tag free">Free</span></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2"><b>Total Monthly Cost</b></td>
+          <td><b>~$15.00/mo</b></td>
+          <td><b>20 sites</b></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── FULL STEP-BY-STEP DEPLOYMENT GUIDE ── -->
+  <div class="card" style="margin-top:20px">
+    <div class="card-title"><span class="card-icon">📖</span> Complete Deployment Guide — From Zero to Live Network</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Follow these steps exactly in order. Each step depends on the previous one. Estimated total setup time: 2–4 hours for a full 20-site network.</div>
+
+    <div style="display:flex;flex-direction:column;gap:0">
+
+      <!-- Phase 1 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">1</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Register Your Domains</div><div style="font-size:12px;color:var(--text2)">One domain per site — do this first</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          <b style="color:var(--text)">Recommended registrars (cheapest to most expensive):</b><br>
+          • <b>Porkbun</b> — Best prices, clean UI. Most .com domains ~$9-11/yr. Great for bulk registration.<br>
+          • <b>Namecheap</b> — Reliable, good dashboard, includes WhoisGuard privacy free.<br>
+          • <b>GoDaddy</b> — More expensive, but familiar if you're already there.<br><br>
+          <b style="color:var(--text)">What to register:</b><br>
+          • For each of your 20 sites, register a .com domain that matches the niche (e.g. <code style="color:var(--accent2)">cryptoinsightsreport.com</code>)<br>
+          • Avoid hyphens — they look spammy to Google<br>
+          • Choose short, memorable names with keywords from the site's category<br><br>
+          <b style="color:var(--text)">After registering:</b> Copy all 20 domain names into Step 3 of this launcher (Configure Network Sites → Basic tab for each site).
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">2</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Set Up Cloudflare (Free)</div><div style="font-size:12px;color:var(--text2)">DNS + CDN + Pages hosting — all free</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          <b style="color:var(--text)">Create a free Cloudflare account</b> at cloudflare.com<br><br>
+          <b style="color:var(--text)">For EACH domain:</b><br>
+          1. Cloudflare dashboard → <b>Add a Site</b> → enter your domain → select <b>Free plan</b><br>
+          2. Cloudflare scans your existing DNS records — click <b>Continue</b><br>
+          3. Cloudflare gives you <b>2 nameservers</b> (e.g. <code style="color:var(--accent2)">blake.ns.cloudflare.com</code>)<br>
+          4. Go to your registrar (Porkbun/Namecheap) → find the domain → change nameservers to the Cloudflare ones<br>
+          5. Back in Cloudflare, click <b>Done, check nameservers</b><br>
+          6. Wait 5-30 minutes for DNS to propagate (usually fast with Porkbun/Namecheap)<br><br>
+          <b style="color:var(--accent2)">Tip:</b> You can batch this — add all 20 domains to Cloudflare, change nameservers at the registrar for all 20, then come back to check status. Saves a lot of back-and-forth.
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">3</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Create GitHub Repositories</div><div style="font-size:12px;color:var(--text2)">1 bot repo + 1 repo per site = 21 total</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          <b style="color:var(--text)">Sign in to GitHub</b> (github.com). Create a free account if needed.<br><br>
+          <b style="color:var(--text)">Create the BOT repository (the engine):</b><br>
+          1. New repository → name it <code style="color:var(--accent2)">content-network-bot</code> → set to <b>Private</b> → Create<br>
+          2. Upload these files from your computer: <code style="color:var(--accent2)">bot.py</code>, <code style="color:var(--accent2)">telegram_bot.py</code>, <code style="color:var(--accent2)">requirements.txt</code>, <code style="color:var(--accent2)">network-config.json</code><br>
+          3. Also upload the <code style="color:var(--accent2)">.github/workflows/</code> folder (which contains <code style="color:var(--accent2)">daily-post.yml</code> and <code style="color:var(--accent2)">weekly-ideas.yml</code>)<br><br>
+          <b style="color:var(--text)">Create ONE repository per site (20 repos):</b><br>
+          1. Name each repo to match the domain slug (e.g. <code style="color:var(--accent2)">cryptoinsights-site</code>)<br>
+          2. Set to <b>Public</b> (required for Cloudflare Pages free tier)<br>
+          3. Initialize with a README (just click the checkbox — you'll replace it)<br>
+          4. Enter the exact repo name (username/reponame) in this launcher's Step 3 for each site<br><br>
+          <b style="color:var(--text)">Create a Personal Access Token (PAT):</b><br>
+          1. GitHub → Settings (top-right) → Developer settings → Personal access tokens → Tokens (classic)<br>
+          2. Generate new token → name it "Content Network Bot" → Expiration: 1 year<br>
+          3. Scopes: check <b>repo</b> (full control of repos) — that's all you need<br>
+          4. Copy the token immediately — paste it into Step 1 of this launcher (GitHub Token field). You won't see it again.
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">4</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Connect Sites to Cloudflare Pages</div><div style="font-size:12px;color:var(--text2)">Free hosting with auto-deploy on every push</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          <b style="color:var(--text)">For EACH of your 20 site repos:</b><br>
+          1. Cloudflare dashboard → <b>Pages</b> (left sidebar) → <b>Create a project</b><br>
+          2. Select <b>Connect to Git</b> → authorize GitHub → select the site's repo<br>
+          3. Build settings: <b>Framework preset = None</b> — leave build command and output directory empty<br>
+          4. Click <b>Save and Deploy</b> — Cloudflare deploys immediately<br>
+          5. Your site is now live at <code style="color:var(--accent2)">your-repo-name.pages.dev</code><br><br>
+          <b style="color:var(--text)">Connect your custom domain:</b><br>
+          1. In the Pages project → <b>Custom domains</b> → <b>Set up a custom domain</b><br>
+          2. Enter your domain (e.g. <code style="color:var(--accent2)">cryptoinsights.com</code>)<br>
+          3. Cloudflare automatically creates the DNS CNAME record (since your domain is already on Cloudflare)<br>
+          4. Wait 1-2 minutes → your domain now points to Cloudflare Pages<br><br>
+          <b style="color:var(--accent2)">Tip:</b> Every time the bot pushes new HTML to the GitHub repo, Cloudflare Pages auto-deploys within 30 seconds. Zero maintenance required.
+        </div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">5</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Get All API Keys</div><div style="font-size:12px;color:var(--text2)">Anthropic + Pexels + Brevo + Telegram</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          <b style="color:var(--text)">Anthropic (Claude API) — REQUIRED:</b><br>
+          • console.anthropic.com → API Keys → Create Key → paste into Step 1 of this launcher<br>
+          • Add a payment method. Cost: ~$0.50-1.00 per day for 20 sites at 1 article each<br><br>
+          <b style="color:var(--text)">Pexels (Stock Photos) — FREE:</b><br>
+          • pexels.com/api → Request Access → get API key → paste into Step 1<br>
+          • 200 requests/hour free — more than enough<br><br>
+          <b style="color:var(--text)">Brevo (Newsletter Email) — FREE:</b><br>
+          • brevo.com → Sign up free → Settings → API Keys → Generate → paste into Step 1<br>
+          • Create a separate contact list for each site in Brevo → get the list ID → enter in Step 3 per-site Basic tab<br>
+          • 300 free emails/day across all lists<br><br>
+          <b style="color:var(--text)">Telegram Bot (Weekly Ideas) — FREE:</b><br>
+          • Open Telegram → search <code style="color:var(--accent2)">@BotFather</code> → send <code style="color:var(--accent2)">/newbot</code> → follow prompts → get your bot token<br>
+          • Start a chat with your new bot → send any message → visit <code style="color:var(--accent2)">api.telegram.org/bot{YOUR_TOKEN}/getUpdates</code> to find your chat ID<br>
+          • Paste both token and chat ID into Step 1 of this launcher
+        </div>
+      </div>
+
+      <!-- Phase 6 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">6</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Configure This Launcher (Steps 1–5)</div><div style="font-size:12px;color:var(--text2)">Fill out all settings, then generate your config</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          1. <b style="color:var(--text)">Step 1</b> — Paste all 7 API keys. They stay in your browser only, never saved to any file.<br>
+          2. <b style="color:var(--text)">Step 2</b> — Set your network name, global writing prompt (the big one all sites inherit), and publishing frequency.<br>
+          3. <b style="color:var(--text)">Step 3</b> — Configure each of your 20 sites: domain, GitHub repo (format: <code style="color:var(--accent2)">username/reponame</code>), category, design, persona, topics, and author names.<br>
+          4. <b style="color:var(--text)">Step 4</b> — Preview what the dashboard and sample designs look like.<br>
+          5. <b style="color:var(--text)">Step 5</b> — Check the network map and backlink projection table.<br>
+          6. <b style="color:var(--text)">Step 6</b> (here) — Click <b>Generate Config</b> → <b>Download JSON</b>. This creates your <code style="color:var(--accent2)">network-config.json</code> file.
+        </div>
+      </div>
+
+      <!-- Phase 7 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">7</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Push Files to Bot Repository</div><div style="font-size:12px;color:var(--text2)">Upload everything to GitHub</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          Upload these files to your <code style="color:var(--accent2)">content-network-bot</code> GitHub repo:<br>
+          • <code style="color:var(--accent2)">bot.py</code> — the main publishing engine<br>
+          • <code style="color:var(--accent2)">telegram_bot.py</code> — weekly idea generator<br>
+          • <code style="color:var(--accent2)">requirements.txt</code> — Python dependencies<br>
+          • <code style="color:var(--accent2)">network-config.json</code> — your config from Step 6 of this launcher<br>
+          • <code style="color:var(--accent2)">.github/workflows/daily-post.yml</code> — the daily publishing schedule<br>
+          • <code style="color:var(--accent2)">.github/workflows/weekly-ideas.yml</code> — Monday topic ideas via Telegram<br><br>
+          <b style="color:var(--text)">Via GitHub web UI (easiest):</b><br>
+          1. Open your repo → click <b>Add file</b> → <b>Upload files</b><br>
+          2. Drag all files including the <code style="color:var(--accent2)">.github</code> folder<br>
+          3. Commit directly to main<br><br>
+          <b style="color:var(--text)">Via Git CLI (faster for updates):</b><br>
+          <code style="color:var(--accent2);background:var(--bg4);padding:4px 8px;border-radius:4px;display:inline-block">git add . && git commit -m "Initial deploy" && git push</code>
+        </div>
+      </div>
+
+      <!-- Phase 8 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">8</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Add GitHub Secrets to Bot Repo</div><div style="font-size:12px;color:var(--text2)">The bot reads these at runtime — never commit them as files</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          In your <code style="color:var(--accent2)">content-network-bot</code> repo:<br>
+          → <b>Settings</b> → <b>Secrets and variables</b> → <b>Actions</b> → <b>New repository secret</b><br><br>
+          Add each secret one at a time:
+          <table style="width:100%;border-collapse:collapse;margin-top:10px">
+            <tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:6px 8px;font-size:12px;color:var(--text3)">Secret Name</th><th style="text-align:left;padding:6px 8px;font-size:12px;color:var(--text3)">Where to get it</th></tr>
+            <tr style="border-bottom:1px solid var(--border2)"><td style="padding:6px 8px"><code style="color:var(--accent2)">ANTHROPIC_API_KEY</code></td><td style="padding:6px 8px;color:var(--text2)">console.anthropic.com → API Keys</td></tr>
+            <tr style="border-bottom:1px solid var(--border2)"><td style="padding:6px 8px"><code style="color:var(--accent2)">PEXELS_API_KEY</code></td><td style="padding:6px 8px;color:var(--text2)">pexels.com/api</td></tr>
+            <tr style="border-bottom:1px solid var(--border2)"><td style="padding:6px 8px"><code style="color:var(--accent2)">GITHUB_TOKEN</code></td><td style="padding:6px 8px;color:var(--text2)">Your PAT from Step 3 above</td></tr>
+            <tr style="border-bottom:1px solid var(--border2)"><td style="padding:6px 8px"><code style="color:var(--accent2)">BREVO_API_KEY</code></td><td style="padding:6px 8px;color:var(--text2)">brevo.com → Settings → API Keys (optional)</td></tr>
+            <tr style="border-bottom:1px solid var(--border2)"><td style="padding:6px 8px"><code style="color:var(--accent2)">TELEGRAM_BOT_TOKEN</code></td><td style="padding:6px 8px;color:var(--text2)">From @BotFather (optional)</td></tr>
+            <tr><td style="padding:6px 8px"><code style="color:var(--accent2)">TELEGRAM_CHAT_ID</code></td><td style="padding:6px 8px;color:var(--text2)">From getUpdates API call (optional)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Phase 9 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">9</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Trigger the First Run &amp; Verify</div><div style="font-size:12px;color:var(--text2)">Don't wait until 8am UTC — test it now</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          <b style="color:var(--text)">Trigger manually from GitHub:</b><br>
+          1. Bot repo → <b>Actions</b> tab → select <b>Daily Content Publisher</b><br>
+          2. Click <b>Run workflow</b> → <b>Run workflow</b> (green button)<br>
+          3. Watch the run logs expand in real time — you'll see each site being processed<br><br>
+          <b style="color:var(--text)">What success looks like:</b><br>
+          • Each site shows "Article pushed: True → /slug/" in the logs<br>
+          • Your GitHub site repos now have <code style="color:var(--accent2)">index.html</code>, <code style="color:var(--accent2)">articles.json</code>, and a slug folder<br>
+          • Cloudflare Pages auto-deploys within ~30 seconds<br>
+          • Visit your domain — the site is live with the first article<br><br>
+          <b style="color:var(--text)">If something fails:</b><br>
+          • Check the Actions log for the exact error message<br>
+          • Most common issue: wrong repo format in config (must be <code style="color:var(--accent2)">username/reponame</code> — no URL, no .git)<br>
+          • Second most common: GitHub token doesn't have <code style="color:var(--accent2)">repo</code> scope — regenerate with correct permissions
+        </div>
+      </div>
+
+      <!-- Phase 10 -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px">
+        <div style="background:var(--bg3);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">10</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">Adding New Sites Going Forward</div><div style="font-size:12px;color:var(--text2)">Expanding the network is easy</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          1. Register the new domain → add to Cloudflare → create a GitHub repo for it<br>
+          2. Connect the new repo to Cloudflare Pages (same process as Step 4)<br>
+          3. Come back to this launcher → Step 3 → click the "+" slot to add the site<br>
+          4. Fill in domain, repo, persona, topics — same as any other site<br>
+          5. Generate Config again → download the new <code style="color:var(--accent2)">network-config.json</code><br>
+          6. Upload the new JSON to your bot repo (it overwrites the old one)<br>
+          7. The bot picks up the new site on the next run automatically<br><br>
+          <b style="color:var(--text)">No code changes required</b> — the bot reads the config file, so adding a site is entirely config-driven.
+        </div>
+      </div>
+
+      <!-- Phase 11 — What's Next -->
+      <div style="border:1px solid var(--accent);border-radius:10px;overflow:hidden;background:var(--glow)">
+        <div style="background:rgba(200,150,60,0.1);padding:14px 18px;display:flex;align-items:center;gap:12px">
+          <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">★</div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--text)">What's Next — Scaling &amp; SEO</div><div style="font-size:12px;color:var(--accent2)">After your first week of publishing</div></div>
+        </div>
+        <div style="padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8">
+          <b style="color:var(--text)">Submit sitemaps to Google:</b><br>
+          Each site auto-generates <code style="color:var(--accent2)">sitemap.xml</code>. Submit each at search.google.com/search-console → Add property → each domain → Sitemaps → <code style="color:var(--accent2)">https://yourdomain.com/sitemap.xml</code><br><br>
+          <b style="color:var(--text)">Monitor cross-link growth:</b><br>
+          The Dashboard backlinks tab shows a matrix of which sites link to which. After 30 days you should see 20-30+ cross-links per site.<br><br>
+          <b style="color:var(--text)">Add Telegram editorial control:</b><br>
+          Every Monday at 9am UTC, the bot sends 20 article ideas to your Telegram. Reply with the idea numbers (e.g. "1 4 7 12 16") to queue those articles. Reply "Auto" to let the bot pick the best 7 automatically.<br><br>
+          <b style="color:var(--text)">Scale to more sites:</b><br>
+          The system handles up to 20 active sites per run within GitHub Actions' free 2,000 minutes/month. Beyond 20, consider upgrading to GitHub Pro or splitting into 2 bot repos.<br><br>
+          <b style="color:var(--text)">Newsletter growth:</b><br>
+          Add subscription forms to each site using Brevo's free embeddable forms. When readers subscribe, they're added to that site's Brevo list and receive every future article by email automatically.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Bottom nav bar -->
+<div class="bottom-bar">
+  <div>
+    <div class="bottom-step" id="bottom-step-label">Step 1 of 6</div>
+  </div>
+  <div class="bottom-btns">
+    <button class="btn btn-ghost" id="btn-prev" onclick="prevStep()" style="display:none">← Previous</button>
+    <button class="btn btn-primary" id="btn-next" onclick="nextStep()">Next Step →</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="page-footer">
+  © 2026 Kavalsia Inc. All Rights Reserved. [Siavash Sadighi]
+</div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  CONSTANTS & DEFAULTS
+// ═══════════════════════════════════════════════════════════════════
+
+const DEFAULT_PROMPT = `Write every article as a knowledgeable human expert, not an AI assistant.
+
+VOICE RULES — follow without exception:
+• Use contractions: it's, don't, can't, we're, they've, I'd
+• Mix sentence lengths dramatically. Short ones punch. Longer ones let you build a point.
+• Begin 2-3 sentences per article with "And", "But", or "So"
+• Use specific numbers confidently: "around 73%", "typically under $400"
+• Hedge naturally: "arguably", "in most cases", "at least from what I've seen"
+• Reference the author persona's direct experience at least once per article
+
+FORBIDDEN PHRASES (these signal AI content):
+delve into • it's worth noting • in the realm of • game-changing • harness the power
+leverage (as metaphor) • navigate the landscape • cutting-edge • multifaceted • utilize
+
+STRUCTURE:
+• Hook the reader in the first two sentences — no slow warmups
+• Each article ends with one clear, practical takeaway
+• Don't summarise what you're about to say — just say it`;
+
+const SAMPLE_TOPICS = {
+  crypto: ["Bitcoin halving cycles explained for first-timers","Why altcoin season doesn't work the way Reddit thinks","DeFi yield farming: what the ROI calculators don't show you","Hardware wallets vs exchange custody — the real tradeoffs","How to read an on-chain chart without getting fooled","Layer 2 scaling: Arbitrum vs Optimism from a user's view","NFT floor prices and what they actually mean","Stablecoin risks most people overlook","Crypto tax reporting — what triggers an audit","The case for and against 10% of your portfolio in crypto"],
+  finance: ["Index fund myths that cost passive investors money","The 4% withdrawal rule — why it's being revised","Why most stock screeners produce terrible results","Margin accounts: when leverage helps and when it destroys","Dividend reinvestment — the math over 20 years","Building a three-fund portfolio without overthinking it","How to read a balance sheet in under 10 minutes","Dollar-cost averaging vs lump-sum — the data","Emergency fund size: the real answer depends on your income type","Real estate vs stocks: honest 30-year comparison"],
+  tech: ["Why most developers misunderstand API rate limits","The 5 SQL mistakes that kill production performance","CI/CD pipeline design for small teams","Docker best practices nobody told you in the tutorials","When microservices hurt more than they help","TypeScript strict mode — what each flag actually does","Building an internal tool: what not to over-engineer","CORS errors explained without the hand-waving","Git rebase vs merge — the team workflow question","Monitoring your app without drowning in alerts"]
+};
+
+const LAYOUT_OPTIONS = [
+  {id:'newsfeed',icon:'📰',name:'Newsfeed',desc:'Tight rows, scannable'},
+  {id:'magazine',icon:'📖',name:'Magazine',desc:'Rich cards, visual'},
+  {id:'editorial',icon:'✍️',name:'Editorial',desc:'Clean, text-first'},
+  {id:'grid',icon:'⊞',name:'Grid',desc:'Uniform card grid'},
+  {id:'minimal',icon:'◻',name:'Minimal',desc:'Pure whitespace'}
+];
+const ARTICLE_LAYOUTS = [
+  {id:'sidebar',icon:'◫',name:'Sidebar',desc:'TOC on the side'},
+  {id:'standard',icon:'▭',name:'Standard',desc:'Full-width body'},
+  {id:'wide',icon:'⬛',name:'Wide',desc:'Max-width content'},
+  {id:'minimal',icon:'▬',name:'Minimal',desc:'No distractions'},
+  {id:'magazine',icon:'◪',name:'Magazine',desc:'Pull quotes + hero'}
+];
+const THEME_OPTIONS = [
+  {id:'dark',name:'Dark',color:'#1e1e35'},
+  {id:'light',name:'Light',color:'#f8f8ff'},
+  {id:'minimal',name:'Minimal',color:'#3ecf8e'},
+  {id:'bold',name:'Bold',color:'#f59e0b'},
+  {id:'elegant',name:'Elegant',color:'#a99ef5'}
+];
+
+const STEP_LABELS = ['API Keys & Accounts','Global Settings','Configure Network Sites','Preview Designs','Network Map','Export & Deploy'];
+const TOTAL_STEPS = 6;
+
+// ═══════════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════════
+
+let currentStep = 1;
+let saveTimer = null;
+let configJSON = null;
+
+const defaultSites = [
+  {
+    id:1,slug:'crypto-insights',domain:'cryptoinsights.com',category:'Cryptocurrency',
+    githubRepo:'',brevoListId:'',active:true,
+    layout:'newsfeed',articleLayout:'sidebar',theme:'dark',designPrompt:'Dark, high-contrast news feel. Electric blue accents on black. Dense information layout with clear timestamp chips and category badges.',
+    persona:'Alex Chen — crypto analyst with 8 years trading experience. Direct, data-driven, skeptical of hype.',
+    writingVoice:'Fast-paced, technical but accessible. Uses analogies from traditional finance to explain crypto. Never hypes — always contextualises.',
+    ignoreGlobal:false,sitePrompt:'',
+    topics:'Bitcoin price analysis\nAltcoin deep dives\nDeFi protocol reviews\nOn-chain analytics\nExchange comparisons\nCrypto regulation news\nNFT market updates\nLayer 2 solutions\nStablecoin mechanics\nCrypto tax strategies'
+  },
+  {
+    id:2,slug:'passive-wealth',domain:'passivewealthguide.com',category:'Personal Finance',
+    githubRepo:'',brevoListId:'',active:true,
+    layout:'magazine',articleLayout:'standard',theme:'light',designPrompt:'Warm, aspirational feel. Light cream backgrounds, forest green accents. Premium magazine aesthetic — think Monocle meets personal finance.',
+    persona:'Sarah Milligan — former financial advisor turned independent writer. Practical, approachable, allergic to jargon.',
+    writingVoice:'Conversational and encouraging. Uses real numbers, real scenarios. Makes complex concepts feel achievable. Occasional dry humour.',
+    ignoreGlobal:false,sitePrompt:'',
+    topics:'Index fund investing\nPassive income streams\nBudget optimization\nEarly retirement planning\nDividend investing\nReal estate investment trusts\nTax-efficient investing\nEmergency fund strategies\nDebt payoff methods\nNetworth tracking'
+  },
+  {
+    id:3,slug:'trading-tech',domain:'tradingtechreview.com',category:'Trading Technology',
+    githubRepo:'',brevoListId:'',active:true,
+    layout:'editorial',articleLayout:'minimal',theme:'minimal',designPrompt:'Clean, minimal, almost clinical. White space is the luxury. Monospace font accents for data. Green-on-white for go signals.',
+    persona:'Marcus Webb — quantitative trader turned tech reviewer. Analytical, precise, values evidence over anecdote.',
+    writingVoice:'Technical precision without being alienating. Gets into specifics — actual code, actual numbers. Cuts marketing speak ruthlessly.',
+    ignoreGlobal:false,sitePrompt:'',
+    topics:'Trading platform reviews\nAlgorithmic trading basics\nAPI integration guides\nBacktesting frameworks\nRisk management tools\nChartting software comparisons\nBroker fee analysis\nOrder type explanations\nScreener tool reviews\nTrading journal methods'
+  }
+];
+
+// Live state
+const state = {
+  keys: {},
+  global: {
+    networkName:'',networkTagline:'',contactEmail:'',
+    publishTime:'08:00',articlesPerDay:1,crosslinks:1,
+    prompt: DEFAULT_PROMPT
+  },
+  sites: JSON.parse(JSON.stringify(defaultSites))
+};
+
+// ═══════════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadFromStorage();
+  document.getElementById('g-prompt').value = state.global.prompt || DEFAULT_PROMPT;
+  renderSites();
+  renderEmptySlots();
+  renderSecrets();
+  updateProgress();
+  goto(1);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════════════
+
+function goto(n) {
+  if(n < 1 || n > TOTAL_STEPS) return;
+  currentStep = n;
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('step-'+n);
+  if(panel) panel.classList.add('active');
+  const btn = document.getElementById('sb-'+n);
+  if(btn) btn.classList.add('active');
+  document.getElementById('bottom-step-label').textContent = 'Step '+n+' of '+TOTAL_STEPS+' — '+STEP_LABELS[n-1];
+  document.getElementById('btn-prev').style.display = n === 1 ? 'none' : 'inline-flex';
+  document.getElementById('btn-next').textContent = n === TOTAL_STEPS ? '✓ Done' : 'Next Step →';
+  if(n === 5) { setTimeout(drawMap, 100); setTimeout(buildBacklinkTable, 100); }
+  if(n === 6) renderSecrets();
+}
+
+function nextStep() {
+  if(currentStep < TOTAL_STEPS) goto(currentStep + 1);
+}
+function prevStep() {
+  if(currentStep > 1) goto(currentStep - 1);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  SAVE / LOAD
+// ═══════════════════════════════════════════════════════════════════
+
+function schedSave() {
+  const dot = document.getElementById('save-dot');
+  const lbl = document.getElementById('save-label');
+  dot.classList.add('saving');
+  lbl.textContent = 'Saving…';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 500);
+}
+
+function doSave() {
+  // Collect global fields
+  state.global.networkName = v('g-network-name');
+  state.global.networkTagline = v('g-network-tagline');
+  state.global.contactEmail = v('g-contact-email');
+  state.global.publishTime = v('g-publish-time');
+  state.global.articlesPerDay = parseInt(v('g-articles-per-day')) || 1;
+  state.global.crosslinks = parseInt(v('g-crosslinks')) || 1;
+  state.global.prompt = v('g-prompt');
+  // Collect keys
+  ['anthropic','pexels','github-token','github-user','brevo','tg-token','tg-chat'].forEach(k => {
+    state.keys[k] = v('key-'+k);
+  });
+  localStorage.setItem('cn_state', JSON.stringify({keys:state.keys, global:state.global, sites:state.sites}));
+  const dot = document.getElementById('save-dot');
+  const lbl = document.getElementById('save-label');
+  dot.classList.remove('saving');
+  lbl.textContent = 'All data saved locally';
+  updateProgress();
+}
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem('cn_state');
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    if(saved.keys) Object.assign(state.keys, saved.keys);
+    if(saved.global) Object.assign(state.global, saved.global);
+    if(saved.sites && saved.sites.length) state.sites = saved.sites;
+    // Apply to DOM
+    const g = state.global;
+    setv('g-network-name', g.networkName);
+    setv('g-network-tagline', g.networkTagline);
+    setv('g-contact-email', g.contactEmail);
+    setv('g-publish-time', g.publishTime);
+    setv('g-articles-per-day', g.articlesPerDay);
+    setv('g-crosslinks', g.crosslinks);
+    // Keys
+    const kmap = {anthropic:'key-anthropic',pexels:'key-pexels','github-token':'key-github-token','github-user':'key-github-user',brevo:'key-brevo','tg-token':'key-tg-token','tg-chat':'key-tg-chat'};
+    Object.entries(kmap).forEach(([k, domId]) => {
+      if(state.keys[k]) { setv(domId, state.keys[k]); updateKeyStatus(domId, 'st-'+k); }
+    });
+  } catch(e) { console.warn('Load error', e); }
+}
+
+function v(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function setv(id, val) { const el = document.getElementById(id); if(el && val !== undefined && val !== null) el.value = val; }
+
+// ═══════════════════════════════════════════════════════════════════
+//  PROGRESS
+// ═══════════════════════════════════════════════════════════════════
+
+function updateProgress() {
+  const keyIds = ['anthropic','pexels','github-token','github-user','brevo','tg-token','tg-chat'];
+  let filled = 0;
+  let total = keyIds.length + 3; // keys + 3 global fields
+  keyIds.forEach(k => { if(state.keys[k] && state.keys[k].trim()) filled++; });
+  if(state.global.networkName && state.global.networkName.trim()) filled++;
+  if(state.global.contactEmail && state.global.contactEmail.trim()) filled++;
+  if(state.sites.length >= 3) filled++;
+  const pct = Math.round((filled/total)*100);
+  document.getElementById('prog-pct').textContent = pct+'%';
+  document.getElementById('prog-fill').style.width = pct+'%';
+  // Mark sidebar steps done
+  markDone(1, keyIds.filter(k => state.keys[k] && state.keys[k].trim()).length >= 4);
+  markDone(2, state.global.networkName && state.global.contactEmail);
+  markDone(3, state.sites.length >= 5);
+  markDone(4, true);
+  markDone(5, true);
+  markDone(6, configJSON !== null);
+}
+
+function markDone(n, cond) {
+  const sb = document.getElementById('sb-'+n);
+  const tk = document.getElementById('tk-'+n);
+  if(!sb) return;
+  if(cond) { sb.classList.add('done'); if(tk) tk.style.opacity = '1'; }
+  else { sb.classList.remove('done'); if(tk) tk.style.opacity = '0'; }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  API KEY HANDLERS
+// ═══════════════════════════════════════════════════════════════════
+
+function onKeyInput(el, statusId) {
+  updateKeyStatus(el.id, statusId);
+  schedSave();
+}
+
+function updateKeyStatus(inputId, statusId) {
+  const val = document.getElementById(inputId)?.value || '';
+  const el = document.getElementById(statusId);
+  if(!el) return;
+  if(val.trim()) {
+    el.className = 'key-status st-set';
+    el.textContent = '✓ Set';
+  } else {
+    el.className = 'key-status st-empty';
+    el.textContent = 'Empty';
+  }
+}
+
+function togglePw(id) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  GLOBAL PROMPT
+// ═══════════════════════════════════════════════════════════════════
+
+function resetGlobalPrompt() {
+  if(!confirm('Reset the global prompt to the default? Your edits will be lost.')) return;
+  document.getElementById('g-prompt').value = DEFAULT_PROMPT;
+  state.global.prompt = DEFAULT_PROMPT;
+  schedSave();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  SITES
+// ═══════════════════════════════════════════════════════════════════
+
+function renderSites() {
+  const list = document.getElementById('sites-list');
+  list.innerHTML = '';
+  state.sites.forEach((s, i) => {
+    list.appendChild(buildAccordion(s, i));
+  });
+  updateSiteCount();
+  renderEmptySlots();
+}
+
+function updateSiteCount() {
+  const el = document.getElementById('sites-configured-count');
+  if(el) el.textContent = state.sites.length;
+}
+
+function addSite(preData) {
+  const id = state.sites.length + 1;
+  const site = preData || {
+    id, slug:'site-'+id, domain:'', category:'', githubRepo:'', brevoListId:'', active:true,
+    layout:'newsfeed', articleLayout:'standard', theme:'dark', designPrompt:'',
+    persona:'', writingVoice:'', ignoreGlobal:false, sitePrompt:'', topics:''
+  };
+  state.sites.push(site);
+  renderSites();
+  schedSave();
+  // Open the new accordion
+  setTimeout(() => {
+    const acc = document.querySelectorAll('.site-accordion');
+    const last = acc[acc.length-1];
+    if(last && !last.classList.contains('open')) last.querySelector('.site-acc-head').click();
+    last && last.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 50);
+}
+
+function removeSite(idx) {
+  if(!confirm('Remove site "'+state.sites[idx].domain+'"? This cannot be undone.')) return;
+  state.sites.splice(idx, 1);
+  state.sites.forEach((s,i) => s.id = i+1);
+  renderSites();
+  schedSave();
+}
+
+function expandAll() {
+  document.querySelectorAll('.site-accordion').forEach(a => a.classList.add('open'));
+}
+function collapseAll() {
+  document.querySelectorAll('.site-accordion').forEach(a => a.classList.remove('open'));
+}
+
+function buildAccordion(site, idx) {
+  const div = document.createElement('div');
+  div.className = 'site-accordion' + (idx < 3 ? '' : '');
+  div.id = 'acc-'+idx;
+
+  const isOpen = idx < 1;
+  if(isOpen) div.classList.add('open');
+
+  const themeColor = THEME_OPTIONS.find(t => t.id === site.theme)?.color || '#7c6fec';
+
+  div.innerHTML = `
+    <div class="site-acc-head" onclick="toggleAccordion(${idx})">
+      <div class="site-num-badge">${site.id}</div>
+      <div class="site-info">
+        <div class="site-domain">${site.domain || 'Untitled Site'}</div>
+        <div class="site-cat">${site.category || 'No category set'}</div>
+        <div class="site-mini-badges">
+          <span class="mb mb-layout">${site.layout}</span>
+          <span class="mb mb-theme" style="border-color:${themeColor}44;color:${themeColor}">${site.theme}</span>
+          ${site.ignoreGlobal ? '<span class="mb mb-override">Custom prompt</span>' : ''}
+          ${site.active ? '<span class="mb mb-active">Active</span>' : '<span class="mb" style="border-color:#ef444444;color:#ef4444">Paused</span>'}
+        </div>
+      </div>
+      <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();removeSite(${idx})" style="margin-right:8px">✕</button>
+      <span class="site-chevron">▶</span>
+    </div>
+    <div class="site-acc-body">
+      ${buildSiteTabs(site, idx)}
+    </div>`;
+
+  return div;
+}
+
+function toggleAccordion(idx) {
+  const acc = document.getElementById('acc-'+idx);
+  if(acc) acc.classList.toggle('open');
+}
+
+function buildSiteTabs(site, idx) {
+  return `
+    <div class="site-tabs">
+      <button class="site-tab active" id="stab-${idx}-basic" onclick="switchSiteTab(${idx},'basic')">Basic</button>
+      <button class="site-tab" id="stab-${idx}-design" onclick="switchSiteTab(${idx},'design')">Design</button>
+      <button class="site-tab" id="stab-${idx}-content" onclick="switchSiteTab(${idx},'content')">Content</button>
+      <button class="site-tab" id="stab-${idx}-topics" onclick="switchSiteTab(${idx},'topics')">Topics</button>
+    </div>
+    ${buildBasicTab(site, idx)}
+    ${buildDesignTab(site, idx)}
+    ${buildContentTab(site, idx)}
+    ${buildTopicsTab(site, idx)}
+  `;
+}
+
+function switchSiteTab(idx, tab) {
+  ['basic','design','content','topics'].forEach(t => {
+    const btn = document.getElementById('stab-'+idx+'-'+t);
+    const panel = document.getElementById('sp-'+idx+'-'+t);
+    if(btn) btn.classList.toggle('active', t === tab);
+    if(panel) panel.classList.toggle('active', t === tab);
+  });
+}
+
+function buildBasicTab(site, idx) {
+  const chk = site.active ? 'checked' : '';
+  return `<div class="site-tab-panel active" id="sp-${idx}-basic">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Domain</label>
+        <input type="text" class="fi" value="${esc(site.domain)}" placeholder="example.com" oninput="updateSiteField(${idx},'domain',this.value)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category / Niche</label>
+        <input type="text" class="fi" value="${esc(site.category)}" placeholder="Cryptocurrency, Finance…" oninput="updateSiteField(${idx},'category',this.value)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">GitHub Repo <small>(site repo name)</small></label>
+        <input type="text" class="fi" value="${esc(site.githubRepo)}" placeholder="my-crypto-site" oninput="updateSiteField(${idx},'githubRepo',this.value)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Brevo List ID <small>(for subscribers)</small></label>
+        <input type="text" class="fi" value="${esc(site.brevoListId)}" placeholder="12" oninput="updateSiteField(${idx},'brevoListId',this.value)">
+      </div>
+    </div>
+    <div style="margin-top:14px;display:flex;align-items:center;gap:10px">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text2)">
+        <input type="checkbox" ${chk} onchange="updateSiteField(${idx},'active',this.checked)" style="width:16px;height:16px;accent-color:var(--accent)">
+        Site is <b style="color:var(--text)">Active</b> — bot will publish to this site on schedule
+      </label>
+    </div>
+  </div>`;
+}
+
+function buildDesignTab(site, idx) {
+  const layoutCards = LAYOUT_OPTIONS.map(l => `
+    <div class="layout-card ${site.layout===l.id?'selected':''}" onclick="updateSiteField(${idx},'layout','${l.id}');document.querySelectorAll('#sp-${idx}-design .layout-cards .layout-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
+      <div class="layout-card-icon">${l.icon}</div>
+      <span class="layout-card-name">${l.name}</span>
+      <span class="layout-card-desc">${l.desc}</span>
+    </div>`).join('');
+
+  const articleCards = ARTICLE_LAYOUTS.map(l => `
+    <div class="layout-card ${site.articleLayout===l.id?'selected':''}" onclick="updateSiteField(${idx},'articleLayout','${l.id}');document.querySelectorAll('#sp-${idx}-design .article-layout-cards .layout-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">
+      <div class="layout-card-icon">${l.icon}</div>
+      <span class="layout-card-name">${l.name}</span>
+      <span class="layout-card-desc">${l.desc}</span>
+    </div>`).join('');
+
+  const swatches = THEME_OPTIONS.map(t => `
+    <div class="theme-swatch ${site.theme===t.id?'selected':''}" onclick="updateSiteField(${idx},'theme','${t.id}');document.querySelectorAll('#sp-${idx}-design .theme-swatches .theme-swatch').forEach(s=>s.classList.remove('selected'));this.classList.add('selected')">
+      <div class="swatch-dot" style="background:${t.color}"></div>
+      <span class="swatch-name">${t.name}</span>
+    </div>`).join('');
+
+  return `<div class="site-tab-panel" id="sp-${idx}-design">
+    <div>
+      <div class="form-label" style="margin-bottom:8px">Homepage Layout</div>
+      <div class="layout-cards">${layoutCards}</div>
+    </div>
+    <div>
+      <div class="form-label" style="margin-bottom:8px">Article Layout</div>
+      <div class="layout-cards article-layout-cards">${articleCards}</div>
+    </div>
+    <div>
+      <div class="form-label" style="margin-bottom:8px">Color Theme</div>
+      <div class="theme-swatches">${swatches}</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Design Prompt <small>(visual style direction for AI image selection)</small></label>
+      <textarea class="fi form-textarea" rows="3" placeholder="Describe the visual style, mood, and imagery for this site…" oninput="updateSiteField(${idx},'designPrompt',this.value)">${esc(site.designPrompt)}</textarea>
+    </div>
+  </div>`;
+}
+
+function buildContentTab(site, idx) {
+  const overrideOn = site.ignoreGlobal ? 'on' : '';
+  const checkMark = site.ignoreGlobal ? '✓' : '';
+  return `<div class="site-tab-panel" id="sp-${idx}-content">
+    <div class="form-group">
+      <label class="form-label">Author Persona</label>
+      <input type="text" class="fi" value="${esc(site.persona)}" placeholder="e.g. Alex Chen — crypto analyst with 8 years trading experience" oninput="updateSiteField(${idx},'persona',this.value)">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Writing Voice / Tone</label>
+      <textarea class="fi form-textarea" rows="3" placeholder="Describe how this author writes — pace, style, what they avoid…" oninput="updateSiteField(${idx},'writingVoice',this.value)">${esc(site.writingVoice)}</textarea>
+    </div>
+    <div>
+      <div class="override-row ${overrideOn}" id="override-row-${idx}" onclick="toggleOverride(${idx})">
+        <div class="toggle-knob" id="override-knob-${idx}">${checkMark}</div>
+        <div class="override-row-text">🔒 Ignore Global Prompt — use a fully custom prompt for this site only</div>
+      </div>
+      <div id="override-inline-${idx}" style="display:${site.ignoreGlobal?'block':'none'};margin-top:10px">
+        <div class="prompt-box">
+          <div class="prompt-box-head">
+            <span class="prompt-box-head-title">Custom Prompt for This Site Only</span>
+            <button class="btn btn-ghost btn-xs" onclick="prefillSitePrompt(${idx})">↩ Prefill from global</button>
+          </div>
+          <textarea id="site-prompt-${idx}" oninput="updateSiteField(${idx},'sitePrompt',this.value)" style="border:none;border-radius:0;background:transparent;width:100%;padding:16px;color:var(--text);font-size:13px;line-height:1.75;resize:vertical;min-height:220px;outline:none">${esc(site.sitePrompt || state.global.prompt || DEFAULT_PROMPT)}</textarea>
+        </div>
+      </div>
+      <div id="override-info-${idx}" style="display:${site.ignoreGlobal?'none':'block'}">
+        <div class="info-box info-accent" style="margin-top:8px">
+          Using global prompt + site-specific additions below. Toggle above to write a fully custom prompt for this site.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="additions-label-${idx}">${site.ignoreGlobal ? 'Additional Instructions (appended after custom prompt)' : 'Site-Specific Additions (appended after global prompt)'}</label>
+      <textarea class="fi form-textarea" rows="4" id="site-additions-${idx}" placeholder="Any extra instructions specific to this site…" oninput="updateSiteField(${idx},'siteAdditions',this.value)">${esc(site.siteAdditions||'')}</textarea>
+    </div>
+    <div class="form-group" style="border-top:1px solid var(--border);margin-top:16px;padding-top:16px">
+      <label class="form-label">Author Names <small>(one per line — rotated across posts)</small></label>
+      <textarea class="fi form-textarea" rows="4" id="author-names-${idx}" placeholder="Marcus Chen&#10;Alex Rivera&#10;Jordan Kim" oninput="updateSiteField(${idx},'authorNames',this.value)">${esc((site.authorNames||[]).join ? (site.authorNames||[]).join('\n') : (site.authorNames||''))}</textarea>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:var(--text2);cursor:pointer">
+        <input type="checkbox" ${site.useRandomAuthor ? 'checked' : ''} onchange="updateSiteField(${idx},'useRandomAuthor',this.checked)" style="accent-color:var(--accent)">
+        Use a different random author name for every post
+      </label>
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <label class="form-label">Publish Date Mode</label>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);cursor:pointer">
+          <input type="radio" name="date-mode-${idx}" value="today" ${(site.dateMode||'today')==='today'?'checked':''} onchange="updateSiteField(${idx},'dateMode',this.value)" style="accent-color:var(--accent)">
+          Today's real date (default)
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);cursor:pointer">
+          <input type="radio" name="date-mode-${idx}" value="distributed" ${site.dateMode==='distributed'?'checked':''} onchange="updateSiteField(${idx},'dateMode',this.value)" style="accent-color:var(--accent)">
+          Distribute posts across the past
+          <input type="number" value="${site.dateSpanYears||3}" min="1" max="10" style="width:50px;padding:2px 6px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:12px" oninput="updateSiteField(${idx},'dateSpanYears',parseInt(this.value)||3)">
+          years
+        </label>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildTopicsTab(site, idx) {
+  const catKey = site.category.toLowerCase().includes('crypt') ? 'crypto' :
+                 site.category.toLowerCase().includes('tech') ? 'tech' : 'finance';
+  return `<div class="site-tab-panel" id="sp-${idx}-topics">
+    <div class="form-group">
+      <label class="form-label">Topics Seed List <small>(one per line — bot uses these to generate article titles)</small></label>
+      <textarea class="fi form-textarea" rows="12" id="topics-ta-${idx}" placeholder="Bitcoin halving cycles\nDeFi yield farming risks\nLayer 2 scaling explained" oninput="updateSiteField(${idx},'topics',this.value)">${esc(site.topics)}</textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="btn btn-info btn-sm" onclick="generateTopicIdeas(${idx},'${catKey}')">✨ Generate 10 Ideas with AI</button>
+      <span style="font-size:11px;color:var(--text3)">Click a generated idea to add it to your list</span>
+    </div>
+    <div class="ideas-output" id="ideas-output-${idx}">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">Click any idea to append it to your topics list →</div>
+      <ul id="ideas-list-${idx}"></ul>
+    </div>
+  </div>`;
+}
+
+function toggleOverride(idx) {
+  const site = state.sites[idx];
+  if(!site) return;
+  site.ignoreGlobal = !site.ignoreGlobal;
+  const row = document.getElementById('override-row-'+idx);
+  const knob = document.getElementById('override-knob-'+idx);
+  const inline = document.getElementById('override-inline-'+idx);
+  const info = document.getElementById('override-info-'+idx);
+  const label = document.getElementById('additions-label-'+idx);
+  if(row) row.classList.toggle('on', site.ignoreGlobal);
+  if(knob) knob.textContent = site.ignoreGlobal ? '✓' : '';
+  if(inline) inline.style.display = site.ignoreGlobal ? 'block' : 'none';
+  if(info) info.style.display = site.ignoreGlobal ? 'none' : 'block';
+  if(label) label.textContent = site.ignoreGlobal ? 'Additional Instructions (appended after custom prompt)' : 'Site-Specific Additions (appended after global prompt)';
+  // Prefill if empty
+  if(site.ignoreGlobal) {
+    const ta = document.getElementById('site-prompt-'+idx);
+    if(ta && !ta.value.trim()) {
+      ta.value = state.global.prompt || DEFAULT_PROMPT;
+      site.sitePrompt = ta.value;
+    }
+  }
+  schedSave();
+}
+
+function prefillSitePrompt(idx) {
+  const ta = document.getElementById('site-prompt-'+idx);
+  if(ta) {
+    ta.value = state.global.prompt || DEFAULT_PROMPT;
+    updateSiteField(idx, 'sitePrompt', ta.value);
+  }
+}
+
+function updateSiteField(idx, field, value) {
+  if(state.sites[idx]) {
+    state.sites[idx][field] = value;
+    // Update header badge live for domain/category/layout/theme
+    const acc = document.getElementById('acc-'+idx);
+    if(acc) {
+      const domainEl = acc.querySelector('.site-domain');
+      const catEl = acc.querySelector('.site-cat');
+      if(domainEl && field === 'domain') domainEl.textContent = value || 'Untitled Site';
+      if(catEl && field === 'category') catEl.textContent = value || 'No category set';
+    }
+    schedSave();
+  }
+}
+
+function generateTopicIdeas(idx, catKey) {
+  const out = document.getElementById('ideas-output-'+idx);
+  const list = document.getElementById('ideas-list-'+idx);
+  if(!out || !list) return;
+  const pool = SAMPLE_TOPICS[catKey] || SAMPLE_TOPICS.finance;
+  const shuffled = pool.slice().sort(() => Math.random()-0.5).slice(0,10);
+  list.innerHTML = shuffled.map(idea => `<li onclick="appendTopic(${idx},'${esc(idea)}')">${idea}</li>`).join('');
+  out.style.display = 'block';
+}
+
+function appendTopic(idx, idea) {
+  const ta = document.getElementById('topics-ta-'+idx);
+  if(!ta) return;
+  const cur = ta.value.trim();
+  ta.value = cur ? cur+'\n'+idea : idea;
+  updateSiteField(idx, 'topics', ta.value);
+}
+
+function renderEmptySlots() {
+  const grid = document.getElementById('empty-slots-grid');
+  if(!grid) return;
+  const used = state.sites.length;
+  const remaining = Math.max(0, 20 - used);
+  grid.innerHTML = '';
+  for(let i = 0; i < remaining; i++) {
+    const n = used + i + 1;
+    const slot = document.createElement('div');
+    slot.className = 'empty-slot';
+    slot.innerHTML = `<div class="empty-slot-n">Site ${n}</div><div class="empty-slot-plus">+</div><div class="empty-slot-label">Click to add</div>`;
+    slot.onclick = () => addSite();
+    grid.appendChild(slot);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  PREVIEW TABS
+// ═══════════════════════════════════════════════════════════════════
+
+function switchPreviewTab(panelId, btnId) {
+  document.querySelectorAll('.preview-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.preview-tab-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('ppanel-'+panelId);
+  const btn = document.getElementById(btnId);
+  if(panel) panel.classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+function openAllFiles() {
+  ['dashboard.html','site-template.html','bot.py','telegram_bot.py'].forEach(f => window.open(f,'_blank'));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  NETWORK MAP (Canvas)
+// ═══════════════════════════════════════════════════════════════════
+
+function drawMap() {
+  const canvas = document.getElementById('map-canvas');
+  if(!canvas) return;
+  const wrap = canvas.parentElement;
+  canvas.width = wrap.offsetWidth;
+  canvas.height = wrap.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const sites = state.sites;
+  if(!sites.length) { ctx.fillStyle='#8888bb'; ctx.font='14px Inter,sans-serif'; ctx.textAlign='center'; ctx.fillText('No sites configured yet',W/2,H/2); return; }
+
+  const themeColors = { dark:'#7c6fec', light:'#38bdf8', minimal:'#3ecf8e', bold:'#f59e0b', elegant:'#a99ef5' };
+  const N = Math.min(sites.length, 20);
+  const cx = W/2, cy = H/2;
+  const radius = Math.min(W, H) * 0.36;
+
+  // Calculate positions in a circle
+  const nodes = sites.slice(0, N).map((s, i) => {
+    const angle = (i / N) * Math.PI * 2 - Math.PI/2;
+    return {
+      x: cx + radius * Math.cos(angle),
+      y: cy + radius * Math.sin(angle),
+      site: s,
+      color: themeColors[s.theme] || '#7c6fec'
+    };
+  });
+
+  // Draw connections (cross-links)
+  const crosslinks = parseInt(state.global.crosslinks) || 1;
+  if(crosslinks > 0) {
+    nodes.forEach((n, i) => {
+      // connect to a few neighbors
+      for(let j = 1; j <= Math.min(crosslinks + 1, N-1); j++) {
+        const target = nodes[(i + j) % N];
+        ctx.beginPath();
+        ctx.moveTo(n.x, n.y);
+        ctx.lineTo(target.x, target.y);
+        ctx.strokeStyle = n.color + '33';
+        ctx.lineWidth = crosslinks;
+        ctx.stroke();
+      }
+    });
+  }
+
+  // Draw nodes
+  nodes.forEach((n, i) => {
+    const r = 26;
+    // Glow
+    const grad = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r*2);
+    grad.addColorStop(0, n.color+'55');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r*2, 0, Math.PI*2);
+    ctx.fill();
+
+    // Node circle
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI*2);
+    ctx.fillStyle = '#0f0f1c';
+    ctx.fill();
+    ctx.strokeStyle = n.color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Index
+    ctx.fillStyle = n.color;
+    ctx.font = 'bold 11px Inter,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n.site.id, n.x, n.y);
+
+    // Label
+    const label = n.site.domain ? n.site.domain.replace(/\.(com|net|io|org)$/,'') : 'site-'+n.site.id;
+    const shortLabel = label.length > 14 ? label.slice(0,13)+'…' : label;
+    ctx.fillStyle = '#8888bb';
+    ctx.font = '10px Inter,sans-serif';
+    ctx.textBaseline = 'top';
+
+    // Position label outside the circle
+    const angle = (i / N) * Math.PI * 2 - Math.PI/2;
+    const lx = cx + (radius + 44) * Math.cos(angle);
+    const ly = cy + (radius + 44) * Math.sin(angle);
+    ctx.fillText(shortLabel, lx, ly - 5);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  BACKLINK TABLE
+// ═══════════════════════════════════════════════════════════════════
+
+function buildBacklinkTable() {
+  const tbody = document.getElementById('backlink-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  const sites = state.sites.slice(0, 20);
+  const cl = parseInt(state.global.crosslinks) || 1;
+  const apd = parseInt(state.global.articlesPerDay) || 1;
+  const daysIn6mo = 182;
+  const linksPerSite = cl * apd * daysIn6mo;
+
+  sites.forEach((src, i) => {
+    const target = sites[(i+1) % sites.length];
+    if(!src.domain || !target.domain) return;
+    const strength = Math.min(100, Math.round(linksPerSite / 20));
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><code>${src.domain || 'site-'+src.id}</code></td>
+      <td><code>${target.domain || 'site-'+target.id}</code></td>
+      <td><b style="color:var(--accent2)">${linksPerSite.toLocaleString()}</b></td>
+      <td><div class="bar-mini" style="width:${strength}px;height:6px;background:var(--accent);border-radius:3px;opacity:0.7;display:inline-block"></div></td>`;
+    tbody.appendChild(row);
+  });
+  if(!tbody.children.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:20px">Configure at least 2 sites to see backlink projections</td></tr>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════════════════════════════════
+
+function generateConfig() {
+  doSave();
+  const config = {
+    _meta: { generated: new Date().toISOString(), generator: 'Content Network Launcher — Kavalsia Inc.', version: '1.0' },
+    network: {
+      name: state.global.networkName || 'Content Network',
+      tagline: state.global.networkTagline || '',
+      contact_email: state.global.contactEmail || '',
+      publish_time_utc: state.global.publishTime || '08:00',
+      articles_per_site_per_day: parseInt(state.global.articlesPerDay) || 1,
+      crosslinks_per_article: parseInt(state.global.crosslinks) || 1
+    },
+    global_prompt: state.global.prompt || DEFAULT_PROMPT,
+    sites: state.sites.map(s => ({
+      id: s.id,
+      slug: s.slug,
+      domain: s.domain,
+      category: s.category,
+      github_repo: s.githubRepo,
+      brevo_list_id: s.brevoListId,
+      active: s.active,
+      design: {
+        layout: s.layout,
+        article_layout: s.articleLayout,
+        theme: s.theme,
+        design_prompt: s.designPrompt
+      },
+      content: {
+        persona: s.persona,
+        writing_voice: s.writingVoice,
+        ignore_global_prompt: s.ignoreGlobal,
+        site_prompt: s.ignoreGlobal ? (s.sitePrompt || state.global.prompt) : null,
+        site_additions: s.siteAdditions || '',
+        author_names: typeof s.authorNames === 'string' ? s.authorNames.split('\n').filter(Boolean) : (s.authorNames || []),
+        use_random_author: !!s.useRandomAuthor,
+        date_mode: s.dateMode || 'today',
+        date_span_years: s.dateSpanYears || 3,
+        topics: s.topics ? s.topics.split('\n').filter(t => t.trim()) : []
+      }
+    }))
+  };
+  configJSON = JSON.stringify(config, null, 2);
+  document.getElementById('export-preview').textContent = configJSON;
+  document.getElementById('btn-download-json').disabled = false;
+  document.getElementById('btn-copy-json').disabled = false;
+  updateProgress();
+}
+
+function downloadJSON() {
+  if(!configJSON) return;
+  const blob = new Blob([configJSON], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'network-config.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyJSON() {
+  if(!configJSON) return;
+  navigator.clipboard.writeText(configJSON).then(() => {
+    const btn = document.getElementById('btn-copy-json');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('btn-green');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('btn-green'); }, 2000);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  SECRETS TABLE
+// ═══════════════════════════════════════════════════════════════════
+
+const SECRET_DEFS = [
+  {name:'ANTHROPIC_API_KEY', key:'anthropic'},
+  {name:'PEXELS_API_KEY', key:'pexels'},
+  {name:'GITHUB_TOKEN', key:'github-token'},
+  {name:'GITHUB_USERNAME', key:'github-user'},
+  {name:'BREVO_API_KEY', key:'brevo'},
+  {name:'TELEGRAM_BOT_TOKEN', key:'tg-token'},
+  {name:'TELEGRAM_CHAT_ID', key:'tg-chat'},
+];
+
+function renderSecrets() {
+  const tbody = document.getElementById('secrets-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  SECRET_DEFS.forEach((sd, i) => {
+    const val = state.keys[sd.key] || '';
+    const masked = val ? '•'.repeat(Math.min(val.length, 20)) : '(not set)';
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><code>${sd.name}</code></td>
+      <td><span class="secret-val">${masked}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-xs" onclick="copySecret('${sd.key}')" ${val?'':'disabled'}>Copy</button>
+      </td>
+      <td>
+        <div class="secret-check" id="sc-${i}" onclick="this.classList.toggle('checked');this.textContent=this.classList.contains('checked')?'✓':''"></div>
+      </td>`;
+    tbody.appendChild(row);
+  });
+}
+
+function copySecret(key) {
+  const val = state.keys[key];
+  if(!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    // Brief flash feedback handled by button
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  UTIL
+// ═══════════════════════════════════════════════════════════════════
+
+function esc(str) {
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Resize map canvas when window resizes
+window.addEventListener('resize', () => {
+  if(currentStep === 5) drawMap();
+});
+
+</script>
+
+</body>
+</html>
