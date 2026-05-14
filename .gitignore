@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+telegram_state.json
+reddit_state.json
+broadcast.processed.json
+snapshots.json
+changelog.json
+backlinks-tracker.json
+.DS_Store
