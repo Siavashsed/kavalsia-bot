@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kavalsia Network — Platform Guide</title>
+<style>
+  :root {
+    --bg:         #080c09;
+    --bg2:        #0d1410;
+    --bg3:        #111a14;
+    --bg4:        #16221a;
+    --bg5:        #1a2a1f;
+    --text:       #e8f0eb;
+    --text2:      #b8d4c0;
+    --accent:     #3ecf8e;
+    --accent2:    #2eb87d;
+    --border:     #1e3028;
+    --red:        #ef4444;
+    --yellow:     #f59e0b;
+    --blue:       #60a5fa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: radial-gradient(ellipse at 50% 0%, #0d2318 0%, #080c09 65%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── Nav header ── */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,12,9,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 24px; height: 52px;
+  }
+  .topbar img { height: 30px; }
+  .topbar-title { color: var(--text2); font-size: 13px; margin-right: auto; }
+  .nav-pill {
+    padding: 5px 14px; border-radius: 999px; font-size: 13px; font-weight: 500;
+    text-decoration: none; color: var(--text2); transition: all .15s;
+    border: 1px solid transparent;
+  }
+  .nav-pill:hover { color: var(--accent); border-color: var(--border); }
+  .nav-pill.active { background: var(--accent); color: #080c09; }
+
+  /* ── Layout ── */
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; gap: 0; }
+
+  .sidebar {
+    width: 240px; min-width: 240px;
+    position: sticky; top: 52px; height: calc(100vh - 52px);
+    overflow-y: auto; padding: 24px 0;
+    border-right: 1px solid var(--border);
+  }
+  .sidebar-section { margin-bottom: 8px; }
+  .sidebar-label {
+    font-size: 10px; font-weight: 700; letter-spacing: .1em;
+    color: var(--text2); text-transform: uppercase;
+    padding: 8px 20px 4px;
+  }
+  .sidebar a {
+    display: block; padding: 6px 20px;
+    font-size: 13px; color: var(--text2);
+    text-decoration: none; border-left: 2px solid transparent;
+    transition: all .12s;
+  }
+  .sidebar a:hover { color: var(--accent); border-color: var(--accent); background: rgba(62,207,142,.06); }
+  .sidebar a.active { color: var(--accent); border-color: var(--accent); background: rgba(62,207,142,.08); }
+
+  /* ── Content ── */
+  .content { flex: 1; padding: 40px 48px; max-width: 860px; }
+
+  /* ── Typography ── */
+  h1 { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  h2 {
+    font-size: 20px; font-weight: 700; color: var(--text);
+    margin: 48px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 70px;
+  }
+  h3 {
+    font-size: 16px; font-weight: 600; color: var(--accent);
+    margin: 28px 0 10px;
+    scroll-margin-top: 70px;
+  }
+  h4 { font-size: 14px; font-weight: 600; color: var(--text2); margin: 18px 0 6px; }
+  p { color: var(--text2); margin-bottom: 12px; }
+  ul, ol { color: var(--text2); padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 5px; }
+  strong { color: var(--text); font-weight: 600; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Code ── */
+  code {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 6px;
+    font-family: "SF Mono", "Fira Code", Consolas, monospace;
+    font-size: 13px; color: var(--accent);
+  }
+  pre {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px 20px; overflow-x: auto;
+    margin: 12px 0 18px;
+  }
+  pre code {
+    background: none; border: none; padding: 0;
+    color: var(--text); font-size: 13px; line-height: 1.6;
+  }
+
+  /* ── Callouts ── */
+  .callout {
+    border-radius: 8px; padding: 14px 18px; margin: 16px 0;
+    border-left: 3px solid;
+    font-size: 14px;
+  }
+  .callout.info    { background: rgba(96,165,250,.08); border-color: var(--blue); color: #93c5fd; }
+  .callout.warning { background: rgba(245,158,11,.08); border-color: var(--yellow); color: #fcd34d; }
+  .callout.danger  { background: rgba(239,68,68,.08); border-color: var(--red); color: #fca5a5; }
+  .callout.tip     { background: rgba(62,207,142,.08); border-color: var(--accent); color: var(--accent); }
+  .callout strong  { color: inherit; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px 22px; margin: 16px 0;
+  }
+  .card h4 { margin-top: 0; color: var(--text); font-size: 15px; }
+
+  /* ── File tree ── */
+  .file-tree {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 18px 20px;
+    font-family: "SF Mono", "Fira Code", Consolas, monospace;
+    font-size: 13px; line-height: 1.8;
+    color: var(--text2);
+    margin: 12px 0 20px;
+  }
+  .file-tree .dir  { color: var(--accent); font-weight: 600; }
+  .file-tree .note { color: #5a7a65; font-style: italic; }
+
+  /* ── Step list ── */
+  .steps { counter-reset: step-counter; list-style: none; padding: 0; }
+  .steps li {
+    counter-increment: step-counter;
+    position: relative; padding: 0 0 20px 52px; margin-bottom: 0;
+  }
+  .steps li:not(:last-child)::after {
+    content: '';
+    position: absolute; left: 18px; top: 36px; bottom: 0;
+    width: 2px; background: var(--border);
+  }
+  .steps li::before {
+    content: counter(step-counter);
+    position: absolute; left: 0; top: 0;
+    width: 36px; height: 36px;
+    background: var(--accent); color: #080c09;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps li h4 { margin-top: 8px; margin-bottom: 6px; color: var(--text); font-size: 15px; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: .04em;
+    vertical-align: middle; margin-left: 6px;
+  }
+  .badge-green  { background: rgba(62,207,142,.18); color: var(--accent); border: 1px solid rgba(62,207,142,.3); }
+  .badge-yellow { background: rgba(245,158,11,.15); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
+  .badge-red    { background: rgba(239,68,68,.12); color: #ef4444; border: 1px solid rgba(239,68,68,.3); }
+  .badge-blue   { background: rgba(96,165,250,.12); color: #60a5fa; border: 1px solid rgba(96,165,250,.3); }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 13px; }
+  th { text-align: left; padding: 9px 14px; background: var(--bg3); color: var(--text); font-weight: 600; border-bottom: 1px solid var(--border); }
+  td { padding: 9px 14px; color: var(--text2); border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(62,207,142,.03); }
+
+  /* ── Hero ── */
+  .hero { margin-bottom: 40px; }
+  .hero-sub { color: var(--text2); font-size: 16px; margin-top: 8px; }
+  .hero-meta { margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .content { padding: 24px 20px; }
+    .topbar .nav-pill { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top nav ─────────────────────────────────────────────────────────── -->
+<div class="topbar">
+  <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia">
+  <span class="topbar-title">Content Network</span>
+  <a href="launcher.html" class="nav-pill">Setup</a>
+  <a href="hub.html" class="nav-pill">Hub</a>
+  <a href="editor.html" class="nav-pill">Editor</a>
+  <a href="dashboard.html" class="nav-pill">Dashboard</a>
+  <a href="guide.html" class="nav-pill active">Guide</a>
+</div>
+
+<div class="layout">
+
+  <!-- ── Sidebar ──────────────────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <a href="#overview" class="active">What is this?</a>
+      <a href="#files">File structure</a>
+      <a href="#pages">Admin pages</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Setup</div>
+      <a href="#step1">1. Prerequisites</a>
+      <a href="#step2">2. Install dependencies</a>
+      <a href="#step3">3. Set env variables</a>
+      <a href="#step4">4. Configure sites</a>
+      <a href="#step5">5. Start the server</a>
+      <a href="#step6">6. First publish</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Admin Pages</div>
+      <a href="#page-launcher">Launcher (Setup)</a>
+      <a href="#page-hub">Hub</a>
+      <a href="#page-editor">Editor</a>
+      <a href="#page-dashboard">Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Features</div>
+      <a href="#global-prompt">Global AI Prompt</a>
+      <a href="#negative-prompt">Negative Prompt</a>
+      <a href="#global-scripts">Header/Footer Scripts</a>
+      <a href="#affiliate">Affiliate Links</a>
+      <a href="#telegram">Telegram Bot</a>
+      <a href="#github-actions">GitHub Actions</a>
+      <a href="#web-search">Web Search</a>
+      <a href="#indexing">Google Indexing</a>
+      <a href="#analytics">Cloudflare Analytics</a>
+      <a href="#social">Social Broadcast</a>
+      <a href="#cloudflare-proxy">Cloudflare Proxy</a>
+      <a href="#backlinks">Backlinks</a>
+      <a href="#monetization">Monetization</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Reference</div>
+      <a href="#config-ref">network-config.json</a>
+      <a href="#env-ref">Environment vars</a>
+      <a href="#workflow">Content workflow</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+    </div>
+  </nav>
+
+  <!-- ── Main content ──────────────────────────────────────────────────── -->
+  <main class="content">
+
+    <!-- Hero -->
+    <div class="hero" id="overview">
+      <h1>Kavalsia Content Network</h1>
+      <p class="hero-sub">A self-hosted AI content engine that writes, publishes, and manages a network of niche blog sites — fully controlled from your browser or Telegram.</p>
+      <div class="hero-meta">
+        <span class="badge badge-green">AI-Powered</span>
+        <span class="badge badge-blue">GitHub Pages</span>
+        <span class="badge badge-yellow">Telegram Control</span>
+      </div>
+    </div>
+
+    <p>The system takes a list of sites you configure, generates full articles using Claude AI, fetches matching images from Pexels, builds HTML pages, and pushes them directly to GitHub Pages — no CMS, no WordPress, no hosting bills.</p>
+
+    <div class="callout tip">
+      <strong>Quick start:</strong> Go to <strong>Setup</strong> → fill in your API keys → go to <strong>Hub</strong> → click <strong>Run Now</strong>. That's it.
+    </div>
+
+    <!-- ── File structure ── -->
+    <h2 id="files">File Structure</h2>
+    <div class="file-tree">
+      <span class="dir">content-network/</span><br>
+      ├── <span class="dir">bot.py</span>              <span class="note"># core engine — generates &amp; publishes articles</span><br>
+      ├── <span class="dir">server.py</span>           <span class="note"># local Flask API that the browser talks to</span><br>
+      ├── <span class="dir">telegram_bot.py</span>     <span class="note"># Telegram bot (on-demand + weekly ideas)</span><br>
+      ├── <span class="dir">network-config.json</span> <span class="note"># all your settings — sites, API keys, prompts</span><br>
+      ├── <span class="dir">launcher.html</span>       <span class="note"># Setup page — initial configuration wizard</span><br>
+      ├── <span class="dir">hub.html</span>            <span class="note"># Hub — run jobs, view logs, analytics</span><br>
+      ├── <span class="dir">editor.html</span>         <span class="note"># Editor — manage sites, prompts, scripts</span><br>
+      ├── <span class="dir">dashboard.html</span>      <span class="note"># Dashboard — preview articles, browse content</span><br>
+      ├── <span class="dir">guide.html</span>          <span class="note"># This guide</span><br>
+      ├── <span class="dir">requirements.txt</span>    <span class="note"># Python dependencies</span><br>
+      ├── <span class="dir">telegram_state.json</span> <span class="note"># auto-created: Telegram bot state</span><br>
+      └── <span class="dir">google-service-account.json</span> <span class="note"># optional: Google Indexing API</span>
+    </div>
+
+    <p>Everything lives in one folder. There is no database — state is stored in <code>network-config.json</code> and article content lives directly in your GitHub repositories.</p>
+
+    <!-- ── Admin pages ── -->
+    <h2 id="pages">The Four Admin Pages</h2>
+
+    <table>
+      <tr>
+        <th>Page</th>
+        <th>Purpose</th>
+        <th>When to use</th>
+      </tr>
+      <tr>
+        <td><strong>Launcher</strong> (Setup)</td>
+        <td>First-time configuration wizard</td>
+        <td>Initial setup, adding API keys</td>
+      </tr>
+      <tr>
+        <td><strong>Hub</strong></td>
+        <td>Run jobs, view live logs, analytics</td>
+        <td>Daily operations — actually publish content</td>
+      </tr>
+      <tr>
+        <td><strong>Editor</strong></td>
+        <td>Manage sites, prompts, global settings</td>
+        <td>Adding sites, editing prompts, affiliate links</td>
+      </tr>
+      <tr>
+        <td><strong>Dashboard</strong></td>
+        <td>Preview articles, browse published content</td>
+        <td>Reviewing what was published</td>
+      </tr>
+    </table>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         SETUP
+    ═══════════════════════════════════════════════════════════════════ -->
+    <h2 id="setup">Step-by-Step Setup</h2>
+
+    <ol class="steps">
+
+      <li id="step1">
+        <h4>Prerequisites</h4>
+        <p>You need the following before anything will work:</p>
+        <ul>
+          <li><strong>Python 3.10+</strong> — check with <code>python3 --version</code></li>
+          <li><strong>Anthropic API key</strong> — from <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></li>
+          <li><strong>GitHub Personal Access Token</strong> — needs <code>repo</code> scope. Create at GitHub → Settings → Developer Settings → Personal access tokens → Tokens (classic)</li>
+          <li><strong>Pexels API key</strong> (optional but recommended) — free at <a href="https://www.pexels.com/api/" target="_blank">pexels.com/api</a> for article images</li>
+          <li>One or more <strong>GitHub Pages repositories</strong> — create a public repo, go to Settings → Pages → Source: Deploy from branch → main</li>
+        </ul>
+      </li>
+
+      <li id="step2">
+        <h4>Install Python dependencies</h4>
+        <p>Open a terminal in the <code>content-network/</code> folder and run:</p>
+        <pre><code>pip install anthropic requests flask</code></pre>
+        <p>If you plan to use Google Indexing API, also run:</p>
+        <pre><code>pip install google-auth google-auth-httplib2</code></pre>
+      </li>
+
+      <li id="step3">
+        <h4>Set environment variables</h4>
+        <p>The engine reads secrets from environment variables — never hardcode them. Set these before starting the server:</p>
+        <pre><code># Required
+export ANTHROPIC_API_KEY="sk-ant-..."
+export GITHUB_TOKEN="ghp_..."
+
+# Recommended
+export PEXELS_API_KEY="your_pexels_key"
+
+# Optional
+export BREVO_API_KEY="your_brevo_key"      # newsletter emails
+export TAVILY_API_KEY="your_tavily_key"    # web search grounding
+</code></pre>
+        <div class="callout warning">
+          <strong>Mac/Linux:</strong> Add these to your <code>~/.zshrc</code> or <code>~/.bashrc</code> so they persist across sessions. On Windows, use System → Environment Variables.
+        </div>
+      </li>
+
+      <li id="step4">
+        <h4>Configure your sites</h4>
+        <p>Open <strong>launcher.html</strong> in your browser (double-click the file, or serve it via the local server — see step 5).</p>
+        <ul>
+          <li>Enter a <strong>password</strong> for the admin pages</li>
+          <li>Add each site: domain, GitHub repo (<code>username/repo-name</code>), category, tone, persona</li>
+          <li>Click <strong>Save Configuration</strong></li>
+        </ul>
+        <p>This writes everything to <code>network-config.json</code>.</p>
+      </li>
+
+      <li id="step5">
+        <h4>Start the local server</h4>
+        <p>The browser pages talk to a local Flask server. Start it with:</p>
+        <pre><code>python server.py</code></pre>
+        <p>You should see:</p>
+        <pre><code> * Running on http://127.0.0.1:5050</code></pre>
+        <p>Now open any admin page in your browser. The server must stay running while you use the admin UI.</p>
+        <div class="callout info">
+          <strong>Keep it running:</strong> Use a terminal multiplexer like <code>tmux</code> or <code>screen</code>, or a process manager like <code>pm2</code>, so the server stays up when you close the terminal.
+        </div>
+      </li>
+
+      <li id="step6">
+        <h4>Publish your first article</h4>
+        <ul>
+          <li>Open <strong>hub.html</strong></li>
+          <li>Log in with your password</li>
+          <li>Click <strong>Run Now</strong></li>
+          <li>Watch the live log — it will generate, upload, and confirm each article</li>
+          <li>Your GitHub Pages site will update within 30–60 seconds of the push</li>
+        </ul>
+        <div class="callout tip">
+          To publish a specific topic, enter it in the <strong>Topic Override</strong> field before clicking Run Now.
+        </div>
+      </li>
+
+    </ol>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         ADMIN PAGES — DETAIL
+    ═══════════════════════════════════════════════════════════════════ -->
+    <h2 id="page-launcher">Launcher (Setup Page)</h2>
+    <p>This is where you do first-time configuration. Open <code>launcher.html</code> directly in your browser.</p>
+
+    <h3>What you configure here</h3>
+    <ul>
+      <li><strong>Admin password</strong> — protects all admin pages</li>
+      <li><strong>Sites</strong> — domain, GitHub repo, category, AI tone, persona</li>
+      <li><strong>Initial global settings</strong> — Anthropic model, schedule, newsletter enable</li>
+    </ul>
+
+    <h3>After setup</h3>
+    <p>Once you've saved config from Launcher, you don't need to return here. Use <strong>Editor</strong> for ongoing changes — it has more options and a better UI.</p>
+
+    <!-- ────────────── -->
+    <h2 id="page-hub">Hub</h2>
+    <p>The Hub is your day-to-day control panel. Everything that actually does something — running jobs, watching logs, checking analytics — lives here.</p>
+
+    <h3>Run a job</h3>
+    <ul>
+      <li><strong>Run Now</strong> — publishes one article to every active site using auto-selected topics</li>
+      <li><strong>Topic Override</strong> — type a topic to force that specific article on the next run</li>
+      <li><strong>Site filter</strong> — run only specific sites (by domain or ID)</li>
+    </ul>
+
+    <h3>Live logs</h3>
+    <p>Logs stream in real time while a job runs. Each line shows what's happening: generating, uploading, success, or error. Errors show the full exception so you can debug immediately.</p>
+
+    <h3>Settings panel</h3>
+    <p>A quick-access panel for enabling/disabling features without opening Editor:</p>
+    <ul>
+      <li>Toggle newsletter (Brevo), web search, Google Indexing</li>
+      <li>Set Telegram bot token and chat ID</li>
+      <li>Cloudflare Analytics query UI</li>
+    </ul>
+
+    <h3>Analytics</h3>
+    <p>If Cloudflare is enabled, the Analytics panel lets you query pageviews, requests, and unique visitors by date range. Enter your API token and zone tag, pick a period, and click Load.</p>
+
+    <!-- ────────────── -->
+    <h2 id="page-editor">Editor</h2>
+    <p>The Editor is where you manage the AI brain of the network — prompts, site configs, global scripts, affiliate links, and social media.</p>
+
+    <h3>Global settings (top section)</h3>
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>What it does</th>
+      </tr>
+      <tr>
+        <td>Global AI Prompt</td>
+        <td>Added to every article on every site. Use for brand voice, SEO rules, linking rules.</td>
+      </tr>
+      <tr>
+        <td>Global Negative Prompt</td>
+        <td>Injected at the very top of every prompt as ABSOLUTE PROHIBITIONS. Pre-filled with em-dash ban + AI-cliché list.</td>
+      </tr>
+      <tr>
+        <td>Global Header Scripts</td>
+        <td>Injected into <code>&lt;head&gt;</code> on every page of every site. Use for GA4, pixels, consent banners.</td>
+      </tr>
+      <tr>
+        <td>Global Footer Scripts</td>
+        <td>Injected before <code>&lt;/body&gt;</code> on every page of every site.</td>
+      </tr>
+      <tr>
+        <td>Affiliate Links</td>
+        <td>Network-wide keyword → URL map. Claude-generated text matching these keywords gets wrapped in affiliate links.</td>
+      </tr>
+    </table>
+
+    <h3>Per-site settings</h3>
+    <p>Click any site card to expand it. Each site has its own:</p>
+    <ul>
+      <li><strong>Domain, GitHub repo, category, tone, persona</strong></li>
+      <li><strong>System prompt override</strong> — site-specific instructions added after the global prompt</li>
+      <li><strong>Newsletter</strong> — Brevo list ID and sender details</li>
+      <li><strong>Site-level affiliate links</strong> — stacks on top of global affiliate links</li>
+      <li><strong>Social media</strong> — webhook, Twitter, LinkedIn toggle and tokens</li>
+      <li><strong>Header/footer scripts</strong> — site-level scripts (stacked after global scripts)</li>
+      <li><strong>Audience warming</strong> — gradual audience expansion schedule</li>
+    </ul>
+
+    <div class="callout info">
+      <strong>Script stacking order:</strong> Global scripts always load first. Site-level scripts load after. This means GA4 (global) initializes before any site-specific pixel.
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="page-dashboard">Dashboard</h2>
+    <p>A read-only view of all published articles across every site. Use it to:</p>
+    <ul>
+      <li>Browse recent articles by site</li>
+      <li>Preview the rendered article HTML in a mobile/desktop frame</li>
+      <li>Verify design, links, and formatting before checking the live site</li>
+    </ul>
+    <p>The preview renderer uses the same themes as <code>bot.py</code>, so what you see here matches what's on the live site.</p>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         FEATURES
+    ═══════════════════════════════════════════════════════════════════ -->
+    <h2 id="global-prompt">Global AI Prompt</h2>
+    <p>Everything in the Global AI Prompt is appended to every article generation call. Use it for:</p>
+    <ul>
+      <li>Brand voice rules ("write in a confident, direct tone")</li>
+      <li>SEO requirements ("include the target keyword in H1, first paragraph, and one H2")</li>
+      <li>Structural rules ("always include a FAQ section at the end")</li>
+      <li>Internal linking rules ("link to the homepage when mentioning the domain")</li>
+    </ul>
+
+    <pre><code># Example global prompt
+Write in a confident, direct, expert tone. Never use passive voice.
+Always include an FAQ section (minimum 4 questions) at the end of each article.
+Structure: H1 → intro paragraph → 3–5 H2 sections → FAQ → conclusion.
+Target keyword must appear in H1, first 100 words, and at least one H2.
+Word count: 1,200–1,800 words.</code></pre>
+
+    <!-- ────────────── -->
+    <h2 id="negative-prompt">Global Negative Prompt</h2>
+    <p>The negative prompt is injected at the <strong>very top</strong> of every article prompt, before anything else, as an absolute prohibition block. Claude sees it first and cannot override it with later instructions.</p>
+
+    <p>Default value (pre-filled in Editor):</p>
+    <pre><code>DO NOT EVER USE " —" (em-dash). NEVER use: delve into, it's worth noting,
+in the realm of, game-changing, harness the power, leverage (as metaphor),
+navigate the landscape, cutting-edge, comprehensive, robust, furthermore,
+in conclusion, in summary, to summarize, it is important to note,
+as an AI language model.</code></pre>
+
+    <div class="callout tip">
+      Add any phrase that consistently appears in AI-generated content and reads as artificial. Each line or phrase is treated as a prohibition.
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="global-scripts">Header / Footer Scripts</h2>
+    <p>These fields accept raw HTML — typically <code>&lt;script&gt;</code> tags. They are injected into every generated page.</p>
+
+    <h3>Common use cases</h3>
+    <h4>Google Analytics 4</h4>
+    <pre><code>&lt;!-- Header scripts --&gt;
+&lt;script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"&gt;&lt;/script&gt;
+&lt;script&gt;
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+&lt;/script&gt;</code></pre>
+
+    <h4>Meta Pixel (footer)</h4>
+    <pre><code>&lt;!-- Footer scripts --&gt;
+&lt;script&gt;
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){...};
+fbq('init', 'YOUR_PIXEL_ID');
+fbq('track', 'PageView');
+&lt;/script&gt;</code></pre>
+
+    <h4>Microsoft Clarity</h4>
+    <pre><code>&lt;!-- Header scripts --&gt;
+&lt;script type="text/javascript"&gt;
+(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){...}
+})(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+&lt;/script&gt;</code></pre>
+
+    <div class="callout warning">
+      <strong>Site-level scripts stack after global scripts.</strong> If a site needs a different GA property, add it in the site's Header Scripts field. Both will fire.
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="affiliate">Affiliate Links</h2>
+    <p>The system automatically wraps matching keywords in affiliate links with <code>rel="sponsored noopener"</code>.</p>
+
+    <h3>How to add affiliate links</h3>
+    <ol>
+      <li>Open <strong>Editor</strong></li>
+      <li>In the Global section, find <strong>Affiliate Links</strong></li>
+      <li>Click <strong>+ Add Link</strong></li>
+      <li>Enter the keyword (e.g. <code>VPN service</code>) and the destination URL</li>
+      <li>Click Save Config</li>
+    </ol>
+
+    <h3>How it works</h3>
+    <ul>
+      <li>Longest keyword is matched first (so "best VPN service" matches before "VPN service")</li>
+      <li>Only first occurrence per keyword is linked (avoids over-linking)</li>
+      <li>Links are added after HTML generation, so they never appear inside headings or existing links</li>
+      <li>Site-level affiliate links are merged with global ones — site wins on conflict</li>
+    </ul>
+
+    <div class="callout tip">
+      Keep keyword phrases specific. <code>VPN service</code> is better than just <code>VPN</code> — less chance of accidentally linking something you didn't intend.
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="telegram">Telegram Bot</h2>
+    <p>Control the entire network from Telegram — post on demand, pause sites, check status.</p>
+
+    <h3>Setup</h3>
+    <ol>
+      <li>Message <strong>@BotFather</strong> on Telegram → <code>/newbot</code> → follow prompts → copy the token</li>
+      <li>Message <strong>@userinfobot</strong> → it replies with your numeric chat ID</li>
+      <li>In Editor → Hub Settings, paste both values</li>
+      <li>Set <code>"enabled": true</code> in <code>network-config.json</code> under <code>settings.telegram</code></li>
+      <li>Start the bot: <code>python telegram_bot.py</code></li>
+    </ol>
+
+    <h3>Commands</h3>
+    <table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>/post all</code></td><td>Publish one article to every active site</td></tr>
+      <tr><td><code>/post domain.com</code></td><td>Publish to one site (auto-selects topic)</td></tr>
+      <tr><td><code>/post domain.com Custom Topic</code></td><td>Publish a specific topic to one site</td></tr>
+      <tr><td><code>/status</code></td><td>Show active/paused status for all sites</td></tr>
+      <tr><td><code>/pause domain.com</code></td><td>Pause a site (skipped in future runs)</td></tr>
+      <tr><td><code>/resume domain.com</code></td><td>Reactivate a paused site</td></tr>
+      <tr><td><code>/ideas</code></td><td>Generate 20 article ideas per site, then reply with numbers to publish</td></tr>
+      <tr><td><code>1 4 7</code> (reply)</td><td>Publish ideas at those positions</td></tr>
+      <tr><td><code>auto</code> (reply)</td><td>Bot picks and publishes the 7 best ideas</td></tr>
+      <tr><td><code>/help</code></td><td>Show command list</td></tr>
+    </table>
+
+    <h3>Security</h3>
+    <p>Add your chat ID to <code>settings.telegram.allowed_chat_ids</code>. The bot will reject commands from any other chat ID.</p>
+
+    <!-- ────────────── -->
+    <h2 id="github-actions">GitHub Actions (Scheduled Publishing)</h2>
+    <p>Run the content engine on a schedule without keeping your computer on.</p>
+
+    <h3>Create the workflow file</h3>
+    <p>In your <strong>content-network repository</strong> (not the sites — the repo containing bot.py), create:</p>
+    <pre><code>.github/workflows/publish.yml</code></pre>
+
+    <pre><code>name: Publish Content
+
+on:
+  schedule:
+    - cron: '0 8 * * 1,3,5'   # Mon/Wed/Fri at 8am UTC
+  workflow_dispatch:            # also allows manual runs from GitHub UI
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic requests flask
+
+      - name: Run content bot
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN:      ${{ secrets.GH_PAT }}
+          PEXELS_API_KEY:    ${{ secrets.PEXELS_API_KEY }}
+          BREVO_API_KEY:     ${{ secrets.BREVO_API_KEY }}
+        run: python bot.py</code></pre>
+
+    <h3>Add secrets to GitHub</h3>
+    <ol>
+      <li>Go to your content-network repo on GitHub</li>
+      <li>Settings → Secrets and variables → Actions</li>
+      <li>Add: <code>ANTHROPIC_API_KEY</code>, <code>GH_PAT</code> (your GitHub token), <code>PEXELS_API_KEY</code>, <code>BREVO_API_KEY</code></li>
+    </ol>
+
+    <div class="callout warning">
+      <strong>Use <code>GH_PAT</code>, not <code>GITHUB_TOKEN</code></strong> for your personal access token. GitHub Actions auto-injects its own <code>GITHUB_TOKEN</code> — if you use that name your secret will be ignored and pushes to other repos will fail.
+    </div>
+
+    <h3>Weekly ideas via GitHub Actions</h3>
+    <p>To run the Telegram ideas workflow on a schedule:</p>
+    <pre><code>- name: Weekly ideas
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+    TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+  run: python telegram_bot.py ideas</code></pre>
+
+    <!-- ────────────── -->
+    <h2 id="web-search">Web Search Grounding</h2>
+    <p>Before generating each article, the bot can search the web for current information and inject it as context. This produces more accurate, timely content.</p>
+
+    <h3>Enable</h3>
+    <p>In Editor → Global Settings → Settings, set:</p>
+    <pre><code>"web_search": {
+  "enabled": true,
+  "provider": "tavily",
+  "tavily_api_key": "tvly-..."
+}</code></pre>
+
+    <p>Alternatively use Perplexity:</p>
+    <pre><code>"provider": "perplexity",
+"perplexity_api_key": "pplx-..."</code></pre>
+
+    <p>Get a Tavily key at <a href="https://tavily.com" target="_blank">tavily.com</a> (free tier: 1,000 searches/month).</p>
+
+    <!-- ────────────── -->
+    <h2 id="indexing">Google Indexing API</h2>
+    <p>After publishing, the bot can ping Google to request immediate indexing of new articles.</p>
+
+    <h3>Setup</h3>
+    <ol>
+      <li>Go to <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a> → create a project</li>
+      <li>Enable the <strong>Indexing API</strong></li>
+      <li>Create a Service Account → download the JSON key</li>
+      <li>Save the key as <code>google-service-account.json</code> in your content-network folder</li>
+      <li>In network-config.json: <code>"google_indexing": {"enabled": true, "service_account_path": "google-service-account.json"}</code></li>
+      <li>Add the service account email to your site's Google Search Console as an Owner</li>
+    </ol>
+
+    <div class="callout info">
+      Google only accepts indexing pings for sites where the service account is verified in Search Console as an Owner (not just a User).
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="analytics">Cloudflare Analytics</h2>
+    <p>If your sites are proxied through Cloudflare, you can query traffic data directly from the Hub.</p>
+
+    <h3>Enable</h3>
+    <pre><code>"cloudflare": {
+  "enabled": true,
+  "api_token": "your_cf_token",
+  "account_id": "your_account_id"
+}</code></pre>
+
+    <p>Create a Cloudflare API token at: Cloudflare Dashboard → My Profile → API Tokens → Create Token → use the <strong>Read analytics</strong> template.</p>
+
+    <h3>Using the analytics panel</h3>
+    <ol>
+      <li>Open <strong>Hub</strong> → Analytics tab</li>
+      <li>Enter your API token and Zone Tag (found in Cloudflare → your domain → Overview → Zone ID)</li>
+      <li>Select a date range</li>
+      <li>Click <strong>Load Analytics</strong></li>
+    </ol>
+
+    <!-- ────────────── -->
+    <h2 id="social">Social Media Broadcast</h2>
+    <p>After publishing, the bot can automatically share articles to social channels.</p>
+
+    <h3>Per-site configuration</h3>
+    <p>In Editor → expand a site → Social Media section:</p>
+
+    <table>
+      <tr><th>Option</th><th>Value needed</th></tr>
+      <tr><td>Generic Webhook</td><td>Any webhook URL (n8n, Zapier, Make, Slack, Discord)</td></tr>
+      <tr><td>Twitter/X</td><td>Bearer token from Twitter Developer Portal</td></tr>
+      <tr><td>LinkedIn</td><td>Access token + Organization ID</td></tr>
+    </table>
+
+    <div class="callout warning">
+      Twitter API requires a paid developer account ($100/month Basic) for write access. LinkedIn requires an approved Marketing Developer Platform app for organic posts.
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         REFERENCE
+    ═══════════════════════════════════════════════════════════════════ -->
+    <h2 id="config-ref">network-config.json Reference</h2>
+    <p>This file is the single source of truth for all configuration. The admin pages read and write it; <code>bot.py</code> reads it at runtime.</p>
+
+    <pre><code>{
+  // ── Global AI ──
+  "global_prompt": "...",          // appended to every article prompt
+  "global_negative_prompt": "...", // injected FIRST as absolute prohibitions
+  "global_header_scripts": "",     // raw HTML for &lt;head&gt; on all pages
+  "global_footer_scripts": "",     // raw HTML before &lt;/body&gt; on all pages
+  "affiliate_links": {             // keyword → URL map
+    "keyword phrase": "https://..."
+  },
+
+  // ── Sites ──
+  "sites": [
+    {
+      "id": "site1",               // unique internal ID
+      "domain": "example.com",
+      "repo": "username/repo",     // GitHub repo for GitHub Pages
+      "category": "Personal Finance",
+      "tone": "expert but approachable",
+      "persona": "CFP with 15 years experience",
+      "active": true,              // false = skipped in all runs
+      "system_prompt": "...",      // site-specific additional prompt
+      "newsletter": {
+        "enabled": false,
+        "provider": "brevo",
+        "api_key": "",             // or use BREVO_API_KEY env var
+        "list_id": 1,
+        "sender_name": "Site Name",
+        "sender_email": "hi@example.com"
+      },
+      "warming": {                 // audience warming schedule
+        "enabled": false,
+        "phase": "awareness",
+        "days_per_phase": 14
+      },
+      "affiliate_links": {},       // site-level (stacks on global)
+      "social_media": {
+        "enabled": false,
+        "webhook_url": "",
+        "twitter_enabled": false,
+        "twitter_bearer_token": "",
+        "linkedin_enabled": false,
+        "linkedin_token": "",
+        "linkedin_org_id": ""
+      },
+      "header_scripts": "",        // site-level (appended after global)
+      "footer_scripts": ""
+    }
+  ],
+
+  // ── Settings ──
+  "settings": {
+    "model": "claude-opus-4-5",
+    "schedule": "daily",
+    "password_hash": "...",
+    "telegram": {
+      "enabled": false,
+      "bot_token": "",
+      "allowed_chat_ids": []
+    },
+    "web_search": {
+      "enabled": false,
+      "provider": "tavily",
+      "tavily_api_key": "",
+      "perplexity_api_key": ""
+    },
+    "google_indexing": {
+      "enabled": false,
+      "service_account_path": "google-service-account.json"
+    },
+    "cloudflare": {
+      "enabled": false,
+      "api_token": "",
+      "account_id": ""
+    }
+  }
+}</code></pre>
+
+    <!-- ────────────── -->
+    <h2 id="env-ref">Environment Variables Reference</h2>
+
+    <table>
+      <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+      <tr>
+        <td><code>ANTHROPIC_API_KEY</code></td>
+        <td><span class="badge badge-red">Required</span></td>
+        <td>Claude API key — article generation won't work without it</td>
+      </tr>
+      <tr>
+        <td><code>GITHUB_TOKEN</code></td>
+        <td><span class="badge badge-red">Required</span></td>
+        <td>Personal access token with <code>repo</code> scope — for pushing to GitHub Pages</td>
+      </tr>
+      <tr>
+        <td><code>PEXELS_API_KEY</code></td>
+        <td><span class="badge badge-yellow">Recommended</span></td>
+        <td>Article images — without it articles publish with no image</td>
+      </tr>
+      <tr>
+        <td><code>BREVO_API_KEY</code></td>
+        <td><span class="badge badge-blue">Optional</span></td>
+        <td>Newsletter emails via Brevo (Sendinblue)</td>
+      </tr>
+      <tr>
+        <td><code>TAVILY_API_KEY</code></td>
+        <td><span class="badge badge-blue">Optional</span></td>
+        <td>Web search grounding for articles</td>
+      </tr>
+      <tr>
+        <td><code>TELEGRAM_BOT_TOKEN</code></td>
+        <td><span class="badge badge-blue">Optional</span></td>
+        <td>Fallback for Telegram bot if not set in network-config.json</td>
+      </tr>
+      <tr>
+        <td><code>TELEGRAM_CHAT_ID</code></td>
+        <td><span class="badge badge-blue">Optional</span></td>
+        <td>Fallback for GitHub Actions Telegram trigger</td>
+      </tr>
+    </table>
+
+    <!-- ────────────── -->
+    <h2 id="workflow">Content Workflow</h2>
+
+    <p>Here's what happens every time a publish job runs, step by step:</p>
+
+    <ol>
+      <li><strong>Load config</strong> — reads network-config.json, filters active sites</li>
+      <li><strong>For each active site:</strong></li>
+      <li style="padding-left:36px"><strong>Select topic</strong> — uses topic override if provided, otherwise uses a rotating topic from the site's topic pool or auto-generates one</li>
+      <li style="padding-left:36px"><strong>Web search</strong> (if enabled) — queries Tavily/Perplexity for current information on the topic</li>
+      <li style="padding-left:36px"><strong>Find internal links</strong> — loads existing articles, scores by keyword overlap with the new topic, passes top 3 as suggestions</li>
+      <li style="padding-left:36px"><strong>Generate article</strong> — sends prompt to Claude with: negative prohibitions → global prompt → site prompt → web context → internal link suggestions → topic</li>
+      <li style="padding-left:36px"><strong>Fetch image</strong> — queries Pexels with the article's image_query field</li>
+      <li style="padding-left:36px"><strong>Build HTML</strong> — generates full article page HTML with theme, image, scripts, affiliate links injected</li>
+      <li style="padding-left:36px"><strong>Push to GitHub</strong> — pushes article HTML, updates index.html (homepage), updates articles.json</li>
+      <li style="padding-left:36px"><strong>Send newsletter</strong> (if enabled) — sends Brevo campaign to list</li>
+      <li style="padding-left:36px"><strong>Broadcast social</strong> (if enabled) — posts to webhook/Twitter/LinkedIn</li>
+      <li style="padding-left:36px"><strong>Ping Google</strong> (if enabled) — requests immediate indexing of the new URL</li>
+    </ol>
+
+    <!-- ────────────── -->
+    <h2 id="cloudflare-proxy">Cloudflare Proxy — Hide Your Host IP (Free)</h2>
+
+    <p>You do <strong>not</strong> need different hosting for each site. Put Cloudflare's free proxy in front of every domain instead. All sites will resolve to Cloudflare's shared IP ranges — which millions of sites share — making it impossible for Google to identify your origin server or detect that multiple domains share the same host.</p>
+
+    <div class="card">
+      <h4>Why this works</h4>
+      <p>When Cloudflare proxy is enabled (orange cloud), all DNS requests return Cloudflare's IP, not your server's IP. Google's crawlers see Cloudflare IPs, which are completely normal. Your actual origin (GitHub Pages, a VPS, anything) is invisible.</p>
+    </div>
+
+    <div class="card">
+      <h4>Setup — 5 minutes per domain</h4>
+      <ol style="padding-left:20px;line-height:2.2">
+        <li>Go to <strong>cloudflare.com</strong> → Add a site → enter your domain</li>
+        <li>Select the <strong>Free plan</strong></li>
+        <li>Cloudflare scans your DNS. You'll see your existing records.</li>
+        <li>For the main A/CNAME record, make sure the cloud icon is <strong>orange</strong> (proxied). Click it to toggle if it's grey.</li>
+        <li>Change your domain's nameservers to the two Cloudflare nameservers shown (e.g. <code>ken.ns.cloudflare.com</code>)</li>
+        <li>Done. Propagation takes 5–30 minutes.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h4>For GitHub Pages specifically</h4>
+      <ol style="padding-left:20px;line-height:2.2">
+        <li>In your GitHub repo → Settings → Pages → set custom domain to your domain</li>
+        <li>In Cloudflare DNS, add a CNAME record: <code>www</code> → <code>YOUR_GITHUB_USERNAME.github.io</code> (proxied ☁)</li>
+        <li>Add an A record for the root domain pointing to GitHub Pages IPs, or redirect root to www — Cloudflare's Page Rules can handle this for free</li>
+        <li>In Cloudflare SSL/TLS, set to <strong>Full</strong> (not Flexible)</li>
+      </ol>
+      <p style="margin-top:12px;font-size:13px;color:#888">GitHub Pages IPs: 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153</p>
+    </div>
+
+    <div class="card">
+      <h4>20 sites, one Cloudflare account</h4>
+      <p>You can manage all 20+ domains from a single free Cloudflare account. Each domain gets its own zone (free tier allows unlimited domains). The proxy is free on all of them. You can also keep all sites on a single cheap VPS (Hetzner €4/month, DigitalOcean $6/month) — with Cloudflare in front, Google sees nothing unusual.</p>
+    </div>
+
+    <div class="card" style="border-left:3px solid #3ecf8e">
+      <h4>Additional Cloudflare free benefits</h4>
+      <ul style="padding-left:20px;line-height:2">
+        <li><strong>Free SSL</strong> on every domain — required for AdSense and trust signals</li>
+        <li><strong>DDoS protection</strong> — your sites stay up under any traffic</li>
+        <li><strong>Cloudflare Analytics</strong> — basic traffic stats without cookies (GDPR-friendly)</li>
+        <li><strong>Caching</strong> — pages served from Cloudflare's edge, faster globally</li>
+        <li><strong>Page Rules</strong> — redirect root → www, force HTTPS, etc.</li>
+      </ul>
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="backlinks">Backlink Content Generator</h2>
+
+    <p>Every time an article is published, the bot automatically generates <strong>ready-to-post content</strong> for Reddit, LinkedIn, and Quora — saved to <code>backlinks/{slug}.md</code> in each site's repo. These create real backlinks from high-authority platforms (Reddit DA91, LinkedIn DA98, Quora DA92) without cross-linking your own network sites to each other.</p>
+
+    <div class="card">
+      <h4>What gets generated per article</h4>
+      <ul style="padding-left:20px;line-height:2">
+        <li><strong>Reddit</strong> — 3 relevant subreddits suggested + a title and post body (150-200 words, written as a genuine community member, not self-promotion)</li>
+        <li><strong>LinkedIn</strong> — A hook line + post body (120-150 words) + 5 hashtags. Post manually or schedule via Buffer</li>
+        <li><strong>Quora</strong> — A question the article answers + a 250-300 word authoritative answer with a natural link back</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h4>How to use the backlink files</h4>
+      <ol style="padding-left:20px;line-height:2.2">
+        <li>After each bot run, go to your site repo → <code>backlinks/</code> folder</li>
+        <li>Open the <code>{slug}.md</code> file for the article just published</li>
+        <li>Copy the Reddit section → post to the suggested subreddits (do 1-2 per article, not all 3 at once)</li>
+        <li>Copy the LinkedIn section → post to your persona's LinkedIn account</li>
+        <li>Copy the Quora section → search the question on Quora, answer it</li>
+        <li>Repeat consistently. After 30-50 articles you'll have 30-50 real backlinks from high-DA platforms.</li>
+      </ol>
+    </div>
+
+    <div class="card" style="border-left:3px solid #f59e0b">
+      <h4>Reddit posting rules — don't get banned</h4>
+      <ul style="padding-left:20px;line-height:2">
+        <li>Post to a subreddit only 1-2 times per week per account</li>
+        <li>Make sure the account is at least 30 days old and has some comment karma first</li>
+        <li>Post the content genuinely — if it's a good answer, Reddit will upvote it. If it reads as spam, it gets removed.</li>
+        <li>Never post the same content to multiple subreddits on the same day</li>
+        <li>Use a dedicated Reddit account per site persona (Marcus Chen has his own account, etc.)</li>
+      </ul>
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="monetization">Monetization Setup</h2>
+
+    <div class="card">
+      <h4>AdSense — ads.txt + publisher ID</h4>
+      <ol style="padding-left:20px;line-height:2.2">
+        <li>Apply for Google AdSense at <strong>adsense.google.com</strong> — one account covers all your sites</li>
+        <li>Once approved, get your publisher ID (format: <code>pub-1234567890123456</code>)</li>
+        <li>In <code>network-config.json</code>, set <code>"adsense_publisher_id"</code> per site</li>
+        <li>On next bot run, <code>ads.txt</code> is automatically created in each site's repo</li>
+        <li>Add the AdSense auto-ads script to <strong>Global Footer Scripts</strong> in the Editor. AdSense will then inject ads on all pages automatically</li>
+      </ol>
+      <pre style="background:#111;padding:12px;border-radius:6px;margin-top:12px;font-size:12px;overflow-x:auto">&lt;script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"&gt;&lt;/script&gt;</pre>
+    </div>
+
+    <div class="card">
+      <h4>Newsletter signup — Brevo form</h4>
+      <ol style="padding-left:20px;line-height:2.2">
+        <li>In Brevo → <strong>Contacts → Forms</strong> → Create a subscription form</li>
+        <li>Get the form URL (e.g. <code>https://app.brevo.com/page/xyz</code>) or embed code</li>
+        <li>In <code>network-config.json</code>, set <code>"signup_url"</code> per site to that URL</li>
+        <li>A "Subscribe free" button automatically appears in the footer of every article page</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h4>Giscus comments (builds engagement signals)</h4>
+      <ol style="padding-left:20px;line-height:2.2">
+        <li>Go to <strong>giscus.app</strong> → enter your site's GitHub repo</li>
+        <li>Enable Discussions on the repo (repo Settings → Features → Discussions ✓)</li>
+        <li>giscus.app gives you a <code>data-repo-id</code> and <code>data-category-id</code></li>
+        <li>Set <code>"giscus_repo_id"</code> and <code>"giscus_category_id"</code> in network-config.json for that site</li>
+        <li>A comments section automatically appears below every article</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h4>Sponsored articles — what to charge</h4>
+      <p>Once a site has 5,000+ monthly visitors and 6+ months of history, you can sell sponsored article placements. Typical rates in finance/crypto/investing niches:</p>
+      <ul style="padding-left:20px;line-height:2">
+        <li>Sponsored article: $200–$800 depending on DA and traffic</li>
+        <li>Newsletter mention (per send): $50–$300 per 1,000 subscribers</li>
+        <li>Sidebar ad placement: $100–$500/month</li>
+      </ul>
+      <p style="margin-top:12px">Use the <strong>client feature</strong> in the bot to naturally integrate sponsor mentions into regular editorial content — one mention every 7 articles keeps it subtle and editorial.</p>
+    </div>
+
+    <!-- ────────────── -->
+    <h2 id="troubleshoot">Troubleshooting</h2>
+
+    <div class="card">
+      <h4>"Config not found" or "Could not connect to server"</h4>
+      <p>The browser pages talk to <code>server.py</code> on port 5050. Make sure you started it with <code>python server.py</code> and it's still running. Check the terminal for errors.</p>
+    </div>
+
+    <div class="card">
+      <h4>Articles push but the site doesn't update</h4>
+      <p>GitHub Pages can take 30–90 seconds to deploy. Check the <strong>Actions</strong> tab in the GitHub repo to see if Pages is building. If it's stuck, make sure the repo has Pages enabled (Settings → Pages → Source: Deploy from branch → main → / (root)).</p>
+    </div>
+
+    <div class="card">
+      <h4>GitHub push returns 404 or 403</h4>
+      <p>Your GitHub token doesn't have access to the repo, or has expired. Create a new token with <code>repo</code> scope at GitHub → Settings → Developer settings → Personal access tokens.</p>
+    </div>
+
+    <div class="card">
+      <h4>Articles are generating but no image appears</h4>
+      <p>Check your <code>PEXELS_API_KEY</code> environment variable. Without it, articles publish with no image. The Pexels free tier allows 200 requests/hour.</p>
+    </div>
+
+    <div class="card">
+      <h4>Telegram bot doesn't respond</h4>
+      <ol style="margin-top:8px">
+        <li>Make sure <code>"enabled": true</code> in settings.telegram</li>
+        <li>Verify the token with: <code>curl https://api.telegram.org/botYOUR_TOKEN/getMe</code></li>
+        <li>Check that your chat ID is in <code>allowed_chat_ids</code> — get it by messaging @userinfobot</li>
+        <li>Make sure only one instance of <code>telegram_bot.py</code> is running (multiple instances conflict)</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h4>GitHub Actions run but nothing is published</h4>
+      <p>Check the Actions log. Common causes: secrets not set, <code>GITHUB_TOKEN</code> name collision (use <code>GH_PAT</code> instead), or <code>network-config.json</code> not committed to the repo.</p>
+      <p style="margin-top:8px"><strong>Important:</strong> <code>network-config.json</code> must be committed to the repo so GitHub Actions can read it. But don't commit API keys inside it — use environment variables instead.</p>
+    </div>
+
+    <div class="card">
+      <h4>Claude returns invalid JSON</h4>
+      <p>Occasionally Claude's response can't be parsed. The bot logs the raw response and skips that article. It usually resolves on the next run. If it happens consistently, simplify the global prompt or reduce max_tokens.</p>
+    </div>
+
+    <div style="margin-top:60px; padding-top:24px; border-top:1px solid var(--border); color:var(--text2); font-size:13px; display:flex; align-items:center; gap:16px;">
+      <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" style="height:22px; opacity:.6">
+      <span>Kavalsia Content Network — Internal Documentation</span>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Active sidebar link based on scroll position
+  const headings = document.querySelectorAll('h2[id], h3[id]');
+  const links    = document.querySelectorAll('.sidebar a');
+
+  function updateActive() {
+    let current = '';
+    headings.forEach(h => {
+      if (window.scrollY >= h.offsetTop - 80) current = h.id;
+    });
+    links.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+</script>
+
+</body>
+</html>
