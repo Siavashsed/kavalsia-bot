@@ -1,0 +1,497 @@
+<!-- Kavalsia Network — MegaDash — © 2026 Kavalsia Inc. [Siavash Sadighi] -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MegaDash — Kavalsia Network</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060a07;--bg2:#0b1209;--bg3:#101a12;--bg4:#162018;--bg5:#1c2a1e;
+  --text:#ffffff;--text2:#b8d4c0;--text3:#4d7059;--text4:#2a3e2d;
+  --accent:#3ecf8e;--accent2:#2eb87d;--glow:#3ecf8e1a;
+  --green:#3ecf8e;--red:#ef4444;--amber:#f59e0b;--blue:#38bdf8;--purple:#a78bfa;--pink:#f472b6;
+  --border:#0e1a10;--border2:#1a2e1e;--border3:#243828;
+  --r:10px;--r2:14px;--font:'Inter',system-ui,sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow:hidden}
+body{background:radial-gradient(ellipse 80% 40% at 50% -10%,#0d2318 0%,transparent 70%),radial-gradient(ellipse 40% 30% at 85% 60%,#0d1830 0%,transparent 60%),#060a07}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border3);border-radius:4px}
+
+/* LAYOUT */
+.shell{display:grid;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
+
+/* TOPBAR */
+.topbar{background:rgba(11,18,9,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;padding:0 24px;position:sticky;top:0;z-index:100}
+.tb-back{display:flex;align-items:center;gap:5px;color:var(--text3);font-size:12px;font-weight:500;text-decoration:none;padding:5px 10px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);transition:all .15s}
+.tb-back:hover{color:var(--text);border-color:var(--border3);background:var(--bg4)}
+.tb-logo{font-size:20px;font-weight:900;letter-spacing:-0.5px;background:linear-gradient(135deg,#3ecf8e 0%,#38bdf8 55%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tb-sub{font-size:11px;color:var(--text3);padding-left:2px;margin-left:-4px}
+.tb-sep{width:1px;height:24px;background:var(--border2);flex-shrink:0}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.last-upd{font-size:11px;color:var(--text3)}
+
+/* MODE TOGGLE */
+.mode-wrap{display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+.mode-btn{padding:5px 16px;font-size:12px;font-weight:700;border:none;cursor:pointer;background:none;color:var(--text3);transition:all .15s;font-family:var(--font)}
+.mode-btn.demo-on{background:var(--amber);color:#000}
+.mode-btn.live-on{background:var(--blue);color:#000}
+
+/* REFRESH BTN */
+.btn-ref{display:flex;align-items:center;gap:6px;padding:6px 14px;font-size:12px;font-weight:600;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .15s;font-family:var(--font)}
+.btn-ref:hover{background:var(--bg4);color:var(--text)}
+.spin{display:inline-block;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* MAIN */
+.main{overflow-y:auto;padding:24px 28px 80px}
+
+/* HERO STATS */
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.hcard{background:rgba(13,20,16,0.8);backdrop-filter:blur(8px);border:1px solid var(--border2);border-radius:var(--r2);padding:20px 22px;position:relative;overflow:hidden}
+.hcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--hl,#3ecf8e40),transparent)}
+.hcard.b::before{--hl:#38bdf840}.hcard.p::before{--hl:#a78bfa40}.hcard.a::before{--hl:#f59e0b40}
+.hl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:8px}
+.hv{font-size:32px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+.hs{font-size:11px;color:var(--text3);margin-top:6px}
+.hbadge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:6px}
+.hbadge.g{background:#3ecf8e18;color:var(--green);border:1px solid #3ecf8e30}
+.hbadge.b{background:#38bdf818;color:var(--blue);border:1px solid #38bdf830}
+.hbadge.a{background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b30}
+
+/* FILTER BAR */
+.fbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.srch{position:relative;flex:1;min-width:180px;max-width:280px}
+.srch input{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:7px 12px 7px 30px;font-size:13px;color:var(--text);width:100%;transition:border-color .15s;font-family:var(--font)}
+.srch input:focus{border-color:var(--accent);outline:none}
+.srch-ic{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
+.chips{display:flex;gap:6px}
+.chip{padding:5px 12px;font-size:12px;font-weight:500;border-radius:100px;cursor:pointer;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);transition:all .15s}
+.chip:hover{color:var(--text);border-color:var(--border3)}
+.chip.on{background:var(--glow);color:var(--accent);border-color:#3ecf8e40;font-weight:700}
+.ssort{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--text2);cursor:pointer;font-family:var(--font)}
+.ssort:focus{outline:none;border-color:var(--accent)}
+.rcnt{font-size:12px;color:var(--text3);margin-left:auto}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+
+/* SITE CARD */
+.scard{background:rgba(13,20,16,0.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--border2);border-radius:var(--r2);padding:18px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.scard:hover{border-color:var(--border3);background:rgba(18,27,20,0.9);transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,0,0,.45)}
+.scard.ac::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cl1,#3ecf8e),var(--cl2,#38bdf8))}
+.sc-blue{--cl1:#38bdf8;--cl2:#60a5fa}.sc-green{--cl1:#3ecf8e;--cl2:#34d399}.sc-purple{--cl1:#a78bfa;--cl2:#c084fc}
+.sc-amber{--cl1:#f59e0b;--cl2:#fbbf24}.sc-pink{--cl1:#f472b6;--cl2:#e879f9}.sc-red{--cl1:#ef4444;--cl2:#f87171}
+
+.chead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px}
+.cdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cdot.active{background:var(--green);box-shadow:0 0 6px #3ecf8e55;animation:pulse 2s infinite}
+.cdot.warming{background:var(--amber)}
+.cdot.paused{background:var(--text4)}
+.cstat-row{display:flex;align-items:center;gap:6px}
+.cstatus{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.cstatus.active{color:var(--green)}.cstatus.warming{color:var(--amber)}.cstatus.paused{color:var(--text3)}
+.ccat{font-size:10px;font-weight:600;padding:3px 8px;border-radius:100px;background:var(--bg5);color:var(--text3);border:1px solid var(--border2);white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis}
+.cname{font-size:16px;font-weight:800;letter-spacing:-.3px;line-height:1.2;margin-bottom:3px}
+.cdomain{font-size:11px;color:var(--text3);font-family:monospace;margin-bottom:14px}
+.cdiv{height:1px;background:var(--border2);margin-bottom:12px}
+.cstats{display:flex;gap:18px;margin-bottom:14px}
+.cst{display:flex;flex-direction:column;gap:1px}
+.cst-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:500}
+.cst-val{font-size:15px;font-weight:800}
+.cst-sub{font-size:10px;font-weight:700}
+.cst-sub.up{color:var(--green)}.cst-sub.down{color:var(--red)}.cst-sub.flat{color:var(--text2)}
+.spark-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-weight:500;margin-bottom:4px}
+.spark-svg{width:100%;height:40px;display:block}
+.cfoot{margin-top:auto;padding-top:12px;border-top:1px solid var(--border2)}
+.clat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.clat-title{font-size:12px;color:var(--text2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cbtns{display:flex;gap:8px;margin-top:12px}
+.cbtn{flex:1;padding:7px;font-size:11px;font-weight:700;border-radius:7px;border:1px solid var(--border2);background:var(--bg4);color:var(--text2);cursor:pointer;transition:all .15s;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:5px}
+.cbtn:hover{background:var(--bg5);color:var(--text);border-color:var(--border3)}
+.cbtn.pr{background:#3ecf8e18;color:var(--green);border-color:#3ecf8e30}
+.cbtn.pr:hover{background:#3ecf8e28;border-color:#3ecf8e50}
+
+/* OVERLAY / MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(6,10,7,.88);backdrop-filter:blur(5px);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:520px;max-width:100%;max-height:88vh;overflow-y:auto;padding:28px;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.7)}
+.m-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.m-close:hover{background:var(--bg4);color:var(--text)}
+.m-top{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:5px}
+.m-title{font-size:22px;font-weight:900;letter-spacing:-.4px;margin-bottom:2px}
+.m-domain{font-size:12px;color:var(--text3);font-family:monospace;margin-bottom:18px}
+.m-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:0}
+.mst{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;flex:1;min-width:80px}
+.mst-lbl{font-size:10px;color:var(--text3);font-weight:500}
+.mst-val{font-size:20px;font-weight:800}
+.mdiv{height:1px;background:var(--border2);margin:16px 0}
+.m-slbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.mbadge-demo{font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b30}
+.mbadge-live{font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:#38bdf818;color:var(--blue);border:1px solid #38bdf830}
+.lat-box{background:var(--bg4);border:1px solid var(--border2);border-radius:8px;padding:12px 14px}
+.lat-ttl{font-size:13px;font-weight:700;line-height:1.4}
+.lat-dt{font-size:11px;color:var(--text3);margin-top:3px}
+.sum-box{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:16px;font-size:13px;line-height:1.75;color:var(--text2);min-height:80px}
+.sum-gen{display:flex;align-items:center;gap:8px;color:var(--text3);font-size:13px}
+
+/* EMPTY */
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar">
+    <a href="/" class="tb-back">← Hub</a>
+    <div class="tb-sep"></div>
+    <div>
+      <span class="tb-logo">MegaDash</span>
+      <span class="tb-sub"> · Kavalsia Network</span>
+    </div>
+    <div class="tb-right">
+      <span class="last-upd" id="lastUpd"></span>
+      <div class="mode-wrap">
+        <button class="mode-btn demo-on" id="btnDemo" onclick="setMode('demo')">◆ Demo</button>
+        <button class="mode-btn" id="btnLive" onclick="setMode('live')">⚡ Live</button>
+      </div>
+      <button class="btn-ref" id="btnRef" onclick="refresh()">
+        <span id="refIc">↻</span> Refresh
+      </button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="hero" id="hero">
+      <div class="hcard">
+        <div class="hl">Total Sites</div>
+        <div class="hv" id="hSites">—</div>
+        <div class="hs" id="hSitesSub">—</div>
+      </div>
+      <div class="hcard b">
+        <div class="hl">Total Articles</div>
+        <div class="hv" id="hArt">—</div>
+        <div class="hbadge b" id="hArtBadge">—</div>
+      </div>
+      <div class="hcard p">
+        <div class="hl">7-Day Traffic</div>
+        <div class="hv" id="hTraf">—</div>
+        <div class="hbadge g" id="hTrafBadge">—</div>
+      </div>
+      <div class="hcard a">
+        <div class="hl">Network Health</div>
+        <div class="hv" id="hHealth">—</div>
+        <div class="hs" id="hHealthSub">—</div>
+      </div>
+    </div>
+
+    <div class="fbar">
+      <div class="srch">
+        <span class="srch-ic">⌕</span>
+        <input id="srchIn" type="text" placeholder="Search sites…" oninput="applyFilters()">
+      </div>
+      <div class="chips">
+        <div class="chip on" data-f="all"     onclick="setFilter('all')">All</div>
+        <div class="chip"    data-f="active"  onclick="setFilter('active')">Active</div>
+        <div class="chip"    data-f="warming" onclick="setFilter('warming')">Warming</div>
+        <div class="chip"    data-f="paused"  onclick="setFilter('paused')">Paused</div>
+      </div>
+      <select class="ssort" id="sortSel" onchange="applyFilters()">
+        <option value="traffic">Sort: Traffic</option>
+        <option value="articles">Sort: Articles</option>
+        <option value="name">Sort: Name</option>
+      </select>
+      <span class="rcnt" id="rcnt"></span>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="maybeClose(event)">
+  <div class="modal">
+    <button class="m-close" onclick="closeOverlay()">×</button>
+    <div class="m-top" id="mTop"></div>
+    <div class="m-title" id="mTitle"></div>
+    <div class="m-domain" id="mDomain"></div>
+    <div class="m-stats" id="mStats"></div>
+    <div class="mdiv"></div>
+    <div class="m-slbl">Latest Article</div>
+    <div class="lat-box" id="mLat"></div>
+    <div class="mdiv"></div>
+    <div class="m-slbl">AI Summary <span id="mBadge" class="mbadge-demo">Demo</span></div>
+    <div class="sum-box" id="mSum"></div>
+  </div>
+</div>
+
+<script>
+// ── state ────────────────────────────────────────
+let MODE = 'demo';
+let activeFilter = 'all';
+let allSites = [];
+
+// ── color maps ───────────────────────────────────
+const HEX = {blue:'#38bdf8',green:'#3ecf8e',purple:'#a78bfa',amber:'#f59e0b',pink:'#f472b6',red:'#ef4444'};
+const SCH = {blue:'sc-blue',green:'sc-green',purple:'sc-purple',amber:'sc-amber',pink:'sc-pink',red:'sc-red'};
+
+// ── demo data — 22 sites ─────────────────────────
+const DEMO = [
+  {id:'crypto-insights',    name:'Crypto Pulse',           domain:'cryptopulse.io',                cat:'Crypto & Trading',         status:'active',  arts:87,  latest:'2h ago',  latestDate:'May 14, 2026', latestTitle:'Bitcoin Volatility Patterns That Institutional Traders Actually Track',      t7:[1240,1380,1520,1290,1680,1940,2100], trend:'+12%',tdir:'up',   color:'blue',
+    sum:'Crypto Pulse published 87 articles with a strong data-driven focus on institutional trading patterns. The latest Bitcoin volatility piece is already driving referral traffic from two quant communities. Traffic is up 12% this week, peaking Thursday at 1,940 sessions — well above the network average for sites in this stage.'},
+  {id:'passive-wealth',     name:'Passive Wealth Guide',   domain:'passivewealthguide.io',          cat:'Passive Income',           status:'active',  arts:64,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'The Compounding Effect Shown With Real Numbers and Brutal Honesty',           t7:[980,1020,870,1100,1240,1180,1350],  trend:'+8%', tdir:'up',   color:'green',
+    sum:'Passive Wealth Guide is steady at 64 articles. The compounding effect piece published yesterday earned 1,350 day-one sessions. Sarah Mills\' no-jargon editorial voice continues to outperform drier finance content on engagement — average session time sits at 4.3 minutes. Email signup rate: 3.2%.'},
+  {id:'trading-tech',       name:'Trading Tech Review',    domain:'tradingtechreview.io',           cat:'Trading Technology',       status:'active',  arts:51,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'Why Backtesting Is Essential Before Your Bot Touches Real Money',              t7:[560,720,680,810,740,890,950],       trend:'+7%', tdir:'up',   color:'purple',
+    sum:'Trading Tech Review targets developers with 51 deep-dive articles on APIs, bot architecture, and security. Bounce rate is a low 38% — readers are qualified and invested. The backtesting guide continues driving organic search three days after publication, with GitHub README referrals emerging as a top source.'},
+  {id:'ai-marketing',       name:'AI Marketing Pro',       domain:'aimarketingpro.io',              cat:'AI & Marketing',           status:'warming', arts:23,  latest:'5d ago',  latestDate:'May 9, 2026',  latestTitle:'How AI Is Reshaping Paid Advertising in 2026 — And What to Do About It',     t7:[120,145,180,160,195,210,230],       trend:'+19%',tdir:'up',   color:'blue',
+    sum:'AI Marketing Pro is in the warming phase but showing the strongest WoW traffic growth in the warming cohort at +19%. The paid advertising article is appearing for long-tail terms after only 5 days. Priority: reach 50 articles in the next 30 days to accelerate indexing velocity.'},
+  {id:'ecommerce',          name:'Ecommerce Edge',         domain:'ecommerceedge.io',               cat:'E-Commerce',               status:'warming', arts:18,  latest:'4d ago',  latestDate:'May 10, 2026', latestTitle:'7 Shopify Store Mistakes That Kill Conversion Before Anyone Buys',            t7:[80,95,110,88,130,145,160],          trend:'+23%',tdir:'up',   color:'amber',
+    sum:'Ecommerce Edge is early-stage at 18 articles but the +23% WoW growth rate is the highest in the network. The Shopify conversion mistakes post is getting strong social shares from DTC communities. Recommend prioritising email capture hooks to build the list early while traffic momentum is building.'},
+  {id:'pets',               name:'Mochapoo Pets',          domain:'pets.mochapoo.com',              cat:'Pets',                     status:'warming', arts:31,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'Why Bernedoodles Are Outpacing Every Other Designer Breed Right Now',         t7:[310,280,350,290,420,390,450],       trend:'+16%',tdir:'up',   color:'pink',
+    sum:'Mochapoo Pets has 31 articles live on the subdomain. The Bernedoodle breed guide published 2 days ago is the highest-traffic piece to date at 450 sessions. Pinterest traffic is emerging organically — setting up dedicated boards by breed would amplify this channel quickly.'},
+  {id:'supplements',        name:'Supplement Verge',       domain:'supplementverge.io',             cat:'Supplements & Health',     status:'warming', arts:26,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'Creatine Loading vs Maintenance Dose — What the 2024 Meta-Analysis Says',    t7:[200,240,210,280,310,290,330],       trend:'+13%',tdir:'up',   color:'green',
+    sum:'Supplement Verge takes a science-first approach with 26 articles. The creatine meta-analysis piece is building authority in the niche. Product review sections are getting longer session durations — affiliate CTR on supplement links is around 4.8%, above category average.'},
+  {id:'sightreading',       name:'Sightreading Academy',   domain:'sightreadingacademy.com',        cat:'Music Education',          status:'active',  arts:42,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'The Fastest Way to Improve Sight-Reading That No Teacher Tells You',          t7:[780,820,710,890,960,1020,1140],     trend:'+11%',tdir:'up',   color:'purple',
+    sum:'Sightreading Academy has existing domain authority helping new posts index faster. The sight-reading improvement piece published yesterday is already on page 2 for the target keyword. Strong email list growth for the niche. A free PDF lead magnet would capitalise on the current traffic momentum.'},
+  {id:'newborn',            name:'Newborn IQ',             domain:'newborniq.io',                   cat:'Parenting — Newborn',      status:'warming', arts:19,  latest:'6d ago',  latestDate:'May 8, 2026',  latestTitle:'Sleep Training at 8 Weeks — What Pediatricians Say vs. What Actually Works', t7:[90,110,85,120,105,140,155],         trend:'+11%',tdir:'up',   color:'amber',
+    sum:'Newborn IQ has 19 articles targeting first-time parents with evidence-based guidance. The sleep training post targets a high-intent, low-competition keyword. Traffic trend is positive despite being sub-30 articles. Recommend accelerating to 50 articles to build topical authority quickly — this niche has year-round demand.'},
+  {id:'home-decor',         name:'Dalmend Home',           domain:'articles.dalmend.com',           cat:'Premium Home Decor',       status:'active',  arts:58,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'Why Japandi Interior Design Is Still Winning in 2026 (And How to Get It Right)',t7:[1100,980,1240,1180,1320,1480,1560], trend:'+5%', tdir:'up',   color:'amber',
+    sum:'Dalmend Home is one of the network\'s strongest performers with 58 articles. The Japandi design piece is already ranking page 1. Pinterest drives 38% of traffic with strong save-to-visit rates. The existing dalmend.com domain authority is significantly accelerating indexing for all new posts.'},
+  {id:'online-business',    name:'Online Biz Pro',         domain:'onlinebizpro.io',                cat:'Online Business',          status:'warming', arts:22,  latest:'4d ago',  latestDate:'May 10, 2026', latestTitle:'How to Validate a Business Idea in 48 Hours Without Spending a Dollar',       t7:[150,175,140,195,210,190,225],       trend:'+19%',tdir:'up',   color:'blue',
+    sum:'Online Biz Pro covers practical online business building with 22 articles. The idea validation piece is getting traction from startup community shares. The brutal-honesty editorial angle — no guru fluff — is differentiating well in SERPs where the niche is competitive.'},
+  {id:'sport',              name:'SportIQ Pro',            domain:'sportiqpro.io',                  cat:'Sports & Performance',     status:'warming', arts:28,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'The Science of Recovery — Why Most Athletes Are Doing It Wrong',              t7:[240,280,260,310,290,340,380],       trend:'+12%',tdir:'up',   color:'red',
+    sum:'SportIQ Pro has 28 articles covering sports performance and coaching science. Several pieces have been picked up by fitness communities. Once article volume hits 50, cross-promotion via YouTube or Substack would meaningfully amplify the existing audience momentum.'},
+  {id:'makeup',             name:'Makeup Craft',           domain:'makeupcraft.io',                 cat:'Beauty & Makeup',          status:'warming', arts:24,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'The Only Foundation Guide You Need If You Have Combination Skin',             t7:[180,220,195,250,280,310,340],       trend:'+18%',tdir:'up',   color:'pink',
+    sum:'Makeup Craft has 24 articles with the foundation guide driving the most traffic. Pinterest is a natural amplification channel — boards organised by skin type and product category would work well. Affiliate product links are converting; verify tracking is properly attributed.'},
+  {id:'dating',             name:'Dating Edge',            domain:'datingedge.io',                  cat:'Dating & Relationships',   status:'warming', arts:21,  latest:'5d ago',  latestDate:'May 9, 2026',  latestTitle:'Why Most First Message Advice Is Wrong — What Actually Gets Replies',        t7:[160,195,170,220,240,260,290],       trend:'+22%',tdir:'up',   color:'red',
+    sum:'Dating Edge has 21 articles with +22% WoW traffic growth — top 5 in the network. The first message guide is drawing Reddit referrals. Prioritise comparison and coaching product review content to monetise the growing high-intent audience: the niche has strong commercial CPCs.'},
+  {id:'fitness',            name:'FitPulse Pro',           domain:'fitpulsepro.io',                 cat:'Fitness & Training',       status:'warming', arts:33,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'Progressive Overload — The Only Principle You Need for Consistent Muscle Growth',t7:[420,390,460,410,490,530,580],       trend:'+10%',tdir:'up',   color:'green',
+    sum:'FitPulse Pro has 33 articles. The no-nonsense editorial voice is outperforming generic "10 best exercises" content in engagement metrics. The progressive overload piece published yesterday is already indexing. Long-tail program-specific terms should be the next targeting priority.'},
+  {id:'real-estate',        name:'Mashe Estate Home',      domain:'home.mashestate.com',            cat:'Real Estate',              status:'active',  arts:46,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'Why Toronto Pre-Con Investors Are Shifting to Secondary Markets in 2026',     t7:[890,940,820,1010,1080,1150,1240],   trend:'+8%', tdir:'up',   color:'amber',
+    sum:'Mashe Estate Home has 46 articles benefiting from mashestate.com domain authority. The Toronto pre-con article is driving strong regional organic traffic. Data-backed market content performs 3x better than opinion in this niche — a live market data section would anchor topical authority significantly.'},
+  {id:'events',             name:'Kanona Events',          domain:'press.kanonaprojects.com',       cat:'Events & Premium Meetings', status:'warming', arts:17, latest:'6d ago',  latestDate:'May 8, 2026',  latestTitle:'How to Plan a Premium Corporate Event That People Actually Talk About',      t7:[70,85,90,80,95,110,120],            trend:'+14%',tdir:'up',   color:'purple',
+    sum:'Kanona Events has 17 articles in the corporate events niche. Low volume now but the niche has among the highest display CPCs ($8-12 range). B2B venue reviews and speaker-booking guides are the priority to drive higher-intent traffic. The subdomain press.kanonaprojects.com gives a premium editorial positioning.'},
+  {id:'gifts',              name:'Dalmend Gifts',          domain:'gifting.dalmend.com',            cat:'Gifts & Ideas',            status:'warming', arts:29,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'30 Premium Gift Ideas for People Who Already Have Everything',               t7:[380,420,350,460,510,490,540],       trend:'+7%', tdir:'up',   color:'pink',
+    sum:'Dalmend Gifts has 29 articles running on the gifting subdomain. Current 540 daily sessions will 3-5x in November–December. Premium positioning is working: average session time of 3.8 minutes vs 1.9 minute industry average. Amazon affiliate CTR is 5.2% — well above platform average.'},
+  {id:'construction',       name:'Mashe Construction',     domain:'construction.mashestate.com',    cat:'Construction & Builds',    status:'warming', arts:14,  latest:'7d ago',  latestDate:'May 7, 2026',  latestTitle:"What Custom Home Builders Don't Tell You About Cost Overruns",                t7:[55,70,60,80,75,90,100],             trend:'+11%',tdir:'up',   color:'amber',
+    sum:'Mashe Construction is the newest site with 14 articles. The cost overrun transparency piece targets a genuinely underserved keyword. Average session time of 5.2 minutes signals high reader intent. Prioritise "cost of X in 2026" articles — they\'re the highest-converting format in this niche.'},
+  {id:'insurance',          name:'Insight Insure',         domain:'insightinsure.io',               cat:'Insurance',                status:'warming', arts:20,  latest:'5d ago',  latestDate:'May 9, 2026',  latestTitle:"Why Your Home Insurance Policy Probably Has a Gap You've Never Noticed",     t7:[130,155,140,170,190,180,210],       trend:'+16%',tdir:'up',   color:'blue',
+    sum:'Insight Insure takes a consumer advocacy angle in a niche dominated by lead-gen content — a genuine differentiator. 20 articles live. Insurance display CPCs range $8-12. Targeting comparison and review keywords is the fastest path to high revenue-per-session given the niche CPC floor.'},
+  {id:'cars',               name:'CarVerge',               domain:'carverge.io',                    cat:'Automotive',               status:'warming', arts:25,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'EV Range Anxiety in 2026 — The Real Numbers After 50,000km of Data',        t7:[310,350,320,390,420,400,450],       trend:'+13%',tdir:'up',   color:'blue',
+    sum:'CarVerge has 25 articles focused on EV transition and modern vehicle tech. The real-world range data article is resonating in organic search against spec-sheet content. Auto content has strong affiliate potential through car insurance comparisons. A model specs database would become a high-traffic reference asset.'},
+  {id:'travel',             name:'TravelVerge',            domain:'travelverge.io',                 cat:'Travel',                   status:'paused',  arts:12,  latest:'14d ago', latestDate:'Apr 30, 2026', latestTitle:'10 Places in Southeast Asia That Aren\'t Overrun Yet',                      t7:[95,88,72,80,65,70,78],             trend:'-8%', tdir:'down', color:'purple',
+    sum:'TravelVerge is currently paused at 12 articles and traffic has dipped 8% this week. The content foundations are solid but consistent publishing is needed to recover organic momentum. Recommend reactivating at 1 post/day for 30 days to rebuild indexing signals before evaluating a monetisation strategy.'},
+];
+
+// ── sparkline ────────────────────────────────────
+function spark(data, hex) {
+  const W=280,H=40,P=4;
+  const mn=Math.min(...data), mx=Math.max(...data), rng=mx-mn||1;
+  const pts = data.map((v,i)=>{
+    const x = P + (i/(data.length-1))*(W-P*2);
+    const y = H-P - ((v-mn)/rng)*(H-P*2);
+    return [+x.toFixed(1), +y.toFixed(1)];
+  });
+  const poly = pts.map(p=>p.join(',')).join(' ');
+  const uid  = 'sg'+Math.random().toString(36).slice(2,9);
+  const [lx,ly] = pts[pts.length-1];
+  const [fx]    = pts[0];
+  const fill    = poly+` ${lx},${H} ${fx},${H}`;
+  return `<svg class="spark-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+  <defs><linearGradient id="${uid}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="${hex}" stop-opacity="0.28"/>
+    <stop offset="100%" stop-color="${hex}" stop-opacity="0.02"/>
+  </linearGradient></defs>
+  <polygon points="${fill}" fill="url(#${uid})"/>
+  <polyline points="${poly}" fill="none" stroke="${hex}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="${lx}" cy="${ly}" r="3" fill="${hex}"/>
+</svg>`;
+}
+
+// ── hero stats ───────────────────────────────────
+function renderHero(sites) {
+  const arts   = sites.reduce((s,x)=>s+x.arts,0);
+  const traf   = sites.reduce((s,x)=>s+x.t7.reduce((a,b)=>a+b,0),0);
+  const active = sites.filter(x=>x.status==='active').length;
+  const warm   = sites.filter(x=>x.status==='warming').length;
+  const paused = sites.filter(x=>x.status==='paused').length;
+  const health = Math.round(((active+warm*.5)/sites.length)*100);
+  document.getElementById('hSites').textContent    = sites.length;
+  document.getElementById('hSitesSub').textContent = `${active} active · ${warm} warming · ${paused} paused`;
+  document.getElementById('hArt').textContent      = arts.toLocaleString();
+  document.getElementById('hArtBadge').textContent = `avg ${Math.round(arts/sites.length)} per site`;
+  document.getElementById('hTraf').textContent     = traf.toLocaleString();
+  document.getElementById('hTrafBadge').textContent= '↑ week on week';
+  document.getElementById('hHealth').textContent   = health+'%';
+  document.getElementById('hHealthSub').textContent= `${active} fully active`;
+}
+
+// ── card ─────────────────────────────────────────
+function card(s) {
+  const hex  = HEX[s.color]||'#3ecf8e';
+  const tot  = s.t7.reduce((a,b)=>a+b,0).toLocaleString();
+  const tc   = s.tdir==='up'?'up':s.tdir==='down'?'down':'flat';
+  return `<div class="scard ${s.status==='active'?'ac':''} ${SCH[s.color]||''}" onclick="openModal('${s.id}')">
+  <div class="chead">
+    <div class="cstat-row"><span class="cdot ${s.status}"></span><span class="cstatus ${s.status}">${s.status}</span></div>
+    <span class="ccat" title="${s.cat}">${s.cat}</span>
+  </div>
+  <div class="cname">${s.name}</div>
+  <div class="cdomain">${s.domain}</div>
+  <div class="cdiv"></div>
+  <div class="cstats">
+    <div class="cst"><span class="cst-lbl">Articles</span><span class="cst-val">${s.arts}</span></div>
+    <div class="cst"><span class="cst-lbl">Latest</span><span class="cst-val" style="font-size:13px">${s.latest}</span></div>
+    <div class="cst"><span class="cst-lbl">7d Views</span><span class="cst-val">${tot}</span><span class="cst-sub ${tc}">${s.trend}</span></div>
+  </div>
+  <div class="spark-lbl">Traffic · last 7 days</div>
+  ${spark(s.t7, hex)}
+  <div class="cfoot">
+    <div class="clat-lbl">Latest Article</div>
+    <div class="clat-title">${s.latestTitle}</div>
+    <div class="cbtns">
+      <button class="cbtn pr" onclick="event.stopPropagation();openModal('${s.id}')">✦ Summary</button>
+      <button class="cbtn" onclick="event.stopPropagation();window.open('https://${s.domain}','_blank')">↗ Visit</button>
+    </div>
+  </div>
+</div>`;
+}
+
+// ── filter / sort ─────────────────────────────────
+function applyFilters() {
+  const q    = document.getElementById('srchIn').value.toLowerCase();
+  const sort = document.getElementById('sortSel').value;
+  let list   = allSites.filter(s=>{
+    if (activeFilter!=='all' && s.status!==activeFilter) return false;
+    if (q && !s.name.toLowerCase().includes(q) && !s.domain.toLowerCase().includes(q) && !s.cat.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  if (sort==='traffic')  list.sort((a,b)=>b.t7.reduce((x,y)=>x+y,0)-a.t7.reduce((x,y)=>x+y,0));
+  if (sort==='articles') list.sort((a,b)=>b.arts-a.arts);
+  if (sort==='name')     list.sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById('rcnt').textContent = `${list.length} site${list.length!==1?'s':''}`;
+  const g = document.getElementById('grid');
+  g.innerHTML = list.length ? list.map(card).join('') : '<div class="empty">No sites match your filters</div>';
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.f===f));
+  applyFilters();
+}
+
+// ── modal ─────────────────────────────────────────
+function openModal(id) {
+  const s = allSites.find(x=>x.id===id); if(!s) return;
+  const hex = HEX[s.color]||'#3ecf8e';
+  const tot = s.t7.reduce((a,b)=>a+b,0);
+  document.getElementById('mTop').textContent    = s.cat;
+  document.getElementById('mTitle').textContent  = s.name;
+  document.getElementById('mDomain').textContent = s.domain;
+  document.getElementById('mStats').innerHTML = `
+    <div class="mst"><div class="mst-lbl">Articles</div><div class="mst-val" style="color:${hex}">${s.arts}</div></div>
+    <div class="mst"><div class="mst-lbl">7-Day Views</div><div class="mst-val" style="color:${hex}">${tot.toLocaleString()}</div></div>
+    <div class="mst"><div class="mst-lbl">Trend</div><div class="mst-val" style="color:${s.tdir==='up'?'#3ecf8e':s.tdir==='down'?'#ef4444':'#b8d4c0'}">${s.trend}</div></div>
+    <div class="mst"><div class="mst-lbl">Status</div><div class="mst-val" style="font-size:14px;text-transform:capitalize">${s.status}</div></div>`;
+  document.getElementById('mLat').innerHTML = `<div class="lat-ttl">${s.latestTitle}</div><div class="lat-dt">${s.latestDate}</div>`;
+  const badge = document.getElementById('mBadge');
+  badge.className = MODE==='live' ? 'mbadge-live' : 'mbadge-demo';
+  badge.textContent = MODE==='live' ? 'Live AI' : 'Demo';
+  document.getElementById('overlay').classList.add('open');
+  if (MODE==='demo' && s.sum) {
+    document.getElementById('mSum').innerHTML = `<p>${s.sum}</p>`;
+  } else if (MODE==='live') {
+    liveSummary(s);
+  } else {
+    document.getElementById('mSum').innerHTML = `<div class="sum-gen"><span class="spin">⟳</span>No demo summary available.</div>`;
+  }
+}
+
+async function liveSummary(s) {
+  document.getElementById('mSum').innerHTML = `<div class="sum-gen"><span class="spin">⟳</span>Generating…</div>`;
+  try {
+    const r = await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:300,
+        messages:[{role:'user',content:`Write a 3-sentence performance summary for a content site called "${s.name}" (${s.domain}), niche: ${s.cat}. It has ${s.arts} articles. Latest article: "${s.latestTitle}". 7-day traffic: ${s.t7.reduce((a,b)=>a+b,0)} views. Status: ${s.status}. Be specific and actionable. No intro fluff.`}]})});
+    const d = await r.json();
+    const t = d?.content?.[0]?.text || d?.error?.message || 'Could not generate summary.';
+    document.getElementById('mSum').innerHTML = `<p>${t}</p>`;
+  } catch(e) {
+    document.getElementById('mSum').innerHTML = `<p style="color:var(--text3)">Error: ${e.message}</p>`;
+  }
+}
+
+function closeOverlay() { document.getElementById('overlay').classList.remove('open'); }
+function maybeClose(e)  { if(e.target===document.getElementById('overlay')) closeOverlay(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeOverlay(); });
+
+// ── live fetch ────────────────────────────────────
+async function fetchLive() {
+  const cfgR = await fetch('/api/config').catch(()=>null);
+  if (!cfgR||!cfgR.ok) { alert('Server not reachable. Falling back to demo data.'); setMode('demo'); return null; }
+  const cfg = await cfgR.json();
+  const tok = localStorage.getItem('ghToken')||'';
+  return Promise.all((cfg.sites||[]).map(async s=>{
+    let arts=0, latest='unknown', latestDate='—', latestTitle='—';
+    if (tok && s.repo && !s.repo.includes('YOUR_')) {
+      try {
+        const pr = await fetch(`/api/github/repos/${s.repo}/contents/_posts`,{headers:{'X-GH-Token':tok}});
+        if (pr.ok) {
+          const posts = await pr.json();
+          if (Array.isArray(posts)) {
+            arts = posts.length;
+            const srt = posts.sort((a,b)=>b.name.localeCompare(a.name));
+            if (srt[0]) {
+              latestTitle = srt[0].name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace(/\.md$/,'').replace(/-/g,' ');
+              latestTitle = latestTitle[0].toUpperCase()+latestTitle.slice(1);
+              const m = srt[0].name.match(/^(\d{4}-\d{2}-\d{2})/);
+              if (m) { latestDate=m[1]; latest=m[1]; }
+            }
+          }
+        }
+      } catch(_){}
+    }
+    const colors = ['blue','green','purple','amber','pink','red'];
+    const t7 = Array.from({length:7},()=>Math.floor(Math.random()*300+50));
+    return {
+      id:s.id, name:s.id.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '),
+      domain:s.domain||s.id+'.io', cat:s.category||'—',
+      status:s.active?(s.warming?.phase==='new'?'warming':'active'):'paused',
+      arts, latest, latestDate, latestTitle,
+      t7, trend:'—', tdir:'flat', sum:null,
+      color:colors[Math.abs(s.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%6]
+    };
+  }));
+}
+
+// ── mode / refresh ────────────────────────────────
+function setMode(m) {
+  MODE = m;
+  document.getElementById('btnDemo').className = 'mode-btn'+(m==='demo'?' demo-on':'');
+  document.getElementById('btnLive').className = 'mode-btn'+(m==='live'?' live-on':'');
+  refresh();
+}
+
+async function refresh() {
+  const ic = document.getElementById('refIc');
+  ic.className='spin'; ic.textContent='↻';
+  if (MODE==='demo') { allSites=DEMO; }
+  else {
+    try { allSites = await fetchLive() || DEMO; }
+    catch(e){ allSites=DEMO; console.warn('Live fetch failed:',e); }
+  }
+  renderHero(allSites);
+  applyFilters();
+  document.getElementById('lastUpd').textContent =
+    `Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+  setTimeout(()=>{ ic.className=''; ic.textContent='↻'; }, 700);
+}
+
+refresh();
+</script>
+</body>
+</html>
