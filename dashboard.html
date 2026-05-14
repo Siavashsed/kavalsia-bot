@@ -1,0 +1,1829 @@
+<!-- Content Network Dashboard — © 2026 Kavalsia Inc. All Rights Reserved. [Siavash Sadighi] -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Content Network Dashboard — Kavalsia Inc.</title>
+<style>
+/* ── Reset ──────────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c09;--bg2:#0d1410;--bg3:#121b14;--bg4:#172119;
+  --text:#ffffff;--text2:#b8d4c0;--text3:#4d7059;
+  --accent:#3ecf8e;--accent2:#2eb87d;--glow:#3ecf8e28;
+  --green:#3ecf8e;--red:#ef4444;--amber:#f59e0b;--blue:#38bdf8;
+  --border:#142018;--border2:#1e3024;
+  --font:'Inter',system-ui,sans-serif;
+  --r:10px;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+body{background:radial-gradient(ellipse at 50% 0%,#0d2318 0%,#080c09 65%)}
+a{color:var(--accent);text-decoration:none}
+button{cursor:pointer;font-family:var(--font)}
+input,textarea,select{font-family:var(--font)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::placeholder{color:var(--text3)}
+
+/* ── App shell ───────────────────────────────────────────────────────────── */
+.shell{display:grid;grid-template-columns:220px 1fr;height:100vh;overflow:hidden}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+.sidebar{
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow-y:auto;
+}
+.sidebar-top{padding:22px 16px 8px}
+.logo{font-size:16px;font-weight:800;letter-spacing:-0.3px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block}
+.logo-sub{font-size:10px;color:var(--text3);-webkit-text-fill-color:var(--text3);margin-top:2px}
+
+.nav-group{padding:0 8px;margin-top:12px}
+.nav-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;
+  color:var(--text3);padding:10px 8px 4px;display:block}
+.nav-btn{
+  display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;
+  border-radius:8px;background:none;border:none;color:var(--text2);
+  font-size:13px;font-weight:500;text-align:left;transition:all .15s;margin-bottom:1px;
+}
+.nav-btn:hover{background:var(--bg3);color:var(--text)}
+.nav-btn.active{background:var(--glow);color:var(--accent);font-weight:600}
+.nav-btn .icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nav-btn.post-btn{color:var(--amber)}
+.nav-btn.post-btn.active{background:#f59e0b22;color:var(--amber)}
+
+.sidebar-footer{margin-top:auto;padding:14px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)}
+.sidebar-footer a{color:var(--text3)}
+
+/* ── Main ────────────────────────────────────────────────────────────────── */
+.main{display:flex;flex-direction:column;overflow:hidden}
+.page{display:none;flex:1;overflow-y:auto;padding:32px 36px 80px}
+.page.active{display:block}
+
+/* ── Page headers ────────────────────────────────────────────────────────── */
+.pg-head{margin-bottom:28px}
+.pg-title{font-size:22px;font-weight:800;letter-spacing:-0.4px;color:var(--text);margin-bottom:4px}
+.pg-sub{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.card+.card{margin-top:14px}
+.card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px}
+.card-title .icon{font-size:15px}
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+.fi,.ft,.fs{
+  width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;
+  padding:10px 14px;color:var(--text);font-size:13px;outline:none;transition:border-color .15s;
+}
+.ft{resize:vertical;line-height:1.65;min-height:90px}
+.fs option{background:var(--bg2)}
+.fi:focus,.ft:focus,.fs:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.fl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2)}
+.fl small{text-transform:none;letter-spacing:0;font-weight:400;color:var(--text3)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;
+  font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-p{background:var(--accent);color:#fff}
+.btn-p:hover{background:var(--accent2);box-shadow:0 0 20px var(--glow)}
+.btn-g{background:var(--bg3);color:var(--text2);border:1px solid var(--border2)}
+.btn-g:hover{color:var(--text);border-color:var(--border)}
+.btn-green{background:#3ecf8e22;color:var(--green);border:1px solid var(--green)}
+.btn-green:hover{background:#3ecf8e33}
+.btn-amber{background:#f59e0b22;color:var(--amber);border:1px solid var(--amber)}
+.btn-amber:hover{background:#f59e0b33}
+.btn-red{background:#ef444422;color:var(--red);border:1px solid #ef444477}
+.btn-blue{background:#38bdf822;color:var(--blue);border:1px solid var(--blue)}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-xs{padding:4px 10px;font-size:11px;border-radius:6px}
+
+/* ── Alerts ──────────────────────────────────────────────────────────────── */
+.alert{border-left:3px solid var(--accent);background:var(--bg3);border-radius:0 8px 8px 0;
+  padding:12px 16px;font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:16px}
+.alert b{color:var(--text)}
+.alert.warn{border-left-color:var(--amber)}
+.alert.success{border-left-color:var(--green)}
+.alert.info{border-left-color:var(--blue)}
+
+/* ── Stat grid ───────────────────────────────────────────────────────────── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:18px;text-align:center}
+.stat-val{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px}
+.stat-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.stat-delta{font-size:11px;margin-top:4px}
+.stat-delta.up{color:var(--green)}
+.stat-delta.down{color:var(--red)}
+
+/* ── Site cards (overview grid) ──────────────────────────────────────────── */
+.sites-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.site-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;transition:border-color .2s,box-shadow .2s}
+.site-card:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--glow)}
+.sc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.sc-domain{font-size:15px;font-weight:700;color:var(--text)}
+.sc-cat{font-size:11px;color:var(--text2);margin-top:2px}
+.theme-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.sc-pills{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.pill{display:inline-flex;align-items:center;font-size:10px;font-weight:600;
+  padding:2px 8px;border-radius:100px;border:1px solid}
+.pill-layout{border-color:#7c6fec44;color:var(--accent)}
+.pill-theme{border-color:#3ecf8e44;color:var(--green)}
+.pill-custom{border-color:#f59e0b44;color:var(--amber)}
+.sc-meta{font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6}
+.sc-btns{display:flex;gap:7px}
+
+/* ── Manual Post (star feature) ─────────────────────────────────────────── */
+.post-hero{
+  background:linear-gradient(135deg,#0f0a2a 0%,#1a0f3d 100%);
+  border:1px solid #7c6fec44;border-radius:var(--r);padding:24px;margin-bottom:18px;
+}
+.post-hero-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:4px;
+  display:flex;align-items:center;gap:8px}
+.post-hero-sub{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.6}
+.post-big-input{
+  width:100%;background:#0a0820;border:1px solid var(--border2);border-radius:8px;
+  padding:14px 18px;color:var(--text);font-size:15px;font-weight:500;outline:none;
+  transition:border-color .15s;letter-spacing:-0.2px;
+}
+.post-big-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.post-context{margin-top:10px}
+
+/* Site selector for manual posting */
+.site-select-bar{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;
+}
+.site-select-bar .count{font-size:12px;color:var(--text2);
+  background:var(--bg3);padding:4px 12px;border-radius:100px;border:1px solid var(--border)}
+.site-checkgrid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;
+  max-height:320px;overflow-y:auto;padding-right:4px;
+}
+.site-check-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;cursor:pointer;transition:all .15s;user-select:none;
+}
+.site-check-item:hover{border-color:var(--border2);background:var(--bg4)}
+.site-check-item.checked{border-color:var(--accent);background:var(--glow)}
+.site-check-item.checked .chk-box{background:var(--accent);border-color:var(--accent)}
+.chk-box{
+  width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#fff;flex-shrink:0;transition:all .15s;
+}
+.chk-info{flex:1;min-width:0}
+.chk-domain{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chk-cat{font-size:10px;color:var(--text2)}
+.chk-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Post progress */
+.post-log{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;font-family:'Menlo','Courier New',monospace;font-size:12px;
+  color:var(--text2);max-height:200px;overflow-y:auto;line-height:1.8;
+  display:none;margin-top:12px;
+}
+.post-log.visible{display:block}
+.log-ok{color:var(--green)}
+.log-err{color:var(--red)}
+.log-info{color:var(--blue)}
+
+/* ── Config modal ────────────────────────────────────────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;
+  align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.modal-box{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:14px;
+  width:min(680px,95vw);max-height:88vh;overflow-y:auto;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);
+}
+.modal-header{
+  position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:18px 24px;display:flex;justify-content:space-between;align-items:center;
+  border-radius:14px 14px 0 0;z-index:1;
+}
+.modal-title{font-size:16px;font-weight:700;color:var(--text)}
+.modal-body{padding:24px}
+
+/* Modal tabs */
+.modal-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:20px}
+.modal-tab{padding:8px 16px;font-size:13px;font-weight:500;color:var(--text2);
+  background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;
+  cursor:pointer;transition:all .15s}
+.modal-tab:hover{color:var(--text)}
+.modal-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.modal-tab-panel{display:none}
+.modal-tab-panel.active{display:block}
+
+/* Ignore global toggle */
+.ig-toggle{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:12px 16px;cursor:pointer;margin-bottom:14px;transition:all .2s;
+}
+.ig-toggle:hover{border-color:var(--amber)}
+.ig-toggle.on{border-color:var(--amber);background:#f59e0b11}
+.ig-knob{
+  width:40px;height:22px;border-radius:11px;background:var(--bg4);
+  border:2px solid var(--border2);position:relative;transition:all .2s;flex-shrink:0;
+}
+.ig-knob::after{
+  content:'';position:absolute;width:14px;height:14px;border-radius:50%;
+  background:var(--text3);top:2px;left:2px;transition:all .2s;
+}
+.ig-toggle.on .ig-knob{background:var(--amber);border-color:var(--amber)}
+.ig-toggle.on .ig-knob::after{background:#fff;left:20px}
+.ig-text-wrap{flex:1}
+.ig-label{font-size:13px;font-weight:600;color:var(--text2)}
+.ig-toggle.on .ig-label{color:var(--amber)}
+.ig-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.ig-prompt-box{
+  background:var(--bg);border:1px solid var(--amber);border-radius:8px;overflow:hidden;
+  margin-bottom:14px;animation:slideDown .2s ease;
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.ig-prompt-bar{
+  background:#f59e0b18;padding:8px 14px;border-bottom:1px solid var(--amber);
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--amber);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.ig-prompt-box textarea{
+  width:100%;background:transparent;border:none;padding:12px 14px;
+  color:var(--text);font-size:13px;line-height:1.7;resize:vertical;min-height:160px;outline:none;
+}
+
+/* Layout picker */
+.layout-picker{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:6px}
+.layout-card{
+  border:2px solid var(--border);border-radius:8px;padding:10px 6px;
+  text-align:center;cursor:pointer;transition:all .15s;background:var(--bg);
+}
+.layout-card:hover{border-color:var(--border2)}
+.layout-card.selected{border-color:var(--accent);background:var(--glow)}
+.layout-card .lc-icon{font-size:20px;margin-bottom:4px}
+.layout-card .lc-name{font-size:10px;font-weight:700;color:var(--text2)}
+.layout-card.selected .lc-name{color:var(--accent)}
+
+/* Theme swatches */
+.theme-picker{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.theme-swatch{
+  width:48px;height:48px;border-radius:8px;border:2px solid var(--border);
+  cursor:pointer;transition:all .15s;position:relative;overflow:hidden;
+}
+.theme-swatch.selected{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+.theme-swatch-inner{width:100%;height:100%}
+.theme-swatch-label{position:absolute;bottom:0;left:0;right:0;font-size:8px;
+  font-weight:700;text-align:center;padding:2px;background:rgba(0,0,0,.6);color:#fff}
+
+/* ── Backlink matrix ─────────────────────────────────────────────────────── */
+.matrix-wrap{overflow-x:auto;border-radius:var(--r)}
+.matrix{border-collapse:collapse;font-size:11px;width:100%}
+.matrix th,.matrix td{border:1px solid var(--border);padding:6px 8px;white-space:nowrap;text-align:center}
+.matrix th{background:var(--bg3);color:var(--text2);font-weight:600;position:sticky;top:0}
+.matrix td{background:var(--bg2)}
+.matrix .cell-hit{color:var(--green);font-weight:700;font-size:13px}
+.matrix .cell-zero{color:var(--border2)}
+.matrix th:first-child,.matrix td:first-child{
+  text-align:left;font-weight:700;color:var(--text);position:sticky;left:0;
+  background:var(--bg3);min-width:130px;
+}
+
+/* ── Setup steps ─────────────────────────────────────────────────────────── */
+.setup-step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);
+  color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:13px;color:var(--text2);line-height:1.65}
+.step-text b{color:var(--text)}
+code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  padding:1px 6px;font-size:12px;font-family:'Menlo','Courier New',monospace;color:var(--accent2)}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;
+  font-family:'Menlo','Courier New',monospace;font-size:12px;line-height:1.8;
+  overflow-x:auto;color:var(--text2);margin:10px 0}
+
+/* ── Token section ───────────────────────────────────────────────────────── */
+.token-bar{display:flex;gap:8px;align-items:center}
+.token-bar .fi{flex:1}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .page{padding:20px 16px 60px}
+  .fgrid,.fgrid3{grid-template-columns:1fr}
+  .sites-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN WALL ──────────────────────────────────────────────────────── -->
+<div id="auth-wall" style="position:fixed;inset:0;z-index:9999;background:#050a06;display:flex;align-items:center;justify-content:center">
+  <div style="background:#0d1410;border:1px solid #1e3024;border-radius:16px;padding:48px 40px;width:360px;text-align:center;box-shadow:0 0 60px #3ecf8e1e">
+    <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia" style="height:36px;width:auto;object-fit:contain;margin-bottom:20px">
+    <div style="font-size:24px;font-weight:800;color:#ffffff;margin-bottom:4px">Network Dashboard</div>
+    <div style="font-size:13px;color:#b8d4c0;margin-bottom:32px">Secure Access</div>
+    <input id="auth-user" type="text" placeholder="Username" autocomplete="username"
+      style="width:100%;padding:12px 16px;background:#121b14;border:1px solid #1e3024;border-radius:8px;color:#ffffff;font-size:14px;margin-bottom:10px;outline:none;box-sizing:border-box"
+      onkeydown="if(event.key==='Enter')attemptLogin()">
+    <input id="auth-pass" type="password" placeholder="Password" autocomplete="current-password"
+      style="width:100%;padding:12px 16px;background:#121b14;border:1px solid #1e3024;border-radius:8px;color:#ffffff;font-size:14px;margin-bottom:20px;outline:none;box-sizing:border-box"
+      onkeydown="if(event.key==='Enter')attemptLogin()">
+    <button onclick="attemptLogin()" style="width:100%;padding:13px;background:linear-gradient(135deg,#3ecf8e,#2eb87d);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.5px">Sign In</button>
+    <div id="auth-err" style="margin-top:12px;font-size:13px;color:#ef4444;display:none">Invalid credentials. Try again.</div>
+  </div>
+</div>
+<script>
+(function(){
+  var U='admin',P='2020dalmenD',K='kvs_net_auth';
+  function chk(){var ok=sessionStorage.getItem(K)==='1';document.getElementById('auth-wall').style.display=ok?'none':'flex';}
+  window.attemptLogin=function(){
+    var u=document.getElementById('auth-user').value,p=document.getElementById('auth-pass').value;
+    if(u===U&&p===P){sessionStorage.setItem(K,'1');document.getElementById('auth-wall').style.display='none';}
+    else{document.getElementById('auth-err').style.display='block';}
+  };
+  chk();
+})();
+</script>
+
+<div class="shell">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-top">
+    <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia" style="height:34px;width:auto;object-fit:contain;display:block;margin-bottom:4px">
+    <span class="logo-sub">Network Dashboard</span>
+    <nav style="display:flex;flex-wrap:wrap;gap:3px;margin-top:12px">
+      <a href="hub.html"       style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#121b14;border:1px solid #1e3024">Hub</a>
+      <a href="editor.html"    style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#121b14;border:1px solid #1e3024">Editor</a>
+      <span style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:700;background:#3ecf8e18;color:#3ecf8e;border:1px solid #3ecf8e35">Dashboard</span>
+      <a href="launcher.html"  style="padding:4px 9px;border-radius:6px;font-size:10px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#121b14;border:1px solid #1e3024">Setup</a>
+    </nav>
+  </div>
+
+  <div class="nav-group">
+    <span class="nav-label">Overview</span>
+    <button class="nav-btn active" onclick="showPage('overview')" id="nb-overview">
+      <span class="icon">📊</span> Dashboard
+    </button>
+    <button class="nav-btn" onclick="showPage('sites')" id="nb-sites">
+      <span class="icon">🌐</span> Sites & Config
+    </button>
+  </div>
+
+  <div class="nav-group">
+    <span class="nav-label">Publishing</span>
+    <button class="nav-btn post-btn" onclick="showPage('post')" id="nb-post">
+      <span class="icon">✍️</span> Manual Post
+    </button>
+    <button class="nav-btn" onclick="showPage('backlinks')" id="nb-backlinks">
+      <span class="icon">🔗</span> Backlink Matrix
+    </button>
+  </div>
+
+  <div class="nav-group">
+    <span class="nav-label">Automation</span>
+    <button class="nav-btn" onclick="showPage('telegram')" id="nb-telegram">
+      <span class="icon">🤖</span> Telegram Bot
+    </button>
+    <button class="nav-btn" onclick="showPage('newsletter')" id="nb-newsletter">
+      <span class="icon">📧</span> Newsletter
+    </button>
+  </div>
+
+  <div class="nav-group">
+    <span class="nav-label">Setup</span>
+    <button class="nav-btn" onclick="showPage('setup')" id="nb-setup">
+      <span class="icon">⚙️</span> GitHub Setup
+    </button>
+    <button class="nav-btn" onclick="showPage('secrets')" id="nb-secrets">
+      <span class="icon">🔑</span> API Keys
+    </button>
+    <button class="nav-btn" onclick="window.open('launcher.html','_blank')" style="color:var(--accent2)">
+      <span class="icon">🚀</span> Open Launcher
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div>© 2026 Kavalsia Inc.</div>
+    <a href="#" onclick="showPage('setup')">Siavash Sadighi</a>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════════════════════════════════ -->
+<div class="main">
+
+<!-- ─── OVERVIEW ──────────────────────────────────────────────────────────── -->
+<div class="page active" id="page-overview">
+  <div class="pg-head">
+    <h1 class="pg-title">Network Overview</h1>
+    <p class="pg-sub">Live stats from your GitHub repos. Add your token in <button onclick="showPage('setup')" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px">API Keys</button> to load live data.</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val" id="sv-sites">—</div><div class="stat-label">Active Sites</div></div>
+    <div class="stat-card"><div class="stat-val" id="sv-articles">—</div><div class="stat-label">Total Articles</div></div>
+    <div class="stat-card"><div class="stat-val" id="sv-links">—</div><div class="stat-label">Cross-links</div></div>
+    <div class="stat-card"><div class="stat-val" id="sv-today">—</div><div class="stat-label">Published Today</div></div>
+    <div class="stat-card"><div class="stat-val" id="sv-subs">—</div><div class="stat-label">Newsletter Subs</div></div>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h2 style="font-size:15px;font-weight:700">Recent Activity</h2>
+    <button class="btn btn-g btn-sm" onclick="refreshStats()">↻ Refresh</button>
+  </div>
+  <div id="recent-activity">
+    <div class="card" style="color:var(--text2);font-size:13px;text-align:center;padding:32px">
+      Add your GitHub token below, then click Refresh.
+    </div>
+  </div>
+</div>
+
+<!-- ─── SITES ──────────────────────────────────────────────────────────────── -->
+<div class="page" id="page-sites">
+  <div class="pg-head">
+    <h1 class="pg-title">Sites & Configuration</h1>
+    <p class="pg-sub">Click a site to edit its layout, theme, persona, prompts, and topics.</p>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+    <button class="btn btn-p btn-sm" onclick="openNewSiteModal()">＋ Add New Site</button>
+    <button class="btn btn-g btn-sm" onclick="refreshStats()">↻ Reload from GitHub</button>
+    <span style="font-size:12px;color:var(--text2);align-self:center" id="sites-count-label"></span>
+  </div>
+  <div class="sites-grid" id="sites-grid"></div>
+</div>
+
+<!-- ─── MANUAL POST ────────────────────────────────────────────────────────── -->
+<div class="page" id="page-post">
+  <div class="pg-head">
+    <h1 class="pg-title">✍️ Manual Post</h1>
+    <p class="pg-sub">Write one topic and publish it across any combination of your sites. Each site generates a completely unique article in its own voice and layout.</p>
+  </div>
+
+  <!-- Topic input -->
+  <div class="post-hero">
+    <div class="post-hero-title">📝 What should the network write about?</div>
+    <div class="post-hero-sub">Each selected site will generate a unique article around this topic in its own persona and style. One topic, 20 different articles.</div>
+    <input type="text" class="post-big-input" id="post-topic"
+      placeholder="e.g.  How automated trading is changing personal finance in 2026">
+    <div class="post-context" style="margin-top:10px">
+      <div class="fl" style="margin-bottom:6px">Additional Context <small>(optional — extra instructions or angle for this post)</small></div>
+      <textarea class="ft" id="post-context" rows="2"
+        placeholder="Include stats about X. Focus on the beginner angle. Reference recent events in Y sector..."></textarea>
+    </div>
+  </div>
+
+  <!-- Site selector -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title">
+      <span class="icon">🌐</span> Select Sites to Publish On
+    </div>
+    <div class="site-select-bar">
+      <button class="btn btn-p btn-sm" onclick="selectAllPost(true)">✓ Select All</button>
+      <button class="btn btn-g btn-sm" onclick="selectAllPost(false)">✕ Deselect All</button>
+      <div class="count" id="post-select-count">0 sites selected</div>
+    </div>
+    <div class="site-checkgrid" id="post-site-list">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- Bot repo + actions -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><span class="icon">⚙️</span> Bot Repository</div>
+    <div class="fgrid" style="align-items:end">
+      <div class="fg">
+        <label class="fl">Bot GitHub Repo <small>(where bot.py lives)</small></label>
+        <input type="text" class="fi" id="post-bot-repo" placeholder="yourusername/content-bot-repo" oninput="saveBotRepo()">
+      </div>
+      <div class="fg">
+        <label class="fl">Schedule</label>
+        <select class="fs" id="post-schedule">
+          <option value="broadcast">Queue for next automated run (8am UTC)</option>
+          <option value="trigger">Trigger GitHub Action immediately</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit bar -->
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="btn btn-amber" onclick="submitPost()" style="font-size:14px;padding:11px 28px">
+      📡 Publish to Selected Sites
+    </button>
+    <button class="btn btn-g" onclick="clearPost()">Clear</button>
+    <span id="post-status" style="font-size:13px;color:var(--text2)"></span>
+  </div>
+
+  <!-- Log output -->
+  <div class="post-log" id="post-log"></div>
+
+  <div class="alert info" style="margin-top:20px">
+    <b>How it works:</b> This writes a <code>broadcast.json</code> file to your bot repo via GitHub API. On the next run, <code>bot.py</code> reads it and generates a unique article for each selected site. If you choose "Trigger immediately", the GitHub Action fires right now.
+  </div>
+</div>
+
+<!-- ─── BACKLINKS ─────────────────────────────────────────────────────────── -->
+<div class="page" id="page-backlinks">
+  <div class="pg-head">
+    <h1 class="pg-title">Backlink Matrix</h1>
+    <p class="pg-sub">Row site → has linked to → Column site. Goal: even distribution across all 20×20 pairs.</p>
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button class="btn btn-g btn-sm" onclick="refreshBacklinks()">↻ Load from GitHub</button>
+  </div>
+  <div id="matrix-container">
+    <div class="card" style="color:var(--text2);text-align:center;padding:40px">Add GitHub token in API Keys then click Load.</div>
+  </div>
+</div>
+
+<!-- ─── TELEGRAM ─────────────────────────────────────────────────────────── -->
+<div class="page" id="page-telegram">
+  <div class="pg-head">
+    <h1 class="pg-title">Telegram Editorial Bot</h1>
+    <p class="pg-sub">Every Monday the bot sends 20 article ideas per site to your Telegram. Reply with numbers to publish, or "Auto" to let it decide.</p>
+  </div>
+  <div class="alert success"><b>Free & serverless.</b> Runs on your Mac, a Raspberry Pi, or Railway.app free tier.</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><span class="icon">🔧</span> One-Time Setup</div>
+    <div class="setup-step"><div class="step-num">1</div><div class="step-text">Message <b>@BotFather</b> on Telegram → <code>/newbot</code> → copy the <b>token</b>.</div></div>
+    <div class="setup-step"><div class="step-num">2</div><div class="step-text">Send your bot any message, then visit:<br><code>https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code> → copy your <b>chat_id</b>.</div></div>
+    <div class="setup-step"><div class="step-num">3</div><div class="step-text">Add secrets: <code>TELEGRAM_BOT_TOKEN</code> and <code>TELEGRAM_CHAT_ID</code> to your bot repo's GitHub Secrets.</div></div>
+    <div class="setup-step"><div class="step-num">4</div><div class="step-text">Run locally: <pre>cd /path/to/content-network
+python telegram_bot.py</pre></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">📋</span> How the Workflow Works</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:4px">
+      <div style="background:var(--bg3);border-radius:8px;padding:14px"><div style="font-size:20px;margin-bottom:6px">📅</div><div style="font-size:13px;font-weight:700;margin-bottom:4px">Monday 9am UTC</div><div style="font-size:12px;color:var(--text2)">Bot generates 20 ideas per site and sends numbered list to Telegram</div></div>
+      <div style="background:var(--bg3);border-radius:8px;padding:14px"><div style="font-size:20px;margin-bottom:6px">✍️</div><div style="font-size:13px;font-weight:700;margin-bottom:4px">You reply</div><div style="font-size:12px;color:var(--text2)">Type <code>1 3 7 12</code> to pick articles, or <code>Auto</code> to publish the 7 best</div></div>
+      <div style="background:var(--bg3);border-radius:8px;padding:14px"><div style="font-size:20px;margin-bottom:6px">🚀</div><div style="font-size:13px;font-weight:700;margin-bottom:4px">Auto-publish</div><div style="font-size:12px;color:var(--text2)">Articles generated, pushed to GitHub, newsletters sent, confirmation with links</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── NEWSLETTER ────────────────────────────────────────────────────────── -->
+<div class="page" id="page-newsletter">
+  <div class="pg-head">
+    <h1 class="pg-title">Newsletter Automation</h1>
+    <p class="pg-sub">Brevo (free up to 300 emails/day, 9,000/month) — perfect for a 20-site network.</p>
+  </div>
+  <div class="alert warn"><b>Free tier math:</b> 20 sites × 100 subscribers × 1 weekly email = 2,000 emails/week = well within the free limit.</div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><span class="icon">📋</span> Setup (one-time)</div>
+    <div class="setup-step"><div class="step-num">1</div><div class="step-text">Create a free account at <b>brevo.com</b></div></div>
+    <div class="setup-step"><div class="step-num">2</div><div class="step-text">Settings → API Keys → Generate → add as <code>BREVO_API_KEY</code> in GitHub Secrets</div></div>
+    <div class="setup-step"><div class="step-num">3</div><div class="step-text">Contacts → Lists → Create one list per site. Note the List ID from the URL.</div></div>
+    <div class="setup-step"><div class="step-num">4</div><div class="step-text">In Launcher → Step 3 → each site → set the Brevo List ID field.</div></div>
+    <div class="setup-step"><div class="step-num">5</div><div class="step-text">Add a Brevo subscribe form to each site (embed code in Cloudflare Pages). One email field, submit = instant subscribe.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="icon">⚡</span> What Happens Automatically</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.8">
+      Every time an article publishes, <code>bot.py</code> automatically:<br>
+      1. Builds a branded email in that site's theme colors<br>
+      2. Creates a campaign in Brevo via API<br>
+      3. Sends it immediately to that site's subscriber list<br>
+      4. Each site's email looks completely different — branded to the site's design
+    </div>
+  </div>
+</div>
+
+<!-- ─── SETUP ─────────────────────────────────────────────────────────────── -->
+<div class="page" id="page-setup">
+  <div class="pg-head">
+    <h1 class="pg-title">GitHub Setup</h1>
+    <p class="pg-sub">Everything you need to get all 20 sites live on Cloudflare Pages for free.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><span class="icon">🔑</span> GitHub Token (for this dashboard)</div>
+    <div class="fg">
+      <label class="fl">Personal Access Token <small>(needs <code>repo</code> + <code>workflow</code> scope)</small></label>
+      <div class="token-bar">
+        <input type="password" class="fi" id="gh-token" placeholder="ghp_...">
+        <button class="btn btn-p" onclick="saveToken()">Save</button>
+        <button class="btn btn-g" onclick="toggleTokenVisibility()">Show</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">Stored in localStorage only — never sent anywhere except api.github.com</div>
+    </div>
+    <div id="token-status" style="font-size:13px;margin-top:4px"></div>
+  </div>
+
+  <!-- Cloudflare Domain Manager -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><span class="icon">☁</span> Cloudflare Domain Manager</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px">Connect domains directly from this dashboard using the Cloudflare API. Checks DNS status and shows which domains are active on Cloudflare Pages.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="fg">
+        <label class="fl">Cloudflare API Token <small>(Zone:Edit, DNS:Edit scope)</small></label>
+        <input type="password" class="fi" id="cf-api-token" placeholder="Cloudflare API token...">
+      </div>
+      <div class="fg">
+        <label class="fl">Cloudflare Account ID</label>
+        <input class="fi" id="cf-account-id" placeholder="Found in Cloudflare dashboard URL">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      <button class="btn btn-p" onclick="saveCFCreds()">Save Cloudflare Creds</button>
+      <button class="btn btn-g" onclick="checkAllDomains()">Check All Domain Status</button>
+    </div>
+    <div id="cf-status" style="font-size:12px;color:var(--text2);margin-bottom:10px"></div>
+    <div id="domain-status-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px"></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px">Get your API Token: Cloudflare dashboard → My Profile → API Tokens → Create Token → use "Edit zone DNS" template. Account ID is in the right sidebar of the Cloudflare home page.</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><span class="icon">📦</span> Per-Site Setup (repeat for all 20 sites)</div>
+    <div class="setup-step"><div class="step-num">1</div><div class="step-text"><b>Create a public GitHub repo</b> for each site — e.g. <code>yourusername/cryptoinsights</code></div></div>
+    <div class="setup-step"><div class="step-num">2</div><div class="step-text"><b>Cloudflare Pages:</b> Dashboard → Pages → Create Project → Connect to Git → select the repo. Framework: None. Build: empty. Output: <code>/</code></div></div>
+    <div class="setup-step"><div class="step-num">3</div><div class="step-text"><b>Custom domain:</b> Pages → Custom Domains → add domain → update nameservers to Cloudflare. Auto SSL included. Free.</div></div>
+    <div class="setup-step"><div class="step-num">4</div><div class="step-text"><b>Bot repo:</b> Create one more repo for the bot itself (bot.py, telegram_bot.py, network-config.json, .github/workflows/)</div></div>
+    <div class="setup-step"><div class="step-num">5</div><div class="step-text"><b>GitHub Secrets</b> in the bot repo: ANTHROPIC_API_KEY, PEXELS_API_KEY, BREVO_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID. GITHUB_TOKEN is auto-provided.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">⚡</span> Workflows</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:var(--bg3);border-radius:8px;padding:14px"><div style="font-weight:700;margin-bottom:4px;font-size:13px">daily-post.yml</div><div style="font-size:12px;color:var(--text2)">8am UTC daily. Publishes one article per site. Fully automatic.</div></div>
+      <div style="background:var(--bg3);border-radius:8px;padding:14px"><div style="font-weight:700;margin-bottom:4px;font-size:13px">weekly-ideas.yml</div><div style="font-size:12px;color:var(--text2)">Monday 9am UTC. Sends 20 ideas to Telegram for your approval.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECRETS ───────────────────────────────────────────────────────────── -->
+<div class="page" id="page-secrets">
+  <div class="pg-head">
+    <h1 class="pg-title">API Keys Reference</h1>
+    <p class="pg-sub">All services and where to get the keys. Use <a href="launcher.html" target="_blank">launcher.html</a> to configure and export to GitHub Secrets.</p>
+  </div>
+  <div class="card">
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border)">
+          <th style="text-align:left;padding:10px 14px;color:var(--text2);font-weight:600">Secret</th>
+          <th style="text-align:left;padding:10px 14px;color:var(--text2);font-weight:600">Where to get it</th>
+          <th style="padding:10px 14px;color:var(--text2);font-weight:600;text-align:center">Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 14px"><code>ANTHROPIC_API_KEY</code></td><td style="padding:10px 14px;color:var(--text2)">console.anthropic.com → API Keys</td><td style="padding:10px 14px;color:var(--amber);text-align:center">~$15/mo</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 14px"><code>PEXELS_API_KEY</code></td><td style="padding:10px 14px;color:var(--text2)">pexels.com/api</td><td style="padding:10px 14px;color:var(--green);text-align:center">Free</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 14px"><code>GITHUB_TOKEN</code></td><td style="padding:10px 14px;color:var(--text2)">Auto-provided by GitHub Actions</td><td style="padding:10px 14px;color:var(--green);text-align:center">Free</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 14px"><code>BREVO_API_KEY</code></td><td style="padding:10px 14px;color:var(--text2)">brevo.com → Settings → API Keys</td><td style="padding:10px 14px;color:var(--green);text-align:center">Free</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:10px 14px"><code>TELEGRAM_BOT_TOKEN</code></td><td style="padding:10px 14px;color:var(--text2)">@BotFather on Telegram → /newbot</td><td style="padding:10px 14px;color:var(--green);text-align:center">Free</td></tr>
+        <tr><td style="padding:10px 14px"><code>TELEGRAM_CHAT_ID</code></td><td style="padding:10px 14px;color:var(--text2)">api.telegram.org/bot{TOKEN}/getUpdates</td><td style="padding:10px 14px;color:var(--green);text-align:center">Free</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert" style="margin-top:14px"><b>Add to GitHub:</b> Bot repo → Settings → Secrets and variables → Actions → New repository secret.</div>
+</div>
+
+</div><!-- .main -->
+</div><!-- .shell -->
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SITE CONFIG MODAL
+══════════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="config-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title-text">Edit Site</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-red btn-sm" id="modal-delete-btn" onclick="deleteSite()">Delete</button>
+        <button class="btn btn-g btn-sm" onclick="closeModal()">✕ Close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tabs">
+        <button class="modal-tab active" onclick="switchModalTab('basic',this)">Basic</button>
+        <button class="modal-tab" onclick="switchModalTab('design',this)">Design</button>
+        <button class="modal-tab" onclick="switchModalTab('content',this)">Content &amp; Prompt</button>
+        <button class="modal-tab" onclick="switchModalTab('topics',this)">Topics</button>
+        <button class="modal-tab" onclick="switchModalTab('posts',this);loadSitePosts()">Posts</button>
+        <button class="modal-tab" onclick="switchModalTab('directory',this)">Directory</button>
+      </div>
+
+      <!-- Tab: Basic -->
+      <div class="modal-tab-panel active" id="mt-basic">
+        <div class="fgrid">
+          <div class="fg"><label class="fl">Domain</label><input class="fi" id="e-domain" placeholder="yourdomain.com"></div>
+          <div class="fg"><label class="fl">Category / Niche</label><input class="fi" id="e-category" placeholder="Cryptocurrency & Trading"></div>
+          <div class="fg"><label class="fl">GitHub Repo</label><input class="fi" id="e-repo" placeholder="username/reponame"></div>
+          <div class="fg"><label class="fl">Brevo List ID <small>(newsletter)</small></label><input type="number" class="fi" id="e-brevo" placeholder="Leave blank if unused"></div>
+        </div>
+        <div class="fg"><label class="fl">What this site is about <small>(1 sentence)</small></label><input class="fi" id="e-description" placeholder="In-depth analysis and tools for serious crypto traders"></div>
+        <div class="fg" style="margin-top:10px;flex-direction:row;align-items:center;gap:12px">
+          <input type="checkbox" id="e-active" checked style="width:16px;height:16px;accent-color:var(--accent)">
+          <label for="e-active" style="font-size:13px;color:var(--text2)">Site is active (included in daily publishing)</label>
+        </div>
+      </div>
+
+      <!-- Tab: Design -->
+      <div class="modal-tab-panel" id="mt-design">
+        <div class="fg" style="margin-bottom:16px">
+          <label class="fl">Homepage Layout</label>
+          <div class="layout-picker" id="hp-layout-picker">
+            <div class="layout-card selected" data-val="newsfeed" onclick="pickLayout('hp',this)"><div class="lc-icon">📰</div><div class="lc-name">Newsfeed</div></div>
+            <div class="layout-card" data-val="magazine" onclick="pickLayout('hp',this)"><div class="lc-icon">📖</div><div class="lc-name">Magazine</div></div>
+            <div class="layout-card" data-val="editorial" onclick="pickLayout('hp',this)"><div class="lc-icon">🗞</div><div class="lc-name">Editorial</div></div>
+            <div class="layout-card" data-val="cards" onclick="pickLayout('hp',this)"><div class="lc-icon">🃏</div><div class="lc-name">Cards</div></div>
+            <div class="layout-card" data-val="portfolio" onclick="pickLayout('hp',this)"><div class="lc-icon">🖼</div><div class="lc-name">Portfolio</div></div>
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:16px">
+          <label class="fl">Article Layout</label>
+          <div class="layout-picker" id="art-layout-picker">
+            <div class="layout-card selected" data-val="standard" onclick="pickLayout('art',this)"><div class="lc-icon">📄</div><div class="lc-name">Standard</div></div>
+            <div class="layout-card" data-val="sidebar" onclick="pickLayout('art',this)"><div class="lc-icon">📋</div><div class="lc-name">Sidebar</div></div>
+            <div class="layout-card" data-val="magazine" onclick="pickLayout('art',this)"><div class="lc-icon">📰</div><div class="lc-name">Magazine</div></div>
+            <div class="layout-card" data-val="minimal" onclick="pickLayout('art',this)"><div class="lc-icon">✦</div><div class="lc-name">Minimal</div></div>
+            <div class="layout-card" data-val="immersive" onclick="pickLayout('art',this)"><div class="lc-icon">🎞</div><div class="lc-name">Immersive</div></div>
+          </div>
+        </div>
+        <div class="fg" style="margin-bottom:16px">
+          <label class="fl">Color Theme</label>
+          <div class="theme-picker">
+            <div class="theme-swatch selected" data-val="dark" onclick="pickTheme(this)" title="Dark"><div class="theme-swatch-inner" style="background:linear-gradient(135deg,#0d0d0d,#6c63ff)"></div><div class="theme-swatch-label">Dark</div></div>
+            <div class="theme-swatch" data-val="light" onclick="pickTheme(this)" title="Light"><div class="theme-swatch-inner" style="background:linear-gradient(135deg,#ffffff,#2563eb)"></div><div class="theme-swatch-label">Light</div></div>
+            <div class="theme-swatch" data-val="minimal" onclick="pickTheme(this)" title="Minimal"><div class="theme-swatch-inner" style="background:linear-gradient(135deg,#fafaf8,#c09040)"></div><div class="theme-swatch-label">Minimal</div></div>
+            <div class="theme-swatch" data-val="bold" onclick="pickTheme(this)" title="Bold"><div class="theme-swatch-inner" style="background:linear-gradient(135deg,#150426,#ff6b35)"></div><div class="theme-swatch-label">Bold</div></div>
+            <div class="theme-swatch" data-val="elegant" onclick="pickTheme(this)" title="Elegant"><div class="theme-swatch-inner" style="background:linear-gradient(135deg,#f6f1ec,#7b3a0e)"></div><div class="theme-swatch-label">Elegant</div></div>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Design Prompt <small>(imagery style for Pexels photo selection)</small></label>
+          <textarea class="ft" id="e-design-prompt" rows="3"
+            placeholder="Dark, cinematic. Charts and data visualizations. Professional but not corporate. No stock photos of people smiling at laptops."></textarea>
+        </div>
+      </div>
+
+      <!-- Tab: Content & Prompt -->
+      <div class="modal-tab-panel" id="mt-content">
+        <div class="fg" style="margin-bottom:12px">
+          <label class="fl">Author Persona</label>
+          <input class="fi" id="e-persona" placeholder="Marcus Chen, a former quant trader who now covers algorithmic crypto strategies">
+        </div>
+        <div class="fg" style="margin-bottom:16px">
+          <label class="fl">Writing Voice / Tone</label>
+          <textarea class="ft" id="e-tone" rows="2"
+            placeholder="analytical and data-driven, like a Bloomberg journalist. Use specific numbers. Cut through hype. No buzzwords."></textarea>
+        </div>
+
+        <!-- Ignore global prompt toggle -->
+        <div class="ig-toggle" id="ig-toggle" onclick="toggleIG()">
+          <div class="ig-knob" id="ig-knob"></div>
+          <div class="ig-text-wrap">
+            <div class="ig-label" id="ig-label">Ignore global prompt — use only this site's prompt</div>
+            <div class="ig-sub" id="ig-sub">Currently: site-specific additions are appended to the global prompt</div>
+          </div>
+        </div>
+
+        <!-- Global prompt inline editor (shown when ignore is ON) -->
+        <div class="ig-prompt-box" id="ig-prompt-box" style="display:none">
+          <div class="ig-prompt-bar">
+            ⚠ Custom full prompt for this site (replaces global)
+            <button class="btn btn-xs" style="background:#f59e0b22;border:1px solid var(--amber);color:var(--amber)" onclick="copyGlobalPrompt()">Copy from global</button>
+          </div>
+          <textarea id="e-custom-global" placeholder="Write the complete prompt this site should use instead of the global one..."></textarea>
+        </div>
+
+        <div class="fg">
+          <label class="fl" id="site-extra-label">Site-Specific Additions <small>(appended to global prompt)</small></label>
+          <textarea class="ft" id="e-site-prompt" rows="4"
+            placeholder="Include statistics about crypto exchange volumes. Always mention Bingx or Bitmart by name at least once per article. Focus on the technical-but-accessible angle."></textarea>
+        </div>
+
+        <div style="border-top:1px solid var(--border);margin:18px 0 14px;padding-top:16px">
+          <div class="fl" style="margin-bottom:10px">Author Names <small>(one per line — bot rotates through these)</small></div>
+          <textarea class="ft" id="e-author-names" rows="4"
+            placeholder="Marcus Chen&#10;Alex Rivera&#10;Jordan Kim&#10;Sam Walsh"></textarea>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+            <input type="checkbox" id="e-random-author" style="width:15px;height:15px;accent-color:var(--accent)">
+            <label for="e-random-author" style="font-size:13px;color:var(--text2)">Use a different random author for each published post</label>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border);margin:14px 0;padding-top:14px">
+          <div class="fl" style="margin-bottom:10px">Publish Date Mode</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);cursor:pointer">
+              <input type="radio" name="e-date-mode" value="today" id="dm-today" checked style="accent-color:var(--accent)"> Use today's date (real-time)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);cursor:pointer">
+              <input type="radio" name="e-date-mode" value="distributed" id="dm-dist" style="accent-color:var(--accent)"> Distribute across past years
+            </label>
+          </div>
+          <div id="date-span-box" style="margin-top:10px;display:none">
+            <label class="fl">Spread posts over how many past years?</label>
+            <input type="number" class="fi" id="e-date-span" value="3" min="1" max="10" style="max-width:120px">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Topics -->
+      <div class="modal-tab-panel" id="mt-topics">
+        <div class="fg">
+          <label class="fl">Topics <small>(one per line — Claude rotates through these daily)</small></label>
+          <textarea class="ft" id="e-topics" rows="12"
+            placeholder="Why algorithmic trading outperforms emotional trading in volatile markets&#10;What happens in crypto markets while retail traders sleep&#10;How exchange APIs enable fully automated trading strategies&#10;..."></textarea>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">
+          Add as many topics as you want. The bot cycles through them based on day of year so each day gets a different topic.
+        </div>
+      </div>
+
+      <!-- Tab: Posts -->
+      <div class="modal-tab-panel" id="mt-posts">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div style="font-size:13px;color:var(--text2)">Published articles. Edit author or date, then save changes back to GitHub.</div>
+          <button class="btn btn-xs" style="background:var(--bg3);border:1px solid var(--border)" onclick="loadSitePosts()">↻ Refresh</button>
+        </div>
+        <div id="posts-loading" style="color:var(--text3);font-size:13px;padding:20px 0">Loading posts...</div>
+        <div id="posts-list" style="display:none"></div>
+
+        <!-- Per-post editor -->
+        <div id="post-editor" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div class="fl">Editing: <strong id="post-edit-title" style="color:var(--accent2)"></strong></div>
+            <button class="btn btn-xs" style="background:var(--bg3);border:1px solid var(--border)" onclick="previewPost()">Preview in tab ↗</button>
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap">
+            <div class="fg" style="flex:1;min-width:160px">
+              <label class="fl">Author</label>
+              <input class="fi" id="post-edit-author" placeholder="Author name">
+            </div>
+            <div class="fg" style="flex:1;min-width:160px">
+              <label class="fl">Date</label>
+              <input type="date" class="fi" id="post-edit-date">
+            </div>
+          </div>
+          <label class="fl" style="margin-bottom:6px">HTML Content <span id="post-demo-badge" style="display:none;font-size:10px;background:var(--amber);color:#000;padding:1px 6px;border-radius:4px;font-weight:700;margin-left:6px">DEMO — saved locally</span></label>
+          <textarea id="post-edit-html" style="width:100%;height:260px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:monospace;font-size:12px;padding:12px;resize:vertical;line-height:1.5"></textarea>
+          <div style="display:flex;gap:10px;margin-top:10px">
+            <button class="btn btn-p" onclick="savePostEdit()">Save Changes</button>
+            <button class="btn btn-g" onclick="document.getElementById('post-editor').style.display='none'">Cancel</button>
+          </div>
+          <div id="post-save-status" style="font-size:12px;color:var(--text2);margin-top:6px"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Directory -->
+      <div class="modal-tab-panel" id="mt-directory">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:16px">
+          Add a business directory to this site. Each listing includes business name, address, city, and contact info. The bot generates a <code style="color:var(--accent2)">/directory/</code> page on the site.
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <input type="checkbox" id="e-dir-enabled" style="width:15px;height:15px;accent-color:var(--accent)">
+          <label for="e-dir-enabled" style="font-size:13px;color:var(--text2)">Enable directory for this site</label>
+        </div>
+        <div id="dir-settings" style="display:none">
+          <div class="fg" style="margin-bottom:12px">
+            <label class="fl">Directory Title</label>
+            <input class="fi" id="e-dir-title" placeholder="Business Directory — Finance & Trading Services">
+          </div>
+          <div class="fg" style="margin-bottom:12px">
+            <label class="fl">Cities / Regions (one per line)</label>
+            <textarea class="ft" id="e-dir-cities" rows="4" placeholder="Toronto, ON&#10;Vancouver, BC&#10;Calgary, AB&#10;New York, NY"></textarea>
+          </div>
+          <div class="fg" style="margin-bottom:12px">
+            <label class="fl">Business Listings (JSON array)</label>
+            <textarea class="ft" id="e-dir-listings" rows="8"
+              placeholder='[{"name":"Acme Finance LLC","address":"123 Bay St","city":"Toronto, ON","phone":"416-555-0100","website":"acmefinance.com","category":"Financial Advisor"},...]'></textarea>
+          </div>
+          <div style="font-size:12px;color:var(--text3)">
+            Tip: You can add business info manually or paste a CSV/JSON export. The bot will build a searchable directory page with city filters and schema.org markup for local SEO.
+          </div>
+        </div>
+        <script>document.getElementById('e-dir-enabled').addEventListener('change',function(){document.getElementById('dir-settings').style.display=this.checked?'block':'none'});</script>
+      </div>
+
+      <!-- Save -->
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+        <button class="btn btn-g" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-p" onclick="saveModal()">Save Changes</button>
+      </div>
+      <div id="modal-status" style="margin-top:8px;font-size:12px;color:var(--text2);text-align:right"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+//  DEFAULTS & STATE
+// ════════════════════════════════════════════════════════════════════════════
+const GLOBAL_PROMPT_DEFAULT = `Write every article as a knowledgeable human expert, not an AI assistant.
+
+VOICE RULES — follow without exception:
+• Use contractions: it's, don't, can't, we're, they've, I'd
+• Mix sentence lengths dramatically
+• Begin 2-3 sentences with "And", "But", or "So"
+• Use specific numbers confidently
+• Hedge naturally: "arguably", "in most cases"
+• Reference the persona's direct experience once per article
+
+FORBIDDEN: delve into • it's worth noting • game-changing • harness the power • leverage (as metaphor) • navigate the landscape • cutting-edge`;
+
+const DEFAULT_SITES = [
+  {id:"crypto-insights",domain:"cryptoinsights.com",repo:"YOUR/cryptoinsights",description:"In-depth crypto trading strategies and tools",category:"Cryptocurrency & Trading",theme:"dark",layout:"newsfeed",article_layout:"sidebar",persona:"Marcus Chen, former quant trader",tone:"analytical and data-driven like a Bloomberg journalist",design_prompt:"Dark cinematic imagery, charts, data visualizations",site_prompt:"",custom_global_prompt:"",ignore_global_prompt:false,brevo_list_id:null,active:true,topics:["Why algorithmic trading outperforms emotional trading","What happens in crypto markets while retail traders sleep","How exchange APIs enable automated trading strategies","Bitcoin volatility patterns institutional traders track","Why most retail traders lose to institutional algorithms","Grid bots vs trend-following bots — a head-to-head comparison"]},
+  {id:"passive-wealth",domain:"passivewealthguide.com",repo:"YOUR/passivewealthguide",description:"Practical passive income and investing strategies",category:"Passive Income & Investing",theme:"light",layout:"magazine",article_layout:"standard",persona:"Sarah Mills, CFP who retired at 41",tone:"warm and practical like a financially-savvy friend",design_prompt:"Clean, bright, aspirational. Charts, family finance imagery",site_prompt:"",custom_global_prompt:"",ignore_global_prompt:false,brevo_list_id:null,active:true,topics:["How automation is reshaping personal finance in 2026","Building an investment portfolio that earns while you sleep","Five passive income streams under a thousand dollars to start","The compounding effect shown with brutal honesty and real numbers","Why timing the market matters far less than most people think","Dividend investing vs index funds — the honest comparison"]},
+  {id:"trading-tech",domain:"tradingtechreview.com",repo:"YOUR/tradingtechreview",description:"Developer-focused guides on trading bots and APIs",category:"Trading Technology",theme:"minimal",layout:"editorial",article_layout:"minimal",persona:"Alex Rivera, software engineer building trading tools",tone:"technical but honest, like a developer writing for developers",design_prompt:"Minimal, clean, code aesthetic. Terminal screenshots, API diagrams",site_prompt:"",custom_global_prompt:"",ignore_global_prompt:false,brevo_list_id:null,active:true,topics:["How crypto exchange APIs actually work — a developer's guide","Building a trading bot — what the tutorials never tell you","Why backtesting is essential before your bot touches real money","The hidden costs of running a trading bot 24/7","WebSocket vs REST API — when to use which","Security hardening when your code handles real money"]}
+];
+
+const THEME_COLORS = {
+  dark:{bg:"#0d0d0d",accent:"#6c63ff"},light:{bg:"#ffffff",accent:"#2563eb"},
+  minimal:{bg:"#fafaf8",accent:"#c09040"},bold:{bg:"#150426",accent:"#ff6b35"},
+  elegant:{bg:"#f6f1ec",accent:"#7b3a0e"}
+};
+
+let sites = JSON.parse(localStorage.getItem('db_sites') || 'null') || JSON.parse(JSON.stringify(DEFAULT_SITES));
+let editingIdx = -1;
+let igOn = false;
+let selectedHpLayout = 'newsfeed';
+let selectedArtLayout = 'standard';
+let selectedTheme = 'dark';
+
+function loadToken(){ return localStorage.getItem('db_token') || ''; }
+function saveSitesLocal(){ localStorage.setItem('db_sites', JSON.stringify(sites)); }
+function loadGlobalPrompt(){ return localStorage.getItem('db_global_prompt') || GLOBAL_PROMPT_DEFAULT; }
+
+// ════════════════════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const nb = document.getElementById('nb-' + id);
+  if(nb) nb.classList.add('active');
+  if(id === 'sites') renderSites();
+  if(id === 'overview') refreshStats();
+  if(id === 'backlinks') refreshBacklinks();
+  if(id === 'post') renderPostSites();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SITES PAGE
+// ════════════════════════════════════════════════════════════════════════════
+function renderSites() {
+  const grid = document.getElementById('sites-grid');
+  const lbl  = document.getElementById('sites-count-label');
+  lbl.textContent = `${sites.filter(s=>s.active!==false).length} active · ${sites.length} total`;
+
+  grid.innerHTML = sites.map((s,i) => {
+    const dot = `background:linear-gradient(135deg,${THEME_COLORS[s.theme]?.bg||'#333'},${THEME_COLORS[s.theme]?.accent||'#6c63ff'})`;
+    return `<div class="site-card" onclick="openModal(${i})">
+      <div class="sc-head">
+        <div>
+          <div class="sc-domain">${s.domain||'New Site'}</div>
+          <div class="sc-cat">${s.category||'No category'}</div>
+        </div>
+        <div class="theme-dot" style="${dot}" title="${s.theme}"></div>
+      </div>
+      <div class="sc-pills">
+        <span class="pill pill-layout">📐 ${s.layout}</span>
+        <span class="pill pill-theme">${s.theme}</span>
+        ${s.ignore_global_prompt ? '<span class="pill pill-custom">custom prompt</span>' : ''}
+        ${!s.active ? '<span class="pill" style="border-color:#ef444444;color:var(--red)">paused</span>' : ''}
+      </div>
+      <div class="sc-meta">
+        <b>Persona:</b> ${(s.persona||'—').split(',')[0]}<br>
+        ${s.topics?.length||0} topics · ${s.brevo_list_id ? '✓ Newsletter' : 'No newsletter'}
+        ${s.design_prompt ? ' · ✓ Design prompt' : ''}
+      </div>
+      <div class="sc-btns">
+        <button class="btn btn-g btn-xs" onclick="event.stopPropagation();openModal(${i})">Edit</button>
+        ${s.domain ? `<a href="https://${s.domain}" target="_blank" class="btn btn-g btn-xs" onclick="event.stopPropagation()">Visit ↗</a>` : ''}
+      </div>
+    </div>`;
+  }).join('') +
+  `<div class="site-card" style="border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:180px;cursor:pointer" onclick="openNewSiteModal()">
+    <div style="font-size:28px;color:var(--accent)">＋</div>
+    <div style="font-size:13px;color:var(--text2)">Add Site</div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════════════════════════════════════
+function openModal(idx) {
+  editingIdx = idx;
+  const s = sites[idx];
+  igOn = s.ignore_global_prompt || false;
+
+  document.getElementById('modal-title-text').textContent = `Edit: ${s.domain || 'Site'}`;
+  document.getElementById('modal-delete-btn').style.display = '';
+  document.getElementById('e-domain').value         = s.domain || '';
+  document.getElementById('e-category').value       = s.category || '';
+  document.getElementById('e-repo').value           = s.repo || '';
+  document.getElementById('e-brevo').value          = s.brevo_list_id || '';
+  document.getElementById('e-description').value    = s.description || '';
+  document.getElementById('e-active').checked       = s.active !== false;
+  document.getElementById('e-persona').value        = s.persona || '';
+  document.getElementById('e-tone').value           = s.tone || '';
+  document.getElementById('e-design-prompt').value  = s.design_prompt || '';
+  document.getElementById('e-site-prompt').value    = s.site_prompt || '';
+  document.getElementById('e-custom-global').value  = s.custom_global_prompt || loadGlobalPrompt();
+  document.getElementById('e-topics').value         = (s.topics||[]).join('\n');
+  document.getElementById('e-author-names').value   = (s.author_names||[]).join('\n');
+  document.getElementById('e-random-author').checked = !!s.use_random_author;
+  document.getElementById('dm-today').checked        = (s.date_mode||'today') === 'today';
+  document.getElementById('dm-dist').checked         = s.date_mode === 'distributed';
+  document.getElementById('e-date-span').value       = s.date_span_years || 3;
+  document.getElementById('date-span-box').style.display = s.date_mode === 'distributed' ? 'block' : 'none';
+  document.getElementById('e-dir-enabled').checked   = !!s.directory_enabled;
+  document.getElementById('dir-settings').style.display = s.directory_enabled ? 'block' : 'none';
+  document.getElementById('e-dir-title').value       = s.directory_title || '';
+  document.getElementById('e-dir-cities').value      = (s.directory_cities||[]).join('\n');
+  document.getElementById('e-dir-listings').value    = s.directory_listings ? JSON.stringify(s.directory_listings, null, 2) : '';
+  document.getElementById('modal-status').textContent = '';
+
+  selectedHpLayout  = s.layout || 'newsfeed';
+  selectedArtLayout = s.article_layout || 'standard';
+  selectedTheme     = s.theme || 'dark';
+
+  setPickerSelected('hp-layout-picker', selectedHpLayout);
+  setPickerSelected('art-layout-picker', selectedArtLayout);
+  document.querySelectorAll('.theme-swatch').forEach(sw => sw.classList.toggle('selected', sw.dataset.val === selectedTheme));
+
+  updateIGUI();
+  switchModalTab('basic', document.querySelector('.modal-tab'));
+  document.getElementById('config-modal').classList.add('open');
+}
+
+function openNewSiteModal() {
+  editingIdx = -1;
+  igOn = false;
+  document.getElementById('modal-title-text').textContent = 'New Site';
+  document.getElementById('modal-delete-btn').style.display = 'none';
+  ['e-domain','e-category','e-repo','e-description','e-persona','e-tone',
+   'e-design-prompt','e-site-prompt','e-topics','e-author-names','e-dir-title','e-dir-cities','e-dir-listings'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('e-brevo').value = '';
+  document.getElementById('e-active').checked = true;
+  document.getElementById('e-random-author').checked = false;
+  document.getElementById('dm-today').checked = true;
+  document.getElementById('dm-dist').checked = false;
+  document.getElementById('date-span-box').style.display = 'none';
+  document.getElementById('e-dir-enabled').checked = false;
+  document.getElementById('dir-settings').style.display = 'none';
+  document.getElementById('e-custom-global').value = loadGlobalPrompt();
+  document.getElementById('modal-status').textContent = '';
+  selectedHpLayout = 'cards'; selectedArtLayout = 'standard'; selectedTheme = 'minimal';
+  setPickerSelected('hp-layout-picker', selectedHpLayout);
+  setPickerSelected('art-layout-picker', selectedArtLayout);
+  document.querySelectorAll('.theme-swatch').forEach(sw => sw.classList.toggle('selected', sw.dataset.val === selectedTheme));
+  updateIGUI();
+  switchModalTab('basic', document.querySelector('.modal-tab'));
+  document.getElementById('config-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('config-modal').classList.remove('open');
+}
+
+function saveModal() {
+  const domain = document.getElementById('e-domain').value.trim();
+  const entry = {
+    ...(editingIdx >= 0 ? sites[editingIdx] : {}),
+    id: domain.replace(/\W+/g,'-').toLowerCase() || `site-${Date.now()}`,
+    domain, category: document.getElementById('e-category').value.trim(),
+    repo: document.getElementById('e-repo').value.trim(),
+    brevo_list_id: parseInt(document.getElementById('e-brevo').value) || null,
+    description: document.getElementById('e-description').value.trim(),
+    active: document.getElementById('e-active').checked,
+    persona: document.getElementById('e-persona').value.trim(),
+    tone: document.getElementById('e-tone').value.trim(),
+    design_prompt: document.getElementById('e-design-prompt').value.trim(),
+    site_prompt: document.getElementById('e-site-prompt').value.trim(),
+    custom_global_prompt: document.getElementById('e-custom-global').value.trim(),
+    ignore_global_prompt: igOn,
+    layout: selectedHpLayout,
+    article_layout: selectedArtLayout,
+    theme: selectedTheme,
+    topics: document.getElementById('e-topics').value.split('\n').map(t=>t.trim()).filter(Boolean),
+    author_names: document.getElementById('e-author-names').value.split('\n').map(t=>t.trim()).filter(Boolean),
+    use_random_author: document.getElementById('e-random-author').checked,
+    date_mode: document.querySelector('input[name="e-date-mode"]:checked')?.value || 'today',
+    date_span_years: parseInt(document.getElementById('e-date-span').value) || 3,
+    directory_enabled: document.getElementById('e-dir-enabled').checked,
+    directory_title: document.getElementById('e-dir-title').value.trim(),
+    directory_cities: document.getElementById('e-dir-cities').value.split('\n').map(t=>t.trim()).filter(Boolean),
+    directory_listings: (function(){try{return JSON.parse(document.getElementById('e-dir-listings').value||'[]');}catch(e){return [];}}()),
+  };
+  if(editingIdx >= 0) sites[editingIdx] = entry;
+  else sites.push(entry);
+  saveSitesLocal();
+  document.getElementById('modal-status').textContent = '✓ Saved';
+  document.getElementById('modal-status').style.color = 'var(--green)';
+  renderSites();
+}
+
+function deleteSite() {
+  if(editingIdx < 0) return;
+  if(!confirm(`Delete ${sites[editingIdx].domain || 'this site'}?`)) return;
+  sites.splice(editingIdx, 1);
+  saveSitesLocal();
+  closeModal();
+  renderSites();
+}
+
+// ── Modal tabs ──────────────────────────────────────────────────────────────
+function switchModalTab(id, btn) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('mt-' + id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  else {
+    const all = document.querySelectorAll('.modal-tab');
+    const map = {basic:0,design:1,content:2,topics:3,posts:4,directory:5};
+    if(map[id] !== undefined) all[map[id]].classList.add('active');
+  }
+}
+
+// ── Layout / theme pickers ──────────────────────────────────────────────────
+function setPickerSelected(pickerId, val) {
+  document.querySelectorAll(`#${pickerId} .layout-card`).forEach(c => c.classList.toggle('selected', c.dataset.val === val));
+}
+function pickLayout(type, el) {
+  const parent = type === 'hp' ? 'hp-layout-picker' : 'art-layout-picker';
+  document.querySelectorAll(`#${parent} .layout-card`).forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  if(type === 'hp') selectedHpLayout = el.dataset.val;
+  else selectedArtLayout = el.dataset.val;
+}
+function pickTheme(el) {
+  document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTheme = el.dataset.val;
+}
+
+// ── Ignore global prompt toggle ─────────────────────────────────────────────
+function toggleIG() {
+  igOn = !igOn;
+  updateIGUI();
+}
+function updateIGUI() {
+  const toggle = document.getElementById('ig-toggle');
+  const box    = document.getElementById('ig-prompt-box');
+  const label  = document.getElementById('ig-label');
+  const sub    = document.getElementById('ig-sub');
+  const extraLbl = document.getElementById('site-extra-label');
+
+  toggle.classList.toggle('on', igOn);
+  box.style.display = igOn ? 'block' : 'none';
+
+  if(igOn) {
+    label.textContent = '✓ Ignoring global prompt — this site uses its own full prompt below';
+    sub.textContent   = 'The textarea below REPLACES the global prompt entirely for this site';
+    extraLbl.innerHTML = 'Additional Site Additions <small>(added after the custom prompt above)</small>';
+  } else {
+    label.textContent = 'Ignore global prompt — use only this site\'s prompt';
+    sub.textContent   = 'Currently: site-specific additions are appended to the global prompt';
+    extraLbl.innerHTML = 'Site-Specific Additions <small>(appended to global prompt)</small>';
+  }
+}
+function copyGlobalPrompt() {
+  document.getElementById('e-custom-global').value = loadGlobalPrompt();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  MANUAL POST PAGE
+// ════════════════════════════════════════════════════════════════════════════
+function renderPostSites() {
+  const list = document.getElementById('post-site-list');
+  list.innerHTML = sites.filter(s => s.active !== false).map((s, i) => {
+    const dot = `background:linear-gradient(135deg,${THEME_COLORS[s.theme]?.bg||'#333'},${THEME_COLORS[s.theme]?.accent||'#6c63ff'})`;
+    return `<div class="site-check-item checked" id="psi-${i}" onclick="togglePostSite(${i})">
+      <div class="chk-box" id="pcb-${i}">✓</div>
+      <div class="chk-info">
+        <div class="chk-domain">${s.domain||'New Site'}</div>
+        <div class="chk-cat">${s.category||''}</div>
+      </div>
+      <div class="chk-dot" style="${dot}"></div>
+    </div>`;
+  }).join('');
+  updatePostCount();
+
+  // Restore bot repo
+  const saved = localStorage.getItem('db_bot_repo') || '';
+  if(saved) document.getElementById('post-bot-repo').value = saved;
+}
+
+function togglePostSite(i) {
+  const item = document.getElementById(`psi-${i}`);
+  const box  = document.getElementById(`pcb-${i}`);
+  const on   = item.classList.toggle('checked');
+  box.textContent = on ? '✓' : '';
+  updatePostCount();
+}
+
+function selectAllPost(checked) {
+  sites.filter(s => s.active !== false).forEach((_,i) => {
+    const item = document.getElementById(`psi-${i}`);
+    const box  = document.getElementById(`pcb-${i}`);
+    if(!item) return;
+    if(checked) item.classList.add('checked'); else item.classList.remove('checked');
+    box.textContent = checked ? '✓' : '';
+  });
+  updatePostCount();
+}
+
+function updatePostCount() {
+  const total    = sites.filter(s => s.active !== false).length;
+  const selected = document.querySelectorAll('.site-check-item.checked').length;
+  document.getElementById('post-select-count').textContent = `${selected} of ${total} sites selected`;
+}
+
+function saveBotRepo() {
+  localStorage.setItem('db_bot_repo', document.getElementById('post-bot-repo').value.trim());
+}
+
+async function submitPost() {
+  const topic   = document.getElementById('post-topic').value.trim();
+  const context = document.getElementById('post-context').value.trim();
+  const botRepo = document.getElementById('post-bot-repo').value.trim();
+  const token   = loadToken();
+  const status  = document.getElementById('post-status');
+  const log     = document.getElementById('post-log');
+  const sched   = document.getElementById('post-schedule').value;
+
+  if(!topic) { status.textContent = '⚠ Enter a topic first'; status.style.color='var(--amber)'; return; }
+  if(!botRepo) { status.textContent = '⚠ Enter your bot repo (e.g. yourusername/content-bot)'; status.style.color='var(--amber)'; return; }
+  if(!token) { status.textContent = '⚠ Add GitHub token in API Keys first'; status.style.color='var(--amber)'; return; }
+
+  // Collect selected site IDs
+  const activeSites = sites.filter(s => s.active !== false);
+  const selectedIds = activeSites
+    .filter((_,i) => document.getElementById(`psi-${i}`)?.classList.contains('checked'))
+    .map(s => s.id);
+
+  if(selectedIds.length === 0) { status.textContent = '⚠ Select at least one site'; status.style.color='var(--amber)'; return; }
+
+  status.textContent = `Publishing to ${selectedIds.length} sites...`;
+  status.style.color = 'var(--text2)';
+  log.classList.add('visible');
+  log.innerHTML = `<span class="log-info">→ Writing broadcast.json to ${botRepo}...</span>\n`;
+
+  const broadcastData = {
+    topic: context ? `${topic}\n\nAdditional context: ${context}` : topic,
+    site_ids: selectedIds,
+    created: new Date().toISOString(),
+    source: 'dashboard-manual-post',
+  };
+
+  const fileUrl = `https://api.github.com/repos/${botRepo}/contents/broadcast.json`;
+  const headers = { Authorization: `token ${token}`, 'Content-Type': 'application/json' };
+
+  try {
+    let sha = null;
+    const check = await fetch(fileUrl, { headers });
+    if(check.ok) sha = (await check.json()).sha;
+
+    const payload = {
+      message: `Manual post: ${topic.slice(0,70)}`,
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(broadcastData, null, 2)))),
+    };
+    if(sha) payload.sha = sha;
+
+    const r = await fetch(fileUrl, { method:'PUT', headers, body: JSON.stringify(payload) });
+    if(!r.ok) throw new Error(`GitHub API: ${r.status} ${(await r.json()).message}`);
+
+    log.innerHTML += `<span class="log-ok">✓ broadcast.json written (${selectedIds.length} sites queued)</span>\n`;
+
+    if(sched === 'trigger') {
+      log.innerHTML += `<span class="log-info">→ Triggering GitHub Action...</span>\n`;
+      const tr = await fetch(
+        `https://api.github.com/repos/${botRepo}/actions/workflows/daily-post.yml/dispatches`,
+        { method:'POST', headers, body: JSON.stringify({ ref: 'main' }) }
+      );
+      if(tr.status === 204) {
+        log.innerHTML += `<span class="log-ok">✓ GitHub Action triggered — articles will publish in ~2 minutes</span>\n`;
+      } else {
+        log.innerHTML += `<span class="log-err">⚠ Trigger failed (${tr.status}) — article queued for next scheduled run</span>\n`;
+      }
+    }
+
+    selectedIds.forEach(id => {
+      log.innerHTML += `<span class="log-ok">✓ Queued: ${id}</span>\n`;
+    });
+
+    status.textContent = `✓ ${selectedIds.length} sites queued for: "${topic.slice(0,50)}${topic.length>50?'…':''}"`;
+    status.style.color = 'var(--green)';
+
+  } catch(e) {
+    log.innerHTML += `<span class="log-err">✕ Error: ${e.message}</span>\n`;
+    status.textContent = 'Failed — check log';
+    status.style.color = 'var(--red)';
+  }
+}
+
+function clearPost() {
+  document.getElementById('post-topic').value = '';
+  document.getElementById('post-context').value = '';
+  document.getElementById('post-status').textContent = '';
+  document.getElementById('post-log').innerHTML = '';
+  document.getElementById('post-log').classList.remove('visible');
+  selectAllPost(true);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  OVERVIEW STATS
+// ════════════════════════════════════════════════════════════════════════════
+async function refreshStats() {
+  const token = loadToken();
+  const today = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('sv-sites').textContent = sites.filter(s=>s.active!==false).length;
+
+  if(!token) {
+    document.getElementById('recent-activity').innerHTML =
+      '<div class="card" style="color:var(--text2);text-align:center;padding:40px">Add GitHub token in API Keys to load live stats.</div>';
+    return;
+  }
+
+  let totalArticles=0, totalLinks=0, todayCount=0;
+  const activity = [];
+
+  for(const site of sites.slice(0,8)) {
+    if(!site.repo || site.repo.includes('YOUR')) continue;
+    try {
+      const r = await fetch(`https://api.github.com/repos/${site.repo}/contents/articles.json`,
+        {headers:{Authorization:`token ${token}`}});
+      if(r.ok) {
+        const data = await r.json();
+        const arts = JSON.parse(atob(data.content.replace(/\n/g,'')));
+        totalArticles += arts.length;
+        arts.forEach(a => {
+          totalLinks += (a.outbound_links||[]).length;
+          if(a.date === today) todayCount++;
+        });
+        const last = arts[arts.length-1];
+        if(last) activity.push(`<div class="card" style="margin-bottom:8px;padding:14px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:4px">${site.domain} · ${last.date}</div>
+          <div style="font-weight:600">${last.title}</div>
+          <a href="https://${site.domain}/${last.slug}/" target="_blank" style="font-size:12px;color:var(--accent)">View →</a>
+        </div>`);
+      }
+    } catch(e){}
+  }
+
+  document.getElementById('sv-articles').textContent = totalArticles||'0';
+  document.getElementById('sv-links').textContent    = totalLinks||'0';
+  document.getElementById('sv-today').textContent    = todayCount||'0';
+  document.getElementById('sv-subs').textContent     = '—';
+  document.getElementById('recent-activity').innerHTML = activity.join('') ||
+    '<div class="card" style="color:var(--text2);padding:32px;text-align:center">No articles found yet — check your repo names in site config.</div>';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  BACKLINK MATRIX
+// ════════════════════════════════════════════════════════════════════════════
+async function refreshBacklinks() {
+  const token = loadToken();
+  if(!token) {
+    document.getElementById('matrix-container').innerHTML = '<div class="card" style="color:var(--text2);text-align:center;padding:40px">Add GitHub token in API Keys first.</div>';
+    return;
+  }
+  document.getElementById('matrix-container').innerHTML = '<div class="card" style="color:var(--text2);padding:24px">Loading from GitHub...</div>';
+
+  const matrix = {};
+  sites.forEach(s => { matrix[s.domain]= {}; sites.forEach(t => { matrix[s.domain][t.domain]=0; }); });
+
+  for(const site of sites) {
+    if(!site.repo||site.repo.includes('YOUR')) continue;
+    try {
+      const r = await fetch(`https://api.github.com/repos/${site.repo}/contents/articles.json`,
+        {headers:{Authorization:`token ${token}`}});
+      if(r.ok) {
+        const data = await r.json();
+        const arts = JSON.parse(atob(data.content.replace(/\n/g,'')));
+        arts.forEach(a => (a.outbound_links||[]).forEach(d => {
+          if(matrix[site.domain]?.[d] !== undefined) matrix[site.domain][d]++;
+        }));
+      }
+    } catch(e){}
+  }
+
+  const hdrs = sites.map(s=>`<th title="${s.domain}">${s.domain.split('.')[0]}</th>`).join('');
+  const rows = sites.map(from=>{
+    const cells = sites.map(to=>{
+      if(from.domain===to.domain) return `<td style="background:var(--bg3)">—</td>`;
+      const v = matrix[from.domain]?.[to.domain]||0;
+      return `<td class="${v>0?'cell-hit':'cell-zero'}">${v||'·'}</td>`;
+    }).join('');
+    return `<tr><th>${from.domain.split('.')[0]}</th>${cells}</tr>`;
+  }).join('');
+
+  document.getElementById('matrix-container').innerHTML = `
+    <div class="alert" style="margin-bottom:12px">Row = source site → Column = destination site being linked to</div>
+    <div class="matrix-wrap"><table class="matrix">
+      <thead><tr><th>From / To</th>${hdrs}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  SETUP / TOKEN
+// ════════════════════════════════════════════════════════════════════════════
+function saveToken() {
+  const t = document.getElementById('gh-token').value.trim();
+  localStorage.setItem('db_token', t);
+  document.getElementById('token-status').textContent = t ? '✓ Token saved' : '—';
+  document.getElementById('token-status').style.color = t ? 'var(--green)' : 'var(--text2)';
+}
+function toggleTokenVisibility() {
+  const el = document.getElementById('gh-token');
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const token = loadToken();
+  if(token) document.getElementById('gh-token').value = token;
+  renderSites();
+  refreshStats();
+  document.getElementById('sites-count-label').textContent =
+    `${sites.filter(s=>s.active!==false).length} active · ${sites.length} total`;
+});
+
+// ── Cloudflare Domain Manager ───────────────────────────────────────────────
+function saveCFCreds() {
+  const tok = document.getElementById('cf-api-token').value.trim();
+  const acc = document.getElementById('cf-account-id').value.trim();
+  if(tok) localStorage.setItem('kvs_cf_token', tok);
+  if(acc) localStorage.setItem('kvs_cf_account', acc);
+  document.getElementById('cf-status').textContent = '✓ Cloudflare credentials saved';
+  document.getElementById('cf-status').style.color = 'var(--green)';
+}
+
+function loadCFCreds() {
+  const tok = localStorage.getItem('kvs_cf_token') || '';
+  const acc = localStorage.getItem('kvs_cf_account') || '';
+  if(tok) document.getElementById('cf-api-token').value = tok;
+  if(acc) document.getElementById('cf-account-id').value = acc;
+  return {token: tok, account: acc};
+}
+
+async function checkAllDomains() {
+  const {token, account} = loadCFCreds();
+  if(!token) { document.getElementById('cf-status').textContent = 'Enter Cloudflare API token first.'; return; }
+  const domains = sites.filter(s => s.domain).map(s => s.domain);
+  if(!domains.length) { document.getElementById('cf-status').textContent = 'No domains configured. Add sites first.'; return; }
+  document.getElementById('cf-status').textContent = `Checking ${domains.length} domains...`;
+  const grid = document.getElementById('domain-status-grid');
+  grid.innerHTML = '';
+
+  // Get list of Cloudflare zones for this account
+  let cfZones = [];
+  try {
+    const r = await fetch('https://api.cloudflare.com/client/v4/zones?per_page=50', {
+      headers: {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'}
+    });
+    const data = await r.json();
+    if(data.success) cfZones = data.result.map(z => ({name: z.name, id: z.id, status: z.status, ns: z.name_servers}));
+  } catch(e) { document.getElementById('cf-status').textContent = 'CF API error: '+e.message; return; }
+
+  domains.forEach(domain => {
+    const rootDomain = domain.replace(/^www\./, '');
+    const zone = cfZones.find(z => rootDomain === z.name || rootDomain.endsWith('.'+z.name));
+    const card = document.createElement('div');
+    card.style.cssText = 'background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px';
+    if(zone) {
+      const statusColor = zone.status === 'active' ? 'var(--green)' : 'var(--amber)';
+      card.innerHTML = `
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${domain}</div>
+        <div style="font-size:11px;color:${statusColor};font-weight:700;text-transform:uppercase">${zone.status}</div>
+        <div style="font-size:11px;color:var(--text3)">Zone ID: ${zone.id.slice(0,8)}...</div>
+        <div style="display:flex;gap:6px;margin-top:4px">
+          <button class="btn btn-xs" style="flex:1" onclick="window.open('https://dash.cloudflare.com/?to=/:account/${zone.id}/pages','_blank')">Open Pages ↗</button>
+          <button class="btn btn-xs" style="flex:1" onclick="window.open('https://dash.cloudflare.com/?to=/:account/${zone.id}/dns','_blank')">DNS ↗</button>
+        </div>`;
+    } else {
+      card.innerHTML = `
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${domain}</div>
+        <div style="font-size:11px;color:var(--text3)">Not found in Cloudflare</div>
+        <button class="btn btn-xs" style="margin-top:4px;background:var(--bg4)" onclick="window.open('https://dash.cloudflare.com/','_blank')">Add to Cloudflare ↗</button>`;
+    }
+    grid.appendChild(card);
+  });
+  document.getElementById('cf-status').textContent = `Found ${cfZones.length} zones on Cloudflare. ${cfZones.filter(z=>z.status==='active').length} active.`;
+}
+
+// Load CF creds on page load
+document.addEventListener('DOMContentLoaded', loadCFCreds);
+
+// Date mode toggle
+document.querySelectorAll('input[name="e-date-mode"]').forEach(r => {
+  r.addEventListener('change', function() {
+    document.getElementById('date-span-box').style.display = this.value === 'distributed' ? 'block' : 'none';
+  });
+});
+
+// Close modal on backdrop click
+document.getElementById('config-modal').addEventListener('click', function(e) {
+  if(e.target === this) closeModal();
+});
+
+// ── Posts Editor ────────────────────────────────────────────────────────────
+var _editPostSlug = '', _editPostRepo = '', _editIsDemo = false;
+
+// ── Demo article data for crypto-insights ───────────────────────────────────
+const DEMO_ARTICLES = [
+  {
+    title: "Why Algorithmic Trading Outperforms Human Emotion By 340%",
+    slug: "algorithmic-trading-outperforms-human-emotion",
+    author: "Marcus Chen", date: "May 08, 2026", date_iso: "2026-05-08",
+    meta_description: "Data from 2023-2025 shows systematic strategies consistently beat discretionary traders. Here's the evidence and what it means for retail.",
+    sections: [
+      {h:"The Emotion Tax Is Real", c:"Every discretionary decision carries what researchers now call an emotion tax. Fear of missing out causes entries too late. Loss aversion causes exits too early. Confirmation bias causes traders to hold losers hoping they come back.<br><br>A 2024 study tracked 2,400 retail traders over 18 months. The most emotionally aware traders underperformed the least emotionally aware by nearly 60%. That's counterintuitive until you realize awareness without systems just produces more second-guessing.<br><br>Algorithms don't have this problem. They execute the same logic on the 200th trade as the first. That consistency is what produces edge over time."},
+      {h:"What the Data Actually Shows", c:"The 340% figure comes from a composite analysis of roughly 800 trading accounts at three brokers who shared anonymized data for research. Accounts were split into two groups: those using systematic rules, and those using discretionary judgment.<br><br>Over 28 months, systematic accounts had higher average returns in 26 of those months. The two months where discretionary accounts won were both high-uncertainty macro events. Makes sense. Black-swan scenarios break models temporarily. But they also destroy undisciplined discretionary traders."},
+      {h:"You Don't Need a PhD to Run a System", c:"You don't need a complex algorithm to get the benefits. The core principle is rules. If you can write down the exact conditions under which you enter and exit a trade, and then follow those rules without exception, you're already operating systematically.<br><br>Start with one rule. Something like: I will not hold a losing position beyond a 2% drawdown from entry. Just that one rule, applied consistently, removes one of the biggest sources of trading destruction: the hope trade."},
+      {h:"Why Most Traders Won't Do This", c:"Most people don't actually want rules. Rules feel like giving up control, and control feels safe even when the data says it's destroying your account.<br><br>There's also the dopamine problem. Winning a trade you 'felt' was right produces a much stronger neurological reward than winning a trade your system flagged. That reward becomes addictive. Traders chase it even when systematic approaches clearly outperform.<br><br>The solution is not willpower. It's design. Build a system, test it, automate as much as possible, and remove yourself from as many decisions as you can."}
+    ],
+    conclusion: "The data is clear. Emotion is not an edge in trading. Whether you build a full algorithm or just write down three rules you will follow every single time, the move is toward systems and away from feelings. The 340% gap does not lie."
+  },
+  {
+    title: "Bitcoin's Volatility Surface: What Quants See That Retail Misses",
+    slug: "bitcoin-volatility-surface-quants",
+    author: "Marcus Chen", date: "May 05, 2026", date_iso: "2026-05-05",
+    meta_description: "The implied volatility surface of Bitcoin options reveals patterns retail traders never look at. Here's what the data shows and why it matters for entries.",
+    sections: [
+      {h:"What Is the Volatility Surface", c:"The volatility surface is a three-dimensional map showing implied volatility across different strike prices and expiration dates. For equity options it's been studied for decades. For Bitcoin, it's relatively new and still mispriced in ways that create exploitable opportunities.<br><br>When you look at Bitcoin's vol surface right now, a few things stand out immediately. Front-month calls are pricing in significantly more upside probability than the underlying price action would suggest. And put skew on 30-day expirations has been compressing since February."},
+      {h:"The Retail Information Gap", c:"Retail traders look at price. Quants look at the second derivative of price, which is volatility. And the third, which is vol-of-vol. Each layer tells you something different about where the market thinks risk actually lives.<br><br>Right now, the surface is telling a story that contradicts what you'll read in most crypto media. The 30-day realized vol is sitting around 58%, but 90-day implied is only 62%. That's an unusually flat term structure. In equity markets, flat term structures historically precede significant directional moves."},
+      {h:"How to Trade This Without Options", c:"Most retail traders don't use options, and that's fine. You can still extract signal from the vol surface without trading it directly. When front-month implied vol diverges significantly from realized, it's often a leading indicator for price movement within 2 to 3 weeks.<br><br>Track the VIX equivalent for Bitcoin on platforms like Deribit or Volmex. When it spikes without a corresponding price move, smart money is buying protection. When it collapses while price grinds sideways, that's often accumulation disguised as calm."},
+      {h:"The Risk You're Not Accounting For", c:"Retail traders almost universally underestimate the cost of optionality in crypto. When markets seem calm and vol is low, the instinct is to size up. That's exactly when the vol surface is telling you position sizes should stay tight.<br><br>I've watched accounts blow up not on the big obvious moves, but on the quiet period right before them. Low vol is not safety. Low vol is the market holding its breath."}
+    ],
+    conclusion: "You don't need to trade options to benefit from understanding them. The vol surface is one of the richest information sources in any liquid market. Start reading it as a sentiment and positioning indicator, and you'll have context most retail traders never access."
+  },
+  {
+    title: "Grid Bot Strategies That Generated 47% Returns in Q1 2026",
+    slug: "grid-bot-strategies-q1-2026-returns",
+    author: "Marcus Chen", date: "April 28, 2026", date_iso: "2026-04-28",
+    meta_description: "Three specific grid bot configurations that outperformed passive holding by 47% in Q1 2026. The settings, the reasoning, and the risks.",
+    sections: [
+      {h:"What Actually Worked in Q1", c:"Q1 2026 was a range-expansion quarter. Bitcoin moved between roughly $71,000 and $98,000 with no sustained breakout in either direction for most of the period. That's close to ideal territory for grid bots, and the results reflected it.<br><br>The three configurations that consistently outperformed were: a wide-range arithmetic grid on BTC/USDT set between $72k and $96k with 48 grid levels, a geometric grid on ETH/USDT with asymmetric spacing weighted toward the lower half of the range, and a hybrid grid on SOL/USDT that combined grid logic with a simple trend filter."},
+      {h:"The SOL Hybrid Configuration", c:"The most interesting performer was the SOL hybrid. The base configuration was a standard arithmetic grid, but it included one rule: if price closed below the 20-day moving average for three consecutive days, the bot paused new long-side orders and held existing inventory.<br><br>That one filter prevented the grid from getting destroyed during the 18-day SOL drawdown in February. Without it, the bot would have been buying all the way down and sitting on a 34% unrealized loss. With it, the drawdown was capped at around 11% and recovery was fast."},
+      {h:"Position Sizing and Capital Allocation", c:"One mistake I see constantly with grid bots is over-allocation. People put 60% or 70% of their trading capital into a single grid configuration and then wonder why a trending market wipes them out.<br><br>The right approach is to treat each grid as a position with a defined max loss. Calculate what happens if price moves 40% outside your range in either direction, and make sure that scenario doesn't threaten your broader portfolio. For most people, this means each individual grid should represent no more than 15% to 20% of total capital."},
+      {h:"When Grids Stop Working", c:"Grids break in trending markets. That's not a bug, it's a fundamental characteristic. A grid bot is essentially a bet that price will oscillate within a range. When price decides to trend, the bot keeps fading the move and accumulates an increasingly wrong-way position.<br><br>The solution is not to run grids without range limits. Always define the upper and lower boundaries at which the bot stops and you reassess. The Q1 configurations that failed were almost all grids without stop conditions, left running through the February trend phase."}
+    ],
+    conclusion: "Grid bots work in range markets and fail in trend markets. The edge in Q1 came not from smarter grid configurations but from better filters and stricter capital allocation rules. The underlying math is simple. The discipline to implement it correctly is not."
+  },
+  {
+    title: "On-Chain Metrics That Predicted the Last Three Major Tops",
+    slug: "on-chain-metrics-predicted-three-major-tops",
+    author: "Marcus Chen", date: "April 19, 2026", date_iso: "2026-04-19",
+    meta_description: "Three on-chain indicators gave reliable warning before the last three Bitcoin cycle peaks. Here's what they measure and what they're saying right now.",
+    sections: [
+      {h:"NUPL: The Sentiment Compression Signal", c:"Net Unrealized Profit and Loss measures the aggregate profit or loss of the entire Bitcoin supply. When NUPL reaches the euphoria zone above 0.75, it has historically marked cycle peaks within weeks rather than months.<br><br>Before the November 2021 top, NUPL hit 0.78. Before the March 2024 local top, it hit 0.71. Before the September 2025 peak, 0.74. The signal is not perfect, and it can stay elevated longer than you expect. But sustained readings above 0.70 have been among the most reliable early warning indicators in any market I've studied."},
+      {h:"Exchange Netflows and the Accumulation Signal", c:"Exchange netflows track the movement of Bitcoin onto and off exchanges. When large amounts move onto exchanges, it typically signals selling intent. When coins flow off exchanges into cold storage, it suggests accumulation or long-term holding.<br><br>What's useful is not the single-day reading but the 30-day trend. In the 6 weeks before each of the last three major tops, exchange inflows accelerated significantly while price was still rising. Smart money was distributing into retail demand."},
+      {h:"The MVRV Ratio: Price vs Fair Value", c:"Market Value to Realized Value compares the current market cap to the realized cap, which approximates the aggregate cost basis of all Bitcoin. An MVRV above 3.0 has historically indicated that the market is significantly overextended relative to its cost basis.<br><br>The practical use is as a position-sizing guide rather than a timing tool. When MVRV is below 1.0, maximum allocation makes sense because price is below the aggregate cost basis, which historically precedes strong recovery. When MVRV is above 3.0, reduce exposure. The top is not always immediate, but the risk-reward has shifted dramatically."},
+      {h:"What These Metrics Are Saying Right Now", c:"Current readings as of this writing: NUPL is sitting at 0.61, which is elevated but not yet in the danger zone. Exchange netflows have been slightly negative over the past 30 days, suggesting modest accumulation. MVRV is at 2.3, above the historical mean but not yet at the levels that preceded prior peaks.<br><br>The composite picture is mid-cycle caution rather than immediate top risk. But given that these metrics move slowly and the signals appear before price turns, the time to start watching closely is now, not after the readings spike."}
+    ],
+    conclusion: "On-chain data is not a crystal ball. But it gives you a view of aggregate positioning and sentiment that price action alone cannot provide. The three metrics covered here have a documented track record. Add them to your monitoring routine and use them to adjust position sizing rather than to predict exact tops."
+  },
+  {
+    title: "How Exchange APIs Enable Systematic Alpha at Scale",
+    slug: "exchange-apis-systematic-alpha",
+    author: "Marcus Chen", date: "April 11, 2026", date_iso: "2026-04-11",
+    meta_description: "The technical architecture behind systematic crypto trading. How exchange APIs work, what data they expose, and how to build a pipeline that scales.",
+    sections: [
+      {h:"REST vs WebSocket: Choosing the Right Tool", c:"Every major crypto exchange exposes two types of API endpoints: REST for request-response data retrieval, and WebSocket for real-time streaming. Understanding when to use each is foundational to building any reliable systematic strategy.<br><br>REST is appropriate for portfolio state queries, order placement, and historical data pulls. WebSocket is the only viable option for real-time market data. If you're using REST calls to fetch orderbook updates, you're already at a structural disadvantage to anyone running WebSocket feeds. The latency difference at peak market activity can be 300 to 800 milliseconds. That's an eternity in algorithmic terms."},
+      {h:"Data Quality and the Hidden Costs of Cheap Feeds", c:"The second mistake most people building their first trading system make is underestimating how much data quality matters. Every exchange feed has gaps, duplicates, and occasional timestamp errors. Your pipeline needs to handle all of them gracefully or your strategy will fail in production even if it looked perfect in backtesting.<br><br>Build gap detection into your WebSocket handler from day one. When the connection drops and reconnects, you need to check whether you missed any fills or significant price moves during the outage window. Most production outages I've seen were caused by code that assumed a clean feed and had no defensive logic."},
+      {h:"Order Types That Most Retail Bots Miss", c:"Most retail bot implementations use market orders or simple limit orders. This leaves significant efficiency gains on the table. Post-only orders, for example, guarantee maker fees on exchanges that offer maker-taker pricing, which can reduce trading costs by 40% to 60% on high-frequency strategies.<br><br>Iceberg orders allow you to show only a portion of your intended size to the market, reducing slippage on larger orders. Stop-limit orders with offset allow you to set triggers that account for expected slippage rather than treating the trigger price as your fill price. Each of these reduces drag on returns that compounds significantly over time."},
+      {h:"Rate Limits and How to Work Within Them", c:"Every exchange imposes rate limits. Binance allows 1,200 requests per minute on most endpoints. Coinbase Pro allows 10 requests per second. Hit those limits and your strategy gets throttled or blocked, often at exactly the wrong moment.<br><br>Build a rate limiter into your API client layer that queues requests and enforces spacing automatically. This should be invisible to the strategy logic above it. The strategy should send requests; the client should worry about whether the exchange can handle them right now. Separating these concerns makes the whole system more maintainable and more reliable."}
+    ],
+    conclusion: "Exchange APIs are more capable than most retail traders realize. The edge they provide isn't just execution speed. It's access to data and order types that manual trading can't replicate. Build the infrastructure carefully, handle the edge cases, and you have a foundation that can run systematic strategies at a scale discretionary trading can never match."
+  }
+];
+
+function buildDemoHTML(article, overrideAuthor, overrideDate) {
+  const author = overrideAuthor || article.author;
+  const date   = overrideDate   || article.date;
+  const t = {bg:'#07090f',bg2:'#0d1020',bg3:'#131728',text:'#e2e8ff',text2:'#7a88bb',
+             meta:'#4d7059',accent:'#3ecf8e',accent2:'#2eb87d',border:'#1e3024'};
+  const toc = article.sections.map((s,i)=>`<li style="padding:4px 0;border-bottom:1px solid ${t.border}"><a href="#s${i}" style="color:${t.text2};font-size:12px;line-height:1.7">${s.h}</a></li>`).join('');
+  const body = article.sections.map((s,i)=>`<h2 id="s${i}" style="font-size:20px;font-weight:700;color:${t.text};margin:36px 0 12px;font-family:Inter,sans-serif">${s.h}</h2><div style="color:${t.text2};line-height:1.8;font-size:15px">${s.c}</div>`).join('');
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${article.title} | cryptoinsights.com</title>
+<meta name="description" content="${article.meta_description}">
+<link rel="canonical" href="https://cryptoinsights.com/${article.slug}/">
+<meta property="og:title" content="${article.title}">
+<meta property="og:description" content="${article.meta_description}">
+\x3Cscript type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"${article.title}","author":{"@type":"Person","name":"${author}"},"datePublished":"${article.date_iso}"}\x3C/script>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,system-ui,sans-serif;background:${t.bg};color:${t.text};line-height:1.65;font-size:16px}a{color:${t.accent};text-decoration:none}</style>
+</head><body>
+<div style="background:${t.bg2};border-bottom:1px solid ${t.border};padding:16px 28px;display:flex;justify-content:space-between;align-items:center">
+  <a href="/" style="font-size:18px;font-weight:800;color:${t.accent}">cryptoinsights.com</a>
+  <span style="font-size:11px;color:${t.meta};text-transform:uppercase;letter-spacing:1px">Cryptocurrency &amp; Trading</span>
+</div>
+<div style="max-width:1060px;margin:40px auto;padding:0 24px;display:grid;grid-template-columns:1fr 240px;gap:48px;align-items:start">
+  <article>
+    <div style="font-size:12px;color:${t.meta};margin-bottom:16px"><a href="/" style="color:${t.meta}">Home</a> / ${article.date}</div>
+    <h1 style="font-size:clamp(24px,4vw,38px);font-weight:800;line-height:1.2;margin-bottom:14px;color:${t.text}">${article.title}</h1>
+    <div style="font-size:13px;color:${t.meta};margin-bottom:28px">By <strong style="color:${t.text2}">${author}</strong> &nbsp;·&nbsp; ${date} &nbsp;·&nbsp; Cryptocurrency &amp; Trading</div>
+    <p style="font-size:18px;line-height:1.7;color:${t.text};border-left:3px solid ${t.accent};padding-left:16px;margin-bottom:24px">${article.meta_description}</p>
+    ${body}
+    <div style="background:${t.bg3};border-left:4px solid ${t.accent};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px;color:${t.text2};line-height:1.75">${article.conclusion}</div>
+  </article>
+  <aside style="position:sticky;top:24px;background:${t.bg2};border:1px solid ${t.border};border-radius:8px;padding:18px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:${t.accent};margin-bottom:12px">Contents</div>
+    <ul style="list-style:none;border-left:2px solid ${t.border};padding-left:10px">${toc}</ul>
+  </aside>
+</div>
+<footer style="background:${t.bg2};border-top:1px solid ${t.border};padding:32px 24px;text-align:center;font-size:12px;color:${t.meta};margin-top:60px">
+  <p>&copy; 2026 cryptoinsights.com &nbsp;·&nbsp; Cryptocurrency &amp; Trading</p>
+  <p style="margin-top:4px;font-size:11px">For informational purposes only. Not financial advice.</p>
+</footer>
+</body></html>`;
+}
+
+function loadSitePosts() {
+  if(editingIdx < 0) return;
+  const s = sites[editingIdx];
+  const postsLoading = document.getElementById('posts-loading');
+  const postsList    = document.getElementById('posts-list');
+  postsLoading.style.display = 'block';
+  postsLoading.textContent   = 'Loading posts...';
+  postsList.style.display    = 'none';
+  document.getElementById('post-editor').style.display = 'none';
+
+  // ── Demo mode: crypto-insights has built-in sample articles ──────────────
+  if(s.id === 'crypto-insights' || s._hasDemo) {
+    const articles = DEMO_ARTICLES.map(a => {
+      const stored = JSON.parse(localStorage.getItem('kvs_demo_post_' + a.slug) || 'null');
+      return stored ? {...a, ...stored} : a;
+    });
+    postsLoading.style.display = 'none';
+    postsList.style.display    = 'block';
+    postsList.innerHTML = `
+      <div style="background:var(--bg3);border:1px solid var(--amber);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--amber)">
+        Sample posts — edit them to see how the editor works. Changes save to your browser.
+        Connect a GitHub token in Setup to load real published posts instead.
+      </div>` +
+      articles.map(a => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;margin-bottom:8px;gap:12px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.title}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:3px">By ${a.author} &nbsp;·&nbsp; ${a.date} &nbsp;·&nbsp; /${a.slug}/</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <button class="btn btn-xs" style="background:var(--bg4);border:1px solid var(--border)" onclick="previewDemoPost('${a.slug}')">View</button>
+            <button class="btn btn-xs" style="background:var(--accent);color:#fff;border:none" onclick="openDemoPostEdit('${a.slug}')">Edit</button>
+          </div>
+        </div>`
+      ).join('');
+    return;
+  }
+
+  // ── GitHub mode: load real articles.json ─────────────────────────────────
+  if(!s.repo) { postsLoading.textContent = 'No GitHub repo configured for this site.'; return; }
+  const ghToken = loadGHCreds().token;
+  if(!ghToken) { postsLoading.textContent = 'Set your GitHub token in Setup to load live posts.'; return; }
+  fetch(`https://api.github.com/repos/${s.repo}/contents/articles.json`, {headers:{'Authorization':'token '+ghToken}})
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if(!data) { postsLoading.textContent = 'No articles.json found. Run the bot first.'; return; }
+      const articles = JSON.parse(atob(data.content.replace(/\n/g,'')));
+      postsLoading.style.display = 'none';
+      postsList.style.display = 'block';
+      postsList.innerHTML = articles.slice().reverse().map(a =>
+        `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;margin-bottom:8px;gap:12px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.title}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:3px">By ${a.author||'Unknown'} &nbsp;·&nbsp; ${a.date||''} &nbsp;·&nbsp; /${a.slug}/</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <button class="btn btn-xs" style="background:var(--bg4);border:1px solid var(--border)" onclick="previewGHPost('${encodeURIComponent(JSON.stringify(a))}','${s.repo}')">View</button>
+            <button class="btn btn-xs" style="background:var(--accent);color:#fff;border:none" onclick="openPostEdit('${encodeURIComponent(JSON.stringify(a))}','${s.repo}')">Edit</button>
+          </div>
+        </div>`
+      ).join('');
+    }).catch(e => { postsLoading.textContent = 'Failed to load: ' + e.message; });
+}
+
+// ── Demo post functions ──────────────────────────────────────────────────────
+function openDemoPostEdit(slug) {
+  const base    = DEMO_ARTICLES.find(a => a.slug === slug);
+  const stored  = JSON.parse(localStorage.getItem('kvs_demo_post_' + slug) || 'null');
+  const article = stored ? {...base, ...stored} : base;
+  _editPostSlug = slug;
+  _editIsDemo   = true;
+  document.getElementById('post-edit-title').textContent   = article.title;
+  document.getElementById('post-edit-author').value        = article.author;
+  document.getElementById('post-edit-date').value          = article.date_iso;
+  document.getElementById('post-demo-badge').style.display = 'inline';
+  document.getElementById('post-edit-html').value          = buildDemoHTML(article);
+  document.getElementById('post-editor').style.display     = 'block';
+  document.getElementById('post-save-status').textContent  = '';
+  document.getElementById('post-editor').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function previewDemoPost(slug) {
+  const base    = DEMO_ARTICLES.find(a => a.slug === slug);
+  const stored  = JSON.parse(localStorage.getItem('kvs_demo_post_' + slug) || 'null');
+  const article = stored ? {...base, ...stored} : base;
+  const html    = buildDemoHTML(article, stored?.author, stored?.date);
+  const win     = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+}
+
+function previewGHPost(encodedArticle, repo) {
+  const a = JSON.parse(decodeURIComponent(encodedArticle));
+  const ghToken = loadGHCreds().token;
+  if(!ghToken) { alert('Set GitHub token in Setup first.'); return; }
+  fetch(`https://api.github.com/repos/${repo}/contents/${a.slug}/index.html`, {headers:{'Authorization':'token '+ghToken}})
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if(!data) { alert('Could not load post HTML.'); return; }
+      const html = atob(data.content.replace(/\n/g,''));
+      const win = window.open('', '_blank');
+      win.document.write(html);
+      win.document.close();
+    });
+}
+
+function openPostEdit(encodedArticle, repo) {
+  const a = JSON.parse(decodeURIComponent(encodedArticle));
+  _editPostSlug = a.slug;
+  _editPostRepo = repo;
+  _editIsDemo   = false;
+  document.getElementById('post-edit-title').textContent   = a.title;
+  document.getElementById('post-edit-author').value        = a.author || '';
+  document.getElementById('post-edit-date').value          = a.date_iso || '';
+  document.getElementById('post-demo-badge').style.display = 'none';
+  document.getElementById('post-edit-html').value          = '(Loading HTML...)';
+  document.getElementById('post-editor').style.display     = 'block';
+  document.getElementById('post-save-status').textContent  = '';
+  const ghToken = loadGHCreds().token;
+  fetch(`https://api.github.com/repos/${repo}/contents/${a.slug}/index.html`, {headers:{'Authorization':'token '+ghToken}})
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      document.getElementById('post-edit-html').value = data ? atob(data.content.replace(/\n/g,'')) : '(Could not load HTML)';
+    });
+}
+
+function previewPost() {
+  const html = document.getElementById('post-edit-html').value;
+  if(!html || html.startsWith('(')) return;
+  const win = window.open('', '_blank');
+  win.document.write(html);
+  win.document.close();
+}
+
+function savePostEdit() {
+  const html   = document.getElementById('post-edit-html').value;
+  const author = document.getElementById('post-edit-author').value.trim();
+  const dateIso= document.getElementById('post-edit-date').value;
+  const status = document.getElementById('post-save-status');
+
+  // ── Patch author/date in HTML ────────────────────────────────────────────
+  let patched = html;
+  if(author) {
+    patched = patched.replace(/<strong style="color:[^"]*">([^<]*)<\/strong>/g, `<strong style="color:#3ecf8e">${author}</strong>`);
+  }
+
+  if(_editIsDemo) {
+    // Save demo edits to localStorage
+    const base = DEMO_ARTICLES.find(a => a.slug === _editPostSlug);
+    const update = {author, date_iso: dateIso, date: dateIso ? new Date(dateIso).toLocaleDateString('en-US',{month:'long',day:'2-digit',year:'numeric'}) : base.date};
+    localStorage.setItem('kvs_demo_post_' + _editPostSlug, JSON.stringify(update));
+    document.getElementById('post-edit-html').value = buildDemoHTML({...base,...update}, author);
+    status.textContent = '✓ Saved locally (demo mode)';
+    status.style.color = 'var(--green)';
+    loadSitePosts(); // refresh list
+    return;
+  }
+
+  // ── Push real post to GitHub ─────────────────────────────────────────────
+  const ghToken = loadGHCreds().token;
+  status.textContent = 'Pushing to GitHub...';
+  fetch(`https://api.github.com/repos/${_editPostRepo}/contents/${_editPostSlug}/index.html`, {headers:{'Authorization':'token '+ghToken}})
+    .then(r => r.json())
+    .then(existing => fetch(`https://api.github.com/repos/${_editPostRepo}/contents/${_editPostSlug}/index.html`, {
+      method:'PUT',
+      headers:{'Authorization':'token '+ghToken,'Content-Type':'application/json'},
+      body: JSON.stringify({message:`Edit: ${_editPostSlug}`, content: btoa(unescape(encodeURIComponent(patched))), sha: existing.sha})
+    }))
+    .then(r => {
+      status.textContent = r.ok ? '✓ Pushed to GitHub — Cloudflare deploys in ~30s' : '✗ Error: ' + r.status;
+      status.style.color = r.ok ? 'var(--green)' : 'var(--red)';
+    }).catch(e => { status.textContent = '✗ ' + e.message; status.style.color = 'var(--red)'; });
+}
+</script>
+
+</body>
+</html>
