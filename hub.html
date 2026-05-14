@@ -1,0 +1,2422 @@
+<!-- Kavalsia Network — © 2026 Kavalsia Inc. [Siavash Sadighi] -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kavalsia Network</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c09;--bg2:#0d1410;--bg3:#121b14;--bg4:#172119;--bg5:#1d2b1f;
+  --text:#ffffff;--text2:#b8d4c0;--text3:#4d7059;
+  --accent:#3ecf8e;--accent2:#2eb87d;--glow:#3ecf8e1e;
+  --green:#3ecf8e;--red:#ef4444;--amber:#f59e0b;--blue:#38bdf8;--purple:#a78bfa;
+  --border:#142018;--border2:#1e3024;
+  --r:8px;--font:'Inter',system-ui,sans-serif;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow:hidden}
+body{background:radial-gradient(ellipse at 50% 0%,#0d2318 0%,#080c09 65%)}
+a{color:var(--accent);text-decoration:none}
+button{cursor:pointer;font-family:var(--font);font-size:13px;border:none;border-radius:var(--r);padding:8px 16px;transition:all .15s}
+input,textarea,select{font-family:var(--font);color:var(--text);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;font-size:13px;outline:none;transition:border-color .15s;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;line-height:1.6}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::placeholder{color:var(--text3)}
+
+/* ── Shell ── */
+.shell{display:grid;grid-template-columns:220px 1fr;grid-template-rows:52px 1fr;height:100vh;overflow:hidden}
+
+/* ── Topbar ── */
+.topbar{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 18px}
+.tb-logo{font-size:15px;font-weight:900;background:linear-gradient(135deg,#3ecf8e,#2eb87d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;margin-right:4px;letter-spacing:-0.3px}
+.tb-health{display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:100px;background:var(--bg3);border:1px solid var(--border2);cursor:pointer;white-space:nowrap}
+.health-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;animation:pulse 2s infinite}
+.health-dot.live{background:var(--green)}
+.health-dot.partial{background:var(--amber)}
+.health-dot.down{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tb-sep{width:1px;height:22px;background:var(--border2);flex-shrink:0}
+.tb-info{font-size:11px;color:var(--text3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.server-badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:700;flex-shrink:0}
+.server-on{background:#3ecf8e18;color:var(--green);border:1px solid #3ecf8e30}
+.server-off{background:#ef444418;color:var(--red);border:1px solid #ef444430}
+.btn{background:var(--bg4);color:var(--text2);border:1px solid var(--border2)}
+.btn:hover{background:var(--bg5);color:var(--text)}
+.btn-accent{background:var(--accent);color:#000;font-weight:700}
+.btn-accent:hover{background:var(--accent2)}
+.btn-green{background:#3ecf8e18;color:var(--green);border:1px solid #3ecf8e30}
+.btn-green:hover{background:#3ecf8e30}
+.btn-blue{background:#38bdf818;color:var(--blue);border:1px solid #38bdf830}
+.btn-blue:hover{background:#38bdf830}
+.btn-red{background:#ef444418;color:var(--red);border:1px solid #ef444430}
+.btn-red:hover{background:#ef444430}
+.btn-amber{background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b30}
+.btn-amber:hover{background:#f59e0b30}
+.btn-sm{padding:5px 12px;font-size:12px}
+
+/* ── Sidebar ── */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-inner{flex:1;overflow-y:auto;padding:12px 8px}
+.nav-section{margin-bottom:4px}
+.nav-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text3);padding:10px 10px 4px;display:block}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:var(--r);background:none;border:none;color:var(--text2);font-size:13px;font-weight:500;text-align:left;transition:all .15s;margin-bottom:1px}
+.nav-btn:hover{background:var(--bg3);color:var(--text)}
+.nav-btn.active{background:var(--glow);color:var(--accent);font-weight:600}
+.nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--red);color:#fff;padding:1px 6px;border-radius:100px}
+
+/* ── Main ── */
+.main{overflow:hidden;display:flex;flex-direction:column}
+.panel{display:none;flex:1;overflow-y:auto;padding:24px 28px 80px}
+.panel.active{display:block}
+.pg-title{font-size:18px;font-weight:800;letter-spacing:-0.3px;color:var(--text);margin-bottom:3px}
+.pg-sub{font-size:12px;color:var(--text2);margin-bottom:20px}
+
+/* ── Cards / Sections ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px}
+.card+.card{margin-top:12px}
+.section-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+
+/* ── Stat cards ── */
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 18px}
+.stat-val{font-size:26px;font-weight:800;letter-spacing:-0.5px;color:var(--text);line-height:1}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.stat-delta{font-size:11px;color:var(--green);margin-top:6px}
+
+/* ── Site status cards ── */
+.site-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s}
+.site-card:hover{border-color:var(--border2)}
+.site-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--text3)}
+.site-dot.live{background:var(--green)}
+.site-dot.checking{background:var(--amber);animation:pulse 1s infinite}
+.site-dot.down{background:var(--red)}
+.site-info{flex:1;overflow:hidden}
+.site-domain{font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.site-tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:100px}
+.tag-client{background:#a78bfa18;color:var(--purple);border:1px solid #a78bfa30}
+.tag-off{background:#ef444418;color:var(--red);border:1px solid #ef444430}
+.tag-multi{background:#38bdf818;color:var(--blue);border:1px solid #38bdf830}
+
+/* ── Activity feed ── */
+.feed{max-height:340px;overflow-y:auto}
+.feed-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.feed-item:last-child{border-bottom:none}
+.feed-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.feed-dot.info{background:var(--blue)}
+.feed-dot.ok{background:var(--green)}
+.feed-dot.warn{background:var(--amber)}
+.feed-dot.err{background:var(--red)}
+.feed-dot.cmd{background:var(--purple)}
+.feed-body{flex:1;overflow:hidden}
+.feed-text{font-size:12px;color:var(--text2);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feed-time{font-size:10px;color:var(--text3);margin-top:1px}
+
+/* ── Command panel ── */
+.cmd-input-wrap{position:relative}
+.cmd-input{width:100%;min-height:80px;padding:14px;font-size:14px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);line-height:1.6;resize:none}
+.cmd-input:focus{border-color:var(--accent);outline:none}
+.cmd-send-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.cmd-examples{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cmd-example{padding:5px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:100px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.cmd-example:hover{border-color:var(--accent);color:var(--accent)}
+.cmd-thinking{display:none;align-items:center;gap:8px;font-size:12px;color:var(--text2);padding:10px 0}
+.cmd-thinking.show{display:flex}
+.spinner{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Preview / Diff ── */
+.preview{display:none;margin-top:16px}
+.preview.show{display:block}
+.preview-head{background:var(--bg2);border:1px solid var(--border2);border-radius:10px 10px 0 0;padding:14px 16px;border-bottom:none}
+.preview-understood{font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px}
+.preview-note{font-size:12px;color:var(--text2);margin-top:6px;padding:8px 10px;background:var(--bg4);border-radius:var(--r)}
+.diff-table{width:100%;border-collapse:collapse;background:var(--bg2);border:1px solid var(--border2);border-radius:0 0 10px 10px;overflow:hidden}
+.diff-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:8px 14px;background:var(--bg3);text-align:left;border-bottom:1px solid var(--border2)}
+.diff-row td{padding:9px 14px;font-size:12px;border-bottom:1px solid var(--border)}
+.diff-row:last-child td{border-bottom:none}
+.diff-field{color:var(--text2);font-family:monospace;font-size:11px}
+.diff-old{color:var(--red);text-decoration:line-through;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.diff-new{color:var(--green);font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.preview-actions{display:flex;gap:10px;margin-top:12px;align-items:center}
+
+/* ── Logs ── */
+.log-filters{display:flex;gap:6px;margin-bottom:14px}
+.log-filter{padding:5px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:100px;font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s}
+.log-filter.active{background:var(--glow);border-color:var(--accent);color:var(--accent)}
+.log-stream{font-family:monospace;font-size:12px;line-height:1.9;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:14px;max-height:calc(100vh - 260px);overflow-y:auto}
+.log-line{display:flex;gap:10px;align-items:baseline}
+.log-ts{color:var(--text3);flex-shrink:0;font-size:10px;width:155px}
+.log-tag{font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;flex-shrink:0}
+.log-tag.ok{background:#3ecf8e18;color:var(--green)}
+.log-tag.err{background:#ef444418;color:var(--red)}
+.log-tag.info{background:#38bdf818;color:var(--blue)}
+.log-tag.cmd{background:#a78bfa18;color:var(--purple)}
+.log-tag.warn{background:#f59e0b18;color:var(--amber)}
+.log-msg{color:var(--text2);word-break:break-all}
+
+/* ── History / Timeline ── */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:grid;grid-template-columns:140px 1fr;gap:0;position:relative}
+.tl-item::before{content:'';position:absolute;left:143px;top:22px;bottom:-2px;width:1px;background:var(--border2)}
+.tl-item:last-child::before{display:none}
+.tl-time{padding:14px 16px 14px 0;text-align:right;font-size:11px;color:var(--text3);line-height:1.4}
+.tl-dot{position:absolute;left:136px;top:18px;width:9px;height:9px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);z-index:1}
+.tl-dot.undo-dot{background:var(--text3)}
+.tl-body{padding:12px 0 12px 24px;border-left:none}
+.tl-cmd{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.tl-desc{font-size:12px;color:var(--text2);margin-bottom:8px}
+.tl-fields{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tl-field{font-size:10px;font-family:monospace;padding:2px 8px;background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--text2)}
+.tl-btns{display:flex;gap:6px}
+
+/* ── GitHub runs ── */
+.run-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.run-row:last-child{border-bottom:none}
+.run-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.run-status.success{background:var(--green)}
+.run-status.failure{background:var(--red)}
+.run-status.in_progress{background:var(--amber);animation:pulse 1s infinite}
+.run-status.queued{background:var(--text3)}
+.run-info{flex:1;overflow:hidden}
+.run-name{font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.run-meta{font-size:11px;color:var(--text3)}
+.run-dur{font-size:11px;color:var(--text3);flex-shrink:0}
+
+/* ── Settings ── */
+.settings-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11px;color:var(--text2);font-weight:600}
+.info-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.7;margin-top:6px}
+
+/* ── Modal ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:26px;width:500px;max-width:95vw}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.modal-sub{font-size:12px;color:var(--text2);margin-bottom:16px}
+.modal-log{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px;font-family:monospace;font-size:11px;min-height:60px;max-height:200px;overflow-y:auto;line-height:1.9}
+.mlog-ok{color:var(--green)} .mlog-err{color:var(--red)} .mlog-info{color:var(--blue)}
+.modal-btns{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
+
+/* ── Empty states ── */
+.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
+.empty b{display:block;font-size:16px;color:var(--text2);margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── Topbar ──────────────────────────────────────────────────────────────── -->
+<div class="topbar">
+  <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia" style="height:32px;width:auto;object-fit:contain;flex-shrink:0;margin-right:4px">
+  <div class="tb-health" onclick="showPanel('status')">
+    <span class="health-dot" id="healthDot"></span>
+    <span id="healthLabel">Checking...</span>
+  </div>
+  <div class="tb-sep"></div>
+  <span class="tb-info" id="lastRunInfo">—</span>
+  <span class="server-badge" id="serverBadge">⬤ Connecting...</span>
+  <div class="tb-sep"></div>
+  <button class="btn btn-sm" onclick="syncConfig()" title="Reload config from local disk">↻ Sync</button>
+  <button class="btn btn-sm btn-green" onclick="pullConfig()" title="Pull network-config.json from GitHub → overwrite local">↓ Pull</button>
+  <button class="btn btn-sm btn-blue" onclick="publishConfig()" title="Push local network-config.json → GitHub">↑ Push</button>
+  <button class="btn btn-sm btn-accent" onclick="triggerRun()">▶ Run Now</button>
+  <div class="tb-sep"></div>
+  <nav style="display:flex;gap:3px;flex-shrink:0">
+    <span style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;background:#3ecf8e18;color:#3ecf8e;border:1px solid #3ecf8e35">Hub</span>
+    <a href="editor.html"    style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#0d1410;border:1px solid #1e3024">Editor</a>
+    <a href="dashboard.html" style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#0d1410;border:1px solid #1e3024">Dashboard</a>
+    <a href="launcher.html"  style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:600;color:#b8d4c0;text-decoration:none;background:#0d1410;border:1px solid #1e3024">Setup</a>
+  </nav>
+</div>
+
+<!-- ── Sidebar ─────────────────────────────────────────────────────────────── -->
+<div class="sidebar">
+  <div class="sidebar-inner">
+    <div class="nav-section">
+      <span class="nav-label">Overview</span>
+      <button class="nav-btn active" id="nav-dashboard" onclick="showPanel('dashboard')"><span class="nav-icon">📊</span> Dashboard</button>
+      <button class="nav-btn" id="nav-status" onclick="showPanel('status')"><span class="nav-icon">🔍</span> Site Status</button>
+    </div>
+    <div class="nav-section">
+      <span class="nav-label">Control</span>
+      <button class="nav-btn" id="nav-command" onclick="showPanel('command')"><span class="nav-icon">✦</span> AI Command</button>
+      <button class="nav-btn" id="nav-customize" onclick="showPanel('customize')"><span class="nav-icon">✏</span> Customize Site</button>
+      <button class="nav-btn" id="nav-history" onclick="showPanel('history')"><span class="nav-icon">↩</span> History &amp; Undo</button>
+      <button class="nav-btn" id="nav-comments" onclick="showPanel('comments')"><span class="nav-icon">💬</span> Comments</button>
+      <button class="nav-btn" id="nav-backlinks" onclick="showPanel('backlinks')"><span class="nav-icon">🔗</span> Backlink Tracker</button>
+    </div>
+    <div class="nav-section">
+      <span class="nav-label">Activity</span>
+      <button class="nav-btn" id="nav-logs" onclick="showPanel('logs')"><span class="nav-icon">📋</span> Logs <span class="nav-badge" id="errorBadge" style="display:none">!</span></button>
+      <button class="nav-btn" id="nav-github" onclick="showPanel('github')"><span class="nav-icon">⚡</span> GitHub Runs</button>
+      <button class="nav-btn" id="nav-analytics" onclick="showPanel('analytics')"><span class="nav-icon">📈</span> Analytics</button>
+    </div>
+    <div class="nav-section">
+      <span class="nav-label">Config</span>
+      <button class="nav-btn" id="nav-compliance" onclick="showPanel('compliance')"><span class="nav-icon">🛡</span> Compliance</button>
+      <button class="nav-btn" id="nav-settings" onclick="showPanel('settings')"><span class="nav-icon">⚙</span> Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main ───────────────────────────────────────────────────────────────── -->
+<div class="main">
+
+<!-- ════════ DASHBOARD ════════ -->
+<div class="panel active" id="panel-dashboard">
+  <div class="pg-title">Dashboard</div>
+  <div class="pg-sub" id="dashSub">Loading...</div>
+  <div class="grid4" style="margin-bottom:16px" id="statCards">
+    <div class="stat-card"><div class="stat-val" id="statSites">—</div><div class="stat-lbl">Total Sites</div></div>
+    <div class="stat-card"><div class="stat-val" id="statActive">—</div><div class="stat-lbl">Active</div></div>
+    <div class="stat-card"><div class="stat-val" id="statClient">—</div><div class="stat-lbl">Client Sites</div></div>
+    <div class="stat-card"><div class="stat-val" id="statTopics">—</div><div class="stat-lbl">Total Topics</div></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="section-head">🌐 Sites</div>
+      <div id="dashSites" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div>
+      <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
+        <span>📡 Activity Feed</span>
+        <button class="btn btn-sm" style="padding:3px 8px;font-size:10px" onclick="clearActivity()">Clear</button>
+      </div>
+      <div class="card" style="padding:0 2px">
+        <div class="feed" id="activityFeed"><div class="empty"><b>No activity yet</b>Make changes to see them here</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SITE STATUS ════════ -->
+<div class="panel" id="panel-status">
+  <div class="pg-title">Site Status</div>
+  <div class="pg-sub">Live ping check for all configured domains.</div>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button class="btn btn-green" onclick="checkAllSites()">↻ Ping All Sites</button>
+    <span id="statusSummary" style="font-size:12px;color:var(--text2);align-self:center"></span>
+  </div>
+  <div id="statusGrid" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+
+<!-- ════════ AI COMMAND ════════ -->
+<div class="panel" id="panel-command">
+  <div class="pg-title">AI Command Center</div>
+  <div class="pg-sub">Type any change in plain English. Claude interprets it, shows you exactly what will change, then you confirm.</div>
+
+  <div class="card">
+    <div class="section-head">✦ Command</div>
+    <textarea class="cmd-input" id="cmdInput" rows="3" placeholder="e.g. Post twice a day on cryptoinsights.com&#10;e.g. Change the tone on passivewealthguide.com to be more conversational&#10;e.g. Make the logo font smaller on tradingtechreview.com&#10;e.g. Add 5 topics about DeFi to crypto-insights&#10;e.g. Set client for trading-tech to Acme Tools, they build backtesting software at acme.com, post about them every 7 articles"></textarea>
+    <div class="cmd-send-row">
+      <button class="btn btn-accent" onclick="sendCommand()" id="cmdSendBtn">Interpret Command →</button>
+      <div class="cmd-thinking" id="cmdThinking"><div class="spinner"></div>Claude is interpreting your command...</div>
+    </div>
+    <div class="cmd-examples">
+      <span style="font-size:11px;color:var(--text3);align-self:center">Examples:</span>
+      <button class="cmd-example" onclick="useExample(this)">Post twice a day on [site]</button>
+      <button class="cmd-example" onclick="useExample(this)">Make the logo smaller on [site]</button>
+      <button class="cmd-example" onclick="useExample(this)">Change font to Roboto on [site]</button>
+      <button class="cmd-example" onclick="useExample(this)">Activate / deactivate [site]</button>
+      <button class="cmd-example" onclick="useExample(this)">Set client for [site] to [business]</button>
+      <button class="cmd-example" onclick="useExample(this)">Add topics about [subject] to [site]</button>
+      <button class="cmd-example" onclick="useExample(this)">Change global writing rules to...</button>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="preview" id="cmdPreview">
+    <div class="preview-head">
+      <div class="preview-understood" id="previewUnderstood"></div>
+      <div class="preview-note" id="previewNote" style="display:none"></div>
+    </div>
+    <table class="diff-table">
+      <thead><tr><th>Field</th><th>Before</th><th>After</th></tr></thead>
+      <tbody id="diffBody"></tbody>
+    </table>
+    <div class="preview-actions">
+      <button class="btn btn-green" onclick="confirmCommand()">✓ Confirm &amp; Apply</button>
+      <button class="btn" onclick="cancelCommand()">✕ Cancel</button>
+      <label style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer">
+        <input type="checkbox" id="autoPublish" checked style="width:auto"> Publish to GitHub after confirming
+      </label>
+    </div>
+  </div>
+
+  <!-- Recent commands -->
+  <div style="margin-top:20px">
+    <div class="section-head">Recent Commands</div>
+    <div id="recentCmds" style="display:flex;flex-direction:column;gap:6px"></div>
+  </div>
+</div>
+
+<!-- ════════ HISTORY & UNDO ════════ -->
+<div class="panel" id="panel-history">
+  <div class="pg-title">History &amp; Undo</div>
+  <div class="pg-sub">Every confirmed command is logged here. Server-side snapshots (auto-saved before customizations) let you restore any point in time.</div>
+
+  <!-- Server snapshots -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
+      <span>📸 Saved Snapshots <span style="font-size:10px;font-weight:400;color:var(--text3)">(auto-saved before every customization)</span></span>
+      <button class="btn btn-sm" onclick="loadSnapshots()">↻ Refresh</button>
+    </div>
+    <div id="snapshots-list" style="font-size:12px;color:var(--text3)">Loading snapshots…</div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center">
+    <div class="section-head" style="margin:0">Command History</div>
+    <button class="btn btn-sm btn-red" onclick="clearHistory()" style="margin-left:auto">Clear History</button>
+  </div>
+  <div class="timeline" id="timeline"></div>
+  <div class="empty" id="historyEmpty" style="display:none"><b>No history yet</b>Confirmed commands will appear here</div>
+</div>
+
+<!-- ════════ CUSTOMIZE SITE ════════ -->
+<div class="panel" id="panel-customize">
+  <div class="pg-title">Customize Site</div>
+  <div class="pg-sub">Describe a visual or functional change in plain English. Claude writes the CSS/JS — you preview and apply it with one click. A snapshot is saved automatically before every apply.</div>
+
+  <div class="card">
+    <div class="section-head">🎨 Pick a Site + Describe the Change</div>
+    <div class="settings-row" style="margin-bottom:12px">
+      <div class="form-group">
+        <div class="form-label">Target Site</div>
+        <select id="cust-site" onchange="showCustApplied()"></select>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Inject into</div>
+        <select id="cust-target">
+          <option value="header_scripts">Header (CSS / early JS)</option>
+          <option value="footer_scripts">Footer (late JS)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <div class="form-label">Describe the change</div>
+      <textarea id="cust-prompt" rows="3" placeholder="e.g. Change the accent color to purple&#10;e.g. Add a reading-time estimate below every article title&#10;e.g. Make the header sticky and add a drop shadow when scrolled&#10;e.g. Add a dark/light mode toggle button in the top-right corner"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-accent" id="cust-gen-btn" onclick="generateCustomization()">✦ Generate Code →</button>
+      <div class="cmd-thinking" id="cust-thinking"><div class="spinner"></div>Claude is writing the code…</div>
+    </div>
+    <div class="cmd-examples" style="margin-top:10px">
+      <span style="font-size:11px;color:var(--text3);align-self:center">Examples:</span>
+      <button class="cmd-example" onclick="useCustExample(this)">Change accent color to purple</button>
+      <button class="cmd-example" onclick="useCustExample(this)">Add reading time below titles</button>
+      <button class="cmd-example" onclick="useCustExample(this)">Make header sticky on scroll</button>
+      <button class="cmd-example" onclick="useCustExample(this)">Add back-to-top button</button>
+    </div>
+  </div>
+
+  <!-- Code preview -->
+  <div id="cust-preview" style="display:none;margin-top:16px">
+    <div class="card">
+      <div class="section-head" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Generated Code</span>
+        <button class="btn btn-sm" onclick="copyCustomCode()">Copy</button>
+      </div>
+      <div id="cust-explanation" style="font-size:13px;color:var(--text2);margin-bottom:10px;line-height:1.6"></div>
+      <pre id="cust-code" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:14px;font-size:11px;font-family:monospace;overflow-x:auto;white-space:pre-wrap;color:var(--green);line-height:1.7;max-height:300px;overflow-y:auto"></pre>
+      <div style="display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-green" onclick="applyCustomization()">✓ Apply to Site (saves snapshot first)</button>
+        <button class="btn" onclick="discardCustomization()">✕ Discard</button>
+        <span id="cust-apply-status" style="font-size:12px;color:var(--text3);margin-left:auto"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applied customizations list -->
+  <div style="margin-top:20px">
+    <div class="section-head">Applied Customizations</div>
+    <div id="cust-applied-list" class="info-box" style="font-size:12px;color:var(--text3)">Select a site to see applied customizations.</div>
+  </div>
+</div>
+
+<!-- ════════ LOGS ════════ -->
+<div class="panel" id="panel-logs">
+  <div class="pg-title">Activity Logs</div>
+  <div class="pg-sub">All actions recorded with date &amp; time — every edit, publish, error, and command.</div>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+    <div class="log-filters">
+      <button class="log-filter active" onclick="filterLogs('all',this)">All</button>
+      <button class="log-filter" onclick="filterLogs('cmd',this)">Commands</button>
+      <button class="log-filter" onclick="filterLogs('ok',this)">Published</button>
+      <button class="log-filter" onclick="filterLogs('err',this)">Errors</button>
+      <button class="log-filter" onclick="filterLogs('info',this)">Info</button>
+    </div>
+    <button class="btn btn-sm" onclick="clearLogs()" style="margin-left:auto">Clear Logs</button>
+    <button class="btn btn-sm" onclick="exportLogs()">Export</button>
+  </div>
+  <div class="log-stream" id="logStream"><div style="color:var(--text3);font-size:12px">No logs yet.</div></div>
+</div>
+
+<!-- ════════ GITHUB RUNS ════════ -->
+<div class="panel" id="panel-github">
+  <div class="pg-title">GitHub Actions Runs</div>
+  <div class="pg-sub">Recent workflow runs fetched from your bot repository.</div>
+  <button class="btn btn-sm btn-blue" onclick="loadGhRuns()" style="margin-bottom:16px">↻ Refresh Runs</button>
+  <div class="card" id="ghRunsCard">
+    <div class="empty"><b>No data yet</b>Set your GitHub token and bot repo in Settings, then click Refresh.</div>
+  </div>
+</div>
+
+<!-- ════════ ANALYTICS ════════ -->
+<div class="panel" id="panel-analytics">
+  <div class="pg-title">Cloudflare Analytics</div>
+  <div class="pg-sub">Traffic overview via Cloudflare Web Analytics API. Add your API token and zone tags in Settings.</div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head" style="margin-bottom:14px">📡 Query Analytics</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end">
+      <div>
+        <div class="form-label">Cloudflare API Token</div>
+        <input type="password" id="cfApiToken" placeholder="Bearer token from Cloudflare dashboard">
+      </div>
+      <div>
+        <div class="form-label">Zone Tag (Site Tag ID)</div>
+        <input type="text" id="cfZoneTag" placeholder="abc123... (from Cloudflare)">
+      </div>
+      <div>
+        <div class="form-label">Period</div>
+        <select id="cfPeriod">
+          <option value="-1440">Last 24 hours</option>
+          <option value="-10080" selected>Last 7 days</option>
+          <option value="-43200">Last 30 days</option>
+        </select>
+      </div>
+      <button class="btn btn-green" onclick="loadCloudflareAnalytics()">↻ Fetch</button>
+    </div>
+    <div class="info-box" style="margin-top:10px">
+      Get your Zone Tag from <b>Cloudflare → Web Analytics → your site → Manage site</b>.<br>
+      API Token: <b>Cloudflare → My Profile → API Tokens → Create Token → Analytics Read</b>.
+    </div>
+  </div>
+
+  <div id="cfResults">
+    <div class="card">
+      <div style="text-align:center;color:var(--text3);padding:40px 0;font-size:13px">Enter your Cloudflare token and zone tag above, then click Fetch.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ COMPLIANCE ════════ -->
+<div class="panel" id="panel-compliance">
+  <div class="pg-title">Google Compliance &amp; Domain Warming</div>
+  <div class="pg-sub">Real-time audit against Google's spam policies. Every issue is a ranking risk.</div>
+  <button class="btn btn-green btn-sm" onclick="runComplianceCheck()" style="margin-bottom:16px">↻ Run Compliance Check</button>
+  <div id="complianceResults"></div>
+
+  <!-- Cloudflare Proxy Guide -->
+  <div class="card" style="margin-top:24px;border-left:3px solid var(--blue)">
+    <div class="section-head" style="color:var(--blue)">☁ Cloudflare Proxy — Hide Your Host (Free, Required)</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px">You don't need different hosting for each site. Put Cloudflare's free proxy in front of every domain. All sites will resolve to Cloudflare IPs — shared by millions of sites — making it impossible for Google to detect that your domains share the same host or infrastructure.</p>
+    <div style="background:var(--bg3);border-radius:8px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:10px">Setup — 5 min per domain</div>
+      <ol style="padding-left:18px;font-size:12px;color:var(--text2);line-height:2.2">
+        <li>Go to <strong style="color:var(--text)">cloudflare.com</strong> → Add site → enter your domain → Free plan</li>
+        <li>Cloudflare scans your DNS. Find your main CNAME/A record and make sure the cloud is <strong style="color:var(--amber)">orange</strong> (proxied)</li>
+        <li>Update your domain's nameservers to Cloudflare's (shown in dashboard)</li>
+        <li>SSL/TLS → set to <strong style="color:var(--text)">Full</strong></li>
+      </ol>
+    </div>
+    <div style="background:var(--bg3);border-radius:8px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:10px">For GitHub Pages</div>
+      <ol style="padding-left:18px;font-size:12px;color:var(--text2);line-height:2.2">
+        <li>Repo → Settings → Pages → set custom domain</li>
+        <li>Cloudflare DNS → CNAME: <code style="background:var(--bg4);padding:2px 6px;border-radius:4px">www</code> → <code style="background:var(--bg4);padding:2px 6px;border-radius:4px">username.github.io</code> (orange cloud ☁)</li>
+        <li>A records for root: <code style="background:var(--bg4);padding:2px 6px;border-radius:4px;font-size:11px">185.199.108.153</code> <code style="background:var(--bg4);padding:2px 6px;border-radius:4px;font-size:11px">185.199.109.153</code> <code style="background:var(--bg4);padding:2px 6px;border-radius:4px;font-size:11px">185.199.110.153</code> <code style="background:var(--bg4);padding:2px 6px;border-radius:4px;font-size:11px">185.199.111.153</code></li>
+      </ol>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--text2)">✓ Free SSL on every domain</div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--text2)">✓ Free on unlimited domains</div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--text2)">✓ DDoS protection</div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--text2)">✓ Origin IP hidden</div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--text2)">✓ 1 account = all 20+ sites</div>
+    </div>
+  </div>
+
+  <!-- Backlinks Guide -->
+  <div class="card" style="margin-top:14px;border-left:3px solid var(--accent)">
+    <div class="section-head" style="color:var(--accent)">🔗 Backlinks — Auto-Generated Per Article</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px">After every article publish, the bot saves a <code style="background:var(--bg3);padding:2px 6px;border-radius:4px">backlinks/{slug}.md</code> file in your site repo with ready-to-post content for 3 platforms. Copy, post, get real DA90+ backlinks without cross-linking your own network.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div style="background:var(--bg3);border-radius:8px;padding:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">Reddit <span style="font-size:10px;color:var(--accent)">DA91</span></div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">3 subreddits suggested · Title + 200-word post body · Written as genuine community member</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">LinkedIn <span style="font-size:10px;color:var(--accent)">DA98</span></div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">Hook + 150-word post + 5 hashtags · Post from persona's LinkedIn account · Schedule via Buffer</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">Quora <span style="font-size:10px;color:var(--accent)">DA92</span></div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">Question + 300-word answer with natural link back · One of the highest-quality free backlink sources</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monetization Guide -->
+  <div class="card" style="margin-top:14px;border-left:3px solid var(--amber)">
+    <div class="section-head" style="color:var(--amber)">💰 Monetization Setup Checklist</div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--text2)">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:var(--accent);font-size:16px;flex-shrink:0">①</span>
+        <div><strong style="color:var(--text)">AdSense</strong> — Apply at adsense.google.com. Once approved, set <code style="background:var(--bg3);padding:1px 5px;border-radius:3px">adsense_publisher_id</code> in config. Bot auto-creates ads.txt. Paste auto-ads script into Global Footer Scripts.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:var(--accent);font-size:16px;flex-shrink:0">②</span>
+        <div><strong style="color:var(--text)">Newsletter</strong> — Create a Brevo signup form. Set <code style="background:var(--bg3);padding:1px 5px;border-radius:3px">signup_url</code> per site. A "Subscribe free" button auto-appears in every article footer.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:var(--accent);font-size:16px;flex-shrink:0">③</span>
+        <div><strong style="color:var(--text)">Giscus Comments</strong> — Go to giscus.app, enable Discussions on your repo, get repo-id + category-id. Set in config. Comments appear on every article automatically.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:var(--accent);font-size:16px;flex-shrink:0">④</span>
+        <div><strong style="color:var(--text)">Sponsored Articles</strong> — Once a site hits 5k monthly visits, enable the client feature (post_every_n: 7). One sponsored mention every 7 articles. Charge $200–$800 per placement in finance/crypto niches.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ SETTINGS ════════ -->
+<div class="panel" id="panel-settings">
+  <div class="pg-title">Settings</div>
+  <div class="pg-sub">Enter each API key once — it auto-fills everywhere it's needed. Keys stay in your browser only.</div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">🔑 API Keys — enter once, used everywhere</div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Anthropic API Key <span style="color:var(--text3)">(AI commands + article generation)</span></div>
+        <input type="password" id="setAnthropicKey" placeholder="sk-ant-..." oninput="propagateKey('anthropic')">
+      </div>
+      <div class="form-group">
+        <div class="form-label">GitHub Token <span style="color:var(--text3)">(publish config + trigger runs)</span></div>
+        <input type="password" id="setGhToken" placeholder="ghp_..." oninput="propagateKey('github')">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Pexels API Key <span style="color:var(--text3)">(hero images for articles)</span></div>
+        <input type="password" id="setPexelsKey" placeholder="pexels-..." oninput="propagateKey('pexels')">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Brevo API Key <span style="color:var(--text3)">(newsletter delivery)</span></div>
+        <input type="password" id="setBrevoKey" placeholder="xkeysib-..." oninput="propagateKey('brevo')">
+      </div>
+    </div>
+    <div class="info-box">
+      <b>Where each key is used:</b><br>
+      Anthropic → AI commands in this hub + <code>bot.py</code> article generation (set as GitHub Secret: <code>ANTHROPIC_API_KEY</code>)<br>
+      GitHub → publishing config, triggering runs, reading workflow status<br>
+      Pexels → article hero images (GitHub Secret: <code>PEXELS_API_KEY</code>)<br>
+      Brevo → newsletter campaigns after each publish (GitHub Secret: <code>BREVO_API_KEY</code>)
+    </div>
+    <div style="margin-top:10px;padding:10px 14px;background:var(--bg4);border-radius:var(--r);font-size:12px;color:var(--text2)">
+      <b style="color:var(--amber)">⚠ GitHub Secrets</b> — the keys above are for local use. For the GitHub Actions workflow to use them, add them as repository secrets at:<br>
+      <code>github.com/YOUR_REPO/settings/secrets/actions</code>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">📦 Bot Repository</div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Bot Repo (username/repo — where bot.py lives)</div>
+        <input type="text" id="setBotRepo" placeholder="username/kavalsia-network-bot">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Claude Model for AI Commands</div>
+        <select id="setModel">
+          <option value="claude-opus-4-5">claude-opus-4-5 (best quality)</option>
+          <option value="claude-sonnet-4-6">claude-sonnet-4-6 (faster)</option>
+          <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (fastest)</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Branch</div>
+        <input type="text" id="setBranch" value="main" placeholder="main">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Workflow File</div>
+        <input type="text" id="setWorkflow" value="daily-post.yml" placeholder="daily-post.yml">
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">🤖 Telegram Bot</div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Telegram Bot Token <span style="color:var(--text3)">(from @BotFather)</span></div>
+        <input type="password" id="setTelegramToken" placeholder="1234567890:AAF...">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Your Chat ID <span style="color:var(--text3)">(message @userinfobot to get yours)</span></div>
+        <input type="text" id="setTelegramChatId" placeholder="123456789">
+      </div>
+    </div>
+    <div class="info-box">
+      Run <code>python telegram_bot.py</code> after saving. Commands: <code>/post all</code> · <code>/post domain.com [topic]</code> · <code>/status</code> · <code>/ideas</code> · <code>/pause domain.com</code>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+    <button class="btn btn-accent" onclick="saveSettings()">Save All Settings</button>
+  </div>
+</div>
+
+<!-- ════════ BACKLINKS ════════ -->
+<div class="panel" id="panel-backlinks">
+  <div class="pg-title">Backlink Tracker</div>
+  <div class="pg-sub">Record every backlink you post. Track Reddit, LinkedIn, Quora, and guest posts across your network.</div>
+
+  <!-- Add form -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="section-head">➕ Record a New Backlink</div>
+    <div class="grid2" style="gap:12px;margin-bottom:12px">
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Source URL <span style="color:var(--text3)">(where you posted)</span></label>
+        <input type="url" id="bl-source" placeholder="https://reddit.com/r/CryptoCurrency/comments/..." style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Target Article URL <span style="color:var(--text3)">(your site)</span></label>
+        <input type="url" id="bl-target" placeholder="https://cryptoinsights.com/your-article/" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Platform</label>
+        <select id="bl-platform" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+          <option value="reddit">Reddit</option>
+          <option value="linkedin">LinkedIn</option>
+          <option value="quora">Quora</option>
+          <option value="medium">Medium</option>
+          <option value="guest-post">Guest Post</option>
+          <option value="forum">Forum</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Anchor Text</label>
+        <input type="text" id="bl-anchor" placeholder="e.g. algorithmic trading guide" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Notes <span style="color:var(--text3)">(optional)</span></label>
+      <input type="text" id="bl-notes" placeholder="e.g. top comment, 47 upvotes" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+    </div>
+    <button class="btn btn-accent btn-sm" onclick="addBacklink()">+ Record Backlink</button>
+    <span id="bl-save-status" style="font-size:12px;color:var(--text3);margin-left:10px"></span>
+  </div>
+
+  <!-- Stats row -->
+  <div class="grid4" style="margin-bottom:16px" id="bl-stats">
+    <div class="stat-card"><div class="stat-val" id="bl-total">—</div><div class="stat-lbl">Total Links</div></div>
+    <div class="stat-card"><div class="stat-val" id="bl-reddit">—</div><div class="stat-lbl">Reddit</div></div>
+    <div class="stat-card"><div class="stat-val" id="bl-linkedin">—</div><div class="stat-lbl">LinkedIn</div></div>
+    <div class="stat-card"><div class="stat-val" id="bl-quora">—</div><div class="stat-lbl">Quora</div></div>
+  </div>
+
+  <!-- Table -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div id="bl-table-wrap" style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="background:var(--bg3);border-bottom:1px solid var(--border)">
+            <th style="text-align:left;padding:10px 14px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700">Date</th>
+            <th style="text-align:left;padding:10px 14px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700">Platform</th>
+            <th style="text-align:left;padding:10px 14px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700">Source</th>
+            <th style="text-align:left;padding:10px 14px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700">Target</th>
+            <th style="text-align:left;padding:10px 14px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700">Anchor</th>
+            <th style="text-align:left;padding:10px 14px;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700">Notes</th>
+            <th style="padding:10px 14px"></th>
+          </tr>
+        </thead>
+        <tbody id="bl-tbody">
+          <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)">No backlinks recorded yet. Post content from your backlinks/ folder and record it here.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ COMMENTS ════════ -->
+<div class="panel" id="panel-comments">
+  <div class="pg-title">Comments Management</div>
+  <div class="pg-sub">Generate AI-seeded comments for any article or add them manually. Comments load client-side from comments.json in each article folder.</div>
+
+  <div class="grid2" style="gap:16px">
+    <!-- Left: Generate + Manual Add -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="section-head">🤖 Generate AI Comments</div>
+        <div class="form-group" style="margin-bottom:10px">
+          <div class="form-label">Site</div>
+          <select id="comm-site"></select>
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <div class="form-label">Article slug <span style="color:var(--text3)">(folder name)</span></div>
+          <input type="text" id="comm-slug" placeholder="e.g. why-algorithmic-trading-wins">
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <div class="form-label">Article title <span style="color:var(--text3)">(for context)</span></div>
+          <input type="text" id="comm-title" placeholder="e.g. Why Algorithmic Trading Consistently Outperforms…">
+        </div>
+        <div class="settings-row" style="margin-bottom:12px">
+          <div class="form-group">
+            <div class="form-label">Number of comments</div>
+            <input type="number" id="comm-count" value="6" min="1" max="19">
+          </div>
+          <div class="form-group">
+            <div class="form-label">Spread over (days)</div>
+            <input type="number" id="comm-days" value="14" min="1" max="90">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="btn btn-accent btn-sm" id="comm-gen-btn" onclick="generateComments()">✦ Generate Comments</button>
+          <div class="cmd-thinking" id="comm-thinking"><div class="spinner"></div>Generating…</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-head">✏ Add Comment Manually</div>
+        <div class="form-group" style="margin-bottom:8px">
+          <div class="form-label">Site</div>
+          <select id="comm-manual-site"></select>
+        </div>
+        <div class="form-group" style="margin-bottom:8px">
+          <div class="form-label">Article slug</div>
+          <input type="text" id="comm-manual-slug" placeholder="article-slug">
+        </div>
+        <div class="settings-row" style="margin-bottom:8px">
+          <div class="form-group">
+            <div class="form-label">Author name</div>
+            <input type="text" id="comm-manual-name" placeholder="e.g. Jordan K.">
+          </div>
+          <div class="form-group">
+            <div class="form-label">Date</div>
+            <input type="date" id="comm-manual-date">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:10px">
+          <div class="form-label">Comment text</div>
+          <textarea id="comm-manual-text" rows="3" placeholder="Write the comment…"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="btn btn-green btn-sm" onclick="addManualComment()">+ Add to Article</button>
+          <span id="comm-manual-status" style="font-size:12px;color:var(--text3)"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Preview & Schedule -->
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="section-head" style="display:flex;justify-content:space-between;align-items:center">
+          <span>📋 Generated Preview</span>
+          <button class="btn btn-sm btn-green" id="comm-push-btn" style="display:none" onclick="pushGeneratedComments()">↑ Push to GitHub</button>
+        </div>
+        <div id="comm-preview-list" style="font-size:12px;color:var(--text3)">Generate comments above to preview them here.</div>
+      </div>
+
+      <div class="card">
+        <div class="section-head">⏱ Per-Site Comment Schedule</div>
+        <div class="form-group" style="margin-bottom:10px">
+          <div class="form-label">Site</div>
+          <select id="comm-sched-site" onchange="loadCommSchedule()"></select>
+        </div>
+        <div id="comm-sched-fields" style="display:none">
+          <div class="settings-row" style="margin-bottom:10px">
+            <div class="form-group">
+              <div class="form-label">Initial comments per article</div>
+              <input type="number" id="cs-initial" min="1" max="19">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Max comments per article</div>
+              <input type="number" id="cs-max" min="1" max="19">
+            </div>
+          </div>
+          <div class="settings-row" style="margin-bottom:10px">
+            <div class="form-group">
+              <div class="form-label">Add per day (drip)</div>
+              <input type="number" id="cs-perday" min="0" max="5">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Delay before starting (days)</div>
+              <input type="number" id="cs-delay" min="0" max="30">
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer">
+              <input type="checkbox" id="cs-enabled" style="width:auto"> Enable scheduled comments for this site
+            </label>
+          </div>
+          <button class="btn btn-accent btn-sm" onclick="saveCommSchedule()">Save Schedule</button>
+          <span id="cs-save-status" style="font-size:12px;color:var(--text3);margin-left:10px"></span>
+        </div>
+        <div id="comm-sched-hint" style="font-size:12px;color:var(--text3)">Select a site to configure its schedule.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- ── Publish Modal ── -->
+<div class="modal-bg" id="publishModal">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Publishing</div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-log" id="modalLog"></div>
+    <div class="modal-btns"><button class="btn" onclick="closeModal()">Close</button></div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let cfg = null;
+let pendingNewCfg = null;
+let pendingCmd = '';
+let serverMode = false;
+let configHash = '';
+let logFilter = 'all';
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+(async () => {
+  loadSettings();
+  await detectServer();
+  await syncConfig();
+  renderDashboard();
+  renderHistory();
+  renderLogs();
+  renderRecentCmds();
+  startPolling();
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) syncConfig();
+  });
+})();
+
+// ── Server detection ───────────────────────────────────────────────────────
+async function detectServer() {
+  try {
+    const r = await fetch('/api/config/hash', { signal: AbortSignal.timeout(1500) });
+    serverMode = r.ok;
+  } catch { serverMode = false; }
+  const badge = document.getElementById('serverBadge');
+  badge.textContent = serverMode ? '⬤ Server running' : '⬤ No server';
+  badge.className = 'server-badge ' + (serverMode ? 'server-on' : 'server-off');
+  if (!serverMode) {
+    addLog('warn', 'server', 'Local server not running — start with: python server.py');
+  }
+}
+
+// ── Config sync ────────────────────────────────────────────────────────────
+async function syncConfig() {
+  if (!serverMode) return;
+  try {
+    const r = await fetch('/api/config');
+    if (!r.ok) return;
+    const text = await r.text();
+    const newHash = await hashStr(text);
+    if (newHash !== configHash) {
+      cfg = JSON.parse(text);
+      configHash = newHash;
+      renderDashboard();
+      renderStatusGrid();
+      addLog('info', 'info', 'Config synced from disk');
+    }
+  } catch(e) { /* silent */ }
+}
+
+async function hashStr(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('').slice(0,16);
+}
+
+// ── Polling ────────────────────────────────────────────────────────────────
+function startPolling() {
+  setInterval(async () => {
+    if (!serverMode) return;
+    try {
+      const r = await fetch('/api/config/hash');
+      const data = await r.json();
+      if (data.hash && data.hash !== configHash) {
+        await syncConfig();
+      }
+    } catch {}
+  }, 4000);
+}
+
+// ── Dashboard ──────────────────────────────────────────────────────────────
+function renderDashboard() {
+  if (!cfg) {
+    document.getElementById('dashSub').textContent = 'No config loaded — start python server.py then refresh.';
+    return;
+  }
+  const sites = cfg.sites || [];
+  const active = sites.filter(s => s.active !== false);
+  const clients = sites.filter(s => s.client?.enabled || (cfg.global_client?.enabled && !s.client?.enabled));
+  const topics = sites.reduce((a, s) => a + (s.topics?.length || 0), 0);
+
+  document.getElementById('statSites').textContent = sites.length;
+  document.getElementById('statActive').textContent = active.length;
+  document.getElementById('statClient').textContent = clients.length;
+  document.getElementById('statTopics').textContent = topics;
+  document.getElementById('dashSub').textContent = `${active.length} active sites · ${clients.length} with client posts · ${topics} total topics`;
+
+  // Site cards
+  const container = document.getElementById('dashSites');
+  container.innerHTML = '';
+  sites.forEach(site => {
+    const hasClient = site.client?.enabled || cfg.global_client?.enabled;
+    const postsPerRun = site.posts_per_run || 1;
+    const div = document.createElement('div');
+    div.className = 'site-card';
+    div.innerHTML = `
+      <span class="site-dot checking" data-domain="${site.domain}" id="dot-${site.id}"></span>
+      <div class="site-info">
+        <div class="site-domain">${site.domain}</div>
+        <div class="site-meta">${site.category || ''} · ${site.theme || ''} / ${site.layout || ''}</div>
+        <div class="site-tags">
+          ${site.active === false ? '<span class="tag tag-off">INACTIVE</span>' : ''}
+          ${hasClient ? '<span class="tag tag-client">CLIENT</span>' : ''}
+          ${postsPerRun > 1 ? `<span class="tag tag-multi">${postsPerRun}×/RUN</span>` : ''}
+        </div>
+      </div>
+    `;
+    div.onclick = () => { showPanel('status'); checkSiteSingle(site.domain, site.id); };
+    container.appendChild(div);
+  });
+
+  // Ping all sites in bg
+  checkAllSites(true);
+
+  // Health dot
+  updateHealthDot();
+}
+
+function updateHealthDot() {
+  if (!cfg) return;
+  const sites = cfg.sites || [];
+  const dot = document.getElementById('healthDot');
+  const lbl = document.getElementById('healthLabel');
+  const active = sites.filter(s => s.active !== false).length;
+  dot.className = 'health-dot live';
+  lbl.textContent = `${active}/${sites.length} sites active`;
+}
+
+// ── Site Status ────────────────────────────────────────────────────────────
+function renderStatusGrid() {
+  if (!cfg) return;
+  const grid = document.getElementById('statusGrid');
+  grid.innerHTML = '';
+  (cfg.sites || []).forEach(site => {
+    const div = document.createElement('div');
+    div.className = 'site-card';
+    div.id = `status-${site.id}`;
+    div.innerHTML = `
+      <span class="site-dot checking" id="sdot-${site.id}"></span>
+      <div class="site-info">
+        <div class="site-domain">${site.domain}</div>
+        <div class="site-meta" id="smeta-${site.id}">Waiting...</div>
+      </div>
+      <a href="https://${site.domain}" target="_blank" class="btn btn-sm" style="flex-shrink:0;font-size:11px">↗ Open</a>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+async function checkAllSites(silent = false) {
+  if (!cfg) return;
+  if (!silent) renderStatusGrid();
+  const sites = cfg.sites || [];
+  let live = 0;
+  const promises = sites.map(s => checkSiteSingle(s.domain, s.id, silent).then(ok => { if (ok) live++; }));
+  await Promise.all(promises);
+  if (!silent) {
+    document.getElementById('statusSummary').textContent = `${live}/${sites.length} sites responding`;
+  }
+  const dot = document.getElementById('healthDot');
+  dot.className = 'health-dot ' + (live === sites.length ? 'live' : live > 0 ? 'partial' : 'down');
+  document.getElementById('healthLabel').textContent = `${live}/${sites.length} live`;
+}
+
+async function checkSiteSingle(domain, id, silent = false) {
+  const dot1 = document.getElementById(`dot-${id}`);
+  const dot2 = document.getElementById(`sdot-${id}`);
+  const meta  = document.getElementById(`smeta-${id}`);
+  if (dot1) dot1.className = 'site-dot checking';
+  if (dot2) dot2.className = 'site-dot checking';
+  const t0 = Date.now();
+  try {
+    await fetch(`https://${domain}`, { mode: 'no-cors', signal: AbortSignal.timeout(7000) });
+    const ms = Date.now() - t0;
+    if (dot1) dot1.className = 'site-dot live';
+    if (dot2) dot2.className = 'site-dot live';
+    if (meta) meta.textContent = `Live · ${ms}ms response`;
+    if (!silent) addLog('ok', 'status', `${domain} — live (${ms}ms)`);
+    return true;
+  } catch(e) {
+    if (dot1) dot1.className = 'site-dot down';
+    if (dot2) dot2.className = 'site-dot down';
+    if (meta) meta.textContent = `No response · may be offline or CORS`;
+    if (!silent) addLog('err', 'status', `${domain} — no response`);
+    return false;
+  }
+}
+
+// ── AI Command ─────────────────────────────────────────────────────────────
+async function sendCommand() {
+  const cmd = document.getElementById('cmdInput').value.trim();
+  if (!cmd) return;
+  if (!cfg) { alert('Config not loaded. Start python server.py first.'); return; }
+  if (!serverMode) { alert('Server not running. Start with: python server.py'); return; }
+
+  const apiKey = ls('anthropicKey');
+  if (!apiKey) { alert('Add your Anthropic API key in Settings first.'); showPanel('settings'); return; }
+
+  const btn = document.getElementById('cmdSendBtn');
+  const thinking = document.getElementById('cmdThinking');
+  btn.style.display = 'none';
+  thinking.classList.add('show');
+  document.getElementById('cmdPreview').classList.remove('show');
+
+  addLog('cmd', 'cmd', `Command: ${cmd}`);
+
+  const model = ls('claudeModel') || 'claude-opus-4-5';
+  const sysPrompt = buildSystemPrompt();
+
+  try {
+    const r = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        _api_key: apiKey,
+        model,
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: `Current config:\n\`\`\`json\n${JSON.stringify(cfg, null, 2)}\n\`\`\`\n\nCommand: "${cmd}"` }],
+        system: sysPrompt,
+      })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error?.message || r.status);
+    let text = data.content?.[0]?.text?.trim() || '';
+    text = text.replace(/^```json\s*/,'').replace(/\s*```$/,'');
+    const result = JSON.parse(text);
+    showPreview(result, cmd);
+    addRecentCmd(cmd, 'preview');
+  } catch(e) {
+    addLog('err', 'cmd', `Command failed: ${e.message}`);
+    alert('Error: ' + e.message);
+  } finally {
+    btn.style.display = '';
+    thinking.classList.remove('show');
+  }
+}
+
+function buildSystemPrompt() {
+  return `You are a configuration assistant for a content publishing platform. You interpret natural language commands and return precise JSON configuration changes.
+
+Your task: analyze the user's command and return ONLY a valid JSON object with this exact structure:
+{
+  "understood": "1-2 sentence plain English description of what you're doing",
+  "changes": [
+    {"field": "Human-readable label", "path": "dot.notation.path e.g. sites[0].posts_per_run", "old": "old value as string", "new": "new value as string"}
+  ],
+  "new_config": { ...complete updated config object... },
+  "note": "optional caveat (omit key if none)"
+}
+
+Field reference:
+- sites[n].active (boolean) — enable/disable a site
+- sites[n].posts_per_run (integer, default 1) — articles published per run for this site
+- sites[n].tone — writing style description
+- sites[n].persona — author persona
+- sites[n].theme — dark/light/minimal/bold/elegant
+- sites[n].layout — newsfeed/magazine/editorial/cards/portfolio
+- sites[n].article_layout — standard/sidebar/magazine/minimal/immersive
+- sites[n].topics — array of strings (append or replace)
+- sites[n].client.enabled — enable client posts
+- sites[n].client.business_name — client/business name
+- sites[n].client.description — full client brief/description
+- sites[n].client.post_every_n — client post frequency (integer)
+- sites[n].custom_css — raw CSS injected into all site pages (for visual changes)
+- sites[n].posts_per_run — how many articles per run (2 = "twice per run/day")
+- global_prompt — global writing rules applied to all sites
+- global_client.enabled/business_name/description/post_every_n
+
+Visual change rules:
+- "make logo smaller" → sites[n].custom_css += ".logo{font-size:16px!important;}"
+- "make logo bigger" → sites[n].custom_css += ".logo{font-size:32px!important;}"
+- "change font to X" → sites[n].custom_css += "body,h1,h2,h3,h4{font-family:'X',sans-serif!important;}"
+- "change accent color to #XXX" → sites[n].custom_css += "a{color:#XXX!important;}h1,h2{color:#XXX!important;}"
+
+Posting frequency:
+- "post twice a day" = posts_per_run: 2
+- "post 3 times a day" = posts_per_run: 3
+- "post once a day" = posts_per_run: 1
+
+Site matching: match by domain name, site ID, or partial name (case-insensitive).
+Global commands (no specific site): apply to global_prompt or global_client or all sites.
+
+Return ONLY the JSON object. No markdown. No explanation outside the JSON.`;
+}
+
+function showPreview(result, cmd) {
+  pendingNewCfg = result.new_config;
+  pendingCmd = cmd;
+
+  document.getElementById('previewUnderstood').textContent = '✓ I understood: ' + (result.understood || '');
+  const noteEl = document.getElementById('previewNote');
+  if (result.note) { noteEl.textContent = 'Note: ' + result.note; noteEl.style.display = ''; }
+  else noteEl.style.display = 'none';
+
+  const tbody = document.getElementById('diffBody');
+  tbody.innerHTML = '';
+  (result.changes || []).forEach(ch => {
+    const tr = document.createElement('tr');
+    tr.className = 'diff-row';
+    tr.innerHTML = `
+      <td class="diff-field">${escHtml(ch.field || ch.path || '')}</td>
+      <td class="diff-old">${escHtml(String(ch.old ?? '—'))}</td>
+      <td class="diff-new">${escHtml(String(ch.new ?? ''))}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('cmdPreview').classList.add('show');
+}
+
+async function confirmCommand() {
+  if (!pendingNewCfg) return;
+
+  // Save undo snapshot before applying
+  saveHistory({
+    command: pendingCmd,
+    understood: document.getElementById('previewUnderstood').textContent.replace('✓ I understood: ',''),
+    changes: Array.from(document.querySelectorAll('#diffBody .diff-row')).map(r => ({
+      field: r.cells[0]?.textContent,
+      old: r.cells[1]?.textContent,
+      new: r.cells[2]?.textContent,
+    })),
+    prev_config: JSON.parse(JSON.stringify(cfg)),
+  });
+
+  cfg = pendingNewCfg;
+  pendingNewCfg = null;
+
+  // Save to server
+  await saveConfigToServer();
+  addLog('ok', 'cmd', `Applied: ${pendingCmd || 'command'}`);
+  renderDashboard();
+  renderHistory();
+  renderRecentCmds();
+  cancelCommand();
+
+  if (document.getElementById('autoPublish').checked) {
+    await publishConfig(true);
+  }
+}
+
+function cancelCommand() {
+  pendingNewCfg = null;
+  document.getElementById('cmdPreview').classList.remove('show');
+}
+
+function useExample(el) {
+  document.getElementById('cmdInput').value = el.textContent;
+  document.getElementById('cmdInput').focus();
+}
+
+// ── Config persistence ─────────────────────────────────────────────────────
+async function saveConfigToServer() {
+  if (!serverMode) return;
+  try {
+    await fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cfg, null, 2),
+    });
+    configHash = await hashStr(JSON.stringify(cfg, null, 2));
+  } catch(e) {
+    addLog('err', 'info', 'Failed to save config: ' + e.message);
+  }
+}
+
+// ── History ────────────────────────────────────────────────────────────────
+function saveHistory(entry) {
+  const history = getHistory();
+  history.unshift({ ...entry, timestamp: new Date().toISOString() });
+  localStorage.setItem('cmdHistory', JSON.stringify(history.slice(0, 50)));
+  saveChangelog(entry);
+}
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('cmdHistory') || '[]'); } catch { return []; }
+}
+
+async function saveChangelog(entry) {
+  // Persist changelog.json via server for permanent record
+  const line = {
+    timestamp: new Date().toISOString(),
+    command: entry.command,
+    understood: entry.understood,
+    changes: entry.changes,
+  };
+  try {
+    // Load existing
+    let log = [];
+    if (serverMode) {
+      const r = await fetch('/api/changelog');
+      if (r.ok) log = await r.json();
+    }
+    log.unshift(line);
+    if (serverMode) {
+      await fetch('/api/changelog', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(log.slice(0, 500), null, 2),
+      });
+    }
+  } catch {}
+}
+
+function renderHistory() {
+  const history = getHistory();
+  const tl = document.getElementById('timeline');
+  const empty = document.getElementById('historyEmpty');
+  tl.innerHTML = '';
+  if (!history.length) { empty.style.display = ''; return; }
+  empty.style.display = 'none';
+
+  history.forEach((entry, i) => {
+    const dt = new Date(entry.timestamp);
+    const dateStr = dt.toLocaleDateString('en-CA');
+    const timeStr = dt.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const item = document.createElement('div');
+    item.className = 'tl-item';
+    const fieldsHtml = (entry.changes || []).slice(0,5).map(c =>
+      `<span class="tl-field">${escHtml(c.field || '')}</span>`
+    ).join('');
+    item.innerHTML = `
+      <div class="tl-time">${dateStr}<br>${timeStr}</div>
+      <div class="tl-dot" id="tldot-${i}"></div>
+      <div class="tl-body">
+        <div class="tl-cmd">${escHtml(entry.command || '')}</div>
+        <div class="tl-desc">${escHtml(entry.understood || '')}</div>
+        <div class="tl-fields">${fieldsHtml}</div>
+        <div class="tl-btns">
+          <button class="btn btn-sm btn-red" onclick="undoChange(${i})">↩ Undo</button>
+        </div>
+      </div>
+    `;
+    tl.appendChild(item);
+  });
+}
+
+async function undoChange(i) {
+  const history = getHistory();
+  const entry = history[i];
+  if (!entry?.prev_config) { alert('No snapshot available for this change.'); return; }
+  if (!confirm(`Undo: "${entry.command}"?\n\nThis will restore the config to before this command was applied.`)) return;
+
+  cfg = entry.prev_config;
+  await saveConfigToServer();
+  addLog('warn', 'cmd', `Undone: ${entry.command}`);
+  renderDashboard();
+
+  // Mark as undone in history
+  history[i]._undone = true;
+  localStorage.setItem('cmdHistory', JSON.stringify(history));
+  renderHistory();
+
+  const dot = document.getElementById(`tldot-${i}`);
+  if (dot) dot.className = 'tl-dot undo-dot';
+
+  if (confirm('Publish the reverted config to GitHub now?')) {
+    await publishConfig(true);
+  }
+}
+
+function clearHistory() {
+  if (!confirm('Clear all history? This cannot be undone.')) return;
+  localStorage.removeItem('cmdHistory');
+  renderHistory();
+}
+
+// ── Logs ───────────────────────────────────────────────────────────────────
+function addLog(type, category, message) {
+  const logs = getLogs();
+  const entry = {
+    ts: new Date().toISOString(),
+    type,
+    category,
+    message,
+  };
+  logs.unshift(entry);
+  localStorage.setItem('hubLogs', JSON.stringify(logs.slice(0, 500)));
+
+  if (type === 'err') {
+    document.getElementById('errorBadge').style.display = '';
+  }
+
+  // Also update activity feed
+  updateActivityFeed(entry);
+  renderLogs();
+}
+
+function getLogs() {
+  try { return JSON.parse(localStorage.getItem('hubLogs') || '[]'); } catch { return []; }
+}
+
+function filterLogs(f, btn) {
+  logFilter = f;
+  document.querySelectorAll('.log-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLogs();
+}
+
+function renderLogs() {
+  const logs = getLogs();
+  const stream = document.getElementById('logStream');
+  const filtered = logFilter === 'all' ? logs : logs.filter(l => l.type === logFilter || l.category === logFilter);
+
+  if (!filtered.length) {
+    stream.innerHTML = '<div style="color:var(--text3);font-size:12px">No logs matching this filter.</div>';
+    return;
+  }
+
+  stream.innerHTML = filtered.map(l => {
+    const dt = new Date(l.ts);
+    const ts = `${dt.toLocaleDateString('en-CA')} ${dt.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
+    return `<div class="log-line">
+      <span class="log-ts">${ts}</span>
+      <span class="log-tag ${l.type}">${l.type.toUpperCase()}</span>
+      <span class="log-msg">${escHtml(l.message)}</span>
+    </div>`;
+  }).join('');
+}
+
+function updateActivityFeed(entry) {
+  const feed = document.getElementById('activityFeed');
+  if (!feed) return;
+  const empty = feed.querySelector('.empty');
+  if (empty) empty.remove();
+
+  const dt = new Date(entry.ts);
+  const ts = dt.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' });
+  const div = document.createElement('div');
+  div.className = 'feed-item';
+  div.innerHTML = `
+    <span class="feed-dot ${entry.type}"></span>
+    <div class="feed-body">
+      <div class="feed-text">${escHtml(entry.message)}</div>
+      <div class="feed-time">${ts}</div>
+    </div>
+  `;
+  feed.insertBefore(div, feed.firstChild);
+  // Keep max 30 items
+  while (feed.children.length > 30) feed.removeChild(feed.lastChild);
+}
+
+function clearLogs() {
+  if (!confirm('Clear all logs?')) return;
+  localStorage.removeItem('hubLogs');
+  document.getElementById('errorBadge').style.display = 'none';
+  renderLogs();
+}
+
+function clearActivity() {
+  const feed = document.getElementById('activityFeed');
+  feed.innerHTML = '<div class="empty"><b>No activity yet</b>Make changes to see them here</div>';
+}
+
+function exportLogs() {
+  const logs = getLogs();
+  const lines = logs.map(l => `${l.ts}\t[${l.type.toUpperCase()}]\t${l.message}`).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([lines], { type: 'text/plain' }));
+  a.download = `hub-logs-${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+}
+
+// ── Recent commands ────────────────────────────────────────────────────────
+function addRecentCmd(cmd, status) {
+  const recent = JSON.parse(localStorage.getItem('recentCmds') || '[]');
+  recent.unshift({ cmd, status, ts: new Date().toISOString() });
+  localStorage.setItem('recentCmds', JSON.stringify(recent.slice(0, 10)));
+  renderRecentCmds();
+}
+
+function renderRecentCmds() {
+  const recent = JSON.parse(localStorage.getItem('recentCmds') || '[]');
+  const container = document.getElementById('recentCmds');
+  if (!recent.length) { container.innerHTML = '<div style="font-size:12px;color:var(--text3)">No recent commands.</div>'; return; }
+  container.innerHTML = recent.slice(0,5).map((r,i) => {
+    const dt = new Date(r.ts);
+    const ts = dt.toLocaleDateString('en-CA') + ' ' + dt.toLocaleTimeString('en-CA', {hour:'2-digit',minute:'2-digit'});
+    const statusColor = r.status === 'ok' ? 'var(--green)' : r.status === 'err' ? 'var(--red)' : 'var(--amber)';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)" >
+      <span style="width:6px;height:6px;border-radius:50%;background:${statusColor};flex-shrink:0"></span>
+      <span style="flex:1;font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(r.cmd)}</span>
+      <span style="font-size:10px;color:var(--text3);flex-shrink:0">${ts}</span>
+      <button class="btn btn-sm" style="padding:3px 8px;font-size:10px;flex-shrink:0" onclick="document.getElementById('cmdInput').value=${JSON.stringify(r.cmd)}">Re-use</button>
+    </div>`;
+  }).join('');
+}
+
+// ── GitHub Runs ────────────────────────────────────────────────────────────
+async function loadGhRuns() {
+  const token = ls('ghToken');
+  const repo = ls('botRepo');
+  if (!token || !repo) { alert('Set GitHub token and bot repo in Settings.'); showPanel('settings'); return; }
+
+  const card = document.getElementById('ghRunsCard');
+  card.innerHTML = '<div style="color:var(--text2);font-size:12px">Loading...</div>';
+
+  try {
+    const r = await fetch(`/api/github/repos/${repo}/actions/runs?per_page=15`, {
+      headers: { 'X-GH-Token': token }
+    });
+    const data = await r.json();
+    const runs = data.workflow_runs || [];
+    if (!runs.length) { card.innerHTML = '<div class="empty"><b>No runs found</b></div>'; return; }
+
+    card.innerHTML = runs.map(run => {
+      const dt = new Date(run.created_at);
+      const ts = dt.toLocaleDateString('en-CA') + ' ' + dt.toLocaleTimeString('en-CA', {hour:'2-digit',minute:'2-digit'});
+      const durMs = run.updated_at ? new Date(run.updated_at) - new Date(run.created_at) : 0;
+      const dur = durMs > 0 ? Math.round(durMs/1000) + 's' : '—';
+      return `<div class="run-row">
+        <span class="run-status ${run.conclusion || run.status}"></span>
+        <div class="run-info">
+          <div class="run-name">${escHtml(run.display_title || run.name || '')}</div>
+          <div class="run-meta">${ts} · ${run.conclusion || run.status} · ${escHtml(run.actor?.login || '')}</div>
+        </div>
+        <span class="run-dur">${dur}</span>
+        <a href="${run.html_url}" target="_blank" class="btn btn-sm" style="font-size:10px">↗</a>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    card.innerHTML = `<div class="empty"><b>Error</b>${escHtml(e.message)}</div>`;
+  }
+}
+
+// ── Publish Config ─────────────────────────────────────────────────────────
+async function publishConfig(silent = false) {
+  if (!cfg) { if (!silent) alert('No config loaded.'); return; }
+  const token = ls('ghToken');
+  const repo  = ls('botRepo');
+  const branch = ls('branch') || 'main';
+  if (!token || !repo || repo.includes('YOUR_')) {
+    if (!silent) { alert('Set GitHub token and bot repo in Settings first.'); showPanel('settings'); }
+    return;
+  }
+
+  if (!silent) openModal('Publishing Config', `Pushing network-config.json to ${repo}...`);
+  mlog('info', `Repo: ${repo} · Branch: ${branch}`);
+
+  try {
+    const content = JSON.stringify(cfg, null, 2);
+    const b64 = btoa(unescape(encodeURIComponent(content)));
+    // Get current SHA
+    const getR = await fetch(`/api/github/repos/${repo}/contents/network-config.json`, {
+      headers: { 'X-GH-Token': token }
+    });
+    let sha = null;
+    if (getR.ok) { const d = await getR.json(); sha = d.sha; }
+
+    const body = { message: `Config update [${new Date().toISOString().slice(0,10)}]`, content: b64, branch };
+    if (sha) body.sha = sha;
+
+    const putR = await fetch(`/api/github/repos/${repo}/contents/network-config.json`, {
+      method: 'PUT',
+      headers: { 'X-GH-Token': token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!putR.ok) { const e = await putR.json(); throw new Error(e.message || putR.status); }
+    mlog('ok', '✓ network-config.json pushed');
+    addLog('ok', 'info', `Config published to ${repo}`);
+  } catch(e) {
+    mlog('err', '✗ ' + e.message);
+    addLog('err', 'info', 'Publish failed: ' + e.message);
+  }
+}
+
+async function pullConfig() {
+  const token = ls('ghToken');
+  const repo  = ls('botRepo');
+  const branch = ls('branch') || 'main';
+  if (!token || !repo || repo.includes('YOUR_')) {
+    alert('Set GitHub token and bot repo in Settings first.'); showPanel('settings'); return;
+  }
+  if (!confirm(`Pull network-config.json from ${repo}?\n\nThis overwrites your local config with the GitHub version.`)) return;
+
+  openModal('Pull from GitHub', `Fetching network-config.json from ${repo}...`);
+  try {
+    const getR = await fetch(`/api/github/repos/${repo}/contents/network-config.json?ref=${branch}`, {
+      headers: { 'X-GH-Token': token }
+    });
+    if (!getR.ok) throw new Error(`GitHub returned ${getR.status}`);
+    const d = await getR.json();
+    const content = decodeURIComponent(escape(atob(d.content.replace(/\n/g, ''))));
+
+    // Validate JSON before writing
+    const parsed = JSON.parse(content);
+
+    if (serverMode) {
+      const saveR = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: content,
+      });
+      if (!saveR.ok) throw new Error('Failed to write config to disk');
+      mlog('ok', '✓ network-config.json pulled from GitHub and saved locally');
+    }
+
+    cfg = parsed;
+    configHash = await hashStr(content);
+    renderDashboard();
+    renderStatusGrid();
+    addLog('ok', 'info', `Config pulled from ${repo}`);
+    closeModal();
+  } catch(e) {
+    mlog('err', '✗ ' + e.message);
+    addLog('err', 'info', 'Pull failed: ' + e.message);
+  }
+}
+
+async function triggerRun() {
+  const token = ls('ghToken');
+  const repo  = ls('botRepo');
+  const branch = ls('branch') || 'main';
+  const workflow = ls('workflow') || 'daily-post.yml';
+  if (!token || !repo || repo.includes('YOUR_')) { alert('Set GitHub token and bot repo in Settings.'); showPanel('settings'); return; }
+  if (!confirm(`Trigger immediate run on ${repo}?`)) return;
+
+  openModal('Triggering Run', `Pushing config then dispatching workflow...`);
+  await publishConfig(true);
+  mlog('info', `Dispatching: ${workflow}`);
+
+  try {
+    const r = await fetch(`/api/github/repos/${repo}/actions/workflows/${workflow}/dispatches`, {
+      method: 'POST',
+      headers: { 'X-GH-Token': token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: branch }),
+    });
+    if (!r.ok && r.status !== 204) { const e = await r.json().catch(()=>({})); throw new Error(e.message || r.status); }
+    mlog('ok', `✓ Workflow triggered — view: https://github.com/${repo}/actions`);
+    addLog('ok', 'info', `Workflow triggered on ${repo}`);
+  } catch(e) {
+    mlog('err', '✗ ' + e.message);
+    addLog('err', 'info', 'Trigger failed: ' + e.message);
+  }
+}
+
+// ── Settings + API auto-fill ───────────────────────────────────────────────
+function propagateKey(type) {
+  // Auto-save any key as soon as it's typed — propagates to all uses immediately
+  const map = {
+    anthropic: { el: 'setAnthropicKey', key: 'anthropicKey' },
+    github:    { el: 'setGhToken',      key: 'ghToken' },
+    pexels:    { el: 'setPexelsKey',    key: 'pexelsKey' },
+    brevo:     { el: 'setBrevoKey',     key: 'brevoKey' },
+  };
+  const { el, key } = map[type] || {};
+  if (!el) return;
+  const val = document.getElementById(el)?.value.trim();
+  if (val) {
+    lss(key, val);
+    addLog('info', 'info', `${type.charAt(0).toUpperCase()+type.slice(1)} API key saved and propagated`);
+  }
+}
+
+function saveSettings() {
+  lss('anthropicKey',   document.getElementById('setAnthropicKey').value.trim());
+  lss('claudeModel',    document.getElementById('setModel').value);
+  lss('ghToken',        document.getElementById('setGhToken').value.trim());
+  lss('pexelsKey',      document.getElementById('setPexelsKey').value.trim());
+  lss('brevoKey',       document.getElementById('setBrevoKey').value.trim());
+  lss('botRepo',        document.getElementById('setBotRepo').value.trim());
+  lss('branch',         document.getElementById('setBranch').value.trim() || 'main');
+  lss('workflow',       document.getElementById('setWorkflow').value.trim() || 'daily-post.yml');
+  lss('telegramToken',  document.getElementById('setTelegramToken').value.trim());
+  lss('telegramChatId', document.getElementById('setTelegramChatId').value.trim());
+  // Sync into config file settings block
+  if (cfg) {
+    cfg.settings = cfg.settings || {};
+    cfg.settings.bot_repo      = ls('botRepo');
+    cfg.settings.branch        = ls('branch');
+    cfg.settings.workflow_file = ls('workflow');
+    // Write Telegram settings into config so telegram_bot.py picks them up
+    const tgToken  = ls('telegramToken');
+    const tgChatId = ls('telegramChatId');
+    if (tgToken || tgChatId) {
+      cfg.settings.telegram = cfg.settings.telegram || {};
+      if (tgToken)  cfg.settings.telegram.bot_token = tgToken;
+      if (tgChatId) cfg.settings.telegram.allowed_chat_ids = [parseInt(tgChatId) || tgChatId];
+    }
+    saveConfigToServer();
+  }
+  addLog('ok', 'info', 'All settings saved');
+}
+
+function loadSettings() {
+  const map = {
+    setAnthropicKey:  'anthropicKey',
+    setModel:         'claudeModel',
+    setGhToken:       'ghToken',
+    setPexelsKey:     'pexelsKey',
+    setBrevoKey:      'brevoKey',
+    setBotRepo:       'botRepo',
+    setBranch:        'branch',
+    setWorkflow:      'workflow',
+    setTelegramToken: 'telegramToken',
+    setTelegramChatId:'telegramChatId',
+  };
+  Object.entries(map).forEach(([elId, key]) => {
+    const el  = document.getElementById(elId);
+    const val = ls(key);
+    if (el && val) el.value = val;
+  });
+}
+
+// ── Compliance check ───────────────────────────────────────────────────────
+function runComplianceCheck() {
+  if (!cfg) { alert('Load config first.'); return; }
+  const sites = cfg.sites || [];
+  const results = document.getElementById('complianceResults');
+  results.innerHTML = '';
+
+  const checks = [];
+
+  // 1. Scaled content abuse — posting frequency
+  sites.forEach(site => {
+    const ppr = site.posts_per_run || 1;
+    if (ppr > 2) checks.push({ site: site.domain, risk: 'high', policy: 'Scaled Content Abuse', issue: `posts_per_run = ${ppr}. More than 2/day is a strong signal of scaled content generation.`, fix: 'Set posts_per_run to 1 or 2 max.' });
+    else if (ppr === 2) checks.push({ site: site.domain, risk: 'medium', policy: 'Scaled Content Abuse', issue: '2 posts/run is manageable but watch overall volume.', fix: 'Ensure each article has a genuinely different angle.' });
+  });
+
+  // 2. Doorway abuse — distinct niches
+  const categories = sites.map(s => (s.category||'').toLowerCase());
+  const uniqueCats = new Set(categories);
+  if (uniqueCats.size < sites.length * 0.7) {
+    checks.push({ site: 'Network', risk: 'high', policy: 'Doorway Abuse', issue: 'Multiple sites share the same or very similar categories. Google may treat them as doorway pages.', fix: 'Ensure every site targets a clearly distinct niche, audience, and intent.' });
+  }
+
+  // 3. Cross-linking network fingerprint
+  checks.push({ site: 'Network', risk: 'medium', policy: 'Link Spam', issue: 'Sites in the same network cross-linking to each other can be detected as a link scheme.', fix: 'Cross-links are now optional in the prompt (fixed). Ensure links only appear where genuinely relevant — max 1 per article.' });
+
+  // 4. Warming — new sites posting too fast
+  sites.forEach(site => {
+    const w = site.warming || {};
+    if (!w.enabled) {
+      checks.push({ site: site.domain, risk: 'low', policy: 'Scaled Content Abuse', issue: 'Domain warming is disabled. New domains that receive lots of content quickly can trigger spam filters.', fix: 'If this is a new domain (< 60 days old), enable warming and set started date.' });
+    } else if (w.enabled && w.started) {
+      const days = Math.floor((Date.now() - new Date(w.started)) / 86400000);
+      const phase = days < 14 ? 'Trust-building (post every 3d)' : days < 30 ? 'Establishing (every 2d)' : days < 60 ? 'Growth (daily)' : 'Full speed';
+      checks.push({ site: site.domain, risk: 'ok', policy: 'Domain Warming', issue: `Day ${days} — Phase: ${phase}`, fix: '' });
+    }
+  });
+
+  // 5. E-E-A-T — author personas
+  sites.forEach(site => {
+    if (!site.persona || site.persona.length < 30) {
+      checks.push({ site: site.domain, risk: 'high', policy: 'E-E-A-T / Scaled Content', issue: 'Missing or very short author persona. Google values demonstrable expertise.', fix: 'Add a detailed persona with background, credentials, and experience.' });
+    }
+  });
+
+  // 6. Active vs. category match
+  sites.forEach(site => {
+    const tone = site.tone || '';
+    if (tone.length < 50) {
+      checks.push({ site: site.domain, risk: 'medium', policy: 'Content Quality', issue: 'Writing tone is too brief. Short tone descriptions produce generic content.', fix: 'Expand the tone to at least 2 sentences describing voice, style, and audience.' });
+    }
+  });
+
+  // 7. Global prompt check
+  if (!cfg.global_prompt || cfg.global_prompt.length < 100) {
+    checks.push({ site: 'Global', risk: 'medium', policy: 'Content Quality', issue: 'Global writing prompt is missing or too short.', fix: 'Add detailed writing rules to help AI produce genuinely differentiated content.' });
+  }
+
+  // 8. Good signals
+  if (cfg.global_prompt?.length > 200) checks.push({ site: 'Global', risk: 'ok', policy: 'Content Quality', issue: 'Strong global writing prompt — good differentiation signal.', fix: '' });
+  const activeCount = sites.filter(s => s.active !== false).length;
+  if (activeCount > 0) checks.push({ site: 'Network', risk: 'ok', policy: 'Active Sites', issue: `${activeCount} active sites with distinct domains and themes.`, fix: '' });
+
+  // Render
+  const riskColor = { high: 'var(--red)', medium: 'var(--amber)', low: 'var(--blue)', ok: 'var(--green)' };
+  const riskLabel = { high: '🔴 HIGH', medium: '🟡 MEDIUM', low: '🔵 LOW', ok: '✅ PASS' };
+
+  const grouped = { high: [], medium: [], low: [], ok: [] };
+  checks.forEach(c => (grouped[c.risk] || grouped.low).push(c));
+
+  const summary = document.createElement('div');
+  summary.className = 'card';
+  summary.style.marginBottom = '12px';
+  summary.innerHTML = `
+    <div class="section-head">Summary</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px">
+      <span style="color:var(--red)">🔴 ${grouped.high.length} High risk</span>
+      <span style="color:var(--amber)">🟡 ${grouped.medium.length} Medium</span>
+      <span style="color:var(--blue)">🔵 ${grouped.low.length} Low</span>
+      <span style="color:var(--green)">✅ ${grouped.ok.length} Passing</span>
+    </div>
+    <div class="info-box" style="margin-top:10px">
+      <b>Policies checked:</b> Scaled Content Abuse, Doorway Abuse, Link Spam, E-E-A-T signals, Domain Warming, Content Quality.<br>
+      Fix all red items before scaling. Address yellow items before month 2.
+    </div>
+  `;
+  results.appendChild(summary);
+
+  ['high','medium','low','ok'].forEach(risk => {
+    grouped[risk].forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.style.marginBottom = '8px';
+      div.style.borderLeft = `3px solid ${riskColor[risk]}`;
+      div.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="font-size:12px;font-weight:700;color:${riskColor[risk]}">${riskLabel[risk]}</span>
+          <span style="font-size:11px;color:var(--text3)">${escHtml(c.policy)}</span>
+          <span style="margin-left:auto;font-size:11px;font-weight:600;color:var(--text2)">${escHtml(c.site)}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:${c.fix?'6px':'0'}">${escHtml(c.issue)}</div>
+        ${c.fix ? `<div style="font-size:11px;color:var(--accent)">Fix: ${escHtml(c.fix)}</div>` : ''}
+      `;
+      results.appendChild(div);
+    });
+  });
+
+  addLog('info', 'info', `Compliance check: ${grouped.high.length} high-risk, ${grouped.medium.length} medium, ${grouped.ok.length} passing`);
+}
+
+// ── Cloudflare Analytics ──────────────────────────────────────────────────
+async function loadCloudflareAnalytics() {
+  const token   = document.getElementById('cfApiToken').value.trim();
+  const zoneTag = document.getElementById('cfZoneTag').value.trim();
+  const period  = document.getElementById('cfPeriod').value;
+  const out     = document.getElementById('cfResults');
+
+  if (!token || !zoneTag) {
+    out.innerHTML = '<div class="card"><div style="color:var(--red);padding:20px">Please enter your API token and zone tag.</div></div>';
+    return;
+  }
+
+  out.innerHTML = '<div class="card"><div style="text-align:center;padding:40px;color:var(--text3)">Fetching analytics…</div></div>';
+
+  try {
+    const endpoint = serverMode
+      ? '/api/cloudflare/analytics'
+      : null;
+
+    if (!endpoint) {
+      out.innerHTML = '<div class="card info-box"><b>Server mode required.</b> Start server.py to use the Cloudflare proxy (avoids CORS).<br><code>python server.py</code></div>';
+      return;
+    }
+
+    const r = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ api_token: token, zone_tag: zoneTag, since: period, until: '0' }),
+    });
+    const data = await r.json();
+
+    if (data.errors?.length) {
+      out.innerHTML = `<div class="card"><div style="color:var(--red);padding:20px">Cloudflare error: ${data.errors.map(e=>e.message).join(', ')}</div></div>`;
+      return;
+    }
+
+    const groups = data?.data?.viewer?.zones?.[0]?.httpRequests1dGroups || [];
+    if (!groups.length) {
+      out.innerHTML = '<div class="card"><div style="padding:20px;color:var(--text3)">No data returned. Check zone tag and token permissions.</div></div>';
+      return;
+    }
+
+    const totalReqs    = groups.reduce((s,g) => s + (g.sum?.requests||0), 0);
+    const totalViews   = groups.reduce((s,g) => s + (g.sum?.pageViews||0), 0);
+    const totalUniques = groups.reduce((s,g) => s + (g.uniq?.uniques||0), 0);
+    const totalBytes   = groups.reduce((s,g) => s + (g.sum?.bytes||0), 0);
+    const fmtBytes = b => b > 1e9 ? (b/1e9).toFixed(1)+'GB' : b > 1e6 ? (b/1e6).toFixed(1)+'MB' : (b/1e3).toFixed(0)+'KB';
+
+    const rows = groups.map(g => `
+      <tr style="border-bottom:1px solid var(--border2)">
+        <td style="padding:8px 12px;color:var(--text2);font-size:12px">${g.dimensions?.date||''}</td>
+        <td style="padding:8px 12px;text-align:right">${(g.sum?.requests||0).toLocaleString()}</td>
+        <td style="padding:8px 12px;text-align:right">${(g.sum?.pageViews||0).toLocaleString()}</td>
+        <td style="padding:8px 12px;text-align:right">${(g.uniq?.uniques||0).toLocaleString()}</td>
+        <td style="padding:8px 12px;text-align:right;color:var(--text3)">${fmtBytes(g.sum?.bytes||0)}</td>
+      </tr>`).join('');
+
+    out.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+        <div class="stat-card"><div class="stat-val">${totalReqs.toLocaleString()}</div><div class="stat-lbl">Total Requests</div></div>
+        <div class="stat-card"><div class="stat-val">${totalViews.toLocaleString()}</div><div class="stat-lbl">Page Views</div></div>
+        <div class="stat-card"><div class="stat-val">${totalUniques.toLocaleString()}</div><div class="stat-lbl">Unique Visitors</div></div>
+        <div class="stat-card"><div class="stat-val">${fmtBytes(totalBytes)}</div><div class="stat-lbl">Bandwidth</div></div>
+      </div>
+      <div class="card" style="overflow:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border2)">
+              <th style="padding:8px 12px;text-align:left;color:var(--text3);font-weight:600;font-size:11px">Date</th>
+              <th style="padding:8px 12px;text-align:right;color:var(--text3);font-weight:600;font-size:11px">Requests</th>
+              <th style="padding:8px 12px;text-align:right;color:var(--text3);font-weight:600;font-size:11px">Page Views</th>
+              <th style="padding:8px 12px;text-align:right;color:var(--text3);font-weight:600;font-size:11px">Uniques</th>
+              <th style="padding:8px 12px;text-align:right;color:var(--text3);font-weight:600;font-size:11px">Bandwidth</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  } catch(e) {
+    out.innerHTML = `<div class="card"><div style="color:var(--red);padding:20px">Error: ${e.message}</div></div>`;
+  }
+}
+
+// ── Panels ─────────────────────────────────────────────────────────────────
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const nb = document.getElementById('nav-'+id);
+  if (nb) nb.classList.add('active');
+  if (id === 'status') renderStatusGrid();
+  if (id === 'github') loadGhRuns();
+  if (id === 'history') renderHistory();
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+function openModal(title, sub) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalSub').textContent = sub;
+  document.getElementById('modalLog').innerHTML = '';
+  document.getElementById('publishModal').classList.add('open');
+}
+function closeModal() { document.getElementById('publishModal').classList.remove('open'); }
+function mlog(type, msg) {
+  const el = document.getElementById('modalLog');
+  const d = document.createElement('div');
+  d.className = 'mlog-' + type;
+  d.textContent = msg;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+document.getElementById('publishModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// ── Utilities ──────────────────────────────────────────────────────────────
+function ls(k)      { return localStorage.getItem(k) || ''; }
+function lss(k, v)  { localStorage.setItem(k, v); }
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Enter to send command
+document.getElementById('cmdInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) sendCommand();
+});
+
+// ── Backlink Tracker ──────────────────────────────────────────────────────
+const PLATFORM_COLORS = {
+  reddit: '#ff4500', linkedin: '#0a66c2', quora: '#b92b27',
+  medium: '#00ab6c', 'guest-post': '#a78bfa', forum: '#38bdf8', other: '#888'
+};
+
+async function loadBacklinks() {
+  try {
+    const r = await fetch('/api/backlinks');
+    const links = await r.json();
+    renderBacklinks(links);
+  } catch(e) { console.error('Backlinks load failed', e); }
+}
+
+function renderBacklinks(links) {
+  const tbody = document.getElementById('bl-tbody');
+  const plat = s => `<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:${PLATFORM_COLORS[s]||'#888'}22;color:${PLATFORM_COLORS[s]||'#888'};border:1px solid ${PLATFORM_COLORS[s]||'#888'}44">${s}</span>`;
+  const short = url => { try { const u = new URL(url); return u.hostname + (u.pathname.length > 30 ? u.pathname.slice(0,30)+'…' : u.pathname); } catch { return url.slice(0,40); }};
+
+  if(!links.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text3)">No backlinks recorded yet.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = links.map(l => `<tr style="border-bottom:1px solid var(--border)">
+    <td style="padding:9px 14px;color:var(--text3);white-space:nowrap">${l.recorded_at ? l.recorded_at.slice(0,10) : '—'}</td>
+    <td style="padding:9px 14px">${plat(l.platform||'other')}</td>
+    <td style="padding:9px 14px;color:var(--text2)"><a href="${l.source||'#'}" target="_blank" style="color:var(--accent)" title="${l.source||''}">${short(l.source||'')}</a></td>
+    <td style="padding:9px 14px;color:var(--text2)"><a href="${l.target||'#'}" target="_blank" style="color:var(--text2)" title="${l.target||''}">${short(l.target||'')}</a></td>
+    <td style="padding:9px 14px;color:var(--text)">${l.anchor||'—'}</td>
+    <td style="padding:9px 14px;color:var(--text3);font-size:11px">${l.notes||''}</td>
+    <td style="padding:9px 14px"><button onclick="deleteBacklink('${l.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px" title="Delete">✕</button></td>
+  </tr>`).join('');
+
+  document.getElementById('bl-total').textContent = links.length;
+  document.getElementById('bl-reddit').textContent = links.filter(l=>l.platform==='reddit').length;
+  document.getElementById('bl-linkedin').textContent = links.filter(l=>l.platform==='linkedin').length;
+  document.getElementById('bl-quora').textContent = links.filter(l=>l.platform==='quora').length;
+}
+
+async function addBacklink() {
+  const source = document.getElementById('bl-source').value.trim();
+  const target = document.getElementById('bl-target').value.trim();
+  const platform = document.getElementById('bl-platform').value;
+  const anchor = document.getElementById('bl-anchor').value.trim();
+  const notes = document.getElementById('bl-notes').value.trim();
+  const status = document.getElementById('bl-save-status');
+
+  if(!source || !target) { status.textContent = 'Source and target URLs required.'; status.style.color='var(--red)'; return; }
+
+  status.textContent = 'Saving…'; status.style.color='var(--text3)';
+  try {
+    await fetch('/api/backlinks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({source,target,platform,anchor,notes}) });
+    ['bl-source','bl-target','bl-anchor','bl-notes'].forEach(id => document.getElementById(id).value='');
+    status.textContent = '✓ Saved'; status.style.color='var(--green)';
+    setTimeout(()=>status.textContent='', 2000);
+    loadBacklinks();
+  } catch(e) { status.textContent = 'Error saving.'; status.style.color='var(--red)'; }
+}
+
+async function deleteBacklink(id) {
+  if(!confirm('Delete this backlink record?')) return;
+  await fetch(`/api/backlinks/${id}`, {method:'DELETE'});
+  loadBacklinks();
+}
+
+const origShowPanel = showPanel;
+window.showPanel = function(name) {
+  origShowPanel(name);
+  if(name === 'backlinks') loadBacklinks();
+  if(name === 'history') loadSnapshots();
+  if(name === 'customize') populateCustSiteDropdown();
+  if(name === 'comments') populateCommSiteDropdowns();
+};
+
+// ── Snapshots (server-side) ────────────────────────────────────────────────
+async function loadSnapshots() {
+  if (!serverMode) {
+    const el = document.getElementById('snapshots-list');
+    if (el) el.textContent = 'Start python server.py to enable snapshots.';
+    return;
+  }
+  try {
+    const r = await fetch('/api/snapshot');
+    const snaps = await r.json();
+    renderSnapshots(snaps);
+  } catch {}
+}
+
+function renderSnapshots(snaps) {
+  const el = document.getElementById('snapshots-list');
+  if (!el) return;
+  if (!snaps.length) {
+    el.innerHTML = '<div style="color:var(--text3)">No snapshots yet. Snapshots are auto-saved before each customization you apply.</div>';
+    return;
+  }
+  el.innerHTML = snaps.map(s => {
+    const dt = new Date(s.created_at);
+    const ts = dt.toLocaleDateString('en-CA') + ' ' + dt.toLocaleTimeString('en-CA', {hour:'2-digit',minute:'2-digit'});
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600;color:var(--text)">${escHtml(s.label)}</div>
+        <div style="font-size:11px;color:var(--text3)">${ts}</div>
+      </div>
+      <button class="btn btn-sm btn-amber" onclick="restoreSnapshot('${s.id}','${escHtml(s.label).replace(/'/g,'&#39;')}')">↩ Restore</button>
+      <button class="btn btn-sm btn-red" onclick="deleteSnapshot('${s.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+async function restoreSnapshot(id, label) {
+  if (!confirm(`Restore snapshot: "${label}"?\n\nThis overwrites the current config. The change will be reflected immediately.`)) return;
+  try {
+    const r = await fetch(`/api/snapshot/${id}/restore`, { method: 'POST' });
+    if (!r.ok) throw new Error('Restore failed');
+    addLog('warn', 'snapshot', `Restored: ${label}`);
+    await syncConfig();
+    renderDashboard();
+    alert('✓ Config restored to: ' + label);
+    loadSnapshots();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function deleteSnapshot(id) {
+  if (!confirm('Delete this snapshot?')) return;
+  await fetch(`/api/snapshot/${id}`, { method: 'DELETE' });
+  loadSnapshots();
+}
+
+// ── Customize Site ─────────────────────────────────────────────────────────
+let custGeneratedCode = '';
+let custGeneratedTarget = 'header_scripts';
+let custGeneratedSiteId = '';
+
+function populateCustSiteDropdown() {
+  if (!cfg) return;
+  const sel = document.getElementById('cust-site');
+  if (!sel) return;
+  sel.innerHTML = (cfg.sites||[]).map(s => `<option value="${s.id}">${s.domain}</option>`).join('');
+  showCustApplied();
+}
+
+function showCustApplied() {
+  if (!cfg) return;
+  const siteId = document.getElementById('cust-site')?.value;
+  const site = (cfg.sites||[]).find(s => s.id === siteId);
+  const list = document.getElementById('cust-applied-list');
+  if (!list) return;
+  if (!site) { list.textContent = 'No site selected.'; return; }
+  const hLen = (site.header_scripts || '').trim().length;
+  const fLen = (site.footer_scripts || '').trim().length;
+  if (!hLen && !fLen) {
+    list.textContent = 'No customizations applied to this site yet.';
+  } else {
+    list.innerHTML = `
+      ${hLen ? `<div style="margin-bottom:6px">Header scripts: <b style="color:var(--accent)">${hLen} chars</b></div>` : ''}
+      ${fLen ? `<div>Footer scripts: <b style="color:var(--accent)">${fLen} chars</b></div>` : ''}
+      <div style="margin-top:8px;font-size:11px;color:var(--text3)">To remove, edit the raw config or use AI Command: "Remove custom CSS from [site]"</div>`;
+  }
+}
+
+async function generateCustomization() {
+  const siteId = document.getElementById('cust-site').value;
+  const prompt = document.getElementById('cust-prompt').value.trim();
+  if (!prompt) { alert('Describe the change first.'); return; }
+  if (!cfg) { alert('Config not loaded.'); return; }
+  if (!serverMode) { alert('Start python server.py first.'); return; }
+  const apiKey = ls('anthropicKey');
+  if (!apiKey) { alert('Add Anthropic API key in Settings.'); showPanel('settings'); return; }
+
+  const site = (cfg.sites||[]).find(s => s.id === siteId);
+  const btn = document.getElementById('cust-gen-btn');
+  const thinking = document.getElementById('cust-thinking');
+  btn.style.display = 'none'; thinking.classList.add('show');
+  document.getElementById('cust-preview').style.display = 'none';
+
+  const sysPrompt = `You are a web developer writing CSS and/or JavaScript to inject into a static blog site via a <style> or <script> tag. Generate ONLY the HTML to inject. The code must be self-contained (no external deps beyond what a basic blog already has) and minimal — only what was asked. IMPORTANT: In the code field, use single backslash-n (\\n) for newlines — do NOT use actual newlines inside JSON string values. Return JSON: {"explanation":"1-2 sentence description of what the code does","code":"<style>...</style> or <script>...</script> block"}. Return ONLY the JSON, no markdown.`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        _api_key: apiKey,
+        model: ls('claudeModel') || 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: `Site: ${site?.domain || siteId}\nTheme: ${site?.theme || 'dark'}\nChange requested: ${prompt}` }],
+        system: sysPrompt,
+      })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error?.message || r.status);
+    let text = (data.content?.[0]?.text || '').trim().replace(/^```json\s*/,'').replace(/\s*```$/,'');
+    const result = JSON.parse(text);
+
+    custGeneratedCode = result.code || '';
+    custGeneratedTarget = document.getElementById('cust-target').value;
+    custGeneratedSiteId = siteId;
+
+    document.getElementById('cust-explanation').textContent = result.explanation || '';
+    document.getElementById('cust-code').textContent = custGeneratedCode;
+    document.getElementById('cust-preview').style.display = '';
+    document.getElementById('cust-apply-status').textContent = '';
+    addLog('info', 'customize', `Code generated for ${site?.domain || siteId}`);
+  } catch(e) {
+    addLog('err', 'customize', 'Customization generation failed: ' + e.message);
+    alert('Error: ' + e.message);
+  } finally {
+    btn.style.display = ''; thinking.classList.remove('show');
+  }
+}
+
+function useCustExample(el) {
+  document.getElementById('cust-prompt').value = el.textContent;
+  document.getElementById('cust-prompt').focus();
+}
+
+function copyCustomCode() {
+  navigator.clipboard.writeText(custGeneratedCode).then(() => {
+    const s = document.getElementById('cust-apply-status');
+    s.textContent = 'Copied!'; s.style.color = 'var(--green)';
+    setTimeout(() => s.textContent = '', 1500);
+  });
+}
+
+async function applyCustomization() {
+  if (!custGeneratedCode) return;
+  if (!serverMode) { alert('Server not running. Start with: python server.py'); return; }
+
+  const status = document.getElementById('cust-apply-status');
+  status.textContent = 'Saving snapshot…'; status.style.color = 'var(--text3)';
+
+  // Save server-side snapshot before applying
+  try {
+    const site = (cfg.sites||[]).find(s => s.id === custGeneratedSiteId);
+    await fetch('/api/snapshot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ label: `Before customize: ${site?.domain || custGeneratedSiteId}` }),
+    });
+  } catch {}
+
+  const site = (cfg.sites||[]).find(s => s.id === custGeneratedSiteId);
+  if (!site) { status.textContent = 'Site not found.'; return; }
+
+  site[custGeneratedTarget] = (site[custGeneratedTarget] || '') + '\n' + custGeneratedCode;
+
+  await saveConfigToServer();
+  status.textContent = '✓ Applied! Publish to GitHub when ready.'; status.style.color = 'var(--green)';
+  showCustApplied();
+  addLog('ok', 'customize', `Customization applied to ${site.domain} → ${custGeneratedTarget}`);
+}
+
+function discardCustomization() {
+  custGeneratedCode = '';
+  document.getElementById('cust-preview').style.display = 'none';
+}
+
+// ── Comments Management ────────────────────────────────────────────────────
+let generatedComments = [];
+let generatedCommentsSlug = '';
+let generatedCommentsSiteId = '';
+
+function populateCommSiteDropdowns() {
+  if (!cfg) return;
+  const opts = (cfg.sites||[]).map(s => `<option value="${s.id}">${s.domain}</option>`).join('');
+  ['comm-site','comm-manual-site','comm-sched-site'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = opts;
+  });
+  // Init schedule view for first site
+  loadCommSchedule();
+}
+
+async function generateComments() {
+  const siteId = document.getElementById('comm-site').value;
+  const slug = document.getElementById('comm-slug').value.trim();
+  const title = document.getElementById('comm-title').value.trim();
+  const count = Math.max(1, Math.min(19, parseInt(document.getElementById('comm-count').value) || 6));
+  const days = Math.max(1, parseInt(document.getElementById('comm-days').value) || 14);
+
+  if (!slug) { alert('Enter the article slug.'); return; }
+  const apiKey = ls('anthropicKey');
+  if (!apiKey) { alert('Add Anthropic API key in Settings.'); showPanel('settings'); return; }
+
+  const site = (cfg?.sites||[]).find(s => s.id === siteId);
+  const btn = document.getElementById('comm-gen-btn');
+  const thinking = document.getElementById('comm-thinking');
+  btn.style.display = 'none'; thinking.classList.add('show');
+  generatedComments = [];
+  document.getElementById('comm-push-btn').style.display = 'none';
+
+  const today = new Date().toISOString().slice(0,10);
+  const COMM_COLORS = ['#3ecf8e','#38bdf8','#a78bfa','#f59e0b','#ef4444','#10b981','#f97316','#ec4899','#6366f1','#14b8a6'];
+  const sysPrompt = `You generate realistic blog comments for a ${site?.category||'finance/investing'} article. Write as distinct real readers: brief, specific, occasionally opinionated. Mix agreement, questions, and brief personal anecdotes. Never use em-dashes. Return a JSON array of exactly ${count} objects with keys: name (FirstName L. format), text (1-3 sentences), date_iso (YYYY-MM-DD, spread across ${days} days starting ${today}), likes (integer 0-12). Return ONLY the JSON array, no markdown.`;
+
+  try {
+    const r = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        _api_key: apiKey,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: `Article: "${title || slug}"\nSite niche: ${site?.category || ''}\nGenerate ${count} comments.` }],
+        system: sysPrompt,
+      })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error?.message || r.status);
+    let text = (data.content?.[0]?.text || '').trim().replace(/^```json\s*/,'').replace(/\s*```$/,'');
+    const raw = JSON.parse(text);
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    generatedComments = raw.map((c, i) => {
+      const name = c.name || 'Reader';
+      const ini = name.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+      const color = COMM_COLORS[(name.charCodeAt(0) + i) % COMM_COLORS.length];
+      const dateStr = c.date_iso || c.date || today;
+      const d = new Date(dateStr + 'T00:00:00');
+      const date_display = MONTHS[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      return { id: `c${i+1}${Math.floor(Math.random()*900+100)}`, name, initials: ini, color, date_iso: dateStr, date_display, text: c.text || '', likes: c.likes || 0 };
+    });
+    generatedCommentsSlug = slug;
+    generatedCommentsSiteId = siteId;
+    renderCommPreview();
+    document.getElementById('comm-push-btn').style.display = '';
+    addLog('info', 'comments', `Generated ${generatedComments.length} comments for ${slug}`);
+  } catch(e) {
+    alert('Error: ' + e.message);
+    addLog('err', 'comments', 'Comment generation failed: ' + e.message);
+  } finally {
+    btn.style.display = ''; thinking.classList.remove('show');
+  }
+}
+
+function renderCommPreview() {
+  const list = document.getElementById('comm-preview-list');
+  if (!generatedComments.length) { list.textContent = 'No comments generated.'; return; }
+  const COLORS = ['#3ecf8e','#38bdf8','#a78bfa','#f59e0b','#ef4444','#10b981'];
+  list.innerHTML = generatedComments.map((c, i) => {
+    const initials = (c.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const color = COLORS[i % COLORS.length];
+    return `<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div style="width:30px;height:30px;border-radius:50%;background:${color}22;border:1px solid ${color}44;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:${color};flex-shrink:0">${escHtml(initials)}</div>
+      <div style="flex:1">
+        <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:2px">
+          <span style="font-size:12px;font-weight:600;color:var(--text)">${escHtml(c.name||'')}</span>
+          <span style="font-size:10px;color:var(--text3)">${c.date_display||c.date||''}</span>
+          <span style="font-size:10px;color:var(--text3);margin-left:auto">♥ ${c.likes||0}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">${escHtml(c.text||'')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function pushGeneratedComments() {
+  if (!generatedComments.length) return;
+  const token = ls('ghToken');
+  const site = (cfg?.sites||[]).find(s => s.id === generatedCommentsSiteId);
+  if (!token) { alert('Set GitHub token in Settings.'); return; }
+  if (!site?.repo || site.repo.includes('YOUR_')) { alert('Set the site repo in network-config.json first.'); return; }
+
+  const btn = document.getElementById('comm-push-btn');
+  btn.textContent = 'Pushing…'; btn.disabled = true;
+
+  const branch = ls('branch') || 'main';
+  const path = `${generatedCommentsSlug}/comments.json`;
+  const content = JSON.stringify(generatedComments, null, 2);
+  const b64 = btoa(unescape(encodeURIComponent(content)));
+
+  try {
+    const getR = await fetch(`/api/github/repos/${site.repo}/contents/${path}`, {
+      headers: { 'X-GH-Token': token }
+    });
+    let sha = null;
+    if (getR.ok) { const d = await getR.json(); sha = d.sha; }
+    const body = { message: `Add comments: ${generatedCommentsSlug}`, content: b64, branch };
+    if (sha) body.sha = sha;
+    const r = await fetch(`/api/github/repos/${site.repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { 'X-GH-Token': token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+    btn.textContent = '✓ Pushed!';
+    addLog('ok', 'comments', `Comments pushed: ${site.domain}/${generatedCommentsSlug}/comments.json`);
+    setTimeout(() => { btn.textContent = '↑ Push to GitHub'; btn.disabled = false; }, 2500);
+  } catch(e) {
+    alert('Push failed: ' + e.message);
+    btn.textContent = '↑ Push to GitHub'; btn.disabled = false;
+  }
+}
+
+async function addManualComment() {
+  const siteId = document.getElementById('comm-manual-site').value;
+  const slug = document.getElementById('comm-manual-slug').value.trim();
+  const name = document.getElementById('comm-manual-name').value.trim();
+  const text = document.getElementById('comm-manual-text').value.trim();
+  const date = document.getElementById('comm-manual-date').value || new Date().toISOString().slice(0,10);
+  const status = document.getElementById('comm-manual-status');
+
+  if (!slug || !name || !text) { status.textContent = 'Fill in slug, name, and text.'; status.style.color='var(--red)'; return; }
+
+  const token = ls('ghToken');
+  const site = (cfg?.sites||[]).find(s => s.id === siteId);
+  if (!token) { alert('Set GitHub token in Settings.'); return; }
+  if (!site?.repo || site.repo.includes('YOUR_')) { alert('Set the site repo in config first.'); return; }
+
+  status.textContent = 'Fetching existing comments…'; status.style.color='var(--text3)';
+  const branch = ls('branch') || 'main';
+  const path = `${slug}/comments.json`;
+
+  try {
+    let existing = [];
+    let sha = null;
+    const getR = await fetch(`/api/github/repos/${site.repo}/contents/${path}`, {
+      headers: { 'X-GH-Token': token }
+    });
+    if (getR.ok) {
+      const d = await getR.json();
+      sha = d.sha;
+      existing = JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+    }
+    const COMM_COLORS_M = ['#3ecf8e','#38bdf8','#a78bfa','#f59e0b','#ef4444','#10b981','#f97316','#ec4899','#6366f1','#14b8a6'];
+    const ini = name.split(/\s+/).map(w => w[0]).join('').slice(0,2).toUpperCase();
+    const col = COMM_COLORS_M[(name.charCodeAt(0) + existing.length) % COMM_COLORS_M.length];
+    const MONTHS_M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const dObj = new Date(date + 'T00:00:00');
+    const date_display = MONTHS_M[dObj.getMonth()] + ' ' + dObj.getDate() + ', ' + dObj.getFullYear();
+    existing.push({ id: `m${Date.now()}`, name, initials: ini, color: col, date_iso: date, date_display, text, likes: 0 });
+    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(existing, null, 2))));
+    const body = { message: `Add comment: ${slug}`, content: b64, branch };
+    if (sha) body.sha = sha;
+    const r = await fetch(`/api/github/repos/${site.repo}/contents/${path}`, {
+      method: 'PUT',
+      headers: { 'X-GH-Token': token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+    status.textContent = '✓ Comment added!'; status.style.color='var(--green)';
+    ['comm-manual-name','comm-manual-text'].forEach(id => document.getElementById(id).value='');
+    addLog('ok', 'comments', `Manual comment added: ${site.domain}/${slug}`);
+    setTimeout(() => status.textContent = '', 2500);
+  } catch(e) {
+    status.textContent = 'Error: ' + e.message; status.style.color='var(--red)';
+  }
+}
+
+function loadCommSchedule() {
+  if (!cfg) return;
+  const siteId = document.getElementById('comm-sched-site')?.value;
+  const site = (cfg.sites||[]).find(s => s.id === siteId);
+  const hint = document.getElementById('comm-sched-hint');
+  const fields = document.getElementById('comm-sched-fields');
+  if (!site) { if(hint) hint.style.display=''; if(fields) fields.style.display='none'; return; }
+  const cs = site.comment_schedule || {};
+  document.getElementById('cs-enabled').checked = cs.enabled || false;
+  document.getElementById('cs-initial').value = cs.initial_count ?? 6;
+  document.getElementById('cs-max').value = cs.max_count ?? 15;
+  document.getElementById('cs-perday').value = cs.add_per_day ?? 2;
+  document.getElementById('cs-delay').value = cs.delay_days ?? 0;
+  if (hint) hint.style.display = 'none';
+  if (fields) fields.style.display = '';
+}
+
+async function saveCommSchedule() {
+  if (!cfg) return;
+  const siteId = document.getElementById('comm-sched-site').value;
+  const site = (cfg.sites||[]).find(s => s.id === siteId);
+  if (!site) return;
+  site.comment_schedule = {
+    enabled: document.getElementById('cs-enabled').checked,
+    initial_count: parseInt(document.getElementById('cs-initial').value) || 6,
+    max_count: parseInt(document.getElementById('cs-max').value) || 15,
+    add_per_day: parseInt(document.getElementById('cs-perday').value) || 2,
+    delay_days: parseInt(document.getElementById('cs-delay').value) || 0,
+  };
+  await saveConfigToServer();
+  const status = document.getElementById('cs-save-status');
+  status.textContent = '✓ Saved'; status.style.color='var(--green)';
+  addLog('ok', 'comments', `Comment schedule saved for ${site.domain}`);
+  setTimeout(() => status.textContent = '', 2000);
+}
+</script>
+</body>
+</html>
