@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kavalsia Content Network — Get Your Brand Featured Across Our Publishing Network</title>
+<meta name="description" content="A network of high-authority niche blogs powered by AI. Get your brand, product, or service featured in front of engaged audiences across multiple verticals.">
+<style>
+  :root {
+    --bg:      #080c09;
+    --bg2:     #0d1410;
+    --bg3:     #111a14;
+    --bg4:     #16221a;
+    --text:    #e8f0eb;
+    --text2:   #b8d4c0;
+    --muted:   #6a8a74;
+    --accent:  #3ecf8e;
+    --accent2: #2eb87d;
+    --border:  #1e3028;
+    --red:     #ef4444;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent2); }
+  img { max-width: 100%; display: block; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ══════════════════════════════════════════
+     NAV
+  ══════════════════════════════════════════ */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    background: rgba(8,12,9,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(62,207,142,.08);
+    transition: background .3s;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+  .nav-logo img { height: 30px; }
+  .nav-logo-text { font-size: 15px; font-weight: 600; color: var(--text2); }
+  .nav-links { display: flex; align-items: center; gap: 8px; }
+  .nav-links a {
+    padding: 7px 16px; border-radius: 8px; font-size: 14px;
+    color: var(--text2); transition: all .15s;
+  }
+  .nav-links a:hover { color: var(--accent); background: rgba(62,207,142,.06); }
+  .nav-cta {
+    background: var(--accent) !important;
+    color: #080c09 !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+  }
+  .nav-cta:hover { background: var(--accent2) !important; }
+  .nav-mobile-btn { display: none; background: none; border: none; cursor: pointer; color: var(--text2); padding: 8px; }
+
+  /* ══════════════════════════════════════════
+     HERO
+  ══════════════════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 100px 24px 80px;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(62,207,142,.18) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(62,207,142,.06) 0%, transparent 50%),
+      var(--bg);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0; opacity: .025;
+    background-image:
+      linear-gradient(var(--accent) 1px, transparent 1px),
+      linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at 50% 40%, black 0%, transparent 70%);
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(62,207,142,.1); border: 1px solid rgba(62,207,142,.25);
+    border-radius: 999px; padding: 6px 16px;
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    margin-bottom: 28px;
+    animation: fadeUp .6s ease both;
+  }
+  .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+
+  .hero h1 {
+    font-size: clamp(38px, 7vw, 80px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+    animation: fadeUp .6s .1s ease both;
+  }
+  .hero h1 span {
+    color: var(--accent);
+    background: linear-gradient(135deg, var(--accent), #7fffd4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(17px, 2.5vw, 21px);
+    color: var(--text2);
+    max-width: 620px;
+    margin: 0 auto 40px;
+    line-height: 1.65;
+    animation: fadeUp .6s .2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; flex-wrap: wrap;
+    animation: fadeUp .6s .3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #080c09; font-weight: 700; font-size: 15px;
+    padding: 14px 28px; border-radius: 10px;
+    border: none; cursor: pointer;
+    transition: all .2s; box-shadow: 0 0 24px rgba(62,207,142,.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px rgba(62,207,142,.4);
+    color: #080c09;
+  }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(62,207,142,.08); border: 1px solid rgba(62,207,142,.2);
+    color: var(--accent); font-weight: 600; font-size: 15px;
+    padding: 14px 28px; border-radius: 10px;
+    cursor: pointer; transition: all .2s;
+  }
+  .btn-ghost:hover { background: rgba(62,207,142,.14); border-color: rgba(62,207,142,.4); color: var(--accent); }
+
+  /* ══════════════════════════════════════════
+     STATS BAR
+  ══════════════════════════════════════════ */
+  .stats-bar {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 40px;
+  }
+  .stats-inner {
+    max-width: 1000px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .stat {
+    text-align: center;
+    padding: 0 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-size: 40px; font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label { font-size: 13px; color: var(--text2); font-weight: 500; }
+
+  /* ══════════════════════════════════════════
+     SECTIONS
+  ══════════════════════════════════════════ */
+  .section { padding: 100px 40px; }
+  .section-inner { max-width: 1060px; margin: 0 auto; }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent);
+    background: rgba(62,207,142,.1); border: 1px solid rgba(62,207,142,.2);
+    padding: 5px 14px; border-radius: 999px;
+    margin-bottom: 18px;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800; line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 18px; color: var(--text2); line-height: 1.65;
+    max-width: 560px;
+  }
+
+  /* ══════════════════════════════════════════
+     HOW IT WORKS
+  ══════════════════════════════════════════ */
+  .how-bg { background: var(--bg2); }
+
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2px; margin-top: 56px;
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+  }
+  .step-card {
+    background: var(--bg3); padding: 36px 28px;
+    border-right: 1px solid var(--border);
+    transition: background .2s;
+    position: relative;
+  }
+  .step-card:last-child { border-right: none; }
+  .step-card:hover { background: var(--bg4); }
+  .step-num {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .step-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(62,207,142,.12); border: 1px solid rgba(62,207,142,.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 20px;
+  }
+  .step-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+  .step-card p  { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+  /* ══════════════════════════════════════════
+     NETWORK GRID
+  ══════════════════════════════════════════ */
+  .niches-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px; margin-top: 56px;
+  }
+  .niche-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+    transition: all .2s; cursor: default;
+  }
+  .niche-card:hover {
+    border-color: rgba(62,207,142,.3);
+    background: var(--bg3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  }
+  .niche-icon {
+    font-size: 28px; margin-bottom: 14px;
+    width: 52px; height: 52px;
+    background: rgba(62,207,142,.08); border: 1px solid rgba(62,207,142,.15);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  }
+  .niche-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .niche-card p  { font-size: 13px; color: var(--text2); line-height: 1.55; }
+  .niche-pill {
+    display: inline-block; margin-top: 14px;
+    font-size: 11px; font-weight: 600; color: var(--accent);
+    background: rgba(62,207,142,.08); border: 1px solid rgba(62,207,142,.15);
+    padding: 3px 10px; border-radius: 999px;
+  }
+
+  /* ══════════════════════════════════════════
+     WHY BE FEATURED
+  ══════════════════════════════════════════ */
+  .why-bg { background: var(--bg2); }
+
+  .benefits-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin-top: 56px;
+  }
+  .benefit-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px;
+    display: flex; gap: 18px; align-items: flex-start;
+  }
+  .benefit-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: rgba(62,207,142,.1); border: 1px solid rgba(62,207,142,.2);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .benefit-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .benefit-card p  { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+  /* ══════════════════════════════════════════
+     PACKAGES
+  ══════════════════════════════════════════ */
+  .packages-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 20px; margin-top: 56px;
+  }
+  .pkg {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 32px 28px;
+    position: relative; transition: all .2s;
+  }
+  .pkg:hover { border-color: rgba(62,207,142,.25); transform: translateY(-3px); }
+  .pkg.featured {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(62,207,142,.07) 0%, var(--bg2) 100%);
+    box-shadow: 0 0 0 1px rgba(62,207,142,.15), 0 20px 60px rgba(0,0,0,.3);
+  }
+  .pkg-badge {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #080c09;
+    font-size: 11px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; padding: 4px 14px; border-radius: 999px;
+  }
+  .pkg-name { font-size: 14px; font-weight: 600; color: var(--text2); margin-bottom: 12px; }
+  .pkg-price {
+    font-size: 40px; font-weight: 800; letter-spacing: -1px;
+    color: var(--text); margin-bottom: 4px; line-height: 1;
+  }
+  .pkg-period { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .pkg-features { list-style: none; margin-bottom: 28px; }
+  .pkg-features li {
+    font-size: 14px; color: var(--text2);
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .pkg-features li:last-child { border-bottom: none; }
+  .pkg-features li::before { content: "✓"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .pkg-btn {
+    display: block; text-align: center;
+    padding: 13px; border-radius: 9px; font-weight: 700; font-size: 14px;
+    transition: all .2s; cursor: pointer; border: none; width: 100%;
+  }
+  .pkg-btn-ghost {
+    background: rgba(62,207,142,.08); border: 1px solid rgba(62,207,142,.2);
+    color: var(--accent);
+  }
+  .pkg-btn-ghost:hover { background: rgba(62,207,142,.15); color: var(--accent); }
+  .pkg-btn-solid {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #080c09;
+    box-shadow: 0 0 20px rgba(62,207,142,.25);
+  }
+  .pkg-btn-solid:hover { box-shadow: 0 0 36px rgba(62,207,142,.4); color: #080c09; }
+
+  /* ══════════════════════════════════════════
+     SUBMISSION FORM
+  ══════════════════════════════════════════ */
+  .form-section { background: var(--bg); }
+
+  .form-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start;
+    margin-top: 56px;
+  }
+  .form-info h3 { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+  .form-info p  { font-size: 15px; color: var(--text2); line-height: 1.7; margin-bottom: 20px; }
+
+  .form-checklist { list-style: none; }
+  .form-checklist li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 14px; color: var(--text2);
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .form-checklist li:last-child { border-bottom: none; }
+  .form-checklist .chk {
+    width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+    background: rgba(62,207,142,.1); border: 1px solid rgba(62,207,142,.25);
+    border-radius: 5px; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--accent);
+  }
+
+  /* Form */
+  .form-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px;
+  }
+  .form-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .form-card .form-subtitle { font-size: 14px; color: var(--text2); margin-bottom: 28px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); letter-spacing: .04em; text-transform: uppercase; }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 9px; padding: 12px 14px;
+    color: var(--text); font-size: 14px; font-family: inherit;
+    transition: border-color .15s, box-shadow .15s;
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+  }
+  .form-group select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236a8a74' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: var(--muted); }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(62,207,142,.5);
+    box-shadow: 0 0 0 3px rgba(62,207,142,.1);
+  }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+
+  .form-submit {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #080c09; font-weight: 700; font-size: 15px;
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 0 20px rgba(62,207,142,.2);
+    margin-top: 6px;
+  }
+  .form-submit:hover { transform: translateY(-1px); box-shadow: 0 0 36px rgba(62,207,142,.4); }
+  .form-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+  .form-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.6; }
+
+  /* Success state */
+  .form-success {
+    display: none; text-align: center; padding: 40px 20px;
+  }
+  .form-success .success-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(62,207,142,.12); border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 20px;
+  }
+  .form-success h4 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+  .form-success p  { color: var(--text2); font-size: 15px; line-height: 1.65; }
+
+  /* ══════════════════════════════════════════
+     FAQ
+  ══════════════════════════════════════════ */
+  .faq-bg { background: var(--bg2); }
+
+  .faq-grid { margin-top: 56px; max-width: 740px; }
+  .faq-item {
+    border-bottom: 1px solid var(--border); overflow: hidden;
+  }
+  .faq-q {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0; background: none; border: none;
+    color: var(--text); font-size: 16px; font-weight: 600; cursor: pointer;
+    text-align: left; gap: 16px;
+  }
+  .faq-q:hover { color: var(--accent); }
+  .faq-arrow {
+    width: 24px; height: 24px; flex-shrink: 0;
+    background: rgba(62,207,142,.08); border: 1px solid rgba(62,207,142,.15);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--accent); transition: transform .25s;
+  }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden; transition: max-height .3s ease;
+  }
+  .faq-a-inner { padding: 0 0 20px; font-size: 15px; color: var(--text2); line-height: 1.7; }
+  .faq-item.open .faq-a { max-height: 300px; }
+
+  /* ══════════════════════════════════════════
+     CTA BANNER
+  ══════════════════════════════════════════ */
+  .cta-banner {
+    padding: 100px 40px; text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(62,207,142,.12) 0%, transparent 65%),
+      var(--bg);
+    position: relative; overflow: hidden;
+  }
+  .cta-banner h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; }
+  .cta-banner p  { font-size: 18px; color: var(--text2); max-width: 500px; margin: 0 auto 36px; }
+
+  /* ══════════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════════ */
+  .footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 48px 40px 32px;
+  }
+  .footer-inner {
+    max-width: 1060px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 40px; flex-wrap: wrap;
+  }
+  .footer-brand img { height: 26px; opacity: .8; margin-bottom: 12px; }
+  .footer-brand p { font-size: 13px; color: var(--muted); max-width: 280px; line-height: 1.6; }
+  .footer-links h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--text2); margin-bottom: 12px; }
+  .footer-links a  { display: block; font-size: 14px; color: var(--muted); margin-bottom: 8px; transition: color .15s; }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom {
+    max-width: 1060px; margin: 32px auto 0;
+    padding-top: 24px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; color: var(--muted); flex-wrap: wrap; gap: 12px;
+  }
+
+  /* ══════════════════════════════════════════
+     ANIMATIONS
+  ══════════════════════════════════════════ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: .4; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .nav { padding: 0 20px; }
+    .nav-links .hide-mobile { display: none; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .stat:nth-child(odd) { border-right: 1px solid var(--border); }
+    .stat:last-child, .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+    .benefits-grid { grid-template-columns: 1fr; }
+    .packages-grid { grid-template-columns: 1fr; }
+    .form-wrap { grid-template-columns: 1fr; gap: 40px; }
+    .form-row { grid-template-columns: 1fr; }
+    .section { padding: 72px 24px; }
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+    .footer-inner { flex-direction: column; }
+  }
+
+  @media (max-width: 600px) {
+    .nav-logo-text { display: none; }
+    .steps-grid { grid-template-columns: 1fr; }
+    .niches-grid { grid-template-columns: 1fr; }
+    .hero h1 { letter-spacing: -1px; }
+    .stats-inner { grid-template-columns: 1fr 1fr; }
+    .cta-banner { padding: 72px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────────────────────────────── -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">
+    <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia">
+    <span class="nav-logo-text">Content Network</span>
+  </div>
+  <div class="nav-links">
+    <a href="#network" class="hide-mobile">Our Network</a>
+    <a href="#how-it-works" class="hide-mobile">How It Works</a>
+    <a href="#packages" class="hide-mobile">Packages</a>
+    <a href="#submit" class="nav-cta">Get Featured</a>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div style="position:relative;z-index:1;max-width:820px">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Publishing across 20+ niche sites
+    </div>
+    <h1>Your brand, placed where<br><span>readers already trust us</span></h1>
+    <p class="hero-sub">
+      The Kavalsia Content Network is a portfolio of high-quality niche blogs covering finance, technology, investing, and more. We publish expert-level content daily — and we open select spots for brands that want to reach engaged, high-intent audiences.
+    </p>
+    <div class="hero-actions">
+      <a href="#submit" class="btn-primary">
+        Submit a Feature Request
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#network" class="btn-ghost">
+        Explore the Network
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ─────────────────────────────────────────────────────────────── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Active niche sites</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">500+</div>
+      <div class="stat-label">Articles published</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">12</div>
+      <div class="stat-label">Industries covered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Daily</div>
+      <div class="stat-label">Fresh content, every site</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ───────────────────────────────────────────────────────── -->
+<section class="section how-bg" id="how-it-works">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">How It Works</span>
+      <h2 class="section-title">From submission to<br>live placement in days</h2>
+      <p class="section-sub">No agency middleman. No guessing. You tell us your goals, we find the right placement in our network and make it happen.</p>
+    </div>
+    <div class="steps-grid reveal">
+      <div class="step-card">
+        <div class="step-num">Step 01</div>
+        <div class="step-icon">📋</div>
+        <h3>Submit your brief</h3>
+        <p>Tell us about your brand, what you want to promote, your target audience, and any key messages. The form below takes 3 minutes.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">Step 02</div>
+        <div class="step-icon">🎯</div>
+        <h3>We find the right fit</h3>
+        <p>We match your brand to the sites in our network where your audience already reads. No forced placements — only relevant, high-quality matches.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">Step 03</div>
+        <div class="step-icon">✍️</div>
+        <h3>Content is crafted</h3>
+        <p>Our editorial team creates or reviews the content. It reads like genuine editorial — because it is. No spammy ad copy, no obvious advertorials.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">Step 04</div>
+        <div class="step-icon">🚀</div>
+        <h3>Go live & track results</h3>
+        <p>Your feature goes live on the agreed sites. You get the direct URLs and a placement report. We also ping Google for fast indexing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NETWORK ────────────────────────────────────────────────────────────── -->
+<section class="section" id="network">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Our Network</span>
+      <h2 class="section-title">20+ sites, one audience:<br>people who want to learn</h2>
+      <p class="section-sub">Every site in our network covers a specific vertical in depth. Readers arrive with genuine intent — they're researching, comparing, and ready to act.</p>
+    </div>
+    <div class="niches-grid reveal">
+      <div class="niche-card">
+        <div class="niche-icon">📈</div>
+        <h3>Crypto & Trading</h3>
+        <p>Algorithmic trading, exchange comparisons, market analysis, and DeFi deep-dives for a technically-minded audience.</p>
+        <span class="niche-pill">High-intent readers</span>
+      </div>
+      <div class="niche-card">
+        <div class="niche-icon">💰</div>
+        <h3>Personal Finance</h3>
+        <p>Budgeting, investing, passive income, FIRE movement, and financial independence. A large, evergreen readership.</p>
+        <span class="niche-pill">Broad audience</span>
+      </div>
+      <div class="niche-card">
+        <div class="niche-icon">🤖</div>
+        <h3>Trading Technology</h3>
+        <p>Developer-focused content covering APIs, bots, backtesting, and fintech tools. Readers build things with money.</p>
+        <span class="niche-pill">Developer audience</span>
+      </div>
+      <div class="niche-card">
+        <div class="niche-icon">🏠</div>
+        <h3>Real Estate</h3>
+        <p>Property investment, rental income, market analysis, and mortgage guides for aspiring and experienced investors.</p>
+        <span class="niche-pill">High AOV decisions</span>
+      </div>
+      <div class="niche-card">
+        <div class="niche-icon">💼</div>
+        <h3>Business & Entrepreneurship</h3>
+        <p>Startup strategy, growth tactics, SaaS, e-commerce, and solopreneur content for ambitious founders.</p>
+        <span class="niche-pill">Decision makers</span>
+      </div>
+      <div class="niche-card">
+        <div class="niche-icon">🌱</div>
+        <h3>Sustainable Investing</h3>
+        <p>ESG, green finance, impact investing, and responsible portfolio building for values-driven investors.</p>
+        <span class="niche-pill">Growing fast</span>
+      </div>
+      <div class="niche-card">
+        <div class="niche-icon">📊</div>
+        <h3>Stock Market</h3>
+        <p>Dividend investing, value analysis, ETFs, and portfolio strategy for long-term retail investors.</p>
+        <span class="niche-pill">High retention</span>
+      </div>
+      <div class="niche-card">
+        <div class="niche-icon">⚙️</div>
+        <h3>Fintech & Tools</h3>
+        <p>App reviews, platform comparisons, digital banking, and investing tool roundups. Readers are actively evaluating products.</p>
+        <span class="niche-pill">Purchase intent</span>
+      </div>
+      <div class="niche-card" style="border-style:dashed;opacity:.7">
+        <div class="niche-icon">➕</div>
+        <h3>More verticals</h3>
+        <p>We're continuously adding new sites. If your niche isn't listed, tell us in the form — we likely have something relevant or can add it.</p>
+        <span class="niche-pill">Ask us</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY BE FEATURED ────────────────────────────────────────────────────── -->
+<section class="section why-bg" id="why">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Why Get Featured</span>
+      <h2 class="section-title">Real editorial placement.<br>Real audience reach.</h2>
+      <p class="section-sub">We don't sell banner ads. Every placement is a genuine editorial feature — contextual, valuable to the reader, and built to rank.</p>
+    </div>
+    <div class="benefits-grid reveal">
+      <div class="benefit-card">
+        <div class="benefit-icon">🔗</div>
+        <div>
+          <h3>Do-follow backlinks that hold</h3>
+          <p>Every featured article links back to your site with contextually relevant anchor text. Our sites are indexed, maintained, and publishing regularly — the kind of links Google values.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🎯</div>
+        <div>
+          <h3>Audience that's already buying</h3>
+          <p>Our readers arrive because they're researching a decision. Crypto tools, investment platforms, fintech products — high-intent traffic that converts well above average display placements.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📍</div>
+        <div>
+          <h3>Indexed within hours</h3>
+          <p>We ping Google Indexing API the moment every article goes live. Your feature doesn't wait weeks to appear in search — it starts working immediately.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🌐</div>
+        <div>
+          <h3>Multi-site coverage available</h3>
+          <p>Place your brand across multiple sites in our network for broader reach. Same message, different audiences, different angles — or tailored content per site.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">✅</div>
+        <div>
+          <h3>Editorial that doesn't read like an ad</h3>
+          <p>Our content is written to inform, not to sell. Readers trust editorial more than ads. That trust transfers to your brand, and it's what makes these placements worth more than a banner.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📈</div>
+        <div>
+          <h3>Evergreen visibility</h3>
+          <p>Articles stay live permanently and continue attracting organic search traffic. You're not buying a 30-day ad slot — you're getting a permanent asset that compounds over time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PACKAGES ────────────────────────────────────────────────────────────── -->
+<section class="section" id="packages">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-tag">Packages</span>
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-sub" style="margin:0 auto">No contracts. No retainers. Pay per placement and scale as results come in.</p>
+    </div>
+    <div class="packages-grid reveal">
+
+      <div class="pkg">
+        <div class="pkg-name">Starter</div>
+        <div class="pkg-price">$149</div>
+        <div class="pkg-period">per placement</div>
+        <ul class="pkg-features">
+          <li>1 featured article</li>
+          <li>1 site in the network</li>
+          <li>Do-follow backlink</li>
+          <li>Google indexing ping</li>
+          <li>Placement URL report</li>
+        </ul>
+        <a href="#submit" class="pkg-btn pkg-btn-ghost">Get started</a>
+      </div>
+
+      <div class="pkg featured">
+        <div class="pkg-badge">Most Popular</div>
+        <div class="pkg-name">Growth</div>
+        <div class="pkg-price">$349</div>
+        <div class="pkg-period">per campaign</div>
+        <ul class="pkg-features">
+          <li>3 featured articles</li>
+          <li>3 different niche sites</li>
+          <li>Do-follow backlinks</li>
+          <li>Custom anchor text</li>
+          <li>Google indexing ping</li>
+          <li>Full placement report</li>
+        </ul>
+        <a href="#submit" class="pkg-btn pkg-btn-solid">Get started</a>
+      </div>
+
+      <div class="pkg">
+        <div class="pkg-name">Network</div>
+        <div class="pkg-price">$799</div>
+        <div class="pkg-period">per campaign</div>
+        <ul class="pkg-features">
+          <li>8 featured articles</li>
+          <li>Up to 8 sites</li>
+          <li>Do-follow backlinks</li>
+          <li>Custom anchor text</li>
+          <li>Google indexing ping</li>
+          <li>Full placement report</li>
+          <li>Priority scheduling</li>
+        </ul>
+        <a href="#submit" class="pkg-btn pkg-btn-ghost">Get started</a>
+      </div>
+
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--muted);margin-top:24px">
+      Need something custom? Mention it in the form — we work with brands on bespoke arrangements.
+    </p>
+  </div>
+</section>
+
+<!-- ── SUBMISSION FORM ────────────────────────────────────────────────────── -->
+<section class="section form-section" id="submit">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center">
+      <span class="section-tag">Get Featured</span>
+      <h2 class="section-title">Tell us about your brand</h2>
+      <p class="section-sub" style="margin:0 auto">Fill in the form and we'll get back to you within 1 business day with a tailored placement recommendation.</p>
+    </div>
+    <div class="form-wrap reveal">
+
+      <!-- Left: what to expect -->
+      <div class="form-info">
+        <h3>What happens after you submit</h3>
+        <p>We review every submission manually. If your brand is a good fit for our network, we'll send you a specific proposal — which sites, which angles, and exact pricing. No vague quotes, no upsell calls.</p>
+        <ul class="form-checklist">
+          <li><span class="chk">✓</span> Response within 1 business day</li>
+          <li><span class="chk">✓</span> Specific site recommendations (not generic)</li>
+          <li><span class="chk">✓</span> Sample articles from shortlisted sites</li>
+          <li><span class="chk">✓</span> Clear pricing before anything is agreed</li>
+          <li><span class="chk">✓</span> No obligation to proceed after the proposal</li>
+          <li><span class="chk">✓</span> Live within 48–72 hours once confirmed</li>
+        </ul>
+        <p style="margin-top:24px;font-size:14px">
+          Questions first? Email us at
+          <a href="mailto:network@kavalsia.com" style="color:var(--accent)">network@kavalsia.com</a>
+        </p>
+      </div>
+
+      <!-- Right: form -->
+      <div class="form-card">
+        <h3>Feature Request</h3>
+        <p class="form-subtitle">Takes about 3 minutes. The more detail the better.</p>
+
+        <form id="featureForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">First name *</label>
+              <input type="text" id="fname" name="first_name" placeholder="Alex" required>
+            </div>
+            <div class="form-group">
+              <label for="lname">Last name *</label>
+              <input type="text" id="lname" name="last_name" placeholder="Johnson" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Business email *</label>
+            <input type="email" id="email" name="email" placeholder="you@company.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="website">Your website / URL *</label>
+            <input type="url" id="website" name="website" placeholder="https://yoursite.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="business">Business / product name *</label>
+            <input type="text" id="business" name="business_name" placeholder="Your company or product" required>
+          </div>
+
+          <div class="form-group">
+            <label for="niche">Best matching niche *</label>
+            <select id="niche" name="niche" required>
+              <option value="" disabled selected>Select a niche…</option>
+              <option>Crypto & Trading</option>
+              <option>Personal Finance</option>
+              <option>Trading Technology</option>
+              <option>Real Estate</option>
+              <option>Business & Entrepreneurship</option>
+              <option>Sustainable Investing</option>
+              <option>Stock Market</option>
+              <option>Fintech & Tools</option>
+              <option>Other / Not sure</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="package">Package interest</label>
+            <select id="package" name="package">
+              <option value="" disabled selected>Select a package…</option>
+              <option>Starter — $149 (1 article, 1 site)</option>
+              <option>Growth — $349 (3 articles, 3 sites)</option>
+              <option>Network — $799 (8 articles, up to 8 sites)</option>
+              <option>Custom / Not sure yet</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">What do you want to promote? *</label>
+            <textarea id="message" name="message" placeholder="Tell us about your product or service, your target audience, and any key talking points you want covered. The more detail you give us, the better our placement recommendation will be." required></textarea>
+          </div>
+
+          <button type="submit" class="form-submit" id="submitBtn">
+            Send Feature Request →
+          </button>
+          <p class="form-note">By submitting this form you agree to be contacted about your request. We don't add you to any mailing list.</p>
+        </form>
+
+        <div class="form-success" id="formSuccess">
+          <div class="success-icon">✓</div>
+          <h4>Request received!</h4>
+          <p>We'll review your submission and come back to you within 1 business day with a specific placement proposal.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ────────────────────────────────────────────────────────────────── -->
+<section class="section faq-bg" id="faq">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">FAQ</span>
+      <h2 class="section-title">Common questions</h2>
+    </div>
+    <div class="faq-grid reveal">
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Are the articles marked as sponsored or advertising?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Affiliate links within articles use <code>rel="sponsored"</code> as required. Feature articles are written editorially — they read as genuine content, not advertorials. We don't add "Sponsored Post" labels that undermine trust. Google's guidance focuses on link attributes (which we follow), not on content labels.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          How long do placements stay live?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Permanently. Articles are hosted on GitHub Pages at no ongoing cost and we don't remove them unless there's a factual error or your request. The backlink and organic traffic compound over time — it's an asset, not an ad slot.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Can I provide my own content, or do you write it?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Both. You can submit a draft or talking points and we'll refine it to match the site's voice, or you can brief us and we'll write the full piece. Either way, you approve the final version before it goes live.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          How do I know the traffic is real?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Our sites run Cloudflare Web Analytics (no cookies, privacy-first). We can share traffic reports for the specific sites you're placed on. Traffic comes from organic search — these aren't PBN spam sites, they're content-first blogs with topical authority built over time.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          What industries or products do you not work with?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">We don't accept gambling, adult content, get-rich-quick schemes, or products that make demonstrably false claims. We also won't feature something that isn't relevant to any site in our network. If your submission doesn't fit, we'll tell you why so you can look elsewhere.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          How quickly can a placement go live?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner">Typically 48–72 hours from payment confirmation. We prioritize the review and content creation queue based on when payment is received. If you need something live faster, mention it in the form and we'll do our best.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BANNER ─────────────────────────────────────────────────────────── -->
+<section class="cta-banner">
+  <div style="position:relative;z-index:1">
+    <span class="section-tag" style="margin-bottom:20px;display:inline-block">Ready to get placed?</span>
+    <h2>Reach readers who are<br>already researching what you sell</h2>
+    <p>A 3-minute form is all it takes to get a tailored placement proposal from us.</p>
+    <a href="#submit" class="btn-primary" style="display:inline-flex">
+      Submit a Feature Request
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="https://kavalsia.com/kavalfiles/2024/12/cropped-Kavalsia-Logo-Digitalmarketing-agency.webp" alt="Kavalsia">
+      <p>A network of niche content sites connecting brands with engaged, high-intent readers.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Network</h4>
+      <a href="#network">Our Sites</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#packages">Packages</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-links">
+      <h4>Company</h4>
+      <a href="https://kavalsia.com" target="_blank">Kavalsia.com</a>
+      <a href="mailto:network@kavalsia.com">Contact Us</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Kavalsia Inc. All rights reserved.</span>
+    <span>Content placements are clearly disclosed where required by law.</span>
+  </div>
+</footer>
+
+<script>
+// ── Scroll reveal ───────────────────────────────────────────────────────────
+const observer = new IntersectionObserver(
+  (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.08 }
+);
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Nav scroll effect ───────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').style.background =
+    window.scrollY > 60 ? 'rgba(8,12,9,0.97)' : 'rgba(8,12,9,0.85)';
+}, { passive: true });
+
+// ── FAQ accordion ───────────────────────────────────────────────────────────
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+// ── Form submission ─────────────────────────────────────────────────────────
+const form      = document.getElementById('featureForm');
+const submitBtn = document.getElementById('submitBtn');
+const success   = document.getElementById('formSuccess');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Basic validation
+  const required = form.querySelectorAll('[required]');
+  let valid = true;
+  required.forEach(field => {
+    field.style.borderColor = '';
+    if (!field.value.trim()) {
+      field.style.borderColor = 'rgba(239,68,68,.6)';
+      field.style.boxShadow   = '0 0 0 3px rgba(239,68,68,.1)';
+      valid = false;
+    }
+  });
+  if (!valid) { required[0].focus(); return; }
+
+  submitBtn.disabled    = true;
+  submitBtn.textContent = 'Sending…';
+
+  const action = form.action;
+
+  // If Formspree is not configured, simulate success for demo
+  if (action.includes('YOUR_FORM_ID')) {
+    await new Promise(r => setTimeout(r, 1200));
+    showSuccess();
+    return;
+  }
+
+  try {
+    const res = await fetch(action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      showSuccess();
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (err) {
+    submitBtn.disabled    = false;
+    submitBtn.textContent = 'Send Feature Request →';
+    alert('Something went wrong. Please email us directly at network@kavalsia.com');
+  }
+});
+
+function showSuccess() {
+  form.style.display    = 'none';
+  success.style.display = 'block';
+}
+
+// Reset red borders on input
+form.querySelectorAll('input, select, textarea').forEach(field => {
+  field.addEventListener('input', () => {
+    field.style.borderColor = '';
+    field.style.boxShadow   = '';
+  });
+});
+
+// ── Smooth scroll for anchor links ──────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
