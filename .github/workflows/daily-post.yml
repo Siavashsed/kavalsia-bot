@@ -1,0 +1,28 @@
+name: Daily Post
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+    inputs:
+      site_id:
+        description: 'Site ID to post to (leave blank for all active)'
+        required: false
+        default: ''
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run bot
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN:      ${{ secrets.GH_PAT }}
+          PEXELS_API_KEY:    ${{ secrets.PEXELS_API_KEY }}
+          BREVO_API_KEY:     ${{ secrets.BREVO_API_KEY }}
+        run: python bot.py ${{ github.event.inputs.site_id }}
