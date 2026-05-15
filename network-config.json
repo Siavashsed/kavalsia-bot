@@ -493,8 +493,7 @@
       },
       "warming": {
         "enabled": true,
-        "started": "",
-        "phase": "new"
+        "started": ""
       },
       "social_media": {
         "enabled": false,
@@ -519,7 +518,9 @@
         "Treble vs bass clef — strategies for the weaker hand",
         "Sight-reading in different time signatures without counting out loud",
         "How long it actually takes to become a confident sight-reader"
-      ]
+      ],
+      "date_mode": "distributed",
+      "site_prompt": ""
     },
     {
       "id": "newborn-iq",
