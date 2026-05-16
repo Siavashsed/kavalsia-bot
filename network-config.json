@@ -493,7 +493,8 @@
       },
       "warming": {
         "enabled": true,
-        "started": ""
+        "started": "",
+        "phase": "new"
       },
       "social_media": {
         "enabled": false,
@@ -518,9 +519,7 @@
         "Treble vs bass clef — strategies for the weaker hand",
         "Sight-reading in different time signatures without counting out loud",
         "How long it actually takes to become a confident sight-reader"
-      ],
-      "date_mode": "distributed",
-      "site_prompt": ""
+      ]
     },
     {
       "id": "newborn-iq",
@@ -892,7 +891,7 @@
       "layout": "newsfeed",
       "article_layout": "sidebar",
       "tone": "no-nonsense and science-based, like a personal trainer who has heard every excuse and respects no-BS results.",
-      "persona": "Coach Marcus Webb, NASM-certified trainer with 12 years in commercial gyms",
+      "persona": "Coach Rachel Stone, NASM-certified personal trainer and corrective exercise specialist with 10 years training competitive athletes",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
