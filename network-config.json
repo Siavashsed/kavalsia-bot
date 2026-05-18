@@ -50,6 +50,20 @@
   "affiliate_links": {},
   "sites": [
     {
+      "id": "nexus",
+      "active": false,
+      "domain": "siavashsed.github.io/nexus",
+      "repo": "Siavashsed/nexus",
+      "category": "Content Network Hub",
+      "theme": "dark",
+      "layout": "nexus",
+      "tone": "editorial",
+      "persona": "Nexus Editorial Team",
+      "articles_per_day": 0,
+      "is_mother_site": true,
+      "nav_style": "dark"
+    },
+    {
       "id": "cryptopulse",
       "active": false,
       "domain": "siavashsed.github.io/cryptopulse",
@@ -59,7 +73,7 @@
       "layout": "newsfeed",
       "article_layout": "sidebar",
       "tone": "analytical and data-driven, like a Bloomberg journalist covering crypto. Use specific numbers. Cut through hype.",
-      "persona": "Marcus Chen, ex-quant trader covering algorithmic crypto strategies for a technical audience",
+      "persona": "Siavash Sadighi, ex-quant trader covering algorithmic crypto strategies for a technical audience",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -109,7 +123,11 @@
         "Crypto market cycles: reading data not headlines"
       ],
       "articles_per_day": 1,
-      "nav_style": "terminal"
+      "nav_style": "terminal",
+      "author_names": [
+        "Siavash Sadighi"
+      ],
+      "use_random_author": false
     },
     {
       "id": "passive-wealth",
@@ -121,7 +139,7 @@
       "layout": "magazine",
       "article_layout": "standard",
       "tone": "warm and practical, like a financially-savvy friend. Jargon-light, real examples, honest about risks.",
-      "persona": "Sarah Mills, certified financial planner who retired at 41 through passive income",
+      "persona": "Siavash Sadighi, certified financial planner who retired at 41 through passive income",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -171,7 +189,11 @@
         "Side hustles that become passive income streams"
       ],
       "articles_per_day": 1,
-      "nav_style": "leaf"
+      "nav_style": "leaf",
+      "author_names": [
+        "Siavash Sadighi"
+      ],
+      "use_random_author": false
     },
     {
       "id": "trading-tech",
@@ -183,7 +205,7 @@
       "layout": "newsfeed",
       "article_layout": "sidebar",
       "tone": "developer-first, technically precise, like a senior software engineer reviewing fintech tools.",
-      "persona": "Alex Rivera, software engineer turned full-time algorithmic trader",
+      "persona": "Siavash Sadighi, software engineer turned full-time algorithmic trader",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -233,7 +255,11 @@
         "Debugging a trading bot that worked in backtests but fails live"
       ],
       "articles_per_day": 1,
-      "nav_style": "pulse"
+      "nav_style": "pulse",
+      "author_names": [
+        "Siavash Sadighi"
+      ],
+      "use_random_author": false
     },
     {
       "id": "ai-marketing",
@@ -245,7 +271,7 @@
       "layout": "magazine",
       "article_layout": "magazine",
       "tone": "confident and results-focused, like a senior performance marketer who has run $10M+ in ad spend.",
-      "persona": "Jordan Blake, performance marketing director turned AI marketing consultant",
+      "persona": "Siavash Sadighi, performance marketing director turned AI marketing consultant",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -295,7 +321,11 @@
         "How to prompt AI for landing page copy that converts"
       ],
       "articles_per_day": 1,
-      "nav_style": "neon"
+      "nav_style": "neon",
+      "author_names": [
+        "Siavash Sadighi"
+      ],
+      "use_random_author": false
     },
     {
       "id": "ecommerce-edge",
@@ -307,7 +337,7 @@
       "layout": "magazine",
       "article_layout": "standard",
       "tone": "tactical and conversion-focused, like a Shopify Plus expert who has launched 50 stores.",
-      "persona": "Nina Patel, ecommerce consultant specializing in DTC brand scaling",
+      "persona": "Siavash Sadighi, ecommerce consultant specializing in DTC brand scaling",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -357,7 +387,11 @@
         "The ecommerce metrics that actually predict profitability"
       ],
       "articles_per_day": 1,
-      "nav_style": "grid"
+      "nav_style": "grid",
+      "author_names": [
+        "Siavash Sadighi"
+      ],
+      "use_random_author": false
     },
     {
       "id": "mochapoo-pets",
@@ -408,15 +442,17 @@
       "footer_scripts": "",
       "topics": [
         "Mochapoo temperament: what first-time owners need to know",
-        "Best food for Mochapoo puppies — ingredient-by-ingredient breakdown",
+        "Best food for Mochapoo puppies - ingredient-by-ingredient breakdown",
         "How to crate train a Mochapoo without stress",
-        "Mochapoo grooming schedule — what professionals actually do",
+        "Mochapoo grooming schedule - what professionals actually do",
         "Common health issues in doodle breeds and how to prevent them",
         "How much exercise does a Mochapoo actually need?",
         "Training a Mochapoo: what works and what backfires",
-        "Best toys for intelligent mixed breeds that get bored easily",
+        "Why Sphynx cats are one of the most intelligent and emotionally complex breeds alive",
         "Mochapoo vs Labradoodle: which is right for your lifestyle",
-        "Understanding separation anxiety in Poodle mix breeds"
+        "Understanding separation anxiety in Poodle mix breeds",
+        "Sphynx cats: the science behind their extraordinary personality and social intelligence",
+        "What makes the Sphynx cat different from every other breed you have ever met"
       ],
       "articles_per_day": 1,
       "nav_style": "leaf"
@@ -679,7 +715,7 @@
       "layout": "magazine",
       "article_layout": "sidebar",
       "tone": "direct and no-fluff, like a bootstrapped founder who has built and sold three businesses.",
-      "persona": "Ryan Cho, serial entrepreneur and startup advisor",
+      "persona": "Siavash Sadighi, serial entrepreneur and startup advisor",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -729,7 +765,11 @@
         "When to hire vs when to use freelancers"
       ],
       "articles_per_day": 1,
-      "nav_style": "stack"
+      "nav_style": "stack",
+      "author_names": [
+        "Siavash Sadighi"
+      ],
+      "use_random_author": false
     },
     {
       "id": "sportiq-pro",
@@ -1046,12 +1086,17 @@
       "active": true,
       "domain": "siavashsed.github.io/kanona-events",
       "repo": "Siavashsed/kanona-events",
-      "category": "Event Planning & Venues",
-      "theme": "light",
+      "name": "Kanona Projects",
+      "category": "Experiential Events & Atmosphere",
+      "theme": "dark",
       "layout": "magazine",
       "article_layout": "standard",
-      "tone": "organized and detail-oriented, like a seasoned event producer who has run 500+ events.",
-      "persona": "Karen Anoa, professional event planner and venue consultant",
+      "tone": "intimate and cinematic, like a director describing a scene. Write about sensory experience - the smell of a room, the weight of silence before music starts, what it feels like when an event becomes a memory. Speak to curious minds who want to experience something beyond the ordinary.",
+      "persona": "Kani Sedighi, experiential event curator and creative director",
+      "author_names": [
+        "Kani Sedighi"
+      ],
+      "use_random_author": false,
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -1089,16 +1134,16 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
-        "How to plan a corporate event on a tight budget",
-        "Venue selection checklist: what to ask before you sign",
-        "Why events run over budget — and how to stop it",
-        "AV setup basics that non-technical planners need to know",
-        "How to negotiate venue contracts to your advantage",
-        "Building a run-of-show document that actually works",
-        "Catering quantities: how to calculate food without wasting half",
-        "The vendor management system that keeps events on track",
-        "Virtual vs in-person events: when hybrid makes sense",
-        "Post-event surveys that generate useful feedback"
+        "How scent shapes memory at high-end private dinners",
+        "The role of silence in a perfectly curated event atmosphere",
+        "What separates a gathering from an experience that lasts years",
+        "Designing sensory contrast: how darkness makes light more powerful",
+        "The psychology of expectation at invitation-only events",
+        "Music selection as emotional architecture for intimate gatherings",
+        "How a single room can carry the weight of an unforgettable evening",
+        "The art of the unrepeatable: why the best events never happen twice",
+        "Curious minds at the table: curating guest dynamics for depth",
+        "When food becomes philosophy: menus designed around a feeling"
       ],
       "articles_per_day": 1,
       "nav_style": "dark"
@@ -1409,6 +1454,75 @@
         "How to find non-touristy food in a tourist city",
         "Border crossings: what no travel blog prepares you for",
         "The honest truth about digital nomad life after 2 years"
+      ],
+      "articles_per_day": 1,
+      "nav_style": "dark"
+    },
+    {
+      "id": "topproduct",
+      "active": true,
+      "domain": "siavashsed.github.io/topproduct",
+      "repo": "Siavashsed/topproduct",
+      "tpl": "topproduct",
+      "category": "Product Reviews & Buying Guides",
+      "theme": "light",
+      "layout": "editorial",
+      "article_layout": "standard",
+      "tone": "direct and trustworthy, like a friend who has already bought and tested the product and gives you the honest answer without brand partnerships clouding the advice.",
+      "persona": "Siavash Sadighi",
+      "author": "Siavash Sadighi",
+      "brevo_list_id": null,
+      "signup_url": "",
+      "adsense_publisher_id": "",
+      "publish_delay_max_seconds": 3600,
+      "giscus_repo_id": "",
+      "giscus_category_id": "",
+      "comment_schedule": {
+        "enabled": false,
+        "initial_count": 6,
+        "max_count": 15,
+        "add_per_day": 2,
+        "delay_days": 0
+      },
+      "client": {
+        "enabled": false,
+        "business_name": "",
+        "description": "",
+        "post_every_n": 7
+      },
+      "warming": {
+        "enabled": true,
+        "started": "",
+        "phase": "new"
+      },
+      "social_media": {
+        "enabled": false,
+        "webhook_url": "",
+        "twitter_enabled": false,
+        "twitter_bearer_token": "",
+        "linkedin_enabled": false,
+        "linkedin_token": "",
+        "linkedin_org_id": ""
+      },
+      "affiliate_links": {},
+      "header_scripts": "",
+      "footer_scripts": "",
+      "topics": [
+        "The 7 products TikTok discovered that are actually worth buying",
+        "Best wireless earbuds under $60 - we tested 9 options",
+        "The compact air fryer that replaced our oven for 80 percent of meals",
+        "Skincare products that dermatologists actually use themselves",
+        "Best linen bedding brands ranked after 3 months of testing",
+        "Resistance bands vs dumbbells: which builds muscle faster at home",
+        "Complete home gym for a small apartment on a $300 budget",
+        "Are LED face masks actually worth $200 - 90 day test",
+        "Portable blenders ranked: 200 smoothies to find the best one",
+        "The kitchen gadgets that are worth the counter space",
+        "Best budget laptops for remote work in 2026",
+        "TikTok beauty dupes that actually work as well as the originals",
+        "Smart home devices that actually save time vs ones that waste it",
+        "The best running shoes for flat feet tested by a podiatrist",
+        "Coffee gear worth buying if you want to stop spending at cafes"
       ],
       "articles_per_day": 1,
       "nav_style": "dark"
