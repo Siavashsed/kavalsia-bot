@@ -47,7 +47,7 @@
       "domain": "siavashsed.github.io/cryptopulse",
       "repo": "Siavashsed/cryptopulse",
       "category": "Crypto & Algorithmic Trading",
-      "theme": "dark",
+      "theme": "light",
       "layout": "newsfeed",
       "article_layout": "sidebar",
       "tone": "analytical and data-driven, like a Bloomberg journalist covering crypto. Use specific numbers. Cut through hype.",
@@ -73,8 +73,7 @@
       },
       "warming": {
         "enabled": true,
-        "started": "",
-        "phase": "new"
+        "started": ""
       },
       "social_media": {
         "enabled": false,
@@ -99,7 +98,9 @@
         "How to build a trading bot without losing your shirt",
         "The psychology of FOMO and how algorithms exploit it",
         "Crypto market cycles: reading data not headlines"
-      ]
+      ],
+      "date_mode": "distributed",
+      "site_prompt": ""
     },
     {
       "id": "passive-wealth",
@@ -493,8 +494,7 @@
       },
       "warming": {
         "enabled": true,
-        "started": "",
-        "phase": "new"
+        "started": ""
       },
       "social_media": {
         "enabled": false,
@@ -519,7 +519,9 @@
         "Treble vs bass clef — strategies for the weaker hand",
         "Sight-reading in different time signatures without counting out loud",
         "How long it actually takes to become a confident sight-reader"
-      ]
+      ],
+      "date_mode": "distributed",
+      "site_prompt": ""
     },
     {
       "id": "newborn-iq",
@@ -891,7 +893,7 @@
       "layout": "newsfeed",
       "article_layout": "sidebar",
       "tone": "no-nonsense and science-based, like a personal trainer who has heard every excuse and respects no-BS results.",
-      "persona": "Coach Rachel Stone, NASM-certified personal trainer and corrective exercise specialist with 10 years training competitive athletes",
+      "persona": "Coach Marcus Webb, NASM-certified trainer with 12 years in commercial gyms",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
