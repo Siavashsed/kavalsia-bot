@@ -102,7 +102,8 @@
         "The psychology of FOMO and how algorithms exploit it",
         "Crypto market cycles: reading data not headlines"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "terminal"
     },
     {
       "id": "passive-wealth",
@@ -163,7 +164,8 @@
         "How compound interest actually works over 30 years",
         "Side hustles that become passive income streams"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "leaf"
     },
     {
       "id": "trading-tech",
@@ -224,7 +226,8 @@
         "How to paper trade before risking real capital",
         "Debugging a trading bot that worked in backtests but fails live"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "pulse"
     },
     {
       "id": "ai-marketing",
@@ -285,7 +288,8 @@
         "AI tools that actually save time in a marketing workflow",
         "How to prompt AI for landing page copy that converts"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "ecommerce-edge",
@@ -346,7 +350,8 @@
         "Reducing customer acquisition cost through referral loops",
         "The ecommerce metrics that actually predict profitability"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "grid"
     },
     {
       "id": "mochapoo-pets",
@@ -407,7 +412,8 @@
         "Mochapoo vs Labradoodle: which is right for your lifestyle",
         "Understanding separation anxiety in Poodle mix breeds"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "leaf"
     },
     {
       "id": "supplement-verge",
@@ -468,7 +474,8 @@
         "How to read a supplement label for actual quality signals",
         "Which protein powder survives third-party testing"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "pulse"
     },
     {
       "id": "sight-reading",
@@ -529,7 +536,8 @@
         "Sight-reading in different time signatures without counting out loud",
         "How long it actually takes to become a confident sight-reader"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "leaf"
     },
     {
       "id": "newborn-iq",
@@ -590,7 +598,8 @@
         "Postpartum recovery: what nobody tells you in the hospital",
         "Building a daily routine with a newborn that isn't miserable"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "dalmend-home",
@@ -651,7 +660,8 @@
         "Landscaping ROI: what actually increases curb appeal",
         "How to declutter a home before selling without regrets"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "leaf"
     },
     {
       "id": "onlinebiz-pro",
@@ -712,7 +722,8 @@
         "How to land your first consulting client via LinkedIn",
         "When to hire vs when to use freelancers"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "pulse"
     },
     {
       "id": "sportiq-pro",
@@ -773,7 +784,8 @@
         "Nutrition timing around training — what the latest research says",
         "Why most athletes train too much and recover too little"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "makeup-craft",
@@ -834,7 +846,8 @@
         "Setting spray vs setting powder — when to use which",
         "The application tools that make the biggest difference"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "dating-edge",
@@ -895,7 +908,8 @@
         "Long-distance relationships: what the research actually shows",
         "Breaking patterns: how to stop dating the same person in different bodies"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "fitpulse-pro",
@@ -956,7 +970,8 @@
         "Gym anxiety: the honest advice nobody gives beginners",
         "What six months of consistent training actually looks like"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "mashestate-home",
@@ -1017,7 +1032,8 @@
         "Short-term vs long-term rental: the 2025 numbers",
         "Reading a real estate market before everyone else does"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "grid"
     },
     {
       "id": "kanona-events",
@@ -1078,7 +1094,8 @@
         "Virtual vs in-person events: when hybrid makes sense",
         "Post-event surveys that generate useful feedback"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "dalmend-gifts",
@@ -1139,7 +1156,8 @@
         "Experiences vs things: what the research says about gift satisfaction",
         "The gifting mistakes that signal you don't really know someone"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "leaf"
     },
     {
       "id": "mashestate-construction",
@@ -1200,7 +1218,8 @@
         "Foundation issues: what's serious and what's cosmetic",
         "How long a renovation actually takes — a realistic timeline"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "insight-insure",
@@ -1261,7 +1280,8 @@
         "How to switch insurance providers without a gap in coverage",
         "The fine print in insurance policies that costs people the most"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     },
     {
       "id": "carverge",
@@ -1322,7 +1342,8 @@
         "EV battery degradation: what owners actually report",
         "Hybrid vs full EV: the decision framework"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "pulse"
     },
     {
       "id": "travelverge",
@@ -1383,7 +1404,8 @@
         "Border crossings: what no travel blog prepares you for",
         "The honest truth about digital nomad life after 2 years"
       ],
-      "articles_per_day": 1
+      "articles_per_day": 1,
+      "nav_style": "default"
     }
   ]
 }
