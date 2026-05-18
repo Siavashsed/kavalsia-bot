@@ -39,7 +39,13 @@
       "enabled": false,
       "api_token": "",
       "account_id": ""
-    }
+    },
+    "image_sources": [
+      "pexels",
+      "unsplash"
+    ],
+    "unsplash_api_key_secret": "UNSPLASH_API_KEY",
+    "replicate_api_key_secret": "REPLICATE_API_KEY"
   },
   "affiliate_links": {},
   "sites": [
