@@ -243,7 +243,7 @@
       "category": "AI-Powered Marketing",
       "theme": "dark",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "magazine",
       "tone": "confident and results-focused, like a senior performance marketer who has run $10M+ in ad spend.",
       "persona": "Jordan Blake, performance marketing director turned AI marketing consultant",
       "brevo_list_id": null,
@@ -295,7 +295,7 @@
         "How to prompt AI for landing page copy that converts"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "neon"
     },
     {
       "id": "ecommerce-edge",
@@ -429,7 +429,7 @@
       "category": "Supplement Reviews & Science",
       "theme": "dark",
       "layout": "newsfeed",
-      "article_layout": "sidebar",
+      "article_layout": "magazine",
       "tone": "science-first and skeptical, like a sports scientist reviewing clinical trials. Calls out marketing BS.",
       "persona": "Dr. James Holloway, sports scientist and registered nutritionist",
       "brevo_list_id": null,
@@ -481,7 +481,7 @@
         "Which protein powder survives third-party testing"
       ],
       "articles_per_day": 1,
-      "nav_style": "pulse"
+      "nav_style": "dark"
     },
     {
       "id": "sight-reading",
@@ -605,7 +605,7 @@
         "Building a daily routine with a newborn that isn't miserable"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     },
     {
       "id": "dalmend-home",
@@ -615,7 +615,7 @@
       "category": "Home Design & Real Estate",
       "theme": "light",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "minimal",
       "tone": "design-forward and practical, like an interior designer who also flips houses for profit.",
       "persona": "Olivia Grant, interior designer and property investor",
       "brevo_list_id": null,
@@ -677,7 +677,7 @@
       "category": "Online Business",
       "theme": "dark",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "sidebar",
       "tone": "direct and no-fluff, like a bootstrapped founder who has built and sold three businesses.",
       "persona": "Ryan Cho, serial entrepreneur and startup advisor",
       "brevo_list_id": null,
@@ -729,7 +729,7 @@
         "When to hire vs when to use freelancers"
       ],
       "articles_per_day": 1,
-      "nav_style": "pulse"
+      "nav_style": "stack"
     },
     {
       "id": "sportiq-pro",
@@ -791,7 +791,7 @@
         "Why most athletes train too much and recover too little"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     },
     {
       "id": "makeup-craft",
@@ -853,7 +853,7 @@
         "The application tools that make the biggest difference"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     },
     {
       "id": "dating-edge",
@@ -915,7 +915,7 @@
         "Breaking patterns: how to stop dating the same person in different bodies"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     },
     {
       "id": "fitpulse-pro",
@@ -977,7 +977,7 @@
         "What six months of consistent training actually looks like"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     },
     {
       "id": "mashestate-home",
@@ -987,7 +987,7 @@
       "category": "Real Estate Investing",
       "theme": "light",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "sidebar",
       "tone": "analytical and investor-focused, like a real estate attorney who also owns 12 doors.",
       "persona": "David Mash, real estate investor and property law consultant",
       "brevo_list_id": null,
@@ -1101,7 +1101,7 @@
         "Post-event surveys that generate useful feedback"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     },
     {
       "id": "dalmend-gifts",
@@ -1111,7 +1111,7 @@
       "category": "Gifts & Lifestyle Products",
       "theme": "light",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "minimal",
       "tone": "warm and thoughtful, like a gifting expert who knows what people actually use vs put in a drawer.",
       "persona": "Emma Dalmend, lifestyle editor and gifting consultant",
       "brevo_list_id": null,
@@ -1173,7 +1173,7 @@
       "category": "Construction & Renovation",
       "theme": "dark",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "sidebar",
       "tone": "practical and contractor-level honest, like a general contractor who also owns rental properties.",
       "persona": "Tom Mash, licensed general contractor and construction project manager",
       "brevo_list_id": null,
@@ -1225,7 +1225,7 @@
         "How long a renovation actually takes — a realistic timeline"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     },
     {
       "id": "insight-insure",
@@ -1287,7 +1287,7 @@
         "The fine print in insurance policies that costs people the most"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "grid"
     },
     {
       "id": "carverge",
@@ -1359,7 +1359,7 @@
       "category": "Travel & Destinations",
       "theme": "light",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "magazine",
       "tone": "specific and experience-driven, like a travel writer who hates generic listicles and tells you what actually happened.",
       "persona": "Ana Verge, independent travel journalist with 60 countries visited",
       "brevo_list_id": null,
@@ -1411,7 +1411,7 @@
         "The honest truth about digital nomad life after 2 years"
       ],
       "articles_per_day": 1,
-      "nav_style": "default"
+      "nav_style": "dark"
     }
   ]
 }
