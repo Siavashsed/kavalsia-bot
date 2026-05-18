@@ -45,7 +45,14 @@
       "unsplash"
     ],
     "unsplash_api_key_secret": "UNSPLASH_API_KEY",
-    "replicate_api_key_secret": "REPLICATE_API_KEY"
+    "replicate_api_key_secret": "REPLICATE_API_KEY",
+    "global_authors": [
+      "Marcus Reid",
+      "Jordan Cole",
+      "Alex Merritt",
+      "Sophie Chen"
+    ],
+    "use_random_global_author": true
   },
   "affiliate_links": {},
   "sites": [
@@ -59,7 +66,7 @@
       "layout": "nexus",
       "tone": "editorial",
       "persona": "Nexus Editorial Team",
-      "articles_per_day": 0,
+      "articles_per_day": 1,
       "is_mother_site": true,
       "nav_style": "dark"
     },
@@ -73,7 +80,7 @@
       "layout": "newsfeed",
       "article_layout": "sidebar",
       "tone": "analytical and data-driven, like a Bloomberg journalist covering crypto. Use specific numbers. Cut through hype.",
-      "persona": "Siavash Sadighi, ex-quant trader covering algorithmic crypto strategies for a technical audience",
+      "persona": "Marcus Webb, ex-quant trader and algorithmic crypto researcher",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -125,9 +132,12 @@
       "articles_per_day": 1,
       "nav_style": "terminal",
       "author_names": [
-        "Siavash Sadighi"
+        "Marcus Webb",
+        "Jordan Osei",
+        "Elena Vasquez",
+        "David Kim"
       ],
-      "use_random_author": false
+      "use_random_author": true
     },
     {
       "id": "passive-wealth",
@@ -139,7 +149,7 @@
       "layout": "magazine",
       "article_layout": "standard",
       "tone": "warm and practical, like a financially-savvy friend. Jargon-light, real examples, honest about risks.",
-      "persona": "Siavash Sadighi, certified financial planner who retired at 41 through passive income",
+      "persona": "Ryan Mitchell, certified financial planner and passive income strategist",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -191,9 +201,12 @@
       "articles_per_day": 1,
       "nav_style": "leaf",
       "author_names": [
-        "Siavash Sadighi"
+        "Ryan Mitchell",
+        "Sarah Chen",
+        "Marcus Reid",
+        "Tanya Kumar"
       ],
-      "use_random_author": false
+      "use_random_author": true
     },
     {
       "id": "trading-tech",
@@ -205,7 +218,7 @@
       "layout": "newsfeed",
       "article_layout": "sidebar",
       "tone": "developer-first, technically precise, like a senior software engineer reviewing fintech tools.",
-      "persona": "Siavash Sadighi, software engineer turned full-time algorithmic trader",
+      "persona": "Alex Turner, software engineer turned full-time algorithmic trader",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -257,9 +270,12 @@
       "articles_per_day": 1,
       "nav_style": "pulse",
       "author_names": [
-        "Siavash Sadighi"
+        "Alex Turner",
+        "Jordan Cole",
+        "Sam Nakamura",
+        "Rachel Obi"
       ],
-      "use_random_author": false
+      "use_random_author": true
     },
     {
       "id": "ai-marketing",
@@ -271,7 +287,7 @@
       "layout": "magazine",
       "article_layout": "magazine",
       "tone": "confident and results-focused, like a senior performance marketer who has run $10M+ in ad spend.",
-      "persona": "Siavash Sadighi, performance marketing director turned AI marketing consultant",
+      "persona": "Jordan Cole, performance marketing director and AI marketing consultant",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -323,9 +339,12 @@
       "articles_per_day": 1,
       "nav_style": "neon",
       "author_names": [
-        "Siavash Sadighi"
+        "Jordan Cole",
+        "Alex Merritt",
+        "Priya Nair",
+        "Marcus Reid"
       ],
-      "use_random_author": false
+      "use_random_author": true
     },
     {
       "id": "ecommerce-edge",
@@ -337,7 +356,7 @@
       "layout": "magazine",
       "article_layout": "standard",
       "tone": "tactical and conversion-focused, like a Shopify Plus expert who has launched 50 stores.",
-      "persona": "Siavash Sadighi, ecommerce consultant specializing in DTC brand scaling",
+      "persona": "Nina Patel, ecommerce consultant specializing in DTC brand scaling",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -389,9 +408,12 @@
       "articles_per_day": 1,
       "nav_style": "grid",
       "author_names": [
-        "Siavash Sadighi"
+        "Nina Patel",
+        "Sophie Chen",
+        "Jake Morrison",
+        "Aisha Williams"
       ],
-      "use_random_author": false
+      "use_random_author": true
     },
     {
       "id": "mochapoo-pets",
@@ -715,7 +737,7 @@
       "layout": "magazine",
       "article_layout": "sidebar",
       "tone": "direct and no-fluff, like a bootstrapped founder who has built and sold three businesses.",
-      "persona": "Siavash Sadighi, serial entrepreneur and startup advisor",
+      "persona": "Ryan Cross, serial entrepreneur and startup advisor",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -767,9 +789,12 @@
       "articles_per_day": 1,
       "nav_style": "stack",
       "author_names": [
-        "Siavash Sadighi"
+        "Ryan Cross",
+        "Maya Torres",
+        "Derek Sullivan",
+        "Keiko Adams"
       ],
-      "use_random_author": false
+      "use_random_author": true
     },
     {
       "id": "sportiq-pro",
@@ -1149,68 +1174,6 @@
       "nav_style": "dark"
     },
     {
-      "id": "dalmend-gifts",
-      "active": false,
-      "domain": "siavashsed.github.io/dalmend-gifts",
-      "repo": "Siavashsed/dalmend-gifts",
-      "category": "Gifts & Lifestyle Products",
-      "theme": "light",
-      "layout": "magazine",
-      "article_layout": "minimal",
-      "tone": "warm and thoughtful, like a gifting expert who knows what people actually use vs put in a drawer.",
-      "persona": "Emma Dalmend, lifestyle editor and gifting consultant",
-      "brevo_list_id": null,
-      "signup_url": "",
-      "adsense_publisher_id": "",
-      "publish_delay_max_seconds": 3600,
-      "giscus_repo_id": "",
-      "giscus_category_id": "",
-      "comment_schedule": {
-        "enabled": false,
-        "initial_count": 6,
-        "max_count": 15,
-        "add_per_day": 2,
-        "delay_days": 0
-      },
-      "client": {
-        "enabled": false,
-        "business_name": "",
-        "description": "",
-        "post_every_n": 7
-      },
-      "warming": {
-        "enabled": true,
-        "started": "",
-        "phase": "new"
-      },
-      "social_media": {
-        "enabled": false,
-        "webhook_url": "",
-        "twitter_enabled": false,
-        "twitter_bearer_token": "",
-        "linkedin_enabled": false,
-        "linkedin_token": "",
-        "linkedin_org_id": ""
-      },
-      "affiliate_links": {},
-      "header_scripts": "",
-      "footer_scripts": "",
-      "topics": [
-        "Gifts that get used vs gifts that collect dust — the real difference",
-        "How to choose a personalized gift that actually means something",
-        "Birthday gifts for people who say they don't want anything",
-        "Luxury gifts under $100 that don't look cheap",
-        "How to build a thoughtful gift basket from scratch",
-        "Corporate gifting: what employees actually appreciate",
-        "Last-minute gifts that don't look last-minute",
-        "Sustainable gift ideas people actually want in 2025",
-        "Experiences vs things: what the research says about gift satisfaction",
-        "The gifting mistakes that signal you don't really know someone"
-      ],
-      "articles_per_day": 1,
-      "nav_style": "leaf"
-    },
-    {
       "id": "mashestate-construction",
       "active": false,
       "domain": "siavashsed.github.io/mashestate-construction",
@@ -1469,8 +1432,8 @@
       "layout": "editorial",
       "article_layout": "standard",
       "tone": "direct and trustworthy, like a friend who has already bought and tested the product and gives you the honest answer without brand partnerships clouding the advice.",
-      "persona": "Siavash Sadighi",
-      "author": "Siavash Sadighi",
+      "persona": "Jamie Cole, product reviewer and consumer advocate",
+      "author": "",
       "brevo_list_id": null,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -1525,7 +1488,14 @@
         "Coffee gear worth buying if you want to stop spending at cafes"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Jamie Cole",
+        "Marcus Reid",
+        "Sophie Chen",
+        "Alex Torres"
+      ],
+      "use_random_author": true
     }
   ]
 }
