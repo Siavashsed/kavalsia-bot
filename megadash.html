@@ -1,10 +1,10 @@
-<!-- Kavalsia Network — MegaDash — © 2026 Kavalsia Inc. [Siavash Sadighi] -->
+<!-- Kavalsia Network - MegaDash - © 2026 Kavalsia Inc. [Siavash Sadighi] -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MegaDash — Kavalsia Network</title>
+<title>MegaDash - Kavalsia Network</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -29,6 +29,15 @@ body{background:radial-gradient(ellipse 80% 40% at 50% -10%,#0d2318 0%,transpare
 .tb-back{display:flex;align-items:center;gap:5px;color:var(--text3);font-size:12px;font-weight:500;text-decoration:none;padding:5px 10px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);transition:all .15s}
 .tb-back:hover{color:var(--text);border-color:var(--border3);background:var(--bg4)}
 .tb-logo{font-size:20px;font-weight:900;letter-spacing:-0.5px;background:linear-gradient(135deg,#3ecf8e 0%,#38bdf8 55%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.md-siaai-logo{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-right:4px;cursor:default}
+.md-radar-wrap{position:relative;width:26px;height:26px;flex-shrink:0}
+.md-radar-wrap .rc{position:absolute;border-radius:50%;border:1px solid #00ff4130}
+.md-radar-wrap .rc1{inset:0;border-color:#00ff4145}
+.md-radar-wrap .rc2{inset:6px;border-color:#00ff4130}
+.md-radar-wrap .rc3{inset:11px;border-color:#00ff4120}
+.md-radar-wrap .md-rsweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,#00ff4140 55deg,transparent 56deg);animation:mdRadarSpin 2s linear infinite}
+.md-siaai-text{font-family:'Courier New',monospace;font-size:14px;font-weight:700;color:#00ff41;letter-spacing:3px;text-shadow:0 0 10px #00ff4199,0 0 20px #00ff4140;animation:mdHackBlink 2.4s step-end infinite}
+.md-siaai-sub{font-family:monospace;font-size:8px;letter-spacing:2px;color:#00ff4160;text-transform:uppercase}
 .tb-sub{font-size:11px;color:var(--text3);padding-left:2px;margin-left:-4px}
 .tb-sep{width:1px;height:24px;background:var(--border2);flex-shrink:0}
 .tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
@@ -144,48 +153,143 @@ body{background:radial-gradient(ellipse 80% 40% at 50% -10%,#0d2318 0%,transpare
 </style>
 </head>
 <body>
+
+<!-- ════════ LOGIN WALL ════════ -->
+<div id="auth-wall" style="position:fixed;inset:0;z-index:99999;background:#050a06;display:flex;align-items:center;justify-content:center">
+  <div style="background:#0d1410;border:1px solid #1e3024;border-radius:16px;padding:48px 40px;width:360px;text-align:center;box-shadow:0 0 60px #3ecf8e1e">
+    <div style="font-size:24px;font-weight:800;margin-bottom:4px;font-family:'Courier New',monospace;color:#00ff41;text-shadow:0 0 14px #00ff4180">KAVALSIA NETWORK</div>
+    <div style="font-size:13px;color:#b8d4c0;margin-bottom:32px">Secure Access</div>
+    <input id="auth-user" type="text" placeholder="Username" autocomplete="username"
+      style="width:100%;padding:12px 16px;background:#121b14;border:1px solid #1e3024;border-radius:8px;color:#ffffff;font-size:14px;margin-bottom:10px;outline:none;box-sizing:border-box"
+      onkeydown="if(event.key==='Enter')attemptLogin()">
+    <input id="auth-pass" type="password" placeholder="Password" autocomplete="current-password"
+      style="width:100%;padding:12px 16px;background:#121b14;border:1px solid #1e3024;border-radius:8px;color:#ffffff;font-size:14px;margin-bottom:20px;outline:none;box-sizing:border-box"
+      onkeydown="if(event.key==='Enter')attemptLogin()">
+    <button onclick="attemptLogin()" style="width:100%;padding:13px;background:linear-gradient(135deg,#3ecf8e,#2eb87d);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">Sign In</button>
+    <div id="auth-err" style="margin-top:12px;font-size:13px;color:#ef4444;display:none">Invalid credentials.</div>
+  </div>
+</div>
+<script>
+(function(){
+  var U='admin',P='2020dalmenD',K='kvs_net_auth';
+  function chk(){var ok=sessionStorage.getItem(K)==='1';document.getElementById('auth-wall').style.display=ok?'none':'flex';}
+  window.attemptLogin=function(){
+    var u=document.getElementById('auth-user').value,p=document.getElementById('auth-pass').value;
+    if(u===U&&p===P){sessionStorage.setItem(K,'1');document.getElementById('auth-wall').style.display='none';}
+    else{document.getElementById('auth-err').style.display='block';}
+  };
+  chk();
+})();
+</script>
+
+<div id="preloader" style="position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;transition:opacity .6s ease">
+  <canvas id="preMatrix" style="position:absolute;inset:0;width:100%;height:100%;opacity:.3"></canvas>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px">
+    <!-- radar -->
+    <div style="position:relative;width:120px;height:120px;margin-bottom:8px">
+      <div style="position:absolute;inset:0;border-radius:50%;border:1px solid #00ff4145"></div>
+      <div style="position:absolute;inset:20px;border-radius:50%;border:1px solid #00ff4135"></div>
+      <div style="position:absolute;inset:40px;border-radius:50%;border:1px solid #00ff4125"></div>
+      <div style="position:absolute;inset:56px;border-radius:50%;border:1px solid #00ff4140"></div>
+      <div style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,#00ff4125 60deg,#00ff4108 90deg,transparent 91deg);animation:mdRadarSpin 2s linear infinite"></div>
+      <div style="position:absolute;left:0;right:0;top:50%;height:1px;background:#00ff4115;transform:translateY(-50%)"></div>
+      <div style="position:absolute;top:0;bottom:0;left:50%;width:1px;background:#00ff4115;transform:translateX(-50%)"></div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:#00ff41;box-shadow:0 0 8px #00ff41"></div>
+      <div style="position:absolute;top:18%;left:62%;width:4px;height:4px;border-radius:50%;background:#00ff41;box-shadow:0 0 6px #00ff41;animation:mdBlip 2s .3s ease-in-out infinite"></div>
+      <div style="position:absolute;top:55%;left:25%;width:4px;height:4px;border-radius:50%;background:#00ff41;box-shadow:0 0 6px #00ff41;animation:mdBlip 2s 1.1s ease-in-out infinite"></div>
+      <div style="position:absolute;top:70%;left:68%;width:4px;height:4px;border-radius:50%;background:#00ff41;box-shadow:0 0 6px #00ff41;animation:mdBlip 2s .7s ease-in-out infinite"></div>
+    </div>
+    <div style="font-family:'Courier New',monospace;font-size:22px;font-weight:700;letter-spacing:4px;color:#00ff41;text-shadow:0 0 20px #00ff4199,0 0 40px #00ff4140;animation:mdHackBlink 2.4s step-end infinite">KAVALSIA</div>
+    <div style="font-family:monospace;font-size:9px;letter-spacing:4px;color:#00ff4160;text-transform:uppercase;margin-top:-4px">// NETWORK</div>
+    <div style="width:180px;height:1px;background:#00ff4115;margin-top:6px;overflow:hidden"><div id="preBar" style="height:100%;width:0;background:#00ff41;box-shadow:0 0 8px #00ff41;transition:width .3s ease"></div></div>
+    <div id="preStatus" style="font-family:monospace;font-size:9px;letter-spacing:2px;color:#00ff4150;margin-top:4px">INITIALIZING NETWORK...</div>
+  </div>
+</div>
+<style>
+@keyframes mdRadarSpin{to{transform:rotate(360deg)}}
+@keyframes mdBlip{0%,100%{opacity:0;transform:scale(.5)}30%,70%{opacity:1;transform:scale(1)}}
+@keyframes mdHackBlink{0%,90%,100%{opacity:1}92%,98%{opacity:.2}}
+</style>
+<script>
+(function(){
+  const canvas=document.getElementById('preMatrix'),ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const cols=Math.floor(canvas.width/16),drops=Array(cols).fill(1);
+  const chars='アイウエオカキクケコ0123456789ABCDEF<>{}[]/\\';
+  function draw(){ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='14px monospace';drops.forEach((y,i)=>{ctx.fillStyle=i%3===0?'#3ecf8e':'#00ff4160';ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,y*16);if(y*16>canvas.height&&Math.random()>.975)drops[i]=0;drops[i]++;});}
+  const mt=setInterval(draw,50);
+  const bar=document.getElementById('preBar'),status=document.getElementById('preStatus');
+  const msgs=['LOADING MEGA DASH...','FETCHING 22 SITES...','BUILDING NETWORK...','READY'];
+  let pct=0,mi=0;
+  const bt=setInterval(()=>{pct=Math.min(pct+Math.random()*18+4,100);bar.style.width=pct+'%';const ni=Math.min(Math.floor(pct/33),msgs.length-1);if(ni!==mi){mi=ni;status.textContent=msgs[mi];}if(pct>=100){clearInterval(bt);clearInterval(mt);status.textContent='READY';setTimeout(()=>{const p=document.getElementById('preloader');p.style.opacity='0';setTimeout(()=>p.remove(),700);},400);}},120);
+})();
+</script>
 <div class="shell">
 
   <div class="topbar">
     <a href="/" class="tb-back">← Hub</a>
     <div class="tb-sep"></div>
-    <div>
-      <span class="tb-logo">MegaDash</span>
-      <span class="tb-sub"> · Kavalsia Network</span>
+    <div class="md-siaai-logo">
+      <div class="md-radar-wrap">
+        <div class="rc rc1"></div><div class="rc rc2"></div><div class="rc rc3"></div>
+        <div class="md-rsweep"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;line-height:1.2">
+        <span class="md-siaai-text">KAVALSIA</span>
+        <span class="md-siaai-sub">NETWORK</span>
+      </div>
     </div>
     <div class="tb-right">
       <span class="last-upd" id="lastUpd"></span>
+      <input id="ghTokenIn" type="password" placeholder="GitHub token (ghp_...)"
+        style="padding:5px 10px;font-size:11px;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;color:var(--text2);outline:none;width:160px"
+        oninput="localStorage.setItem('ghToken',this.value)"
+        title="Paste your GitHub Personal Access Token to load live article data">
+      <button onclick="triggerBotRun()" id="btnRun"
+        style="padding:6px 12px;font-size:12px;font-weight:600;background:#f59e0b22;border:1px solid #f59e0b88;border-radius:7px;color:var(--amber);cursor:pointer"
+        title="Trigger GitHub Actions bot run now">⚡ Run Bot</button>
       <div class="mode-wrap">
-        <button class="mode-btn demo-on" id="btnDemo" onclick="setMode('demo')">◆ Demo</button>
+        <button class="mode-btn demo-on" id="btnDemo" onclick="setMode('demo')">◆ Showcase</button>
         <button class="mode-btn" id="btnLive" onclick="setMode('live')">⚡ Live</button>
       </div>
+      <button class="btn-ref" onclick="showMDView('report');loadMDReport()">📰 Report</button>
+      <button class="btn-ref" onclick="showMDView('guide')">📚 Guide</button>
       <button class="btn-ref" id="btnRef" onclick="refresh()">
         <span id="refIc">↻</span> Refresh
       </button>
     </div>
   </div>
 
-  <div class="main">
+  <div class="main" id="mdMain">
+    <!-- overlay views -->
+    <div id="mdView" style="display:none;position:fixed;inset:56px 0 0 0;z-index:50;background:var(--bg);overflow-y:auto;padding:24px 28px 80px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <button onclick="showMDView(null)" style="padding:5px 12px;font-size:12px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);cursor:pointer">← Back</button>
+        <span id="mdViewTitle" style="font-size:18px;font-weight:800"></span>
+      </div>
+      <div id="mdViewContent"></div>
+    </div>
+
     <div class="hero" id="hero">
       <div class="hcard">
         <div class="hl">Total Sites</div>
-        <div class="hv" id="hSites">—</div>
-        <div class="hs" id="hSitesSub">—</div>
+        <div class="hv" id="hSites">-</div>
+        <div class="hs" id="hSitesSub">-</div>
       </div>
       <div class="hcard b">
         <div class="hl">Total Articles</div>
-        <div class="hv" id="hArt">—</div>
-        <div class="hbadge b" id="hArtBadge">—</div>
+        <div class="hv" id="hArt">-</div>
+        <div class="hbadge b" id="hArtBadge">-</div>
       </div>
       <div class="hcard p">
-        <div class="hl">7-Day Traffic</div>
-        <div class="hv" id="hTraf">—</div>
-        <div class="hbadge g" id="hTrafBadge">—</div>
+        <div class="hl">7-Day Traffic <span id="hTrafDemoTag" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b30;border-radius:100px;padding:1px 6px;vertical-align:middle">Demo</span></div>
+        <div class="hv" id="hTraf">-</div>
+        <div class="hbadge g" id="hTrafBadge">-</div>
       </div>
       <div class="hcard a">
         <div class="hl">Network Health</div>
-        <div class="hv" id="hHealth">—</div>
-        <div class="hs" id="hHealthSub">—</div>
+        <div class="hv" id="hHealth">-</div>
+        <div class="hs" id="hHealthSub">-</div>
       </div>
     </div>
 
@@ -224,7 +328,7 @@ body{background:radial-gradient(ellipse 80% 40% at 50% -10%,#0d2318 0%,transpare
     <div class="m-slbl">Latest Article</div>
     <div class="lat-box" id="mLat"></div>
     <div class="mdiv"></div>
-    <div class="m-slbl">AI Summary <span id="mBadge" class="mbadge-demo">Demo</span></div>
+    <div class="m-slbl">AI Summary <span id="mBadge" class="mbadge-demo">Showcase</span></div>
     <div class="sum-box" id="mSum"></div>
   </div>
 </div>
@@ -239,52 +343,50 @@ let allSites = [];
 const HEX = {blue:'#38bdf8',green:'#3ecf8e',purple:'#a78bfa',amber:'#f59e0b',pink:'#f472b6',red:'#ef4444'};
 const SCH = {blue:'sc-blue',green:'sc-green',purple:'sc-purple',amber:'sc-amber',pink:'sc-pink',red:'sc-red'};
 
-// ── demo data — 22 sites ─────────────────────────
+// ── site data - 22 sites (GitHub Pages URLs) ─────────────────────────
 const DEMO = [
-  {id:'crypto-insights',    name:'Crypto Pulse',           domain:'cryptopulse.io',                cat:'Crypto & Trading',         status:'active',  arts:87,  latest:'2h ago',  latestDate:'May 14, 2026', latestTitle:'Bitcoin Volatility Patterns That Institutional Traders Actually Track',      t7:[1240,1380,1520,1290,1680,1940,2100], trend:'+12%',tdir:'up',   color:'blue',
-    sum:'Crypto Pulse published 87 articles with a strong data-driven focus on institutional trading patterns. The latest Bitcoin volatility piece is already driving referral traffic from two quant communities. Traffic is up 12% this week, peaking Thursday at 1,940 sessions — well above the network average for sites in this stage.'},
-  {id:'passive-wealth',     name:'Passive Wealth Guide',   domain:'passivewealthguide.io',          cat:'Passive Income',           status:'active',  arts:64,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'The Compounding Effect Shown With Real Numbers and Brutal Honesty',           t7:[980,1020,870,1100,1240,1180,1350],  trend:'+8%', tdir:'up',   color:'green',
-    sum:'Passive Wealth Guide is steady at 64 articles. The compounding effect piece published yesterday earned 1,350 day-one sessions. Sarah Mills\' no-jargon editorial voice continues to outperform drier finance content on engagement — average session time sits at 4.3 minutes. Email signup rate: 3.2%.'},
-  {id:'trading-tech',       name:'Trading Tech Review',    domain:'tradingtechreview.io',           cat:'Trading Technology',       status:'active',  arts:51,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'Why Backtesting Is Essential Before Your Bot Touches Real Money',              t7:[560,720,680,810,740,890,950],       trend:'+7%', tdir:'up',   color:'purple',
-    sum:'Trading Tech Review targets developers with 51 deep-dive articles on APIs, bot architecture, and security. Bounce rate is a low 38% — readers are qualified and invested. The backtesting guide continues driving organic search three days after publication, with GitHub README referrals emerging as a top source.'},
-  {id:'ai-marketing',       name:'AI Marketing Pro',       domain:'aimarketingpro.io',              cat:'AI & Marketing',           status:'warming', arts:23,  latest:'5d ago',  latestDate:'May 9, 2026',  latestTitle:'How AI Is Reshaping Paid Advertising in 2026 — And What to Do About It',     t7:[120,145,180,160,195,210,230],       trend:'+19%',tdir:'up',   color:'blue',
-    sum:'AI Marketing Pro is in the warming phase but showing the strongest WoW traffic growth in the warming cohort at +19%. The paid advertising article is appearing for long-tail terms after only 5 days. Priority: reach 50 articles in the next 30 days to accelerate indexing velocity.'},
-  {id:'ecommerce',          name:'Ecommerce Edge',         domain:'ecommerceedge.io',               cat:'E-Commerce',               status:'warming', arts:18,  latest:'4d ago',  latestDate:'May 10, 2026', latestTitle:'7 Shopify Store Mistakes That Kill Conversion Before Anyone Buys',            t7:[80,95,110,88,130,145,160],          trend:'+23%',tdir:'up',   color:'amber',
-    sum:'Ecommerce Edge is early-stage at 18 articles but the +23% WoW growth rate is the highest in the network. The Shopify conversion mistakes post is getting strong social shares from DTC communities. Recommend prioritising email capture hooks to build the list early while traffic momentum is building.'},
-  {id:'pets',               name:'Mochapoo Pets',          domain:'pets.mochapoo.com',              cat:'Pets',                     status:'warming', arts:31,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'Why Bernedoodles Are Outpacing Every Other Designer Breed Right Now',         t7:[310,280,350,290,420,390,450],       trend:'+16%',tdir:'up',   color:'pink',
-    sum:'Mochapoo Pets has 31 articles live on the subdomain. The Bernedoodle breed guide published 2 days ago is the highest-traffic piece to date at 450 sessions. Pinterest traffic is emerging organically — setting up dedicated boards by breed would amplify this channel quickly.'},
-  {id:'supplements',        name:'Supplement Verge',       domain:'supplementverge.io',             cat:'Supplements & Health',     status:'warming', arts:26,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'Creatine Loading vs Maintenance Dose — What the 2024 Meta-Analysis Says',    t7:[200,240,210,280,310,290,330],       trend:'+13%',tdir:'up',   color:'green',
-    sum:'Supplement Verge takes a science-first approach with 26 articles. The creatine meta-analysis piece is building authority in the niche. Product review sections are getting longer session durations — affiliate CTR on supplement links is around 4.8%, above category average.'},
-  {id:'sightreading',       name:'Sightreading Academy',   domain:'sightreadingacademy.com',        cat:'Music Education',          status:'active',  arts:42,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'The Fastest Way to Improve Sight-Reading That No Teacher Tells You',          t7:[780,820,710,890,960,1020,1140],     trend:'+11%',tdir:'up',   color:'purple',
-    sum:'Sightreading Academy has existing domain authority helping new posts index faster. The sight-reading improvement piece published yesterday is already on page 2 for the target keyword. Strong email list growth for the niche. A free PDF lead magnet would capitalise on the current traffic momentum.'},
-  {id:'newborn',            name:'Newborn IQ',             domain:'newborniq.io',                   cat:'Parenting — Newborn',      status:'warming', arts:19,  latest:'6d ago',  latestDate:'May 8, 2026',  latestTitle:'Sleep Training at 8 Weeks — What Pediatricians Say vs. What Actually Works', t7:[90,110,85,120,105,140,155],         trend:'+11%',tdir:'up',   color:'amber',
-    sum:'Newborn IQ has 19 articles targeting first-time parents with evidence-based guidance. The sleep training post targets a high-intent, low-competition keyword. Traffic trend is positive despite being sub-30 articles. Recommend accelerating to 50 articles to build topical authority quickly — this niche has year-round demand.'},
-  {id:'home-decor',         name:'Dalmend Home',           domain:'articles.dalmend.com',           cat:'Premium Home Decor',       status:'active',  arts:58,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'Why Japandi Interior Design Is Still Winning in 2026 (And How to Get It Right)',t7:[1100,980,1240,1180,1320,1480,1560], trend:'+5%', tdir:'up',   color:'amber',
-    sum:'Dalmend Home is one of the network\'s strongest performers with 58 articles. The Japandi design piece is already ranking page 1. Pinterest drives 38% of traffic with strong save-to-visit rates. The existing dalmend.com domain authority is significantly accelerating indexing for all new posts.'},
-  {id:'online-business',    name:'Online Biz Pro',         domain:'onlinebizpro.io',                cat:'Online Business',          status:'warming', arts:22,  latest:'4d ago',  latestDate:'May 10, 2026', latestTitle:'How to Validate a Business Idea in 48 Hours Without Spending a Dollar',       t7:[150,175,140,195,210,190,225],       trend:'+19%',tdir:'up',   color:'blue',
-    sum:'Online Biz Pro covers practical online business building with 22 articles. The idea validation piece is getting traction from startup community shares. The brutal-honesty editorial angle — no guru fluff — is differentiating well in SERPs where the niche is competitive.'},
-  {id:'sport',              name:'SportIQ Pro',            domain:'sportiqpro.io',                  cat:'Sports & Performance',     status:'warming', arts:28,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'The Science of Recovery — Why Most Athletes Are Doing It Wrong',              t7:[240,280,260,310,290,340,380],       trend:'+12%',tdir:'up',   color:'red',
-    sum:'SportIQ Pro has 28 articles covering sports performance and coaching science. Several pieces have been picked up by fitness communities. Once article volume hits 50, cross-promotion via YouTube or Substack would meaningfully amplify the existing audience momentum.'},
-  {id:'makeup',             name:'Makeup Craft',           domain:'makeupcraft.io',                 cat:'Beauty & Makeup',          status:'warming', arts:24,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'The Only Foundation Guide You Need If You Have Combination Skin',             t7:[180,220,195,250,280,310,340],       trend:'+18%',tdir:'up',   color:'pink',
-    sum:'Makeup Craft has 24 articles with the foundation guide driving the most traffic. Pinterest is a natural amplification channel — boards organised by skin type and product category would work well. Affiliate product links are converting; verify tracking is properly attributed.'},
-  {id:'dating',             name:'Dating Edge',            domain:'datingedge.io',                  cat:'Dating & Relationships',   status:'warming', arts:21,  latest:'5d ago',  latestDate:'May 9, 2026',  latestTitle:'Why Most First Message Advice Is Wrong — What Actually Gets Replies',        t7:[160,195,170,220,240,260,290],       trend:'+22%',tdir:'up',   color:'red',
-    sum:'Dating Edge has 21 articles with +22% WoW traffic growth — top 5 in the network. The first message guide is drawing Reddit referrals. Prioritise comparison and coaching product review content to monetise the growing high-intent audience: the niche has strong commercial CPCs.'},
-  {id:'fitness',            name:'FitPulse Pro',           domain:'fitpulsepro.io',                 cat:'Fitness & Training',       status:'warming', arts:33,  latest:'1d ago',  latestDate:'May 13, 2026', latestTitle:'Progressive Overload — The Only Principle You Need for Consistent Muscle Growth',t7:[420,390,460,410,490,530,580],       trend:'+10%',tdir:'up',   color:'green',
-    sum:'FitPulse Pro has 33 articles. The no-nonsense editorial voice is outperforming generic "10 best exercises" content in engagement metrics. The progressive overload piece published yesterday is already indexing. Long-tail program-specific terms should be the next targeting priority.'},
-  {id:'real-estate',        name:'Mashe Estate Home',      domain:'home.mashestate.com',            cat:'Real Estate',              status:'active',  arts:46,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'Why Toronto Pre-Con Investors Are Shifting to Secondary Markets in 2026',     t7:[890,940,820,1010,1080,1150,1240],   trend:'+8%', tdir:'up',   color:'amber',
-    sum:'Mashe Estate Home has 46 articles benefiting from mashestate.com domain authority. The Toronto pre-con article is driving strong regional organic traffic. Data-backed market content performs 3x better than opinion in this niche — a live market data section would anchor topical authority significantly.'},
-  {id:'events',             name:'Kanona Events',          domain:'press.kanonaprojects.com',       cat:'Events & Premium Meetings', status:'warming', arts:17, latest:'6d ago',  latestDate:'May 8, 2026',  latestTitle:'How to Plan a Premium Corporate Event That People Actually Talk About',      t7:[70,85,90,80,95,110,120],            trend:'+14%',tdir:'up',   color:'purple',
-    sum:'Kanona Events has 17 articles in the corporate events niche. Low volume now but the niche has among the highest display CPCs ($8-12 range). B2B venue reviews and speaker-booking guides are the priority to drive higher-intent traffic. The subdomain press.kanonaprojects.com gives a premium editorial positioning.'},
-  {id:'gifts',              name:'Dalmend Gifts',          domain:'gifting.dalmend.com',            cat:'Gifts & Ideas',            status:'warming', arts:29,  latest:'2d ago',  latestDate:'May 12, 2026', latestTitle:'30 Premium Gift Ideas for People Who Already Have Everything',               t7:[380,420,350,460,510,490,540],       trend:'+7%', tdir:'up',   color:'pink',
-    sum:'Dalmend Gifts has 29 articles running on the gifting subdomain. Current 540 daily sessions will 3-5x in November–December. Premium positioning is working: average session time of 3.8 minutes vs 1.9 minute industry average. Amazon affiliate CTR is 5.2% — well above platform average.'},
-  {id:'construction',       name:'Mashe Construction',     domain:'construction.mashestate.com',    cat:'Construction & Builds',    status:'warming', arts:14,  latest:'7d ago',  latestDate:'May 7, 2026',  latestTitle:"What Custom Home Builders Don't Tell You About Cost Overruns",                t7:[55,70,60,80,75,90,100],             trend:'+11%',tdir:'up',   color:'amber',
-    sum:'Mashe Construction is the newest site with 14 articles. The cost overrun transparency piece targets a genuinely underserved keyword. Average session time of 5.2 minutes signals high reader intent. Prioritise "cost of X in 2026" articles — they\'re the highest-converting format in this niche.'},
-  {id:'insurance',          name:'Insight Insure',         domain:'insightinsure.io',               cat:'Insurance',                status:'warming', arts:20,  latest:'5d ago',  latestDate:'May 9, 2026',  latestTitle:"Why Your Home Insurance Policy Probably Has a Gap You've Never Noticed",     t7:[130,155,140,170,190,180,210],       trend:'+16%',tdir:'up',   color:'blue',
-    sum:'Insight Insure takes a consumer advocacy angle in a niche dominated by lead-gen content — a genuine differentiator. 20 articles live. Insurance display CPCs range $8-12. Targeting comparison and review keywords is the fastest path to high revenue-per-session given the niche CPC floor.'},
-  {id:'cars',               name:'CarVerge',               domain:'carverge.io',                    cat:'Automotive',               status:'warming', arts:25,  latest:'3d ago',  latestDate:'May 11, 2026', latestTitle:'EV Range Anxiety in 2026 — The Real Numbers After 50,000km of Data',        t7:[310,350,320,390,420,400,450],       trend:'+13%',tdir:'up',   color:'blue',
-    sum:'CarVerge has 25 articles focused on EV transition and modern vehicle tech. The real-world range data article is resonating in organic search against spec-sheet content. Auto content has strong affiliate potential through car insurance comparisons. A model specs database would become a high-traffic reference asset.'},
-  {id:'travel',             name:'TravelVerge',            domain:'travelverge.io',                 cat:'Travel',                   status:'paused',  arts:12,  latest:'14d ago', latestDate:'Apr 30, 2026', latestTitle:'10 Places in Southeast Asia That Aren\'t Overrun Yet',                      t7:[95,88,72,80,65,70,78],             trend:'-8%', tdir:'down', color:'purple',
-    sum:'TravelVerge is currently paused at 12 articles and traffic has dipped 8% this week. The content foundations are solid but consistent publishing is needed to recover organic momentum. Recommend reactivating at 1 post/day for 30 days to rebuild indexing signals before evaluating a monetisation strategy.'},
+  {id:'cryptopulse',         name:'Crypto Pulse',           domain:'siavashsed.github.io/cryptopulse',              cat:'Crypto & Trading',         status:'active',     arts:22,   latest:'-',       latestDate:'-', latestTitle:'Why Passive Income Takes Longer Than Ads Say', t7:[287,312,344,389,421,403,438], trend:'+14%',tdir:'up',color:'blue',
+    sum:'Crypto Pulse is freshly deployed on GitHub Pages. Once articles start publishing via the daily bot, traffic data will appear here. Check GitHub Actions for publishing status.'},
+  {id:'passive-wealth',      name:'Passive Wealth Guide',   domain:'siavashsed.github.io/passivewealthguide',        cat:'Passive Income',           status:'active',     arts:18,   latest:'-',       latestDate:'-', latestTitle:'The Hidden Cost of API Rate Limits', t7:[224,218,231,209,226,241,235], trend:'+4%',tdir:'up',color:'green',
+    sum:'Passive Wealth Guide is live on GitHub Pages. Sarah Mills\' no-jargon financial voice will be published once the bot runs.'},
+  {id:'trading-tech',        name:'Trading Tech Review',    domain:'siavashsed.github.io/tradingtechreview',         cat:'Trading Technology',       status:'active',     arts:31,   latest:'-',       latestDate:'-', latestTitle:'EV Battery Degradation: The Real Numbers', t7:[341,318,372,404,388,431,468], trend:'+18%',tdir:'up',color:'purple',
+    sum:'Trading Tech Review targets developers with deep-dive articles on APIs, bot architecture, and trading tools.'},
+  {id:'ai-marketing',        name:'AI Marketing Pro',       domain:'siavashsed.github.io/aimarketingpro',            cat:'AI & Marketing',           status:'active',     arts:24,   latest:'-',       latestDate:'-', latestTitle:'3 AI Tools That Actually Cut Ad Spend', t7:[352,408,371,339,413,447,423], trend:'+9%',tdir:'up',color:'blue',
+    sum:'AI Marketing Pro will cover practical AI tools for marketers and performance advertisers.'},
+  {id:'ecommerce-edge',      name:'Ecommerce Edge',         domain:'siavashsed.github.io/ecommerceedge',             cat:'E-Commerce',               status:'active',     arts:19,   latest:'-',       latestDate:'-', latestTitle:'How to Validate a Business Idea in 48 Hours', t7:[278,261,284,271,253,268,247], trend:'-6%',tdir:'down',color:'amber',
+    sum:'Ecommerce Edge covers Shopify, DTC brand strategy, and conversion optimisation.'},
+  {id:'mochapoo-pets',       name:'Mochapoo Pets',          domain:'siavashsed.github.io/mochapoo-pets',             cat:'Pets',                     status:'active',     arts:28,   latest:'-',       latestDate:'-', latestTitle:'Progressive Overload: What Coaches Get Wrong', t7:[312,298,341,487,502,411,386], trend:'+15%',tdir:'up',color:'pink',
+    sum:'Mochapoo Pets covers doodle breeds, dog nutrition, and pet care with a vet-backed editorial voice.'},
+  {id:'supplement-verge',    name:'Supplement Verge',       domain:'siavashsed.github.io/supplementverge',           cat:'Supplements & Health',     status:'active',     arts:15,   latest:'-',       latestDate:'-', latestTitle:'Attachment Styles and Why Dating Apps Fail You', t7:[196,204,188,212,207,219,231], trend:'+12%',tdir:'up',color:'green',
+    sum:'Supplement Verge takes a science-first, skeptical approach to supplement reviews backed by clinical trial data.'},
+  {id:'sight-reading',       name:'Sightreading Academy',   domain:'siavashsed.github.io/sightreadingacademy',       cat:'Music Education',          status:'active',     arts:33,   latest:'-',       latestDate:'-', latestTitle:'The Protein Timing Myth Finally Settled', t7:[571,548,534,522,509,488,503], trend:'-4%',tdir:'down',color:'purple',
+    sum:'Sightreading Academy publishes piano and music education content from a Juilliard-trained educator\'s perspective.'},
+  {id:'newborn-iq',          name:'Newborn IQ',             domain:'siavashsed.github.io/newborniq',                 cat:'Parenting - Newborn',      status:'active',     arts:21,   latest:'-',       latestDate:'-', latestTitle:'Creatine Monohydrate vs HCL: The Evidence', t7:[267,284,291,312,581,318,334], trend:'+16%',tdir:'up',color:'amber',
+    sum:'Newborn IQ targets first-time parents with calm, evidence-based newborn care guidance from a NICU nurse.'},
+  {id:'dalmend-home',        name:'Dalmend Home',           domain:'siavashsed.github.io/dalmend-home',              cat:'Home Design & Real Estate', status:'active',    arts:17,   latest:'-',       latestDate:'-', latestTitle:'Shopify Checkout Abandonment Root Causes', t7:[218,231,204,241,228,215,239], trend:'+3%',tdir:'up',color:'amber',
+    sum:'Dalmend Home covers interior design, staging, and home renovation ROI from an investor-designer perspective.'},
+  {id:'onlinebiz-pro',       name:'Online Biz Pro',         domain:'siavashsed.github.io/onlinebizpro',              cat:'Online Business',          status:'active',     arts:26,   latest:'-',       latestDate:'-', latestTitle:'Term vs Whole Life: The Math Most Brokers Skip', t7:[348,371,394,428,412,453,487], trend:'+18%',tdir:'up',color:'blue',
+    sum:'Online Biz Pro covers bootstrapped founder tactics - no-fluff, practical online business building.'},
+  {id:'sportiq-pro',         name:'SportIQ Pro',            domain:'siavashsed.github.io/sportiqpro',                cat:'Sports & Performance',     status:'active',     arts:20,   latest:'-',       latestDate:'-', latestTitle:'BRRRR Strategy: When It Works and When It Doesn\'t', t7:[242,258,271,289,301,421,447], trend:'+22%',tdir:'up',color:'red',
+    sum:'SportIQ Pro covers sports performance science, strength programming, and coaching methodology.'},
+  {id:'makeup-craft',        name:'Makeup Craft',           domain:'siavashsed.github.io/makeupcraft',               cat:'Beauty & Makeup',          status:'active',     arts:29,   latest:'-',       latestDate:'-', latestTitle:'Safe Sleep: What the AAP Actually Recommends', t7:[387,394,402,413,427,441,459], trend:'+8%',tdir:'up',color:'pink',
+    sum:'Makeup Craft publishes technique-focused beauty content from a professional MUA\'s perspective.'},
+  {id:'dating-edge',         name:'Dating Edge',            domain:'siavashsed.github.io/datingedge',                cat:'Dating & Relationships',   status:'active',     arts:23,   latest:'-',       latestDate:'-', latestTitle:'REITs vs Rental Property: A 10-Year Comparison', t7:[298,341,287,324,368,312,389], trend:'+12%',tdir:'up',color:'red',
+    sum:'Dating Edge covers attachment theory, dating app strategy, and modern relationship psychology.'},
+  {id:'fitpulse-pro',        name:'FitPulse Pro',           domain:'siavashsed.github.io/fitpulsepro',               cat:'Fitness & Training',       status:'active',     arts:16,   latest:'-',       latestDate:'-', latestTitle:'Doodle Mix Health Issues No Breeder Tells You', t7:[247,231,218,204,212,198,224], trend:'-7%',tdir:'down',color:'green',
+    sum:'FitPulse Pro covers lifting, fat loss, and training science with a no-excuses, no-BS editorial voice.'},
+  {id:'mashestate-home',     name:'Mashe Estate Home',      domain:'siavashsed.github.io/mashestate-home',           cat:'Real Estate Investing',    status:'active',     arts:25,   latest:'-',       latestDate:'-', latestTitle:'The 5-Minute Sight-Reading Drill That Works', t7:[312,334,318,351,341,368,387], trend:'+9%',tdir:'up',color:'amber',
+    sum:'Mashe Estate Home covers rental property analysis, BRRRR strategy, and real estate investment fundamentals.'},
+  {id:'kanona-events',       name:'Kanona Projects',          domain:'siavashsed.github.io/kanona-events',             cat:'Events & Premium Meetings', status:'active',    arts:30,   latest:'-',       latestDate:'-', latestTitle:'Paint Colors That Add Value Before You Sell', t7:[471,523,618,542,487,412,389], trend:'-4%',tdir:'down',color:'purple',
+    sum:'Kanona Projects covers corporate event planning, venue selection, and premium meeting production.'},
+  {id:'mashestate-construction',name:'Mashe Construction',  domain:'siavashsed.github.io/mashestate-construction',   cat:'Construction & Renovation', status:'active',     arts:27,  latest:'-',       latestDate:'-', latestTitle:'Why Your Contractor Gave 3 Different Quotes', t7:[412,398,421,441,408,453,437], trend:'+2%',tdir:'up',color:'amber',
+    sum:'Mashe Construction covers renovation costs, contractor hiring, and building project management.'},
+  {id:'insight-insure',      name:'Insight Insure',         domain:'siavashsed.github.io/insightinsure',             cat:'Insurance',                status:'active',     arts:27,   latest:'-',       latestDate:'-', latestTitle:'Foundation Matching for All Skin Tones', t7:[362,378,351,394,371,388,412], trend:'+8%',tdir:'up',color:'blue',
+    sum:'Insight Insure takes a consumer-first angle on insurance comparisons - plain language, no lead-gen fluff.'},
+  {id:'carverge',            name:'CarVerge',               domain:'siavashsed.github.io/carverge',                  cat:'Automotive & EV',          status:'active',     arts:14,   latest:'-',       latestDate:'-', latestTitle:'Border Crossing Chile to Argentina: The Real Guide', t7:[174,188,163,192,181,204,197], trend:'+6%',tdir:'up',color:'blue',
+    sum:'CarVerge covers EV transition, real-world range data, and modern vehicle tech from an engineer\'s perspective.'},
+  {id:'travelverge',         name:'TravelVerge',            domain:'siavashsed.github.io/travelverge',               cat:'Travel',                   status:'active',     arts:32,   latest:'-',       latestDate:'-', latestTitle:'Why Your Contractor Gave You Three Different Quotes', t7:[421,394,378,358,428,512,487], trend:'+11%',tdir:'up',color:'purple',
+    sum:'TravelVerge publishes experience-driven travel writing - no generic listicles, real boots-on-ground perspective.'},
 ];
 
 // ── sparkline ────────────────────────────────────
@@ -325,7 +427,9 @@ function renderHero(sites) {
   document.getElementById('hArt').textContent      = arts.toLocaleString();
   document.getElementById('hArtBadge').textContent = `avg ${Math.round(arts/sites.length)} per site`;
   document.getElementById('hTraf').textContent     = traf.toLocaleString();
-  document.getElementById('hTrafBadge').textContent= '↑ week on week';
+  document.getElementById('hTrafBadge').textContent= MODE==='demo' ? 'Estimated / Demo data' : '↑ week on week';
+  const demoTag = document.getElementById('hTrafDemoTag');
+  if (demoTag) demoTag.style.display = MODE==='demo' ? '' : 'none';
   document.getElementById('hHealth').textContent   = health+'%';
   document.getElementById('hHealthSub').textContent= `${active} fully active`;
 }
@@ -348,7 +452,7 @@ function card(s) {
     <div class="cst"><span class="cst-lbl">Latest</span><span class="cst-val" style="font-size:13px">${s.latest}</span></div>
     <div class="cst"><span class="cst-lbl">7d Views</span><span class="cst-val">${tot}</span><span class="cst-sub ${tc}">${s.trend}</span></div>
   </div>
-  <div class="spark-lbl">Traffic · last 7 days</div>
+  <div class="spark-lbl">Est. Views · 7 days</div>
   ${spark(s.t7, hex)}
   <div class="cfoot">
     <div class="clat-lbl">Latest Article</div>
@@ -400,14 +504,14 @@ function openModal(id) {
   document.getElementById('mLat').innerHTML = `<div class="lat-ttl">${s.latestTitle}</div><div class="lat-dt">${s.latestDate}</div>`;
   const badge = document.getElementById('mBadge');
   badge.className = MODE==='live' ? 'mbadge-live' : 'mbadge-demo';
-  badge.textContent = MODE==='live' ? 'Live AI' : 'Demo';
+  badge.textContent = MODE==='live' ? 'Live AI' : 'Showcase';
   document.getElementById('overlay').classList.add('open');
   if (MODE==='demo' && s.sum) {
     document.getElementById('mSum').innerHTML = `<p>${s.sum}</p>`;
   } else if (MODE==='live') {
     liveSummary(s);
   } else {
-    document.getElementById('mSum').innerHTML = `<div class="sum-gen"><span class="spin">⟳</span>No demo summary available.</div>`;
+    document.getElementById('mSum').innerHTML = `<div class="sum-gen"><span class="spin">⟳</span>No showcase summary available.</div>`;
   }
 }
 
@@ -429,43 +533,110 @@ function closeOverlay() { document.getElementById('overlay').classList.remove('o
 function maybeClose(e)  { if(e.target===document.getElementById('overlay')) closeOverlay(); }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeOverlay(); });
 
+// ── trigger bot run ───────────────────────────────
+async function triggerBotRun() {
+  const tok = localStorage.getItem('ghToken') || document.getElementById('ghTokenIn').value.trim();
+  if (!tok) { alert('Paste your GitHub token in the field first.'); return; }
+  const btn = document.getElementById('btnRun');
+  btn.textContent = '⏳ Triggering…'; btn.disabled = true;
+  try {
+    const r = await fetch('https://api.github.com/repos/Siavashsed/kavalsia-bot/actions/workflows/daily-post.yml/dispatches', {
+      method: 'POST',
+      headers: { 'Authorization': `token ${tok}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: 'main' })
+    });
+    if (r.status === 204) {
+      btn.textContent = '✓ Triggered!'; btn.style.background='#3ecf8e22'; btn.style.borderColor='#3ecf8e88'; btn.style.color='var(--green)';
+      setTimeout(() => { btn.textContent='⚡ Run Bot'; btn.style=''; btn.disabled=false; }, 4000);
+    } else {
+      const err = await r.json().catch(()=>({}));
+      alert('Error ' + r.status + ': ' + (err.message||'Check token has workflow scope'));
+      btn.textContent='⚡ Run Bot'; btn.disabled=false;
+    }
+  } catch(e) { alert('Network error: ' + e.message); btn.textContent='⚡ Run Bot'; btn.disabled=false; }
+}
+
 // ── live fetch ────────────────────────────────────
 async function fetchLive() {
-  const cfgR = await fetch('/api/config').catch(()=>null);
-  if (!cfgR||!cfgR.ok) { alert('Server not reachable. Falling back to demo data.'); setMode('demo'); return null; }
-  const cfg = await cfgR.json();
-  const tok = localStorage.getItem('ghToken')||'';
-  return Promise.all((cfg.sites||[]).map(async s=>{
-    let arts=0, latest='unknown', latestDate='—', latestTitle='—';
-    if (tok && s.repo && !s.repo.includes('YOUR_')) {
-      try {
-        const pr = await fetch(`/api/github/repos/${s.repo}/contents/_posts`,{headers:{'X-GH-Token':tok}});
-        if (pr.ok) {
-          const posts = await pr.json();
-          if (Array.isArray(posts)) {
-            arts = posts.length;
-            const srt = posts.sort((a,b)=>b.name.localeCompare(a.name));
-            if (srt[0]) {
-              latestTitle = srt[0].name.replace(/^\d{4}-\d{2}-\d{2}-/,'').replace(/\.md$/,'').replace(/-/g,' ');
-              latestTitle = latestTitle[0].toUpperCase()+latestTitle.slice(1);
-              const m = srt[0].name.match(/^(\d{4}-\d{2}-\d{2})/);
-              if (m) { latestDate=m[1]; latest=m[1]; }
-            }
-          }
-        }
-      } catch(_){}
+  const tok = localStorage.getItem('ghToken') || document.getElementById('ghTokenIn').value.trim();
+  if (!tok) {
+    const t = prompt('Enter your GitHub Personal Access Token (repo scope) to load live data:');
+    if (!t) { setMode('demo'); return null; }
+    localStorage.setItem('ghToken', t);
+    document.getElementById('ghTokenIn').value = t;
+  }
+  const ghTok = localStorage.getItem('ghToken');
+
+  // Load config from server if available, otherwise use DEMO site list
+  let siteCfg = DEMO;
+  try {
+    const cfgR = await fetch('/api/config', {signal: AbortSignal.timeout(2000)}).catch(()=>null);
+    if (cfgR && cfgR.ok) {
+      const cfg = await cfgR.json();
+      if (cfg.sites?.length) siteCfg = cfg.sites;
     }
-    const colors = ['blue','green','purple','amber','pink','red'];
-    const t7 = Array.from({length:7},()=>Math.floor(Math.random()*300+50));
+  } catch(_) {}
+
+  const colors = ['blue','green','purple','amber','pink','red'];
+
+  return Promise.all(siteCfg.map(async (s, idx) => {
+    let arts = 0, latest = '-', latestDate = '-', latestTitle = 'No articles yet';
+    const repo = s.repo || (DEMO.find(d=>d.id===s.id)||{}).id;
+
+    if (ghTok && repo && !repo.includes('YOUR')) {
+      try {
+        const r = await fetch(`https://api.github.com/repos/${repo}/contents/articles.json`, {
+          headers: { 'Authorization': `token ${ghTok}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (r.ok) {
+          const data = await r.json();
+          const decoded = JSON.parse(atob(data.content.replace(/\n/g,'')));
+          if (Array.isArray(decoded) && decoded.length) {
+            arts = decoded.length;
+            const newest = decoded.sort((a,b) => (b.date_iso||b.date||'').localeCompare(a.date_iso||a.date||''))[0];
+            latestTitle = newest.title || '-';
+            latestDate  = newest.date  || newest.date_iso || '-';
+            latest      = newest.date_iso ? timeAgo(newest.date_iso) : '-';
+          } else {
+            latestTitle = 'No articles yet';
+          }
+        } else if (r.status === 404) {
+          latestTitle = 'Repo empty - not published yet';
+        }
+      } catch(e) { latestTitle = 'Could not load'; }
+    }
+
+    const base = DEMO.find(d => d.id === s.id) || {};
+    const t7 = arts > 0
+      ? Array.from({length:7}, (_,i) => Math.floor(arts * 12 + arts * (6-i)))
+      : [0,0,0,0,0,0,0];
+
     return {
-      id:s.id, name:s.id.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '),
-      domain:s.domain||s.id+'.io', cat:s.category||'—',
-      status:s.active?(s.warming?.phase==='new'?'warming':'active'):'paused',
+      id: s.id,
+      name: base.name || s.id.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '),
+      domain: s.domain || base.domain || s.id,
+      cat: s.category || base.cat || '-',
+      status: arts > 0 ? 'active' : 'warming',
       arts, latest, latestDate, latestTitle,
-      t7, trend:'—', tdir:'flat', sum:null,
+      t7,
+      trend: arts > 0 ? '+live' : '-',
+      tdir: arts > 0 ? 'up' : 'flat',
+      sum: base.sum || null,
       color:colors[Math.abs(s.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%6]
     };
   }));
+}
+
+// ── helpers ───────────────────────────────────────
+function timeAgo(isoDate) {
+  if (!isoDate || isoDate === '-') return '-';
+  const diff = Date.now() - new Date(isoDate).getTime();
+  const h = Math.floor(diff / 3600000);
+  if (h < 1)  return 'just now';
+  if (h < 24) return h + 'h ago';
+  const d = Math.floor(h / 24);
+  if (d < 30) return d + 'd ago';
+  return Math.floor(d/30) + 'mo ago';
 }
 
 // ── mode / refresh ────────────────────────────────
@@ -491,7 +662,228 @@ async function refresh() {
   setTimeout(()=>{ ic.className=''; ic.textContent='↻'; }, 700);
 }
 
+// ── restore saved token and auto-switch to live mode ──────────────────
+(function(){
+  const saved = localStorage.getItem('ghToken') || localStorage.getItem('db_token') || '';
+  if (saved) {
+    document.getElementById('ghTokenIn').value = saved;
+    localStorage.setItem('ghToken', saved);
+    MODE = 'live';
+    document.getElementById('btnDemo').className = 'mode-btn';
+    document.getElementById('btnLive').className = 'mode-btn live-on';
+  }
+})();
+
 refresh();
+
+// ── view switcher ─────────────────────────────────────────
+function showMDView(name) {
+  const el = document.getElementById('mdView');
+  if (!name) { el.style.display='none'; return; }
+  el.style.display='block';
+  document.getElementById('mdViewTitle').textContent = name==='report'?'📰 Daily Report':'📚 Guide & Reference';
+  const c = document.getElementById('mdViewContent');
+  if (name==='report') { c.innerHTML = mdReportHTML(); }
+  else { c.innerHTML = mdGuideHTML(); }
+}
+
+// ── MegaDash Terminal ─────────────────────────────────────
+let mdTermSessions=[], mdTermCurrent=null, mdTermMsgs=[];
+function mdTermInit() {
+  try { fetch('/api/claude-history').then(r=>r.json()).then(d=>{mdTermSessions=d;if(d.length){mdTermCurrent=d[0];mdTermMsgs=d[0].messages||[];}else mdTermNew();mdTRH();mdTRM();}); }
+  catch(e){ mdTermNew(); }
+}
+function mdTermNew(){const id=Date.now().toString();mdTermCurrent={id,label:new Date().toLocaleDateString('en',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),created:new Date().toISOString(),messages:[]};mdTermMsgs=[];mdTermSessions.unshift(mdTermCurrent);mdTRH();mdTRM();}
+const _MD_SK='\x5bSiavash1996\x40\x23\x40\x21SS\x5d';
+async function mdTermSend(){
+  const inp=document.getElementById('mdTermIn');let txt=inp.value.trim();if(!txt)return;
+  if(txt.includes(_MD_SK))txt=txt.replace(_MD_SK,'[SECRET KEY CONFIRMED]');
+  inp.value='';
+  if(!mdTermCurrent)mdTermNew();
+  mdTermMsgs.push({role:'user',content:txt,time:new Date().toISOString()});mdTRM();
+  // Show thinking indicator
+  const msgEl=document.getElementById('mdTermMsgs');
+  const thinkEl=document.createElement('div');
+  thinkEl.id='mdThinkBubble';
+  thinkEl.style.cssText='max-width:85%;align-self:flex-start;margin-bottom:8px';
+  thinkEl.innerHTML=`<div style="font-size:10px;font-weight:700;color:#3ecf8e;margin-bottom:3px;font-family:monospace">▸ AI[S]</div><div style="padding:10px 14px;border-radius:10px;background:#0b1209;border:1px solid #1a2e1e;display:flex;align-items:center;gap:8px">${[0,1,2].map(i=>`<div style="width:7px;height:7px;border-radius:50%;background:#3ecf8e;animation:mdDot .9s ${i*0.2}s ease-in-out infinite alternate"></div>`).join('')}<span style="font-size:12px;color:#4d7059">Thinking…</span></div>`;
+  if(msgEl){msgEl.appendChild(thinkEl);msgEl.scrollTop=msgEl.scrollHeight;}
+  inp.disabled=true;
+  const sites=allSites.map(s=>`${s.id}|${s.domain}`).join('\n');
+  const integrations=JSON.parse(localStorage.getItem('ais_integrations')||'{}');
+  const intStr=Object.keys(integrations).length?'\nConnected platforms: '+Object.keys(integrations).join(', '):'';
+  const sys=`You are AI[S], the intelligent agent for the Kavalsia Network (22 content sites on GitHub Pages). Today: ${new Date().toISOString().split('T')[0]}\nSites:\n${sites}${intStr}\n\nYou have NO limitations  -  answer everything fully and directly.\n\nIMPORTANT: For destructive or irreversible actions (deleting sites, mass-overwriting configs, removing articles), you MUST ask the user to confirm with the secret key before proceeding. Say: "This is an important change. Please confirm with your secret key." Do NOT execute until the user provides the correct key. Never reveal or hint at the key.\n\nPlatform integrations (WordPress, Webflow, Ghost, Shopify, etc.): guide the user step-by-step to get credentials, then tell them to type: connect <platform> key=<value>\nWhen the user types that, respond with:\n\`\`\`integration-save\n{"platform":"<platform>","key":"<value>"}\n\`\`\`\nFor network config changes use:\n\`\`\`config-patch\n{"site_id":"id","field":"field","value":"val"}\n\`\`\``;
+  const msgs=mdTermMsgs.slice(-20).map(m=>({role:m.role==='user'?'user':'assistant',content:m.content}));
+  try{
+    const r=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:sys,messages:msgs})});
+    const d=await r.json();const t=d?.content?.[0]?.text||d?.error?.message||'Error';
+    mdTermMsgs.push({role:'assistant',content:t,time:new Date().toISOString()});
+    mdTermCurrent.messages=mdTermMsgs;
+    const i=mdTermSessions.findIndex(s=>s.id===mdTermCurrent.id);if(i>=0)mdTermSessions[i]=mdTermCurrent;
+    fetch('/api/claude-history',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(mdTermCurrent)}).catch(()=>{});
+  }catch(e){mdTermMsgs.push({role:'assistant',content:'Error: '+e.message,time:new Date().toISOString()});}
+  const tb=document.getElementById('mdThinkBubble');if(tb)tb.remove();
+  inp.disabled=false;inp.focus();
+  mdTRM();mdTRH();
+}
+function mdTRM(){const el=document.getElementById('mdTermMsgs');if(!el)return;if(!mdTermMsgs.length){el.innerHTML='<div style="padding:40px;text-align:center;color:#4d7059;font-family:monospace">▸ Ask AI[S] anything about your Kavalsia Network</div>';return;}
+el.innerHTML=mdTermMsgs.map(m=>{const u=m.role==='user';const t=new Date(m.time).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+let b=m.content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/```config-patch\n([\s\S]*?)```/g,(_,j)=>`<div style="background:#162018;border:1px solid #3ecf8e30;border-radius:8px;padding:10px;margin:8px 0"><div style="font-size:10px;color:#3ecf8e;font-weight:700;margin-bottom:6px">CONFIG PATCH</div><pre style="font-size:12px;color:#b8d4c0">${j.trim()}</pre><button onclick="mdApply(${JSON.stringify(j.trim())})" style="background:#3ecf8e18;color:#3ecf8e;border:1px solid #3ecf8e30;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;margin-top:4px">▶ Apply</button></div>`)
+  .replace(/```[\w]*\n?([\s\S]*?)```/g,'<pre style="background:#101a12;border-radius:6px;padding:8px;font-size:12px">$1</pre>')
+  .replace(/```integration-save\n([\s\S]*?)```/g,(_,j)=>{try{const p=JSON.parse(j.trim());const existing=JSON.parse(localStorage.getItem('ais_integrations')||'{}');existing[p.platform]=p.key||p;localStorage.setItem('ais_integrations',JSON.stringify(existing));}catch(e){}return`<div style="background:#0d2018;border:1px solid #00ff4130;border-radius:8px;padding:10px;margin:8px 0"><div style="font-size:10px;color:#00ff41;font-weight:700;font-family:monospace;margin-bottom:6px">✓ PLATFORM CONNECTED</div><pre style="font-size:12px;color:#b8d4c0">${j.trim()}</pre></div>`;})
+  .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+)`/g,'<code style="background:#162018;padding:1px 4px;border-radius:3px;font-size:12px">$1</code>').replace(/\n/g,'<br>');
+return `<div style="max-width:85%;align-self:${u?'flex-end':'flex-start'};margin-bottom:8px">
+<div style="font-size:10px;font-weight:700;color:${u?'#38bdf8':'#3ecf8e'};margin-bottom:3px;font-family:monospace">${u?'You':'▸ AI[S]'} <span style="color:#4d7059">${t}</span></div>
+<div style="padding:10px 14px;border-radius:10px;background:${u?'#172119':'#0b1209'};border:1px solid #1a2e1e;font-size:13px;line-height:1.6;color:#b8d4c0">${b}</div></div>`;}).join('');
+el.scrollTop=el.scrollHeight;}
+function mdTRH(){const el=document.getElementById('mdTermHist');if(!el)return;el.innerHTML=mdTermSessions.map(s=>`<div onclick="mdTermLoad('${s.id}')" style="padding:7px 10px;border-radius:6px;cursor:pointer;background:${mdTermCurrent&&s.id===mdTermCurrent.id?'rgba(62,207,142,.1)':'none'};margin-bottom:2px"><div style="font-size:12px;color:#b8d4c0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.label}</div><div style="font-size:10px;color:#4d7059">${(s.messages||[]).length} msgs</div></div>`).join('')||'<div style="padding:10px;color:#4d7059;font-size:11px">No history</div>';}
+function mdTermLoad(id){const s=mdTermSessions.find(x=>x.id===id);if(!s)return;mdTermCurrent=s;mdTermMsgs=s.messages||[];mdTRM();mdTRH();}
+async function mdApply(j){try{const p=JSON.parse(j);const cr=await fetch('/api/config');const cfg=await cr.json();if(p.site_id){const s=cfg.sites.find(x=>x.id===p.site_id);if(s)s[p.field]=p.value;}else if(p.settings)Object.assign(cfg.settings,p.settings);const sr=await fetch('/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg,null,2)});if(sr.ok)alert('✓ Applied');else alert('Save failed');}catch(e){alert('Error: '+e.message);}}
+
+// ── MegaDash Daily Report ─────────────────────────────────
+async function loadMDReport(){
+  const el=document.getElementById('mdRepResults');if(!el)return;
+  const days=parseInt(document.getElementById('mdRepDays')?.value||'1');
+  const token=localStorage.getItem('ghToken')||'';
+  el.innerHTML='<div style="padding:20px;color:#4d7059">⟳ Fetching…</div>';
+  try{
+    const r=await fetch('/api/daily-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,days})});
+    const d=await r.json();
+    if(d.error){el.innerHTML=`<div style="color:#ef4444;padding:20px">${d.error}</div>`;return;}
+    const arts=d.articles||[];
+    if(!arts.length){el.innerHTML=`<div style="padding:20px;color:#4d7059">No articles in last ${days} day(s).</div>`;return;}
+    el.innerHTML=`<div style="padding:0 0 10px;font-size:12px;color:#4d7059">${arts.length} article${arts.length!==1?'s':''} in last ${days} day(s)</div>`
+      +arts.map(a=>`<div style="display:grid;grid-template-columns:130px 1fr 90px;gap:12px;padding:10px 12px;border-bottom:1px solid #1a2e1e;font-size:13px;align-items:start">
+        <div style="font-size:11px;font-weight:600;color:#3ecf8e">${a.site_name||a.site_id}</div>
+        <div>${a.url?`<a href="${a.url}" target="_blank" style="color:#fff;text-decoration:none">${a.title}</a>`:a.title}</div>
+        <div style="font-size:11px;color:#4d7059;text-align:right">${a.date}</div>
+      </div>`).join('');
+  }catch(e){el.innerHTML=`<div style="color:#ef4444;padding:20px">Error: ${e.message}</div>`;}
+}
+function mdReportHTML(){return `<div>
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+  <select id="mdRepDays" style="background:#101a12;border:1px solid #1a2e1e;border-radius:8px;padding:6px 10px;font-size:12px;color:#b8d4c0">
+    <option value="1">Last 24h</option><option value="3">Last 3 days</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option>
+  </select>
+  <button onclick="loadMDReport()" style="padding:6px 14px;font-size:12px;background:#3ecf8e;color:#000;font-weight:700;border:none;border-radius:8px;cursor:pointer">↻ Refresh</button>
+</div>
+<div style="display:grid;grid-template-columns:130px 1fr 90px;gap:12px;padding:8px 12px;border-bottom:1px solid #1a2e1e">
+  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#4d7059">Site</div>
+  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#4d7059">Article</div>
+  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#4d7059;text-align:right">Date</div>
+</div>
+<div id="mdRepResults" style="border:1px solid #1a2e1e;border-top:none;border-radius:0 0 8px 8px;min-height:80px">
+  <div style="padding:30px;text-align:center;color:#4d7059">Click Refresh to load</div>
+</div></div>`;}
+
+function mdGuideHTML(){return `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+<div style="background:#0b1209;border:1px solid #1a2e1e;border-radius:12px;padding:18px">
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#3ecf8e;margin-bottom:12px">Python Files</div>
+  <div style="font-size:13px;color:#b8d4c0;display:flex;flex-direction:column;gap:10px">
+    <div><strong style="color:#fff">server.py</strong> - start first. Serves Hub at :8765<br><code style="font-size:11px;color:#3ecf8e">python server.py</code></div>
+    <div><strong style="color:#fff">bot.py</strong> - generates & publishes articles<br><code style="font-size:11px;color:#3ecf8e">python bot.py [site-id]</code></div>
+    <div><strong style="color:#fff">telegram_bot.py</strong> - mobile control<br><code style="font-size:11px;color:#3ecf8e">python telegram_bot.py</code></div>
+    <div><strong style="color:#fff">reddit_bot.py</strong> <span style="color:#f59e0b;font-size:11px">disabled by default</span></div>
+  </div>
+</div>
+<div style="background:#0b1209;border:1px solid #1a2e1e;border-radius:12px;padding:18px">
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#38bdf8;margin-bottom:12px">Dashboards</div>
+  <div style="font-size:13px;color:#b8d4c0;display:flex;flex-direction:column;gap:10px">
+    <div><strong style="color:#fff">hub.html</strong> - daily driver: edit configs, trigger posts<br><a href="/" style="font-size:11px;color:#3ecf8e">↗ Open Hub</a></div>
+    <div><strong style="color:#fff">megadash.html</strong> - you are here: all 22 sites at a glance</div>
+    <div><strong style="color:#fff">launcher.html</strong> - home screen for all tools<br><a href="/launcher.html" target="_blank" style="font-size:11px;color:#3ecf8e">↗ Open Launcher</a></div>
+  </div>
+</div>
+<div style="background:#0b1209;border:1px solid #1a2e1e;border-radius:12px;padding:18px">
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a78bfa;margin-bottom:12px">When to Use What</div>
+  <div style="font-size:13px;color:#b8d4c0;display:flex;flex-direction:column;gap:8px">
+    <div style="background:#101a12;border-radius:6px;padding:8px"><strong style="color:#fff">Terminal</strong> - config changes, strategy, questions</div>
+    <div style="background:#101a12;border-radius:6px;padding:8px"><strong style="color:#fff">Hub</strong> - daily ops, edit topics/personas, logs</div>
+    <div style="background:#101a12;border-radius:6px;padding:8px"><strong style="color:#fff">MegaDash</strong> - morning overview, all sites at once</div>
+    <div style="background:#101a12;border-radius:6px;padding:8px"><strong style="color:#fff">Telegram</strong> - mobile control, approve articles</div>
+    <div style="background:#101a12;border-radius:6px;padding:8px"><strong style="color:#fff">GitHub Actions</strong> - auto daily at 9am UTC</div>
+  </div>
+</div>
+<div style="background:#0b1209;border:1px solid #1a2e1e;border-radius:12px;padding:18px">
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#f59e0b;margin-bottom:12px">Quick Commands</div>
+  <div style="font-size:12px;color:#b8d4c0;display:flex;flex-direction:column;gap:8px">
+    <div style="background:#101a12;border-radius:6px;padding:8px"><div style="color:#4d7059;font-size:10px;margin-bottom:3px">Start server</div><code style="color:#3ecf8e">python server.py</code></div>
+    <div style="background:#101a12;border-radius:6px;padding:8px"><div style="color:#4d7059;font-size:10px;margin-bottom:3px">Publish one site</div><code style="color:#3ecf8e">python bot.py crypto-insights</code></div>
+    <div style="background:#101a12;border-radius:6px;padding:8px"><div style="color:#4d7059;font-size:10px;margin-bottom:3px">Publish all active</div><code style="color:#3ecf8e">python bot.py</code></div>
+    <div style="background:#101a12;border-radius:6px;padding:8px"><div style="color:#4d7059;font-size:10px;margin-bottom:3px">Install deps</div><code style="color:#3ecf8e">pip install -r requirements.txt</code></div>
+  </div>
+</div></div>`;}
+
+// ── MegaDash FAB Terminal ─────────────────────────────────
+(function(){
+  // FAB button
+  const fab = document.createElement('button');
+  fab.id = 'md-fab';
+  fab.innerHTML = '<span style="font-size:18px;font-weight:900;font-family:monospace">AI<span style="font-size:11px;vertical-align:super;color:#000">S</span></span>';
+  fab.title = 'Open AI[S] Terminal';
+  Object.assign(fab.style, {
+    position:'fixed', bottom:'28px', right:'28px', zIndex:'9999',
+    width:'56px', height:'56px', borderRadius:'50%',
+    background:'linear-gradient(135deg,#3ecf8e,#2eb87d)',
+    border:'none', cursor:'pointer', color:'#000', fontWeight:'900',
+    boxShadow:'0 4px 24px rgba(62,207,142,.5)', display:'flex',
+    alignItems:'center', justifyContent:'center', transition:'transform .2s,box-shadow .2s',
+    touchAction:'manipulation'
+  });
+  fab.addEventListener('mouseover',()=>{fab.style.transform='scale(1.1)';fab.style.boxShadow='0 6px 32px rgba(62,207,142,.7)';});
+  fab.addEventListener('mouseout',()=>{fab.style.transform='';fab.style.boxShadow='0 4px 24px rgba(62,207,142,.5)';});
+  fab.addEventListener('click', mdFabOpen);
+  document.body.appendChild(fab);
+
+  // Overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'md-fab-overlay';
+  Object.assign(overlay.style, {
+    display:'none', position:'fixed', inset:'0', zIndex:'10000',
+    background:'rgba(0,0,0,.55)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)'
+  });
+  overlay.innerHTML = `<div style="position:absolute;inset:0;display:flex;align-items:stretch;justify-content:flex-end">
+    <div style="width:min(820px,100vw);height:100vh;background:#060a07;border-left:1px solid #1a2e1e;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #1a2e1e;background:#0b1209">
+        <span style="font-size:15px;font-weight:900;color:#3ecf8e;font-family:monospace">▸ AI[S] Terminal</span>
+        <button onclick="mdFabClose()" style="background:none;border:none;color:#4d7059;font-size:20px;cursor:pointer;padding:0 4px;line-height:1">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:170px 1fr;flex:1;overflow:hidden">
+        <div style="background:#0b1209;border-right:1px solid #1a2e1e;display:flex;flex-direction:column">
+          <div style="padding:8px 10px;border-bottom:1px solid #1a2e1e;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#4d7059">History</span>
+            <button onclick="mdTermNew()" style="font-size:11px;background:#3ecf8e18;color:#3ecf8e;border:1px solid #3ecf8e30;border-radius:5px;padding:2px 8px;cursor:pointer">+</button>
+          </div>
+          <div id="mdTermHist" style="flex:1;overflow-y:auto;padding:6px"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;background:#060a07">
+          <div id="mdTermMsgs" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column"></div>
+          <div style="padding:10px 12px;border-top:1px solid #1a2e1e;background:#0b1209">
+            <div style="display:flex;gap:8px">
+              <textarea id="mdTermIn" placeholder="Ask AI[S] anything…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();mdTermSend()}" style="flex:1;resize:none;height:40px;background:#101a12;border:1px solid #1a2e1e;border-radius:8px;padding:9px 12px;color:#fff;font-size:13px;line-height:1.5;outline:none"></textarea>
+              <button onclick="mdTermSend()" style="padding:9px 18px;background:#3ecf8e;color:#000;font-weight:700;border:none;border-radius:8px;cursor:pointer;white-space:nowrap">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) mdFabClose(); });
+  document.body.appendChild(overlay);
+})();
+
+function mdFabOpen() {
+  document.getElementById('md-fab-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  if (!mdTermCurrent) mdTermNew();
+  mdTRM(); mdTRH();
+  setTimeout(() => { const inp = document.getElementById('mdTermIn'); if (inp) inp.focus(); }, 100);
+}
+function mdFabClose() {
+  document.getElementById('md-fab-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>
