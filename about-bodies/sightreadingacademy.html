@@ -1,0 +1,161 @@
+<style>
+.ab-main{--ab-bg:#11100d;--ab-bg2:#181712;--ab-bg3:#211f18;--ab-panel:#1d1b15;--ab-gold:#c9a96e;--ab-gold2:#b8944a;--ab-goldsoft:#e3cda0;--ab-burgundy:#7d2b3a;--ab-text:#efece2;--ab-text2:#cbc7b8;--ab-muted:#8d897c;--ab-border:#2c2a22;--ab-border2:#3a3729;--ab-serif:'Cormorant Garamond',serif;--ab-sans:'Inter',system-ui,sans-serif;background:var(--ab-bg);color:var(--ab-text);font-family:var(--ab-sans);font-size:16px;line-height:1.7;display:block;-webkit-font-smoothing:antialiased}
+.ab-wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+.ab-label{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--ab-gold);margin-bottom:14px}
+.ab-label::before{content:"";width:22px;height:1px;background:var(--ab-gold)}
+.ab-main h1,.ab-main h2,.ab-main h3,.ab-main h4{font-family:var(--ab-serif);font-weight:600;letter-spacing:.005em;color:var(--ab-text)}
+
+/* HERO */
+.ab-hero{position:relative;overflow:hidden;border-bottom:1px solid var(--ab-border);background:radial-gradient(900px 460px at 78% 0%,rgba(201,169,110,.12),transparent 70%),var(--ab-bg)}
+.ab-staff{position:absolute;inset:0;pointer-events:none;opacity:.5}
+.ab-staff span{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ab-border2) 30%,var(--ab-border2) 70%,transparent)}
+.ab-hero-in{position:relative;max-width:1180px;margin:0 auto;padding:88px 32px}
+.ab-kicker{display:inline-flex;align-items:center;gap:9px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ab-gold);margin-bottom:24px}
+.ab-kicker::before{content:"";width:30px;height:1px;background:var(--ab-gold)}
+.ab-hero h1{font-size:clamp(42px,5.5vw,74px);font-weight:600;line-height:1.04;margin-bottom:20px}
+.ab-hero h1 em{display:block;color:var(--ab-gold);font-style:italic;font-weight:500}
+.ab-hero p{font-size:17.5px;color:var(--ab-text2);max-width:580px;line-height:1.75}
+
+/* SECTION */
+.ab-section{padding:88px 0}
+.ab-section.tint{background:var(--ab-bg2);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border)}
+.ab-h2{font-family:var(--ab-serif);font-size:clamp(30px,4vw,46px);font-weight:600;line-height:1.1;margin-bottom:16px}
+.ab-h2 em{color:var(--ab-gold);font-style:italic}
+.ab-sub{font-size:16.5px;color:var(--ab-text2);line-height:1.7;max-width:600px}
+
+/* STORY */
+.ab-story{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.ab-story p{font-size:16.5px;color:var(--ab-text2);line-height:1.85;margin-bottom:18px}
+.ab-story .lead{font-family:var(--ab-serif);font-size:24px;font-style:italic;color:var(--ab-text);line-height:1.5;margin-bottom:24px}
+.ab-story-panel{background:var(--ab-panel);border:1px solid var(--ab-border2);border-radius:16px;padding:40px}
+.ab-step{display:grid;grid-template-columns:54px 1fr;gap:18px;padding:22px 0;border-bottom:1px solid var(--ab-border)}
+.ab-step:first-child{padding-top:0}
+.ab-step:last-child{border-bottom:none;padding-bottom:0}
+.ab-step-num{font-family:var(--ab-serif);font-size:38px;font-weight:600;color:var(--ab-gold);line-height:.9}
+.ab-step h4{font-size:21px;margin-bottom:5px}
+.ab-step p{font-size:14.5px;color:var(--ab-muted);line-height:1.65}
+
+/* VALUE CARDS */
+.ab-vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px}
+.ab-vcard{background:var(--ab-bg2);border:1px solid var(--ab-border);border-radius:14px;padding:34px 30px;transition:all .22s}
+.ab-vcard:hover{border-color:var(--ab-border2);transform:translateY(-4px);background:var(--ab-bg3)}
+.ab-vicon{font-family:var(--ab-serif);font-size:34px;color:var(--ab-gold);line-height:1;margin-bottom:16px}
+.ab-vcard h3{font-size:24px;margin-bottom:10px}
+.ab-vcard p{font-size:14.5px;color:var(--ab-text2);line-height:1.7}
+
+/* QUOTE */
+.ab-quote{text-align:center}
+.ab-qmark{font-family:var(--ab-serif);font-size:120px;line-height:.4;color:var(--ab-gold);opacity:.22;display:block;margin-bottom:18px}
+.ab-qtext{font-family:var(--ab-serif);font-size:clamp(24px,3.4vw,38px);font-style:italic;font-weight:500;color:var(--ab-text);max-width:840px;margin:0 auto;line-height:1.42}
+.ab-qattr{font-size:12px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--ab-gold);margin-top:26px}
+
+/* FACULTY */
+.ab-fac{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:center}
+.ab-portrait{position:relative;aspect-ratio:4/5;border:1px solid var(--ab-border2);border-radius:16px;background:radial-gradient(420px 320px at 50% 30%,rgba(201,169,110,.16),transparent),linear-gradient(160deg,var(--ab-bg3),var(--ab-bg));display:flex;align-items:center;justify-content:center}
+.ab-portrait .glyph{font-family:var(--ab-serif);font-size:170px;color:var(--ab-gold);opacity:.42;line-height:1}
+.ab-fac-body p{font-size:16.5px;color:var(--ab-text2);line-height:1.85;margin-bottom:16px}
+.ab-fac-body .lead{font-family:var(--ab-serif);font-size:23px;font-style:italic;color:var(--ab-text);line-height:1.5}
+.ab-fcreds{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+.ab-fcred{background:var(--ab-bg2);border:1px solid var(--ab-border);border-radius:8px;padding:12px 16px}
+.ab-fcred b{display:block;font-family:var(--ab-serif);font-size:24px;font-weight:600;color:var(--ab-gold)}
+.ab-fcred span{font-size:11.5px;color:var(--ab-muted)}
+
+/* CTA */
+.ab-cta{position:relative;overflow:hidden;background:radial-gradient(700px 360px at 50% 120%,rgba(201,169,110,.16),transparent),var(--ab-bg);border:1px solid var(--ab-border2);border-radius:18px;padding:64px 40px;text-align:center}
+.ab-cta .clef{font-family:var(--ab-serif);font-size:56px;color:var(--ab-gold);line-height:1;margin-bottom:8px}
+.ab-cta h2{font-size:clamp(28px,4vw,42px);margin-bottom:12px}
+.ab-cta h2 em{color:var(--ab-gold);font-style:italic}
+.ab-cta p{font-size:16px;color:var(--ab-text2);max-width:480px;margin:0 auto 28px;line-height:1.7}
+.ab-btn{display:inline-flex;align-items:center;gap:9px;background:var(--ab-gold);color:#1a1813;font-family:var(--ab-sans);font-size:13.5px;font-weight:600;letter-spacing:.02em;padding:15px 30px;border-radius:8px;transition:all .18s}
+.ab-btn:hover{background:var(--ab-goldsoft);transform:translateY(-2px)}
+
+@media(max-width:960px){.ab-story,.ab-fac{grid-template-columns:1fr;gap:48px}.ab-vgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.ab-wrap,.ab-hero-in{padding-left:20px;padding-right:20px}.ab-section{padding:62px 0}.ab-vgrid{grid-template-columns:1fr}.ab-cta{padding:46px 24px}}
+</style>
+
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-staff"><span style="top:40%"></span><span style="top:48%"></span><span style="top:56%"></span><span style="top:64%"></span><span style="top:72%"></span></div>
+    <div class="ab-hero-in">
+      <div class="ab-kicker">About the Academy</div>
+      <h1>We teach the skill<em>most musicians are never taught.</em></h1>
+      <p>Sight Reading Academy exists for one purpose - to turn the slow, anxious work of decoding a score into the quiet confidence of simply playing it. Fluency is not a gift reserved for the talented. It is a built skill, and this is where it is built.</p>
+    </div>
+  </section>
+
+  <section class="ab-section tint">
+    <div class="ab-wrap ab-story">
+      <div>
+        <div class="ab-label">Why We Exist</div>
+        <h2 class="ab-h2">Most musicians stall at the <em>same wall.</em></h2>
+        <p class="lead">Their eyes move note by note while the music moves measure by measure.</p>
+        <p>Every glance becomes a small act of decoding, and decoding is slow. The page wins, the tempo collapses, and confidence quietly erodes. Worse, the player concludes they simply lack a gift - when what they actually lack is a method.</p>
+        <p>Sight Reading Academy was founded to dismantle that wall. We treat reading the way a conservatory treats technique: as a discipline broken into trainable parts, practiced deliberately, and compounded over time. Intervals become shapes. Rhythms become vocabulary. Harmony becomes the context that lets you anticipate a phrase before your eyes arrive.</p>
+        <p>The result is not magic. It is the reliable, repeatable confidence of opening a score you have never seen and reading it at tempo.</p>
+      </div>
+      <div class="ab-story-panel">
+        <div class="ab-step"><span class="ab-step-num">01</span><div><h4>See the pattern</h4><p>Train the eye to read intervals and contour as shapes, not isolated dots on a staff.</p></div></div>
+        <div class="ab-step"><span class="ab-step-num">02</span><div><h4>Hear it first</h4><p>Ear training links what you see to what you expect, so the page confirms instead of surprises.</p></div></div>
+        <div class="ab-step"><span class="ab-step-num">03</span><div><h4>Feel the rhythm</h4><p>Build a library of rhythmic patterns until counting becomes recognition at tempo.</p></div></div>
+        <div class="ab-step"><span class="ab-step-num">04</span><div><h4>Practice with intent</h4><p>A daily protocol turns fifteen focused minutes into measurable, compounding progress.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap">
+      <div class="ab-label">The Method</div>
+      <h2 class="ab-h2">A curriculum built like a <em>conservatory program</em></h2>
+      <p class="ab-sub">Each discipline reinforces the others. Trained as one system, they make reading feel less like translation and more like understanding.</p>
+      <div class="ab-vgrid">
+        <div class="ab-vcard"><div class="ab-vicon">&#9833;</div><h3>Interval Recognition</h3><p>Stop reading note names. Process harmonic distance instantly, so the staff turns into shapes your eye already knows.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon">&#9834;</div><h3>Rhythmic Vocabulary</h3><p>Build a deep library of rhythmic figures until subdivisions are recognized on sight, not laboriously counted.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon">&#119070;</div><h3>Harmonic Context</h3><p>Use key, chord and function to predict what comes next - reading ahead instead of reacting one note behind.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon">&#9835;</div><h3>Ear Training</h3><p>Connect the eye to the inner ear so you anticipate the sound of a phrase before your fingers reach it.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon">&#9837;</div><h3>Practice Systems</h3><p>Structured daily protocols that remove guesswork. Know exactly what to practice, for how long, and why.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon">&#9839;</div><h3>Applied Repertoire</h3><p>Carefully graded material that meets your level and pulls your reading forward, measure by measure.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section tint">
+    <div class="ab-wrap ab-quote">
+      <span class="ab-qmark">&#8220;</span>
+      <p class="ab-qtext">The musician who can sight-read fluently is not gifted. They have simply internalized patterns that every musician can learn.</p>
+      <div class="ab-qattr">Sight Reading Academy &middot; Core Principle</div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap ab-fac">
+      <div class="ab-portrait">
+        <span class="glyph">&#119070;</span>
+      </div>
+      <div class="ab-fac-body">
+        <div class="ab-label">The Faculty</div>
+        <h2 class="ab-h2">Taught by musicians who teach <em>reading for a living</em></h2>
+        <p class="lead">Every lesson is shaped by one question: what is actually stopping this musician from reading fluently?</p>
+        <p>Sight Reading Academy is built by performers and pedagogues drawn from conservatory faculties and professional ensembles. Each of us spent years on the wrong side of the page before discovering that fluency is teachable - and each of us has since taught it to hundreds of students.</p>
+        <p>That experience shapes everything here. No vague encouragement, no busywork, no theory for its own sake. Just clear diagnosis, deliberate drills, and a method refined across thousands of lessons. The curriculum suits beginner to advanced players, on any instrument, in fifteen focused minutes a day.</p>
+        <div class="ab-fcreds">
+          <div class="ab-fcred"><b>20+</b><span>Years teaching</span></div>
+          <div class="ab-fcred"><b>5</b><span>Conservatory backgrounds</span></div>
+          <div class="ab-fcred"><b>1,000s</b><span>Students guided</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section tint">
+    <div class="ab-wrap">
+      <div class="ab-cta">
+        <div class="clef">&#119070;</div>
+        <h2>Start reading with <em>real fluency</em></h2>
+        <p>The Weekly Score delivers one lesson, one exercise, and one insight every Monday morning. It is the fastest way to begin training today.</p>
+        <a href="./#newsletter" class="ab-btn">Subscribe Free
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
