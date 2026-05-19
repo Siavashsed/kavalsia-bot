@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MashEstate Construction - Build It Right</title>
+<meta name="description" content="MashEstate Construction publishes renovation planning guides, contractor vetting advice, and real building cost intelligence for homeowners who want to build it right.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0f12;
+  --bg2:#13161a;
+  --bg3:#1b1f25;
+  --panel:#202530;
+  --amber:#f5a524;
+  --amber2:#e0901a;
+  --steel:#5b8fb0;
+  --text:#edeef0;
+  --muted:#9298a3;
+  --faint:#6a7079;
+  --border:#262b33;
+  --display:'Archivo',sans-serif;
+  --body:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+.eyebrow::before{content:"";width:24px;height:2px;background:var(--amber)}
+
+/* HEADER */
+.topbar{background:#0a0c0f;border-bottom:1px solid var(--border);font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.topbar-in{display:flex;align-items:center;justify-content:space-between;height:34px;gap:18px;flex-wrap:wrap}
+.topbar-left{display:flex;align-items:center;gap:18px}
+.topbar-left span{display:inline-flex;align-items:center;gap:7px}
+.topbar-left svg{width:12px;height:12px;stroke:var(--amber);fill:none;stroke-width:2.2}
+.topbar-right{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.topbar-right b{color:var(--amber);font-weight:800;letter-spacing:.1em}
+.site-nav{background:rgba(13,15,18,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
+.site-nav::after{content:"";position:absolute;left:0;bottom:-1px;width:100%;height:2px;background:linear-gradient(90deg,var(--amber),rgba(245,165,36,.35) 30%,transparent 70%)}
+.nav-in{display:flex;align-items:center;height:78px;gap:40px}
+.nav-logo{display:flex;align-items:center;gap:12px;font-family:var(--display);font-size:20px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:var(--text);position:relative}
+.nav-logo .mark-box{width:42px;height:42px;flex-shrink:0;border-radius:10px;background:linear-gradient(140deg,#241a08,#0d0f12);border:1px solid rgba(245,165,36,.35);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(245,165,36,.08),0 6px 14px -8px rgba(245,165,36,.5)}
+.nav-logo .mark{width:24px;height:24px;flex-shrink:0}
+.nav-logo .logo-text{display:flex;flex-direction:column;line-height:1}
+.nav-logo .logo-text span:first-child{font-size:17px;letter-spacing:.05em}
+.nav-logo .logo-text span:last-child{font-size:9.5px;font-weight:700;letter-spacing:.32em;color:var(--amber);margin-top:5px}
+.nav-links{display:flex;gap:2px;margin-left:14px;padding:5px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px}
+.nav-links a{position:relative;font-family:var(--display);font-size:12.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:9px 14px;border-radius:6px;color:var(--muted);transition:color .15s,background .15s}
+.nav-links a:hover{color:var(--text);background:rgba(245,165,36,.08)}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-phone{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--text);padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);transition:border-color .15s,color .15s}
+.nav-phone:hover{border-color:rgba(245,165,36,.5);color:var(--amber)}
+.nav-phone svg{width:14px;height:14px;stroke:var(--amber);fill:none;stroke-width:2}
+.nav-cta{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(140deg,var(--amber),#d68a18);color:#1a1206;font-family:var(--display);font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:12px 20px 12px 22px;border-radius:8px;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 14px -4px rgba(245,165,36,.55),inset 0 1px 0 rgba(255,255,255,.25)}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 12px 24px -8px rgba(245,165,36,.7)}
+.nav-cta svg{width:13px;height:13px;stroke:#1a1206;fill:none;stroke-width:2.6}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(700px 420px at 78% 12%,rgba(245,165,36,.13),transparent 70%),
+  radial-gradient(620px 480px at 8% 96%,rgba(91,143,176,.1),transparent 70%)}
+.hero::after{content:"";position:absolute;inset:0;opacity:.5;
+  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(circle at 50% 30%,#000,transparent 78%)}
+.hero-in{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;padding:84px 24px 90px}
+.hero-h1{font-family:var(--display);font-size:clamp(46px,6.4vw,82px);font-weight:900;line-height:.98;letter-spacing:-.01em;margin:18px 0 20px}
+.hero-h1 em{color:var(--amber);font-style:normal}
+.hero-desc{font-size:16px;color:var(--muted);max-width:480px;margin-bottom:30px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--amber);color:#1a1206;font-family:var(--display);font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:15px 28px;border-radius:8px;transition:transform .15s,box-shadow .15s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px -10px rgba(245,165,36,.6)}
+.btn-ghost{border:1px solid var(--border);color:var(--text);font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:14px 26px;border-radius:8px;background:var(--bg2);transition:border-color .15s,color .15s}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber)}
+.hero-meta{display:flex;gap:26px;margin-top:32px;flex-wrap:wrap}
+.hero-meta div{display:flex;flex-direction:column}
+.hero-meta b{font-family:var(--display);font-size:24px;font-weight:900;color:var(--text)}
+.hero-meta small{font-size:12px;color:var(--faint);letter-spacing:.04em}
+/* hero blueprint card */
+.blueprint{position:relative;background:linear-gradient(160deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:16px;padding:30px;box-shadow:0 30px 60px -30px rgba(0,0,0,.7)}
+.blueprint-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.blueprint-top span{font-family:var(--display);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(245,165,36,.15)}
+.phase{display:grid;grid-template-columns:46px 1fr;gap:16px;padding:15px 0;border-bottom:1px solid var(--border);align-items:center}
+.phase:last-child{border-bottom:none;padding-bottom:0}
+.phase-num{width:44px;height:44px;border-radius:9px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:900;font-size:17px;color:var(--amber)}
+.phase b{display:block;font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:.02em;color:var(--text)}
+.phase small{font-size:12.5px;color:var(--muted)}
+
+/* TRUST STRIP */
+.trust{border-bottom:1px solid var(--border);background:var(--bg2)}
+.trust-in{display:flex;align-items:center;gap:38px;padding:22px 24px;flex-wrap:wrap;justify-content:center}
+.trust-in p{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.trust-item{display:flex;align-items:center;gap:9px;font-family:var(--display);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.trust-item svg{width:17px;height:17px;stroke:var(--amber);fill:none;stroke-width:2}
+
+/* SECTION SHELL */
+.section{padding:88px 0}
+.sec-head{max-width:660px;margin-bottom:46px}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.sec-title{font-family:var(--display);font-size:clamp(30px,4vw,46px);font-weight:900;line-height:1.04;letter-spacing:-.01em;margin:14px 0 12px}
+.sec-sub{font-size:15.5px;color:var(--muted)}
+
+/* WHY / STORY */
+.story{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.story-in{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.story-list{display:flex;flex-direction:column;gap:18px;margin-top:26px}
+.story-row{display:flex;gap:16px}
+.story-ic{width:42px;height:42px;flex-shrink:0;border-radius:9px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.story-ic svg{width:20px;height:20px;stroke:var(--amber);fill:none;stroke-width:2}
+.story-row b{font-family:var(--display);font-size:16px;font-weight:700;display:block;margin-bottom:2px}
+.story-row p{font-size:14px;color:var(--muted)}
+.story-visual{position:relative;border-radius:16px;border:1px solid var(--border);background:linear-gradient(150deg,var(--bg3),var(--bg));padding:34px;overflow:hidden}
+.story-visual::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(245,165,36,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(245,165,36,.05) 1px,transparent 1px);background-size:36px 36px}
+.story-quote{position:relative;font-family:var(--display);font-size:clamp(20px,2.4vw,28px);font-weight:800;line-height:1.25;letter-spacing:-.01em}
+.story-quote span{color:var(--amber)}
+.story-attr{position:relative;margin-top:20px;font-size:13px;color:var(--faint);font-family:var(--display);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+
+/* VALUE CARDS */
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.val-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:30px;transition:transform .2s,border-color .2s}
+.val-card:hover{transform:translateY(-5px);border-color:rgba(245,165,36,.45)}
+.val-ic{width:54px;height:54px;border-radius:12px;background:linear-gradient(145deg,rgba(245,165,36,.18),rgba(245,165,36,.04));border:1px solid rgba(245,165,36,.25);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.val-ic svg{width:26px;height:26px;stroke:var(--amber);fill:none;stroke-width:1.9}
+.val-card h3{font-family:var(--display);font-size:19px;font-weight:800;margin-bottom:8px}
+.val-card p{font-size:14px;color:var(--muted)}
+
+/* STATS BAND */
+.stats{background:linear-gradient(150deg,var(--bg3),var(--bg2));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stats-in{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.stat{background:var(--bg2);padding:48px 24px;text-align:center}
+.stat b{font-family:var(--display);font-size:clamp(38px,5vw,56px);font-weight:900;color:var(--amber);line-height:1;display:block}
+.stat small{display:block;margin-top:10px;font-size:13px;color:var(--muted);letter-spacing:.04em}
+
+/* TOPIC GRID */
+.topic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.topic{position:relative;display:flex;align-items:center;gap:16px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px;transition:border-color .2s,background .2s}
+.topic:hover{border-color:rgba(245,165,36,.4);background:var(--bg3)}
+.topic-ic{width:46px;height:46px;flex-shrink:0;border-radius:10px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.topic-ic svg{width:22px;height:22px;stroke:var(--amber);fill:none;stroke-width:1.9}
+.topic b{font-family:var(--display);font-size:15px;font-weight:700;display:block}
+.topic small{font-size:12.5px;color:var(--muted)}
+
+/* ARTICLES */
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.art-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+.art-card:hover{transform:translateY(-6px);border-color:rgba(245,165,36,.45)}
+.art-thumb{height:170px;position:relative;overflow:hidden}
+.art-thumb svg{position:absolute;inset:0;width:100%;height:100%}
+.art-cat{position:absolute;top:14px;left:14px;background:var(--amber);color:#1a1206;font-family:var(--display);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:5px}
+.art-body{padding:22px;display:flex;flex-direction:column;flex:1}
+.art-title{font-family:var(--display);font-size:19px;font-weight:800;line-height:1.22;letter-spacing:-.005em;margin-bottom:9px;transition:color .15s}
+.art-card:hover .art-title{color:var(--amber)}
+.art-excerpt{font-size:13.5px;color:var(--muted);margin-bottom:16px;flex:1}
+.art-meta{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:11.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);border-top:1px solid var(--border);padding-top:14px}
+.art-meta .read{margin-left:auto;color:var(--amber)}
+.art-empty{grid-column:1/-1;text-align:center;padding:70px 24px;background:var(--bg2);border:1px dashed var(--border);border-radius:14px}
+.art-empty svg{width:48px;height:48px;stroke:var(--faint);fill:none;stroke-width:1.6;margin:0 auto 16px}
+.art-empty h3{font-family:var(--display);font-size:21px;font-weight:800;margin-bottom:8px}
+.art-empty p{font-size:14px;color:var(--muted);max-width:380px;margin:0 auto}
+
+/* AUTHOR */
+.author{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.author-in{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center}
+.author-photo{width:160px;height:160px;border-radius:16px;background:linear-gradient(150deg,var(--bg3),var(--bg));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative}
+.author-photo svg{width:78px;height:78px}
+.author-photo::after{content:"";position:absolute;right:-8px;bottom:-8px;width:34px;height:34px;border-radius:9px;background:var(--amber);border:3px solid var(--bg2)}
+.author-info h3{font-family:var(--display);font-size:24px;font-weight:900;margin-bottom:4px}
+.author-role{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.author-info p{font-size:15px;color:var(--muted);max-width:620px}
+
+/* FAQ */
+.faq-list{max-width:820px;margin:0 auto}
+.faq-item{border:1px solid var(--border);border-radius:12px;background:var(--bg2);margin-bottom:14px;overflow:hidden}
+.faq-q{width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:16px;padding:22px 24px;text-align:left;font-family:var(--display);font-size:16.5px;font-weight:700;color:var(--text)}
+.faq-q .ic{width:26px;height:26px;flex-shrink:0;border-radius:7px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform .25s,background .2s}
+.faq-q .ic::before,.faq-q .ic::after{content:"";position:absolute;background:var(--amber);border-radius:2px}
+.faq-q .ic::before{width:12px;height:2px}
+.faq-q .ic::after{width:2px;height:12px;transition:transform .25s}
+.faq-item.open .faq-q .ic{background:var(--amber)}
+.faq-item.open .faq-q .ic::before,.faq-item.open .faq-q .ic::after{background:#1a1206}
+.faq-item.open .faq-q .ic::after{transform:scaleY(0)}
+.faq-q span:first-child{flex:1}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-a p{padding:0 24px 22px 66px;font-size:14.5px;color:var(--muted)}
+
+/* NEWSLETTER */
+.newsletter{position:relative;overflow:hidden}
+.newsletter::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 50% 0%,rgba(245,165,36,.12),transparent 70%)}
+.nl-card{position:relative;background:linear-gradient(150deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:18px;padding:54px 40px;text-align:center;max-width:680px;margin:0 auto}
+.nl-card h2{font-family:var(--display);font-size:clamp(28px,3.6vw,40px);font-weight:900;line-height:1.05;margin-bottom:10px}
+.nl-card h2 span{color:var(--amber)}
+.nl-card p{font-size:15px;color:var(--muted);margin-bottom:26px}
+.nl-form{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap}
+.nl-input{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:var(--body);padding:14px 16px;outline:none;transition:border-color .15s}
+.nl-input:focus{border-color:var(--amber)}
+.nl-input::placeholder{color:var(--faint)}
+.nl-btn{background:var(--amber);color:#1a1206;font-family:var(--display);font-size:12.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:14px 26px;border:none;border-radius:8px;cursor:pointer;transition:transform .15s}
+.nl-btn:hover{transform:translateY(-2px)}
+.nl-fine{margin-top:14px;font-size:12px;color:var(--faint)}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:64px 0 28px}
+.footer-in{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:44px;margin-bottom:44px}
+.footer-logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:19px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;margin-bottom:12px}
+.footer-logo .mark{width:28px;height:28px}
+.footer-logo span{color:var(--amber)}
+.footer-desc{font-size:13.5px;color:var(--muted);max-width:300px}
+.footer-head{font-family:var(--display);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:13.5px;color:var(--muted);transition:color .15s}
+.footer-links a:hover{color:var(--amber)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:26px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.footer-copy{font-size:12.5px;color:var(--faint)}
+
+/* COST ESTIMATOR */
+.calc-wrap{display:grid;grid-template-columns:1fr .9fr;gap:28px;align-items:stretch}
+.calc-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:32px}
+.calc-field{margin-bottom:22px}
+.calc-field:last-child{margin-bottom:0}
+.calc-label{display:block;font-family:var(--display);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.calc-opts{display:flex;flex-wrap:wrap;gap:8px}
+.calc-opt{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.03em;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 16px;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.calc-opt:hover{border-color:rgba(245,165,36,.4);color:var(--text)}
+.calc-opt.active{background:var(--amber);border-color:var(--amber);color:#1a1206}
+.calc-range{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:4px;background:var(--bg3);outline:none;margin-top:6px}
+.calc-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--amber);border:3px solid var(--bg2);cursor:pointer}
+.calc-range::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--amber);border:3px solid var(--bg2);cursor:pointer}
+.calc-sqft-val{font-family:var(--display);font-size:18px;font-weight:900;color:var(--amber)}
+.calc-result{background:linear-gradient(150deg,var(--bg3),var(--bg));border:1px solid var(--border);border-radius:14px;padding:32px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.calc-result small{font-family:var(--display);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.calc-amount{font-family:var(--display);font-size:clamp(30px,4vw,46px);font-weight:900;color:var(--amber);line-height:1.05;margin:14px 0 6px}
+.calc-result p{font-size:13px;color:var(--muted)}
+.calc-note{margin-top:18px;font-size:12px;color:var(--faint);border-top:1px solid var(--border);padding-top:16px}
+@media(max-width:980px){.calc-wrap{grid-template-columns:1fr}}
+
+/* TOOLS TABS */
+.tools-tabs{display:flex;gap:6px;padding:6px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin:0 auto 32px;max-width:680px;flex-wrap:wrap;justify-content:center}
+.tools-tab{flex:1;min-width:160px;font-family:var(--display);font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:12px 14px;border-radius:8px;transition:background .15s,color .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.tools-tab svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.tools-tab:hover{color:var(--text)}
+.tools-tab.active{background:var(--amber);color:#1a1206}
+.tool-panel{display:none}
+.tool-panel.active{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* CHECKLIST TOOL */
+.check-wrap{display:grid;grid-template-columns:1fr .9fr;gap:28px;align-items:stretch}
+.check-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:30px}
+.check-list{display:flex;flex-direction:column;gap:10px}
+.check-item{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s}
+.check-item:hover{border-color:rgba(245,165,36,.4)}
+.check-item.on{border-color:rgba(245,165,36,.6);background:linear-gradient(150deg,rgba(245,165,36,.08),transparent 60%)}
+.check-box{width:22px;height:22px;flex-shrink:0;border-radius:6px;background:var(--bg3);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;margin-top:1px}
+.check-box svg{width:13px;height:13px;stroke:#1a1206;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .15s}
+.check-item.on .check-box{background:var(--amber);border-color:var(--amber)}
+.check-item.on .check-box svg{opacity:1}
+.check-text b{display:block;font-family:var(--display);font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:2px;letter-spacing:.01em}
+.check-text small{font-size:12.5px;color:var(--muted);line-height:1.5}
+.check-meter{background:linear-gradient(150deg,var(--bg3),var(--bg));border:1px solid var(--border);border-radius:14px;padding:32px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.score-ring{position:relative;width:170px;height:170px;margin:0 auto 20px}
+.score-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.score-ring .track{stroke:var(--border);stroke-width:11;fill:none}
+.score-ring .bar{stroke:var(--amber);stroke-width:11;fill:none;stroke-linecap:round;transition:stroke-dashoffset .5s ease,stroke .3s}
+.score-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num b{font-family:var(--display);font-size:44px;font-weight:900;color:var(--text);line-height:1}
+.score-num small{font-family:var(--display);font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--faint);text-transform:uppercase;margin-top:4px}
+.score-label{font-family:var(--display);font-size:15px;font-weight:800;color:var(--amber);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.check-meter p{font-size:13px;color:var(--muted)}
+.check-note{margin-top:18px;font-size:12px;color:var(--faint);border-top:1px solid var(--border);padding-top:16px;text-align:left}
+
+/* TIMELINE TOOL */
+.tl-wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:stretch}
+.tl-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:30px}
+.tl-result{background:linear-gradient(150deg,var(--bg3),var(--bg));border:1px solid var(--border);border-radius:14px;padding:30px;display:flex;flex-direction:column}
+.tl-summary{text-align:center;padding-bottom:22px;border-bottom:1px solid var(--border);margin-bottom:22px}
+.tl-summary small{font-family:var(--display);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.tl-weeks{font-family:var(--display);font-size:clamp(28px,3.8vw,42px);font-weight:900;color:var(--amber);line-height:1.05;margin:10px 0 4px}
+.tl-summary p{font-size:13px;color:var(--muted)}
+.tl-phases{display:flex;flex-direction:column;gap:10px}
+.tl-phase{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.tl-phase-row{display:flex;align-items:center;gap:12px}
+.tl-phase-dot{width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(245,165,36,.14);flex-shrink:0}
+.tl-phase b{font-family:var(--display);font-size:13.5px;font-weight:700;color:var(--text)}
+.tl-bar{grid-column:1/-1;height:7px;border-radius:5px;background:var(--bg);overflow:hidden;position:relative}
+.tl-bar-fill{height:100%;background:linear-gradient(90deg,var(--amber),#e0901a);border-radius:5px;transition:width .5s ease}
+.tl-phase span{font-family:var(--display);font-size:12px;font-weight:700;color:var(--muted)}
+@media(max-width:980px){.check-wrap,.tl-wrap{grid-template-columns:1fr}}
+
+/* PROCESS / PHASES SECTION */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:phase}
+.process-card{position:relative;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px 24px;overflow:hidden;transition:transform .2s,border-color .2s}
+.process-card:hover{transform:translateY(-5px);border-color:rgba(245,165,36,.45)}
+.process-card::before{counter-increment:phase;content:"0" counter(phase);position:absolute;top:18px;right:20px;font-family:var(--display);font-size:42px;font-weight:900;color:var(--bg3);line-height:1}
+.process-card h3{font-family:var(--display);font-size:17px;font-weight:800;margin:0 0 8px;position:relative}
+.process-card p{font-size:13.5px;color:var(--muted);margin-bottom:14px;position:relative}
+.process-card ul{list-style:none;padding:0;margin:0;position:relative}
+.process-card li{font-size:12.5px;color:var(--muted);padding:5px 0 5px 18px;position:relative}
+.process-card li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:1.5px;background:var(--amber)}
+.process-tag{display:inline-block;font-family:var(--display);font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);background:rgba(245,165,36,.08);border:1px solid rgba(245,165,36,.25);border-radius:5px;padding:4px 9px;margin-bottom:14px}
+
+/* BUDGET BREAKDOWN */
+.budget-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.budget-list{display:flex;flex-direction:column;gap:14px}
+.budget-row{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.budget-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
+.budget-top b{font-family:var(--display);font-size:14.5px;font-weight:700}
+.budget-top span{font-family:var(--display);font-size:13px;font-weight:800;color:var(--amber)}
+.budget-track{height:8px;background:var(--bg);border-radius:5px;overflow:hidden}
+.budget-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--amber),#e0901a)}
+.budget-row p{font-size:12.5px;color:var(--muted);margin-top:8px}
+.budget-viz{position:relative;background:linear-gradient(150deg,var(--bg3),var(--bg2));border:1px solid var(--border);border-radius:18px;padding:36px;overflow:hidden}
+.budget-viz::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(245,165,36,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(245,165,36,.04) 1px,transparent 1px);background-size:32px 32px}
+.budget-donut{position:relative;width:240px;height:240px;margin:0 auto}
+.budget-donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.donut-center b{font-family:var(--display);font-size:14px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.donut-center span{font-family:var(--display);font-size:38px;font-weight:900;color:var(--amber);line-height:1;margin-top:6px}
+.budget-legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:24px;position:relative}
+.budget-legend div{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:12px;font-weight:600;color:var(--muted)}
+.legend-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+@media(max-width:980px){.process-grid{grid-template-columns:1fr 1fr}.budget-wrap{grid-template-columns:1fr}}
+
+/* PITFALLS */
+.pit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pit-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:26px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.pit-card:hover{transform:translateY(-4px);border-color:rgba(245,165,36,.4)}
+.pit-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--amber),transparent)}
+.pit-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.pit-ic{width:42px;height:42px;border-radius:10px;background:rgba(245,165,36,.1);border:1px solid rgba(245,165,36,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pit-ic svg{width:20px;height:20px;stroke:var(--amber);fill:none;stroke-width:2}
+.pit-card h3{font-family:var(--display);font-size:16.5px;font-weight:800}
+.pit-card p{font-size:13.5px;color:var(--muted);margin-bottom:14px}
+.pit-tip{display:flex;gap:10px;align-items:flex-start;padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:9px;font-size:12.5px;color:var(--text)}
+.pit-tip b{font-family:var(--display);font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-right:6px}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.tm-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:28px;display:flex;flex-direction:column;position:relative;transition:transform .2s,border-color .2s}
+.tm-card:hover{transform:translateY(-5px);border-color:rgba(245,165,36,.45)}
+.tm-quote-mark{position:absolute;top:18px;right:22px;font-family:var(--display);font-size:64px;font-weight:900;color:rgba(245,165,36,.16);line-height:.7;font-style:italic}
+.tm-stars{display:flex;gap:3px;margin-bottom:14px}
+.tm-stars svg{width:15px;height:15px;fill:var(--amber)}
+.tm-quote{font-size:14.5px;color:var(--text);line-height:1.6;margin-bottom:22px;flex:1;position:relative}
+.tm-foot{display:flex;align-items:center;gap:13px;border-top:1px solid var(--border);padding-top:18px}
+.tm-avatar{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:15px;font-weight:800;color:#1a1206;letter-spacing:.02em}
+.tm-meta b{display:block;font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.01em}
+.tm-meta small{display:block;font-size:11.5px;color:var(--faint);font-family:var(--display);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+@media(max-width:980px){.pit-grid,.tm-grid{grid-template-columns:1fr 1fr}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:980px){
+  .hero-in,.story-in,.author-in{grid-template-columns:1fr;gap:44px}
+  .val-grid,.topic-grid,.art-grid{grid-template-columns:1fr 1fr}
+  .stats-in{grid-template-columns:1fr 1fr}
+  .footer-in{grid-template-columns:1fr 1fr}
+  .author-in{text-align:center}
+  .author-photo{margin:0 auto}
+}
+@media(max-width:620px){
+  .nav-links,.nav-phone,.topbar-right{display:none}
+  .topbar-in{justify-content:center}
+  .nav-in{height:64px;gap:14px}
+  .nav-logo .logo-text span:last-child{display:none}
+  .section{padding:62px 0}
+  .val-grid,.topic-grid,.art-grid,.process-grid,.pit-grid,.tm-grid{grid-template-columns:1fr}
+  .stats-in{grid-template-columns:1fr 1fr}
+  .footer-in{grid-template-columns:1fr 1fr}
+  .faq-a p{padding-left:24px}
+  .tools-tab{min-width:0}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#f5a524-->
+<!--SHELL:HEADER-->
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <div class="topbar-left">
+      <span><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9"/></svg>Licensed-pro reviewed</span>
+      <span><svg viewBox="0 0 24 24"><path d="M12 6v6l4 2" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg>2025 cost data</span>
+    </div>
+    <div class="topbar-right"><span>New guides every week</span><b>// EST. 2014</b></div>
+  </div>
+</div>
+<nav class="site-nav">
+  <div class="wrap nav-in">
+    <a href="./" class="nav-logo">
+      <span class="mark-box">
+        <svg class="mark" viewBox="0 0 32 32" fill="none"><path d="M4 28V13L16 5l12 8v15" stroke="#f5a524" stroke-width="2.6" stroke-linejoin="round"/><path d="M12 28v-9h8v9" stroke="#edeef0" stroke-width="2.6" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="logo-text">
+        <span>MashEstate</span>
+        <span>Construction Intel</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="./#why">Why Us</a>
+      <a href="./#topics">Topics</a>
+      <a href="./#tools">Tools</a>
+      <a href="./#process">Process</a>
+      <a href="./#guides">Guides</a>
+      <a href="about.html">About</a>
+    </div>
+    <div class="nav-actions">
+      <a href="./#tools" class="nav-phone">
+        <svg viewBox="0 0 24 24"><path d="M3 5c0 9 7 16 16 16l3-4-5-2-2 2c-3-1-6-4-7-7l2-2-2-5-5 2z" stroke-linejoin="round"/></svg>
+        Free Tools
+      </a>
+      <a href="./#newsletter" class="nav-cta">
+        Get the Guide
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<section class="hero">
+  <div class="wrap hero-in">
+    <div class="reveal">
+      <span class="eyebrow">Construction Intelligence</span>
+      <h1 class="hero-h1">Build it <em>right.</em><br>The first time.</h1>
+      <p class="hero-desc">Renovation planning, contractor vetting, and honest cost breakdowns for homeowners who want to know exactly what they are getting into before the first crew shows up.</p>
+      <div class="hero-btns">
+        <a href="./#guides" class="btn-primary">Browse Project Guides</a>
+        <a href="./#why" class="btn-ghost">How It Works</a>
+      </div>
+      <div class="hero-meta">
+        <div><b data-count="600" data-suffix="+">0</b><small>Project guides published</small></div>
+        <div><b data-count="78" data-suffix="%">0</b><small>Renos run over budget</small></div>
+        <div><b data-count="12" data-suffix="">0</b><small>Years of build research</small></div>
+      </div>
+    </div>
+    <div class="blueprint reveal">
+      <div class="blueprint-top">
+        <span>Project Phases - Start Here</span>
+        <span class="dot"></span>
+      </div>
+      <div class="phase"><div class="phase-num">01</div><div><b>Planning &amp; Permits</b><small>Scope, timeline and approvals</small></div></div>
+      <div class="phase"><div class="phase-num">02</div><div><b>Finding Contractors</b><small>Vetting, bidding and contracts</small></div></div>
+      <div class="phase"><div class="phase-num">03</div><div><b>Budgeting &amp; Costs</b><small>Real numbers, not guesses</small></div></div>
+      <div class="phase"><div class="phase-num">04</div><div><b>During Construction</b><small>Oversight and change orders</small></div></div>
+      <div class="phase"><div class="phase-num">05</div><div><b>Finishing &amp; Sign-Off</b><small>Punch list, warranty, retention</small></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="trust-in">
+    <p>Trusted Building Knowledge</p>
+    <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9"/></svg>Licensed-pro reviewed</div>
+    <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke-linejoin="round"/></svg>No-spin advice</div>
+    <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round"/></svg>2025 cost data</div>
+    <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 6v6l4 2" stroke-linecap="round"/><circle cx="12" cy="12" r="9"/></svg>Updated weekly</div>
+  </div>
+</div>
+
+<section class="section story" id="why">
+  <div class="wrap story-in">
+    <div class="reveal">
+      <span class="eyebrow">Why MashEstate</span>
+      <h2 class="sec-title">Most reno disasters are decided before demo day.</h2>
+      <p class="sec-sub">They happen at the planning table - the skipped permit, the lowball bid, the vague contract. We break the whole process into plain language so you can spot the warning signs while you still have leverage.</p>
+      <div class="story-list">
+        <div class="story-row">
+          <div class="story-ic"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10" stroke-linecap="round"/></svg></div>
+          <div><b>Plain-language playbooks</b><p>Every guide is built from real projects, not brochure copy.</p></div>
+        </div>
+        <div class="story-row">
+          <div class="story-ic"><svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13M9 21v-7h6v7" stroke-linejoin="round"/></svg></div>
+          <div><b>Numbers you can verify</b><p>Cost ranges sourced from current contractor bids across multiple regions.</p></div>
+        </div>
+        <div class="story-row">
+          <div class="story-ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke-linejoin="round"/></svg></div>
+          <div><b>Built to protect you</b><p>We side with the homeowner - not the contractor, not the lender.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="story-visual reveal">
+      <p class="story-quote">"A renovation budget is not a number. It is a <span>plan</span> for what happens when reality costs more."</p>
+      <p class="story-attr">- The MashEstate Build Principle</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">What You Get</span>
+      <h2 class="sec-title">A clearer way to run a build</h2>
+      <p class="sec-sub">Three things every guide is engineered to give you before you commit a dollar.</p>
+    </div>
+    <div class="val-grid">
+      <div class="val-card reveal">
+        <div class="val-ic"><svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13M9 21v-7h6v7" stroke-linejoin="round"/></svg></div>
+        <h3>Scope With No Surprises</h3>
+        <p>Step-by-step breakdowns of what each project actually involves, so nothing gets discovered halfway through demolition.</p>
+      </div>
+      <div class="val-card reveal">
+        <div class="val-ic"><svg viewBox="0 0 24 24"><path d="M12 2v20M6 8h9a3 3 0 010 6H6m12 0H9a3 3 0 010-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Real Cost Benchmarks</h3>
+        <p>Honest 2025 price ranges for kitchens, baths, roofs and more - so you can spot an inflated quote in seconds.</p>
+      </div>
+      <div class="val-card reveal">
+        <div class="val-ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke-linejoin="round"/></svg></div>
+        <h3>Contractor Vetting</h3>
+        <p>License checks, bid reading, contract red flags and reference scripts that filter out the riskiest crews fast.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap">
+    <div class="stats-in">
+      <div class="stat reveal"><b data-count="600" data-suffix="+">0</b><small>Project guides published</small></div>
+      <div class="stat reveal"><b data-count="42" data-suffix="K">0</b><small>Homeowners helped monthly</small></div>
+      <div class="stat reveal"><b data-count="120" data-suffix="+">0</b><small>Cost benchmarks tracked</small></div>
+      <div class="stat reveal"><b data-count="9" data-suffix="/10">0</b><small>Readers feel build-ready</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="topics">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">What We Cover</span>
+      <h2 class="sec-title">From first sketch to final walk-through</h2>
+      <p class="sec-sub">Every stage of building and renovating a home, broken into focused guides.</p>
+    </div>
+    <div class="topic-grid">
+      <div class="topic reveal"><div class="topic-ic"><svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13M9 21v-7h6v7" stroke-linejoin="round"/></svg></div><div><b>Renovation Planning</b><small>Scope, timelines and sequencing</small></div></div>
+      <div class="topic reveal"><div class="topic-ic"><svg viewBox="0 0 24 24"><path d="M4 22V6l8-4 8 4v16M4 22h16M9 12h6M9 16h6" stroke-linejoin="round"/></svg></div><div><b>New Builds</b><small>Lot to lock-up decisions</small></div></div>
+      <div class="topic reveal"><div class="topic-ic"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9"/></svg></div><div><b>Hiring Contractors</b><small>Vetting, bidding and contracts</small></div></div>
+      <div class="topic reveal"><div class="topic-ic"><svg viewBox="0 0 24 24"><path d="M12 2v20M6 8h9a3 3 0 010 6H6m12 0H9a3 3 0 010-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>Cost Guides</b><small>Real budgets and benchmarks</small></div></div>
+      <div class="topic reveal"><div class="topic-ic"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 7v13M17 7v13M4 20h16M9 11h6" stroke-linecap="round"/></svg></div><div><b>Permits &amp; Codes</b><small>Approvals and compliance</small></div></div>
+      <div class="topic reveal"><div class="topic-ic"><svg viewBox="0 0 24 24"><path d="M14 3l7 7-9 9-7 1 1-7 8-10z" stroke-linejoin="round"/></svg></div><div><b>DIY &amp; Finishing</b><small>What is safe to do yourself</small></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tools">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Free Planning Tools</span>
+      <h2 class="sec-title">Three calculators every homeowner needs</h2>
+      <p class="sec-sub">Cost ranges, realistic timelines and a live contractor vetting score - built on the same data our guides use.</p>
+    </div>
+
+    <div class="tools-tabs reveal" id="toolsTabs">
+      <button type="button" class="tools-tab active" data-tab="calc">
+        <svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zM9 7h6M9 11h6M9 15h3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Cost Estimator
+      </button>
+      <button type="button" class="tools-tab" data-tab="timeline">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>
+        Timeline Estimator
+      </button>
+      <button type="button" class="tools-tab" data-tab="vet">
+        <svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Vetting Checklist
+      </button>
+    </div>
+
+    <div class="tool-panel active" id="calculator" data-panel="calc">
+      <div class="calc-wrap reveal">
+        <div class="calc-card">
+          <div class="calc-field">
+            <label class="calc-label">Project Type</label>
+            <div class="calc-opts" id="calc-type">
+              <button type="button" class="calc-opt active" data-val="kitchen">Kitchen</button>
+              <button type="button" class="calc-opt" data-val="bathroom">Bathroom</button>
+              <button type="button" class="calc-opt" data-val="whole-home">Whole Home</button>
+              <button type="button" class="calc-opt" data-val="addition">Addition</button>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label class="calc-label" for="calc-sqft">Square Footage - <span class="calc-sqft-val" id="calc-sqft-val">200 sq ft</span></label>
+            <input type="range" class="calc-range" id="calc-sqft" min="50" max="3000" step="10" value="200">
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Finish Level</label>
+            <div class="calc-opts" id="calc-finish">
+              <button type="button" class="calc-opt active" data-val="budget">Budget</button>
+              <button type="button" class="calc-opt" data-val="mid-range">Mid-Range</button>
+              <button type="button" class="calc-opt" data-val="high-end">High-End</button>
+            </div>
+          </div>
+        </div>
+        <div class="calc-result">
+          <small>Estimated Project Cost</small>
+          <div class="calc-amount" id="calc-amount">$0 - $0</div>
+          <p id="calc-detail">Kitchen remodel, budget finish</p>
+          <div class="calc-note">Ballpark only. Regional labor rates, structural work and permits can shift the final figure. Always confirm with itemized contractor bids.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-panel" data-panel="timeline">
+      <div class="tl-wrap reveal">
+        <div class="tl-card">
+          <div class="calc-field">
+            <label class="calc-label">Project Type</label>
+            <div class="calc-opts" id="tl-type">
+              <button type="button" class="calc-opt active" data-val="kitchen">Kitchen</button>
+              <button type="button" class="calc-opt" data-val="bathroom">Bathroom</button>
+              <button type="button" class="calc-opt" data-val="addition">Addition</button>
+              <button type="button" class="calc-opt" data-val="whole-home">Whole Home</button>
+              <button type="button" class="calc-opt" data-val="new-build">New Build</button>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Scope</label>
+            <div class="calc-opts" id="tl-scope">
+              <button type="button" class="calc-opt active" data-val="light">Light Refresh</button>
+              <button type="button" class="calc-opt" data-val="standard">Standard Remodel</button>
+              <button type="button" class="calc-opt" data-val="gut">Gut + Rebuild</button>
+            </div>
+          </div>
+          <div class="calc-field">
+            <label class="calc-label">Permits Required</label>
+            <div class="calc-opts" id="tl-permit">
+              <button type="button" class="calc-opt active" data-val="no">No</button>
+              <button type="button" class="calc-opt" data-val="minor">Minor</button>
+              <button type="button" class="calc-opt" data-val="major">Major</button>
+            </div>
+          </div>
+        </div>
+        <div class="tl-result">
+          <div class="tl-summary">
+            <small>Typical Timeline</small>
+            <div class="tl-weeks" id="tl-weeks">0 - 0 weeks</div>
+            <p id="tl-detail">Kitchen, light refresh</p>
+          </div>
+          <div class="tl-phases" id="tl-phases"></div>
+          <div class="calc-note">Assumes a normal permit office, no structural surprises and a contractor with available crew. Custom millwork, slab corrections or supply delays can add weeks.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-panel" data-panel="vet">
+      <div class="check-wrap reveal">
+        <div class="check-card">
+          <label class="calc-label" style="margin-bottom:18px">Tick everything the contractor has provided</label>
+          <div class="check-list" id="checkList">
+            <div class="check-item" data-weight="14"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Active state license</b><small>Verified on the state licensing board, not just a number on a card.</small></div></div>
+            <div class="check-item" data-weight="14"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>General liability + workers comp insurance</b><small>Certificate of insurance sent directly from the insurer, not the contractor.</small></div></div>
+            <div class="check-item" data-weight="10"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>At least three recent client references</b><small>Projects from the last 12 to 24 months in the same scope range as yours.</small></div></div>
+            <div class="check-item" data-weight="12"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Itemized written quote</b><small>Line items for labor, materials and allowances. Not a single round-number total.</small></div></div>
+            <div class="check-item" data-weight="10"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Signed written contract</b><small>Scope, schedule, payment terms, change-order process and warranty in writing.</small></div></div>
+            <div class="check-item" data-weight="10"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Progress-based payment schedule</b><small>Tied to milestones, never more than 10 percent up front for typical projects.</small></div></div>
+            <div class="check-item" data-weight="8"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Permit handling defined</b><small>Clarity on who pulls permits and that permits will actually be pulled.</small></div></div>
+            <div class="check-item" data-weight="8"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Lien waivers from subs and suppliers</b><small>Conditional waivers with every progress payment, unconditional at the end.</small></div></div>
+            <div class="check-item" data-weight="8"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Written warranty terms</b><small>One year on workmanship is typical, plus manufacturer warranties on materials.</small></div></div>
+            <div class="check-item" data-weight="6"><div class="check-box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div><div class="check-text"><b>Named project lead and communication cadence</b><small>One person owns the job site, with weekly updates and a defined response time.</small></div></div>
+          </div>
+        </div>
+        <div class="check-meter">
+          <div class="score-ring">
+            <svg viewBox="0 0 200 200">
+              <circle class="track" cx="100" cy="100" r="86"/>
+              <circle class="bar" id="scoreBar" cx="100" cy="100" r="86" stroke-dasharray="540.3" stroke-dashoffset="540.3"/>
+            </svg>
+            <div class="score-num"><b id="scoreNum">0</b><small>Vetting Score</small></div>
+          </div>
+          <div class="score-label" id="scoreLabel">Just Starting</div>
+          <p id="scoreCopy">Tick each item the contractor has actually provided. Anything missing is a question to ask before you sign.</p>
+          <div class="check-note">A score below 70 is a clear stop sign. Below 50, walk away regardless of price. This is not contractor screening - this is loss prevention.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">The Build Process</span>
+      <h2 class="sec-title">Every project moves through four phases</h2>
+      <p class="sec-sub">Skip a phase and you pay for it later. Here is what each stage actually involves and where homeowners lose the most money.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-card reveal">
+        <span class="process-tag">Weeks 1 - 4</span>
+        <h3>Plan + Permit</h3>
+        <p>Define scope, finalize drawings, gather bids and pull permits before a hammer swings.</p>
+        <ul><li>Written scope of work</li><li>Three comparable bids</li><li>Permit applications filed</li><li>Contingency budget set</li></ul>
+      </div>
+      <div class="process-card reveal">
+        <span class="process-tag">Weeks 4 - 8</span>
+        <h3>Mobilize + Demo</h3>
+        <p>Contract signed, deposit released, site protected and demolition handled with proper disposal.</p>
+        <ul><li>Signed contract and schedule</li><li>Site protection installed</li><li>Demo and haul-away</li><li>Discovery review meeting</li></ul>
+      </div>
+      <div class="process-card reveal">
+        <span class="process-tag">Weeks 6 - 16</span>
+        <h3>Rough-In + Inspect</h3>
+        <p>Framing, plumbing, electrical and HVAC roughed in. Inspections passed before walls close up.</p>
+        <ul><li>Mechanical rough-in</li><li>Insulation and vapor barrier</li><li>Mid-build inspections</li><li>Drywall and prime coat</li></ul>
+      </div>
+      <div class="process-card reveal">
+        <span class="process-tag">Weeks 14 - 22</span>
+        <h3>Finish + Sign-Off</h3>
+        <p>Finish carpentry, paint, tile, fixtures, punch list and retention release with final inspection.</p>
+        <ul><li>Finishes and fixtures</li><li>Punch list walk-through</li><li>Final inspection passed</li><li>Warranty docs and lien waivers</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section story">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Budget Reality</span>
+      <h2 class="sec-title">Where the money actually goes</h2>
+      <p class="sec-sub">Most homeowners size the kitchen and forget the rest. A typical mid-range renovation breaks down roughly like this - know it before you sign anything.</p>
+    </div>
+    <div class="budget-wrap reveal">
+      <div class="budget-list">
+        <div class="budget-row">
+          <div class="budget-top"><b>Labor</b><span>35%</span></div>
+          <div class="budget-track"><div class="budget-fill" style="width:35%"></div></div>
+          <p>Skilled trades, supervision and crew time. The first place lowball bids cut corners.</p>
+        </div>
+        <div class="budget-row">
+          <div class="budget-top"><b>Materials + Finishes</b><span>30%</span></div>
+          <div class="budget-track"><div class="budget-fill" style="width:30%"></div></div>
+          <p>Cabinets, flooring, tile, fixtures, paint. Allowances are where budgets quietly blow up.</p>
+        </div>
+        <div class="budget-row">
+          <div class="budget-top"><b>Structural + Systems</b><span>15%</span></div>
+          <div class="budget-track"><div class="budget-fill" style="width:15%"></div></div>
+          <p>Framing changes, plumbing, electrical, HVAC. Often discovered, never quoted properly upfront.</p>
+        </div>
+        <div class="budget-row">
+          <div class="budget-top"><b>Permits + Fees</b><span>5%</span></div>
+          <div class="budget-track"><div class="budget-fill" style="width:5%"></div></div>
+          <p>Permit pulls, inspections, design fees and dump fees. Small line, real money.</p>
+        </div>
+        <div class="budget-row">
+          <div class="budget-top"><b>Contingency</b><span>15%</span></div>
+          <div class="budget-track"><div class="budget-fill" style="width:15%"></div></div>
+          <p>Reserve for the surprises every renovation generates. Older homes need closer to 20%.</p>
+        </div>
+      </div>
+      <div class="budget-viz">
+        <div class="budget-donut">
+          <svg viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#1b1f25" stroke-width="32"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#f5a524" stroke-width="32" stroke-dasharray="175.8 502.7" stroke-dashoffset="0"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#e0901a" stroke-width="32" stroke-dasharray="150.8 502.7" stroke-dashoffset="-175.8"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#b87514" stroke-width="32" stroke-dasharray="75.4 502.7" stroke-dashoffset="-326.6"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#5b8fb0" stroke-width="32" stroke-dasharray="25.1 502.7" stroke-dashoffset="-402"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#7aa6c4" stroke-width="32" stroke-dasharray="75.4 502.7" stroke-dashoffset="-427.1"/>
+          </svg>
+          <div class="donut-center"><b>Avg Mid-Range</b><span>$84k</span></div>
+        </div>
+        <div class="budget-legend">
+          <div><span class="legend-dot" style="background:#f5a524"></span>Labor 35%</div>
+          <div><span class="legend-dot" style="background:#e0901a"></span>Materials 30%</div>
+          <div><span class="legend-dot" style="background:#b87514"></span>Systems 15%</div>
+          <div><span class="legend-dot" style="background:#5b8fb0"></span>Permits 5%</div>
+          <div><span class="legend-dot" style="background:#7aa6c4"></span>Contingency 15%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Common Pitfalls</span>
+      <h2 class="sec-title">The six mistakes that cost homeowners the most</h2>
+      <p class="sec-sub">After thousands of project reviews, the same expensive errors keep showing up. Here is what to do instead.</p>
+    </div>
+    <div class="pit-grid">
+      <div class="pit-card reveal">
+        <div class="pit-head"><div class="pit-ic"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2L12 3z" stroke-linejoin="round"/><path d="M12 10v5M12 18v.5" stroke-linecap="round"/></svg></div><h3>Picking the lowest bid</h3></div>
+        <p>The cheapest quote almost always wins by leaving things out. Mid-project change orders make up the difference plus a premium.</p>
+        <div class="pit-tip"><span><b>Do this</b>Get three bids and throw out the lowest unless you can explain - line by line - why it is lower.</span></div>
+      </div>
+      <div class="pit-card reveal">
+        <div class="pit-head"><div class="pit-ic"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M9 3v6M15 3v6M4 12h16" stroke-linecap="round"/></svg></div><h3>Skipping permits</h3></div>
+        <p>Unpermitted work hurts at resale, voids insurance after a fire and turns into a six-figure problem during refinancing.</p>
+        <div class="pit-tip"><span><b>Do this</b>Pull every permit the code requires. Period. Treat any contractor who suggests otherwise as disqualified.</span></div>
+      </div>
+      <div class="pit-card reveal">
+        <div class="pit-head"><div class="pit-ic"><svg viewBox="0 0 24 24"><path d="M12 2v20M6 8h9a3 3 0 010 6H6m12 0H9a3 3 0 010-6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>No contingency budget</h3></div>
+        <p>Older homes always hide something. Hitting 100% of budget on day one means change orders go on a credit card at 22%.</p>
+        <div class="pit-tip"><span><b>Do this</b>Hold back 15 to 20% of total budget in cash, untouched, until final walk-through.</span></div>
+      </div>
+      <div class="pit-card reveal">
+        <div class="pit-head"><div class="pit-ic"><svg viewBox="0 0 24 24"><path d="M4 17l6-6 4 4 6-6M4 7h7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Vague allowances</h3></div>
+        <p>A $3,000 "tile allowance" for an entire bathroom is fiction. Real tile, install and underlayment costs three times that.</p>
+        <div class="pit-tip"><span><b>Do this</b>Select finishes before signing, or require itemized allowances pinned to real product SKUs.</span></div>
+      </div>
+      <div class="pit-card reveal">
+        <div class="pit-head"><div class="pit-ic"><svg viewBox="0 0 24 24"><path d="M3 12l4-4M3 12l4 4M3 12h18M17 8l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Front-loaded payments</h3></div>
+        <p>Big deposits give a contractor zero reason to finish on time. Every horror story starts with a 40% up-front check.</p>
+        <div class="pit-tip"><span><b>Do this</b>Cap deposits at 10%. Tie remaining payments to inspected milestones, hold final 10% for punch list.</span></div>
+      </div>
+      <div class="pit-card reveal">
+        <div class="pit-head"><div class="pit-ic"><svg viewBox="0 0 24 24"><path d="M21 11a8 8 0 11-16 0 8 8 0 0116 0z"/><path d="M11 8v4l3 2" stroke-linecap="round"/></svg></div><h3>No written schedule</h3></div>
+        <p>Without a milestone schedule, a six-week kitchen becomes a six-month occupation of your house.</p>
+        <div class="pit-tip"><span><b>Do this</b>Require a written schedule with start, milestones and substantial completion dates. Tie liquidated damages to it.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section testimonials">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Reader Wins</span>
+      <h2 class="sec-title">Homeowners who built it right</h2>
+      <p class="sec-sub">Real notes from readers who used MashEstate guides, tools and checklists before signing a contract.</p>
+    </div>
+    <div class="tm-grid">
+      <div class="tm-card reveal">
+        <span class="tm-quote-mark">"</span>
+        <div class="tm-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+        <p class="tm-quote">The vetting checklist saved us from a contractor who looked great on paper. Three items missing on his quote turned out to be exactly the things that bankrupt our neighbor's reno.</p>
+        <div class="tm-foot">
+          <div class="tm-avatar" style="background:linear-gradient(140deg,#f5a524,#d68a18)">MR</div>
+          <div class="tm-meta"><b>Marcus Reyes</b><small>Kitchen Remodel - Austin TX</small></div>
+        </div>
+      </div>
+      <div class="tm-card reveal">
+        <span class="tm-quote-mark">"</span>
+        <div class="tm-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+        <p class="tm-quote">We were ready to sign a $410k addition contract until the cost estimator flagged it as 30% over benchmark. Two more bids later we built the same plan for $290k.</p>
+        <div class="tm-foot">
+          <div class="tm-avatar" style="background:linear-gradient(140deg,#5b8fb0,#3d6e8c)">EH</div>
+          <div class="tm-meta"><b>Elena Hartmann</b><small>Second-Floor Addition - Denver CO</small></div>
+        </div>
+      </div>
+      <div class="tm-card reveal">
+        <span class="tm-quote-mark">"</span>
+        <div class="tm-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+        <p class="tm-quote">First-time homeowner here, completely lost. The four-phase process broke a terrifying full-home reno into something I could actually manage week by week.</p>
+        <div class="tm-foot">
+          <div class="tm-avatar" style="background:linear-gradient(140deg,#b87514,#8a5810)">JL</div>
+          <div class="tm-meta"><b>Jamie Liu</b><small>Full-Home Renovation - Portland OR</small></div>
+        </div>
+      </div>
+      <div class="tm-card reveal">
+        <span class="tm-quote-mark">"</span>
+        <div class="tm-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+        <p class="tm-quote">Used the timeline estimator to push back on a builder promising a four-week bathroom. He admitted eight was realistic. We planned around it and the project actually finished on time.</p>
+        <div class="tm-foot">
+          <div class="tm-avatar" style="background:linear-gradient(140deg,#7aa6c4,#5b8fb0)">PO</div>
+          <div class="tm-meta"><b>Priya Okafor</b><small>Primary Bath Remodel - Chicago IL</small></div>
+        </div>
+      </div>
+      <div class="tm-card reveal">
+        <span class="tm-quote-mark">"</span>
+        <div class="tm-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+        <p class="tm-quote">The "where the money goes" breakdown convinced my wife the 20% contingency was non-negotiable. Sure enough, the foundation needed repairs and we did not blink.</p>
+        <div class="tm-foot">
+          <div class="tm-avatar" style="background:linear-gradient(140deg,#f5a524,#b87514)">DK</div>
+          <div class="tm-meta"><b>Derek Kowalski</b><small>1920s Bungalow Restore - Minneapolis MN</small></div>
+        </div>
+      </div>
+      <div class="tm-card reveal">
+        <span class="tm-quote-mark">"</span>
+        <div class="tm-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+        <p class="tm-quote">Every other site sounded like it was selling me something. MashEstate just gave me numbers, scripts and red flags. That is exactly what a first-time builder needs.</p>
+        <div class="tm-foot">
+          <div class="tm-avatar" style="background:linear-gradient(140deg,#5b8fb0,#7aa6c4)">SN</div>
+          <div class="tm-meta"><b>Sara Nguyen</b><small>New Build - Raleigh NC</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section story" id="guides">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Latest Guides</span>
+      <h2 class="sec-title">Fresh from the build desk</h2>
+      <p class="sec-sub">New project guides, cost updates and contractor advice as they publish.</p>
+    </div>
+    <div class="art-grid" id="artGrid"></div>
+  </div>
+</section>
+
+<section class="section author">
+  <div class="wrap author-in">
+    <div class="author-photo reveal">
+      <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="30" r="15" fill="#2a3038"/><path d="M14 70c0-15 12-24 26-24s26 9 26 24" fill="#2a3038"/><path d="M22 24l6-9h24l6 9" stroke="#f5a524" stroke-width="3" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="author-info reveal">
+      <span class="eyebrow">Behind The Guides</span>
+      <h3>The MashEstate Build Desk</h3>
+      <p class="author-role">Construction Writers &amp; Licensed Reviewers</p>
+      <p>Every guide is drafted by writers who have walked active job sites and reviewed by licensed contractors and estimators. We do not take builder sponsorships and we update cost data as the market moves - because advice that is six months stale can cost you thousands at the bargaining table.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">Common Questions</span>
+      <h2 class="sec-title">Before you break ground</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>Are MashEstate cost figures accurate for my area?</span><span class="ic"></span></button>
+        <div class="faq-a"><p>Our benchmarks are national ranges built from current contractor bids across several regions. Treat them as a reference band: if a quote lands far outside the range, that is your cue to ask why - not proof the quote is wrong.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>Do you recommend specific contractors?</span><span class="ic"></span></button>
+        <div class="faq-a"><p>No. We stay independent and take no builder sponsorships. Instead we teach you the vetting process - license checks, insurance verification, reference scripts and bid review - so you can choose with confidence.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>Is this useful if I have never managed a project?</span><span class="ic"></span></button>
+        <div class="faq-a"><p>Especially then. Our guides assume zero construction background and walk through each phase in plain language, from planning and permits to the final punch list.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q"><span>How often is the content updated?</span><span class="ic"></span></button>
+        <div class="faq-a"><p>We publish new guides weekly and revisit cost benchmarks as material and labor prices shift, so the numbers you read reflect the current market.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section newsletter" id="newsletter">
+  <div class="wrap">
+    <div class="nl-card reveal">
+      <span class="eyebrow" style="margin-bottom:14px">Build Smart Weekly</span>
+      <h2>Plan your project <span>before</span> you spend.</h2>
+      <p>Weekly project guides, cost updates and contractor advice - straight to your inbox. No spam, unsubscribe anytime.</p>
+      <form class="nl-form" onsubmit="return false">
+        <input class="nl-input" type="email" placeholder="your@email.com" aria-label="Email address" required>
+        <button class="nl-btn" type="submit">Subscribe</button>
+      </form>
+      <p class="nl-fine">Join homeowners who plan their builds the smart way.</p>
+    </div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer>
+  <div class="wrap">
+    <div class="footer-in">
+      <div>
+        <div class="footer-logo">
+          <svg class="mark" viewBox="0 0 32 32" fill="none"><path d="M4 28V13L16 5l12 8v15" stroke="#f5a524" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 28v-9h8v9" stroke="#edeef0" stroke-width="2.4" stroke-linejoin="round"/></svg>
+          MashEstate <span>Construction</span>
+        </div>
+        <p class="footer-desc">Construction and renovation intelligence for homeowners who want to know exactly what they are getting into before they sign.</p>
+      </div>
+      <div>
+        <div class="footer-head">Explore</div>
+        <div class="footer-links">
+          <a href="./#why">Why MashEstate</a>
+          <a href="./#topics">What We Cover</a>
+          <a href="./#tools">Planning Tools</a>
+          <a href="./#process">Build Process</a>
+          <a href="./#guides">Latest Guides</a>
+          <a href="./#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-head">Topics</div>
+        <div class="footer-links">
+          <a href="./#topics">Renovation Planning</a>
+          <a href="./#topics">Cost Guides</a>
+          <a href="./#topics">Hiring Contractors</a>
+          <a href="./#topics">Permits &amp; Codes</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-head">Company</div>
+        <div class="footer-links">
+          <a href="./">Home</a>
+          <a href="about.html">About</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Use</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 MashEstate Construction. All rights reserved.</div>
+      <div class="footer-copy">Build it right.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Article grid - real data only, no placeholders */
+(function(){
+  if(!document.getElementById('artGrid'))return;
+  var grid=document.getElementById('artGrid');
+  var palettes=[
+    ['#1b2733','#2d4257'],['#2a2113','#4a3618'],['#1f2a26','#36493f'],
+    ['#241f2c','#3d3450'],['#2c2018','#4a3424'],['#1c2630','#33414f']
+  ];
+  function thumb(i,cat){
+    var p=palettes[i%palettes.length];
+    return '<div class="art-thumb">'+
+      '<svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">'+
+      '<defs><linearGradient id="g'+i+'" x1="0" y1="0" x2="1" y2="1">'+
+      '<stop offset="0" stop-color="'+p[0]+'"/><stop offset="1" stop-color="'+p[1]+'"/></linearGradient></defs>'+
+      '<rect width="400" height="200" fill="url(#g'+i+')"/>'+
+      '<g stroke="rgba(245,165,36,.22)" stroke-width="1" fill="none">'+
+      '<path d="M0 150h400M0 110h400M0 70h400"/><path d="M80 0v200M160 0v200M240 0v200M320 0v200"/></g>'+
+      '<path d="M60 150V95l50-32 50 32v55" stroke="#f5a524" stroke-width="2.4" fill="none" stroke-linejoin="round"/>'+
+      '<path d="M95 150v-30h30v30" stroke="rgba(237,238,240,.55)" stroke-width="2.4" fill="none"/>'+
+      '<circle cx="300" cy="58" r="26" stroke="rgba(245,165,36,.4)" stroke-width="2" fill="none"/>'+
+      '</svg>'+
+      '<span class="art-cat">'+esc(cat||'Guide')+'</span></div>';
+  }
+  function esc(s){var d=document.createElement('div');d.textContent=String(s==null?'':s);return d.innerHTML;}
+  function emptyState(){
+    grid.innerHTML='<div class="art-empty">'+
+      '<svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke-linejoin="round"/></svg>'+
+      '<h3>New guides are on the way</h3>'+
+      '<p>Our build desk is finishing the next round of project guides. Subscribe below and we will send them the moment they publish.</p></div>';
+  }
+  fetch('./articles.json')
+    .then(function(r){if(!r.ok)throw new Error('no file');return r.json();})
+    .then(function(data){
+      var list=Array.isArray(data)?data:(data&&Array.isArray(data.articles)?data.articles:[]);
+      list=list.filter(function(a){return a&&a.slug&&a.title;});
+      if(!list.length){emptyState();return;}
+      grid.innerHTML=list.slice(0,6).map(function(a,i){
+        var cat=a.category||a.cat||'Guide';
+        var excerpt=a.excerpt||a.description||a.summary||'';
+        var meta=a.date||a.published||'';
+        var read=a.read_time||a.readingTime||(a.mins?a.mins+' min read':'');
+        return '<a class="art-card" href="./'+encodeURIComponent(a.slug)+'/">'+
+          thumb(i,cat)+
+          '<div class="art-body">'+
+          '<h3 class="art-title">'+esc(a.title)+'</h3>'+
+          (excerpt?'<p class="art-excerpt">'+esc(excerpt)+'</p>':'<p class="art-excerpt"></p>')+
+          '<div class="art-meta">'+(meta?'<span>'+esc(meta)+'</span>':'<span>MashEstate</span>')+
+          (read?'<span class="read">'+esc(read)+'</span>':'')+'</div>'+
+          '</div></a>';
+      }).join('');
+    })
+    .catch(function(){emptyState();});
+})();
+
+/* Scroll reveal */
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.14});
+  els.forEach(function(e){io.observe(e);});
+})();
+
+/* Count-up */
+(function(){
+  var nums=document.querySelectorAll('[data-count]');
+  function run(el){
+    var target=parseFloat(el.getAttribute('data-count'))||0;
+    var suffix=el.getAttribute('data-suffix')||'';
+    var start=null,dur=1400;
+    function step(ts){
+      if(!start)start=ts;
+      var p=Math.min((ts-start)/dur,1);
+      var eased=1-Math.pow(1-p,3);
+      el.textContent=Math.round(target*eased)+suffix;
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if(!('IntersectionObserver' in window)){nums.forEach(function(n){n.textContent=n.getAttribute('data-count')+(n.getAttribute('data-suffix')||'');});return;}
+  var io=new IntersectionObserver(function(ents){
+    ents.forEach(function(en){if(en.isIntersecting){run(en.target);io.unobserve(en.target);}});
+  },{threshold:.6});
+  nums.forEach(function(n){io.observe(n);});
+})();
+
+/* Renovation Cost Estimator */
+(function(){
+  var sqftInput=document.getElementById('calc-sqft');
+  if(!sqftInput)return;
+  /* cost-per-sqft low/high bands by project type */
+  var RATES={
+    'kitchen':{low:90,high:200,label:'Kitchen remodel'},
+    'bathroom':{low:120,high:260,label:'Bathroom remodel'},
+    'whole-home':{low:60,high:160,label:'Whole-home renovation'},
+    'addition':{low:130,high:300,label:'Home addition'}
+  };
+  /* finish-level multipliers */
+  var FINISH={
+    'budget':{mult:0.75,label:'budget finish'},
+    'mid-range':{mult:1.0,label:'mid-range finish'},
+    'high-end':{mult:1.55,label:'high-end finish'}
+  };
+  var state={type:'kitchen',finish:'budget'};
+
+  function money(n){
+    return '$'+(Math.round(n/100)*100).toLocaleString('en-US');
+  }
+  function compute(){
+    var sqft=parseInt(sqftInput.value,10)||0;
+    var r=RATES[state.type],f=FINISH[state.finish];
+    var low=sqft*r.low*f.mult;
+    var high=sqft*r.high*f.mult;
+    document.getElementById('calc-sqft-val').textContent=sqft.toLocaleString('en-US')+' sq ft';
+    document.getElementById('calc-amount').textContent=money(low)+' - '+money(high);
+    document.getElementById('calc-detail').textContent=r.label+', '+f.label;
+  }
+  function bindGroup(id,key){
+    var grp=document.getElementById(id);
+    grp.querySelectorAll('.calc-opt').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        grp.querySelectorAll('.calc-opt').forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active');
+        state[key]=btn.getAttribute('data-val');
+        compute();
+      });
+    });
+  }
+  bindGroup('calc-type','type');
+  bindGroup('calc-finish','finish');
+  sqftInput.addEventListener('input',compute);
+  compute();
+})();
+
+/* Tool tabs */
+(function(){
+  var tabs=document.querySelectorAll('.tools-tab');
+  if(!tabs.length)return;
+  var panels=document.querySelectorAll('.tool-panel');
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      var tab=t.getAttribute('data-tab');
+      tabs.forEach(function(o){o.classList.remove('active');});
+      t.classList.add('active');
+      panels.forEach(function(p){p.classList.toggle('active',p.getAttribute('data-panel')===tab);});
+    });
+  });
+})();
+
+/* Timeline Estimator */
+(function(){
+  var typeGrp=document.getElementById('tl-type');
+  if(!typeGrp)return;
+  var BASE={
+    'kitchen':{weeks:[4,8],label:'Kitchen'},
+    'bathroom':{weeks:[3,6],label:'Bathroom'},
+    'addition':{weeks:[12,20],label:'Addition'},
+    'whole-home':{weeks:[16,28],label:'Whole-home renovation'},
+    'new-build':{weeks:[30,52],label:'New build'}
+  };
+  var SCOPE={'light':{mult:0.7,label:'light refresh'},'standard':{mult:1.0,label:'standard remodel'},'gut':{mult:1.5,label:'gut + rebuild'}};
+  var PERMIT={'no':0,'minor':2,'major':5};
+  var PHASES=[
+    {name:'Planning + Permits',pct:0.20},
+    {name:'Demo + Site Prep',pct:0.10},
+    {name:'Rough-In + Inspections',pct:0.30},
+    {name:'Drywall + Finish Carpentry',pct:0.20},
+    {name:'Finishes + Punch List',pct:0.20}
+  ];
+  var state={type:'kitchen',scope:'light',permit:'no'};
+  function bind(id,key){
+    var g=document.getElementById(id);
+    g.querySelectorAll('.calc-opt').forEach(function(b){
+      b.addEventListener('click',function(){
+        g.querySelectorAll('.calc-opt').forEach(function(x){x.classList.remove('active');});
+        b.classList.add('active');
+        state[key]=b.getAttribute('data-val');
+        compute();
+      });
+    });
+  }
+  function compute(){
+    var b=BASE[state.type],s=SCOPE[state.scope],p=PERMIT[state.permit];
+    var low=Math.round(b.weeks[0]*s.mult)+p;
+    var high=Math.round(b.weeks[1]*s.mult)+p;
+    document.getElementById('tl-weeks').textContent=low+' - '+high+' weeks';
+    document.getElementById('tl-detail').textContent=b.label+', '+s.label;
+    var maxPct=Math.max.apply(null,PHASES.map(function(x){return x.pct;}));
+    var html=PHASES.map(function(ph){
+      var lo=Math.max(1,Math.round(low*ph.pct));
+      var hi=Math.max(1,Math.round(high*ph.pct));
+      var w=(ph.pct/maxPct*100).toFixed(0);
+      return '<div class="tl-phase"><div class="tl-phase-row"><span class="tl-phase-dot"></span><b>'+ph.name+'</b></div><span>'+lo+' - '+hi+' wks</span><div class="tl-bar"><div class="tl-bar-fill" style="width:'+w+'%"></div></div></div>';
+    }).join('');
+    document.getElementById('tl-phases').innerHTML=html;
+  }
+  bind('tl-type','type');bind('tl-scope','scope');bind('tl-permit','permit');
+  compute();
+})();
+
+/* Vetting Checklist */
+(function(){
+  var list=document.getElementById('checkList');
+  if(!list)return;
+  var items=list.querySelectorAll('.check-item');
+  var bar=document.getElementById('scoreBar');
+  var num=document.getElementById('scoreNum');
+  var label=document.getElementById('scoreLabel');
+  var copy=document.getElementById('scoreCopy');
+  var C=2*Math.PI*86;
+  bar.setAttribute('stroke-dasharray',C.toFixed(1));
+  function update(){
+    var total=0,got=0;
+    items.forEach(function(it){
+      var w=parseInt(it.getAttribute('data-weight'),10)||0;
+      total+=w;
+      if(it.classList.contains('on'))got+=w;
+    });
+    var pct=total?Math.round(got/total*100):0;
+    num.textContent=pct;
+    bar.style.strokeDashoffset=(C*(1-pct/100)).toFixed(1);
+    var color='#e0901a',lab='Just Starting',msg='Tick each item the contractor has actually provided. Anything missing is a question to ask before you sign.';
+    if(pct>=85){color='#7bc77b';lab='Green Light';msg='Strong vetting profile. You have the documentation in place to start with confidence. Keep records of every payment and change order.';}
+    else if(pct>=70){color='#f5a524';lab='Almost There';msg='Solid foundation. Close the remaining gaps in writing before any deposit changes hands.';}
+    else if(pct>=50){color='#e0901a';lab='Risky';msg='Real exposure here. Do not sign or transfer money until the missing items are documented.';}
+    else if(pct>0){color='#d9534f';lab='High Risk';msg='Major gaps. Most homeowner disasters trace back to this stage. Slow down and complete the checklist before going further.';}
+    bar.style.stroke=color;
+    label.style.color=color;
+    label.textContent=lab;
+    copy.textContent=msg;
+  }
+  items.forEach(function(it){
+    it.addEventListener('click',function(){it.classList.toggle('on');update();});
+  });
+  update();
+})();
+
+/* FAQ accordion */
+(function(){
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var btn=item.querySelector('.faq-q');
+    var ans=item.querySelector('.faq-a');
+    btn.addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(o){
+        o.classList.remove('open');
+        o.querySelector('.faq-a').style.maxHeight=null;
+      });
+      if(!open){item.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';}
+    });
+  });
+})();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
