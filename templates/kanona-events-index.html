@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kanona Events - Experiential Event Curation</title>
+<meta name="description" content="Kanona Events designs experiential gatherings - the scent, the silence, the light, the room, the people. Refined event curation for evenings that stay with you.">
+<meta property="og:title" content="Kanona Events">
+<meta property="og:description" content="Experiential event curation. The scent, the silence, the light, the room, the people.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#050407">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+:root{
+  --bg:#050407;
+  --bg2:#090710;
+  --surface:#0e0b15;
+  --surface2:#140f1d;
+  --gold:#c4a05d;
+  --gold2:#9a7c3c;
+  --gold-dim:rgba(196,160,93,.14);
+  --text:#e8e2d9;
+  --text2:rgba(232,226,217,.6);
+  --muted:#6a6058;
+  --muted2:rgba(106,96,88,.45);
+  --border:rgba(255,255,255,.055);
+  --border2:rgba(255,255,255,.09);
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --maxw:1240px;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.75;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+
+/* grain overlay */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:1000;
+  pointer-events:none;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 56px;
+  border-bottom:1px solid transparent;
+  transition:background .5s, border-color .5s;
+}
+.nav.scrolled{
+  background:rgba(5,4,7,.94);
+  border-bottom-color:var(--border);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+.nav-logo{
+  font-family:var(--serif);
+  font-size:15px;font-weight:400;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text);
+}
+.nav-logo em{color:var(--gold);font-style:normal}
+.nav-links{display:flex;align-items:center;gap:34px}
+.nav-link{
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);font-weight:400;
+  transition:color .3s;
+}
+.nav-link:hover{color:var(--text)}
+.nav-cta{
+  font-size:9px;letter-spacing:1.2px;text-transform:uppercase;
+  font-weight:500;
+  color:var(--bg);background:var(--gold);
+  padding:9px 20px;
+  transition:opacity .2s;
+}
+.nav-cta:hover{opacity:.82}
+@media(max-width:760px){
+  .nav{padding:0 22px}
+  .nav-links .nav-link{display:none}
+}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 38%, rgba(34,24,14,.55) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(20,14,28,.7) 0%, transparent 65%),
+    linear-gradient(180deg,#06050a 0%, #0a0712 45%, #050407 100%);
+}
+/* gallery-feel photographic backdrop, pure CSS */
+.hero-backdrop{
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.hero-backdrop::before{
+  /* soft spotlight pool, like a single overhead picture light */
+  content:'';
+  position:absolute;
+  left:50%;top:-8%;
+  width:120vmin;height:120vmin;
+  transform:translateX(-50%);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(196,160,93,.16) 0%, rgba(196,160,93,.06) 18%, transparent 48%);
+  filter:blur(8px);
+}
+.hero-backdrop::after{
+  /* low warm floor-glow */
+  content:'';
+  position:absolute;inset:auto 0 0 0;height:55%;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(120,80,30,.18) 0%, transparent 55%),
+    linear-gradient(to top, rgba(5,4,7,.6) 0%, transparent 100%);
+}
+/* hairline gold filigree corner frames */
+.hero-frame{
+  position:absolute;z-index:2;pointer-events:none;
+  width:54px;height:54px;
+}
+.hero-frame svg{width:100%;height:100%;display:block}
+.hero-frame.tl{top:88px;left:56px}
+.hero-frame.tr{top:88px;right:56px;transform:scaleX(-1)}
+.hero-frame.bl{bottom:56px;left:56px;transform:scaleY(-1)}
+.hero-frame.br{bottom:56px;right:56px;transform:scale(-1,-1)}
+@media(max-width:760px){
+  .hero-frame{width:38px;height:38px}
+  .hero-frame.tl,.hero-frame.tr{top:74px}
+  .hero-frame.tl,.hero-frame.bl{left:22px}
+  .hero-frame.tr,.hero-frame.br{right:22px}
+  .hero-frame.bl,.hero-frame.br{bottom:38px}
+}
+/* SVG-painted hero ornament (centered above headline) */
+.hero-ornament{
+  display:block;margin:0 auto 22px;
+  width:120px;height:22px;
+  opacity:.7;
+}
+.hero-ornament path,.hero-ornament line,.hero-ornament circle{
+  stroke:var(--gold);
+}
+.hero-meta{
+  display:flex;align-items:center;justify-content:center;gap:22px;
+  margin-top:54px;
+  font-size:8.5px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(232,226,217,.32);
+}
+.hero-meta-dot{
+  width:3px;height:3px;border-radius:50%;
+  background:var(--gold);opacity:.55;
+}
+@media(max-width:600px){
+  .hero-meta{gap:14px;font-size:8px;letter-spacing:1.8px;flex-wrap:wrap}
+}
+#gl{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;z-index:1;
+  transition:opacity .8s;
+}
+.hero-vignette{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 45%, transparent 22%, rgba(5,4,7,.72) 100%),
+    linear-gradient(to bottom, rgba(5,4,7,.32) 0%, transparent 32%, transparent 68%, rgba(5,4,7,.85) 100%);
+}
+.hero-content{
+  position:relative;z-index:2;
+  text-align:center;
+  padding:96px 32px 64px;
+  max-width:780px;width:100%;
+  will-change:transform;
+}
+.hero-eyebrow{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(196,160,93,.4);
+  margin-bottom:48px;
+}
+.hero-h1{
+  font-family:var(--sans);
+  font-size:11px;
+  font-weight:300;
+  line-height:1;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(232,226,217,.4);
+}
+.hero-h1 i{
+  display:block;
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:clamp(38px,6vw,72px);
+  font-weight:400;
+  letter-spacing:-.5px;
+  text-transform:none;
+  color:var(--text);
+  line-height:1.08;
+  margin:18px 0 20px;
+}
+.hero-h1 span{
+  display:block;
+  font-family:var(--sans);
+  font-style:normal;
+  font-size:9px;
+  font-weight:400;
+  letter-spacing:1.8px;
+  text-transform:uppercase;
+  color:rgba(232,226,217,.24);
+}
+.hero-sub{
+  font-size:12.5px;font-weight:300;
+  color:var(--text2);
+  line-height:2.2;
+  letter-spacing:.2px;
+  max-width:440px;
+  margin:34px auto 52px;
+}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  font-family:var(--sans);
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;
+  color:var(--bg);background:var(--gold);
+  padding:13px 28px;transition:opacity .2s;
+}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{
+  font-family:var(--sans);
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:400;
+  color:var(--text2);
+  padding:13px 26px;
+  border:1px solid var(--border2);
+  transition:border-color .25s,color .25s;
+}
+.btn-ghost:hover{border-color:rgba(196,160,93,.4);color:var(--text)}
+.hero-scroll{
+  display:inline-flex;flex-direction:column;align-items:center;gap:10px;
+  background:none;border:none;cursor:pointer;
+  color:var(--muted2);
+  margin-top:56px;
+  font-family:var(--sans);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  transition:color .3s;
+}
+.hero-scroll:hover{color:var(--gold)}
+.hero-scroll-track{
+  width:1px;height:46px;
+  background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:track-breathe 3.4s ease-in-out infinite;
+}
+@keyframes track-breathe{0%,100%{opacity:.3}50%{opacity:.75}}
+@media(max-width:600px){
+  .hero-content{padding:72px 26px 56px}
+}
+
+/* ── SHARED LAYOUT ── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 56px}
+@media(max-width:600px){.wrap{padding:0 24px}}
+
+.section-rule{
+  display:flex;align-items:center;gap:0;
+  max-width:var(--maxw);margin:0 auto;padding:0 56px;
+}
+.section-rule::before,.section-rule::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.section-rule-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:var(--gold);opacity:.35;margin:0 18px;
+}
+@media(max-width:600px){.section-rule{padding:0 24px}}
+
+.sect-label{
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(196,160,93,.45);
+  margin-bottom:18px;
+  display:flex;align-items:center;gap:12px;
+}
+.sect-label::before{
+  content:'';width:20px;height:1px;
+  background:var(--gold);opacity:.35;flex-shrink:0;
+}
+.sect-head{
+  font-family:var(--serif);
+  font-size:clamp(26px,3.4vw,40px);font-weight:400;
+  color:var(--text);line-height:1.15;
+  letter-spacing:-.4px;
+  max-width:620px;
+  margin-bottom:52px;
+}
+.sect-head i{font-style:italic;color:var(--gold)}
+
+/* ── INTRO / STORY ── */
+.story-section{padding:110px 0 96px}
+.story-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:64px;align-items:start;
+}
+.story-lead{
+  font-family:var(--serif);
+  font-size:clamp(20px,2.4vw,28px);font-weight:400;
+  font-style:italic;
+  color:var(--text);line-height:1.5;
+  letter-spacing:-.2px;
+}
+.story-lead em{color:var(--gold);font-style:italic}
+.story-body p{
+  font-size:12.5px;font-weight:300;
+  color:var(--text2);line-height:2.2;
+  letter-spacing:.2px;margin-bottom:18px;
+}
+.story-body p:last-child{margin-bottom:0}
+@media(max-width:760px){
+  .story-grid{grid-template-columns:1fr;gap:32px}
+  .story-section{padding:80px 0 72px}
+}
+
+/* ── STATS ── */
+.stats-band{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--bg2);
+}
+.stats-grid{
+  max-width:var(--maxw);margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.stat{
+  padding:56px 32px;
+  text-align:center;
+  border-right:1px solid var(--border);
+}
+.stat:last-child{border-right:none}
+.stat-n{
+  font-family:var(--serif);
+  font-size:clamp(34px,4.2vw,52px);font-weight:400;
+  color:var(--text);line-height:1;
+  letter-spacing:-1px;
+  margin-bottom:12px;
+}
+.stat-n em{color:var(--gold);font-style:normal}
+.stat-l{
+  font-size:9px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--muted);
+}
+@media(max-width:760px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .stat{padding:40px 24px}
+  .stat:nth-child(2){border-right:none}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--border)}
+}
+
+/* ── SERVICES ── */
+.services-section{padding:104px 0}
+.svc-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+}
+.svc-card{
+  background:var(--bg);
+  padding:44px 36px;
+  transition:background .35s;
+}
+.svc-card:hover{background:var(--surface)}
+.svc-icon{
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(196,160,93,.3);
+  border-radius:50%;
+  margin-bottom:26px;
+}
+.svc-icon svg{stroke:var(--gold);opacity:.8}
+.svc-h{
+  font-family:var(--serif);
+  font-size:21px;font-weight:400;
+  color:var(--text);line-height:1.25;
+  letter-spacing:-.2px;
+  margin-bottom:12px;
+}
+.svc-p{
+  font-size:11.5px;font-weight:300;
+  color:var(--muted);line-height:2.05;
+  letter-spacing:.15px;
+}
+@media(max-width:860px){.svc-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){
+  .svc-grid{grid-template-columns:1fr}
+  .services-section{padding:80px 0}
+}
+
+/* ── PROCESS ── */
+.process-section{padding:0 0 104px}
+.proc-list{border-top:1px solid var(--border)}
+.proc-item{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:0 40px;
+  padding:48px 0;
+  border-bottom:1px solid var(--border);
+}
+.proc-n{
+  font-family:var(--serif);
+  font-size:42px;font-weight:300;
+  color:var(--gold-dim);
+  line-height:1;letter-spacing:-1px;
+}
+.proc-step{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(196,160,93,.5);margin-bottom:10px;
+}
+.proc-h{
+  font-family:var(--serif);
+  font-size:clamp(20px,2.4vw,26px);font-weight:400;
+  color:var(--text);margin-bottom:12px;line-height:1.2;
+  letter-spacing:-.2px;
+}
+.proc-p{
+  font-size:12px;font-weight:300;
+  color:var(--text2);line-height:2.15;letter-spacing:.2px;
+  max-width:640px;
+}
+@media(max-width:600px){
+  .proc-item{grid-template-columns:56px 1fr;gap:0 22px;padding:36px 0}
+  .proc-n{font-size:30px}
+}
+
+/* ── ARTICLES ── */
+.exp-section{padding:104px 0}
+.exp-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+}
+.exp-card{
+  display:flex;flex-direction:column;
+  padding:40px 34px;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  transition:background .35s;
+}
+.exp-card::after{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;transition:opacity .45s var(--ease);
+}
+.exp-card:hover{background:var(--surface)}
+.exp-card:hover::after{opacity:.6}
+.exp-n{
+  font-family:var(--serif);
+  font-size:34px;font-weight:300;
+  color:var(--gold-dim);
+  letter-spacing:-1px;
+  line-height:1;
+  margin-bottom:24px;
+}
+.exp-tag{
+  font-size:8.5px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--gold);opacity:.7;margin-bottom:12px;
+}
+.exp-title{
+  font-family:var(--serif);
+  font-size:clamp(17px,1.6vw,21px);font-weight:400;
+  color:var(--text);
+  line-height:1.3;
+  letter-spacing:-.1px;
+  margin-bottom:14px;
+  flex:1;
+}
+.exp-desc{
+  font-size:11.5px;font-weight:300;
+  color:var(--muted);
+  line-height:2.1;
+  letter-spacing:.15px;
+  margin-bottom:24px;
+}
+.exp-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:16px;
+  border-top:1px solid var(--border);
+  font-size:10px;color:var(--muted2);letter-spacing:.4px;
+}
+.exp-read{
+  font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--gold);opacity:.7;
+  display:flex;align-items:center;gap:5px;
+  transition:gap .25s, opacity .25s;
+}
+.exp-card:hover .exp-read{gap:9px;opacity:1}
+.exp-empty{
+  border:1px solid var(--border);
+  padding:80px 40px;text-align:center;
+}
+.exp-empty-mark{
+  font-family:var(--serif);font-size:40px;font-style:italic;
+  color:var(--gold);opacity:.5;margin-bottom:18px;
+}
+.exp-empty-h{
+  font-family:var(--serif);font-size:22px;font-weight:400;
+  color:var(--text);margin-bottom:12px;letter-spacing:-.2px;
+}
+.exp-empty-p{
+  font-size:11.5px;font-weight:300;color:var(--muted);
+  line-height:2;max-width:380px;margin:0 auto;
+}
+@media(max-width:860px){.exp-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){
+  .exp-grid{grid-template-columns:1fr}
+  .exp-card{padding:30px 22px}
+  .exp-section{padding:80px 0}
+}
+
+/* ── PHILOSOPHY ── */
+.phi-section{padding:0 0 104px}
+.phi-list{
+  border-top:1px solid var(--border);
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0 64px;
+}
+.phi-item{
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:0 28px;
+  padding:38px 0;
+  border-bottom:1px solid var(--border);
+  opacity:0;transform:translateY(16px);
+  transition:opacity .9s var(--ease),transform .9s var(--ease);
+}
+.phi-item.in{opacity:1;transform:none}
+.phi-n{
+  font-family:var(--serif);
+  font-size:13px;font-weight:400;
+  color:var(--gold);opacity:.4;
+  letter-spacing:.5px;
+  padding-top:5px;text-align:right;
+}
+.phi-h{
+  font-family:var(--serif);
+  font-size:clamp(18px,2.2vw,23px);font-weight:400;
+  color:var(--text);
+  margin-bottom:12px;line-height:1.22;
+  letter-spacing:-.2px;
+}
+.phi-p{
+  font-size:11.5px;font-weight:300;
+  color:var(--muted);
+  line-height:2.1;letter-spacing:.2px;
+}
+@media(max-width:760px){
+  .phi-list{grid-template-columns:1fr;gap:0}
+}
+@media(max-width:560px){
+  .phi-item{grid-template-columns:38px 1fr;gap:0 16px;padding:30px 0}
+}
+
+/* ── PULL QUOTE ── */
+.pull-wrap{
+  padding:96px 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  text-align:center;
+}
+.pull-text{
+  font-family:var(--serif);
+  font-size:clamp(22px,3.6vw,40px);
+  font-weight:400;font-style:italic;
+  color:var(--text);
+  line-height:1.4;
+  letter-spacing:-.3px;
+  max-width:760px;margin:0 auto 22px;
+}
+.pull-attr{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted2);
+}
+
+/* ── CREATOR ── */
+.creator-section{padding:104px 0}
+.creator-inner{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  gap:72px;align-items:start;
+}
+.creator-img-wrap{
+  width:240px;
+  aspect-ratio:3/4;
+  position:relative;
+}
+.creator-img-wrap::before{
+  content:'';
+  position:absolute;
+  top:12px;left:12px;right:-12px;bottom:-12px;
+  border:1px solid rgba(196,160,93,.22);
+  z-index:0;pointer-events:none;
+}
+.creator-img-wrap img{
+  position:relative;z-index:1;
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  display:block;
+  filter:grayscale(15%) contrast(1.05) brightness(.88);
+  transition:filter .6s;
+}
+.creator-img-wrap:hover img{filter:grayscale(0%) contrast(1.02) brightness(.94)}
+.creator-img-wrap::after{
+  content:'';position:absolute;
+  inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(to bottom, transparent 60%, rgba(5,4,7,.55) 100%);
+}
+.creator-role{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(196,160,93,.5);margin-bottom:10px;
+}
+.creator-name{
+  font-family:var(--serif);
+  font-size:clamp(32px,4.4vw,52px);font-weight:400;
+  color:var(--text);line-height:1.02;
+  margin-bottom:28px;letter-spacing:-.6px;
+}
+.creator-text{
+  font-size:12px;font-weight:300;
+  color:var(--text2);
+  line-height:2.2;letter-spacing:.2px;
+}
+.creator-text p{margin-bottom:20px}
+.creator-text p:last-child{margin-bottom:0}
+.creator-sig{
+  font-family:var(--serif);font-style:italic;
+  font-size:24px;color:var(--gold);
+  margin-top:24px;
+}
+@media(max-width:760px){
+  .creator-inner{grid-template-columns:1fr;gap:32px}
+  .creator-img-wrap{width:170px;aspect-ratio:2/3}
+  .creator-section{padding:80px 0}
+}
+
+/* ── FAQ ── */
+.faq-section{padding:0 0 104px}
+.faq-list{border-top:1px solid var(--border)}
+.faq-item{
+  border-bottom:1px solid var(--border);
+}
+.faq-q{
+  width:100%;text-align:left;
+  background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:30px 0;
+  font-family:var(--serif);
+  font-size:clamp(16px,1.9vw,21px);font-weight:400;
+  color:var(--text);letter-spacing:-.1px;
+  transition:color .25s;
+}
+.faq-q:hover{color:var(--gold)}
+.faq-mark{
+  flex-shrink:0;width:14px;height:14px;position:relative;
+}
+.faq-mark::before,.faq-mark::after{
+  content:'';position:absolute;background:var(--gold);
+  transition:transform .3s var(--ease),opacity .3s;
+}
+.faq-mark::before{left:0;right:0;top:50%;height:1px;margin-top:-.5px}
+.faq-mark::after{top:0;bottom:0;left:50%;width:1px;margin-left:-.5px}
+.faq-item.open .faq-mark::after{transform:scaleY(0);opacity:0}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .4s var(--ease);
+}
+.faq-a-inner{
+  font-size:12px;font-weight:300;
+  color:var(--muted);line-height:2.15;letter-spacing:.2px;
+  padding:0 0 30px;max-width:660px;
+}
+@media(max-width:600px){.faq-section{padding:0 0 80px}}
+
+/* ── NEWSLETTER ── */
+.nl-section{
+  background:var(--surface);
+  border-top:1px solid var(--border);
+}
+.nl-section::before{
+  content:'';display:block;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  opacity:.18;
+}
+.nl-inner{
+  max-width:var(--maxw);margin:0 auto;
+  padding:104px 56px 92px;text-align:center;
+}
+.nl-label{
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--gold);opacity:.55;margin-bottom:24px;
+}
+.nl-h2{
+  font-family:var(--serif);
+  font-size:clamp(30px,5vw,54px);font-weight:400;
+  color:var(--text);line-height:1.08;
+  margin-bottom:18px;letter-spacing:-.6px;
+}
+.nl-h2 i{font-style:italic;color:var(--gold)}
+.nl-sub{
+  font-size:12px;font-weight:300;
+  color:var(--muted);line-height:2.2;
+  margin-bottom:44px;
+  max-width:420px;margin-left:auto;margin-right:auto;
+}
+.nl-form{
+  display:flex;max-width:420px;margin:0 auto;
+}
+.nl-input{
+  flex:1;min-width:0;
+  font-family:var(--sans);font-size:12px;
+  color:var(--text);
+  background:var(--bg);
+  border:1px solid var(--border2);border-right:none;
+  padding:14px 18px;outline:none;
+  transition:border-color .25s;letter-spacing:.2px;
+  -webkit-appearance:none;
+}
+.nl-input:focus{border-color:rgba(196,160,93,.4)}
+.nl-input::placeholder{color:var(--muted)}
+.nl-btn{
+  font-family:var(--sans);
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;
+  color:var(--bg);background:var(--gold);
+  border:none;padding:14px 24px;
+  cursor:pointer;flex-shrink:0;
+  transition:opacity .2s;-webkit-appearance:none;
+}
+.nl-btn:hover{opacity:.82}
+.nl-ok{
+  display:none;
+  font-family:var(--serif);font-size:18px;font-style:italic;
+  color:var(--gold);margin-top:24px;
+}
+@media(max-width:600px){
+  .nl-inner{padding:76px 24px 68px}
+  .nl-form{flex-direction:column;gap:11px}
+  .nl-input{border-right:1px solid var(--border2);border-bottom:1px solid var(--border2)}
+  .nl-btn{padding:15px 24px}
+}
+
+/* ── FOOTER ── */
+.site-footer{
+  border-top:1px solid var(--border);
+}
+.footer-top{
+  max-width:var(--maxw);margin:0 auto;
+  padding:72px 56px 56px;
+  display:grid;
+  grid-template-columns:1.6fr 1fr 1fr 1fr;
+  gap:48px;
+}
+.footer-brand{
+  font-family:var(--serif);
+  font-size:19px;font-weight:400;
+  letter-spacing:.5px;text-transform:uppercase;
+  color:var(--text);
+}
+.footer-brand em{color:var(--gold);font-style:normal}
+.footer-tag{
+  font-size:11.5px;font-weight:300;
+  color:var(--muted);line-height:2;
+  margin-top:16px;max-width:280px;
+}
+.footer-col h4{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);opacity:.6;font-weight:500;
+  margin-bottom:18px;
+}
+.footer-col a{
+  display:block;
+  font-size:11px;color:var(--muted);
+  letter-spacing:.3px;margin-bottom:11px;
+  transition:color .2s;
+}
+.footer-col a:hover{color:var(--gold)}
+.footer-bottom{
+  border-top:1px solid var(--border);
+}
+.footer-bottom-inner{
+  max-width:var(--maxw);margin:0 auto;
+  padding:26px 56px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-copy{font-size:9.5px;color:rgba(232,226,217,.2);letter-spacing:.4px}
+@media(max-width:760px){
+  .footer-top{grid-template-columns:1fr 1fr;gap:36px;padding:56px 24px 44px}
+  .footer-bottom-inner{padding:22px 24px}
+}
+@media(max-width:480px){
+  .footer-top{grid-template-columns:1fr}
+}
+
+/* ── CURSOR ── */
+.cursor-orb{
+  position:fixed;pointer-events:none;z-index:0;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,160,93,.045) 0%,transparent 70%);
+  transform:translate(-50%,-50%);
+  will-change:transform;transition:opacity .5s;
+}
+@media(hover:none){.cursor-orb{display:none}}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}
+
+/* ── EDITORIAL ORNAMENT DIVIDERS ── */
+.ornament-divider{
+  display:flex;align-items:center;justify-content:center;
+  max-width:var(--maxw);margin:0 auto;padding:48px 56px;
+  gap:0;
+}
+.ornament-divider .od-rule{
+  flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border2) 30%,var(--border2) 70%,transparent);
+}
+.ornament-divider svg{
+  width:88px;height:22px;margin:0 22px;opacity:.7;flex-shrink:0;
+}
+.ornament-divider svg *{stroke:var(--gold)}
+@media(max-width:600px){
+  .ornament-divider{padding:36px 24px}
+  .ornament-divider svg{width:64px;margin:0 14px}
+}
+
+/* ── STAT FLOURISH (subtle) ── */
+.stat{position:relative}
+.stat::before{
+  content:'';
+  position:absolute;
+  top:18px;left:50%;
+  width:14px;height:1px;
+  background:var(--gold);opacity:.35;
+  transform:translateX(-50%);
+}
+
+/* ── COMPOSITION CARD (CSS-only editorial visual) ── */
+.atelier-section{padding:0 0 104px}
+.atelier-grid{
+  display:grid;
+  grid-template-columns:0.95fr 1.05fr;
+  gap:72px;align-items:center;
+}
+.atelier-visual{
+  position:relative;
+  aspect-ratio:4/5;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 38%, rgba(196,160,93,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(20,14,28,.7) 0%, transparent 60%),
+    linear-gradient(180deg,#0a0712 0%,#06050a 55%,#040306 100%);
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+.atelier-visual::before{
+  /* candle pool of light */
+  content:'';
+  position:absolute;left:50%;top:36%;
+  width:60%;height:42%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(255,210,140,.22) 0%, rgba(196,160,93,.08) 35%, transparent 70%);
+  filter:blur(6px);
+}
+.atelier-visual::after{
+  /* hairline frame inset */
+  content:'';
+  position:absolute;inset:14px;
+  border:1px solid rgba(196,160,93,.18);
+  pointer-events:none;
+}
+.atelier-mark{
+  position:absolute;left:0;right:0;bottom:32px;
+  text-align:center;
+  font-family:var(--serif);font-style:italic;
+  color:var(--gold);
+  font-size:18px;letter-spacing:.3px;
+  opacity:.85;
+  z-index:2;
+}
+.atelier-mark::before{
+  content:'';display:block;
+  width:1px;height:38px;margin:0 auto 16px;
+  background:linear-gradient(to bottom,transparent,var(--gold));
+  opacity:.6;
+}
+.atelier-flame{
+  position:absolute;left:50%;top:32%;
+  width:6px;height:18px;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse at 50% 70%, #ffd58a 0%, #c4a05d 40%, transparent 80%);
+  border-radius:50% 50% 45% 45% / 70% 70% 30% 30%;
+  filter:blur(.6px);
+  z-index:1;
+  animation:flicker 3.4s ease-in-out infinite;
+}
+.atelier-stem{
+  position:absolute;left:50%;top:34%;
+  width:1px;height:36%;
+  background:linear-gradient(to bottom, rgba(196,160,93,.4), rgba(196,160,93,.06));
+  transform:translateX(-50%);
+  z-index:1;
+}
+@keyframes flicker{
+  0%,100%{opacity:.85;transform:translate(-50%,-50%) scale(1,1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.04,1.08)}
+}
+.atelier-body .at-eyebrow{
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(196,160,93,.55);margin-bottom:18px;
+  display:flex;align-items:center;gap:12px;
+}
+.atelier-body .at-eyebrow::before{
+  content:'';width:20px;height:1px;background:var(--gold);opacity:.4;
+}
+.atelier-body .at-h{
+  font-family:var(--serif);
+  font-size:clamp(24px,3vw,36px);font-weight:400;
+  color:var(--text);line-height:1.18;letter-spacing:-.3px;
+  margin-bottom:26px;
+}
+.atelier-body .at-h i{font-style:italic;color:var(--gold)}
+.atelier-body .at-p{
+  font-size:12.5px;font-weight:300;
+  color:var(--text2);line-height:2.2;letter-spacing:.2px;
+  margin-bottom:14px;
+}
+@media(max-width:760px){
+  .atelier-grid{grid-template-columns:1fr;gap:40px}
+  .atelier-visual{aspect-ratio:5/4;max-height:360px}
+  .atelier-section{padding:0 0 80px}
+}
+
+/* enhanced pull-quote with gold hairline */
+.pull-wrap{position:relative}
+.pull-wrap::before{
+  content:'';
+  position:absolute;left:50%;top:50px;
+  width:1px;height:36px;
+  background:linear-gradient(to bottom,var(--gold),transparent);
+  transform:translateX(-50%);opacity:.7;
+}
+.pull-mark{
+  font-family:var(--serif);font-style:italic;
+  color:var(--gold);
+  font-size:48px;line-height:1;
+  opacity:.45;
+  margin-bottom:14px;
+}
+.pull-rule{
+  display:block;
+  width:54px;height:1px;
+  background:var(--gold);opacity:.55;
+  margin:24px auto 0;
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .reveal,.phi-item{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#c4a05d-->
+<!--SHELL:HEADER-->
+
+<div class="cursor-orb" id="orb"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="./" class="nav-logo">Kanona <em>Events</em></a>
+  <div class="nav-links">
+    <a href="./#services" class="nav-link">Services</a>
+    <a href="./#process" class="nav-link">Process</a>
+    <a href="./#writing" class="nav-link">Journal</a>
+    <a href="./about.html" class="nav-link">About</a>
+    <a href="./#newsletter" class="nav-cta">The Letter</a>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-backdrop" aria-hidden="true"></div>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="hero-vignette" aria-hidden="true"></div>
+
+  <!-- gold filigree corner frames -->
+  <div class="hero-frame tl" aria-hidden="true">
+    <svg viewBox="0 0 54 54" fill="none" stroke-width="1">
+      <line x1="0" y1="0.5" x2="40" y2="0.5"/>
+      <line x1="0.5" y1="0" x2="0.5" y2="40"/>
+      <path d="M0.5 14 Q 6 14 6 8 Q 6 0.5 14 0.5" opacity=".55"/>
+      <circle cx="10" cy="10" r="1.2" fill="currentColor" stroke="none" opacity=".7"/>
+    </svg>
+  </div>
+  <div class="hero-frame tr" aria-hidden="true">
+    <svg viewBox="0 0 54 54" fill="none" stroke-width="1">
+      <line x1="0" y1="0.5" x2="40" y2="0.5"/>
+      <line x1="0.5" y1="0" x2="0.5" y2="40"/>
+      <path d="M0.5 14 Q 6 14 6 8 Q 6 0.5 14 0.5" opacity=".55"/>
+      <circle cx="10" cy="10" r="1.2" fill="currentColor" stroke="none" opacity=".7"/>
+    </svg>
+  </div>
+  <div class="hero-frame bl" aria-hidden="true">
+    <svg viewBox="0 0 54 54" fill="none" stroke-width="1">
+      <line x1="0" y1="0.5" x2="40" y2="0.5"/>
+      <line x1="0.5" y1="0" x2="0.5" y2="40"/>
+      <path d="M0.5 14 Q 6 14 6 8 Q 6 0.5 14 0.5" opacity=".55"/>
+      <circle cx="10" cy="10" r="1.2" fill="currentColor" stroke="none" opacity=".7"/>
+    </svg>
+  </div>
+  <div class="hero-frame br" aria-hidden="true">
+    <svg viewBox="0 0 54 54" fill="none" stroke-width="1">
+      <line x1="0" y1="0.5" x2="40" y2="0.5"/>
+      <line x1="0.5" y1="0" x2="0.5" y2="40"/>
+      <path d="M0.5 14 Q 6 14 6 8 Q 6 0.5 14 0.5" opacity=".55"/>
+      <circle cx="10" cy="10" r="1.2" fill="currentColor" stroke="none" opacity=".7"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Kanona Events &middot; Experiential Curation</div>
+
+    <!-- editorial ornament above headline -->
+    <svg class="hero-ornament" viewBox="0 0 120 22" fill="none" stroke-width="1" aria-hidden="true">
+      <line x1="0" y1="11" x2="44" y2="11" opacity=".55"/>
+      <line x1="76" y1="11" x2="120" y2="11" opacity=".55"/>
+      <circle cx="60" cy="11" r="3.2" opacity=".9"/>
+      <circle cx="51" cy="11" r="1" fill="currentColor" stroke="none" opacity=".7"/>
+      <circle cx="69" cy="11" r="1" fill="currentColor" stroke="none" opacity=".7"/>
+    </svg>
+
+    <h1 class="hero-h1">
+      We design
+      <i>evenings built to remain.</i>
+      <span>Sensory &middot; Atmosphere &middot; Memory</span>
+    </h1>
+    <p class="hero-sub">An event-curation studio for gatherings designed around feeling. The scent at the door, the weight of the silence, the warmth of a single candle - every detail a deliberate decision.</p>
+    <div class="hero-actions">
+      <a href="./#services" class="btn-primary">What We Do</a>
+      <a href="./#process" class="btn-ghost">How We Work</a>
+    </div>
+
+    <div class="hero-meta">
+      <span>By Invitation</span>
+      <span class="hero-meta-dot"></span>
+      <span>One Evening at a Time</span>
+      <span class="hero-meta-dot"></span>
+      <span>Est. MMXVII</span>
+    </div>
+
+    <button class="hero-scroll" onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})">
+      <div class="hero-scroll-track"></div>
+      <span>Begin</span>
+    </button>
+  </div>
+</section>
+
+<!-- STORY -->
+<section id="story" class="story-section">
+  <div class="wrap">
+    <div class="sect-label reveal">The Studio</div>
+    <div class="story-grid">
+      <p class="story-lead reveal">Most gatherings are organized around logistics. We organize them around <em>the feeling a person carries home.</em></p>
+      <div class="story-body reveal reveal-d1">
+        <p>Kanona Events began with a simple observation. The mechanics of an event - the seating, the schedule, the catering count - are usually solved with care, while the atmosphere is left to chance. The emotional arc of an evening, the quality of the light, the silence between courses: these are the things guests actually remember, and they are rarely designed at all.</p>
+        <p>We treat them as the work. Every gathering we curate is built from the senses outward, composed the way a piece of music is composed, with arrival, peak, and a deliberate, graceful close.</p>
+        <p>The result is not a bigger event. It is a quieter, more considered one - the kind of evening that stays with the people who were in the room long after the night has ended.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stats-grid">
+    <div class="stat reveal">
+      <div class="stat-n"><em>140</em>+</div>
+      <div class="stat-l">Evenings Curated</div>
+    </div>
+    <div class="stat reveal reveal-d1">
+      <div class="stat-n"><em>9</em></div>
+      <div class="stat-l">Years of Practice</div>
+    </div>
+    <div class="stat reveal reveal-d2">
+      <div class="stat-n"><em>12</em></div>
+      <div class="stat-l">Guests Average Table</div>
+    </div>
+    <div class="stat reveal reveal-d3">
+      <div class="stat-n"><em>1</em></div>
+      <div class="stat-l">Event at a Time</div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="services-section">
+  <div class="wrap">
+    <div class="sect-label reveal">What We Cover</div>
+    <h2 class="sect-head reveal reveal-d1">A complete sensory <i>brief</i> for every gathering.</h2>
+    <div class="svc-grid">
+      <div class="svc-card reveal">
+        <div class="svc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round"><path d="M12 3v18M5 8c0 4 3 6 7 6M19 8c0 4-3 6-7 6"/></svg></div>
+        <div class="svc-h">Private Dinners</div>
+        <p class="svc-p">Intimate seated evenings for ten to twenty. We design the menu pacing, the table dynamics, and the room itself so the conversation has somewhere to go.</p>
+      </div>
+      <div class="svc-card reveal reveal-d1">
+        <div class="svc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>
+        <div class="svc-h">Brand Experiences</div>
+        <p class="svc-p">Launches and showcases that feel like an evening rather than an announcement. We translate a brand into scent, sound, light, and ritual.</p>
+      </div>
+      <div class="svc-card reveal reveal-d2">
+        <div class="svc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round"><path d="M3 21V8l9-5 9 5v13M9 21v-6h6v6"/></svg></div>
+        <div class="svc-h">Venue Atmosphere</div>
+        <p class="svc-p">A focused engagement to transform a space you already have. Lighting design, scent layering, and a sound score tuned to the room.</p>
+      </div>
+      <div class="svc-card reveal">
+        <div class="svc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round"><path d="M8 7h8M8 12h8M8 17h5"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+        <div class="svc-h">Guest Curation</div>
+        <p class="svc-p">The most considered part of any evening is who is in the room. We help shape a guest list with genuine chemistry, not only availability.</p>
+      </div>
+      <div class="svc-card reveal reveal-d1">
+        <div class="svc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <div class="svc-h">Sound & Music</div>
+        <p class="svc-p">A bespoke score for the night - not background, but structure. We build the playlist as an architecture that moves guests through the evening.</p>
+      </div>
+      <div class="svc-card reveal reveal-d2">
+        <div class="svc-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round"><path d="M12 2a7 7 0 0 0-4 12.7V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.3A7 7 0 0 0 12 2zM9 21h6"/></svg></div>
+        <div class="svc-h">Creative Direction</div>
+        <p class="svc-p">For larger productions, an end-to-end role overseeing every sensory layer so the evening reads as one coherent, intentional whole.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORNAMENT DIVIDER -->
+<div class="ornament-divider reveal" aria-hidden="true">
+  <span class="od-rule"></span>
+  <svg viewBox="0 0 88 22" fill="none" stroke-width="1">
+    <line x1="0" y1="11" x2="28" y2="11" opacity=".5"/>
+    <line x1="60" y1="11" x2="88" y2="11" opacity=".5"/>
+    <path d="M30 11 Q 38 4 44 11 Q 50 18 58 11" opacity=".75"/>
+    <circle cx="44" cy="11" r="1.4" fill="currentColor" stroke="none" opacity=".8"/>
+  </svg>
+  <span class="od-rule"></span>
+</div>
+
+<!-- ATELIER COMPOSITION -->
+<section class="atelier-section">
+  <div class="wrap">
+    <div class="atelier-grid">
+      <div class="atelier-visual reveal" aria-hidden="true">
+        <div class="atelier-flame"></div>
+        <div class="atelier-stem"></div>
+        <div class="atelier-mark">a single candle, deliberately placed</div>
+      </div>
+      <div class="atelier-body reveal reveal-d1">
+        <div class="at-eyebrow">The Studio Method</div>
+        <h3 class="at-h">Each element <i>earns its place</i> in the room.</h3>
+        <p class="at-p">A scent chosen for the hour. A light tuned to the table. A piece of music written for arrival, not background. Nothing in a Kanona evening exists because it usually exists at an event - every layer is placed because it carries the feeling forward.</p>
+        <p class="at-p">It is the difference between a room that is decorated and a room that is composed. Guests rarely name the layers, but they remember the result.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="process-section" style="padding-top:104px">
+  <div class="wrap">
+    <div class="sect-label reveal">How We Work</div>
+    <h2 class="sect-head reveal reveal-d1">Four movements, from <i>brief to close.</i></h2>
+    <div class="proc-list">
+      <div class="proc-item reveal">
+        <div class="proc-n">01</div>
+        <div>
+          <div class="proc-step">The Conversation</div>
+          <div class="proc-h">We listen for the feeling</div>
+          <p class="proc-p">Before any logistics, we talk about intent. What should guests feel on arrival, at the peak, and as they leave? That emotional brief becomes the reference point for every later decision.</p>
+        </div>
+      </div>
+      <div class="proc-item reveal">
+        <div class="proc-n">02</div>
+        <div>
+          <div class="proc-step">The Composition</div>
+          <div class="proc-h">We design the sensory score</div>
+          <p class="proc-p">Scent, light, sound, pacing, and seating are drafted together as a single composition. Nothing is decided in isolation - each layer is chosen for how it sits against the others.</p>
+        </div>
+      </div>
+      <div class="proc-item reveal">
+        <div class="proc-n">03</div>
+        <div>
+          <div class="proc-step">The Rehearsal</div>
+          <div class="proc-h">We test the room in advance</div>
+          <p class="proc-p">We walk the space at the same hour the event will run, tuning the light and sound until the room itself tells the right first sentence. Surprises are designed out before guests arrive.</p>
+        </div>
+      </div>
+      <div class="proc-item reveal">
+        <div class="proc-n">04</div>
+        <div>
+          <div class="proc-step">The Evening</div>
+          <div class="proc-h">We hold the arc, quietly</div>
+          <p class="proc-p">On the night, our presence is invisible. We manage the transitions, protect the silences, and guide the evening to a graceful close so the hosts can simply be guests at their own table.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PULL QUOTE -->
+<div class="wrap">
+  <div class="pull-wrap reveal">
+    <div class="pull-mark">&#8220;</div>
+    <p class="pull-text">The scent of a room is the first sentence of the evening. Everything after is elaboration.</p>
+    <p class="pull-attr">Kani Sedighi &middot; Kanona Events</p>
+    <span class="pull-rule" aria-hidden="true"></span>
+  </div>
+</div>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy" class="phi-section" style="padding-top:104px">
+  <div class="wrap">
+    <div class="sect-label reveal">Principles</div>
+    <h2 class="sect-head reveal reveal-d1">Six convictions behind <i>every evening.</i></h2>
+    <div class="phi-list">
+      <div class="phi-item"><div class="phi-n">01</div><div>
+        <div class="phi-h">Scent is the first sentence</div>
+        <p class="phi-p">Before guests see the room or hear the music, they smell it. A single note of cedar, white tea, or aged wood tells the body where it is before the mind catches up. We design the olfactory layer first.</p>
+      </div></div>
+      <div class="phi-item"><div class="phi-n">02</div><div>
+        <div class="phi-h">Silence is not empty</div>
+        <p class="phi-p">The pause before the first note of a string quartet. The quiet between courses when conversation drops to a murmur. These moments carry more weight than the sounds around them. We protect them.</p>
+      </div></div>
+      <div class="phi-item"><div class="phi-n">03</div><div>
+        <div class="phi-h">The guest list is the event</div>
+        <p class="phi-p">Ten people who have something genuine to offer each other will create a more memorable evening than a hundred who share only an invitation. Curation starts with who is in the room.</p>
+      </div></div>
+      <div class="phi-item"><div class="phi-n">04</div><div>
+        <div class="phi-h">Darkness earns the light</div>
+        <p class="phi-p">A room that is uniformly bright is a room without drama. We use deep shadow to make a candle feel like a moment worth remembering. Contrast is the vocabulary of atmosphere.</p>
+      </div></div>
+      <div class="phi-item"><div class="phi-n">05</div><div>
+        <div class="phi-h">Music is architecture</div>
+        <p class="phi-p">The playlist is not background. It is structure. We treat the sound environment as a score that moves the evening through arrival, peak, and departure with intention.</p>
+      </div></div>
+      <div class="phi-item"><div class="phi-n">06</div><div>
+        <div class="phi-h">Nothing happens twice</div>
+        <p class="phi-p">The specific combination of people, room, weather, and conversation cannot be recreated. We design for the one occasion in front of us, never the template.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ORNAMENT DIVIDER -->
+<div class="ornament-divider reveal" aria-hidden="true">
+  <span class="od-rule"></span>
+  <svg viewBox="0 0 88 22" fill="none" stroke-width="1">
+    <circle cx="14" cy="11" r="1.2" fill="currentColor" stroke="none" opacity=".7"/>
+    <line x1="22" y1="11" x2="38" y2="11" opacity=".5"/>
+    <path d="M40 6 L 44 11 L 40 16" opacity=".75"/>
+    <path d="M48 6 L 44 11 L 48 16" opacity=".75"/>
+    <line x1="50" y1="11" x2="66" y2="11" opacity=".5"/>
+    <circle cx="74" cy="11" r="1.2" fill="currentColor" stroke="none" opacity=".7"/>
+  </svg>
+  <span class="od-rule"></span>
+</div>
+
+<!-- WRITING / JOURNAL -->
+<section id="writing" class="exp-section">
+  <div class="wrap">
+    <div class="sect-label reveal">The Journal</div>
+    <h2 class="sect-head reveal reveal-d1">Notes on the craft of <i>atmosphere.</i></h2>
+    <div id="exp-grid"><!-- populated by JS from articles.json --></div>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-dot"></div></div>
+
+<!-- CREATOR -->
+<section class="creator-section">
+  <div class="wrap">
+    <div class="sect-label reveal">The Curator</div>
+    <div class="creator-inner reveal reveal-d1">
+      <div class="creator-img-wrap">
+        <img src="https://media.licdn.com/dms/image/v2/D5603AQGaRyPZftmGEw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1675404601711?e=1780531200&v=beta&t=pZOkSp0O4rBPghbMpoaI1SXQdDcu6etPymqgUORCvCU" alt="Kani Sedighi" loading="lazy" onerror="this.parentElement.style.background='var(--surface2)';this.style.display='none'">
+      </div>
+      <div>
+        <div class="creator-role">Experiential Curator &middot; Founder</div>
+        <div class="creator-name">Kani Sedighi</div>
+        <div class="creator-text">
+          <p>I design gatherings as sensory experiments. The scent of a room, the weight of silence before music begins, the specific warmth of a single candle - these are as deliberate as the guest list. Every detail is a decision about what feeling a person carries home.</p>
+          <p>This work started with a simple frustration: most gatherings are organized around logistics rather than experience. The atmosphere, the emotional arc, the quality of the silence between courses are left to chance. Kanona Events does not leave those things to chance.</p>
+          <p>I keep the studio small and take one evening at a time, on purpose. An event made with full attention is the only kind worth making, and the journal here is an extension of that practice.</p>
+        </div>
+        <div class="creator-sig">Kani Sedighi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-rule"><div class="section-rule-dot"></div></div>
+
+<!-- FAQ -->
+<section id="faq" class="faq-section" style="padding-top:104px">
+  <div class="wrap">
+    <div class="sect-label reveal">Questions</div>
+    <h2 class="sect-head reveal reveal-d1">What hosts usually <i>ask first.</i></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>How far in advance should we begin?</span><span class="faq-mark"></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Most evenings are best designed six to ten weeks ahead, which gives the sensory composition room to settle and the rehearsal time it needs. We do take on shorter timelines when the brief is focused, though the studio only ever holds one event at a time.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>Do you work with our existing venue?</span><span class="faq-mark"></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Almost always. We rarely need a different space - we need a closer reading of the one you have. Lighting, scent, and sound can transform a familiar room entirely, and our Venue Atmosphere engagement is built exactly for that.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>What size of event do you curate?</span><span class="faq-mark"></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Our instinct is intimate - tables of ten to twenty, where atmosphere and conversation can be genuinely designed. We do take on larger productions in a creative-direction role, overseeing the sensory layers while a production team handles scale.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>Are you present on the night?</span><span class="faq-mark"></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Yes, always - and invisibly. We hold the arc of the evening, manage the transitions, and protect the quiet moments so the hosts can be guests at their own table rather than managers of it.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" type="button"><span>How do we start a conversation?</span><span class="faq-mark"></span></button>
+        <div class="faq-a"><div class="faq-a-inner">Begin with the About page, then subscribe to The Kanona Letter below. Every enquiry starts with a conversation about intent rather than logistics, so there is no formal brief required - only an evening you would like to make memorable.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="nl-section">
+    <div class="nl-inner">
+      <div class="nl-label reveal">The Kanona Letter</div>
+      <h2 class="nl-h2 reveal reveal-d1">One evening,<br><i>described in full.</i></h2>
+      <p class="nl-sub reveal reveal-d2">Monthly. A single curated evening - the scent chosen, the music built, the guest dynamics considered, and what we were thinking as we designed it.</p>
+      <form class="nl-form reveal reveal-d3" id="nl-form" onsubmit="return nlSub(event)" novalidate>
+        <input class="nl-input" type="email" id="nl-email" placeholder="your@email.com" autocomplete="email" required>
+        <button class="nl-btn" type="submit" id="nl-btn">Subscribe</button>
+      </form>
+      <p class="nl-ok" id="nl-ok">Thank you. The first letter arrives soon.</p>
+    </div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">Kanona <em>Events</em></div>
+      <p class="footer-tag">An experiential event-curation studio designing evenings built to remain.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Studio</h4>
+      <a href="./#services">Services</a>
+      <a href="./#process">Process</a>
+      <a href="./#philosophy">Principles</a>
+      <a href="./#faq">Questions</a>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="./">Home</a>
+      <a href="./#writing">Journal</a>
+      <a href="./about.html">About</a>
+      <a href="./#newsletter">The Letter</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="./privacy.html">Privacy</a>
+      <a href="./terms.html">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <div class="footer-copy">&copy; 2026 Kanona Events &middot; Kani Sedighi</div>
+      <div class="footer-copy">Experiential Event Curation</div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+'use strict';
+
+var REDUCED=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* NAV scroll */
+var nav=document.getElementById('nav');
+window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',scrollY>36)},{passive:true});
+
+/* Cursor orb */
+var orb=document.getElementById('orb');
+if(!REDUCED&&window.matchMedia('(hover:hover)').matches){
+  document.addEventListener('mousemove',function(e){
+    orb.style.left=e.clientX+'px';orb.style.top=e.clientY+'px';
+  },{passive:true});
+}else if(orb){orb.style.display='none';}
+
+/* ── THREE.JS - calm field of light ── */
+(function(){
+  var canvas=document.getElementById('gl');
+  var hero=document.getElementById('hero');
+  if(!canvas||!hero||!window.THREE||REDUCED){if(canvas)canvas.style.opacity=0;return;}
+  var mobile=window.innerWidth<760||navigator.maxTouchPoints>0;
+  var N=mobile?34:70;
+  var scene=new THREE.Scene();
+  var W=hero.clientWidth,H=hero.clientHeight;
+  var cam=new THREE.PerspectiveCamera(60,W/H,.1,100);
+  cam.position.set(0,0,8);
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:false,powerPreference:'low-power'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.25:1.6));
+  renderer.setSize(W,H);
+  renderer.setClearColor(0,0);
+
+  /* slow, sparse motes of light */
+  var geo=new THREE.BufferGeometry();
+  var pos=new Float32Array(N*3);
+  var ph=[];
+  for(var i=0;i<N;i++){
+    pos[i*3]=(Math.random()-.5)*20;
+    pos[i*3+1]=(Math.random()-.5)*13;
+    pos[i*3+2]=(Math.random()-.5)*6;
+    ph.push(Math.random()*Math.PI*2);
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  var motes=new THREE.Points(geo,new THREE.PointsMaterial({
+    color:0xc4a05d,size:mobile?.05:.06,sizeAttenuation:true,
+    transparent:true,opacity:.42,
+    blending:THREE.AdditiveBlending,depthWrite:false
+  }));
+  scene.add(motes);
+
+  /* a single slow, refined wireframe ring - the WebGL focal point */
+  var ring=new THREE.Mesh(
+    new THREE.TorusGeometry(3.2,.02,2,mobile?64:120),
+    new THREE.MeshBasicMaterial({color:0xc4a05d,transparent:true,opacity:.16,wireframe:true})
+  );
+  ring.rotation.x=1.15;
+  scene.add(ring);
+  var ring2=new THREE.Mesh(
+    new THREE.TorusGeometry(4.6,.015,2,mobile?64:120),
+    new THREE.MeshBasicMaterial({color:0xe8c890,transparent:true,opacity:.08,wireframe:true})
+  );
+  ring2.rotation.x=1.15;
+  scene.add(ring2);
+
+  function resize(){
+    W=hero.clientWidth;H=hero.clientHeight;
+    cam.aspect=W/H;cam.updateProjectionMatrix();
+    renderer.setSize(W,H);
+  }
+  window.addEventListener('resize',resize,{passive:true});
+
+  var visible=true;
+  new IntersectionObserver(function(e){visible=e[0].isIntersecting;},{threshold:0}).observe(hero);
+  document.addEventListener('visibilitychange',function(){visible=!document.hidden;});
+  window.addEventListener('scroll',function(){
+    var f=Math.max(0,1-scrollY/(hero.offsetHeight*.6));
+    canvas.style.opacity=f;
+  },{passive:true});
+
+  var t=0;
+  (function loop(){
+    requestAnimationFrame(loop);
+    if(!visible)return;
+    t+=.0045;
+    var a=geo.attributes.position.array;
+    for(var j=0;j<N;j++){
+      a[j*3+1]+=.0016+Math.sin(t+ph[j])*.0004;
+      if(a[j*3+1]>6.8){a[j*3+1]=-6.8;a[j*3]=(Math.random()-.5)*20;}
+    }
+    geo.attributes.position.needsUpdate=true;
+    ring.rotation.z=t*.6;
+    ring2.rotation.z=-t*.4;
+    cam.position.x=Math.sin(t*.5)*.18;
+    cam.position.y=Math.cos(t*.4)*.12;
+    cam.lookAt(0,0,0);
+    renderer.render(scene,cam);
+  })();
+})();
+
+/* ── SCROLL REVEAL ── */
+(function(){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+    });
+  },{threshold:.12,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+  document.querySelectorAll('.phi-item').forEach(function(el,i){
+    el.style.transitionDelay=((i%2)*.1)+'s';
+    io.observe(el);
+  });
+})();
+
+/* ── FAQ accordion ── */
+(function(){
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var btn=item.querySelector('.faq-q');
+    var ans=item.querySelector('.faq-a');
+    btn.addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      if(open){item.classList.remove('open');ans.style.maxHeight=null;}
+      else{item.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';}
+    });
+  });
+})();
+
+/* ── ARTICLES - real articles only, tasteful empty state ── */
+(function(){
+  if(!document.getElementById('exp-grid'))return;
+  var grid=document.getElementById('exp-grid');
+
+  function emptyState(){
+    grid.className='';
+    grid.innerHTML=
+      '<div class="exp-empty">'
+      +'<div class="exp-empty-mark">&#10086;</div>'
+      +'<div class="exp-empty-h">The journal opens soon</div>'
+      +'<p class="exp-empty-p">Notes on scent, light, sound, and the craft of atmosphere are in preparation. Subscribe to The Kanona Letter below to read the first entries.</p>'
+      +'</div>';
+  }
+
+  function render(arts){
+    if(!arts||!arts.length){emptyState();return;}
+    grid.className='exp-grid';
+    var arrow='<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    grid.innerHTML=arts.map(function(a,i){
+      var n=(i+1)<10?'0'+(i+1):''+(i+1);
+      var desc=(a.meta_description||a.description||'');
+      if(desc.length>118)desc=desc.slice(0,118)+'...';
+      return '<a class="exp-card" href="./'+a.slug+'/">'
+        +'<div class="exp-n">'+n+'</div>'
+        +'<div class="exp-tag">'+(a.category||'Journal')+'</div>'
+        +'<div class="exp-title">'+(a.title||'Untitled')+'</div>'
+        +'<div class="exp-desc">'+desc+'</div>'
+        +'<div class="exp-foot"><span>'+(a.date||'')+'</span>'
+        +'<span class="exp-read">Read '+arrow+'</span></div>'
+        +'</a>';
+    }).join('');
+  }
+
+  fetch('./articles.json')
+    .then(function(r){return r.ok?r.json():Promise.reject();})
+    .then(function(data){
+      var arts=Array.isArray(data)?data:(data&&Array.isArray(data.articles)?data.articles:[]);
+      arts=arts.filter(function(a){return a&&a.slug&&a.title;});
+      render(arts);
+    })
+    .catch(function(){emptyState();});
+})();
+
+/* ── NEWSLETTER ── */
+var HUB=(typeof KAVALSIA_HUB_URL!=='undefined'?KAVALSIA_HUB_URL:'').replace(/\/$/,'');
+function nlSub(e){
+  e.preventDefault();
+  var email=document.getElementById('nl-email').value.trim();
+  var btn=document.getElementById('nl-btn');
+  if(!email)return false;
+  btn.disabled=true;btn.textContent='...';
+  if(HUB){
+    fetch(HUB+'/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,list_id:23})})
+      .then(function(r){
+        if(r.ok){document.getElementById('nl-form').style.display='none';document.getElementById('nl-ok').style.display='block';}
+        else throw 0;
+      })
+      .catch(function(){btn.disabled=false;btn.textContent='Subscribe';});
+  }else{
+    setTimeout(function(){document.getElementById('nl-form').style.display='none';document.getElementById('nl-ok').style.display='block';},250);
+  }
+  return false;
+}
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
