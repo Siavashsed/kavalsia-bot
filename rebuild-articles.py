@@ -207,6 +207,12 @@ def patch_site(stem, site, token, log):
             css  = re.sub(re.escape(old_text), new_text, css,  flags=re.IGNORECASE)
             body = re.sub(re.escape(old_text), new_text, body, flags=re.IGNORECASE)
 
+        # Tighten article headline line-height network-wide; extra-tight for Kanona.
+        lh = "1.04" if stem == "kanona-events" else "1.1"
+        css = css + ("\n/* tight headlines */\n"
+                     ".art h1,.wrap h1,.art-grid h1,.art-min h1,.mag-hero h1,.imm-hero h1,"
+                     "article h1,h1{line-height:" + lh + "!important}")
+
         title = article.get("title", slug)
         desc  = article.get("meta_description", "")
         canonical = f"https://{domain}/{slug}/" if domain else ""
