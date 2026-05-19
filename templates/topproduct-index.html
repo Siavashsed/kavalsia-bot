@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TopProduct - Editor-Tested Reviews of Viral &amp; Trending Products</title>
+<meta name="description" content="TopProduct independently tests the trending products actually worth buying. Honest, editor-led reviews of viral TikTok finds, tech, home, beauty and fitness gear with zero sponsored fluff.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+:root{
+  --bg:#f7f6f2;
+  --bg2:#eeeae1;
+  --surface:#ffffff;
+  --ink:#0e0e0d;
+  --ink2:#33322d;
+  --muted:#6b675d;
+  --border:#e5e0d4;
+  --border2:#1a1a17;
+  --accent:#dc2626;
+  --accent2:#ea580c;
+  --gold:#d97706;
+  --green:#16a34a;
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+  --display:'Bricolage Grotesque','Inter',system-ui,sans-serif;
+  --radius:14px;
+  --radius-sm:8px;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* MASTHEAD */
+.masthead{background:var(--ink);padding:0 24px;border-bottom:1px solid #000;position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%)}
+.masthead-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.masthead-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.masthead-logo{font-family:var(--display);font-size:24px;font-weight:800;color:#fff;letter-spacing:-1px;display:flex;align-items:center;gap:10px;font-variation-settings:"opsz" 32}
+.masthead-logo-mark{width:32px;height:32px;background:var(--accent);border-radius:9px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(220,38,38,.4)}
+.masthead-logo span{color:var(--accent)}
+.masthead-nav{display:flex;align-items:center;gap:2px}
+.masthead-nav a{font-size:13px;font-weight:500;color:rgba(255,255,255,.72);padding:9px 14px;border-radius:8px;transition:color .2s,background .2s;letter-spacing:-.1px}
+.masthead-nav a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.masthead-subscribe{font-size:13px;font-weight:600;color:#fff!important;background:var(--accent);padding:10px 18px!important;border-radius:999px;transition:transform .2s,box-shadow .2s;margin-left:8px}
+.masthead-subscribe:hover{background:var(--accent)!important;transform:translateY(-1px);box-shadow:0 8px 20px rgba(220,38,38,.4)}
+.menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px}
+.menu-toggle svg{stroke:#fff}
+
+/* HERO */
+.hero{position:relative;background:radial-gradient(120% 80% at 50% 0%,#241f1a 0%,#141413 60%,#0e0e0d 100%);padding:96px 24px 110px;overflow:hidden;border-bottom:1px solid #000}
+.hero::before{content:'';position:absolute;top:-160px;right:-160px;width:520px;height:520px;background:radial-gradient(circle,rgba(220,38,38,.28),transparent 65%);border-radius:50%;filter:blur(20px)}
+.hero::after{content:'';position:absolute;bottom:-180px;left:-120px;width:480px;height:480px;background:radial-gradient(circle,rgba(234,88,12,.18),transparent 65%);border-radius:50%;filter:blur(20px)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 80%);pointer-events:none}
+.hero-inner{max-width:960px;margin:0 auto;text-align:center;position:relative;z-index:2}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);padding:8px 16px;border-radius:999px;letter-spacing:-.1px;margin-bottom:28px;backdrop-filter:blur(8px)}
+.hero-eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(220,38,38,.25),0 0 12px rgba(220,38,38,.8);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.hero h1{font-family:var(--display);font-size:clamp(40px,7vw,82px);font-weight:700;color:#fff;line-height:.98;letter-spacing:-2.5px;margin-bottom:24px;font-variation-settings:"opsz" 96}
+.hero h1 .accent{background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+.hero p{font-size:clamp(16px,1.6vw,19px);color:rgba(255,255,255,.62);line-height:1.6;max-width:660px;margin:0 auto 36px;font-weight:400}
+.hero-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:15px 26px;border-radius:999px;border:none;cursor:pointer;font-family:var(--font);transition:transform .2s,opacity .2s,box-shadow .2s,background .2s;letter-spacing:-.1px}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 28px rgba(220,38,38,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(220,38,38,.5)}
+.btn-ghost{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px)}
+.btn-ghost:hover{background:rgba(255,255,255,.12);transform:translateY(-2px)}
+
+/* TRUST STRIP */
+.trust{background:var(--ink);padding:24px;border-top:1px solid rgba(255,255,255,.06)}
+.trust-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:14px 44px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.6);letter-spacing:-.1px}
+.trust-item svg{stroke:var(--accent);flex-shrink:0}
+
+/* SECTION COMMON */
+.section{padding:96px 24px}
+.section-inner{max-width:1280px;margin:0 auto}
+.section-narrow{max-width:960px}
+.section-head{text-align:center;margin-bottom:56px}
+.section-head.left{text-align:left}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:18px;padding:6px 14px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.18);border-radius:999px}
+.section-title{font-family:var(--display);font-size:clamp(32px,4.4vw,52px);font-weight:700;color:var(--ink);line-height:1.04;letter-spacing:-1.6px;font-variation-settings:"opsz" 72}
+.section-title .accent{color:var(--accent);font-style:italic}
+.section-sub{font-size:16px;color:var(--muted);line-height:1.65;max-width:640px;margin:18px auto 0;font-weight:400}
+.section-head.left .section-sub{margin-left:0}
+
+/* SCORECARD TOOL */
+.tool-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.tool-section::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(220,38,38,.06),transparent 70%);border-radius:50%}
+.tool-wrap{display:grid;grid-template-columns:1fr 380px;gap:36px;align-items:start;position:relative}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;box-shadow:0 4px 30px rgba(0,0,0,.04)}
+.tool-card h3{font-family:var(--display);font-size:24px;font-weight:700;margin-bottom:6px;letter-spacing:-.7px}
+.tool-card .tool-hint{font-size:14px;color:var(--muted);margin-bottom:26px}
+.check-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);cursor:pointer;align-items:flex-start;transition:opacity .15s}
+.check-item:last-child{border-bottom:none}
+.check-item:hover{opacity:.82}
+.check-box{width:24px;height:24px;border:2px solid var(--border);border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px}
+.check-box svg{opacity:0;transform:scale(.5);transition:all .2s}
+.check-item.on .check-box{background:var(--green);border-color:var(--green)}
+.check-item.on .check-box svg{opacity:1;transform:scale(1)}
+.check-text strong{display:block;font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:3px;letter-spacing:-.2px}
+.check-text span{font-size:13px;color:var(--muted);line-height:1.55}
+.score-panel{background:var(--ink);border-radius:20px;padding:34px 28px;color:#fff;position:sticky;top:90px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.18);border:1px solid #000}
+.score-ring{position:relative;width:160px;height:160px;margin:6px auto 18px}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-ring-num b{font-family:var(--display);font-size:48px;font-weight:700;line-height:1;letter-spacing:-2px}
+.score-ring-num em{font-size:10px;font-style:normal;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:4px}
+.score-verdict{font-family:var(--display);font-size:24px;font-weight:700;margin-bottom:8px;letter-spacing:-.6px}
+.score-msg{font-size:13.5px;color:rgba(255,255,255,.62);line-height:1.6;min-height:62px}
+.score-bar{height:7px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:20px 0 8px}
+.score-bar i{display:block;height:100%;width:0;border-radius:999px;background:var(--accent);transition:width .4s ease,background .4s ease}
+.score-count{font-size:11.5px;color:rgba(255,255,255,.42);letter-spacing:.4px}
+.score-reset{margin-top:20px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.8);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:10px 20px;border-radius:999px;cursor:pointer;font-family:var(--font);transition:background .2s}
+.score-reset:hover{background:rgba(255,255,255,.18)}
+
+/* STORY / WHY */
+.story-section{background:var(--bg)}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.story-visual{background:var(--ink);border-radius:24px;padding:40px;color:#fff;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.15)}
+.story-visual::before{content:'';position:absolute;top:-100px;right:-100px;width:280px;height:280px;background:radial-gradient(circle,rgba(220,38,38,.25),transparent 70%);border-radius:50%}
+.story-visual .sv-row{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08);align-items:center;position:relative}
+.story-visual .sv-row:last-child{border-bottom:none}
+.story-visual .sv-icon{width:44px;height:44px;border-radius:12px;background:rgba(220,38,38,.16);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(220,38,38,.2)}
+.story-visual .sv-icon svg{stroke:var(--accent)}
+.story-visual .sv-row b{font-size:14.5px;display:block;font-weight:600;letter-spacing:-.2px}
+.story-visual .sv-row span{font-size:12.5px;color:rgba(255,255,255,.5)}
+.story-text h2{font-family:var(--display);font-size:clamp(30px,3.6vw,46px);font-weight:700;line-height:1.04;margin-bottom:22px;letter-spacing:-1.4px;font-variation-settings:"opsz" 64}
+.story-text h2 .accent{color:var(--accent);font-style:italic}
+.story-text p{font-size:15.5px;color:var(--ink2);line-height:1.72;margin-bottom:16px}
+.story-text p:last-of-type{margin-bottom:0}
+
+/* VALUE CARDS */
+.value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.value-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:32px;transition:transform .25s,box-shadow .25s,border-color .25s}
+.value-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.08);border-color:#cfc8b8}
+.value-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 8px 20px rgba(220,38,38,.25)}
+.value-card h3{font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:10px;letter-spacing:-.5px}
+.value-card p{font-size:14px;color:var(--muted);line-height:1.65}
+
+/* STATS BAND */
+.stats{background:var(--ink);padding:72px 24px;position:relative;overflow:hidden}
+.stats::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 60% 80% at 50% 50%,#000,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 60% 80% at 50% 50%,#000,transparent 75%)}
+.stats-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:28px;position:relative}
+.stat{text-align:center}
+.stat b{font-family:var(--display);font-size:clamp(40px,5.6vw,64px);font-weight:700;color:#fff;line-height:1;display:block;letter-spacing:-2.4px;font-variation-settings:"opsz" 96}
+.stat b .accent{color:var(--accent)}
+.stat em{font-size:12px;font-style:normal;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1.6px;margin-top:12px;display:block;font-weight:500}
+
+/* COVER / TOPIC GRID */
+.topic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;display:flex;gap:16px;align-items:flex-start;transition:transform .25s,box-shadow .25s,border-color .25s}
+.topic-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.07);border-color:#cfc8b8}
+.topic-icon{width:48px;height:48px;border-radius:12px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border)}
+.topic-icon svg{stroke:var(--accent)}
+.topic-card h3{font-family:var(--display);font-size:17px;font-weight:600;margin-bottom:6px;letter-spacing:-.3px}
+.topic-card p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ARTICLES */
+.arts-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.arts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.art-card{border-radius:18px;overflow:hidden;border:1px solid var(--border);background:var(--surface);transition:transform .25s,box-shadow .25s,border-color .25s;display:flex;flex-direction:column}
+.art-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(0,0,0,.1);border-color:#cfc8b8}
+.art-card-img{width:100%;height:184px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a2720,#0e0e0d);position:relative;overflow:hidden}
+.art-card-img::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:24px 24px}
+.art-card-img svg{opacity:.4;position:relative;z-index:1}
+.art-card-body{padding:24px;display:flex;flex-direction:column;flex:1}
+.art-card-cat{display:inline-block;font-size:10.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:12px;padding:4px 10px;background:rgba(220,38,38,.08);border-radius:999px;align-self:flex-start}
+.art-card-title{font-family:var(--display);font-size:19px;font-weight:600;line-height:1.22;margin-bottom:10px;letter-spacing:-.5px}
+.art-card-desc{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:18px;flex:1}
+.art-card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid var(--border)}
+.art-card-meta{font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.art-card-meta b{font-weight:600;color:var(--ink);font-size:12px;letter-spacing:-.1px}
+.art-card-read{font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+.arts-empty{background:var(--surface);border:1px dashed var(--border);border-radius:20px;padding:72px 32px;text-align:center}
+.arts-empty svg{opacity:.35;margin-bottom:20px}
+.arts-empty h3{font-family:var(--display);font-size:22px;font-weight:700;margin-bottom:10px;letter-spacing:-.6px}
+.arts-empty p{font-size:14.5px;color:var(--muted);max-width:440px;margin:0 auto;line-height:1.65}
+
+/* EDITOR */
+.editor-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:44px;display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:center;box-shadow:0 14px 40px rgba(0,0,0,.05)}
+.editor-avatar{width:128px;height:128px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--display);font-size:46px;font-weight:700;color:#fff;letter-spacing:-1.5px;box-shadow:0 12px 28px rgba(220,38,38,.3)}
+.editor-info .editor-label{display:inline-flex;font-size:11.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1.8px;margin-bottom:10px;padding:5px 12px;background:rgba(220,38,38,.08);border-radius:999px}
+.editor-info h3{font-family:var(--display);font-size:28px;font-weight:700;margin-bottom:4px;letter-spacing:-.9px}
+.editor-info .editor-role{font-size:13.5px;color:var(--muted);font-weight:500;margin-bottom:14px;letter-spacing:-.1px}
+.editor-info p{font-size:14.5px;color:var(--ink2);line-height:1.72;margin-bottom:16px}
+.editor-stats{display:flex;gap:28px;flex-wrap:wrap;padding-top:8px;border-top:1px solid var(--border);padding:18px 0 0}
+.editor-stats div b{font-family:var(--display);font-size:22px;font-weight:700;color:var(--accent);letter-spacing:-.6px}
+.editor-stats div span{font-size:11.5px;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:1.2px;font-weight:500}
+
+/* FAQ */
+.faq-section{background:var(--bg)}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.faq-item.open{border-color:var(--accent)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;cursor:pointer;font-size:15.5px;font-weight:600;color:var(--ink);letter-spacing:-.2px;font-family:var(--display);font-variation-settings:"opsz" 24}
+.faq-q svg{flex-shrink:0;transition:transform .25s;stroke:var(--accent)}
+.faq-item.open .faq-q svg{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-a p{padding:0 26px 24px;font-size:14.5px;color:var(--muted);line-height:1.7}
+.faq-item.open .faq-a{max-height:260px}
+
+/* NEWSLETTER */
+.newsletter-section{background:radial-gradient(120% 80% at 50% 0%,#241f1a 0%,#141413 60%,#0e0e0d 100%);padding:96px 24px;text-align:center;position:relative;overflow:hidden;border-top:1px solid #000;border-bottom:1px solid #000}
+.newsletter-section::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:340px;background:radial-gradient(circle,rgba(220,38,38,.22),transparent 65%);filter:blur(20px)}
+.newsletter-inner{max-width:640px;margin:0 auto;position:relative;z-index:2}
+.newsletter-kicker{display:inline-flex;font-size:11.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:18px;padding:6px 14px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:999px}
+.newsletter-h2{font-family:var(--display);font-size:clamp(32px,4.6vw,52px);font-weight:700;color:#fff;line-height:1.04;margin-bottom:16px;letter-spacing:-1.6px;font-variation-settings:"opsz" 72}
+.newsletter-h2 .accent{font-style:italic;background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.newsletter-sub{font-size:16px;color:rgba(255,255,255,.62);line-height:1.65;margin-bottom:32px}
+.newsletter-form{display:flex;gap:8px;max-width:500px;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px;backdrop-filter:blur(10px)}
+.newsletter-input{flex:1;font-size:14.5px;font-family:var(--font);color:#fff;background:transparent;border:none;padding:12px 20px;outline:none}
+.newsletter-input::placeholder{color:rgba(255,255,255,.4)}
+.newsletter-btn{font-size:13.5px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:999px;padding:12px 24px;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:opacity .2s,transform .2s}
+.newsletter-btn:hover{opacity:.95;transform:translateY(-1px)}
+.newsletter-note{font-size:11.5px;color:rgba(255,255,255,.34);margin-top:16px}
+
+/* FOOTER */
+.footer{background:#0a0a0a;border-top:1px solid #1a1a1a;padding:64px 24px 28px}
+.footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px}
+.footer-logo{font-family:var(--display);font-size:24px;font-weight:700;color:#fff;margin-bottom:14px;letter-spacing:-.8px;display:flex;align-items:center;gap:10px}
+.footer-logo span{color:var(--accent)}
+.footer-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7;max-width:320px}
+.footer-col h4{font-size:11.5px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:1.6px;margin-bottom:16px}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,.44);margin-bottom:10px;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{max-width:1280px;margin:48px auto 0;border-top:1px solid rgba(255,255,255,.06);padding-top:24px;font-size:11.5px;color:rgba(255,255,255,.3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:980px){
+  .section{padding:72px 20px}
+  .hero{padding:72px 20px 84px}
+  .tool-wrap{grid-template-columns:1fr}
+  .score-panel{position:static}
+  .story-grid{grid-template-columns:1fr;gap:36px}
+  .value-grid,.topic-grid,.arts-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-inner{grid-template-columns:repeat(2,1fr);gap:36px}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  .masthead-nav a:not(.masthead-subscribe){display:none}
+  .menu-toggle{display:block}
+  .masthead-nav.open a:not(.masthead-subscribe){display:block;position:absolute;left:0;right:0;background:var(--ink);text-align:center;padding:14px}
+  .masthead-nav.open{position:static}
+  .value-grid,.topic-grid,.arts-grid{grid-template-columns:1fr}
+  .newsletter-form{flex-direction:column;border-radius:18px;padding:8px}
+  .newsletter-btn{border-radius:999px}
+  .editor-card{grid-template-columns:1fr;text-align:center;justify-items:center;padding:32px}
+  .editor-stats{justify-content:center}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .trust-inner{gap:12px 22px}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#dc2626-->
+<!--SHELL:HEADER-->
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-brand">
+      <a href="./" class="masthead-logo">
+        <span class="masthead-logo-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </span>
+        Top<span>Product</span>
+      </a>
+    </div>
+    <nav class="masthead-nav" id="mainNav">
+      <a href="./">Home</a>
+      <a href="./#scorecard">Scorecard</a>
+      <a href="./#cover">Categories</a>
+      <a href="./#articles">Reviews</a>
+      <a href="about.html">About</a>
+      <a href="./#newsletter" class="masthead-subscribe">Get Weekly Picks</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</header>
+<!--/SHELL:HEADER-->
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="dot"></span>Trending Products, Honestly Reviewed</div>
+    <h1>Don't get burned by the <span class="accent">next viral product</span>.</h1>
+    <p>Every week TikTok, Instagram and the algorithm crown a new must-buy. We test the hype, expose the dropship markups, and tell you what is genuinely worth your money and what is not.</p>
+    <div class="hero-cta-row">
+      <a href="./#scorecard" class="btn btn-primary">
+        Score a Product Now
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <a href="./#articles" class="btn btn-ghost">Read Latest Reviews</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust">
+  <div class="trust-inner">
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>30 Day Real World Testing</div>
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1l3 6 6 .9-4.5 4.3 1 6.1L12 21l-5.5 2.3 1-6.1L3 7.9 9 7z"/></svg>No Sponsored Fluff</div>
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Updated Weekly</div>
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Dropship Markups Exposed</div>
+  </div>
+</div>
+
+<!-- SCORECARD TOOL -->
+<section class="section tool-section" id="scorecard">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-label">Free Interactive Tool</div>
+      <h2 class="section-title">The Trending Product <span class="accent">Scorecard</span></h2>
+      <p class="section-sub">Found something viral you are tempted to buy? Run it through our 10 point checklist. Tick every box that honestly applies and we will tell you whether it is a smart buy or a scroll past.</p>
+    </div>
+    <div class="tool-wrap reveal">
+      <div class="tool-card">
+        <h3>Score Your Product</h3>
+        <p class="tool-hint">Check each statement that is true for the product you are eyeing.</p>
+        <div id="checklist"></div>
+      </div>
+      <div class="score-panel">
+        <div class="score-ring">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="12"/>
+            <circle id="scoreArc" cx="80" cy="80" r="68" fill="none" stroke="#dc2626" stroke-width="12" stroke-linecap="round" stroke-dasharray="427" stroke-dashoffset="427"/>
+          </svg>
+          <div class="score-ring-num"><b id="scoreNum">0</b><em>out of 100</em></div>
+        </div>
+        <div class="score-verdict" id="scoreVerdict">Start Checking</div>
+        <p class="score-msg" id="scoreMsg">Tick the boxes that apply and your live verdict appears here instantly.</p>
+        <div class="score-bar"><i id="scoreBar"></i></div>
+        <div class="score-count" id="scoreCount">0 of 10 criteria met</div>
+        <button class="score-reset" id="scoreReset">Reset Scorecard</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY / WHY -->
+<section class="section story-section">
+  <div class="section-inner">
+    <div class="story-grid">
+      <div class="story-text reveal">
+        <div class="section-label">Why We Exist</div>
+        <h2>The viral economy was built to <span class="accent">empty your wallet</span>.</h2>
+        <p>A single 15 second clip can turn an unknown gadget into a global obsession overnight. The problem is that going viral has nothing to do with being good. Most TikTok-made-me-buy-it products are generic items pulled from the same overseas catalogs, marked up three to five times, and shipped slowly in plain packaging.</p>
+        <p>TopProduct exists to break that cycle. We buy products with our own money, live with them for at least 30 days, and report exactly what holds up and what falls apart. No affiliate pressure, no brand deals dictating the verdict.</p>
+        <p>When a viral find is genuinely excellent we will be the first to tell you. When it is recycled hype, we will save you the disappointment and the return shipping.</p>
+      </div>
+      <div class="story-visual reveal">
+        <div class="sv-row">
+          <div class="sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg></div>
+          <div><b>We find it before it floods your feed</b><span>Tracking emerging trends daily</span></div>
+        </div>
+        <div class="sv-row">
+          <div class="sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+          <div><b>We test it for 30+ days</b><span>Real homes, real use, real wear</span></div>
+        </div>
+        <div class="sv-row">
+          <div class="sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div><b>We trace the real price</b><span>Spotting markups and dropship tricks</span></div>
+        </div>
+        <div class="sv-row">
+          <div class="sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-6 0v4"/><rect x="3" y="9" width="18" height="12" rx="2"/></svg></div>
+          <div><b>We publish the honest verdict</b><span>Buy, skip, or wait, clearly stated</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE CARDS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-label">Why TopProduct</div>
+      <h2 class="section-title">How we keep you from <span class="accent">wasting money</span>.</h2>
+      <p class="section-sub">Six principles guide every review we publish and every product we tell you to skip.</p>
+    </div>
+    <div class="value-grid">
+      <div class="value-card reveal">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Bought, Not Gifted</h3>
+        <p>Every product we review is purchased at retail price like a normal shopper. Brands never get to send us a polished sample and skew the result.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h3>Tested Over Time</h3>
+        <p>A first impression means nothing. We use products for a month or more so we catch the cheap hinge, the fading battery, the peeling coating.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>Price Reality Checks</h3>
+        <p>We trace viral products back to their source listings so you know if that $49 gadget is really a $12 item with a marketing budget attached.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3>Clear Verdicts</h3>
+        <p>No vague star ratings. Every review ends with a plain answer: buy it, skip it, or wait for the price to drop. Decisions made simple.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg></div>
+        <h3>Trend Radar</h3>
+        <p>We monitor what is gaining traction before it hits everyone's feed, so our verdict is ready the moment you start wondering about it.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+        <h3>Reader First, Always</h3>
+        <p>If a product is bad we say so even when it would be easy to stay quiet. Your trust is worth more than any single review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<section class="stats">
+  <div class="stats-inner">
+    <div class="stat reveal"><b data-count="640">0</b><em>Products Tested</em></div>
+    <div class="stat reveal"><b data-count="30">0</b><em>Min Days Per Test</em></div>
+    <div class="stat reveal"><b data-count="48">0</b><em>Trends Tracked Weekly</em></div>
+    <div class="stat reveal"><b><span data-count="0">0</span><span class="accent">%</span></b><em>Sponsored Reviews</em></div>
+  </div>
+</section>
+
+<!-- WHAT WE COVER -->
+<section class="section story-section" id="cover">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-label">What We Cover</div>
+      <h2 class="section-title">Every category where <span class="accent">hype meets your wallet</span>.</h2>
+      <p class="section-sub">From the gadget aisle to the bathroom shelf, these are the spaces where viral marketing works hardest, and where we dig deepest.</p>
+    </div>
+    <div class="topic-grid">
+      <div class="topic-card reveal">
+        <div class="topic-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>
+        <div><h3>Tech &amp; Gadgets</h3><p>Earbuds, smart rings, chargers and the accessories that promise the world for $30.</p></div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div><h3>Home &amp; Living</h3><p>Bedding, organizers, lighting and the decor that fills every Amazon must-have list.</p></div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <div><h3>Beauty &amp; Skincare</h3><p>Serums, LED masks, hair tools and dupes, tested against the claims and the originals.</p></div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div><h3>Fitness &amp; Wellness</h3><p>Resistance gear, recovery tools and supplements that flood the feed every January.</p></div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2l1.5 9h15L21 2"/><path d="M5 11v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9"/></svg></div>
+        <div><h3>Kitchen &amp; Gear</h3><p>Air fryers, portable blenders and the countertop gadgets promising to change dinner.</p></div>
+      </div>
+      <div class="topic-card reveal">
+        <div class="topic-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+        <div><h3>TikTok &amp; Viral Finds</h3><p>The week's biggest made-me-buy-it moments, fact checked before you tap order.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="section arts-section" id="articles">
+  <div class="section-inner">
+    <div class="section-head reveal">
+      <div class="section-label">Latest Reviews</div>
+      <h2 class="section-title">What we've been <span class="accent">testing</span>.</h2>
+      <p class="section-sub">Fresh editor-tested reviews and buying guides, published as we finish each round of testing.</p>
+    </div>
+    <div class="arts-grid" id="arts-grid"></div>
+  </div>
+</section>
+
+<!-- EDITOR -->
+<section class="section">
+  <div class="section-inner section-narrow">
+    <div class="editor-card reveal">
+      <div class="editor-avatar">SC</div>
+      <div class="editor-info">
+        <div class="editor-label">Meet The Editor</div>
+        <h3>Sophie Chen</h3>
+        <div class="editor-role">Product Editor, TopProduct</div>
+        <p>Sophie leads our review desk. She has spent the last decade buying, breaking and benchmarking consumer products, from $20 viral kitchen gadgets to flagship headphones, and has zero patience for marketing fluff.</p>
+        <p>Every verdict that goes live on TopProduct is earned through real money spent and real time used. No agency, no brand on a leash, just careful testing and plain talk.</p>
+        <div class="editor-stats">
+          <div><b>640+</b><span>Products Reviewed</span></div>
+          <div><b>30 Days</b><span>Minimum Per Test</span></div>
+          <div><b>0</b><span>Paid Verdicts</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq-section">
+  <div class="section-inner section-narrow">
+    <div class="section-head reveal">
+      <div class="section-label">Good Questions</div>
+      <h2 class="section-title">Frequently asked <span class="accent">questions</span>.</h2>
+    </div>
+    <div id="faqList" class="reveal">
+      <div class="faq-item">
+        <div class="faq-q">How does TopProduct make money if reviews are not sponsored?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a"><p>We may earn a small commission when readers buy through some links, but that never changes a verdict. We recommend skip-it products constantly, and a brand can never pay to improve its score or position.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What is the Trending Product Scorecard for?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a"><p>It is a free, instant gut check. When you spot a viral product, run it through the 10 point checklist on this page. The live score tells you whether the basics of a smart purchase are in place before you spend a cent.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do you decide which products to test?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a"><p>We track what is trending across social platforms and search every week, then prioritize the products readers ask about most. If something is blowing up your feed, it is probably already on our test bench.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I suggest a product for review?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a"><p>Yes, reader requests are one of our best sources of test ideas. Head to our About page to find the best way to reach the editorial desk with your suggestion.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How often do you publish new reviews?<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <div class="faq-a"><p>New reviews and buying guides go up regularly as testing rounds wrap. Joining the weekly digest is the easiest way to get every new verdict the moment it is live.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section" id="newsletter">
+  <div class="newsletter-inner">
+    <div class="newsletter-kicker">Weekly Product Digest</div>
+    <h2 class="newsletter-h2">The best finds, every <span class="accent">Thursday</span>.</h2>
+    <p class="newsletter-sub">One short email a week: our newest editor-tested verdicts, the viral products to skip, and the deals genuinely worth grabbing. No spam, ever.</p>
+    <form class="newsletter-form" onsubmit="return handleSub(event)">
+      <input type="email" class="newsletter-input" placeholder="your@email.com" required>
+      <button type="submit" class="newsletter-btn">Get Weekly Picks</button>
+    </form>
+    <div class="newsletter-note">No spam. One email per week. Unsubscribe any time.</div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Top<span>Product</span></div>
+      <p class="footer-desc">Editor-tested reviews of trending and viral products. We test the hype so you can shop with confidence. No sponsored fluff, just honest verdicts.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="./">Home</a>
+      <a href="./#scorecard">Scorecard Tool</a>
+      <a href="./#cover">What We Cover</a>
+      <a href="./#articles">Latest Reviews</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="about.html">About Us</a>
+      <a href="./#newsletter">Newsletter</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+    </div>
+    <div class="footer-col">
+      <h4>Categories</h4>
+      <a href="./#cover">Tech &amp; Gadgets</a>
+      <a href="./#cover">Home &amp; Living</a>
+      <a href="./#cover">Beauty &amp; Skincare</a>
+      <a href="./#cover">TikTok Finds</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 TopProduct. All rights reserved.</span>
+    <span>Independent reviews. Tested with our own money.</span>
+  </div>
+</footer>
+
+<script>
+/* ---- Mobile nav ---- */
+(function(){
+  var t=document.getElementById('menuToggle'),n=document.getElementById('mainNav');
+  if(t&&n)t.addEventListener('click',function(){n.classList.toggle('open')});
+})();
+
+/* ---- Trending Product Scorecard ---- */
+(function(){
+  var CRITERIA=[
+    {t:'Real reviews exist',d:'There are detailed reviews from multiple independent sources, not just the seller.'},
+    {t:'Fair price for the value',d:'The price reasonably matches what the product is and does.'},
+    {t:'Ships in a sensible time',d:'Delivery is days, not the 3-6 weeks typical of dropship listings.'},
+    {t:'Not an obvious dropship markup',d:'You cannot find the exact same item far cheaper under a generic name.'},
+    {t:'Solves a real problem',d:'It fixes something you actually deal with, not just a clever looking gimmick.'},
+    {t:'Clear return policy',d:'There is a stated, reasonable way to return it if it disappoints.'},
+    {t:'Identifiable brand or seller',d:'A real, contactable brand stands behind it, not an anonymous storefront.'},
+    {t:'Quality materials or build',d:'Photos, specs and reviews suggest it will survive normal use.'},
+    {t:'You would buy it without the hype',d:'Stripped of the viral video, you would still genuinely want it.'},
+    {t:'Fits a genuine need or budget',d:'It belongs in your life and your budget, not just your cart on impulse.'}
+  ];
+  var list=document.getElementById('checklist');
+  if(!list)return;
+  var arc=document.getElementById('scoreArc'),
+      numEl=document.getElementById('scoreNum'),
+      verdictEl=document.getElementById('scoreVerdict'),
+      msgEl=document.getElementById('scoreMsg'),
+      barEl=document.getElementById('scoreBar'),
+      countEl=document.getElementById('scoreCount'),
+      resetBtn=document.getElementById('scoreReset'),
+      CIRC=427;
+
+  CRITERIA.forEach(function(c,i){
+    var div=document.createElement('div');
+    div.className='check-item';
+    div.setAttribute('data-i',i);
+    div.innerHTML='<div class="check-box"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>'+
+      '<div class="check-text"><strong>'+c.t+'</strong><span>'+c.d+'</span></div>';
+    div.addEventListener('click',function(){div.classList.toggle('on');update()});
+    list.appendChild(div);
+  });
+
+  function update(){
+    var checked=list.querySelectorAll('.check-item.on').length;
+    var score=checked*10;
+    numEl.textContent=score;
+    arc.style.strokeDashoffset=CIRC-(CIRC*score/100);
+    barEl.style.width=score+'%';
+    countEl.textContent=checked+' of 10 criteria met';
+    var color,verdict,msg;
+    if(checked===0){color='#dc2626';verdict='Start Checking';msg='Tick the boxes that apply and your live verdict appears here instantly.';}
+    else if(checked<=3){color='#dc2626';verdict='Hard Pass';msg='This has classic viral trap warning signs. Walk away and keep your money.';}
+    else if(checked<=5){color='#ea580c';verdict='Risky Buy';msg='Too many gaps. Dig much deeper or wait before you spend anything here.';}
+    else if(checked<=7){color='#d97706';verdict='Proceed With Care';msg='Some real promise, but a few boxes are missing. Verify them before checkout.';}
+    else if(checked<=9){color='#16a34a';verdict='Looks Worth It';msg='This product clears most of the smart buy checks. A solid, low risk purchase.';}
+    else{color='#16a34a';verdict='Genuine Top Product';msg='A clean sweep. This is exactly the kind of trending product worth buying.';}
+    arc.style.stroke=color;barEl.style.background=color;verdictEl.style.color=color;
+    verdictEl.textContent=verdict;msgEl.textContent=msg;
+  }
+  resetBtn.addEventListener('click',function(){
+    list.querySelectorAll('.check-item.on').forEach(function(el){el.classList.remove('on')});
+    update();
+  });
+  update();
+})();
+
+/* ---- FAQ accordion ---- */
+(function(){
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open')});
+      if(!open)item.classList.add('open');
+    });
+  });
+})();
+
+/* ---- Count-up stats ---- */
+(function(){
+  var done=false;
+  function run(){
+    if(done)return;
+    var band=document.querySelector('.stats');
+    if(!band)return;
+    if(band.getBoundingClientRect().top<window.innerHeight-80){
+      done=true;
+      document.querySelectorAll('[data-count]').forEach(function(el){
+        var target=parseInt(el.getAttribute('data-count'),10),cur=0,
+            step=Math.max(1,Math.ceil(target/45));
+        var t=setInterval(function(){
+          cur+=step;
+          if(cur>=target){cur=target;clearInterval(t)}
+          el.textContent=cur+(target>=100?'+':'');
+        },28);
+      });
+    }
+  }
+  window.addEventListener('scroll',run,{passive:true});run();
+})();
+
+/* ---- Scroll reveal ---- */
+(function(){
+  function reveal(){
+    document.querySelectorAll('.reveal').forEach(function(el){
+      if(el.getBoundingClientRect().top<window.innerHeight-70)el.classList.add('visible');
+    });
+  }
+  window.addEventListener('scroll',reveal,{passive:true});reveal();
+})();
+
+/* ---- Newsletter ---- */
+function handleSub(e){
+  e.preventDefault();
+  var btn=e.target.querySelector('.newsletter-btn');
+  btn.textContent="You're in!";
+  btn.style.background='#16a34a';
+  return false;
+}
+
+/* ---- Article grid: real data only ---- */
+async function loadArticles(){
+  if(!document.getElementById('arts-grid'))return;
+  var grid=document.getElementById('arts-grid');
+  var posts=[];
+  try{
+    var r=await fetch('./articles.json');
+    if(r.ok){var d=await r.json();if(Array.isArray(d))posts=d;}
+  }catch(e){posts=[];}
+  posts=posts.filter(function(a){return a&&a.slug&&a.title});
+  if(!posts.length){
+    grid.style.display='block';
+    grid.innerHTML='<div class="arts-empty">'+
+      '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#c0b8a8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'+
+      '<h3>Fresh Reviews Are On The Test Bench</h3>'+
+      '<p>Our editors are currently testing the next round of trending products. Join the weekly digest below to get every verdict the moment it goes live.</p>'+
+      '</div>';
+    return;
+  }
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  grid.innerHTML=posts.slice(0,9).map(function(a){
+    var desc=(a.meta_description||a.description||'').slice(0,118);
+    if(desc)desc+='...';
+    var author=a.author?esc(a.author):'';
+    var date=a.date?esc(a.date):'';
+    var metaLine=author?('<b>'+author+'</b>'+(date?'<span>'+date+'</span>':'')):(date?'<b>'+date+'</b>':'<b>TopProduct Review</b>');
+    return '<a class="art-card" href="./'+esc(a.slug)+'/">'+
+      '<div class="art-card-img"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>'+
+      '<div class="art-card-body">'+
+      (a.category?'<div class="art-card-cat">'+esc(a.category)+'</div>':'')+
+      '<h3 class="art-card-title">'+esc(a.title)+'</h3>'+
+      (desc?'<p class="art-card-desc">'+esc(desc)+'</p>':'<p class="art-card-desc"></p>')+
+      '<div class="art-card-footer"><span class="art-card-meta">'+metaLine+'</span>'+
+      '<span class="art-card-read">Read &rarr;</span></div>'+
+      '</div></a>';
+  }).join('');
+}
+loadArticles();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
