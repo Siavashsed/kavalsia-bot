@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NewbornIQ - Trusted Newborn Care Guidance</title>
+<meta name="description" content="Evidence-based newborn care, sleep guides, feeding support, and first-year milestones for new parents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fafbf8;
+  --bg2:#fff;
+  --cream:#f5f0e8;
+  --navy:#1e3a5f;
+  --navy2:#162d4a;
+  --sage:#7a9e7e;
+  --warm:#f0ebe0;
+  --text:#1a2332;
+  --muted:#7a8697;
+  --border:#e4e9ef;
+  --serif:'Lora',serif;
+  --sans:'Nunito',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* NAV */
+.site-nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-in{max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:40px}
+.nav-logo{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--navy)}
+.nav-logo span{color:var(--sage)}
+.nav-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}
+.nav-links a{font-size:14px;font-weight:600;padding:0 16px;height:64px;display:flex;align-items:center;color:var(--muted);transition:color .15s}
+.nav-links a:hover{color:var(--navy)}
+.nav-cta{margin-left:auto;background:var(--navy);color:#fff;font-size:14px;font-weight:700;padding:10px 20px;border-radius:24px;transition:background .15s}
+.nav-cta:hover{background:var(--navy2)}
+
+/* HERO - warm and welcoming */
+.hero{background:var(--cream);overflow:hidden}
+.hero-in{max-width:1160px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 380px;gap:60px;align-items:center}
+.hero-text{}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);padding:5px 14px 5px 8px;border-radius:100px;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:20px}
+.hero-pill-dot{width:8px;height:8px;background:var(--sage);border-radius:50%}
+.hero-h1{font-family:var(--serif);font-size:clamp(36px,4.5vw,56px);font-weight:600;line-height:1.15;letter-spacing:-.02em;color:var(--navy);margin-bottom:16px}
+.hero-h1 em{color:var(--sage);font-style:italic}
+.hero-desc{font-size:15px;color:var(--muted);max-width:440px;margin-bottom:32px;line-height:1.8}
+.hero-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.trust-item{text-align:center;padding:16px 12px;background:var(--bg2);border-radius:12px}
+.trust-num{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--navy);display:block}
+.trust-label{font-size:11px;color:var(--muted);font-weight:600;line-height:1.4;margin-top:3px}
+.hero-btns{display:flex;gap:12px}
+.btn-navy{background:var(--navy);color:#fff;font-size:14px;font-weight:700;padding:12px 24px;border-radius:24px;transition:background .15s}
+.btn-navy:hover{background:var(--navy2)}
+.btn-soft{background:var(--bg2);border:2px solid var(--border);color:var(--navy);font-size:14px;font-weight:600;padding:11px 24px;border-radius:24px;transition:all .15s}
+.btn-soft:hover{border-color:var(--sage);color:var(--sage)}
+.hero-image{position:relative}
+.hero-image-main{aspect-ratio:3/4;background:var(--warm);border-radius:24px;overflow:hidden}
+.hero-image-main img{width:100%;height:100%;object-fit:cover}
+.hero-image-badge{position:absolute;bottom:-16px;left:-16px;background:var(--bg2);border-radius:16px;padding:16px 20px;box-shadow:0 8px 32px rgba(30,58,95,.12)}
+.hero-image-badge-icon{font-size:24px;margin-bottom:4px}
+.hero-image-badge-text{font-size:13px;font-weight:700;color:var(--navy)}
+.hero-image-badge-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* TOPIC STRIP */
+.topic-strip{background:var(--navy);padding:0}
+.topic-in{max-width:1160px;margin:0 auto;padding:0 24px;display:flex;overflow-x:auto;scrollbar-width:none}
+.topic-in::-webkit-scrollbar{display:none}
+.topic-item{font-size:13px;font-weight:700;color:rgba(255,255,255,.5);padding:16px 20px;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.topic-item:hover,.topic-item.active{color:#fff;border-color:var(--sage)}
+
+/* SECTIONS */
+.section{padding:52px 0}
+.container{max-width:1160px;margin:0 auto;padding:0 24px}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+.sec-title{font-family:var(--serif);font-size:clamp(24px,3vw,32px);font-weight:600;letter-spacing:-.02em;color:var(--navy);margin-bottom:28px}
+
+/* CARD GRID - soft and warm */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.card{background:var(--bg2);border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(30,58,95,.08)}
+.card-img{aspect-ratio:16/9;background:var(--warm);overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.card:hover .card-img img{transform:scale(1.03)}
+.card-body{padding:20px}
+.card-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sage);background:rgba(122,158,126,.1);padding:3px 8px;border-radius:4px;margin-bottom:10px}
+.card-title{font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.35;color:var(--navy);margin-bottom:8px;letter-spacing:-.01em;transition:color .15s}
+.card:hover .card-title{color:var(--sage)}
+.card-excerpt{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.card-meta{font-size:12px;color:var(--muted);font-weight:600}
+
+/* MILESTONE SECTION */
+.milestones{background:var(--navy);padding:56px 0}
+.milestones-in{max-width:1160px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.milestone-text .sec-label{color:rgba(255,255,255,.4)}
+.milestone-text .sec-title{color:#fff}
+.milestone-desc{font-size:14px;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:24px}
+.milestone-btn{background:var(--sage);color:#fff;font-size:14px;font-weight:700;padding:12px 24px;border-radius:24px;display:inline-block;transition:opacity .15s}
+.milestone-btn:hover{opacity:.85}
+.milestone-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.milestone-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);padding:20px;border-radius:12px}
+.milestone-month{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:6px}
+.milestone-fact{font-family:var(--serif);font-size:15px;color:rgba(255,255,255,.85);font-weight:400;line-height:1.5}
+
+/* REASSURANCE STRIP */
+.reassurance{background:var(--cream);padding:40px 0}
+.reassurance-in{max-width:1160px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.reassurance-item{text-align:center;padding:24px 16px}
+.reassurance-icon{width:48px;height:48px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:1.5px solid var(--border)}
+.reassurance-icon svg{width:22px;height:22px;stroke:var(--sage);fill:none;stroke-width:2}
+.reassurance-label{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.reassurance-sub{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* NEWSLETTER */
+.newsletter{background:var(--bg2);border-top:1px solid var(--border);padding:64px 0}
+.nl-in{max-width:520px;margin:0 auto;padding:0 24px;text-align:center}
+.nl-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(122,158,126,.1);border:1px solid rgba(122,158,126,.2);padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;color:var(--sage);margin-bottom:16px}
+.nl-title{font-family:var(--serif);font-size:clamp(26px,3.5vw,36px);font-weight:600;letter-spacing:-.02em;color:var(--navy);margin-bottom:10px}
+.nl-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+.nl-form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.nl-input{flex:1;min-width:220px;background:var(--bg);border:1.5px solid var(--border);border-radius:24px;color:var(--text);font-size:14px;font-family:var(--sans);padding:12px 20px;outline:none;transition:border-color .15s}
+.nl-input:focus{border-color:var(--sage)}
+.nl-input::placeholder{color:var(--muted)}
+.nl-btn{background:var(--navy);color:#fff;font-size:14px;font-weight:700;padding:12px 24px;border-radius:24px;border:none;cursor:pointer;font-family:var(--sans);transition:background .15s}
+.nl-btn:hover{background:var(--navy2)}
+
+/* FOOTER */
+footer{background:var(--navy);padding:48px 0 24px}
+.footer-in{max-width:1160px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px}
+.footer-logo{font-family:var(--serif);font-size:20px;font-weight:600;color:#fff;margin-bottom:8px}
+.footer-logo span{color:var(--sage)}
+.footer-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7}
+.footer-head{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.5);transition:color .15s}
+.footer-links a:hover{color:var(--sage)}
+.footer-bottom{max-width:1160px;margin:0 auto;padding:24px 24px 0;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.25)}
+
+/* TOOLS */
+.tools{background:var(--bg2);padding:64px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.tools-head{text-align:center;max-width:640px;margin:0 auto 40px}
+.tools-head .sec-label{color:var(--sage)}
+.tools-sub{font-size:14px;color:var(--muted);margin-top:10px;line-height:1.7}
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.tool{background:var(--cream);border:1px solid var(--border);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px;transition:box-shadow .2s,transform .2s}
+.tool:hover{box-shadow:0 10px 32px rgba(30,58,95,.08);transform:translateY(-2px)}
+.tool-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);background:rgba(122,158,126,.12);padding:4px 10px;border-radius:100px;align-self:flex-start}
+.tool-title{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--navy);letter-spacing:-.01em;line-height:1.3}
+.tool-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.tool-field{display:flex;flex-direction:column;gap:6px}
+.tool-label{font-size:12px;font-weight:700;color:var(--navy)}
+.tool-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tool-input,.tool-select{flex:1;min-width:0;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;font-family:var(--sans);padding:10px 14px;outline:none;transition:border-color .15s}
+.tool-input:focus,.tool-select:focus{border-color:var(--sage)}
+.tool-out{background:var(--bg2);border:1px dashed var(--border);border-radius:12px;padding:16px;margin-top:auto}
+.tool-out-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.tool-out-main{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--navy);line-height:1.4;margin-bottom:6px}
+.tool-out-detail{font-size:13px;color:var(--text);line-height:1.6}
+.tool-out-detail strong{color:var(--navy);font-weight:700}
+.tool-pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tool-pill{background:rgba(122,158,126,.12);color:var(--sage);font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px}
+.tool-disclaimer{max-width:760px;margin:32px auto 0;text-align:center;font-size:12px;color:var(--muted);line-height:1.7;padding:16px 20px;background:var(--warm);border-radius:12px}
+.tool-disclaimer strong{color:var(--navy);font-weight:700}
+@media(max-width:900px){.tools-grid{grid-template-columns:1fr}}
+
+@media(max-width:900px){
+  .hero-in{grid-template-columns:1fr}
+  .hero-image{display:none}
+  .card-grid{grid-template-columns:1fr 1fr}
+  .milestones-in{grid-template-columns:1fr}
+  .reassurance-in{grid-template-columns:1fr 1fr}
+  .footer-in{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .card-grid{grid-template-columns:1fr}
+  .footer-in{grid-template-columns:1fr}
+  .reassurance-in{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#1e3a5f-->
+<!--SHELL:HEADER-->
+
+<nav class="site-nav">
+  <div class="nav-in">
+    <a href="./" class="nav-logo">Newborn<span>IQ</span></a>
+    <div class="nav-links">
+      <a href="./">Newborn Basics</a>
+      <a href="./">Sleep</a>
+      <a href="./">Feeding</a>
+      <a href="./">Development</a>
+      <a href="./">Postpartum</a>
+      <a href="#tools">Tools</a>
+    </div>
+    <a href="./" class="nav-cta">Free Sleep Guide</a>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<section class="hero">
+  <div class="hero-in">
+    <div class="hero-text">
+      <div class="hero-pill"><span class="hero-pill-dot"></span>Trusted by 80,000+ new parents</div>
+      <h1 class="hero-h1">Confident parenting starts with<em> reliable guidance.</em></h1>
+      <p class="hero-desc">Evidence-based newborn care, sleep science, feeding support, and developmental milestones - from the first night home through month twelve.</p>
+      <div class="hero-trust">
+        <div class="trust-item"><span class="trust-num">500+</span><span class="trust-label">Research-backed guides</span></div>
+        <div class="trust-item"><span class="trust-num">0</span><span class="trust-label">Sponsored advice</span></div>
+        <div class="trust-item"><span class="trust-num">12mo</span><span class="trust-label">Complete first year</span></div>
+      </div>
+      <div class="hero-btns">
+        <a href="./" class="btn-navy">Start Here</a>
+        <a href="./" class="btn-soft">About Us</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-image-main"><img src="https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=600&q=80" alt="Newborn care"></div>
+      <div class="hero-image-badge">
+        <div class="hero-image-badge-icon">&#128338;</div>
+        <div class="hero-image-badge-text">Sleep milestone: 6 weeks</div>
+        <div class="hero-image-badge-sub">First 4-hour stretch begins</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="topic-strip">
+  <div class="topic-in">
+    <div class="topic-item active" onclick="setFilter('all')">All Topics</div>
+    <div class="topic-item" onclick="setFilter('newborn')">Newborn Basics</div>
+    <div class="topic-item" onclick="setFilter('sleep')">Sleep</div>
+    <div class="topic-item" onclick="setFilter('feeding')">Feeding</div>
+    <div class="topic-item" onclick="setFilter('development')">Development</div>
+    <div class="topic-item" onclick="setFilter('postpartum')">Postpartum</div>
+    <div class="topic-item" onclick="setFilter('health')">Health</div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-label">Most Helpful</div>
+    <h2 class="sec-title">Guides New Parents Trust</h2>
+    <div class="card-grid" id="cardGrid"></div>
+  </div>
+</section>
+
+<div class="reassurance">
+  <div class="reassurance-in">
+    <div class="reassurance-item">
+      <div class="reassurance-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="reassurance-label">Evidence-Based</div>
+      <div class="reassurance-sub">Every guide references pediatric research and AAP guidelines</div>
+    </div>
+    <div class="reassurance-item">
+      <div class="reassurance-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg></div>
+      <div class="reassurance-label">Parent-Written</div>
+      <div class="reassurance-sub">Real experiences from parents who've been exactly where you are</div>
+    </div>
+    <div class="reassurance-item">
+      <div class="reassurance-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <div class="reassurance-label">Always Updated</div>
+      <div class="reassurance-sub">Content reviewed and updated with the latest pediatric guidance</div>
+    </div>
+    <div class="reassurance-item">
+      <div class="reassurance-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <div class="reassurance-label">No Judgment</div>
+      <div class="reassurance-sub">Fed is best. Bed-sharing guide or crib guide - you choose what fits</div>
+    </div>
+  </div>
+</div>
+
+<section class="tools" id="tools">
+  <div class="container">
+    <div class="tools-head">
+      <div class="sec-label">Interactive</div>
+      <h2 class="sec-title">Tools for New Parents</h2>
+      <p class="tools-sub">Quick, gentle calculators to help you make sense of the day. Update the inputs and the answers update live.</p>
+    </div>
+    <div class="tools-grid">
+
+      <div class="tool">
+        <span class="tool-badge">Feeding</span>
+        <div class="tool-title">Feeding Interval Estimator</div>
+        <div class="tool-desc">Typical feeding rhythm and daily intake range based on baby's age.</div>
+        <div class="tool-field">
+          <label class="tool-label" for="feedAge">Baby's age</label>
+          <div class="tool-row">
+            <input class="tool-input" type="number" id="feedAge" min="0" max="52" value="4" step="1">
+            <select class="tool-select" id="feedUnit" style="max-width:120px">
+              <option value="weeks">weeks</option>
+              <option value="months">months</option>
+            </select>
+          </div>
+        </div>
+        <div class="tool-field">
+          <label class="tool-label" for="feedMode">Feeding style</label>
+          <select class="tool-select" id="feedMode">
+            <option value="breast">Breastfeeding</option>
+            <option value="formula">Formula / bottle</option>
+            <option value="mixed">Mixed</option>
+          </select>
+        </div>
+        <div class="tool-out" id="feedOut"></div>
+      </div>
+
+      <div class="tool">
+        <span class="tool-badge">Sleep</span>
+        <div class="tool-title">Wake Window Calculator</div>
+        <div class="tool-desc">Find the right awake stretch and when the next nap should start.</div>
+        <div class="tool-field">
+          <label class="tool-label" for="wakeAge">Baby's age (months)</label>
+          <input class="tool-input" type="number" id="wakeAge" min="0" max="24" value="3" step="0.5">
+        </div>
+        <div class="tool-field">
+          <label class="tool-label" for="wakeStart">Woke up at</label>
+          <input class="tool-input" type="time" id="wakeStart" value="07:00">
+        </div>
+        <div class="tool-out" id="wakeOut"></div>
+      </div>
+
+      <div class="tool">
+        <span class="tool-badge">Diapers</span>
+        <div class="tool-title">Diaper Count Estimator</div>
+        <div class="tool-desc">Typical daily diaper use and a monthly stock-up estimate by size.</div>
+        <div class="tool-field">
+          <label class="tool-label" for="diapAge">Baby's age (months)</label>
+          <input class="tool-input" type="number" id="diapAge" min="0" max="36" value="2" step="0.5">
+        </div>
+        <div class="tool-field">
+          <label class="tool-label" for="diapWeight">Weight (lbs, optional)</label>
+          <input class="tool-input" type="number" id="diapWeight" min="4" max="40" value="11" step="0.5">
+        </div>
+        <div class="tool-out" id="diapOut"></div>
+      </div>
+
+    </div>
+    <div class="tool-disclaimer">
+      <strong>Gentle reminder:</strong> these tools offer general guidance based on typical ranges. Every baby is different. Please consult your pediatrician for advice about your child's feeding, sleep, growth, or health.
+    </div>
+  </div>
+</section>
+
+<div class="milestones">
+  <div class="milestones-in">
+    <div class="milestone-text">
+      <div class="sec-label">First Year Guide</div>
+      <h2 class="sec-title">Month-by-Month Milestones</h2>
+      <p class="milestone-desc">What to expect - and when to stop comparing. A realistic guide to your baby's first year that celebrates range, not checkboxes.</p>
+      <a href="./" class="milestone-btn">Read the Full Guide</a>
+    </div>
+    <div class="milestone-grid">
+      <div class="milestone-card"><div class="milestone-month">Months 0-1</div><div class="milestone-fact">Responds to voice, tracks movement with eyes, irregular sleep of 16-18hrs</div></div>
+      <div class="milestone-card"><div class="milestone-month">Months 2-3</div><div class="milestone-fact">Social smiles begin, recognizes faces, sleeps up to 5hrs in a stretch</div></div>
+      <div class="milestone-card"><div class="milestone-month">Months 4-6</div><div class="milestone-fact">Rolls over, laughs out loud, reaches for objects, ready for solids</div></div>
+      <div class="milestone-card"><div class="milestone-month">Months 7-12</div><div class="milestone-fact">Sits independently, first words emerging, separation anxiety peaks</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-label">More Guides</div>
+    <h2 class="sec-title">All Topics</h2>
+    <div class="card-grid" id="moreGrid"></div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="nl-in">
+    <div class="nl-badge">Weekly Guide</div>
+    <h2 class="nl-title">A gentle email, every week.</h2>
+    <p class="nl-sub">What's normal this week, what's coming next, and one thing to try. No overwhelm.</p>
+    <form class="nl-form" onsubmit="return false">
+      <input class="nl-input" type="email" placeholder="your@email.com">
+      <button class="nl-btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer>
+  <div class="footer-in">
+    <div>
+      <div class="footer-logo">Newborn<span>IQ</span></div>
+      <p class="footer-desc">Calm, evidence-based guidance for the first year of parenthood. No perfection required.</p>
+    </div>
+    <div>
+      <div class="footer-head">Topics</div>
+      <div class="footer-links">
+        <a href="./">Newborn Basics</a>
+        <a href="./">Sleep Training</a>
+        <a href="./">Breastfeeding</a>
+        <a href="./">Formula</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-head">Development</div>
+      <div class="footer-links">
+        <a href="./">Milestones</a>
+        <a href="./">Motor Skills</a>
+        <a href="./">Language</a>
+        <a href="./">Postpartum</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-head">Site</div>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 NewbornIQ. All rights reserved.</div>
+    <div class="footer-copy">Trusted parenting guidance.</div>
+  </div>
+</footer>
+
+<script>
+const IMGS=[
+  'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=600&q=75',
+  'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=75',
+  'https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=600&q=75',
+  'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=600&q=75',
+  'https://images.unsplash.com/photo-1491013516836-7db643ee125a?w=600&q=75',
+  'https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?w=600&q=75',
+];
+
+let arts=[];
+let activeFilter="all";
+
+function setFilter(f){
+  activeFilter=f;
+  document.querySelectorAll(".topic-item").forEach(t=>t.classList.toggle("active",t.textContent.toLowerCase()===f||(f==="all"&&t.textContent==="All Topics")));
+  renderCards();
+}
+
+const EMPTY_STATE='<div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:var(--muted)">New articles coming soon.</div>';
+
+function cardHTML(a,i){
+  return `
+    <a href="./${a.slug}/" class="card">
+      <div class="card-img"><img src="${a.image||IMGS[i%IMGS.length]}" alt="${a.title}" loading="lazy"></div>
+      <div class="card-body">
+        <span class="card-tag">${a.cat||a.category||'guide'}</span>
+        <h3 class="card-title">${a.title}</h3>
+        <p class="card-excerpt">${a.excerpt||a.meta_description||''}</p>
+        <div class="card-meta">${a.mins||5} min read</div>
+      </div>
+    </a>`;
+}
+
+function renderCards(){
+  const g=document.getElementById("cardGrid");
+  if(!g)return;
+  const filtered=activeFilter==="all"?arts:arts.filter(a=>(a.cat||a.category)===activeFilter);
+  g.innerHTML=filtered.length?filtered.slice(0,6).map(cardHTML).join(""):EMPTY_STATE;
+}
+
+function renderMore(){
+  const g=document.getElementById("moreGrid");
+  if(!g)return;
+  const rest=arts.slice(6,12);
+  g.innerHTML=rest.length?rest.map(cardHTML).join(""):EMPTY_STATE;
+}
+
+async function load(){
+  try{
+    const r=await fetch("./articles.json");
+    const data=r.ok?await r.json():[];
+    const list=Array.isArray(data)?data:(data&&Array.isArray(data.articles)?data.articles:[]);
+    arts=list.filter(a=>a&&a.slug&&a.title);
+  }catch{arts=[];}
+  renderCards();
+  renderMore();
+}
+load();
+
+/* ============ TOOLS ============ */
+
+function toMonths(v,unit){return unit==='weeks'?v/4.345:v}
+
+function feedCalc(){
+  const ageRaw=parseFloat(document.getElementById('feedAge').value);
+  const unit=document.getElementById('feedUnit').value;
+  const mode=document.getElementById('feedMode').value;
+  const out=document.getElementById('feedOut');
+  if(isNaN(ageRaw)||ageRaw<0){out.innerHTML='<div class="tool-out-label">Enter a valid age</div>';return}
+  const m=toMonths(ageRaw,unit);
+  let interval,perDay,ozLow,ozHigh,note;
+  if(m<0.25){interval='2 to 3 hours';perDay='8 to 12';ozLow=mode==='breast'?0:14;ozHigh=mode==='breast'?0:20;note='Newborns feed on demand. Wake to feed if more than 3 hours during the day.'}
+  else if(m<1){interval='2 to 3 hours';perDay='8 to 12';ozLow=mode==='breast'?0:18;ozHigh=mode==='breast'?0:24;note='Cluster feeding in the evenings is very common at this age.'}
+  else if(m<2){interval='2.5 to 3.5 hours';perDay='7 to 10';ozLow=mode==='breast'?0:20;ozHigh=mode==='breast'?0:27;note='Growth spurts may temporarily shorten intervals.'}
+  else if(m<4){interval='3 to 4 hours';perDay='6 to 8';ozLow=mode==='breast'?0:24;ozHigh=mode==='breast'?0:32;note='Many babies start spacing night feeds at this age.'}
+  else if(m<6){interval='3.5 to 4.5 hours';perDay='5 to 7';ozLow=mode==='breast'?0:28;ozHigh=mode==='breast'?0:34;note='Solids may begin around 6 months; milk still leads.'}
+  else if(m<9){interval='4 to 5 hours';perDay='4 to 6';ozLow=mode==='breast'?0:24;ozHigh=mode==='breast'?0:32;note='Solids add complexity; milk intake gradually decreases.'}
+  else if(m<12){interval='4 to 6 hours';perDay='3 to 5';ozLow=mode==='breast'?0:20;ozHigh=mode==='breast'?0:28;note='Three meals a day plus milk is typical now.'}
+  else{interval='4 to 6 hours (or with meals)';perDay='3 to 4';ozLow=mode==='breast'?0:16;ozHigh=mode==='breast'?0:24;note='Whole milk can replace formula at 12 months if introduced.'}
+  const mlLow=Math.round(ozLow*29.5),mlHigh=Math.round(ozHigh*29.5);
+  const intakeLine=mode==='breast'
+    ? 'Breastfed babies self-regulate; count wet diapers (6+/day) instead of ounces.'
+    : `Roughly <strong>${ozLow} to ${ozHigh} oz</strong> (${mlLow} to ${mlHigh} ml) per day.`;
+  out.innerHTML=`
+    <div class="tool-out-label">Suggested rhythm</div>
+    <div class="tool-out-main">Every ${interval}</div>
+    <div class="tool-out-detail"><strong>${perDay} feeds</strong> per 24 hours. ${intakeLine}</div>
+    <div class="tool-pill-row"><span class="tool-pill">${note}</span></div>`;
+}
+
+function wakeCalc(){
+  const m=parseFloat(document.getElementById('wakeAge').value);
+  const t=document.getElementById('wakeStart').value;
+  const out=document.getElementById('wakeOut');
+  if(isNaN(m)||m<0||!t){out.innerHTML='<div class="tool-out-label">Enter age and wake time</div>';return}
+  let lo,hi,naps,night,day;
+  if(m<1){lo=45;hi=60;naps='4 to 6 naps';night='8 to 9 hours';day='7 to 9 hours'}
+  else if(m<2){lo=60;hi=75;naps='4 to 5 naps';night='8 to 10 hours';day='6 to 8 hours'}
+  else if(m<4){lo=75;hi=105;naps='4 naps';night='10 to 11 hours';day='4 to 6 hours'}
+  else if(m<6){lo=105;hi=135;naps='3 to 4 naps';night='10 to 12 hours';day='3 to 4 hours'}
+  else if(m<9){lo=150;hi=180;naps='2 to 3 naps';night='10 to 12 hours';day='3 hours'}
+  else if(m<12){lo=180;hi=210;naps='2 naps';night='11 to 12 hours';day='2 to 3 hours'}
+  else if(m<18){lo=210;hi=270;naps='1 to 2 naps';night='11 to 12 hours';day='2 to 3 hours'}
+  else{lo=300;hi=360;naps='1 nap';night='11 to 12 hours';day='1.5 to 2 hours'}
+  const [h,mn]=t.split(':').map(Number);
+  const start=new Date();start.setHours(h,mn,0,0);
+  const napLo=new Date(start.getTime()+lo*60000);
+  const napHi=new Date(start.getTime()+hi*60000);
+  const fmt=d=>d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+  const avg=Math.round((lo+hi)/2);
+  const hrs=Math.floor(avg/60),mins=avg%60;
+  out.innerHTML=`
+    <div class="tool-out-label">Next nap window</div>
+    <div class="tool-out-main">${fmt(napLo)} to ${fmt(napHi)}</div>
+    <div class="tool-out-detail">Wake window of about <strong>${hrs}h ${mins}m</strong>. Typical day: <strong>${naps}</strong>, ${day} of daytime sleep, ${night} at night.</div>
+    <div class="tool-pill-row"><span class="tool-pill">Watch for early sleepy cues</span></div>`;
+}
+
+function diapCalc(){
+  const m=parseFloat(document.getElementById('diapAge').value);
+  const w=parseFloat(document.getElementById('diapWeight').value);
+  const out=document.getElementById('diapOut');
+  if(isNaN(m)||m<0){out.innerHTML='<div class="tool-out-label">Enter a valid age</div>';return}
+  let lo,hi,size;
+  if(m<0.25){lo=8;hi=12;size='Newborn'}
+  else if(m<2){lo=8;hi=12;size='Size 1'}
+  else if(m<4){lo=7;hi=10;size='Size 1 to 2'}
+  else if(m<7){lo=6;hi=9;size='Size 2 to 3'}
+  else if(m<12){lo=6;hi=8;size='Size 3 to 4'}
+  else if(m<24){lo=5;hi=7;size='Size 4 to 5'}
+  else{lo=4;hi=6;size='Size 5 to 6'}
+  if(!isNaN(w)){
+    if(w<10)size='Newborn or Size 1';
+    else if(w<14)size='Size 1';
+    else if(w<22)size='Size 2';
+    else if(w<28)size='Size 3';
+    else if(w<35)size='Size 4';
+    else size='Size 5';
+  }
+  const monthLo=lo*30,monthHi=hi*30;
+  const boxes=Math.ceil(monthHi/80);
+  out.innerHTML=`
+    <div class="tool-out-label">Daily and monthly need</div>
+    <div class="tool-out-main">${lo} to ${hi} diapers / day</div>
+    <div class="tool-out-detail">About <strong>${monthLo} to ${monthHi}</strong> per month. Plan for roughly <strong>${boxes} large boxes</strong> (about 80 ct).</div>
+    <div class="tool-pill-row"><span class="tool-pill">Suggested: ${size}</span><span class="tool-pill">Buy a mix of sizes</span></div>`;
+}
+
+['feedAge','feedUnit','feedMode'].forEach(id=>document.getElementById(id).addEventListener('input',feedCalc));
+['wakeAge','wakeStart'].forEach(id=>document.getElementById(id).addEventListener('input',wakeCalc));
+['diapAge','diapWeight'].forEach(id=>document.getElementById(id).addEventListener('input',diapCalc));
+feedCalc();wakeCalc();diapCalc();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
