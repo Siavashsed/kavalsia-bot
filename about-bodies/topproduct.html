@@ -1,0 +1,185 @@
+<style>
+.ab-main{--c-bg:#fafaf8;--c-bg2:#f2ede6;--c-ink:#1a1a17;--c-ink2:#3a3832;--c-muted:#706b60;--c-border:#e0dbd2;--c-accent:#dc2626;--c-accent2:#ea580c;--c-gold:#d97706;--c-green:#16a34a;--c-font:'Inter',system-ui,sans-serif;--c-serif:'Playfair Display',Georgia,serif;background:var(--c-bg);color:var(--c-ink);font-family:var(--c-font);font-size:15px;line-height:1.65}
+.ab-wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.ab-narrow{max-width:920px}
+.ab-label{font-size:11px;font-weight:800;color:var(--c-accent);text-transform:uppercase;letter-spacing:2.6px;margin-bottom:12px}
+.ab-title{font-family:var(--c-serif);font-size:clamp(26px,3.4vw,38px);font-weight:900;color:var(--c-ink);line-height:1.18;letter-spacing:-.5px}
+.ab-title span{color:var(--c-accent)}
+
+/* HERO */
+.ab-hero{position:relative;background:linear-gradient(160deg,#1f1d18 0%,#1a1a17 60%,#241f1a 100%);padding:78px 24px 86px;overflow:hidden}
+.ab-hero::before{content:'';position:absolute;top:-120px;right:-120px;width:420px;height:420px;background:radial-gradient(circle,rgba(220,38,38,.22),transparent 70%);border-radius:50%}
+.ab-hero::after{content:'';position:absolute;bottom:-140px;left:-100px;width:380px;height:380px;background:radial-gradient(circle,rgba(234,88,12,.16),transparent 70%);border-radius:50%}
+.ab-hero-in{max-width:880px;margin:0 auto;text-align:center;position:relative;z-index:2}
+.ab-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:7px 16px;border-radius:30px;text-transform:uppercase;letter-spacing:1.6px;margin-bottom:22px}
+.ab-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--c-accent);box-shadow:0 0 0 4px rgba(220,38,38,.25)}
+.ab-hero h1{font-family:var(--c-serif);font-size:clamp(30px,5vw,54px);font-weight:900;color:#fff;line-height:1.14;letter-spacing:-1px;margin-bottom:20px}
+.ab-hero h1 span{color:var(--c-accent)}
+.ab-hero p{font-size:clamp(15px,2vw,17px);color:rgba(255,255,255,.66);line-height:1.7;max-width:620px;margin:0 auto}
+
+/* SECTION */
+.ab-sec{padding:72px 24px}
+.ab-sec.alt{background:var(--c-bg2);border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border)}
+.ab-head{text-align:center;margin-bottom:42px}
+.ab-sub{font-size:15px;color:var(--c-muted);line-height:1.7;max-width:620px;margin:14px auto 0}
+
+/* STORY */
+.ab-story{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.ab-story-text h2{font-family:var(--c-serif);font-size:clamp(24px,3vw,34px);font-weight:900;line-height:1.2;margin-bottom:18px;letter-spacing:-.5px}
+.ab-story-text h2 span{color:var(--c-accent)}
+.ab-story-text p{font-size:15px;color:var(--c-ink2);line-height:1.75;margin-bottom:16px}
+.ab-story-text p:last-child{margin-bottom:0}
+.ab-story-visual{background:var(--c-ink);border-radius:16px;padding:36px;color:#fff}
+.ab-sv-row{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.08);align-items:center}
+.ab-sv-row:last-child{border-bottom:none}
+.ab-sv-icon{width:42px;height:42px;border-radius:10px;background:rgba(220,38,38,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ab-sv-icon svg{stroke:var(--c-accent)}
+.ab-sv-row b{font-size:14px;display:block}
+.ab-sv-row span{font-size:12px;color:rgba(255,255,255,.5)}
+
+/* VALUE CARDS */
+.ab-vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.ab-vcard{background:#fff;border:1px solid var(--c-border);border-radius:12px;padding:30px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.ab-vcard:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(0,0,0,.08);border-color:var(--c-accent)}
+.ab-vicon{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--c-accent),var(--c-accent2));display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.ab-vcard h3{font-family:var(--c-serif);font-size:19px;font-weight:700;margin-bottom:9px}
+.ab-vcard p{font-size:13.5px;color:var(--c-muted);line-height:1.65}
+
+/* AUTHOR */
+.ab-author{background:#fff;border:1px solid var(--c-border);border-radius:16px;padding:40px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center}
+.ab-avatar{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--c-accent),var(--c-accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--c-serif);font-size:42px;font-weight:900;color:#fff}
+.ab-author h3{font-family:var(--c-serif);font-size:24px;font-weight:900;margin-bottom:10px}
+.ab-author p{font-size:14px;color:var(--c-ink2);line-height:1.72;margin-bottom:14px}
+.ab-astats{display:flex;gap:26px;flex-wrap:wrap}
+.ab-astats div b{font-family:var(--c-serif);font-size:20px;font-weight:900;color:var(--c-accent)}
+.ab-astats div span{font-size:11px;color:var(--c-muted);display:block;text-transform:uppercase;letter-spacing:1px}
+
+/* CTA */
+.ab-cta{background:linear-gradient(160deg,#1f1d18,#1a1a17);padding:78px 24px;text-align:center;position:relative;overflow:hidden}
+.ab-cta::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(circle,rgba(220,38,38,.18),transparent 70%)}
+.ab-cta-in{max-width:600px;margin:0 auto;position:relative;z-index:2}
+.ab-cta-in h2{font-family:var(--c-serif);font-size:clamp(24px,4vw,36px);font-weight:900;color:#fff;line-height:1.18;margin-bottom:14px}
+.ab-cta-in p{font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:26px}
+.ab-btn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;padding:14px 28px;border-radius:7px;background:var(--c-accent);color:#fff;box-shadow:0 8px 24px rgba(220,38,38,.35);transition:transform .2s,box-shadow .2s}
+.ab-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(220,38,38,.45)}
+
+@media(max-width:980px){.ab-story{grid-template-columns:1fr;gap:32px}.ab-vgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){.ab-vgrid{grid-template-columns:1fr}.ab-author{grid-template-columns:1fr;text-align:center;justify-items:center}.ab-astats{justify-content:center}}
+</style>
+
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-hero-in">
+      <div class="ab-eyebrow"><span class="dot"></span>About TopProduct</div>
+      <h1>We Buy the Hype So You <span>Don't Have To</span></h1>
+      <p>TopProduct is an independent review desk that tests the trending products the internet keeps telling you to buy - then publishes the honest verdict, paid for with our own money.</p>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap">
+      <div class="ab-story">
+        <div class="ab-story-text">
+          <div class="ab-label">Why We Exist</div>
+          <h2>The Viral Economy Was Built to <span>Empty Your Wallet</span></h2>
+          <p>A single 15-second clip can turn an unknown gadget into a global obsession overnight. The trouble is that going viral has nothing to do with being good. Most "TikTok made me buy it" products are generic items pulled from the same overseas catalogs, marked up three to five times, and shipped slowly in plain packaging.</p>
+          <p>We got tired of friends asking "is this thing actually good?" and finding no honest answer online - only affiliate roundups and reviews written by the seller. So we built TopProduct to break that cycle: a place where every verdict is earned through real money spent and real time used.</p>
+          <p>When a viral find is genuinely excellent, we are the first to say so. When it is recycled hype, we save you the disappointment and the return shipping.</p>
+        </div>
+        <div class="ab-story-visual">
+          <div class="ab-sv-row">
+            <div class="ab-sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg></div>
+            <div><b>We find it before it floods your feed</b><span>Tracking emerging trends daily</span></div>
+          </div>
+          <div class="ab-sv-row">
+            <div class="ab-sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+            <div><b>We test it for 30+ days</b><span>Real homes, real use, real wear</span></div>
+          </div>
+          <div class="ab-sv-row">
+            <div class="ab-sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div><b>We trace the real price</b><span>Spotting markups and dropship tricks</span></div>
+          </div>
+          <div class="ab-sv-row">
+            <div class="ab-sv-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-6 0v4"/><rect x="3" y="9" width="18" height="12" rx="2"/></svg></div>
+            <div><b>We publish the honest verdict</b><span>Buy, skip, or wait - clearly stated</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec alt">
+    <div class="ab-wrap">
+      <div class="ab-head">
+        <div class="ab-label">Our Standards</div>
+        <h2 class="ab-title">The Rules Every Review <span>Follows</span></h2>
+        <p class="ab-sub">Six principles guide every verdict we publish - and every product we tell you to skip.</p>
+      </div>
+      <div class="ab-vgrid">
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3>Bought, Not Gifted</h3>
+          <p>Every product is purchased at retail price like a normal shopper. Brands never get to send a polished sample and skew the result.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <h3>Tested Over Time</h3>
+          <p>A first impression means nothing. We use products for a month or more so we catch the cheap hinge, the fading battery, the peeling coating.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <h3>Price Reality Checks</h3>
+          <p>We trace viral products to their source listings, so you know if that $49 gadget is really a $12 item with a marketing budget.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <h3>Clear Verdicts</h3>
+          <p>No vague star ratings. Every review ends with a plain answer: buy it, skip it, or wait for the price to drop.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg></div>
+          <h3>Trend Radar</h3>
+          <p>We watch what is gaining traction before it hits everyone's feed, so the verdict is ready the moment you start wondering.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+          <h3>Reader-First, Always</h3>
+          <p>If a product is bad, we say so even when it would be easy to stay quiet. Your trust is worth more than any single review.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-narrow">
+      <div class="ab-head">
+        <div class="ab-label">The Team Behind the Reviews</div>
+        <h2 class="ab-title">Who We <span>Are</span></h2>
+      </div>
+      <div class="ab-author">
+        <div class="ab-avatar">TP</div>
+        <div>
+          <h3>The TopProduct Editorial Desk</h3>
+          <p>We are a small, independent team of product testers, deal hunters and skeptical shoppers. We have spent years watching viral products come and go, and we built TopProduct to put an honest answer where there used to be only marketing.</p>
+          <p>There is no agency above us and no brand on a leash. Every verdict is earned through real money spent and real time used - careful testing and plain talk, nothing more.</p>
+          <div class="ab-astats">
+            <div><b>640+</b><span>Products Reviewed</span></div>
+            <div><b>30 Days</b><span>Minimum Per Test</span></div>
+            <div><b>0</b><span>Paid Verdicts</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-cta">
+    <div class="ab-cta-in">
+      <div class="ab-label" style="color:var(--c-accent)">Weekly Product Digest</div>
+      <h2>Shop Smarter, Every Thursday</h2>
+      <p>One short email a week: our newest editor-tested verdicts, the viral products to skip, and the deals genuinely worth grabbing. No spam, ever.</p>
+      <a href="./#newsletter" class="ab-btn">Get Weekly Picks
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </section>
+</main>
