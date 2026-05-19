@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DatingEdge - Honest, Research-Backed Dating &amp; Relationship Advice</title>
+<meta name="description" content="DatingEdge delivers honest, research-backed dating and relationship advice for modern connection. No games, no pickup scripts - just clear psychology that works.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fbf6f1;
+  --bg2:#ffffff;
+  --ink:#221a16;
+  --ink-soft:#4a3f39;
+  --muted:#7c6f67;
+  --rose:#b8503f;
+  --rose-d:#963d2f;
+  --plum:#3a2730;
+  --gold:#c98b3a;
+  --soft:#f3e8e0;
+  --border:#e8dcd3;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ---- NAV ---- */
+.site-nav{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:70px;gap:32px}
+.nav-logo{font-family:var(--serif);font-size:25px;font-weight:600;color:var(--ink);letter-spacing:-.02em;white-space:nowrap}
+.nav-logo em{color:var(--rose);font-style:italic}
+.nav-links{display:flex;gap:4px;flex:1;justify-content:center}
+.nav-links a{font-size:14px;font-weight:500;padding:8px 14px;color:var(--ink-soft);border-radius:8px;transition:background .15s,color .15s}
+.nav-links a:hover{color:var(--rose);background:var(--soft)}
+.nav-cta{background:var(--rose);color:#fff;font-size:14px;font-weight:600;padding:11px 22px;border-radius:100px;transition:background .15s,transform .15s;white-space:nowrap}
+.nav-cta:hover{background:var(--rose-d);transform:translateY(-1px)}
+.nav-toggle{display:none;background:none;border:none;cursor:pointer;font-size:24px;color:var(--ink)}
+
+/* ---- HERO ---- */
+.hero{position:relative;overflow:hidden;background:
+  radial-gradient(680px 420px at 88% -8%,rgba(184,80,63,.16),transparent 70%),
+  radial-gradient(560px 380px at 4% 104%,rgba(201,139,58,.14),transparent 70%),
+  var(--bg)}
+.hero-in{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding:84px 24px 92px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin-bottom:22px}
+.kicker::before{content:"";width:30px;height:2px;background:var(--rose);border-radius:2px}
+.hero-h1{font-family:var(--serif);font-size:clamp(40px,5.4vw,66px);font-weight:600;line-height:1.06;letter-spacing:-.025em;color:var(--ink);margin-bottom:22px}
+.hero-h1 em{color:var(--rose);font-style:italic}
+.hero-desc{font-size:18px;color:var(--ink-soft);max-width:500px;margin-bottom:34px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+.btn-fill{background:var(--rose);color:#fff;font-size:15px;font-weight:600;padding:15px 30px;border-radius:100px;transition:background .15s,transform .15s;box-shadow:0 10px 24px -10px rgba(184,80,63,.6)}
+.btn-fill:hover{background:var(--rose-d);transform:translateY(-2px)}
+.btn-ghost{border:1.6px solid var(--border);background:var(--bg2);color:var(--ink);font-size:15px;font-weight:600;padding:14px 28px;border-radius:100px;transition:border-color .15s,color .15s}
+.btn-ghost:hover{border-color:var(--rose);color:var(--rose)}
+.hero-proof{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted)}
+.hero-proof .avatars{display:flex}
+.hero-proof .avatars span{width:34px;height:34px;border-radius:50%;border:2.5px solid var(--bg);margin-left:-10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--serif)}
+.hero-proof .avatars span:first-child{margin-left:0}
+.hero-proof b{color:var(--ink)}
+.hero-stars{color:var(--gold);letter-spacing:2px}
+
+/* hero visual card */
+.hero-card{position:relative}
+.hc-main{background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:30px;box-shadow:0 30px 60px -28px rgba(58,39,48,.4)}
+.hc-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);background:var(--soft);padding:6px 12px;border-radius:100px;margin-bottom:18px}
+.hc-art{aspect-ratio:16/10;border-radius:14px;overflow:hidden;margin-bottom:18px;background:linear-gradient(135deg,#3a2730,#b8503f)}
+.hc-art svg{width:100%;height:100%}
+.hc-title{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.3;color:var(--ink);margin-bottom:8px}
+.hc-meta{font-size:13px;color:var(--muted)}
+.hc-float{position:absolute;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 18px;box-shadow:0 16px 34px -16px rgba(58,39,48,.4)}
+.hc-float.one{top:-26px;left:-30px}
+.hc-float.two{bottom:-26px;right:-26px}
+.hc-float .fnum{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--rose);line-height:1}
+.hc-float .flabel{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* ---- TRUST STRIP ---- */
+.trust{background:var(--plum);color:#fff;padding:22px 0}
+.trust-in{display:flex;align-items:center;justify-content:center;gap:38px;flex-wrap:wrap}
+.trust-in span{font-size:13px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.82);display:flex;align-items:center;gap:9px}
+.trust-in span svg{flex-shrink:0}
+.trust-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.3)}
+
+/* ---- SECTION SHELL ---- */
+.section{padding:88px 0}
+.section.alt{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.sec-head{max-width:680px;margin:0 auto 52px;text-align:center}
+.sec-kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin-bottom:14px}
+.sec-title{font-family:var(--serif);font-size:clamp(30px,3.6vw,44px);font-weight:600;line-height:1.14;letter-spacing:-.02em;color:var(--ink)}
+.sec-sub{font-size:17px;color:var(--ink-soft);margin-top:14px}
+
+/* ---- STORY / WHY ---- */
+.story-in{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.story-visual{position:relative;aspect-ratio:1/1;border-radius:24px;overflow:hidden;background:linear-gradient(150deg,#3a2730,#b8503f 70%,#c98b3a)}
+.story-visual svg{position:absolute;inset:0;width:100%;height:100%}
+.story-visual .badge{position:absolute;bottom:24px;left:24px;right:24px;background:rgba(255,255,255,.95);border-radius:14px;padding:18px 20px}
+.story-visual .badge .bt{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink)}
+.story-visual .badge .bs{font-size:13px;color:var(--muted);margin-top:3px}
+.story-text h2{font-family:var(--serif);font-size:clamp(28px,3.4vw,40px);font-weight:600;line-height:1.16;letter-spacing:-.02em;color:var(--ink);margin-bottom:18px}
+.story-text h2 em{color:var(--rose);font-style:italic}
+.story-text p{font-size:16px;color:var(--ink-soft);margin-bottom:16px}
+.story-list{display:flex;flex-direction:column;gap:14px;margin:24px 0 28px}
+.story-list li{display:flex;gap:13px;align-items:flex-start;list-style:none;font-size:15px;color:var(--ink-soft)}
+.story-list li svg{flex-shrink:0;margin-top:2px}
+.story-list li b{color:var(--ink)}
+
+/* ---- VALUE CARDS ---- */
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.val-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:32px 28px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.section.alt .val-card{background:var(--bg)}
+.val-card:hover{transform:translateY(-5px);box-shadow:0 24px 44px -24px rgba(58,39,48,.34);border-color:var(--rose)}
+.val-ico{width:54px;height:54px;border-radius:14px;background:var(--soft);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.val-card h3{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink);margin-bottom:9px;letter-spacing:-.01em}
+.val-card p{font-size:14.5px;color:var(--ink-soft)}
+
+/* ---- STATS BAND ---- */
+.stats{background:var(--plum);color:#fff;padding:74px 0;position:relative;overflow:hidden}
+.stats::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(184,80,63,.4),transparent 70%);top:-180px;right:-100px}
+.stats-in{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.stat-num{font-family:var(--serif);font-size:clamp(38px,4.6vw,56px);font-weight:600;color:#fff;line-height:1}
+.stat-num em{color:var(--gold);font-style:normal}
+.stat-label{font-size:13.5px;color:rgba(255,255,255,.7);margin-top:10px;letter-spacing:.02em}
+
+/* ---- TOPICS ---- */
+.topic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.topic{position:relative;border-radius:16px;padding:30px 26px;overflow:hidden;border:1px solid var(--border);background:var(--bg2);transition:transform .2s,box-shadow .2s}
+.section.alt .topic{background:var(--bg)}
+.topic:hover{transform:translateY(-4px);box-shadow:0 20px 38px -22px rgba(58,39,48,.32)}
+.topic .tnum{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--rose)}
+.topic h3{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);margin:8px 0 7px;letter-spacing:-.01em}
+.topic p{font-size:14px;color:var(--ink-soft)}
+.topic .tbar{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--rose);transform:scaleY(0);transform-origin:top;transition:transform .25s}
+.topic:hover .tbar{transform:scaleY(1)}
+
+/* ---- ARTICLES ---- */
+.art-toolbar{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:38px}
+.chip{font-size:13px;font-weight:600;letter-spacing:.03em;color:var(--ink-soft);background:var(--bg2);border:1px solid var(--border);padding:8px 18px;border-radius:100px;cursor:pointer;transition:all .15s}
+.section.alt .chip{background:var(--bg)}
+.chip:hover{border-color:var(--rose);color:var(--rose)}
+.chip.active{background:var(--rose);border-color:var(--rose);color:#fff}
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.art-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.section.alt .art-card{background:var(--bg)}
+.art-card:hover{transform:translateY(-5px);box-shadow:0 26px 46px -26px rgba(58,39,48,.36)}
+.art-thumb{aspect-ratio:16/10;position:relative;overflow:hidden}
+.art-thumb svg{width:100%;height:100%}
+.art-body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.art-cat{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);margin-bottom:9px}
+.art-title{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.32;letter-spacing:-.01em;color:var(--ink);margin-bottom:9px;transition:color .15s}
+.art-card:hover .art-title{color:var(--rose)}
+.art-excerpt{font-size:14px;color:var(--ink-soft);margin-bottom:16px;flex:1}
+.art-meta{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);padding-top:14px}
+.art-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0;font-size:15px}
+
+/* ---- COACH ---- */
+.coach{background:var(--bg2);border:1px solid var(--border);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:.85fr 1.15fr}
+.coach-portrait{background:linear-gradient(160deg,#3a2730,#b8503f);position:relative;min-height:340px}
+.coach-portrait svg{position:absolute;inset:0;width:100%;height:100%}
+.coach-body{padding:48px 46px}
+.coach-body .sec-kicker{margin-bottom:12px}
+.coach-body h2{font-family:var(--serif);font-size:clamp(26px,3vw,36px);font-weight:600;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px}
+.coach-role{font-size:14px;font-weight:600;color:var(--rose);margin-bottom:18px}
+.coach-body p{font-size:15.5px;color:var(--ink-soft);margin-bottom:14px}
+.coach-cred{display:flex;gap:26px;flex-wrap:wrap;margin-top:22px;padding-top:22px;border-top:1px solid var(--border)}
+.coach-cred div .cn{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--ink)}
+.coach-cred div .cl{font-size:12.5px;color:var(--muted)}
+
+/* ---- FAQ ---- */
+.faq-wrap{max-width:760px;margin:0 auto}
+.faq-item{border:1px solid var(--border);background:var(--bg2);border-radius:14px;margin-bottom:14px;overflow:hidden;transition:border-color .15s}
+.section.alt .faq-item{background:var(--bg)}
+.faq-item.open{border-color:var(--rose)}
+.faq-q{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:21px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px;font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink)}
+.faq-icon{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--rose);font-size:18px;font-weight:600;transition:transform .2s,background .2s}
+.faq-item.open .faq-icon{transform:rotate(45deg);background:var(--rose);color:#fff}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .28s ease}
+.faq-a p{padding:0 24px 22px;font-size:15px;color:var(--ink-soft)}
+
+/* ---- NEWSLETTER ---- */
+.nl{background:linear-gradient(135deg,#3a2730,#b8503f);border-radius:26px;padding:64px 40px;text-align:center;position:relative;overflow:hidden}
+.nl::before{content:"";position:absolute;width:340px;height:340px;border-radius:50%;border:2px solid rgba(255,255,255,.12);top:-150px;left:-90px}
+.nl::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;border:2px solid rgba(255,255,255,.1);bottom:-120px;right:-70px}
+.nl-in{position:relative;max-width:540px;margin:0 auto}
+.nl .sec-kicker{color:var(--gold)}
+.nl h2{font-family:var(--serif);font-size:clamp(28px,3.6vw,42px);font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.14;margin-bottom:12px}
+.nl p{font-size:15.5px;color:rgba(255,255,255,.82);margin-bottom:28px}
+.nl-form{display:flex;gap:8px;background:#fff;border-radius:100px;padding:6px 6px 6px 8px;max-width:460px;margin:0 auto}
+.nl-form input{flex:1;border:none;outline:none;background:none;font-size:15px;font-family:var(--sans);color:var(--ink);padding:0 14px}
+.nl-form input::placeholder{color:var(--muted)}
+.nl-form button{background:var(--rose);color:#fff;border:none;font-size:14px;font-weight:600;padding:13px 26px;border-radius:100px;cursor:pointer;transition:background .15s;white-space:nowrap}
+.nl-form button:hover{background:var(--rose-d)}
+.nl-fine{font-size:12.5px;color:rgba(255,255,255,.6);margin-top:14px}
+
+/* ---- FOOTER ---- */
+footer{background:var(--ink);padding:62px 0 28px}
+.footer-in{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:44px;margin-bottom:42px}
+.footer-logo{font-family:var(--serif);font-size:24px;font-weight:600;color:#fff;margin-bottom:12px}
+.footer-logo em{color:var(--rose);font-style:italic}
+.footer-tagline{font-size:14px;color:rgba(255,255,255,.55);max-width:300px}
+.footer-social{display:flex;gap:10px;margin-top:18px}
+.footer-social a{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;transition:background .15s}
+.footer-social a:hover{background:var(--rose)}
+.footer-col-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:16px}
+.footer-links{display:flex;flex-direction:column;gap:11px}
+.footer-links a{font-size:14px;color:rgba(255,255,255,.62);transition:color .15s}
+.footer-links a:hover{color:var(--rose)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.footer-copy{font-size:12.5px;color:rgba(255,255,255,.4)}
+
+/* ---- REVEAL ---- */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:960px){
+  .hero-in,.story-in{grid-template-columns:1fr;gap:46px}
+  .hero-card{max-width:440px;margin:0 auto}
+  .val-grid,.topic-grid,.art-grid{grid-template-columns:1fr 1fr}
+  .stats-in{grid-template-columns:1fr 1fr;gap:38px 24px}
+  .coach{grid-template-columns:1fr}
+  .coach-portrait{min-height:240px}
+  .footer-in{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .nav-links{display:none}
+  .nav-toggle{display:block}
+  .nav-links.open{display:flex;position:absolute;top:70px;left:0;right:0;flex-direction:column;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px}
+  .nav-links.open a{padding:13px}
+  .section{padding:62px 0}
+  .val-grid,.topic-grid,.art-grid{grid-template-columns:1fr}
+  .stats-in{grid-template-columns:1fr 1fr}
+  .coach-body{padding:34px 26px}
+  .nl-form{flex-direction:column;border-radius:18px;padding:10px}
+  .nl-form button{border-radius:12px}
+  .footer-in{grid-template-columns:1fr}
+  .hc-float.one{left:-12px}
+  .hc-float.two{right:-10px}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#b8503f-->
+<!--SHELL:HEADER-->
+<nav class="site-nav">
+  <div class="nav-in">
+    <a href="./" class="nav-logo">Dating<em>Edge</em></a>
+    <div class="nav-links" id="navLinks">
+      <a href="./#topics">Topics</a>
+      <a href="./#why">Why Us</a>
+      <a href="./#articles">Articles</a>
+      <a href="./#coach">Coach</a>
+      <a href="resources.html">Resources</a>
+      <a href="objections.html">Honest Answers</a>
+      <a href="about.html">About</a>
+      <a href="./#faq">FAQ</a>
+    </div>
+    <a href="./#newsletter" class="nav-cta">Free Guide</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<header class="hero">
+  <div class="hero-in wrap">
+    <div class="hero-text reveal">
+      <div class="kicker">Modern Relationship Intelligence</div>
+      <h1 class="hero-h1">Honest advice for <em>real connection.</em></h1>
+      <p class="hero-desc">No manipulation tactics. No pickup scripts. Just clear, research-backed insight into how attraction, communication, and lasting commitment actually work.</p>
+      <div class="hero-btns">
+        <a href="./#articles" class="btn-fill">Start Reading</a>
+        <a href="./#newsletter" class="btn-ghost">Get the Free Guide</a>
+      </div>
+      <div class="hero-proof">
+        <div class="avatars">
+          <span style="background:#b8503f">A</span>
+          <span style="background:#3a2730">M</span>
+          <span style="background:#c98b3a">J</span>
+          <span style="background:#7c6f67">+</span>
+        </div>
+        <div><b>120,000+ readers</b> &nbsp;<span class="hero-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+      </div>
+    </div>
+    <div class="hero-card reveal">
+      <div class="hc-float one">
+        <div class="fnum">94%</div>
+        <div class="flabel">say advice felt honest</div>
+      </div>
+      <div class="hc-float two">
+        <div class="fnum">7&nbsp;min</div>
+        <div class="flabel">average read</div>
+      </div>
+      <div class="hc-main">
+        <span class="hc-tag">Featured</span>
+        <div class="hc-art">
+          <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3a2730"/><stop offset="1" stop-color="#b8503f"/>
+            </linearGradient></defs>
+            <rect width="320" height="200" fill="url(#hg)"/>
+            <circle cx="120" cy="100" r="40" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+            <circle cx="190" cy="100" r="40" fill="none" stroke="#c98b3a" stroke-width="3"/>
+            <circle cx="120" cy="100" r="10" fill="#fff" fill-opacity=".85"/>
+            <circle cx="190" cy="100" r="10" fill="#c98b3a"/>
+          </svg>
+        </div>
+        <div class="hc-title" id="heroFeatureTitle">Honest, practical dating and relationship advice</div>
+        <div class="hc-meta" id="heroFeatureMeta">New articles coming soon</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="trust">
+  <div class="trust-in wrap">
+    <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="2.4"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>Research-backed, not opinion</span>
+    <span class="trust-dot"></span>
+    <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="2.4"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg>Trusted by 120k+ readers</span>
+    <span class="trust-dot"></span>
+    <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="2.4"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg>No games, ever</span>
+  </div>
+</section>
+
+<!-- WHY / STORY -->
+<section class="section" id="why">
+  <div class="wrap story-in">
+    <div class="story-visual reveal">
+      <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="180" r="80" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="4"/>
+        <circle cx="250" cy="180" r="80" fill="none" stroke="#c98b3a" stroke-width="4"/>
+        <path d="M200 110 q40 50 0 140 q-40 -90 0 -140z" fill="#fff" fill-opacity=".18"/>
+        <circle cx="150" cy="180" r="14" fill="#fff" fill-opacity=".7"/>
+        <circle cx="250" cy="180" r="14" fill="#c98b3a"/>
+      </svg>
+      <div class="badge">
+        <div class="bt">Built on evidence</div>
+        <div class="bs">Every framework cites peer-reviewed psychology</div>
+      </div>
+    </div>
+    <div class="story-text reveal">
+      <span class="sec-kicker">Why DatingEdge</span>
+      <h2>The internet is full of dating advice. <em>Almost none of it is honest.</em></h2>
+      <p>Most dating content sells shortcuts - scripts, tricks, and tactics that treat people like targets. It might work once. It never builds a relationship worth keeping.</p>
+      <p>DatingEdge takes the opposite path. We translate real research on attachment, attraction, and communication into advice you can actually use - without becoming someone you don't recognize.</p>
+      <ul class="story-list">
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg><span><b>Grounded in psychology</b> - attachment theory, social science, and clinical research, made readable.</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg><span><b>Zero toxic tactics</b> - no negging, no mind games, no pretending to be someone else.</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.6"><path d="M5 13l4 4L19 7"/></svg><span><b>For every stage</b> - first dates, defining the relationship, long-term love, and healing after loss.</span></li>
+      </ul>
+      <a href="about.html" class="btn-fill">Read Our Story</a>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE CARDS -->
+<section class="section alt">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">What You Get</span>
+      <h2 class="sec-title">Advice that respects you and the people you date</h2>
+      <p class="sec-sub">Three principles shape everything we publish.</p>
+    </div>
+    <div class="val-grid">
+      <div class="val-card reveal">
+        <div class="val-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/><path d="M12 8v4l3 2"/></svg></div>
+        <h3>Clarity Over Hype</h3>
+        <p>Plain-spoken guidance you can apply tonight - not vague mantras or recycled motivational quotes.</p>
+      </div>
+      <div class="val-card reveal">
+        <div class="val-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M4 19V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 11h8M8 15h6"/></svg></div>
+        <h3>Backed by Research</h3>
+        <p>Every claim traces back to published studies on attachment, communication, and human behavior.</p>
+      </div>
+      <div class="val-card reveal">
+        <div class="val-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg></div>
+        <h3>Kindness as Strategy</h3>
+        <p>Real attraction grows from honesty and self-respect - the only foundation that lasts past the first month.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<section class="stats">
+  <div class="wrap stats-in">
+    <div class="reveal"><div class="stat-num" data-count="120">0</div><div class="stat-label">Thousand monthly readers</div></div>
+    <div class="reveal"><div class="stat-num" data-count="340">0</div><div class="stat-label">In-depth articles published</div></div>
+    <div class="reveal"><div class="stat-num" data-count="74" data-suffix="%">0</div><div class="stat-label">Report better relationships</div></div>
+    <div class="reveal"><div class="stat-num" data-count="9" data-prefix="" data-suffix=" yrs">0</div><div class="stat-label">Of relationship research</div></div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section class="section" id="topics">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">What We Cover</span>
+      <h2 class="sec-title">From the first message to lasting love</h2>
+      <p class="sec-sub">Whatever stage you're in, there's a clear path forward.</p>
+    </div>
+    <div class="topic-grid">
+      <div class="topic reveal"><span class="tbar"></span><div class="tnum">01</div><h3>First Dates</h3><p>Conversation, confidence, and reading genuine interest without overthinking every signal.</p></div>
+      <div class="topic reveal"><span class="tbar"></span><div class="tnum">02</div><h3>Long-Term Love</h3><p>Keeping connection, trust, and desire alive once the early spark settles into real life.</p></div>
+      <div class="topic reveal"><span class="tbar"></span><div class="tnum">03</div><h3>Communication</h3><p>Saying what you need, handling conflict, and being heard without drama or distance.</p></div>
+      <div class="topic reveal"><span class="tbar"></span><div class="tnum">04</div><h3>Psychology</h3><p>Attachment styles, emotional patterns, and the unconscious habits that shape how you love.</p></div>
+      <div class="topic reveal"><span class="tbar"></span><div class="tnum">05</div><h3>Self-Worth</h3><p>Building the inner security that makes healthy relationships possible in the first place.</p></div>
+      <div class="topic reveal"><span class="tbar"></span><div class="tnum">06</div><h3>Moving On</h3><p>Healing after breakups, processing loss, and re-entering dating as your whole self.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="section alt" id="articles">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">From the Journal</span>
+      <h2 class="sec-title">Latest articles &amp; guides</h2>
+      <p class="sec-sub">Fresh, research-backed reads to help you date with intention.</p>
+    </div>
+    <div class="art-toolbar reveal" id="artToolbar"></div>
+    <div class="art-grid" id="artGrid"></div>
+  </div>
+</section>
+
+<!-- COACH -->
+<section class="section" id="coach">
+  <div class="wrap">
+    <div class="coach reveal">
+      <div class="coach-portrait">
+        <svg viewBox="0 0 300 360" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="150" cy="135" r="62" fill="#fbf6f1" fill-opacity=".95"/>
+          <circle cx="150" cy="118" r="34" fill="#3a2730"/>
+          <path d="M88 240c0-44 28-72 62-72s62 28 62 72z" fill="#fbf6f1" fill-opacity=".95"/>
+          <circle cx="240" cy="70" r="20" fill="#c98b3a" fill-opacity=".5"/>
+          <circle cx="56" cy="300" r="28" fill="#fff" fill-opacity=".15"/>
+        </svg>
+      </div>
+      <div class="coach-body">
+        <span class="sec-kicker">Meet the Coach</span>
+        <h2>Dr. Lena Hart</h2>
+        <div class="coach-role">Relationship Psychologist &amp; Founder of DatingEdge</div>
+        <p>After nine years counseling couples and singles, Lena grew tired of watching good people get hurt by bad advice. She founded DatingEdge to put honest, evidence-based guidance within everyone's reach.</p>
+        <p>Her work blends attachment science with practical communication skills - the same approach she uses one-on-one, written for anyone ready to date with more self-respect.</p>
+        <div class="coach-cred">
+          <div><div class="cn">9 yrs</div><div class="cl">Clinical practice</div></div>
+          <div><div class="cn">2,400+</div><div class="cl">Clients counseled</div></div>
+          <div><div class="cn">PhD</div><div class="cl">Relationship Psychology</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section alt" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-kicker">Questions</span>
+      <h2 class="sec-title">Things readers ask us</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item reveal">
+        <button class="faq-q">Is DatingEdge advice based on real research?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Yes. Every framework we publish is grounded in peer-reviewed psychology - attachment theory, communication research, and behavioral science. We translate it into plain language, but the source material is the real thing.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Will you teach pickup lines or manipulation tactics?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Never. We believe scripts and mind games damage both people involved. Our advice is about honesty, self-worth, and genuine communication - the only things that build relationships worth keeping.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">Is this for people dating, or already in relationships?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Both. We cover everything from first dates and defining the relationship to long-term commitment and healing after a breakup. Whatever stage you're in, there's a clear path forward.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">How much does it cost to read DatingEdge?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Our articles and guides are completely free. Our weekly email is free too. We may offer deeper courses in the future, but the core library will always stay open to everyone.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q">How often do you publish new articles?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>We publish several in-depth pieces every month and send one carefully written insight to subscribers each week. Quality over volume - every article earns its place.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="section" id="newsletter">
+  <div class="wrap">
+    <div class="nl reveal">
+      <div class="nl-in">
+        <span class="sec-kicker">Weekly Insight</span>
+        <h2>Get smarter about love. One honest email a week.</h2>
+        <p>Real psychology, practical tools, and zero toxic advice - delivered every Sunday. Plus instant access to our free Attachment Style starter guide.</p>
+        <form class="nl-form" onsubmit="return false">
+          <input type="email" placeholder="your@email.com" aria-label="Email address" required>
+          <button type="submit">Get the Free Guide</button>
+        </form>
+        <div class="nl-fine">Join 120,000+ readers. Unsubscribe anytime - no hard feelings.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer>
+  <div class="wrap">
+    <div class="footer-in">
+      <div>
+        <div class="footer-logo">Dating<em>Edge</em></div>
+        <p class="footer-tagline">Relationship intelligence for people who want real connection - not just better tactics.</p>
+        <div class="footer-social">
+          <a href="./#newsletter" aria-label="Newsletter"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+          <a href="resources.html" aria-label="Resources"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 19V5a2 2 0 012-2h12a2 2 0 012 2v14M4 19l4-3 4 3 4-3 4 3"/></svg></a>
+          <a href="about.html" aria-label="About"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-4 3-6 7-6s7 2 7 6"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Topics</div>
+        <div class="footer-links">
+          <a href="./#topics">First Dates</a>
+          <a href="./#topics">Long-Term Love</a>
+          <a href="./#topics">Communication</a>
+          <a href="./#topics">Self-Worth</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Explore</div>
+        <div class="footer-links">
+          <a href="./#articles">Latest Articles</a>
+          <a href="resources.html">Resources</a>
+          <a href="objections.html">Honest Answers</a>
+          <a href="./#coach">Meet the Coach</a>
+          <a href="./#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Site</div>
+        <div class="footer-links">
+          <a href="./">Home</a>
+          <a href="about.html">About</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 DatingEdge. All rights reserved.</div>
+      <div class="footer-copy">Honest, research-backed relationship advice.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---- mobile nav ---- */
+(function(){
+  var t=document.getElementById('navToggle'),n=document.getElementById('navLinks');
+  if(t&&n)t.addEventListener('click',function(){n.classList.toggle('open');});
+})();
+
+/* ---- article grid ---- */
+var ART_IMG_GRADS=[['#3a2730','#b8503f'],['#b8503f','#c98b3a'],['#3a2730','#7c6f67'],['#963d2f','#c98b3a'],['#3a2730','#963d2f'],['#7c6f67','#b8503f']];
+function artSVG(i){
+  var g=ART_IMG_GRADS[i%ART_IMG_GRADS.length];
+  return '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">'
+    +'<defs><linearGradient id="ag'+i+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+g[0]+'"/><stop offset="1" stop-color="'+g[1]+'"/></linearGradient></defs>'
+    +'<rect width="320" height="200" fill="url(#ag'+i+')"/>'
+    +'<circle cx="128" cy="100" r="34" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="3"/>'
+    +'<circle cx="184" cy="100" r="34" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="3"/>'
+    +'<circle cx="156" cy="100" r="8" fill="#fff" fill-opacity=".85"/></svg>';
+}
+
+var arts=[],activeFilter='all';
+
+function renderToolbar(){
+  var bar=document.getElementById('artToolbar');
+  if(!bar)return;
+  var cats=['all'];
+  arts.forEach(function(a){if(a.cat&&cats.indexOf(a.cat)<0)cats.push(a.cat);});
+  bar.innerHTML=cats.map(function(c){
+    var label=c==='all'?'All Topics':c.charAt(0).toUpperCase()+c.slice(1);
+    return '<button class="chip'+(c===activeFilter?' active':'')+'" data-cat="'+c+'">'+label+'</button>';
+  }).join('');
+  bar.querySelectorAll('.chip').forEach(function(ch){
+    ch.addEventListener('click',function(){activeFilter=ch.getAttribute('data-cat');renderToolbar();renderGrid();});
+  });
+}
+
+function renderGrid(){
+  if(!document.getElementById('artGrid'))return;
+  var g=document.getElementById('artGrid');
+  var list=activeFilter==='all'?arts:arts.filter(function(a){return a.cat===activeFilter;});
+  if(!list.length){g.innerHTML='<div class="art-empty">No articles in this topic yet - check back soon.</div>';return;}
+  g.innerHTML=list.map(function(a,i){
+    return '<a href="./'+a.slug+'/" class="art-card">'
+      +'<div class="art-thumb">'+artSVG(i)+'</div>'
+      +'<div class="art-body">'
+      +'<div class="art-cat">'+(a.cat||'Article')+'</div>'
+      +'<h3 class="art-title">'+a.title+'</h3>'
+      +'<p class="art-excerpt">'+(a.excerpt||'')+'</p>'
+      +'<div class="art-meta">'+((a.mins||6)+' min read')+'</div>'
+      +'</div></a>';
+  }).join('');
+}
+
+function applyHero(){
+  if(!arts.length)return;
+  var f=arts[0];
+  var t=document.getElementById('heroFeatureTitle'),m=document.getElementById('heroFeatureMeta');
+  if(t)t.textContent=f.title;
+  if(m)m.textContent=(f.cat?f.cat.charAt(0).toUpperCase()+f.cat.slice(1):'Featured')+' · '+(f.mins||7)+' min read';
+}
+
+function loadArticles(){
+  if(!document.getElementById('artGrid'))return;
+  fetch('./articles.json').then(function(r){
+    if(!r.ok)throw 0;return r.json();
+  }).then(function(d){
+    arts=Array.isArray(d)?d.filter(function(a){return a&&a.slug&&a.title;}):[];
+  }).catch(function(){
+    arts=[];
+  }).then(function(){
+    renderToolbar();renderGrid();applyHero();
+  });
+}
+loadArticles();
+
+/* ---- FAQ accordion ---- */
+document.querySelectorAll('.faq-q').forEach(function(q){
+  q.addEventListener('click',function(){
+    var item=q.parentElement,a=q.nextElementSibling,open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(it){
+      it.classList.remove('open');it.querySelector('.faq-a').style.maxHeight=null;
+    });
+    if(!open){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+  });
+});
+
+/* ---- scroll reveal ---- */
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver'in window)){els.forEach(function(e){e.classList.add('in');});return;}
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.14});
+  els.forEach(function(e){io.observe(e);});
+})();
+
+/* ---- count-up ---- */
+(function(){
+  var done=false;
+  function run(){
+    if(done)return;done=true;
+    document.querySelectorAll('.stat-num').forEach(function(el){
+      var target=parseFloat(el.getAttribute('data-count'))||0,
+          suffix=el.getAttribute('data-suffix')||'',
+          prefix=el.getAttribute('data-prefix')||'',
+          start=null,dur=1500;
+      function step(ts){
+        if(!start)start=ts;
+        var p=Math.min((ts-start)/dur,1),
+            eased=1-Math.pow(1-p,3),
+            val=Math.round(target*eased);
+        el.textContent=prefix+val+suffix;
+        if(p<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  var band=document.querySelector('.stats');
+  if(band&&'IntersectionObserver'in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting)run();});
+    },{threshold:.4});
+    io.observe(band);
+  }else run();
+})();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
