@@ -1,6 +1,6 @@
 {
   "_name": "Kavalsia Network",
-  "global_prompt": "Write like a seasoned human expert with direct experience, not an AI assistant. Use contractions, vary sentence length, reference your own experience at least twice, include one specific data point or study reference with a year. Take a clear editorial position. NEVER use em-dashes. NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion.",
+  "global_prompt": "Write like a seasoned human expert with direct experience, not an AI assistant. Use contractions, vary sentence length, reference your own experience at least twice, include one specific data point or study reference with a year. Take a clear editorial position. NEVER use em-dashes. NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion. Somewhere in the article - not at the start, not as the conclusion - include one paragraph that reads like a real human wrote it in a slightly different mood: uncertain phrasing, an offhand mention of someone ('my friend tried this and honestly...'), a personal anecdote that is specific and slightly embarrassing or funny, or a moment of genuine doubt ('I'm not 100% sure this works for everyone, but...'). The tone of this paragraph can be looser, funnier, or more uncertain than the rest. It should feel like the writer briefly forgot they were writing an article.",
   "global_negative_prompt": "DO NOT EVER USE \" —\" (em-dash). NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion, in summary, to summarize, it is important to note, as an AI language model.",
   "global_header_scripts": "",
   "global_footer_scripts": "",
@@ -52,7 +52,8 @@
       "Alex Merritt",
       "Sophie Chen"
     ],
-    "use_random_global_author": true
+    "use_random_global_author": true,
+    "hub_api_url": ""
   },
   "affiliate_links": {},
   "sites": [
@@ -68,7 +69,8 @@
       "persona": "Nexus Editorial Team",
       "articles_per_day": 1,
       "is_mother_site": true,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "brevo_list_id": 4
     },
     {
       "id": "cryptopulse",
@@ -81,7 +83,7 @@
       "article_layout": "sidebar",
       "tone": "analytical and data-driven, like a Bloomberg journalist covering crypto. Use specific numbers. Cut through hype.",
       "persona": "Marcus Webb, ex-quant trader and algorithmic crypto researcher",
-      "brevo_list_id": null,
+      "brevo_list_id": 3,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -135,7 +137,8 @@
         "Marcus Webb",
         "Jordan Osei",
         "Elena Vasquez",
-        "David Kim"
+        "David Kim",
+        "Siavash Sadighi"
       ],
       "use_random_author": true
     },
@@ -150,7 +153,7 @@
       "article_layout": "standard",
       "tone": "warm and practical, like a financially-savvy friend. Jargon-light, real examples, honest about risks.",
       "persona": "Ryan Mitchell, certified financial planner and passive income strategist",
-      "brevo_list_id": null,
+      "brevo_list_id": 5,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -204,7 +207,8 @@
         "Ryan Mitchell",
         "Sarah Chen",
         "Marcus Reid",
-        "Tanya Kumar"
+        "Tanya Kumar",
+        "Siavash Sadighi"
       ],
       "use_random_author": true
     },
@@ -219,7 +223,7 @@
       "article_layout": "sidebar",
       "tone": "developer-first, technically precise, like a senior software engineer reviewing fintech tools.",
       "persona": "Alex Turner, software engineer turned full-time algorithmic trader",
-      "brevo_list_id": null,
+      "brevo_list_id": 6,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -273,7 +277,8 @@
         "Alex Turner",
         "Jordan Cole",
         "Sam Nakamura",
-        "Rachel Obi"
+        "Rachel Obi",
+        "Siavash Sadighi"
       ],
       "use_random_author": true
     },
@@ -288,7 +293,7 @@
       "article_layout": "magazine",
       "tone": "confident and results-focused, like a senior performance marketer who has run $10M+ in ad spend.",
       "persona": "Jordan Cole, performance marketing director and AI marketing consultant",
-      "brevo_list_id": null,
+      "brevo_list_id": 7,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -342,7 +347,8 @@
         "Jordan Cole",
         "Alex Merritt",
         "Priya Nair",
-        "Marcus Reid"
+        "Marcus Reid",
+        "Siavash Sadighi"
       ],
       "use_random_author": true
     },
@@ -357,7 +363,7 @@
       "article_layout": "standard",
       "tone": "tactical and conversion-focused, like a Shopify Plus expert who has launched 50 stores.",
       "persona": "Nina Patel, ecommerce consultant specializing in DTC brand scaling",
-      "brevo_list_id": null,
+      "brevo_list_id": 9,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -411,7 +417,8 @@
         "Nina Patel",
         "Sophie Chen",
         "Jake Morrison",
-        "Aisha Williams"
+        "Aisha Williams",
+        "Siavash Sadighi"
       ],
       "use_random_author": true
     },
@@ -426,7 +433,7 @@
       "article_layout": "standard",
       "tone": "warm and enthusiastic, like a vet who also happens to be a lifelong dog lover. Science-backed but accessible.",
       "persona": "Dr. Emily Ross, veterinarian and dog nutrition specialist",
-      "brevo_list_id": null,
+      "brevo_list_id": 10,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -477,7 +484,15 @@
         "What makes the Sphynx cat different from every other breed you have ever met"
       ],
       "articles_per_day": 1,
-      "nav_style": "leaf"
+      "nav_style": "leaf",
+      "author_names": [
+        "Jamie Park",
+        "Rachel Green",
+        "Tom Hensley",
+        "Maya Torres",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "supplement-verge",
@@ -490,7 +505,7 @@
       "article_layout": "magazine",
       "tone": "science-first and skeptical, like a sports scientist reviewing clinical trials. Calls out marketing BS.",
       "persona": "Dr. James Holloway, sports scientist and registered nutritionist",
-      "brevo_list_id": null,
+      "brevo_list_id": 15,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -539,7 +554,15 @@
         "Which protein powder survives third-party testing"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Ryan Ellis",
+        "Sarah Cole",
+        "Marcus Reid",
+        "Nina Patel",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "sight-reading",
@@ -552,7 +575,7 @@
       "article_layout": "standard",
       "tone": "encouraging and methodical, like a conservatory-trained teacher who has taught beginners for 20 years.",
       "persona": "Professor Laura Kim, Juilliard-trained pianist and music educator",
-      "brevo_list_id": null,
+      "brevo_list_id": 16,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -601,7 +624,15 @@
         "How long it actually takes to become a confident sight-reader"
       ],
       "articles_per_day": 1,
-      "nav_style": "leaf"
+      "nav_style": "leaf",
+      "author_names": [
+        "Elena Vasquez",
+        "Tom Clarke",
+        "Rachel Kim",
+        "Jordan Webb",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "newborn-iq",
@@ -614,7 +645,7 @@
       "article_layout": "standard",
       "tone": "calm and evidence-based, like a pediatric nurse practitioner who also has three kids. No fear-mongering.",
       "persona": "Melissa Torres, NICU nurse and mother of three",
-      "brevo_list_id": null,
+      "brevo_list_id": 8,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -663,7 +694,15 @@
         "Building a daily routine with a newborn that isn't miserable"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Sarah Mitchell",
+        "Amy Chen",
+        "Emma Torres",
+        "Ryan Park",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "dalmend-home",
@@ -676,7 +715,7 @@
       "article_layout": "minimal",
       "tone": "design-forward and practical, like an interior designer who also flips houses for profit.",
       "persona": "Olivia Grant, interior designer and property investor",
-      "brevo_list_id": null,
+      "brevo_list_id": 25,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -725,7 +764,15 @@
         "How to declutter a home before selling without regrets"
       ],
       "articles_per_day": 1,
-      "nav_style": "leaf"
+      "nav_style": "leaf",
+      "author_names": [
+        "Alex Morrison",
+        "Nina Webb",
+        "Jordan Clarke",
+        "Sophie Reid",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "onlinebiz-pro",
@@ -738,7 +785,7 @@
       "article_layout": "sidebar",
       "tone": "direct and no-fluff, like a bootstrapped founder who has built and sold three businesses.",
       "persona": "Ryan Cross, serial entrepreneur and startup advisor",
-      "brevo_list_id": null,
+      "brevo_list_id": 14,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -792,7 +839,8 @@
         "Ryan Cross",
         "Maya Torres",
         "Derek Sullivan",
-        "Keiko Adams"
+        "Keiko Adams",
+        "Siavash Sadighi"
       ],
       "use_random_author": true
     },
@@ -807,7 +855,7 @@
       "article_layout": "sidebar",
       "tone": "evidence-based and performance-focused, like a strength coach who has worked with professional athletes.",
       "persona": "Coach Daniel Webb, CSCS-certified strength and conditioning specialist",
-      "brevo_list_id": null,
+      "brevo_list_id": 17,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -856,7 +904,15 @@
         "Why most athletes train too much and recover too little"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Marcus Cole",
+        "Jake Turner",
+        "Rachel Obi",
+        "Alex Nash",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "makeup-craft",
@@ -869,7 +925,7 @@
       "article_layout": "standard",
       "tone": "expert and technique-focused, like a professional MUA who teaches other makeup artists.",
       "persona": "Sofia Marino, professional makeup artist and beauty educator",
-      "brevo_list_id": null,
+      "brevo_list_id": 18,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -918,7 +974,15 @@
         "The application tools that make the biggest difference"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Sofia Marino",
+        "Emma Clarke",
+        "Priya Nair",
+        "Maya Torres",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "dating-edge",
@@ -931,7 +995,7 @@
       "article_layout": "standard",
       "tone": "direct and honest, like a psychologist who advises on relationships without sugarcoating reality.",
       "persona": "Dr. Priya Sharma, clinical psychologist specializing in attachment and modern relationships",
-      "brevo_list_id": null,
+      "brevo_list_id": 11,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -980,7 +1044,15 @@
         "Breaking patterns: how to stop dating the same person in different bodies"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Ryan Cross",
+        "Jordan Lee",
+        "Alex Webb",
+        "Sarah Kim",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "fitpulse-pro",
@@ -993,7 +1065,7 @@
       "article_layout": "sidebar",
       "tone": "no-nonsense and science-based, like a personal trainer who has heard every excuse and respects no-BS results.",
       "persona": "Coach Rachel Stone, NASM-certified personal trainer and corrective exercise specialist with 10 years training competitive athletes",
-      "brevo_list_id": null,
+      "brevo_list_id": 19,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1042,7 +1114,15 @@
         "What six months of consistent training actually looks like"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Marcus Reid",
+        "Jake Cole",
+        "Rachel Turner",
+        "Alex Nash",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "mashestate-home",
@@ -1055,7 +1135,7 @@
       "article_layout": "sidebar",
       "tone": "analytical and investor-focused, like a real estate attorney who also owns 12 doors.",
       "persona": "David Mash, real estate investor and property law consultant",
-      "brevo_list_id": null,
+      "brevo_list_id": 21,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1104,7 +1184,15 @@
         "Reading a real estate market before everyone else does"
       ],
       "articles_per_day": 1,
-      "nav_style": "grid"
+      "nav_style": "grid",
+      "author_names": [
+        "Tom Mash",
+        "Jordan Webb",
+        "Sarah Cole",
+        "Alex Morrison",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "kanona-events",
@@ -1119,10 +1207,14 @@
       "tone": "intimate and cinematic, like a director describing a scene. Write about sensory experience - the smell of a room, the weight of silence before music starts, what it feels like when an event becomes a memory. Speak to curious minds who want to experience something beyond the ordinary.",
       "persona": "Kani Sedighi, experiential event curator and creative director",
       "author_names": [
-        "Kani Sedighi"
+        "Elena Vasquez",
+        "Marcus Reid",
+        "Jordan Park",
+        "Sophie Clarke",
+        "Siavash Sadighi"
       ],
-      "use_random_author": false,
-      "brevo_list_id": null,
+      "use_random_author": true,
+      "brevo_list_id": 20,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1184,7 +1276,7 @@
       "article_layout": "sidebar",
       "tone": "practical and contractor-level honest, like a general contractor who also owns rental properties.",
       "persona": "Tom Mash, licensed general contractor and construction project manager",
-      "brevo_list_id": null,
+      "brevo_list_id": 22,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1233,7 +1325,15 @@
         "How long a renovation actually takes — a realistic timeline"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Tom Mash",
+        "Alex Morrison",
+        "Jake Turner",
+        "Rachel Webb",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "insight-insure",
@@ -1246,7 +1346,7 @@
       "article_layout": "standard",
       "tone": "consumer-first and plain-language, like an insurance broker who hates industry jargon.",
       "persona": "Patrick Lane, independent insurance broker and consumer advocate",
-      "brevo_list_id": null,
+      "brevo_list_id": 24,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1295,7 +1395,15 @@
         "The fine print in insurance policies that costs people the most"
       ],
       "articles_per_day": 1,
-      "nav_style": "grid"
+      "nav_style": "grid",
+      "author_names": [
+        "Ryan Mitchell",
+        "Sarah Clarke",
+        "Marcus Cole",
+        "Jordan Kim",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "carverge",
@@ -1308,7 +1416,7 @@
       "article_layout": "sidebar",
       "tone": "technically detailed and honest, like a mechanical engineer who also writes for Car and Driver.",
       "persona": "James Carr, automotive engineer and EV adoption researcher",
-      "brevo_list_id": null,
+      "brevo_list_id": 23,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1357,7 +1465,15 @@
         "Hybrid vs full EV: the decision framework"
       ],
       "articles_per_day": 1,
-      "nav_style": "carverge"
+      "nav_style": "carverge",
+      "author_names": [
+        "Alex Turner",
+        "Marcus Webb",
+        "Jake Morrison",
+        "Rachel Cole",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "travelverge",
@@ -1370,7 +1486,7 @@
       "article_layout": "magazine",
       "tone": "specific and experience-driven, like a travel writer who hates generic listicles and tells you what actually happened.",
       "persona": "Ana Verge, independent travel journalist with 60 countries visited",
-      "brevo_list_id": null,
+      "brevo_list_id": 13,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1419,7 +1535,15 @@
         "The honest truth about digital nomad life after 2 years"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "author_names": [
+        "Ana Verge",
+        "Jordan Clarke",
+        "Sophie Kim",
+        "Marcus Reid",
+        "Siavash Sadighi"
+      ],
+      "use_random_author": true
     },
     {
       "id": "topproduct",
@@ -1434,7 +1558,7 @@
       "tone": "direct and trustworthy, like a friend who has already bought and tested the product and gives you the honest answer without brand partnerships clouding the advice.",
       "persona": "Jamie Cole, product reviewer and consumer advocate",
       "author": "",
-      "brevo_list_id": null,
+      "brevo_list_id": 12,
       "signup_url": "",
       "adsense_publisher_id": "",
       "publish_delay_max_seconds": 3600,
@@ -1493,7 +1617,8 @@
         "Jamie Cole",
         "Marcus Reid",
         "Sophie Chen",
-        "Alex Torres"
+        "Alex Torres",
+        "Siavash Sadighi"
       ],
       "use_random_author": true
     }
