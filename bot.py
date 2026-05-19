@@ -15,10 +15,13 @@ Environment variables (GitHub Secrets or .env):
     BREVO_API_KEY           free at brevo.com (300 emails/day free)
 """
 
-import os, re, json, time, random, base64
+import os, re, json, time, random, base64, sys
 import requests
 import anthropic
 from datetime import datetime, timedelta
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import layout_shell
 
 # Load .env for local development (ignored in GitHub Actions where secrets are env vars)
 try:
@@ -28,7 +31,7 @@ try:
         load_dotenv(_env_path)
         print("  Loaded .env file")
 except ImportError:
-    pass  # python-dotenv not installed — fine in CI/CD
+    pass  # python-dotenv not installed - fine in CI/CD
 
 
 def _retry(fn, max_attempts=3, base_delay=5):
@@ -43,7 +46,7 @@ def _retry(fn, max_attempts=3, base_delay=5):
             time.sleep(delay)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# FEATURE FLAGS — all optional, enabled in network-config.json
+# FEATURE FLAGS - all optional, enabled in network-config.json
 # ─────────────────────────────────────────────────────────────────────────────
 
 def search_web(topic, web_cfg):
@@ -102,7 +105,7 @@ def search_web(topic, web_cfg):
 def get_internal_link_candidates(articles, topic, n=3):
     """
     Find the most relevant older articles on the same site for internal linking.
-    Builds topical authority clusters — pure SEO value, not link spam.
+    Builds topical authority clusters - pure SEO value, not link spam.
     """
     if not articles or len(articles) < 2:
         return []
@@ -117,10 +120,104 @@ def get_internal_link_candidates(articles, topic, n=3):
     return [a for _, a in scored[:n]]
 
 
+def insert_internal_links(html, articles, site_domain, current_slug=""):
+    """
+    Weave 2-3 contextual internal links into existing paragraph text.
+    Links are inserted naturally by appending a short contextual phrase to a
+    suitable paragraph - NOT as a separate related-articles block.
+    Uses relative URLs: ../{slug}/ format.
+    Only runs when there are at least 3 other articles to choose from.
+    """
+    STOP_WORDS = {
+        'the', 'a', 'an', 'is', 'are', 'how', 'why', 'what', 'for', 'to',
+        'in', 'of', 'and', 'or', 'with', 'vs', 'on', 'at', 'by', 'as',
+        'be', 'do', 'if', 'it', 'no', 'not', 'so', 'up', 'we', 'my',
+        'our', 'you', 'was', 'has', 'had', 'can', 'but', 'from', 'this',
+        'that', 'your', 'than', 'more', 'into', 'over', 'also', 'about',
+    }
+
+    # Filter candidates: exclude current article, require at least 3 others
+    candidates = [a for a in articles if a.get("slug") and a.get("slug") != current_slug and a.get("title")]
+    if len(candidates) < 3:
+        return html
+
+    # Score candidates by word overlap with the article title extracted from HTML
+    title_match = re.search(r'<title[^>]*>([^<]+)</title>', html, re.IGNORECASE)
+    article_title = title_match.group(1) if title_match else ""
+    # Strip site name suffix like " | Site Name"
+    article_title = re.sub(r'\s*[|]\s*.+$', '', article_title).strip()
+    current_words = set(re.findall(r'\w+', article_title.lower())) - STOP_WORDS
+
+    scored = []
+    for a in candidates:
+        title_words = set(re.findall(r'\w+', a["title"].lower())) - STOP_WORDS
+        overlap = len(current_words & title_words)
+        if overlap >= 2:
+            scored.append((overlap, a))
+    scored.sort(key=lambda x: -x[0])
+    targets = [a for _, a in scored[:3]]
+
+    if not targets:
+        return html
+
+    # Find <p> tags in the article body (skip very short ones and the first paragraph)
+    # Split HTML into parts to safely work on text nodes inside <p> tags
+    p_pattern = re.compile(r'(<p(?:\s[^>]*)?>)(.*?)(</p>)', re.DOTALL | re.IGNORECASE)
+    paragraphs = [(m.start(), m.end(), m.group(1), m.group(2), m.group(3))
+                  for m in p_pattern.finditer(html)]
+
+    # Skip the first paragraph (usually the lede), filter out short/empty ones
+    usable = [p for p in paragraphs[1:] if len(re.sub(r'<[^>]+>', '', p[3]).strip()) > 80]
+
+    if not usable:
+        return html
+
+    # Spread links across different paragraphs
+    import random as _random
+    # Pick evenly-spaced paragraphs from the usable set
+    step = max(1, len(usable) // (len(targets) + 1))
+    chosen_indices = [min(step * (i + 1), len(usable) - 1) for i in range(len(targets))]
+    # Deduplicate indices
+    chosen_indices = list(dict.fromkeys(chosen_indices))
+
+    # Build a map of paragraph start positions to inject links
+    inject_map = {}
+    for idx, article in zip(chosen_indices, targets):
+        if idx < len(usable):
+            para = usable[idx]
+            inject_map[para[0]] = (para, article)
+
+    if not inject_map:
+        return html
+
+    # Rebuild HTML with links injected
+    result_parts = []
+    prev_end = 0
+    for m in p_pattern.finditer(html):
+        if m.start() not in inject_map:
+            result_parts.append(html[prev_end:m.end()])
+            prev_end = m.end()
+            continue
+        para_tuple, target_article = inject_map[m.start()]
+        open_tag, inner, close_tag = m.group(1), m.group(2), m.group(3)
+        link_url = f"../{target_article['slug']}/"
+        link_title = target_article['title']
+        # Append link as a natural sentence within the paragraph
+        link_phrase = f' For more on this, see <a href="{link_url}">{link_title}</a>.'
+        # Insert before the closing </p>
+        new_para = f"{open_tag}{inner}{link_phrase}{close_tag}"
+        result_parts.append(html[prev_end:m.start()])
+        result_parts.append(new_para)
+        prev_end = m.end()
+
+    result_parts.append(html[prev_end:])
+    return ''.join(result_parts)
+
+
 def inject_affiliate_links(html, affiliate_dict):
     """
     Wrap first occurrence of each keyword in affiliate link.
-    Operates on text nodes only — never injects inside existing tags or attributes.
+    Operates on text nodes only - never injects inside existing tags or attributes.
     Keywords are sorted longest-first to prevent partial matches.
     """
     if not affiliate_dict:
@@ -207,7 +304,7 @@ def broadcast_social(site, article, social_cfg):
             except Exception as e:
                 print(f"  Twitter error: {e}")
         else:
-            print("  Twitter/X: skipped — set twitter_oauth_consumer_key/secret + twitter_oauth_token/secret in social_media config (Bearer token is read-only and cannot post)")
+            print("  Twitter/X: skipped - set twitter_oauth_consumer_key/secret + twitter_oauth_token/secret in social_media config (Bearer token is read-only and cannot post)")
 
     # ── LinkedIn API ─────────────────────────────────────────────────────────
     if social_cfg.get("linkedin_enabled") and social_cfg.get("linkedin_token") and social_cfg.get("linkedin_org_id"):
@@ -269,7 +366,7 @@ def ping_google_indexing(url, indexing_cfg):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# CONFIG LOADER — reads network-config.json if present (set by launcher.html)
+# CONFIG LOADER - reads network-config.json if present (set by launcher.html)
 # ─────────────────────────────────────────────────────────────────────────────
 def load_network_config():
     """
@@ -321,10 +418,10 @@ SITES = [
             "How to read crypto market cycles with data rather than gut feeling",
             "Why most retail traders consistently lose to institutional algorithms",
             "On-chain metrics that preceded the last three market tops",
-            "Grid bots vs trend-following bots — a real head-to-head comparison",
+            "Grid bots vs trend-following bots - a real head-to-head comparison",
             "The psychology of FOMO and how algorithms exploit it systematically",
             "Understanding funding rates and why they matter for futures traders",
-            "Dollar-cost averaging into crypto — the math behind why it works",
+            "Dollar-cost averaging into crypto - the math behind why it works",
             "How to build a trading bot without losing your shirt in the process",
         ]
     },
@@ -342,11 +439,11 @@ SITES = [
         "topics": [
             "How automation is reshaping personal finance in 2026",
             "Building an investment portfolio that earns while you sleep",
-            "The FIRE movement meets crypto — what actually works and what doesn't",
+            "The FIRE movement meets crypto - what actually works and what doesn't",
             "Five passive income streams you can start for under a thousand dollars",
             "The compounding effect shown with real numbers and brutal honesty",
             "Why timing the market matters far less than most people think",
-            "Dividend investing vs index funds — the honest, unglamorous answer",
+            "Dividend investing vs index funds - the honest, unglamorous answer",
             "What I wish I'd known before starting to invest in my 20s",
             "How algorithmic investing removes emotion from your decisions",
             "The hidden cost of being too conservative with your savings",
@@ -366,18 +463,18 @@ SITES = [
         "persona":        "Alex Rivera, a software engineer who builds trading tools as a side project and writes about what actually works",
         "brevo_list_id":  None,
         "topics": [
-            "How crypto exchange APIs actually work — a developer's honest guide",
-            "Building a trading bot — what the tutorials never tell you",
-            "Bingx vs Bitmart API — a practical comparison for bot builders",
+            "How crypto exchange APIs actually work - a developer's honest guide",
+            "Building a trading bot - what the tutorials never tell you",
+            "Bingx vs Bitmart API - a practical comparison for bot builders",
             "Why backtesting is essential before your bot touches real money",
             "Order types for developers who learn best by building things",
             "How rate limits affect bot performance when you start scaling",
-            "WebSocket vs REST API — when to use which for trading data",
+            "WebSocket vs REST API - when to use which for trading data",
             "Security hardening when your code is connected to real money",
             "The hidden infrastructure costs of running a trading bot 24/7",
             "Why most trading bot tutorials are dangerously incomplete",
-            "State management for trading bots — how to not lose your mind",
-            "Error handling in financial code — where most beginners fail",
+            "State management for trading bots - how to not lose your mind",
+            "Error handling in financial code - where most beginners fail",
         ]
     },
     # ── Template for your remaining 17 sites ─────────────────────────────────
@@ -399,7 +496,7 @@ SITES = [
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# THEMES — 5 distinct visual designs
+# THEMES - 5 distinct visual designs
 # ─────────────────────────────────────────────────────────────────────────────
 THEMES = {
     "dark": {
@@ -444,6 +541,187 @@ THEMES = {
     },
 }
 
+# Per-site themes  -  exact brand colors matching each homepage.
+# Keyed by network-config.json site id. Overrides generic THEMES in build_article_page.
+SITE_THEMES = {
+    "cryptopulse": {
+        "bg":"#050908","bg2":"#081009","bg3":"#0c1710",
+        "text":"#d8f0e0","text2":"#8ab898",
+        "accent":"#00e676","accent2":"#00b85a",
+        "meta":"#5a8468","border":"#122216",
+        "font":"'Space Grotesk',system-ui,sans-serif",
+        "heading_font":"'Space Grotesk',system-ui,sans-serif",
+    },
+    "trading-tech": {
+        "bg":"#0d1117","bg2":"#161b22","bg3":"#1c2128",
+        "text":"#e6edf3","text2":"#b0bcc8",
+        "accent":"#58a6ff","accent2":"#1f6feb",
+        "meta":"#8b949e","border":"#21262d",
+        "font":"system-ui,sans-serif",
+        "heading_font":"system-ui,sans-serif",
+    },
+    "carverge": {
+        "bg":"#040d1a","bg2":"#071428","bg3":"#0b1d36",
+        "text":"#e0eeff","text2":"#9ab8d8",
+        "accent":"#60a5fa","accent2":"#2563eb",
+        "meta":"#6494c8","border":"#0e2040",
+        "font":"system-ui,sans-serif",
+        "heading_font":"system-ui,sans-serif",
+    },
+    "ai-marketing": {
+        "bg":"#08060f","bg2":"#100c1a","bg3":"#17122a",
+        "text":"#f0e8ff","text2":"#c4a8e8",
+        "accent":"#a855f7","accent2":"#7c3aed",
+        "meta":"#9575cd","border":"#2a1f45",
+        "font":"'Space Grotesk',sans-serif",
+        "heading_font":"'Space Grotesk',sans-serif",
+    },
+    "onlinebiz-pro": {
+        "bg":"#0a0a0a","bg2":"#141414","bg3":"#1c1c1c",
+        "text":"#f5f0e8","text2":"#c8b898",
+        "accent":"#f59e0b","accent2":"#d97706",
+        "meta":"#9c8c70","border":"#2a2520",
+        "font":"'Inter',sans-serif",
+        "heading_font":"'Inter',sans-serif",
+    },
+    "sportiq-pro": {
+        "bg":"#080b0f","bg2":"#0f1318","bg3":"#161b22",
+        "text":"#f5f5f5","text2":"#cccccc",
+        "accent":"#ef4444","accent2":"#dc2626",
+        "meta":"#888888","border":"#1a1d24",
+        "font":"'Barlow Condensed',sans-serif",
+        "heading_font":"'Barlow Condensed',sans-serif",
+    },
+    "dating-edge": {
+        "bg":"#fdf8f5","bg2":"#f5ede8","bg3":"#ede5e0",
+        "text":"#1a1512","text2":"#5a4e48",
+        "accent":"#c2715a","accent2":"#a85840",
+        "meta":"#7a6e68","border":"#e8ddd8",
+        "font":"'Playfair Display',serif",
+        "heading_font":"'Playfair Display',serif",
+    },
+    "fitpulse-pro": {
+        "bg":"#0a0a0a","bg2":"#141414","bg3":"#1c1c1c",
+        "text":"#f5f5f5","text2":"#bbbbbb",
+        "accent":"#22c55e","accent2":"#16a34a",
+        "meta":"#888888","border":"#222222",
+        "font":"'DM Sans',sans-serif",
+        "heading_font":"'DM Sans',sans-serif",
+    },
+    "supplement-verge": {
+        "bg":"#060a07","bg2":"#0c1009","bg3":"#121810",
+        "text":"#eef8e0","text2":"#a8c888",
+        "accent":"#84cc16","accent2":"#65a30d",
+        "meta":"#7a9860","border":"#1a2814",
+        "font":"system-ui,sans-serif",
+        "heading_font":"system-ui,sans-serif",
+    },
+    "ecommerce-edge": {
+        "bg":"#ffffff","bg2":"#f8f8f8","bg3":"#f0f0f0",
+        "text":"#111111","text2":"#444444",
+        "accent":"#f97316","accent2":"#ea580c",
+        "meta":"#666666","border":"#e5e5e5",
+        "font":"system-ui,sans-serif",
+        "heading_font":"system-ui,sans-serif",
+    },
+    "insight-insure": {
+        "bg":"#f8fafc","bg2":"#f1f5f9","bg3":"#e8eef4",
+        "text":"#0f172a","text2":"#334155",
+        "accent":"#0891b2","accent2":"#0e7490",
+        "meta":"#64748b","border":"#cbd5e1",
+        "font":"system-ui,sans-serif",
+        "heading_font":"system-ui,sans-serif",
+    },
+    "mashestate-home": {
+        "bg":"#ffffff","bg2":"#f9fafb","bg3":"#f3f4f6",
+        "text":"#111827","text2":"#374151",
+        "accent":"#1b2a4a","accent2":"#2563eb",
+        "meta":"#6b7280","border":"#e5e7eb",
+        "font":"'Inter',sans-serif",
+        "heading_font":"'Inter',sans-serif",
+    },
+    "newborn-iq": {
+        "bg":"#fafbf8","bg2":"#f5f0e8","bg3":"#ede8dc",
+        "text":"#1a2332","text2":"#3a4a5e",
+        "accent":"#1e3a5f","accent2":"#253f6a",
+        "meta":"#7a8697","border":"#e4e9ef",
+        "font":"'Lora',serif",
+        "heading_font":"'Lora',serif",
+    },
+    "passive-wealth": {
+        "bg":"#faf8f2","bg2":"#f3f0e8","bg3":"#ece8dc",
+        "text":"#1c1a14","text2":"#4a4438",
+        "accent":"#1a4731","accent2":"#15803d",
+        "meta":"#7a7060","border":"#d8d0bc",
+        "font":"Lora,Georgia,serif",
+        "heading_font":"Lora,Georgia,serif",
+    },
+    "mochapoo-pets": {
+        "bg":"#fdf6e3","bg2":"#f8eedb","bg3":"#f0e4cc",
+        "text":"#1c1408","text2":"#4a3818",
+        "accent":"#b45309","accent2":"#92400e",
+        "meta":"#947040","border":"#e0cc9a",
+        "font":"Lora,Georgia,serif",
+        "heading_font":"Lora,Georgia,serif",
+    },
+    "sight-reading": {
+        "bg":"#0d0d0f","bg2":"#131317","bg3":"#1a1a20",
+        "text":"#e8e6df","text2":"#b8b6af",
+        "accent":"#c9a96e","accent2":"#b8965a",
+        "meta":"#7a7870","border":"#222228",
+        "font":"'Cormorant Garamond',serif",
+        "heading_font":"'Cormorant Garamond',serif",
+    },
+    "dalmend-home": {
+        "bg":"#fefcf7","bg2":"#f0ece2","bg3":"#e8e4da",
+        "text":"#1c1814","text2":"#484038",
+        "accent":"#c8a47e","accent2":"#b8905a",
+        "meta":"#8c8070","border":"#ddd8cc",
+        "font":"'Cormorant Garamond',Georgia,serif",
+        "heading_font":"'Cormorant Garamond',Georgia,serif",
+    },
+    "makeup-craft": {
+        "bg":"#ffffff","bg2":"#f8e5f0","bg3":"#f0d0e4",
+        "text":"#1a0d15","text2":"#4a303e",
+        "accent":"#d63384","accent2":"#be185d",
+        "meta":"#897a84","border":"#eddde8",
+        "font":"'Raleway',sans-serif",
+        "heading_font":"'Raleway',sans-serif",
+    },
+    "travelverge": {
+        "bg":"#0d1a1e","bg2":"#122028","bg3":"#1a2a34",
+        "text":"#e2f0ed","text2":"#a8c8c0",
+        "accent":"#0d9488","accent2":"#0f766e",
+        "meta":"#7aa89e","border":"#1e3340",
+        "font":"'Merriweather',serif",
+        "heading_font":"'Merriweather',serif",
+    },
+    "mashestate-construction": {
+        "bg":"#0c0d0e","bg2":"#131416","bg3":"#1c1e20",
+        "text":"#e8e6e0","text2":"#b8b6b0",
+        "accent":"#f97316","accent2":"#ea6c10",
+        "meta":"#8a8880","border":"#242628",
+        "font":"'Oswald',sans-serif",
+        "heading_font":"'Oswald',sans-serif",
+    },
+    "kanona-events": {
+        "bg":"#07060a","bg2":"#0e0c12","bg3":"#16141c",
+        "text":"#ede9e2","text2":"#b8b4aa",
+        "accent":"#c9a96e","accent2":"#b8965a",
+        "meta":"#7a7068","border":"rgba(255,255,255,.07)",
+        "font":"'Cormorant Garamond',Georgia,serif",
+        "heading_font":"'Cormorant Garamond',Georgia,serif",
+    },
+    "topproduct": {
+        "bg":"#fafaf8","bg2":"#f2f0ec","bg3":"#e8e5de",
+        "text":"#1a1a17","text2":"#4a4840",
+        "accent":"#dc2626","accent2":"#b91c1c",
+        "meta":"#706b60","border":"#e0dbd2",
+        "font":"'Inter',sans-serif",
+        "heading_font":"'Playfair Display',serif",
+    },
+}
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONTENT GENERATION
@@ -457,12 +735,64 @@ def get_today_topic(site, articles_count=0):
     return topics[articles_count % len(topics)]
 
 
+# ── Weekly "Top Finds" product roundup ────────────────────────────────────────
+# These commerce-leaning sites publish a weekly "top trending products" roundup.
+ROUNDUP_SITES   = {"topproduct", "mochapoo-pets", "newborn-iq", "dalmend-home", "supplement-verge"}
+ROUNDUP_CATEGORY = "Top Finds"
+
+
+def is_roundup_due(site, articles):
+    """True if this site should publish its weekly Top Finds roundup on this run.
+    Due when the site is a roundup site and no roundup has gone out in the last 6 days."""
+    if site.get("id") not in ROUNDUP_SITES:
+        return False
+    roundups = [a for a in articles if a.get("category") == ROUNDUP_CATEGORY]
+    if not roundups:
+        return True
+    latest = max((a.get("date_iso", "") for a in roundups), default="")
+    if not latest:
+        return True
+    try:
+        last = datetime.strptime(latest, "%Y-%m-%d")
+        return (datetime.now() - last).days >= 6
+    except Exception:
+        return True
+
+
+def roundup_topic(site):
+    """Topic line for the weekly roundup - phrased as a listicle so the article
+    generator naturally produces a ranked 'top products' roundup."""
+    week = datetime.now().strftime("%B %d, %Y")
+    return (f"The Week's Top 7: a ranked roundup of the most notable trending products "
+            f"and innovations worth knowing about right now ({week}), what makes each "
+            f"one stand out, and who each is best for")
+
+
 def should_post_today(site, articles):
     """
-    Warming mode: enforces a gradual ramp-up schedule for new domains.
-    Returns (ok: bool, reason: str).
-    Protects against Google's scaled-content and rapid-indexing signals.
+    Frequency + warming gate. Returns (ok: bool, reason: str).
+    Checks posts_per_week cap first, then warming ramp-up schedule.
     """
+    # posts_per_week: enforce a minimum gap between posts (1-6/week)
+    ppw = site.get("posts_per_week")
+    if ppw and int(ppw) < 7:
+        ppw = max(1, min(6, int(ppw)))
+        min_gap = max(1, round(7 / ppw))
+        if articles:
+            dates = []
+            for a in articles:
+                iso = a.get("date_iso", "")
+                if iso:
+                    try:
+                        dates.append(datetime.strptime(iso, "%Y-%m-%d"))
+                    except ValueError:
+                        pass
+            if dates:
+                last = max(dates)
+                gap = (datetime.now() - last).days
+                if gap < min_gap:
+                    return False, f"Frequency cap ({ppw}/week): last post {gap}d ago, min gap {min_gap}d"
+
     warming = site.get("warming", {})
     if not warming.get("enabled", False):
         return True, ""
@@ -541,7 +871,7 @@ def generate_client_topic(site, client_cfg, claude_client):
         resp = _retry(lambda: claude_client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=200,
-            messages=[{"role": "user", "content": f"""Site: {site.get('domain')} — {site.get('category')}
+            messages=[{"role": "user", "content": f"""Site: {site.get('domain')} - {site.get('category')}
 Persona: {site.get('persona', 'an expert')}
 
 Client to feature: {name}
@@ -585,7 +915,7 @@ Return ONLY a JSON array of strings, no markdown:
 
 
 def get_network_links(site, all_sites):
-    """Cross-network linking disabled — eliminates PBN footprint signal."""
+    """Cross-network linking disabled - eliminates PBN footprint signal."""
     return ""
 
 
@@ -614,7 +944,7 @@ def generate_article(topic, site, all_sites, client, global_prompt="", author_na
         name = client_context.get("business_name", "")
         desc = client_context.get("description", "")
         client_section = f"""
-SPONSORED FEATURE — Editorial integration:
+SPONSORED FEATURE - Editorial integration:
 Naturally work in a mention of {name} where it fits the article's narrative.
 Context: {desc}
 Rules: integrate as editorial recommendation or case example, not advertising copy. One mention is enough. Match the site's voice exactly. If the description includes a URL, link it with topic-relevant anchor text (e.g. "their backtesting platform" not "click here"). Mark the link rel="sponsored".
@@ -624,7 +954,7 @@ Rules: integrate as editorial recommendation or case example, not advertising co
     crosslink_section = ""
     if network_links:
         crosslink_section = f"""
-EDITORIAL CROSS-REFERENCE (optional — only if it genuinely serves the reader):
+EDITORIAL CROSS-REFERENCE (optional - only if it genuinely serves the reader):
 If the article naturally calls for a related resource and one of the sites below covers it well, you may include ONE brief mention with a plain link. Do not force this. A missing link is far better than an awkward one. Use descriptive anchor text (the specific topic, not the domain name). No tracking parameters.
 Potentially relevant sites:
 {network_links}
@@ -633,16 +963,16 @@ Potentially relevant sites:
     web_section = ""
     if web_context:
         web_section = f"""
-LIVE WEB CONTEXT — recent facts and developments to ground the article in current reality:
+LIVE WEB CONTEXT - recent facts and developments to ground the article in current reality:
 {web_context}
 Integrate relevant facts naturally. Do not copy text verbatim. Use as background intelligence only.
 """
 
     internal_link_section = ""
     if internal_links:
-        links_text = "\n".join([f"- /{a['slug']}/ — {a['title']}" for a in internal_links])
+        links_text = "\n".join([f"- /{a['slug']}/ - {a['title']}" for a in internal_links])
         internal_link_section = f"""
-INTERNAL LINKS — link to these older articles on this same site where topically relevant (builds topical authority):
+INTERNAL LINKS - link to these older articles on this same site where topically relevant (builds topical authority):
 {links_text}
 Use descriptive anchor text matching the linked article's angle. Only link when it genuinely helps the reader.
 """
@@ -650,14 +980,14 @@ Use descriptive anchor text matching the linked article's angle. Only link when 
     negative_section = ""
     if global_negative_prompt.strip():
         negative_section = f"""
-⚠ ABSOLUTE PROHIBITIONS — violating any of these will make the article unpublishable:
+⚠ ABSOLUTE PROHIBITIONS - violating any of these will make the article unpublishable:
 {global_negative_prompt.strip()}
 """
 
     prompt = f"""You are {site.get("persona", "an expert writer")}. Write under your own name and perspective.
 {negative_section}
 
-Write an original, expert-level article for {site.get("domain", "")} — a publication covering {site.get("category", "")}.
+Write an original, expert-level article for {site.get("domain", "")} - a publication covering {site.get("category", "")}.
 
 TOPIC: {topic}
 
@@ -668,53 +998,88 @@ YOUR VOICE: {site.get("tone", "")}
 {crosslink_section}
 {web_section}
 {internal_link_section}
-EXPERIENCE, EXPERTISE, AUTHORITY, TRUST — non-negotiable:
+EXPERIENCE, EXPERTISE, AUTHORITY, TRUST - non-negotiable:
 • Reference your direct first-hand experience at least twice: "When I tested...", "I've seen this pattern...", "In my work with..."
-• Include at least one specific data point, study result, or industry figure with a year: "According to [source], in [year]..." or "Research from [year] found..."
-• Take a clear editorial position. Don't just summarise — argue for something.
+• Include at least 2 specific data points or study results. For each one, cite the real source inline as an HTML link: <a href="https://source-url.com" target="_blank" rel="noopener">Source Name</a>. Use real, existing URLs  -  government reports, academic journals, major publications, official org sites.
+• Take a clear editorial position. Don't just summarise - argue for something.
 • Acknowledge complexity honestly: mention one thing that doesn't always work, one common misconception, or one area of genuine debate.
 • Think: what would {site.get("persona","an expert")} say about {topic} that a generic article wouldn't? Write that.
 
-HUMAN WRITING — strict rules:
+SOURCES - mandatory:
+• Every statistic, study finding, or external claim must have an inline hyperlink to the real source in the HTML content.
+• Format: <a href="https://real-url.com/path" target="_blank" rel="noopener">Publisher or Study Name</a>
+• Use real URLs that actually exist: CDC, WHO, NIH, Statista, Forbes, Reuters, Bloomberg, academic papers, government data, official industry reports.
+• Do NOT invent URLs. If unsure of exact URL, link to the homepage of the authoritative source (e.g. https://www.cdc.gov).
+• Also return all sources in the "sources" JSON field as a list of objects.
+
+HUMAN WRITING - strict rules (burstiness and perplexity):
+• Talk directly to the reader. Use "you" and "your" constantly. Be close, warm, and direct, not formal.
 • Contractions throughout: it's, don't, can't, we're, they've, I'd
-• Vary sentence length deliberately. Short ones hit hard. Longer ones build.
-• Start 2–3 sentences with And, But, or So.
+• BURSTINESS IS MANDATORY: Vary sentence length deliberately and aggressively. Some sentences are three words. Others unspool across multiple clauses and build on each other until the reader reaches the idea fully formed. Mix both freely throughout every paragraph.
+• Use "..." naturally in 2-3 places to create a pause or tension: "And here's the thing... it doesn't always work that way."
+• Start 2-3 sentences with And, But, or So. It's fine. It sounds human.
 • Specific numbers even when approximate: "around 340,000 accounts", "somewhere between $180 and $400"
-• Natural hedges: "arguably", "in most cases", "at least in my experience"
-• NEVER use em-dash (—) or double-hyphen (--). Restructure or use a comma.
-• BANNED (AI fingerprints): delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, it's important to note, furthermore, in conclusion, in summary, to summarize
+• Natural hedges: "arguably", "in most cases", "at least in my experience", "most of the time"
+• ABSOLUTE RULE: NEVER use em-dash ( - ) or the character - anywhere. Not once. Replace with a comma, period, or restructure entirely.
+• Also never use double-hyphen (--). Use a comma instead.
+• BANNED AI FINGERPRINTS - forbidden words and phrases (use NONE of these):
+  delve, delve into, tapestry, in the fast-paced world of, navigating the landscape,
+  it's important to note, a testament to, unlock, unleash, elevate, foster, facilitate,
+  in the realm of, game-changing, harness the power, leverage (as a verb metaphor),
+  cutting-edge, comprehensive, robust, furthermore, in conclusion, in summary,
+  to summarize, it's worth noting, underscore, pivotal, paramount, multifaceted,
+  ever-evolving, at the end of the day, in today's world, digital age, journey (metaphor),
+  revolutionize, streamline, ecosystem (metaphor), synergy, holistic, groundbreaking
+
+ANSWER INTENT FIRST:
+• The introduction must directly answer or address the searcher's core question in the first 2 sentences. Then use the rest to go deeper.
+• Do NOT open with background history, definitions, or unnecessary context. Hook immediately.
+
+E-E-A-T - PERSONAL ANECDOTE (mandatory, write it fully):
+• In the first or second paragraph of the intro, write a short, specific, believable first-person anecdote as {author_name}.
+• Do NOT use a placeholder. Write the actual story, 2-3 sentences, as if it happened to you.
+• Make it specific and grounded: include a real-feeling detail (a product name, a number, a place, a time of day, a feeling). Vague anecdotes don't count.
+• It should feel like something only someone who actually did this would know.
+• Example style: "I remember testing three different versions of this back in 2023, and the one that actually stuck was nothing like what the reviews said. It took about six weeks to notice any real difference, and even then it was subtle."
 
 KEYWORD DISCIPLINE:
-• Use the main topic keyword naturally, the way a real writer would — not repeated mechanically.
+• Use the main topic keyword naturally, the way a real writer would, not repeated mechanically.
 • Never stuff related keywords into a sentence where they sound unnatural.
 • Write for the reader first, search engines will follow.
 
 STRUCTURE:
-• Title: contains the main keyword naturally, signals your angle
-• Introduction: two paragraphs — hook with a specific observation or fact, then state your argument
-• 4 body sections with descriptive H2 headings (not generic ones like "Introduction" or "Conclusion")
-• 2–3 substantive paragraphs per section — not bullets, not padding
-• Conclusion: one actionable takeaway the reader can use today
+• Title: contains the main keyword naturally, signals a clear angle or opinion
+• Introduction: hook immediately with a specific fact, observation, or counterintuitive statement. No fluff.
+• 4 body sections with descriptive H2 headings (never use "Introduction", "Conclusion", "Overview", "Summary")
+• Use H3 subheadings within sections where it helps break up dense content
+• Bold key takeaways and critical phrases readers might skim for
+• 2-3 substantive paragraphs per section, not padding
+• Mix in 1-2 bullet lists where they genuinely aid scanning (not as filler)
+• Conclusion: one concrete actionable takeaway the reader can use today
 • Target: {word_target} words. Do not pad.
 
-Return ONLY valid JSON — no markdown, no extra text:
+Return ONLY valid JSON - no markdown, no extra text:
 {{
   "title": "Full article title",
-  "meta_description": "Under 155 characters — compelling summary with keyword",
+  "meta_description": "Under 155 characters - compelling summary with keyword",
   "slug": "url-friendly-slug-max-6-words",
   "author": "{author_name}",
-  "intro": "<p>First paragraph...</p>",
-  "intro2": "<p>Second paragraph...</p>",
+  "intro": "<p>Hook sentence that directly addresses the question. Then 2-3 sentences of a specific personal anecdote written in first person as the author - a real-feeling story with a specific detail (a date, a product, a number, a place). Then the argument or thesis.</p>",
+  "intro2": "<p>Second paragraph with deeper context or a specific observation that sets up the body sections.</p>",
   "sections": [
-    {{"heading": "Specific descriptive heading", "content": "<p>Para 1</p><p>Para 2</p><p>Para 3</p>"}},
-    {{"heading": "Specific descriptive heading", "content": "<p>...</p>"}},
-    {{"heading": "Specific descriptive heading", "content": "<p>...</p>"}},
-    {{"heading": "Specific descriptive heading", "content": "<p>...</p>"}}
+    {{"heading": "Specific descriptive H2 heading", "content": "<p>Para 1</p><p>Para 2</p><p>Para 3</p>"}},
+    {{"heading": "Specific descriptive H2 heading", "content": "<p>...</p>"}},
+    {{"heading": "Specific descriptive H2 heading", "content": "<p>...</p>"}},
+    {{"heading": "Specific descriptive H2 heading", "content": "<p>...</p>"}}
   ],
-  "conclusion": "<p>Conclusion paragraph...</p>",
+  "conclusion": "<p>One concrete actionable takeaway the reader can apply today. No summary of what was already said.</p>",
   "image_query": "3-word Pexels search term",
-  "image_alt": "Descriptive alt text that describes what the image shows — NOT the article title. Be specific (e.g. 'trader watching multiple monitor screens showing crypto charts'). Under 120 chars.",
-  "outbound_links": ["domain.com"]
+  "image_alt": "Descriptive alt text that describes what the image shows - NOT the article title. Be specific (e.g. 'trader watching multiple monitor screens showing crypto charts'). Under 120 chars.",
+  "outbound_links": ["domain.com"],
+  "sources": [
+    {{"name": "Source Name", "url": "https://real-url.com"}},
+    {{"name": "Another Source", "url": "https://another-real-url.com"}}
+  ]
 }}"""
 
     response = _retry(lambda: client.messages.create(
@@ -728,22 +1093,106 @@ Return ONLY valid JSON — no markdown, no extra text:
     return json.loads(text)
 
 
-def fetch_image(query, pexels_key):
-    if not pexels_key:
-        return None, None
-    try:
-        r = requests.get(
-            "https://api.pexels.com/v1/search",
-            headers={"Authorization": pexels_key},
-            params={"query": query, "per_page": 8, "orientation": "landscape"},
-            timeout=10
-        )
-        photos = r.json().get("photos", [])
-        if photos:
-            photo = random.choice(photos)
-            return photo["src"]["large2x"], photo["photographer"]
-    except Exception as e:
-        print(f"  Pexels fetch failed: {e}")
+def _pexels_photo_id(url):
+    """Extract numeric photo ID from a Pexels URL for dedup comparison."""
+    import re as _re
+    m = _re.search(r'/photos/(\d+)/', url or "")
+    return m.group(1) if m else url
+
+
+def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, sources=None, exclude_urls=None):
+    """Fetch image from configured sources in order: pexels → unsplash → none.
+    exclude_urls: set of already-used image URLs - will skip photos matching those IDs.
+    """
+    sources = sources or (["pexels", "unsplash"] if unsplash_key else ["pexels"])
+    excluded_ids = {_pexels_photo_id(u) for u in (exclude_urls or set())} if exclude_urls else set()
+
+    for source in sources:
+        if source == "pexels" and pexels_key:
+            try:
+                # Try up to 4 pages to find an unused photo
+                pages_tried = set()
+                for attempt in range(4):
+                    page = random.randint(1, 8)
+                    while page in pages_tried:
+                        page = random.randint(1, 8)
+                    pages_tried.add(page)
+
+                    r = requests.get(
+                        "https://api.pexels.com/v1/search",
+                        headers={"Authorization": pexels_key},
+                        params={"query": query, "per_page": 20, "orientation": "landscape", "page": page},
+                        timeout=10
+                    )
+                    photos = r.json().get("photos", [])
+                    if not photos and page > 1:
+                        r = requests.get(
+                            "https://api.pexels.com/v1/search",
+                            headers={"Authorization": pexels_key},
+                            params={"query": query, "per_page": 20, "orientation": "landscape", "page": 1},
+                            timeout=10
+                        )
+                        photos = r.json().get("photos", [])
+
+                    # Filter out already-used photos
+                    fresh = [p for p in photos if _pexels_photo_id(p["src"]["large2x"]) not in excluded_ids]
+                    if fresh:
+                        photo = random.choice(fresh)
+                        return photo["src"]["large2x"], photo["photographer"]
+                    if photos and not excluded_ids:
+                        # No exclusion filter - just pick any
+                        photo = random.choice(photos)
+                        return photo["src"]["large2x"], photo["photographer"]
+
+                # All pages had duplicates - pick any from last fetch as last resort
+                if photos:
+                    photo = random.choice(photos)
+                    print(f"  Image dedup: no fresh photo found for '{query}', reusing best available")
+                    return photo["src"]["large2x"], photo["photographer"]
+            except Exception as e:
+                print(f"  Pexels fetch failed: {e}")
+
+        elif source == "unsplash" and unsplash_key:
+            try:
+                r = requests.get(
+                    "https://api.unsplash.com/photos/random",
+                    params={"query": query, "count": 8, "orientation": "landscape", "client_id": unsplash_key},
+                    timeout=10
+                )
+                photos = r.json()
+                if isinstance(photos, list) and photos:
+                    fresh = [p for p in photos if p["urls"]["regular"] not in (exclude_urls or set())]
+                    photo = random.choice(fresh) if fresh else random.choice(photos)
+                    user = photo.get("user", {}).get("name", "Unsplash")
+                    return photo["urls"]["regular"], user
+            except Exception as e:
+                print(f"  Unsplash fetch failed: {e}")
+
+        elif source == "replicate" and replicate_key:
+            try:
+                import time as _t
+                headers = {"Authorization": f"Token {replicate_key}", "Content-Type": "application/json"}
+                r = requests.post(
+                    "https://api.replicate.com/v1/predictions",
+                    headers=headers,
+                    json={"version": "ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4",
+                          "input": {"prompt": f"professional photo {query}, high quality, photography"}},
+                    timeout=15
+                )
+                pred = r.json()
+                pred_id = pred.get("id")
+                if pred_id:
+                    for _ in range(15):
+                        _t.sleep(3)
+                        r2 = requests.get(f"https://api.replicate.com/v1/predictions/{pred_id}", headers=headers, timeout=10)
+                        out = r2.json()
+                        if out.get("status") == "succeeded" and out.get("output"):
+                            return out["output"][0], "AI Generated / Replicate"
+                        elif out.get("status") in ("failed", "canceled"):
+                            break
+            except Exception as e:
+                print(f"  Replicate generate failed: {e}")
+
     return None, None
 
 
@@ -786,28 +1235,75 @@ img{{max-width:100%;display:block;height:auto}}
 <body>"""
 
 
-def _foot(domain, category, t, signup_url=""):
-    signup_html = ""
+def _seo_meta(title, description, canonical="", og_image="", author="", date_iso=""):
+    """Build SEO / Open Graph / JSON-LD <head> tags for an article page.
+    Returned as a raw tag string for layout_shell.wrap_page(head_meta=...)."""
+    if not canonical:
+        return ""
+    og_img = (f'<meta property="og:image" content="{og_image}">'
+              f'<meta name="twitter:image" content="{og_image}">' if og_image else "")
+    tags = (f'<link rel="canonical" href="{canonical}">'
+            f'<meta property="og:title" content="{title}">'
+            f'<meta property="og:description" content="{description}">'
+            f'<meta property="og:url" content="{canonical}">'
+            f'<meta property="og:type" content="article">'
+            f'<meta name="twitter:card" content="summary_large_image">'
+            f'<meta name="twitter:title" content="{title}">'
+            f'<meta name="twitter:description" content="{description}">{og_img}')
+    if author:
+        img_prop = f',"image":"{og_image}"' if og_image else ""
+        st = title.replace('"', '\\"')
+        sd = description.replace('"', '\\"')
+        sa = author.replace('"', '\\"')
+        tags += (f'<script type="application/ld+json">{{"@context":"https://schema.org",'
+                 f'"@type":"Article","headline":"{st}","description":"{sd}",'
+                 f'"author":{{"@type":"Person","name":"{sa}"}},'
+                 f'"datePublished":"{date_iso}","url":"{canonical}"{img_prop}}}</script>')
+    return tags
+
+
+def _foot(domain, category, t, signup_url="", depth=0):
+    prefix = "../" if depth > 0 else "./"
+    home   = "../" if depth > 0 else "./"
+    hov    = t["accent"]
+    nl_html = ""
     if signup_url:
-        signup_html = f"""<div style="background:{t["bg3"]};border-radius:10px;padding:28px 24px;margin:0 auto 32px;max-width:480px;border:1px solid {t["border"]}">
-<p style="font-size:15px;font-weight:700;color:{t["text"]};margin-bottom:6px">Stay in the loop</p>
-<p style="font-size:12px;color:{t["meta"]};margin-bottom:16px">New articles delivered to your inbox. No spam, ever.</p>
-<a href="{signup_url}" target="_blank" rel="noopener" style="display:inline-block;background:{t["accent"]};color:#fff;padding:11px 26px;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none">Subscribe free →</a>
+        nl_html = f"""<div style="background:{t["bg3"]};border-radius:10px;padding:32px 24px;margin:0 auto 40px;max-width:520px;border:1px solid {t["border"]}">
+<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:10px">Newsletter</div>
+<p style="font-size:15px;font-weight:700;color:{t["text"]};margin:0 0 6px">Stay in the loop</p>
+<p style="font-size:12px;color:{t["meta"]};margin:0 0 18px">New articles delivered to your inbox. No spam, ever.</p>
+<a href="{signup_url}" target="_blank" rel="noopener" style="display:inline-block;background:{t["accent"]};color:{t["bg"]};padding:11px 28px;border-radius:7px;font-size:13px;font-weight:700;text-decoration:none">Subscribe free</a>
 </div>"""
-    return f"""<footer style="background:{t["bg2"]};border-top:1px solid {t["border"]};padding:40px 24px;text-align:center;font-size:13px;color:{t["meta"]};margin-top:60px">
-{signup_html}<p>&copy; {datetime.now().year} {domain} &nbsp;&middot;&nbsp; {category}</p>
-<p style="margin-top:6px;font-size:11px">For informational purposes only. Not financial or investment advice.</p>
-<p style="margin-top:6px;font-size:11px"><a href="/about/" style="color:{t["meta"]}">About</a> &nbsp;&middot;&nbsp; <a href="/contact/" style="color:{t["meta"]}">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy/" style="color:{t["meta"]}">Privacy Policy</a></p>
+    lnk = f"color:{t['meta']};text-decoration:none;transition:color .15s"
+    return f"""<footer style="background:{t["bg2"]};border-top:3px solid {t["accent"]};padding:52px 24px 32px;text-align:center;font-size:13px;color:{t["meta"]};margin-top:60px">
+{nl_html}<div style="font-size:16px;font-weight:700;color:{t["text"]};margin-bottom:4px">{domain}</div>
+<p style="font-size:12px;color:{t["meta"]};margin:0 0 24px">{category}</p>
+<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:6px 20px;margin-bottom:20px;font-size:12px">
+  <a href="{home}" style="{lnk}" onmouseover="this.style.color='{hov}'" onmouseout="this.style.color='{t['meta']}'">Home</a>
+  <a href="{prefix}about/" style="{lnk}" onmouseover="this.style.color='{hov}'" onmouseout="this.style.color='{t['meta']}'">About</a>
+  <a href="{prefix}privacy/" style="{lnk}" onmouseover="this.style.color='{hov}'" onmouseout="this.style.color='{t['meta']}'">Privacy Policy</a>
+  <a href="{prefix}terms/" style="{lnk}" onmouseover="this.style.color='{hov}'" onmouseout="this.style.color='{t['meta']}'">Terms</a>
+  <a href="{prefix}sms/" style="{lnk}" onmouseover="this.style.color='{hov}'" onmouseout="this.style.color='{t['meta']}'">SMS Policy</a>
+</div>
+<p style="font-size:11px;color:{t["meta"]};margin:0 0 8px">For informational purposes only. Not financial, legal, or professional advice.</p>
+<p style="font-size:10px;color:{t["meta"]};margin:0">&copy; {datetime.now().year} {domain}</p>
 </footer></body></html>"""
 
 
-def get_author_name(site):
-    """Pick the article author. Uses random selection if configured."""
+def get_author_name(site, settings=None):
+    """Pick the article author. Site-level names take priority; falls back to global_authors."""
     names = site.get("author_names", [])
-    if site.get("use_random_author") and names:
-        return random.choice(names)
     if names:
+        if site.get("use_random_author"):
+            return random.choice(names)
         return names[0]
+    # Global authors pool (set in network-config.json settings.global_authors)
+    if settings:
+        global_names = settings.get("global_authors", [])
+        if global_names and settings.get("use_random_global_author"):
+            return random.choice(global_names)
+        if global_names:
+            return global_names[0]
     persona = site.get("persona", "")
     if persona:
         return persona.split(",")[0].strip()
@@ -855,9 +1351,10 @@ def generate_sitemap(site, articles):
 
 def generate_404_page(site, t):
     domain   = site["domain"]
+    name     = _site_name(site)
     category = site["category"]
     signup   = site.get("signup_url", "")
-    return (_head(f"Page Not Found — {domain}", f"The page you were looking for doesn't exist on {domain}", t, f"""
+    return (_head(f"Page Not Found - {name}", f"The page you were looking for doesn't exist on {name}", t, f"""
 .wrap{{max-width:680px;margin:120px auto;padding:0 24px;text-align:center}}
 h1{{font-size:80px;font-weight:900;color:{t["accent"]};margin-bottom:8px;line-height:1}}
 h2{{font-size:24px;font-weight:700;margin-bottom:12px}}
@@ -866,9 +1363,9 @@ p{{color:{t["text2"]};margin-bottom:28px;line-height:1.7}}
 <div class="wrap">
   <h1>404</h1>
   <h2>Page not found</h2>
-  <p>The article or page you were looking for doesn't exist on {domain}.<br>It may have been moved or the URL might have a typo.</p>
-  <a href="/" style="display:inline-block;background:{t["accent"]};color:#fff;padding:12px 28px;border-radius:7px;font-size:14px;font-weight:700;text-decoration:none">← Back to Homepage</a>
-</div>""" + _foot(domain, category, t, signup))
+  <p>The article or page you were looking for doesn't exist on {name}.<br>It may have been moved or the URL might have a typo.</p>
+  <a href="https://{domain}/" style="display:inline-block;background:{t["accent"]};color:#fff;padding:12px 28px;border-radius:7px;font-size:14px;font-weight:700;text-decoration:none">← Back to {name}</a>
+</div>""" + _foot(name, category, t, signup, depth=1))
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -902,59 +1399,61 @@ def _giscus(site):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# STATIC PAGES — About, Contact, Privacy, ads.txt
+# STATIC PAGES - About, Contact, Privacy, ads.txt
 # ─────────────────────────────────────────────────────────────────────────────
 
 def generate_ads_txt(publisher_id):
-    """AdSense ads.txt — replace pub-XXXX with your publisher ID."""
+    """AdSense ads.txt - replace pub-XXXX with your publisher ID."""
     return f"google.com, {publisher_id}, DIRECT, f08c47fec0942fa0\n"
 
 
 def generate_about_page(site, t):
     domain   = site["domain"]
+    name     = _site_name(site)
     category = site["category"]
     persona  = site.get("persona", "our editorial team")
     author   = persona.split(",")[0].strip()
     bio      = persona
     signup   = site.get("signup_url", "")
-    return (_head(f"About — {domain}", f"About the team behind {domain}", t, f"""
+    return (_head(f"About - {name}", f"About the team behind {name}", t, f"""
 .wrap{{max-width:760px;margin:60px auto;padding:0 24px 80px}}
 h1{{font-size:32px;font-weight:800;margin-bottom:12px}}
 p{{color:{t["text2"]};line-height:1.8;margin-bottom:16px}}
 .hdr{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:18px 24px;display:flex;justify-content:space-between;align-items:center}}
 """) + f"""
-<div class="hdr"><a href="/" style="font-size:18px;font-weight:700;color:{t["accent"]}">{domain}</a>
+<div class="hdr"><a href="../" style="font-size:18px;font-weight:700;color:{t["accent"]}">{name}</a>
 <span style="font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:1px">{category}</span></div>
 <div class="wrap">
-<p style="font-size:12px;color:{t["meta"]}"><a href="/" style="color:{t["meta"]}">← Home</a></p>
-<h1>About {domain}</h1>
-<p>{domain} is an independent publication covering {category.lower()}. Our goal is to cut through hype and deliver analysis that's actually useful — grounded in real experience, not press releases.</p>
+<p style="font-size:12px;color:{t["meta"]}"><a href="../" style="color:{t["meta"]}">← Home</a></p>
+<h1>About {name}</h1>
+<p>{name} is an independent publication covering {category.lower()}. Our goal is to cut through hype and deliver analysis that's actually useful - grounded in real experience, not press releases.</p>
 <h2 style="font-size:20px;font-weight:700;margin:32px 0 12px">Who writes here</h2>
 <p>{bio}.</p>
 <p>Every article on this site is written with a single standard: would this be useful to someone who actually works in this space? If not, it doesn't get published.</p>
 <h2 style="font-size:20px;font-weight:700;margin:32px 0 12px">Editorial policy</h2>
-<p>We do not accept paid placements disguised as editorial content. Sponsored content is clearly labelled. We may earn affiliate commissions on some product recommendations — these never influence our editorial judgement.</p>
+<p>We do not accept paid placements disguised as editorial content. Sponsored content is clearly labelled. We may earn affiliate commissions on some product recommendations - these never influence our editorial judgement.</p>
 <h2 style="font-size:20px;font-weight:700;margin:32px 0 12px">Contact</h2>
-<p>For editorial questions, corrections, or partnership enquiries: <a href="/contact/">contact us here</a>.</p>
-</div>""" + _foot(domain, category, t, signup))
+<p>For editorial questions, corrections, or partnership enquiries: <a href="../contact/">contact us here</a>.</p>
+</div>""" + _foot(name, category, t, signup, depth=1))
 
 
 def generate_contact_page(site, t):
     domain   = site["domain"]
+    name     = _site_name(site)
     category = site["category"]
     signup   = site.get("signup_url", "")
     email    = f"hello@{domain}"
-    return (_head(f"Contact — {domain}", f"Get in touch with {domain}", t, f"""
+    return (_head(f"Contact - {name}", f"Get in touch with {name}", t, f"""
 .wrap{{max-width:680px;margin:60px auto;padding:0 24px 80px}}
 h1{{font-size:32px;font-weight:800;margin-bottom:12px}}
 p{{color:{t["text2"]};line-height:1.8;margin-bottom:16px}}
 .hdr{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:18px 24px;display:flex;justify-content:space-between;align-items:center}}
 .cbox{{background:{t["bg2"]};border:1px solid {t["border"]};border-radius:10px;padding:28px;margin-top:28px}}
 """) + f"""
-<div class="hdr"><a href="/" style="font-size:18px;font-weight:700;color:{t["accent"]}">{domain}</a>
+<div class="hdr"><a href="../" style="font-size:18px;font-weight:700;color:{t["accent"]}">{name}</a>
 <span style="font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:1px">{category}</span></div>
 <div class="wrap">
-<p style="font-size:12px;color:{t["meta"]}"><a href="/" style="color:{t["meta"]}">← Home</a></p>
+<p style="font-size:12px;color:{t["meta"]}"><a href="../" style="color:{t["meta"]}">← Home</a></p>
 <h1>Contact</h1>
 <p>We read every message. Typical response time is 2-3 business days.</p>
 <div class="cbox">
@@ -965,25 +1464,26 @@ p{{color:{t["text2"]};line-height:1.8;margin-bottom:16px}}
 <p style="font-size:14px;font-weight:700;color:{t["text"]};margin-bottom:6px">Sponsored content & partnerships</p>
 <p style="margin:0;font-size:13px;color:{t["text2"]}">We consider clearly-labelled sponsored articles and newsletter sponsorships. Include your URL, target audience, and proposed topic. We decline anything that doesn't match our editorial standards.</p>
 </div>
-</div>""" + _foot(domain, category, t, signup))
+</div>""" + _foot(name, category, t, signup, depth=1))
 
 
 def generate_privacy_page(site, t):
     domain   = site["domain"]
+    name     = _site_name(site)
     category = site["category"]
     signup   = site.get("signup_url", "")
     year     = datetime.now().year
-    return (_head(f"Privacy Policy — {domain}", f"Privacy policy for {domain}", t, f"""
+    return (_head(f"Privacy Policy - {name}", f"Privacy policy for {name}", t, f"""
 .wrap{{max-width:760px;margin:60px auto;padding:0 24px 80px}}
 h1{{font-size:32px;font-weight:800;margin-bottom:12px}}
 h2{{font-size:18px;font-weight:700;margin:32px 0 10px}}
 p{{color:{t["text2"]};line-height:1.8;margin-bottom:14px}}
 .hdr{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:18px 24px;display:flex;justify-content:space-between;align-items:center}}
 """) + f"""
-<div class="hdr"><a href="/" style="font-size:18px;font-weight:700;color:{t["accent"]}">{domain}</a>
+<div class="hdr"><a href="../" style="font-size:18px;font-weight:700;color:{t["accent"]}">{domain}</a>
 <span style="font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:1px">{category}</span></div>
 <div class="wrap">
-<p style="font-size:12px;color:{t["meta"]}"><a href="/" style="color:{t["meta"]}">← Home</a></p>
+<p style="font-size:12px;color:{t["meta"]}"><a href="../" style="color:{t["meta"]}">← Home</a></p>
 <h1>Privacy Policy</h1>
 <p style="font-size:13px;color:{t["meta"]}">Last updated: {datetime.now().strftime("%B %Y")}</p>
 <h2>Information we collect</h2>
@@ -998,12 +1498,12 @@ p{{color:{t["text2"]};line-height:1.8;margin-bottom:14px}}
 <p>You can unsubscribe from our newsletter at any time using the link in any email we send. To request deletion of your personal data, email us at <a href="mailto:hello@{domain}">hello@{domain}</a>.</p>
 <h2>Contact</h2>
 <p>Questions about this policy: <a href="mailto:hello@{domain}">hello@{domain}</a></p>
-<p style="font-size:12px;color:{t["meta"]};margin-top:32px">&copy; {year} {domain}</p>
-</div>""" + _foot(domain, category, t, signup))
+<p style="font-size:12px;color:{t["meta"]};margin-top:32px">&copy; {year} {name}</p>
+</div>""" + _foot(name, category, t, signup, depth=1))
 
 
 def push_static_pages_if_missing(site, t, github_token):
-    """Push About, Contact, Privacy, and ads.txt to GitHub — only if they don't already exist."""
+    """Push About, Contact, Privacy, and ads.txt to GitHub - only if they don't already exist."""
     repo    = site["repo"]
     headers = {"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3+json"}
 
@@ -1018,9 +1518,9 @@ def push_static_pages_if_missing(site, t, github_token):
     if publisher_id:
         pages["ads.txt"] = generate_ads_txt(publisher_id)
 
-    # CNAME — required for GitHub Pages custom domain
+    # CNAME - only push for real custom domains (not github.io URLs)
     domain = site.get("domain", "")
-    if domain:
+    if domain and "github.io" not in domain:
         pages["CNAME"] = domain + "\n"
 
     for path, content in pages.items():
@@ -1031,6 +1531,16 @@ def push_static_pages_if_missing(site, t, github_token):
         else:
             print(f"  Static file exists (skipping): /{path}")
 
+    # Delete CNAME if domain is github.io (remove old custom domain config)
+    if domain and "github.io" in domain:
+        cname_check = requests.get(f"https://api.github.com/repos/{repo}/contents/CNAME", headers=headers, timeout=10)
+        if cname_check.status_code == 200:
+            sha = cname_check.json().get("sha", "")
+            if sha:
+                requests.delete(f"https://api.github.com/repos/{repo}/contents/CNAME",
+                    headers=headers, json={"message": "Remove custom domain CNAME", "sha": sha}, timeout=10)
+                print(f"  CNAME deleted (site uses github.io URL)")
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # BACKLINK CONTENT GENERATOR
@@ -1039,7 +1549,7 @@ def push_static_pages_if_missing(site, t, github_token):
 def generate_backlink_content(article, site, client):
     """
     For each published article, generate ready-to-post content for
-    Reddit, LinkedIn, and Quora — saved to backlinks/{slug}.md in the repo.
+    Reddit, LinkedIn, and Quora - saved to backlinks/{slug}.md in the repo.
     These create real backlinks from high-DA platforms without cross-linking
     your own network sites to each other.
     """
@@ -1057,15 +1567,15 @@ Site category: {category}
 Author persona: {persona}
 Article intro: {intro}
 
-Return ONLY valid JSON — no markdown, no extra text:
+Return ONLY valid JSON - no markdown, no extra text:
 {{
   "reddit": {{
     "subreddits": ["3 relevant subreddits without r/ prefix, pick based on the category"],
-    "title": "Reddit post title — should be a question or insight, not the article title",
+    "title": "Reddit post title - should be a question or insight, not the article title",
     "body": "Reddit post body, 150-200 words. Write as a genuine community member sharing an insight. Include the URL naturally at the end as 'Full breakdown here: {url}'. No self-promotion tone."
   }},
   "linkedin": {{
-    "hook": "First line — a bold statement or surprising fact (under 20 words, no emoji)",
+    "hook": "First line - a bold statement or surprising fact (under 20 words, no emoji)",
     "body": "LinkedIn post body, 120-150 words. 3-4 short paragraphs. Share a genuine insight from the article. End with: Read the full analysis → {url}",
     "hashtags": ["5 relevant hashtags without # prefix"]
   }},
@@ -1096,7 +1606,7 @@ Return ONLY valid JSON — no markdown, no extra text:
     subs = ", ".join([f"r/{s}" for s in reddit.get("subreddits", [])])
     tags = " ".join([f"#{h}" for h in linkedin.get("hashtags", [])])
 
-    md = f"""# Backlink content — {title}
+    md = f"""# Backlink content - {title}
 **URL:** {url}
 **Generated:** {datetime.now().strftime("%Y-%m-%d")}
 
@@ -1152,78 +1662,120 @@ _AVATAR_COLORS = [
 ]
 
 def generate_comments(article, site, client, count=None):
-    """Generate realistic reader comments for an article using Claude Haiku."""
+    """Generate realistic reader comments + author replies using Claude Haiku."""
     comment_cfg = site.get("comment_schedule", {})
     if count is None:
-        lo = int(comment_cfg.get("initial_count", 4))
-        hi = int(comment_cfg.get("max_count", 15))  # honour config max, no silent override
-        hi = max(lo, min(hi, 50))  # clamp to a sane absolute ceiling of 50
+        lo = max(4, int(comment_cfg.get("initial_count", 4)))
+        hi = max(lo, min(int(comment_cfg.get("max_count", 15)), 50))
         count = random.randint(lo, hi)
 
-    title   = article["title"]
-    intro   = re.sub(r"<[^>]+>", "", article.get("intro", ""))[:300]
-    persona = site.get("persona", "an expert")
+    count = max(count, 4)  # always at least 4 reader comments
+
+    title    = article["title"]
+    intro    = re.sub(r"<[^>]+>", "", article.get("intro", ""))[:300]
+    persona  = site.get("persona", "an expert")
     category = site.get("category", "")
+    author_name = get_author_name(site)
+    # Extract author title from persona field
+    persona_parts = persona.split(",", 1)
+    author_title  = persona_parts[1].strip() if len(persona_parts) > 1 else category
 
-    prompt = f"""Generate {count} realistic reader comments for this blog article. They must feel like genuine readers — a mix of people who agree, ask follow-up questions, share their own experience, or respectfully push back.
+    prompt = f"""Generate {count} realistic reader comments for this blog article, then 2 author replies to specific readers' questions.
 
-Article: {title}
+Article: "{title}"
 Category: {category}
 Intro: {intro}
-Author persona: {persona}
+Author: {author_name} ({author_title})
 
-Rules:
-- Use varied first names (mix of common English, international names) with initials or numbers sometimes (e.g. "james_k", "Priya M.", "user_4892")
-- Comments range from 1 sentence to 4 sentences
-- Some ask specific questions about the article content
-- Some share a personal anecdote or experience
-- Some mention a specific detail from the article they found useful
-- 1-2 can be mildly skeptical or ask for clarification
-- NO generic praise like "Great article!" alone — all comments must be specific
-- Dates spread over the 4 weeks after publish
+Reader comment rules:
+- Varied names (English, international, some with initials like "james_k", "Priya M.")
+- 1-4 sentences each. Mix: agree, share experience, ask specific follow-up question, mild skepticism
+- 2-3 must ask a direct question that the author would naturally reply to
+- NO generic "Great article!" - all must reference something specific in the content
+- Dates spread 1-21 days after publish
 
-Return ONLY a JSON array — no markdown, no extra text:
-[
-  {{
-    "name": "display name",
-    "text": "comment text",
-    "days_after_publish": 0-28,
-    "likes": 0-23
-  }}
-]"""
+Author reply rules:
+- Author replies to exactly 2 of the questions asked by readers
+- Reply is warm, specific, helpful (2-3 sentences). Signs off as "{author_name}"
+- reply_to field must match the reader's name exactly
+
+Return ONLY valid JSON - no markdown:
+{{
+  "comments": [
+    {{"name": "display name", "text": "comment", "days_after_publish": 1-21, "likes": 0-18}}
+  ],
+  "author_replies": [
+    {{"reply_to": "reader name", "text": "author reply text", "days_after_reply": 1-3}}
+  ]
+}}"""
 
     try:
         resp = _retry(lambda: client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=2000,
+            max_tokens=2500,
             messages=[{"role": "user", "content": prompt}]
         ))
         raw = resp.content[0].text.strip()
         raw = re.sub(r'^```json\s*', '', raw)
         raw = re.sub(r'\s*```$', '', raw)
-        comments_raw = json.loads(raw)
+        data = json.loads(raw)
+        comments_raw = data.get("comments", data) if isinstance(data, dict) else data
+        replies_raw  = data.get("author_replies", []) if isinstance(data, dict) else []
     except Exception as e:
         print(f"  Comment generation failed: {e}")
         return []
 
-    pub_date = datetime.now()
+    pub_date   = datetime.now()
+    author_initials = "".join(w[0].upper() for w in author_name.split()[:2]) or "AU"
     result = []
+
+    # Index reader comments by name for reply lookup
+    name_to_idx = {}
     for i, c in enumerate(comments_raw[:count]):
         name     = c.get("name", "Reader")
         initials = "".join(w[0].upper() for w in re.findall(r'\w+', name)[:2]) or "?"
         color    = _AVATAR_COLORS[i % len(_AVATAR_COLORS)]
-        days     = int(c.get("days_after_publish", random.randint(0, 14)))
+        days     = int(c.get("days_after_publish", random.randint(1, 14)))
         cdate    = pub_date + timedelta(days=days)
-        result.append({
-            "id":      f"c{i+1}{random.randint(100,999)}",
-            "name":    name,
-            "initials": initials,
-            "color":   color,
-            "date_iso": cdate.strftime("%Y-%m-%d"),
+        comment  = {
+            "id":           f"c{i+1}{random.randint(100,999)}",
+            "name":         name,
+            "initials":     initials,
+            "color":        color,
+            "date_iso":     cdate.strftime("%Y-%m-%d"),
             "date_display": cdate.strftime("%b %d, %Y"),
-            "text":    c.get("text", ""),
-            "likes":   int(c.get("likes", random.randint(0, 8))),
+            "text":         c.get("text", ""),
+            "likes":        int(c.get("likes", random.randint(0, 8))),
+            "replies":      [],
+        }
+        name_to_idx[name] = len(result)
+        result.append(comment)
+
+    # Attach author replies
+    for r in replies_raw[:2]:
+        reply_to = r.get("reply_to", "")
+        idx = name_to_idx.get(reply_to)
+        if idx is None:
+            # Fallback: attach to first comment with a question mark
+            for j, cm in enumerate(result):
+                if "?" in cm["text"]:
+                    idx = j
+                    break
+        if idx is None:
+            continue
+        parent_date = datetime.strptime(result[idx]["date_iso"], "%Y-%m-%d")
+        rdate = parent_date + timedelta(days=int(r.get("days_after_reply", 1)))
+        result[idx]["replies"].append({
+            "name":         author_name,
+            "initials":     author_initials,
+            "color":        "#3ecf8e",
+            "is_author":    True,
+            "date_iso":     rdate.strftime("%Y-%m-%d"),
+            "date_display": rdate.strftime("%b %d, %Y"),
+            "text":         r.get("text", ""),
+            "likes":        random.randint(3, 12),
         })
+
     result.sort(key=lambda x: x["date_iso"])
     return result
 
@@ -1298,48 +1850,177 @@ def maybe_add_scheduled_comments(site, articles, client, github_token):
             _retry(lambda: requests.put(url, headers=headers, json=payload, timeout=15))
             print(f"  Scheduled comments added: {len(new_c)} → /{slug}/")
             updated += 1
-        # If no comments.json yet, skip — it'll be seeded on next full publish
+        # If no comments.json yet, skip - it'll be seeded on next full publish
     if updated:
         print(f"  Scheduled comment updates: {updated} articles")
 
 
 def _comments_section_js(t=None):
-    """Inline JS + HTML for rendering comments.json in article pages."""
+    """Enhanced comments: displays comments.json + user can add new comments + like/heart."""
     border_color = (t["border"] if t else "rgba(128,128,128,.2)")
     meta_color   = (t["meta"]   if t else "#888")
     text2_color  = (t["text2"]  if t else "inherit")
+    accent       = (t["accent"] if t else "#3ecf8e")
+    bg2          = (t["bg2"]    if t else "#f9f9f9")
+    bg           = (t["bg"]     if t else "#ffffff")
+    text_color   = (t["text"]   if t else "#111")
     PALETTE = ["#3ecf8e","#38bdf8","#a78bfa","#f59e0b","#ef4444",
                "#10b981","#f97316","#ec4899","#6366f1","#14b8a6"]
     palette_js = str(PALETTE)
-    return f"""<div id="comments-section" style="max-width:760px;margin:60px auto 0;padding:0 24px">
-<h2 style="font-size:18px;font-weight:700;margin-bottom:20px" id="comments-heading">Comments</h2>
-<div id="comments-list"></div>
+    return f"""
+<div id="comments-section" style="max-width:760px;margin:64px auto 0;padding:0 24px 48px">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <h2 id="comments-heading" style="font-size:21px;font-weight:800;color:{text_color};margin:0;letter-spacing:-.4px">Discussion</h2>
+  </div>
+  <div id="comment-form" style="display:flex;gap:14px;margin-bottom:32px;scroll-margin-top:90px">
+    <div style="width:44px;height:44px;border-radius:50%;background:{accent};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;line-height:1">+</div>
+    <div style="flex:1;min-width:0;background:{bg2};border:1px solid {border_color};border-radius:16px;padding:16px 16px 12px;transition:border-color .2s" id="c-box">
+      <textarea id="c-text" placeholder="Add your thoughts to the discussion..." rows="3" style="width:100%;padding:4px 2px;border:none;font-size:15px;background:transparent;color:{text_color};outline:none;font-family:inherit;resize:vertical;min-height:62px;display:block;box-sizing:border-box" onfocus="document.getElementById('c-box').style.borderColor='{accent}'" onblur="document.getElementById('c-box').style.borderColor='{border_color}'"></textarea>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid {border_color}">
+        <input id="c-name" placeholder="Your name" style="flex:1;min-width:120px;padding:9px 13px;border:1px solid {border_color};border-radius:100px;font-size:13px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box">
+        <input id="c-email" placeholder="Email (private)" style="flex:1;min-width:120px;padding:9px 13px;border:1px solid {border_color};border-radius:100px;font-size:13px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box">
+        <button onclick="submitComment()" style="background:{accent};color:#fff;border:none;border-radius:100px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s,opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Post</button>
+      </div>
+      <div id="c-success" style="display:none;margin-top:12px;padding:9px 13px;background:{accent}18;border:1px solid {accent}44;border-radius:10px;font-size:13px;color:{accent};font-weight:600">Posted. Thanks for joining the discussion.</div>
+    </div>
+  </div>
+  <div id="comments-list"></div>
 </div>
 <script>
 (function(){{
   var PALETTE={palette_js};
-  function initials(name){{return(name||'?').split(/\\s+/).map(function(w){{return w[0];}}).join('').slice(0,2).toUpperCase();}}
-  function color(name,i){{return PALETTE[(name.charCodeAt(0)+i)%PALETTE.length];}}
-  var el=document.getElementById('comments-list');
-  var heading=document.getElementById('comments-heading');
-  fetch('./comments.json').then(function(r){{return r.ok?r.json():[];}}).then(function(cs){{
-    if(!cs||!cs.length){{el.innerHTML='<p style="font-size:13px;color:{meta_color}">No comments yet.</p>';return;}}
-    heading.textContent='Comments ('+cs.length+')';
-    el.innerHTML=cs.map(function(c,i){{
-      var bg=c.color||color(c.name||'',i);
-      var ini=c.initials||initials(c.name||'?');
-      var date=c.date_display||c.date||c.date_iso||'';
-      return '<div style="display:flex;gap:12px;padding:16px 0;border-bottom:1px solid {border_color}">'+
-        '<div style="width:38px;height:38px;border-radius:50%;background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0">'+ini+'</div>'+
-        '<div style="flex:1"><div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">'+
-          '<span style="font-size:13px;font-weight:700">'+c.name+'</span>'+
-          '<span style="font-size:11px;color:{meta_color}">'+date+'</span></div>'+
-          '<p style="font-size:14px;line-height:1.7;margin:0 0 8px;color:{text2_color}">'+c.text+'</p>'+
-          '<span style="font-size:11px;color:{meta_color}">&#9829; '+(c.likes||0)+'</span></div></div>';
+  var ACCENT='{accent}';
+  var BG2='{bg2}';
+  var META='{meta_color}';
+  var BRD='{border_color}';
+  var TXT2='{text2_color}';
+  var TXT='{text_color}';
+  var BG='{bg}';
+  var slug=location.pathname.split('/').filter(Boolean).join('-')||'home';
+
+  function initials(n){{return(n||'?').split(/\\s+/).map(function(w){{return w[0];}}).join('').slice(0,2).toUpperCase();}}
+  function clr(n,i){{return PALETTE[((n||'').charCodeAt(0)+(i||0))%PALETTE.length];}}
+  function getLikes(){{try{{return JSON.parse(localStorage.getItem('lk_'+slug)||'{{}}');}}catch(e){{return{{}};}}}}
+  function saveLikes(l){{try{{localStorage.setItem('lk_'+slug,JSON.stringify(l));}}catch(e){{}}}}
+  function getLocal(){{try{{return JSON.parse(localStorage.getItem('uc_'+slug)||'[]');}}catch(e){{return[];}}}}
+  function saveLocal(cs){{try{{localStorage.setItem('uc_'+slug,JSON.stringify(cs));}}catch(e){{}}}}
+
+  function heartSVG(liked){{
+    return '<svg width="13" height="13" viewBox="0 0 24 24" fill="'+(liked?ACCENT:'none')+'" stroke="'+ACCENT+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+  }}
+
+  function renderComment(c,i,isReply,likes){{
+    var key=c._id||(c.name||'')+'_'+i;
+    var liked=likes[key]||false;
+    var cnt=(c.likes||0)+(liked?1:0);
+    var bg=c.color||clr(c.name||'',i);
+    var ini=c.initials||initials(c.name||'?');
+    var date=c.date_display||c.date||c.date_iso||'';
+    var authorBadge=c.is_author?'<span style="font-size:10px;font-weight:700;background:'+ACCENT+'22;color:'+ACCENT+';border:1px solid '+ACCENT+'55;border-radius:100px;padding:1px 8px;margin-left:6px">Author</span>':'';
+    var youBadge=c._user?'<span style="font-size:10px;font-weight:700;background:#3b82f622;color:#3b82f6;border:1px solid #3b82f655;border-radius:100px;padding:1px 8px;margin-left:6px">You</span>':'';
+    var replyStyle=isReply?'margin-left:44px;margin-top:10px;padding:12px 16px;background:'+BG2+';border-radius:10px;border-left:3px solid '+ACCENT+';':'padding:18px 0;border-bottom:1px solid '+BRD+';';
+    var sz=isReply?'30':'40';
+    return '<div style="display:flex;gap:12px;'+replyStyle+'">'+
+      '<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:'+(isReply?'11':'13')+'px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:-.5px">'+ini+'</div>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:6px">'+
+          '<span style="font-size:14px;font-weight:700;color:'+TXT+'">'+c.name+'</span>'+authorBadge+youBadge+
+          '<span style="font-size:11px;color:'+META+'">'+date+'</span></div>'+
+        '<p style="font-size:14px;line-height:1.7;margin:0 0 10px;color:'+TXT2+'">'+c.text+'</p>'+
+        '<button onclick="toggleLike(\''+key+'\',this)" style="background:none;border:1px solid '+(liked?ACCENT:BRD)+';border-radius:100px;padding:4px 12px;cursor:pointer;font-size:12px;color:'+(liked?ACCENT:META)+';display:inline-flex;align-items:center;gap:2px;font-family:inherit;transition:all .15s">'+
+          heartSVG(liked)+'<span class="lc">'+cnt+'</span>'+
+        '</button>'+
+      '</div></div>';
+  }}
+
+  window.toggleLike=function(key,btn){{
+    var likes=getLikes();
+    likes[key]=!likes[key];
+    var liked=likes[key];
+    saveLikes(likes);
+    btn.style.borderColor=liked?ACCENT:BRD;
+    btn.style.color=liked?ACCENT:META;
+    var svg=btn.querySelector('svg');if(svg)svg.setAttribute('fill',liked?ACCENT:'none');
+    var lc=btn.querySelector('.lc');
+    if(lc){{var n=parseInt(lc.textContent||'0');lc.textContent=liked?n+1:Math.max(0,n-1);}}
+  }};
+
+  window.submitComment=function(){{
+    var name=(document.getElementById('c-name').value||'').trim();
+    var text=(document.getElementById('c-text').value||'').trim();
+    var nameEl=document.getElementById('c-name');
+    var textEl=document.getElementById('c-text');
+    nameEl.style.borderColor=BRD;textEl.style.borderColor=BRD;
+    if(!name){{nameEl.style.borderColor='#ef4444';nameEl.focus();return;}}
+    if(!text){{textEl.style.borderColor='#ef4444';textEl.focus();return;}}
+    var now=new Date();
+    var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var ds=mo[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+    var c={{name:name,text:text,date_display:ds,likes:0,_user:true,_id:'u_'+Date.now()}};
+    var local=getLocal();local.push(c);saveLocal(local);
+    nameEl.value='';document.getElementById('c-email').value='';textEl.value='';
+    var succ=document.getElementById('c-success');
+    succ.style.display='block';setTimeout(function(){{succ.style.display='none';}},4000);
+    rerender();
+  }};
+
+  var allComments=[];
+
+  function rerender(){{
+    var el=document.getElementById('comments-list');
+    var heading=document.getElementById('comments-heading');
+    var likes=getLikes();
+    var combined=allComments.concat(getLocal());
+    if(!combined.length){{
+      el.innerHTML='<p style="font-size:14px;color:'+META+';padding:20px 0">No comments yet  -  be the first to share your thoughts below.</p>';
+      if(heading)heading.textContent='Comments (0)';return;
+    }}
+    var total=combined.reduce(function(s,c){{return s+1+(c.replies?c.replies.length:0);}},0);
+    if(heading)heading.textContent='Comments ('+total+')';
+    el.innerHTML=combined.map(function(c,i){{
+      var html=renderComment(c,i,false,likes);
+      if(c.replies&&c.replies.length){{html+=c.replies.map(function(r,j){{return renderComment(r,j,true,likes);}}).join('');}}
+      return html;
     }}).join('');
-  }}).catch(function(){{el.style.display='none';heading.style.display='none';}});
+  }}
+
+  var el=document.getElementById('comments-list');
+  if(el){{
+    fetch('./comments.json').then(function(r){{return r.ok?r.json():[];}}).then(function(cs){{
+      allComments=cs||[];rerender();
+    }}).catch(function(){{allComments=[];rerender();}});
+  }}
 }})();
 </script>"""
+
+
+def _site_name(site):
+    """Clean display name  -  uses config name field if set, otherwise derives from ID."""
+    if site.get("name"):
+        return site["name"]
+    return site["id"].replace("-", " ").replace("_", " ").title()
+
+
+def _author_card(site, author_name, t):
+    """Author bio card shown below article body  -  uses persona for niche-specific bio."""
+    persona      = site.get("persona", "")
+    parts        = persona.split(",", 1)
+    author_title = parts[1].strip() if len(parts) > 1 else site.get("category", "Expert")
+    initials     = "".join(w[0].upper() for w in author_name.split()[:2]) or "AU"
+    accent       = t.get("accent", "#3ecf8e")
+    # Bio sentence: "Sarah Mills is a certified financial planner who retired at 41..."
+    bio = f"{author_name} is a {author_title}." if author_title else f"Expert in {site.get('category','').lower()}."
+    return f"""<div style="max-width:760px;margin:48px auto 0;padding:0 24px">
+  <div style="border:1px solid {t["border"]};border-radius:12px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start;background:{t["bg2"]}">
+    <div style="width:54px;height:54px;border-radius:50%;background:{accent};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0;letter-spacing:-1px">{initials}</div>
+    <div style="flex:1">
+      <div style="font-size:14px;font-weight:700;color:{t["text"]};margin-bottom:2px">{author_name}</div>
+      <div style="font-size:12px;color:{accent};margin-bottom:8px;font-weight:600">{author_title}</div>
+      <p style="font-size:13px;color:{t["text2"]};line-height:1.65;margin:0">{bio}</p>
+    </div>
+  </div>
+</div>"""
 
 
 def _card(a, t, img_height="180px"):
@@ -1348,9 +2029,9 @@ def _card(a, t, img_height="180px"):
   {img}
   <div style="padding:18px">
     <div style="font-size:11px;color:{t["meta"]};margin-bottom:6px">{a.get("date","")}</div>
-    <a href="/{a["slug"]}/" style="font-size:16px;font-weight:700;color:{t["text"]};line-height:1.3;display:block;margin-bottom:8px">{a["title"]}</a>
+    <a href="{a["slug"]}/" style="font-size:16px;font-weight:700;color:{t["text"]};line-height:1.3;display:block;margin-bottom:8px">{a["title"]}</a>
     <p style="font-size:13px;color:{t["text2"]};line-height:1.55;margin-bottom:12px">{a.get("meta_description","")[:100]}...</p>
-    <a href="/{a["slug"]}/" style="font-size:13px;font-weight:600;color:{t["accent"]}">Read →</a>
+    <a href="{a["slug"]}/" style="font-size:13px;font-weight:600;color:{t["accent"]}">Read →</a>
   </div>
 </div>"""
 
@@ -1372,17 +2053,19 @@ def homepage_newsfeed(site, articles, t):
         feat_html = f"""
         {img}
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]};margin-bottom:8px">{site["category"]}</div>
-        <a href="/{featured["slug"]}/" style="font-size:clamp(20px,3vw,28px);font-weight:700;line-height:1.25;color:{t["text"]};display:block;margin-bottom:12px">{featured["title"]}</a>
+        <a href="{featured["slug"]}/" style="font-size:clamp(20px,3vw,28px);font-weight:700;line-height:1.25;color:{t["text"]};display:block;margin-bottom:12px;text-decoration:none">{featured["title"]}</a>
         <p style="font-size:15px;color:{t["text2"]};line-height:1.6;margin-bottom:16px">{featured.get("meta_description","")}</p>
-        <a href="/{featured["slug"]}/" style="font-size:13px;font-weight:700;color:{t["accent"]}">Read full article →</a>
+        <a href="{featured["slug"]}/" style="font-size:13px;font-weight:700;color:{t["accent"]}">Read full article →</a>
         <div style="font-size:11px;color:{t["meta"]};margin-top:8px">{featured.get("date","")}</div>"""
+    else:
+        feat_html = f'<div style="background:{t["bg3"]};border-radius:12px;padding:48px;text-align:center;border:1px solid {t["border"]}"><div style="font-size:36px;margin-bottom:16px">✍</div><h2 style="font-size:22px;font-weight:700;color:{t["text"]};margin-bottom:8px">Articles coming soon</h2><p style="font-size:14px;color:{t["text2"]}">Expert content publishes regularly  -  check back soon.</p></div>'
 
     side_html = "".join([f"""
     <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid {t["border"]}">
       {'<img src="' + a["image"] + '" alt="' + a["title"] + '" loading="lazy" style="width:72px;height:58px;object-fit:cover;border-radius:4px;flex-shrink:0">' if a.get("image") else f'<div style="width:72px;height:58px;background:{t["bg3"]};border-radius:4px;flex-shrink:0"></div>'}
       <div>
         <div style="font-size:11px;color:{t["meta"]};margin-bottom:3px">{a.get("date","")}</div>
-        <a href="/{a["slug"]}/" style="font-size:14px;font-weight:600;color:{t["text"]};line-height:1.35">{a["title"]}</a>
+        <a href="{a["slug"]}/" style="font-size:14px;font-weight:600;color:{t["text"]};line-height:1.35">{a["title"]}</a>
       </div>
     </div>""" for a in sidebar])
 
@@ -1390,17 +2073,27 @@ def homepage_newsfeed(site, articles, t):
 
     css = f"""
 .wrap{{max-width:1100px;margin:0 auto;padding:0 24px}}
-.top-bar{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:0}}
-.logo{{font-size:22px;font-weight:800;color:{t["accent"]}}}
+.masthead{{background:linear-gradient(135deg,{t["bg2"]} 0%,{t["bg3"]} 100%);border-bottom:3px solid {t["accent"]};padding:36px 0 28px;text-align:center}}
+.masthead-name{{font-size:clamp(34px,6vw,58px);font-weight:900;letter-spacing:-2px;color:{t["text"]};font-family:{t["heading_font"]};line-height:1}}
+.masthead-cat{{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:{t["accent"]};margin-top:10px}}
+.masthead-rule{{width:40px;height:2px;background:{t["accent"]};margin:14px auto 0}}
+.nav-strip{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:0}}
 .split{{display:grid;grid-template-columns:2fr 1fr;gap:36px;margin:40px 0 48px}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}}
 @media(max-width:780px){{.split{{grid-template-columns:1fr}}}}"""
 
-    return (_head(f"{site['domain']} — {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
-<div class="top-bar">
-  <div class="wrap" style="padding:16px 24px;display:flex;justify-content:space-between;align-items:center">
-    <a href="/" class="logo">{site["domain"]}</a>
-    <span style="font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:2px">{site["category"]}</span>
+    return (_head(f"{_site_name(site)} - {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
+<div class="masthead">
+  <div class="wrap">
+    <a href="./" class="masthead-name" style="text-decoration:none;display:block">{_site_name(site)}</a>
+    <div class="masthead-cat">{site["category"]}</div>
+    <div class="masthead-rule"></div>
+  </div>
+</div>
+<div class="nav-strip">
+  <div class="wrap" style="padding:10px 24px;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:12px;color:{t["meta"]}">{len(articles)} articles published</span>
+    <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["text2"]}">Science-Based &nbsp;·&nbsp; Expert Reviews</span>
   </div>
 </div>
 <div class="wrap">
@@ -1414,7 +2107,7 @@ def homepage_newsfeed(site, articles, t):
   {'<h2 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:' + t["text2"] + ';margin-bottom:20px">More Articles</h2>' if grid_html else ""}
   <div class="grid">{grid_html}</div>
 </div>
-""" + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+""" + _foot(_site_name(site), site["category"], t, site.get("signup_url", "")))
 
 
 def homepage_magazine(site, articles, t):
@@ -1425,28 +2118,33 @@ def homepage_magazine(site, articles, t):
 
     feat_html = ""
     if featured:
-        img = f'<div style="background:url({featured["image"]}) center/cover;height:420px;border-radius:12px;position:relative;overflow:hidden"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 60%)"></div><div style="position:absolute;bottom:0;left:0;right:0;padding:28px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:{t["accent"]}">{site["category"]}</span><br><a href="/{featured["slug"]}/" style="font-size:clamp(22px,4vw,34px);font-weight:700;color:#fff;line-height:1.2;display:block;margin:8px 0">{featured["title"]}</a><span style="font-size:13px;color:rgba(255,255,255,.7)">{featured.get("date","")}</span></div></div>' if featured.get("image") else f'<div style="background:{t["bg3"]};border-radius:12px;padding:40px"><h2 style="font-size:30px;font-weight:700">{featured["title"]}</h2></div>'
-        feat_html = img
+        if featured.get("image"):
+            feat_html = f'<div style="background:url({featured["image"]}) center/cover;height:420px;border-radius:12px;position:relative;overflow:hidden"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,transparent 60%)"></div><div style="position:absolute;bottom:0;left:0;right:0;padding:28px"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:{t["accent"]}">{site["category"]}</span><br><a href="{featured["slug"]}/" style="font-size:clamp(22px,4vw,34px);font-weight:700;color:#fff;line-height:1.2;display:block;margin:8px 0;text-decoration:none">{featured["title"]}</a><p style="font-size:14px;color:rgba(255,255,255,.75);margin:6px 0 10px;line-height:1.5">{featured.get("meta_description","")[:120]}</p><a href="{featured["slug"]}/" style="font-size:13px;font-weight:700;color:{t["accent"]}">Read article →</a></div></div>'
+        else:
+            feat_html = f'<div style="background:{t["bg3"]};border-radius:12px;padding:44px 40px;border:1px solid {t["border"]}"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:{t["accent"]};margin-bottom:12px">{site["category"]}</div><a href="{featured["slug"]}/" style="font-size:clamp(24px,4vw,36px);font-weight:800;color:{t["text"]};line-height:1.2;display:block;margin-bottom:14px;text-decoration:none">{featured["title"]}</a><p style="font-size:15px;color:{t["text2"]};line-height:1.6;margin-bottom:18px">{featured.get("meta_description","")}</p><a href="{featured["slug"]}/" style="font-size:13px;font-weight:700;color:{t["accent"]}">Read article →</a></div>'
+    else:
+        feat_html = f'<div style="background:{t["bg3"]};border-radius:12px;padding:44px;text-align:center;border:1px solid {t["border"]}"><div style="font-size:32px;margin-bottom:16px">✍</div><h2 style="font-size:20px;font-weight:700;color:{t["text"]};margin-bottom:8px">First articles coming soon</h2><p style="font-size:14px;color:{t["text2"]}">New expert content publishes regularly. Check back soon.</p></div>'
 
     grid_html = "".join([_card(a, t) for a in rest])
 
     css = f"""
 .wrap{{max-width:1100px;margin:0 auto;padding:0 24px}}
-.hdr{{background:{t["bg"]};border-bottom:1px solid {t["border"]};padding:20px 0;text-align:center}}
-.logo{{font-size:28px;font-weight:800;color:{t["accent"]};display:block;margin-bottom:4px}}
-.tagline{{font-size:12px;color:{t["meta"]};text-transform:uppercase;letter-spacing:2px}}
+.hdr{{background:linear-gradient(160deg,{t["bg2"]} 0%,{t["bg3"]} 100%);border-bottom:3px solid {t["accent"]};padding:44px 0 36px;text-align:center}}
+.logo{{font-size:clamp(38px,6vw,60px);font-weight:900;letter-spacing:-2px;color:{t["text"]};display:block;margin-bottom:8px;font-family:{t["heading_font"]}}}
+.tagline{{font-size:11px;color:{t["accent"]};text-transform:uppercase;letter-spacing:3px;font-weight:700}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px;margin-top:40px}}"""
 
-    return (_head(f"{site['domain']} — {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
+    return (_head(f"{_site_name(site)} - {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
 <div class="hdr">
-  <a href="/" class="logo">{site["domain"]}</a>
+  <a href="./" class="logo">{_site_name(site)}</a>
   <span class="tagline">{site["category"]}</span>
+  <div style="width:36px;height:2px;background:{t["accent"]};margin:16px auto 0"></div>
 </div>
 <div class="wrap">
   <div style="margin:40px 0">{feat_html}</div>
   <div class="grid">{grid_html}</div>
 </div>
-""" + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+""" + _foot(_site_name(site), site["category"], t, site.get("signup_url", "")))
 
 
 def homepage_editorial(site, articles, t):
@@ -1460,9 +2158,9 @@ def homepage_editorial(site, articles, t):
         <div style="font-size:11px;color:{t["accent"]};margin-top:4px">{site["category"]}</div>
       </div>
       <div>
-        <a href="/{a["slug"]}/" style="font-size:clamp(18px,2.5vw,24px);font-weight:700;color:{t["text"]};line-height:1.3;display:block;margin-bottom:10px">{a["title"]}</a>
+        <a href="{a["slug"]}/" style="font-size:clamp(18px,2.5vw,24px);font-weight:700;color:{t["text"]};line-height:1.3;display:block;margin-bottom:10px">{a["title"]}</a>
         <p style="font-size:14px;color:{t["text2"]};line-height:1.6;margin-bottom:10px">{a.get("meta_description","")}</p>
-        <a href="/{a["slug"]}/" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]}">Read →</a>
+        <a href="{a["slug"]}/" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]}">Read →</a>
       </div>
     </div>""" for a in recent])
 
@@ -1473,15 +2171,15 @@ def homepage_editorial(site, articles, t):
 .cat{{font-size:12px;color:{t["meta"]};text-transform:uppercase;letter-spacing:2px;margin-top:6px}}
 @media(max-width:600px){{div[style*="grid-template-columns:120px"]{{grid-template-columns:1fr!important}}}}"""
 
-    return (_head(f"{site['domain']} — {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
+    return (_head(f"{_site_name(site)} - {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
 <div class="wrap">
   <div class="hdr">
-    <a href="/" class="logo">{site["domain"]}</a>
+    <a href="./" class="logo">{_site_name(site)}</a>
     <div class="cat">{site["category"]}</div>
   </div>
   {rows}
 </div>
-""" + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+""" + _foot(_site_name(site), site["category"], t, site.get("signup_url", "")))
 
 
 def homepage_cards(site, articles, t):
@@ -1498,10 +2196,10 @@ def homepage_cards(site, articles, t):
 .cat-tag{{display:inline-block;background:{t["accent"]};color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border-radius:100px;margin-bottom:10px}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;margin-top:36px}}"""
 
-    return (_head(f"{site['domain']} — {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
+    return (_head(f"{_site_name(site)} - {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
 <div class="hdr">
   <div class="wrap" style="display:flex;justify-content:space-between;align-items:center">
-    <a href="/" class="logo">{site["domain"]}</a>
+    <a href="./" class="logo">{_site_name(site)}</a>
     <span style="font-size:12px;color:{t["meta"]}">{site["category"]}</span>
   </div>
 </div>
@@ -1512,7 +2210,7 @@ def homepage_cards(site, articles, t):
   </div>
   <div class="grid">{cards}</div>
 </div>
-""" + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+""" + _foot(_site_name(site), site["category"], t, site.get("signup_url", "")))
 
 
 def homepage_portfolio(site, articles, t):
@@ -1525,8 +2223,8 @@ def homepage_portfolio(site, articles, t):
       <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 60%,transparent 100%)"></div>
       <div style="position:absolute;bottom:0;left:0;right:0;padding:20px">
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:{t["accent"]};margin-bottom:6px">{a.get("date","")}</div>
-        <a href="/{a["slug"]}/" style="font-size:16px;font-weight:700;color:#fff;line-height:1.3;display:block">{a["title"]}</a>
-        <a href="/{a["slug"]}/" style="font-size:12px;color:rgba(255,255,255,.7);margin-top:8px;display:inline-block">Read →</a>
+        <a href="{a["slug"]}/" style="font-size:16px;font-weight:700;color:#fff;line-height:1.3;display:block">{a["title"]}</a>
+        <a href="{a["slug"]}/" style="font-size:12px;color:rgba(255,255,255,.7);margin-top:8px;display:inline-block">Read →</a>
       </div>
     </div>""" for a in recent])
 
@@ -1538,15 +2236,122 @@ body{{background:{t["bg"]}}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}}
 @media(max-width:600px){{.grid{{grid-template-columns:1fr}}}}"""
 
-    return (_head(f"{site['domain']} — {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
+    return (_head(f"{_site_name(site)} - {site['category']}", f"Expert insights on {site['category'].lower()}", t, css) + f"""
 <div class="wrap">
   <div class="hdr" style="display:flex;justify-content:space-between;align-items:center">
-    <a href="/" class="logo">{site["domain"]}</a>
+    <a href="./" class="logo">{_site_name(site)}</a>
     <span style="font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:2px">{site["category"]}</span>
   </div>
   <div class="grid">{items}</div>
 </div>
-""" + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+""" + _foot(_site_name(site), site["category"], t, site.get("signup_url", "")))
+
+
+def homepage_bbc(site, articles, t):
+    """BBC News-style: centered logo, category nav bar, 3-col layout (left cards | center hero | right text list)."""
+    recent   = list(reversed(articles[-12:]))
+    hero     = recent[0] if recent else None
+    left     = recent[1:3]   # 2 image cards on the left
+    right    = recent[3:8]   # up to 5 text-only items on the right
+    below    = recent[8:]    # grid of remaining cards below
+
+    def _time_ago(date_str):
+        if not date_str:
+            return ""
+        try:
+            from datetime import datetime as dt
+            d = dt.strptime(date_str, "%Y-%m-%d")
+            days = (dt.now() - d).days
+            if days == 0:   return "Today"
+            if days == 1:   return "1 day ago"
+            return f"{days} days ago"
+        except Exception:
+            return date_str
+
+    def _left_card(a):
+        img = f'<img src="{a["image"]}" alt="{a.get("image_alt",a["title"])}" loading="lazy" style="width:100%;height:160px;object-fit:cover;display:block">' if a.get("image") else f'<div style="width:100%;height:160px;background:{t["bg3"]}"></div>'
+        return f"""<div style="background:{t["bg2"]};border:1px solid {t["border"]};overflow:hidden;margin-bottom:16px">
+  {img}
+  <div style="padding:14px 16px 16px">
+    <a href="{a["slug"]}/" style="font-size:16px;font-weight:700;line-height:1.35;color:{t["text"]};display:block;margin-bottom:8px;text-decoration:none">{a["title"]}</a>
+    <p style="font-size:13px;color:{t["text2"]};line-height:1.55;margin:0 0 10px">{(a.get("meta_description",""))[:110]}</p>
+    <span style="font-size:11px;color:{t["meta"]}">{_time_ago(a.get("date",""))}</span>
+    <span style="font-size:11px;color:{t["meta"]};margin-left:10px;padding-left:10px;border-left:1px solid {t["border"]}">{site["category"]}</span>
+  </div>
+</div>"""
+
+    def _right_item(a, divider=True):
+        sep = f'<hr style="border:none;border-top:1px solid {t["border"]};margin:14px 0">' if divider else ""
+        indicator = "▶ " if a.get("image") else ""
+        return f"""{sep}<div>
+  <a href="{a["slug"]}/" style="font-size:15px;font-weight:700;line-height:1.35;color:{t["text"]};display:block;margin-bottom:6px;text-decoration:none">{indicator}{a["title"]}</a>
+  <p style="font-size:13px;color:{t["text2"]};line-height:1.5;margin:0 0 8px">{(a.get("meta_description",""))[:100]}</p>
+  <span style="font-size:11px;color:{t["meta"]}">{_time_ago(a.get("date",""))}</span>
+  <span style="font-size:11px;color:{t["meta"]};margin-left:10px;padding-left:10px;border-left:1px solid {t["border"]}">{site["category"]}</span>
+</div>"""
+
+    hero_html = ""
+    if hero:
+        hero_img = f'<img src="{hero["image"]}" alt="{hero.get("image_alt",hero["title"])}" loading="lazy" style="width:100%;height:360px;object-fit:cover;display:block;margin-bottom:0">' if hero.get("image") else f'<div style="width:100%;height:360px;background:{t["bg3"]}"></div>'
+        hero_html = f"""<div>
+  {hero_img}
+  <div style="padding:18px 20px 20px;background:{t["bg2"]};border:1px solid {t["border"]};border-top:none">
+    <a href="{hero["slug"]}/" style="font-size:clamp(20px,2.5vw,28px);font-weight:700;line-height:1.25;color:{t["text"]};display:block;margin-bottom:10px;text-decoration:none">{hero["title"]}</a>
+    <p style="font-size:15px;color:{t["text2"]};line-height:1.6;margin:0 0 12px">{hero.get("meta_description","")}</p>
+    <span style="font-size:12px;color:{t["meta"]}">{_time_ago(hero.get("date",""))}</span>
+    <span style="font-size:12px;color:{t["meta"]};margin-left:12px;padding-left:12px;border-left:1px solid {t["border"]}">{site["category"]}</span>
+  </div>
+</div>"""
+
+    left_html  = "".join([_left_card(a) for a in left])
+    right_html = "".join([_right_item(a, i > 0) for i, a in enumerate(right)])
+    below_html = "".join([_card(a, t, "150px") for a in below])
+
+    # Category nav tabs (static  -  just show category variations)
+    cats = ["Home", "Latest", site["category"], "About"]
+    nav_tabs = "".join([
+        f'<a href="{"" if c == "Home" else c.lower().replace(" ","") + "/"}." style="padding:14px 18px;font-size:14px;font-weight:{"700" if c == "Home" else "400"};color:{"#fff" if c == "Home" else t["text2"]};text-decoration:none;display:inline-block;{"border-bottom:3px solid " + t["accent"] + ";" if c == "Home" else "border-bottom:3px solid transparent;"};transition:all .15s;white-space:nowrap">{c}</a>'
+        for c in cats
+    ])
+
+    css = f"""
+* {{ box-sizing: border-box; margin: 0; padding: 0 }}
+body {{ font-family: {t["body_font"]}; background: {t["bg"]}; color: {t["text"]}; }}
+a {{ color: inherit; }}
+.wrap {{ max-width: 1180px; margin: 0 auto; padding: 0 20px }}
+.top-ident {{ background: {t["bg2"]}; border-bottom: 1px solid {t["border"]}; padding: 12px 20px; text-align: center }}
+.logo-block {{ font-size: clamp(28px,4vw,46px); font-weight: 900; letter-spacing: -1px; color: {t["text"]} }}
+.cat-nav {{ background: {t["bg2"]}; border-bottom: 2px solid {t["border"]}; overflow-x: auto; white-space: nowrap }}
+.cat-nav a:hover {{ color: {t["text"]}; border-bottom-color: {t["accent"]} !important }}
+.hero-grid {{ display: grid; grid-template-columns: 220px 1fr 260px; gap: 0; border: 1px solid {t["border"]}; margin: 20px 0 }}
+.hero-left {{ border-right: 1px solid {t["border"]}; padding: 0 }}
+.hero-center {{ border-right: 1px solid {t["border"]}; }}
+.hero-right {{ padding: 20px }}
+.below-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; margin: 20px 0 }}
+@media (max-width: 900px) {{ .hero-grid {{ grid-template-columns: 1fr }} .hero-left,.hero-center,.hero-right {{ border-right: none; border-bottom: 1px solid {t["border"]} }} }}
+@media (max-width: 600px) {{ .below-grid {{ grid-template-columns: 1fr }} }}
+"""
+
+    return (_head(f"{_site_name(site)}  -  {site['category']}", f"Expert coverage of {site['category'].lower()}", t, css) + f"""
+<div class="top-ident">
+  <div class="wrap">
+    <div class="logo-block">{_site_name(site).upper()}</div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["meta"]};margin-top:4px">{site["category"]}</div>
+  </div>
+</div>
+<div class="cat-nav">
+  <div class="wrap">{nav_tabs}</div>
+</div>
+<div class="wrap">
+  <div class="hero-grid">
+    <div class="hero-left">{left_html}</div>
+    <div class="hero-center">{hero_html}</div>
+    <div class="hero-right">{right_html}</div>
+  </div>
+  {'<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:' + t["text2"] + ';padding:12px 0 10px;border-top:2px solid ' + t["accent"] + '">More Stories</div>' if below_html else ''}
+  <div class="below-grid">{below_html}</div>
+</div>
+""" + _foot(_site_name(site), site["category"], t, site.get("signup_url", "")))
 
 
 HOMEPAGE_BUILDERS = {
@@ -1555,6 +2360,7 @@ HOMEPAGE_BUILDERS = {
     "editorial": homepage_editorial,
     "cards":     homepage_cards,
     "portfolio": homepage_portfolio,
+    "bbc":       homepage_bbc,
 }
 
 
@@ -1562,10 +2368,805 @@ HOMEPAGE_BUILDERS = {
 # ARTICLE LAYOUTS (5 distinct designs)
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _sources_block(article, t):
+    """Render a Sources section if the article has a sources list."""
+    sources = article.get("sources", [])
+    if not sources:
+        return ""
+    items = "".join([
+        f'<li style="margin-bottom:6px"><a href="{s.get("url","#")}" target="_blank" rel="noopener" '
+        f'style="color:{t["accent"]};text-decoration:none;font-size:13px">'
+        f'{s.get("name", s.get("url","Source"))}</a></li>'
+        for s in sources if s.get("url") or s.get("name")
+    ])
+    if not items:
+        return ""
+    return f"""<div style="margin-top:40px;padding-top:24px;border-top:1px solid {t["border"]}">
+<h2 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["text2"]};margin-bottom:12px">Sources</h2>
+<ul style="list-style:none;padding:0;margin:0">{items}</ul>
+</div>"""
+
 def _article_sections(sections, t):
     return "\n".join([f"""
 <h2 style="font-family:{t["heading_font"]};font-size:22px;font-weight:700;margin:40px 0 14px;color:{t["text"]}">{s["heading"]}</h2>
 <div>{s["content"]}</div>""" for s in sections])
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ARTICLE NAV BUILDERS  (css_str, html_str)  -  replaces generic site-nav
+# Each matches its homepage template exactly. depth=1 → use "../" prefix.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _nav_terminal(site):
+    """Cryptopulse dark-green terminal nav with live ticker."""
+    name = _site_name(site)
+    return (
+        # CSS
+        """<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+.a-tk{background:#020d06;border-bottom:1px solid #0d2b18;height:38px;display:flex;align-items:center;overflow:hidden;width:100%}
+.a-tk-lbl{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#020d06;background:#00e676;padding:0 14px;height:100%;display:flex;align-items:center;flex-shrink:0;letter-spacing:2px;text-transform:uppercase;gap:5px}
+.a-tk-dot{width:7px;height:7px;border-radius:50%;background:#020d06;animation:atk-blink 1.2s ease-in-out infinite}
+@keyframes atk-blink{0%,100%{opacity:1}50%{opacity:.2}}
+.a-tk-vp{flex:1;overflow:hidden}
+.a-tk-tr{display:flex;white-space:nowrap;animation:atk-scroll 40s linear infinite}
+.a-tk-tr:hover{animation-play-state:paused}
+@keyframes atk-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.a-tk-it{font-family:'Space Mono',monospace;font-size:11px;color:#4a7a5a;display:inline-flex;gap:7px;align-items:center;padding:0 22px;border-right:1px solid #0d2b18}
+.a-tk-sy{color:#a0cfb0;font-weight:700}.a-tk-up{color:#00e676;font-weight:700}.a-tk-dn{color:#ff5252;font-weight:700}
+.a-nav{background:#020d06;border-bottom:1px solid #0d2b18;position:sticky;top:0;z-index:100;font-family:'Space Grotesk',sans-serif}
+.a-nav-in{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:58px;gap:0}
+.a-nav-logo{font-size:20px;font-weight:700;color:#00e676;margin-right:40px;flex-shrink:0;letter-spacing:-0.5px;text-decoration:none}
+.a-nav-logo span{font-family:'Space Mono',monospace;font-size:10px;color:#2a5a38;font-weight:400;margin-left:6px;letter-spacing:1px;text-transform:uppercase}
+.a-nav-links{display:flex;gap:0;height:100%;flex:1}
+.a-nav-links a{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#3a6a48;text-transform:uppercase;letter-spacing:1px;padding:0 14px;height:58px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px;text-decoration:none}
+.a-nav-links a:hover{color:#00e676;border-bottom-color:#00e676}
+.a-nav-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.a-nav-date{font-family:'Space Mono',monospace;font-size:10px;color:#2a5a38}
+.a-nav-sub{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#020d06;background:#00e676;padding:6px 14px;border-radius:2px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;text-decoration:none}
+.a-nav-sub:hover{opacity:.85}
+@media(max-width:768px){.a-tk{display:none}.a-nav-links,.a-nav-date{display:none}}
+</style>""",
+        # HTML
+        f"""<div class="a-tk">
+  <div class="a-tk-lbl"><div class="a-tk-dot"></div>LIVE</div>
+  <div class="a-tk-vp"><div class="a-tk-tr">
+    <div class="a-tk-it"><span class="a-tk-sy">BTC</span><span id="atk-btc">$67,234</span><span class="a-tk-up" id="atk-btc-c">▲ 2.31%</span></div>
+    <div class="a-tk-it"><span class="a-tk-sy">ETH</span><span id="atk-eth">$3,421</span><span class="a-tk-dn" id="atk-eth-c">▼ 0.84%</span></div>
+    <div class="a-tk-it"><span class="a-tk-sy">SOL</span><span id="atk-sol">$142.50</span><span class="a-tk-up" id="atk-sol-c">▲ 4.12%</span></div>
+    <div class="a-tk-it"><span class="a-tk-sy">BNB</span><span id="atk-bnb">$612</span><span class="a-tk-up" id="atk-bnb-c">▲ 1.05%</span></div>
+    <div class="a-tk-it"><span class="a-tk-sy">BTC</span><span id="atk-btc2">$67,234</span><span class="a-tk-up" id="atk-btc-c2">▲ 2.31%</span></div>
+    <div class="a-tk-it"><span class="a-tk-sy">ETH</span><span id="atk-eth2">$3,421</span><span class="a-tk-dn" id="atk-eth-c2">▼ 0.84%</span></div>
+    <div class="a-tk-it"><span class="a-tk-sy">SOL</span><span id="atk-sol2">$142.50</span><span class="a-tk-up" id="atk-sol-c2">▲ 4.12%</span></div>
+    <div class="a-tk-it"><span class="a-tk-sy">BNB</span><span id="atk-bnb2">$612</span><span class="a-tk-up" id="atk-bnb-c2">▲ 1.05%</span></div>
+  </div></div>
+</div>
+<nav class="a-nav">
+  <div class="a-nav-in">
+    <a href="../" class="a-nav-logo">{name}<span>crypto intelligence</span></a>
+    <div class="a-nav-links">
+      <a href="../#analysis">Analysis</a>
+      <a href="../#topics">On-Chain</a>
+      <a href="../#market">Algo Signals</a>
+      <a href="../about.html">About</a>
+    </div>
+    <div class="a-nav-right">
+      <div class="a-nav-date" id="a-nav-date"></div>
+      <a href="../#newsletter" class="a-nav-sub">Subscribe</a>
+    </div>
+  </div>
+</nav>
+<script>
+document.getElementById('a-nav-date').textContent=new Date().toLocaleDateString('en-US',{{weekday:'short',month:'short',day:'numeric'}});
+(async function(){{
+  var p={{btc:67234,eth:3421,sol:142.5,bnb:612}},c={{btc:2.31,eth:-0.84,sol:4.12,bnb:1.05}};
+  function fmt(v){{return v>=1000?'$'+v.toFixed(0).replace(/\\B(?=(\\d{{3}})+(?!\\d))/g,','):'$'+v.toFixed(2);}}
+  function upd(){{['btc','eth','sol','bnb'].forEach(function(k){{
+    var up=c[k]>=0,pv=fmt(p[k]),cv=(up?'▲ ':'▼ ')+Math.abs(c[k]).toFixed(2)+'%',cl=up?'a-tk-up':'a-tk-dn';
+    ['','2'].forEach(function(s){{
+      var pe=document.getElementById('atk-'+k+s),ce=document.getElementById('atk-'+k+'-c'+s);
+      if(pe)pe.textContent=pv;if(ce){{ce.textContent=cv;ce.className=cl;}}
+    }});
+  }});}}
+  fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd&include_24hr_change=true',{{cache:'no-store'}})
+    .then(r=>r.json()).then(function(d){{
+      if(d.bitcoin){{p.btc=d.bitcoin.usd;c.btc=d.bitcoin.usd_24h_change||0;}}
+      if(d.ethereum){{p.eth=d.ethereum.usd;c.eth=d.ethereum.usd_24h_change||0;}}
+      if(d.solana){{p.sol=d.solana.usd;c.sol=d.solana.usd_24h_change||0;}}
+      if(d.binancecoin){{p.bnb=d.binancecoin.usd;c.bnb=d.binancecoin.usd_24h_change||0;}}
+      upd();
+    }}).catch(upd);
+  setInterval(function(){{['btc','eth','sol','bnb'].forEach(k=>{{p[k]*=(1+(Math.random()-.5)*.0006);}});upd();}},4000);
+}})();
+</script>"""
+    )
+
+
+def _nav_leaf(site):
+    """Warm serif nav matching the leaf template (passivewealthguide, mochapoo-pets, etc.)."""
+    name  = _site_name(site)
+    words = name.split()
+    brand = f'<em>{words[0]}</em>{" " + " ".join(words[1:]) if len(words) > 1 else ""}' if words else name
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-ln{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid #d8d0bc;background:#faf8f2;position:sticky;top:0;z-index:99}\n'
+        '.a-ln-brand{font-family:Lora,Georgia,serif;font-size:21px;font-weight:700;color:#1c1a14;text-decoration:none;letter-spacing:-.3px}\n'
+        '.a-ln-brand em{color:#1a4731;font-style:normal}\n'
+        '.a-ln-nav{display:flex;gap:24px;align-items:center}\n'
+        '.a-ln-nav a{font-size:13px;color:#7a7060;font-weight:500;transition:color .2s;text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}\n'
+        '.a-ln-nav a:hover{color:#1c1a14;border-bottom-color:#1a4731}\n'
+        '.a-ln-back{font-size:12px;color:#7a7060;text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .2s}\n'
+        '.a-ln-back:hover{color:#1c1a14}\n'
+        '@media(max-width:640px){.a-ln-nav a:not(:last-child){display:none}}\n</style>',
+        f'<nav class="a-ln">'
+        f'<a href="../" class="a-ln-brand">{brand}</a>'
+        f'<div class="a-ln-nav">'
+        f'<a href="../">Home</a>'
+        f'<a href="../about.html">About</a>'
+        f'<a href="../" class="a-ln-back"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> All Articles</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_grid(site, t):
+    """Clean white nav with accent underline  -  matches grid template (ecommerceedge, mashestate-home)."""
+    name = _site_name(site)
+    acc  = t["accent"]
+    return (
+        f'<style>\n'
+        f'.a-gn{{background:#fff;border-bottom:2px solid {acc};padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:62px;position:sticky;top:0;z-index:99;box-shadow:0 2px 12px rgba(0,0,0,.06)}}\n'
+        f'.a-gn-logo{{font-size:19px;font-weight:800;color:{acc};letter-spacing:-.5px;text-decoration:none}}\n'
+        f'.a-gn-links{{display:flex;gap:20px;align-items:center}}\n'
+        f'.a-gn-links a{{font-size:13px;color:#9a7060;font-weight:500;transition:color .2s;text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}}\n'
+        f'.a-gn-links a:hover{{color:{acc};border-bottom-color:{acc}}}\n'
+        f'.a-gn-back{{font-size:12px;color:#9a7060;text-decoration:none;display:flex;align-items:center;gap:4px;transition:color .2s}}\n'
+        f'.a-gn-back:hover{{color:{acc}}}\n'
+        f'@media(max-width:640px){{.a-gn-links a:not(.a-gn-back){{display:none}}}}\n</style>',
+        f'<nav class="a-gn">'
+        f'<a href="../" class="a-gn-logo">{name}</a>'
+        f'<div class="a-gn-links">'
+        f'<a href="../">Home</a>'
+        f'<a href="../about.html">About</a>'
+        f'<a href="../" class="a-gn-back"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_pulse(site, t):
+    """Dark fixed nav matching pulse template home page (tradingtechreview, carverge)."""
+    name  = _site_name(site)
+    sid   = site.get("id", "")
+    acc   = t["accent"]
+    bg    = t["bg"]
+    bg2   = t["bg2"]
+    brd   = t["border"]
+    txt   = t["text"]
+    mut   = t["meta"]
+    mono  = site.get("theme_mono", "'JetBrains Mono',monospace")
+    # Build nav links based on site
+    if sid == "tradingtechreview":
+        abbr  = "TTR"
+        links = '<a href="../">all</a><a href="../">backtesting</a><a href="../">apis</a><a href="../">python</a>'
+        sub   = f'<a href="../#newsletter" style="font-family:{mono};font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{bg};background:{acc};padding:6px 14px;border-radius:3px;text-decoration:none;margin-left:12px;white-space:nowrap;transition:opacity .18s">subscribe</a>'
+        logo  = (f'<a href="../" style="display:flex;align-items:center;gap:10px;margin-right:32px;flex-shrink:0;text-decoration:none">'
+                 f'<span style="font-family:{mono};font-size:11px;font-weight:800;color:{bg};background:{acc};padding:3px 8px;border-radius:3px;letter-spacing:.5px">{abbr}</span>'
+                 f'<span style="font-family:{mono};font-size:13px;font-weight:600;color:{txt};letter-spacing:-.3px">TradingTech<span style="color:{acc}">.</span>Review</span>'
+                 f'</a>')
+    elif sid == "carverge":
+        abbr  = "CV"
+        links = '<a href="../">Analysis</a><a href="../">EV Tech</a><a href="../">Battery</a>'
+        sub   = f'<a href="../#newsletter" style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:{bg};background:{acc};padding:8px 18px;border-radius:0;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);text-decoration:none;margin-left:12px;white-space:nowrap">Dispatch</a>'
+        logo  = (f'<a href="../" style="display:flex;align-items:center;gap:8px;margin-right:32px;flex-shrink:0;text-decoration:none">'
+                 f'<span style="width:28px;height:28px;background:{acc};clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;flex-shrink:0"></span>'
+                 f'<span style="font-size:18px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#fff">{name}</span>'
+                 f'</a>')
+    else:
+        abbr  = "".join(w[0] for w in name.split()[:2]).upper()
+        links = '<a href="../">Home</a><a href="../about.html">About</a>'
+        sub   = ""
+        logo  = f'<a href="../" style="font-size:18px;font-weight:800;color:{txt};margin-right:32px;flex-shrink:0;text-decoration:none;letter-spacing:-.5px">{name}</a>'
+    return (
+        f'<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">\n'
+        f'<style>\n'
+        f'.a-pn{{background:{bg};border-bottom:1px solid {brd};position:sticky;top:0;z-index:200;transition:background .25s,border-color .25s}}\n'
+        f'.a-pn-in{{max-width:1280px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;gap:0}}\n'
+        f'.a-pn-links{{display:flex;gap:0;height:56px;flex:1}}\n'
+        f'.a-pn-links a{{font-family:\'JetBrains Mono\',monospace;font-size:11px;font-weight:500;letter-spacing:.3px;color:{mut};padding:0 14px;height:100%;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .18s;margin-bottom:-1px;text-decoration:none}}\n'
+        f'.a-pn-links a:hover{{color:{txt};border-bottom-color:{acc}}}\n'
+        f'.a-pn-back{{font-family:\'JetBrains Mono\',monospace;font-size:11px;color:{mut};text-decoration:none;display:flex;align-items:center;gap:5px;margin-left:auto;transition:color .18s;padding:0 4px}}\n'
+        f'.a-pn-back:hover{{color:{acc}}}\n'
+        f'@media(max-width:900px){{.a-pn-links{{display:none}}}}\n</style>',
+        f'<nav class="a-pn"><div class="a-pn-in">'
+        f'{logo}'
+        f'<div class="a-pn-links">{links}</div>'
+        f'{sub}'
+        f'<a href="../" class="a-pn-back" style="margin-left:{"4px" if sub else "auto"}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> All Articles</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_stack(site, t):
+    """Amber/dark nav matching the stack/onlinebizpro template - Inter font, amber primary."""
+    name = _site_name(site)
+    acc  = t["accent"]
+    bg   = t["bg"]
+    bg2  = t["bg2"]
+    brd  = t["border"]
+    txt  = t["text"]
+    mut  = t["meta"]
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n'
+        f'<style>\n'
+        f'.a-sk{{background:rgba({_hex_to_rgb(bg)},.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid {brd};position:sticky;top:0;z-index:200;font-family:Inter,system-ui,sans-serif}}\n'
+        f'.a-sk-in{{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:0}}\n'
+        f'.a-sk-logo{{font-size:18px;font-weight:700;color:{acc};margin-right:auto;flex-shrink:0;text-decoration:none;letter-spacing:-.3px}}\n'
+        f'.a-sk-links{{display:flex;gap:4px;align-items:center}}\n'
+        f'.a-sk-links a{{font-size:13px;font-weight:500;color:{mut};padding:6px 12px;border-radius:6px;transition:all .2s;text-decoration:none}}\n'
+        f'.a-sk-links a:hover{{color:{txt};background:{bg2}}}\n'
+        f'.a-sk-cta{{font-size:12px;font-weight:600;color:#000;background:{acc};padding:8px 18px;border-radius:6px;margin-left:10px;transition:all .2s;text-decoration:none}}\n'
+        f'.a-sk-cta:hover{{opacity:.88;transform:translateY(-1px)}}\n'
+        f'@media(max-width:640px){{.a-sk-links{{display:none}}}}\n</style>',
+        f'<nav class="a-sk"><div class="a-sk-in">'
+        f'<a href="../" class="a-sk-logo">{name}</a>'
+        f'<div class="a-sk-links">'
+        f'<a href="../">Home</a>'
+        f'<a href="../about.html">About</a>'
+        f'<a href="../" style="display:flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> All Posts</a>'
+        f'</div>'
+        f'<a href="../#newsletter" class="a-sk-cta">Newsletter</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_neon(site, t):
+    """Dark purple/cyan nav matching the neon/aimarketingpro template - Space Grotesk."""
+    name = _site_name(site)
+    acc  = t["accent"]
+    bg   = t["bg"]
+    bg2  = t["bg2"]
+    brd  = t["border"]
+    txt  = t["text"]
+    mut  = t["meta"]
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">\n'
+        f'<style>\n'
+        f'.a-nn{{background:{bg};border-bottom:1px solid {brd};position:sticky;top:0;z-index:200;font-family:"Space Grotesk",system-ui,sans-serif}}\n'
+        f'.a-nn-in{{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:0}}\n'
+        f'.a-nn-logo{{font-size:17px;font-weight:700;color:{acc};margin-right:auto;flex-shrink:0;text-decoration:none;letter-spacing:-.3px;text-shadow:0 0 20px rgba(168,85,247,.3)}}\n'
+        f'.a-nn-links{{display:flex;gap:4px;align-items:center}}\n'
+        f'.a-nn-links a{{font-size:13px;font-weight:500;color:{mut};padding:6px 12px;border-radius:6px;transition:all .2s;text-decoration:none}}\n'
+        f'.a-nn-links a:hover{{color:{txt};background:{bg2}}}\n'
+        f'.a-nn-cta{{font-size:11px;font-weight:600;color:{txt};border:1px solid {acc};padding:7px 16px;border-radius:6px;margin-left:10px;transition:all .2s;text-decoration:none;letter-spacing:.3px}}\n'
+        f'.a-nn-cta:hover{{background:{acc};color:#fff;box-shadow:0 0 16px rgba(168,85,247,.4)}}\n'
+        f'@media(max-width:640px){{.a-nn-links{{display:none}}}}\n</style>',
+        f'<nav class="a-nn"><div class="a-nn-in">'
+        f'<a href="../" class="a-nn-logo">{name}</a>'
+        f'<div class="a-nn-links">'
+        f'<a href="../">Home</a>'
+        f'<a href="../about.html">About</a>'
+        f'<a href="../" style="display:flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> All Posts</a>'
+        f'</div>'
+        f'<a href="../#newsletter" class="a-nn-cta">Newsletter</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_carverge(site, t):
+    """Barlow Condensed dark-navy nav matching the carverge cinematic template."""
+    name = _site_name(site)
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">\n'
+        '<style>\n'
+        '.a-cv{position:sticky;top:0;z-index:500;background:rgba(4,8,15,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid #0e2040;height:68px;display:flex;align-items:center;padding:0 32px}\n'
+        '.a-cv-logo{font-family:"Barlow Condensed",system-ui,sans-serif;font-size:20px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-right:auto;text-decoration:none;display:flex;align-items:center;gap:10px}\n'
+        '.a-cv-mark{width:28px;height:28px;background:#60a5fa;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);flex-shrink:0}\n'
+        '.a-cv-links{display:flex;gap:0;align-items:center}\n'
+        '.a-cv-links a{font-family:"Barlow Condensed",system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(228,240,255,.5);padding:8px 14px;transition:color .2s;text-decoration:none}\n'
+        '.a-cv-links a:hover{color:#fff}\n'
+        '.a-cv-cta{font-family:"Barlow Condensed",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#04080f;background:#60a5fa;padding:8px 20px;margin-left:12px;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);text-decoration:none;transition:background .2s}\n'
+        '.a-cv-cta:hover{background:#22d3ee}\n'
+        '@media(max-width:640px){.a-cv-links{display:none}}\n</style>',
+        f'<nav class="a-cv">'
+        f'<a href="../" class="a-cv-logo"><div class="a-cv-mark"></div>{name}</a>'
+        f'<div class="a-cv-links">'
+        f'<a href="../">Home</a>'
+        f'<a href="../#ev-tech">EV Tech</a>'
+        f'<a href="../about.html">About</a>'
+        f'<a href="../" style="display:flex;align-items:center;gap:4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> All</a>'
+        f'</div>'
+        f'<a href="../#newsletter" class="a-cv-cta">Dispatch</a>'
+        f'</nav>'
+    )
+
+
+def _nav_dark(site, t):
+    """Generic dark theme nav using site accent colors - fallback for all dark-bg sites."""
+    name = _site_name(site)
+    acc  = t["accent"]
+    bg   = t["bg"]
+    bg2  = t["bg2"]
+    brd  = t["border"]
+    txt  = t["text"]
+    mut  = t["meta"]
+    return (
+        f'<style>\n'
+        f'.a-dk{{background:{bg};border-bottom:1px solid {brd};position:sticky;top:0;z-index:200}}\n'
+        f'.a-dk-in{{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:60px;gap:0}}\n'
+        f'.a-dk-logo{{font-size:17px;font-weight:700;color:{acc};margin-right:auto;flex-shrink:0;text-decoration:none;letter-spacing:-.3px}}\n'
+        f'.a-dk-links{{display:flex;gap:0;height:100%}}\n'
+        f'.a-dk-links a{{font-size:13px;font-weight:500;color:{mut};padding:0 14px;height:60px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px;text-decoration:none}}\n'
+        f'.a-dk-links a:hover{{color:{txt};border-bottom-color:{acc}}}\n'
+        f'.a-dk-cta{{font-size:12px;font-weight:600;color:{bg};background:{acc};padding:7px 16px;border-radius:6px;margin-left:14px;transition:opacity .2s;text-decoration:none;flex-shrink:0;align-self:center}}\n'
+        f'.a-dk-cta:hover{{opacity:.85}}\n'
+        f'@media(max-width:640px){{.a-dk-links{{display:none}}}}\n</style>',
+        f'<nav class="a-dk"><div class="a-dk-in">'
+        f'<a href="../" class="a-dk-logo">{name}</a>'
+        f'<div class="a-dk-links">'
+        f'<a href="../">Home</a>'
+        f'<a href="../about.html">About</a>'
+        f'<a href="../" style="display:flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</a>'
+        f'</div>'
+        f'<a href="../#newsletter" class="a-dk-cta">Subscribe</a>'
+        f'</div></nav>'
+    )
+
+
+def _hex_to_rgb(hex_color):
+    """Convert #rrggbb to 'r,g,b' string for rgba()."""
+    h = hex_color.lstrip('#')
+    if len(h) == 3:
+        h = ''.join(c*2 for c in h)
+    try:
+        r, g, b = int(h[0:2],16), int(h[2:4],16), int(h[4:6],16)
+        return f"{r},{g},{b}"
+    except Exception:
+        return "0,0,0"
+
+
+def _nav_sportiqpro(site):
+    """Barlow Condensed dark-red nav matching sportiqpro newspaper homepage."""
+    name = _site_name(site)
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-sq{background:#0f1318;border-bottom:2px solid #ef4444;position:sticky;top:0;z-index:100}\n'
+        '.a-sq-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:52px;gap:24px}\n'
+        '.a-sq-logo{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#fff;white-space:nowrap;text-decoration:none}\n'
+        '.a-sq-logo span{color:#ef4444}\n'
+        '.a-sq-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-sq-links a{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 14px;height:52px;display:flex;align-items:center;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;text-decoration:none}\n'
+        '.a-sq-links a:hover{color:#fff;border-color:#ef4444}\n'
+        '.a-sq-back{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;text-decoration:none;display:flex;align-items:center;gap:4px;margin-left:auto;white-space:nowrap}\n'
+        '.a-sq-back:hover{color:#ef4444}\n'
+        '@media(max-width:640px){.a-sq-links{display:none}}\n</style>',
+        f'<nav class="a-sq"><div class="a-sq-in">'
+        f'<a href="../" class="a-sq-logo">Sportiq<span>Pro</span></a>'
+        f'<div class="a-sq-links">'
+        f'<a href="../">Training</a><a href="../">Recovery</a><a href="../">Nutrition</a><a href="../">Gear</a><a href="../">Mindset</a>'
+        f'</div>'
+        f'<a href="../" class="a-sq-back"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_datingedge(site):
+    """Playfair Display light-rose nav matching datingedge editorial homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-de{background:#fdf8f5;border-bottom:1px solid #e8ddd8;position:sticky;top:0;z-index:100}\n'
+        '.a-de-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:40px}\n'
+        '.a-de-logo{font-family:"Playfair Display",serif;font-size:24px;font-weight:700;color:#1a1512;letter-spacing:-.02em;text-decoration:none}\n'
+        '.a-de-logo em{color:#c2715a;font-style:italic}\n'
+        '.a-de-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-de-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;padding:0 16px;height:64px;display:flex;align-items:center;color:#7a6e68;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;text-decoration:none}\n'
+        '.a-de-links a:hover{color:#1a1512;border-color:#c2715a}\n'
+        '.a-de-back{font-family:Inter,sans-serif;font-size:13px;font-weight:600;background:#c2715a;color:#fff;padding:9px 20px;border-radius:100px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-de-back:hover{background:#a85840}\n'
+        '@media(max-width:640px){.a-de-links{display:none}}\n</style>',
+        f'<nav class="a-de"><div class="a-de-in">'
+        f'<a href="../" class="a-de-logo">Dating<em>Edge</em></a>'
+        f'<div class="a-de-links">'
+        f'<a href="../">Dating</a><a href="../">Relationships</a><a href="../">Communication</a><a href="../">Psychology</a>'
+        f'</div>'
+        f'<a href="../" class="a-de-back">All Articles</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_fitpulsepro(site):
+    """DM Sans dark-green nav matching fitpulsepro journal homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-fp{background:#0a0a0a;border-bottom:1px solid #222;position:sticky;top:0;z-index:100}\n'
+        '.a-fp-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:60px;gap:32px}\n'
+        '.a-fp-logo{font-family:"DM Sans",sans-serif;font-size:18px;font-weight:700;color:#f5f5f5;letter-spacing:-.02em;text-decoration:none}\n'
+        '.a-fp-logo span{color:#22c55e}\n'
+        '.a-fp-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-fp-links a{font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;padding:0 14px;height:60px;display:flex;align-items:center;color:#888;transition:color .15s;text-decoration:none}\n'
+        '.a-fp-links a:hover{color:#f5f5f5}\n'
+        '.a-fp-cta{font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;background:#22c55e;color:#000;padding:8px 18px;border-radius:4px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-fp-cta:hover{background:#16a34a}\n'
+        '@media(max-width:640px){.a-fp-links{display:none}}\n</style>',
+        f'<nav class="a-fp"><div class="a-fp-in">'
+        f'<a href="../" class="a-fp-logo">FitPulse<span>Pro</span></a>'
+        f'<div class="a-fp-links">'
+        f'<a href="../">Workouts</a><a href="../">Programs</a><a href="../">Nutrition</a><a href="../">Recovery</a>'
+        f'</div>'
+        f'<a href="../" class="a-fp-cta">All Articles</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_mashestatehome(site):
+    """Inter navy nav matching mashestate-home property portal homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-mh{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:100}\n'
+        '.a-mh-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:68px;gap:48px}\n'
+        '.a-mh-logo{font-family:Inter,sans-serif;font-size:20px;font-weight:700;color:#1b2a4a;letter-spacing:-.03em;text-decoration:none}\n'
+        '.a-mh-logo span{color:#2563eb}\n'
+        '.a-mh-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-mh-links a{font-family:Inter,sans-serif;font-size:14px;font-weight:500;padding:0 18px;height:68px;display:flex;align-items:center;color:#6b7280;transition:color .15s;text-decoration:none}\n'
+        '.a-mh-links a:hover{color:#1b2a4a}\n'
+        '.a-mh-back{font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#6b7280;text-decoration:none;display:flex;align-items:center;gap:4px;margin-left:auto;transition:color .15s}\n'
+        '.a-mh-back:hover{color:#1b2a4a}\n'
+        '@media(max-width:640px){.a-mh-links{display:none}}\n</style>',
+        f'<nav class="a-mh"><div class="a-mh-in">'
+        f'<a href="../" class="a-mh-logo">Mash<span>Estate</span></a>'
+        f'<div class="a-mh-links">'
+        f'<a href="../">Buying Guides</a><a href="../">Market Data</a><a href="../">Investment</a><a href="../">First-Time Buyers</a>'
+        f'</div>'
+        f'<a href="../" class="a-mh-back"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_newborniq(site):
+    """Lora serif navy nav matching newborniq parenting homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-nb{background:#f5f0e8;border-bottom:1px solid #e4e9ef;position:sticky;top:0;z-index:100}\n'
+        '.a-nb-in{max-width:1160px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:40px}\n'
+        '.a-nb-logo{font-family:Lora,serif;font-size:22px;font-weight:600;color:#1e3a5f;text-decoration:none}\n'
+        '.a-nb-logo span{color:#7a9e7e}\n'
+        '.a-nb-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-nb-links a{font-family:Nunito,sans-serif;font-size:14px;font-weight:600;padding:0 16px;height:64px;display:flex;align-items:center;color:#7a8697;transition:color .15s;text-decoration:none}\n'
+        '.a-nb-links a:hover{color:#1e3a5f}\n'
+        '.a-nb-cta{font-family:Nunito,sans-serif;font-size:14px;font-weight:700;background:#1e3a5f;color:#fff;padding:10px 20px;border-radius:24px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-nb-cta:hover{background:#253f6a}\n'
+        '@media(max-width:640px){.a-nb-links{display:none}}\n</style>',
+        f'<nav class="a-nb"><div class="a-nb-in">'
+        f'<a href="../" class="a-nb-logo">Newborn<span>IQ</span></a>'
+        f'<div class="a-nb-links">'
+        f'<a href="../">Newborn Basics</a><a href="../">Sleep</a><a href="../">Feeding</a><a href="../">Development</a>'
+        f'</div>'
+        f'<a href="../" class="a-nb-cta">All Articles</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_sightreading(site):
+    """Cormorant Garamond dark-gold nav matching sightreadingacademy homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-sr{background:#0d0d0f;border-bottom:1px solid #222228;position:sticky;top:0;z-index:100}\n'
+        '.a-sr-in{max-width:1160px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:64px;gap:48px}\n'
+        '.a-sr-logo{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600;color:#e8e6df;letter-spacing:.02em;font-style:italic;text-decoration:none}\n'
+        '.a-sr-logo em{color:#c9a96e;font-style:normal;font-weight:600}\n'
+        '.a-sr-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-sr-links a{font-family:"Josefin Sans",sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:0 18px;height:64px;display:flex;align-items:center;color:#7a7870;border-bottom:1px solid transparent;margin-bottom:-1px;transition:all .15s;text-decoration:none}\n'
+        '.a-sr-links a:hover{color:#e8e6df;border-color:#c9a96e}\n'
+        '.a-sr-cta{font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid #c9a96e;color:#c9a96e;padding:9px 20px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:all .15s}\n'
+        '.a-sr-cta:hover{background:#c9a96e;color:#0d0d0f}\n'
+        '@media(max-width:640px){.a-sr-links{display:none}}\n</style>',
+        f'<nav class="a-sr"><div class="a-sr-in">'
+        f'<a href="../" class="a-sr-logo">Sight Reading <em>Academy</em></a>'
+        f'<div class="a-sr-links">'
+        f'<a href="../">Method</a><a href="../">Rhythm</a><a href="../">Ear Training</a><a href="../">Theory</a>'
+        f'</div>'
+        f'<a href="../" class="a-sr-cta">All Lessons</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_makeupcraft(site):
+    """Raleway uppercase pink nav matching makeupcraft beauty homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-mc{background:#fff;border-bottom:1px solid #eddde8;position:sticky;top:0;z-index:100}\n'
+        '.a-mc-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:40px}\n'
+        '.a-mc-logo{font-family:Raleway,sans-serif;font-size:22px;font-weight:800;color:#1a0d15;letter-spacing:.02em;text-transform:uppercase;text-decoration:none}\n'
+        '.a-mc-logo span{color:#d63384}\n'
+        '.a-mc-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-mc-links a{font-family:Raleway,sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:0 16px;height:64px;display:flex;align-items:center;color:#897a84;transition:color .15s;text-decoration:none}\n'
+        '.a-mc-links a:hover{color:#d63384}\n'
+        '.a-mc-cta{font-family:Raleway,sans-serif;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:#d63384;color:#fff;padding:10px 20px;border-radius:100px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-mc-cta:hover{background:#be185d}\n'
+        '@media(max-width:640px){.a-mc-links{display:none}}\n</style>',
+        f'<nav class="a-mc"><div class="a-mc-in">'
+        f'<a href="../" class="a-mc-logo">Makeup<span>Craft</span></a>'
+        f'<div class="a-mc-links">'
+        f'<a href="../">Tutorials</a><a href="../">Technique</a><a href="../">Skincare</a><a href="../">Reviews</a>'
+        f'</div>'
+        f'<a href="../" class="a-mc-cta">All Tutorials</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_travelverge(site):
+    """Merriweather dark-teal nav matching travelverge immersive homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-tv{background:#0d1a1e;border-bottom:1px solid #1e3340;position:sticky;top:0;z-index:100}\n'
+        '.a-tv-in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:40px}\n'
+        '.a-tv-logo{font-family:Merriweather,serif;font-size:20px;font-weight:700;color:#e2f0ed;letter-spacing:-.02em;text-decoration:none}\n'
+        '.a-tv-logo em{color:#0d9488;font-style:normal}\n'
+        '.a-tv-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-tv-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;padding:0 16px;height:64px;display:flex;align-items:center;color:#7aa89e;transition:color .15s;text-decoration:none}\n'
+        '.a-tv-links a:hover{color:#e2f0ed}\n'
+        '.a-tv-cta{font-family:Inter,sans-serif;font-size:13px;font-weight:600;background:#0d9488;color:#fff;padding:10px 20px;border-radius:4px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-tv-cta:hover{background:#0f766e}\n'
+        '@media(max-width:640px){.a-tv-links{display:none}}\n</style>',
+        f'<nav class="a-tv"><div class="a-tv-in">'
+        f'<a href="../" class="a-tv-logo">Travel<em>Verge</em></a>'
+        f'<div class="a-tv-links">'
+        f'<a href="../">Destinations</a><a href="../">Planning</a><a href="../">Packing</a><a href="../">Budget Travel</a>'
+        f'</div>'
+        f'<a href="../" class="a-tv-cta">All Articles</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_mashestateconst(site):
+    """Oswald dark-orange nav matching mashestate-construction industrial homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-mb{background:#131416;border-bottom:2px solid #f97316;position:sticky;top:0;z-index:100}\n'
+        '.a-mb-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:60px;gap:32px}\n'
+        '.a-mb-logo{font-family:Oswald,sans-serif;font-size:20px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#e8e6e0;text-decoration:none}\n'
+        '.a-mb-logo span{color:#f97316}\n'
+        '.a-mb-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-mb-links a{font-family:Oswald,sans-serif;font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:0 16px;height:60px;display:flex;align-items:center;color:#8a8880;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;text-decoration:none}\n'
+        '.a-mb-links a:hover{color:#e8e6e0;border-color:#f97316}\n'
+        '.a-mb-cta{font-family:Oswald,sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:#f97316;color:#fff;padding:9px 20px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-mb-cta:hover{background:#ea6c10}\n'
+        '@media(max-width:640px){.a-mb-links{display:none}}\n</style>',
+        f'<nav class="a-mb"><div class="a-mb-in">'
+        f'<a href="../" class="a-mb-logo">MashEstate <span>Build</span></a>'
+        f'<div class="a-mb-links">'
+        f'<a href="../">Renovation</a><a href="../">New Builds</a><a href="../">Contractors</a><a href="../">Costs</a>'
+        f'</div>'
+        f'<a href="../" class="a-mb-cta">All Guides</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_aimarketingpro(site):
+    """Space Grotesk dark-purple nav matching aimarketingpro homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-am{background:#08060f;border-bottom:1px solid #2a1f45;position:sticky;top:0;z-index:100}\n'
+        '.a-am-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:0}\n'
+        '.a-am-mark{font-family:"Space Grotesk",sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#08060f;background:#a855f7;padding:4px 8px;border-radius:3px;margin-right:10px;flex-shrink:0}\n'
+        '.a-am-logo{font-family:"Space Grotesk",sans-serif;font-size:15px;font-weight:700;color:#f0e8ff;text-decoration:none;margin-right:auto;letter-spacing:-.2px}\n'
+        '.a-am-links{display:flex;gap:0;height:100%}\n'
+        '.a-am-links a{font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:500;color:#9575cd;padding:0 14px;height:64px;display:flex;align-items:center;transition:color .15s;text-decoration:none}\n'
+        '.a-am-links a:hover{color:#f0e8ff}\n'
+        '.a-am-cta{font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:600;color:#a855f7;border:1px solid #a855f7;padding:7px 16px;border-radius:6px;margin-left:14px;text-decoration:none;white-space:nowrap;transition:all .15s}\n'
+        '.a-am-cta:hover{background:#a855f7;color:#fff}\n'
+        '@media(max-width:640px){.a-am-links{display:none}}\n</style>',
+        f'<nav class="a-am"><div class="a-am-in">'
+        f'<span class="a-am-mark">AMP</span>'
+        f'<a href="../" class="a-am-logo">AI Marketing Pro</a>'
+        f'<div class="a-am-links">'
+        f'<a href="../">Tools</a><a href="../">Case Studies</a><a href="../">Articles</a><a href="../">About</a>'
+        f'</div>'
+        f'<a href="../" class="a-am-cta">Subscribe</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_onlinebizpro(site):
+    """Inter amber nav with OBP mark matching onlinebiz-pro homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-ob{background:#0a0a0a;border-bottom:1px solid #2a2520;position:sticky;top:0;z-index:100}\n'
+        '.a-ob-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:62px;gap:0}\n'
+        '.a-ob-logo{display:flex;align-items:center;gap:10px;margin-right:auto;flex-shrink:0;text-decoration:none}\n'
+        '.a-ob-mark{font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;color:#0a0a0a;background:#f59e0b;padding:4px 8px;border-radius:4px}\n'
+        '.a-ob-name{font-family:Inter,sans-serif;font-size:15px;font-weight:700;color:#f5f0e8;letter-spacing:-.2px}\n'
+        '.a-ob-name span{color:#f59e0b}\n'
+        '.a-ob-links{display:flex;gap:4px;align-items:center}\n'
+        '.a-ob-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;color:#9c8c70;padding:6px 12px;border-radius:6px;transition:all .2s;text-decoration:none}\n'
+        '.a-ob-links a:hover{color:#f5f0e8;background:#1c1c1c}\n'
+        '.a-ob-cta{font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:#0a0a0a;background:#f59e0b;padding:8px 18px;border-radius:6px;margin-left:10px;text-decoration:none;white-space:nowrap;transition:opacity .2s}\n'
+        '.a-ob-cta:hover{opacity:.85}\n'
+        '@media(max-width:640px){.a-ob-links{display:none}}\n</style>',
+        f'<nav class="a-ob"><div class="a-ob-in">'
+        f'<a href="../" class="a-ob-logo">'
+        f'<div class="a-ob-mark">OBP</div>'
+        f'<span class="a-ob-name">Online <span>Biz</span> Pro</span>'
+        f'</a>'
+        f'<div class="a-ob-links">'
+        f'<a href="../">Articles</a><a href="../">About</a>'
+        f'</div>'
+        f'<a href="../" class="a-ob-cta">Subscribe Free</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_dalmendhome(site):
+    """Cormorant Garamond warm-stone nav matching dalmend-home interior design homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-dh{background:#fefcf7;border-bottom:1px solid #ddd8cc;position:sticky;top:0;z-index:100}\n'
+        '.a-dh-in{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;height:68px;gap:0}\n'
+        '.a-dh-logo{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:#1c1814;letter-spacing:.01em;text-decoration:none;margin-right:auto;font-style:italic}\n'
+        '.a-dh-logo span{color:#c8a47e;font-style:normal}\n'
+        '.a-dh-links{display:flex;gap:0;height:100%;align-items:center}\n'
+        '.a-dh-links a{font-family:Inter,sans-serif;font-size:12px;font-weight:400;letter-spacing:.8px;text-transform:uppercase;color:#8c8070;padding:0 18px;height:68px;display:flex;align-items:center;transition:color .2s;text-decoration:none;border-bottom:1px solid transparent}\n'
+        '.a-dh-links a:hover{color:#1c1814;border-bottom-color:#c8a47e}\n'
+        '.a-dh-cta{font-family:Inter,sans-serif;font-size:12px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;color:#1c1814;border:1px solid #c8a47e;padding:8px 20px;margin-left:14px;text-decoration:none;white-space:nowrap;transition:all .2s}\n'
+        '.a-dh-cta:hover{background:#c8a47e;color:#fff}\n'
+        '@media(max-width:640px){.a-dh-links{display:none}}\n</style>',
+        f'<nav class="a-dh"><div class="a-dh-in">'
+        f'<a href="../" class="a-dh-logo">Dalmend<span>Home</span></a>'
+        f'<div class="a-dh-links">'
+        f'<a href="../">Design</a><a href="../">Staging</a><a href="../">ROI</a><a href="../">About</a>'
+        f'</div>'
+        f'<a href="../" class="a-dh-cta">All Articles</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_topproduct(site):
+    """Dark ink masthead with star-badge logo and category nav matching topproduct homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-tp{background:#1a1a17;border-bottom:3px solid #dc2626;position:sticky;top:0;z-index:100}\n'
+        '.a-tp-in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:68px}\n'
+        '.a-tp-brand{display:flex;flex-direction:column;gap:2px;flex-shrink:0;text-decoration:none}\n'
+        '.a-tp-logo{font-family:"Playfair Display",serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:-.8px;display:flex;align-items:center;gap:7px}\n'
+        '.a-tp-logo-mark{width:26px;height:26px;background:#dc2626;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}\n'
+        '.a-tp-logo span{color:#dc2626}\n'
+        '.a-tp-tagline{font-family:Inter,sans-serif;font-size:9px;font-weight:600;color:rgba(255,255,255,.35);letter-spacing:1.8px;text-transform:uppercase;padding-left:33px}\n'
+        '.a-tp-links{display:flex;align-items:center;gap:0;flex:1;padding:0 28px;flex-wrap:nowrap;overflow:hidden}\n'
+        '.a-tp-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,.5);padding:0 14px;height:68px;display:flex;align-items:center;transition:color .15s;text-decoration:none}\n'
+        '.a-tp-links a:hover{color:#fff}\n'
+        '.a-tp-cta{font-family:Inter,sans-serif;font-size:12px;font-weight:700;background:#dc2626;color:#fff;padding:9px 18px;border-radius:4px;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-tp-cta:hover{background:#b91c1c}\n'
+        '@media(max-width:640px){.a-tp-links{display:none}}\n</style>',
+        f'<nav class="a-tp"><div class="a-tp-in">'
+        f'<a href="../" class="a-tp-brand">'
+        f'<div class="a-tp-logo">'
+        f'<span class="a-tp-logo-mark"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span>'
+        f'Top<span>Product</span>'
+        f'</div>'
+        f'<div class="a-tp-tagline">Editor-Tested Reviews</div>'
+        f'</a>'
+        f'<div class="a-tp-links">'
+        f'<a href="../">Tech</a><a href="../">Home</a><a href="../">Beauty</a><a href="../">Kitchen</a><a href="../">Fitness</a>'
+        f'</div>'
+        f'<a href="../" class="a-tp-cta">All Picks</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_supplementverge(site):
+    """IBM Plex Sans dark-green nav matching supplementverge reviews homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-sv{background:rgba(5,8,7,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #162012;position:sticky;top:0;z-index:200}\n'
+        '.a-sv-in{max-width:1240px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:62px;gap:0}\n'
+        '.a-sv-logo{display:flex;align-items:center;gap:10px;margin-right:auto;flex-shrink:0;text-decoration:none}\n'
+        '.a-sv-icon{width:28px;height:28px;background:#84cc16;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}\n'
+        '.a-sv-name{font-family:"IBM Plex Sans",sans-serif;font-size:15px;font-weight:700;color:#eef8e0;letter-spacing:-.2px}\n'
+        '.a-sv-links{display:flex;align-items:center;gap:2px}\n'
+        '.a-sv-links a{font-family:"IBM Plex Sans",sans-serif;font-size:13px;font-weight:500;color:#7a9860;padding:6px 12px;border-radius:6px;transition:all .18s;text-decoration:none}\n'
+        '.a-sv-links a:hover{color:#eef8e0;background:#0c1009}\n'
+        '.a-sv-back{font-family:"IBM Plex Sans",sans-serif;font-size:12px;font-weight:600;color:#0c1009;background:#84cc16;padding:7px 14px;border-radius:6px;margin-left:10px;text-decoration:none;white-space:nowrap;transition:opacity .15s}\n'
+        '.a-sv-back:hover{opacity:.85}\n'
+        '@media(max-width:640px){.a-sv-links{display:none}}\n</style>',
+        f'<nav class="a-sv"><div class="a-sv-in">'
+        f'<a href="../" class="a-sv-logo">'
+        f'<div class="a-sv-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0c1009" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg></div>'
+        f'<span class="a-sv-name">SupplementVerge</span>'
+        f'</a>'
+        f'<div class="a-sv-links">'
+        f'<a href="../">Reviews</a><a href="../">Methodology</a><a href="../">Ingredients</a><a href="../">Stacks</a>'
+        f'</div>'
+        f'<a href="../" class="a-sv-back">All Reviews</a>'
+        f'</div></nav>'
+    )
+
+
+def _nav_kanonaevents(site):
+    """Kanona nav - matches updated homepage exactly."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-ke{background:rgba(5,4,7,.96);border-bottom:1px solid rgba(255,255,255,.055);position:sticky;top:0;z-index:200;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}\n'
+        '.a-ke-in{max-width:740px;margin:0 auto;padding:0 44px;display:flex;align-items:center;justify-content:space-between;height:58px}\n'
+        '.a-ke-logo{font-family:"Cormorant Garamond",serif;font-size:13px;font-weight:300;color:#e8e2d9;letter-spacing:7px;text-transform:uppercase;text-decoration:none}\n'
+        '.a-ke-logo em{color:#c4a05d;font-style:normal}\n'
+        '.a-ke-links{display:flex;align-items:center;gap:28px}\n'
+        '.a-ke-links a{font-family:Inter,sans-serif;font-size:8px;font-weight:400;color:#6a6058;letter-spacing:4px;text-transform:uppercase;transition:color .3s;text-decoration:none}\n'
+        '.a-ke-links a:hover{color:#e8e2d9}\n'
+        '.a-ke-cta{font-family:Inter,sans-serif;font-size:8px;font-weight:400;letter-spacing:3px;text-transform:uppercase;color:#050407;background:#c4a05d;padding:8px 18px;text-decoration:none;transition:opacity .2s}\n'
+        '.a-ke-cta:hover{opacity:.82}\n'
+        '@media(max-width:700px){.a-ke-in{padding:0 20px}.a-ke-links a:not(.a-ke-cta){display:none}}\n</style>',
+        '<nav class="a-ke"><div class="a-ke-in">'
+        '<a href="../" class="a-ke-logo">Kanona <em>&nbsp;Projects</em></a>'
+        '<div class="a-ke-links">'
+        '<a href="../#writing">Writing</a>'
+        '<a href="../#philosophy">Philosophy</a>'
+        '<a href="../about.html">About</a>'
+        '<a href="../#newsletter" class="a-ke-cta">The Letter</a>'
+        '</div>'
+        '</div></nav>'
+    )
+
+
+def _get_article_nav(site, t):
+    """Return (head_injection, body_nav_html) for the site's nav_style.
+    head_injection goes before </head>; body_nav_html replaces <nav class="site-nav">...</nav>."""
+    sid   = site.get("id", "")
+    style = site.get("nav_style", "default")
+
+    # Site-specific exact-match nav builders (take priority over generic styles)
+    if sid == "sportiq-pro":
+        return _nav_sportiqpro(site)
+    if sid == "dating-edge":
+        return _nav_datingedge(site)
+    if sid == "fitpulse-pro":
+        return _nav_fitpulsepro(site)
+    if sid == "mashestate-home":
+        return _nav_mashestatehome(site)
+    if sid == "newborn-iq":
+        return _nav_newborniq(site)
+    if sid == "sight-reading":
+        return _nav_sightreading(site)
+    if sid == "makeup-craft":
+        return _nav_makeupcraft(site)
+    if sid == "travelverge":
+        return _nav_travelverge(site)
+    if sid == "mashestate-construction":
+        return _nav_mashestateconst(site)
+    if sid == "topproduct":
+        return _nav_topproduct(site)
+    if sid == "supplement-verge":
+        return _nav_supplementverge(site)
+    if sid == "kanona-events":
+        return _nav_kanonaevents(site)
+    if sid == "ai-marketing":
+        return _nav_aimarketingpro(site)
+    if sid == "onlinebiz-pro":
+        return _nav_onlinebizpro(site)
+    if sid == "dalmend-home":
+        return _nav_dalmendhome(site)
+    if style == "terminal":
+        css, html = _nav_terminal(site)
+        return css, html
+    if style == "leaf":
+        css, html = _nav_leaf(site)
+        return css, html
+    if style == "grid":
+        css, html = _nav_grid(site, t)
+        return css, html
+    if style == "pulse":
+        css, html = _nav_pulse(site, t)
+        return css, html
+    if style == "stack":
+        css, html = _nav_stack(site, t)
+        return css, html
+    if style == "neon":
+        css, html = _nav_neon(site, t)
+        return css, html
+    if style == "dark":
+        css, html = _nav_dark(site, t)
+        return css, html
+    if style == "carverge":
+        css, html = _nav_carverge(site, t)
+        return css, html
+    return "", ""   # default: keep generic site-nav as-is
 
 
 def article_standard(article, site, image_url, photographer, t):
@@ -1575,24 +3176,15 @@ def article_standard(article, site, image_url, photographer, t):
 
     css = f"""
 .art{{max-width:760px;margin:48px auto;padding:0 24px 80px}}
-.hdr{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:18px 0}}
-.hi{{max-width:760px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center}}
-h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:16px;color:{t["text"]}}}
-p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
-.intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
-.concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
-.meta{{font-size:13px;color:{t["meta"]};margin-bottom:24px}}"""
+.art h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:16px;color:{t["text"]}}}
+.art p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
+.art .intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
+.art .concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
+.art .meta{{font-size:13px;color:{t["meta"]};margin-bottom:24px}}"""
 
-    canonical = f"https://{site['domain']}/{article['slug']}/"
-    author    = article.get("author", get_author_name(site))
-    date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
-    return (_head(f"{article['title']} | {site['domain']}", article["meta_description"], t, css, canonical, image_url or "", author, date_iso) +
-    f"""<div class="hdr"><div class="hi">
-  <a href="/" style="font-size:18px;font-weight:700;color:{t["accent"]}">{site["domain"]}</a>
-  <span style="font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:1px">{site["category"]}</span>
-</div></div>
-<div class="art">
-  <div class="meta"><a href="/" style="color:{t["meta"]}">← Home</a> &nbsp;·&nbsp; {article.get("date","")} &nbsp;·&nbsp; {site["category"]}</div>
+    author = article.get("author", get_author_name(site))
+    body = f"""<div class="art">
+  <div class="meta"><span style="color:{t["meta"]}">{article.get("date","")} &nbsp;·&nbsp; {site["category"]}</span></div>
   <h1>{article["title"]}</h1>
   <div style="font-size:13px;color:{t["meta"]};margin-bottom:24px">By <strong style="color:{t["text2"]}">{author}</strong></div>
   {img}
@@ -1600,39 +3192,33 @@ p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
   <p>{article["intro2"]}</p>
   {sections}
   <div class="concl">{article["conclusion"]}</div>
-</div>""" + _comments_section_js(t) + _giscus(site) + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+  {_sources_block(article, t)}
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+    return css, body
 
 
 def article_sidebar(article, site, image_url, photographer, t):
     """Two-column: article body + sticky TOC sidebar."""
     sections    = article["sections"]
-    toc_items   = "".join([f'<li><a href="#s{i}" style="color:{t["text2"]};font-size:13px;line-height:1.8">{s["heading"]}</a></li>' for i, s in enumerate(sections)])
+    toc_items   = "".join([f'<li><a href="#s{i}" style="color:{t["text2"]};font-size:13px;line-height:1.8;transition:color .2s;text-decoration:none" onmouseover="this.style.color=\'{t["accent"]}\'" onmouseout="this.style.color=\'{t["text2"]}\'">{s["heading"]}</a></li>' for i, s in enumerate(sections)])
     body_html   = "".join([f'<h2 id="s{i}" style="font-family:{t["heading_font"]};font-size:22px;font-weight:700;margin:40px 0 14px;color:{t["text"]}">{s["heading"]}</h2><div>{s["content"]}</div>' for i, s in enumerate(sections)])
     img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;height:380px;object-fit:cover;border-radius:8px;margin:24px 0"><p style="font-size:11px;color:{t["meta"]};margin-top:-12px">Photo: {photographer} / Pexels</p>' if image_url else ""
 
     css = f"""
-.hdr{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:18px 24px;display:flex;justify-content:space-between;align-items:center;max-width:none}}
-.wrap{{max-width:1060px;margin:48px auto;padding:0 24px;display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:start}}
-.sidebar{{position:sticky;top:24px;background:{t["bg2"]};border:1px solid {t["border"]};border-radius:8px;padding:20px}}
-.sidebar h3{{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]};margin-bottom:12px}}
-.sidebar ul{{list-style:none;border-left:2px solid {t["border"]};padding-left:12px}}
-h1{{font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.2;margin-bottom:16px}}
-p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
-.intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
-.concl{{background:{t["bg3"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
-@media(max-width:800px){{.wrap{{grid-template-columns:1fr}}.sidebar{{display:none}}}}"""
+.art-grid{{max-width:1060px;margin:48px auto;padding:0 24px;display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:start}}
+.art-grid .art-side{{position:sticky;top:24px;background:{t["bg2"]};border:1px solid {t["border"]};border-top:3px solid {t["accent"]};border-radius:8px;padding:20px}}
+.art-grid .art-side h3{{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]};margin-bottom:12px}}
+.art-grid .art-side ul{{list-style:none;border-left:2px solid {t["accent"]};padding-left:12px;opacity:.7}}
+.art-grid h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.2;margin-bottom:16px;color:{t["text"]}}}
+.art-grid p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
+.art-grid .intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
+.art-grid .concl{{background:{t["bg3"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
+@media(max-width:800px){{.art-grid{{grid-template-columns:1fr}}.art-grid .art-side{{display:none}}}}"""
 
-    canonical = f"https://{site['domain']}/{article['slug']}/"
-    author    = article.get("author", get_author_name(site))
-    date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
-    return (_head(f"{article['title']} | {site['domain']}", article["meta_description"], t, css, canonical, image_url or "", author, date_iso) +
-    f"""<div class="hdr">
-  <a href="/" style="font-size:18px;font-weight:700;color:{t["accent"]}">{site["domain"]}</a>
-  <span style="font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:1px">{site["category"]}</span>
-</div>
-<div class="wrap">
+    author = article.get("author", get_author_name(site))
+    body = (f"""<div class="art-grid">
   <article>
-    <div style="font-size:13px;color:{t["meta"]};margin-bottom:20px"><a href="/" style="color:{t["meta"]}">← Home</a> &nbsp;·&nbsp; {article.get("date","")}</div>
+    <div style="font-size:12px;color:{t["meta"]};margin-bottom:20px">{article.get("date","")} &nbsp;·&nbsp; {site["category"]}</div>
     <h1>{article["title"]}</h1>
     <div style="font-size:13px;color:{t["meta"]};margin-bottom:20px">By <strong style="color:{t["text2"]}">{author}</strong></div>
     {img}
@@ -1640,12 +3226,14 @@ p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
     <p>{article["intro2"]}</p>
     {body_html}
     <div class="concl">{article["conclusion"]}</div>
+  {_sources_block(article, t)}
   </article>
-  <aside class="sidebar">
+  <aside class="art-side">
     <h3>Contents</h3>
     <ul>{toc_items}</ul>
   </aside>
-</div>""" + _comments_section_js(t) + _giscus(site) + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site))
+    return css, body
 
 
 def article_magazine(article, site, image_url, photographer, t):
@@ -1654,27 +3242,19 @@ def article_magazine(article, site, image_url, photographer, t):
     img = f'<div style="width:100%;height:480px;background:url({image_url}) center/cover;border-radius:0"></div><p style="font-size:11px;color:{t["meta"]};text-align:center;padding:8px">Photo: {photographer} / Pexels</p>' if image_url else ""
 
     css = f"""
-.hero{{background:{t["bg3"]};padding:60px 0 0;text-align:center}}
-.hero-inner{{max-width:800px;margin:0 auto;padding:0 24px}}
-.hero h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,48px);font-weight:900;line-height:1.15;margin-bottom:20px}}
-.hero .lead{{font-size:19px;line-height:1.65;color:{t["text2"]};column-count:2;column-gap:32px;margin-bottom:32px}}
-.body{{max-width:740px;margin:40px auto;padding:0 24px 80px}}
-p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8}}
-.pull{{font-size:22px;font-style:italic;color:{t["accent"]};border-top:3px solid {t["accent"]};border-bottom:1px solid {t["border"]};padding:20px 0;margin:32px 0;line-height:1.4}}
-.concl{{border-top:2px solid {t["text"]};padding-top:24px;margin-top:40px}}
-.hdr{{background:{t["bg2"]};border-bottom:1px solid {t["border"]};padding:16px 24px;display:flex;justify-content:space-between}}
-@media(max-width:600px){{.hero .lead{{column-count:1}}}}"""
+.mag-hero{{background:{t["bg3"]};padding:60px 0 0;text-align:center}}
+.mag-hero-inner{{max-width:800px;margin:0 auto;padding:0 24px}}
+.mag-hero h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,48px);font-weight:900;line-height:1.15;margin-bottom:20px;color:{t["text"]}}}
+.mag-hero .lead{{font-size:19px;line-height:1.65;color:{t["text2"]};column-count:2;column-gap:32px;margin-bottom:32px}}
+.mag-body{{max-width:740px;margin:40px auto;padding:0 24px 80px}}
+.mag-body p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8}}
+.mag-body .pull{{font-size:22px;font-style:italic;color:{t["accent"]};border-top:3px solid {t["accent"]};border-bottom:1px solid {t["border"]};padding:20px 0;margin:32px 0;line-height:1.4}}
+.mag-body .concl{{border-top:2px solid {t["text"]};padding-top:24px;margin-top:40px}}
+@media(max-width:600px){{.mag-hero .lead{{column-count:1}}}}"""
 
-    canonical = f"https://{site['domain']}/{article['slug']}/"
-    author    = article.get("author", get_author_name(site))
-    date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
-    return (_head(f"{article['title']} | {site['domain']}", article["meta_description"], t, css, canonical, image_url or "", author, date_iso) +
-    f"""<div class="hdr">
-  <a href="/" style="font-size:18px;font-weight:700;color:{t["accent"]}">{site["domain"]}</a>
-  <span style="font-size:11px;color:{t["meta"]}">{site["category"]} &nbsp;·&nbsp; {article.get("date","")}</span>
-</div>
-<div class="hero">
-  <div class="hero-inner">
+    author = article.get("author", get_author_name(site))
+    body = (f"""<div class="mag-hero">
+  <div class="mag-hero-inner">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:16px">{site["category"]}</div>
     <h1>{article["title"]}</h1>
     <div style="font-size:13px;color:{t["meta"]};margin:10px 0 20px">By <strong style="color:{t["text2"]}">{author}</strong></div>
@@ -1682,12 +3262,14 @@ p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8}}
   </div>
   {img}
 </div>
-<div class="body">
+<div class="mag-body">
   <p style="font-size:18px;color:{t["text"]}">{article["intro2"]}</p>
   {sections}
   <div class="pull">"{article.get("meta_description","")}"</div>
   <div class="concl">{article["conclusion"]}</div>
-</div>""" + _comments_section_js(t) + _giscus(site) + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+  {_sources_block(article, t)}
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site))
+    return css, body
 
 
 def article_minimal(article, site, image_url, photographer, t):
@@ -1696,25 +3278,16 @@ def article_minimal(article, site, image_url, photographer, t):
     img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;max-height:500px;object-fit:cover;margin:40px 0 8px"><p style="font-size:11px;color:{t["meta"]};text-align:center;margin-bottom:40px">Photo: {photographer} / Pexels</p>' if image_url else ""
 
     css = f"""
-body{{background:{t["bg"]};font-size:19px;line-height:1.8}}
-.wrap{{max-width:680px;margin:0 auto;padding:60px 24px 100px}}
-h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-0.5px}}
-h2{{font-family:{t["heading_font"]};font-size:24px;font-weight:700;margin:48px 0 16px;color:{t["text"]}}}
-p{{margin-bottom:24px;color:{t["text2"]}}}
-.intro{{font-size:22px;font-style:italic;color:{t["text"]};border-bottom:1px solid {t["border"]};padding-bottom:32px;margin-bottom:32px}}
-.byline{{font-size:14px;color:{t["meta"]};margin-bottom:48px}}
-.concl{{font-size:18px;font-weight:500;color:{t["text"]};border-top:1px solid {t["border"]};padding-top:32px;margin-top:48px}}
-.top-nav{{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid {t["border"]}}}"""
+.art-min{{max-width:680px;margin:0 auto;padding:48px 24px 100px;font-size:19px;line-height:1.8}}
+.art-min h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-0.5px;color:{t["text"]}}}
+.art-min h2{{font-family:{t["heading_font"]};font-size:24px;font-weight:700;margin:48px 0 16px;color:{t["text"]}}}
+.art-min p{{margin-bottom:24px;color:{t["text2"]}}}
+.art-min .intro{{font-size:22px;font-style:italic;color:{t["text"]};border-bottom:1px solid {t["border"]};padding-bottom:32px;margin-bottom:32px}}
+.art-min .byline{{font-size:14px;color:{t["meta"]};margin-bottom:48px}}
+.art-min .concl{{font-size:18px;font-weight:500;color:{t["text"]};border-top:1px solid {t["border"]};padding-top:32px;margin-top:48px}}"""
 
-    canonical = f"https://{site['domain']}/{article['slug']}/"
-    author    = article.get("author", get_author_name(site))
-    date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
-    return (_head(f"{article['title']} | {site['domain']}", article["meta_description"], t, css, canonical, image_url or "", author, date_iso) +
-    f"""<nav class="top-nav">
-  <a href="/" style="font-size:16px;font-weight:700;color:{t["accent"]}">{site["domain"]}</a>
-  <a href="/" style="font-size:13px;color:{t["meta"]}">← Back</a>
-</nav>
-<div class="wrap">
+    author = article.get("author", get_author_name(site))
+    body = (f"""<div class="art-min">
   <h1>{article["title"]}</h1>
   <div class="byline">{author} &nbsp;·&nbsp; {article.get("date","")} &nbsp;·&nbsp; {site["category"]}</div>
   {img}
@@ -1722,7 +3295,9 @@ p{{margin-bottom:24px;color:{t["text2"]}}}
   <p>{article["intro2"]}</p>
   {sections}
   <div class="concl">{article["conclusion"]}</div>
-</div>""" + _comments_section_js(t) + _giscus(site) + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+  {_sources_block(article, t)}
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site))
+    return css, body
 
 
 def article_immersive(article, site, image_url, photographer, t):
@@ -1731,39 +3306,33 @@ def article_immersive(article, site, image_url, photographer, t):
     hero_bg = f"url({image_url}) center/cover" if image_url else t["bg3"]
 
     css = f"""
-.hero{{height:80vh;min-height:480px;background:{hero_bg};display:flex;align-items:flex-end;position:relative}}
-.hero-overlay{{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.3) 50%,transparent 100%)}}
-.hero-content{{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:48px 24px;width:100%}}
-.hero h1{{font-family:{t["heading_font"]};font-size:clamp(26px,5vw,46px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:14px}}
-.hero .meta{{font-size:13px;color:rgba(255,255,255,.65)}}
-.body{{max-width:760px;margin:52px auto;padding:0 24px 80px}}
-p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8;font-size:17px}}
-.intro{{font-size:20px;line-height:1.7;color:{t["text"]};border-bottom:1px solid {t["border"]};padding-bottom:28px;margin-bottom:28px}}
-.concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:24px;border-radius:0 8px 8px 0;margin-top:40px}}
-.top-nav{{position:absolute;top:0;left:0;right:0;z-index:10;padding:20px 28px;display:flex;justify-content:space-between;align-items:center}}"""
+.imm-hero{{height:62vh;min-height:420px;background:{hero_bg};display:flex;align-items:flex-end;position:relative}}
+.imm-hero .imm-overlay{{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.3) 50%,transparent 100%)}}
+.imm-hero .imm-content{{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:48px 24px;width:100%}}
+.imm-hero h1{{font-family:{t["heading_font"]};font-size:clamp(26px,5vw,46px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:14px}}
+.imm-hero .meta{{font-size:13px;color:rgba(255,255,255,.65)}}
+.imm-body{{max-width:760px;margin:52px auto;padding:0 24px 80px}}
+.imm-body p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8;font-size:17px}}
+.imm-body .intro{{font-size:20px;line-height:1.7;color:{t["text"]};border-bottom:1px solid {t["border"]};padding-bottom:28px;margin-bottom:28px}}
+.imm-body .concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:24px;border-radius:0 8px 8px 0;margin-top:40px}}"""
 
-    canonical = f"https://{site['domain']}/{article['slug']}/"
-    author    = article.get("author", get_author_name(site))
-    date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
-    return (_head(f"{article['title']} | {site['domain']}", article["meta_description"], t, css, canonical, image_url or "", author, date_iso) +
-    f"""<div class="hero">
-  <div class="hero-overlay"></div>
-  <nav class="top-nav">
-    <a href="/" style="font-size:18px;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5)">{site["domain"]}</a>
-    <a href="/" style="font-size:13px;color:rgba(255,255,255,.7)">← Back</a>
-  </nav>
-  <div class="hero-content">
+    author = article.get("author", get_author_name(site))
+    body = (f"""<div class="imm-hero">
+  <div class="imm-overlay"></div>
+  <div class="imm-content">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:12px">{site["category"]}</div>
     <h1>{article["title"]}</h1>
     <div class="meta">By {author} &nbsp;·&nbsp; {article.get("date","")} {'&nbsp;·&nbsp; Photo: ' + photographer + ' / Pexels' if photographer else ''}</div>
   </div>
 </div>
-<div class="body">
+<div class="imm-body">
   <p class="intro">{article["intro"]}</p>
   <p>{article["intro2"]}</p>
   {sections}
   <div class="concl">{article["conclusion"]}</div>
-</div>""" + _comments_section_js(t) + _giscus(site) + _foot(site["domain"], site["category"], t, site.get("signup_url", "")))
+  {_sources_block(article, t)}
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site))
+    return css, body
 
 
 ARTICLE_BUILDERS = {
@@ -1779,13 +3348,18 @@ ARTICLE_BUILDERS = {
 # DISPATCHERS
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _site_stem(site):
+    """Template stem (= GitHub repo basename) for a site, used by layout_shell."""
+    return site.get("repo", "").rsplit("/", 1)[-1] or site.get("id", "")
+
+
 def build_homepage(site, articles, themes, global_header_scripts="", global_footer_scripts=""):
-    t       = themes.get(site.get("theme", "minimal"), themes["minimal"])
-    layout  = site.get("layout", "cards")
-    builder = HOMEPAGE_BUILDERS.get(layout, homepage_cards)
-    html    = builder(site, articles, t)
-    custom  = site.get("custom_css", "").strip()
-    if custom:
+    """The homepage is the stored templates/<stem>-index.html - the single source of
+    truth for the whole site's chrome. The article grid loads client-side from
+    articles.json, so the homepage HTML itself is static."""
+    html = layout_shell.clean(layout_shell.template_path(_site_stem(site)).read_text(encoding="utf-8"))
+    custom = site.get("custom_css", "").strip()
+    if custom and "</style>" in html:
         html = html.replace("</style>", f"\n/* custom */\n{custom}\n</style>", 1)
     header_scripts = "\n".join(filter(None, [global_header_scripts.strip(), site.get("header_scripts", "").strip()]))
     footer_scripts = "\n".join(filter(None, [global_footer_scripts.strip(), site.get("footer_scripts", "").strip()]))
@@ -1797,19 +3371,40 @@ def build_homepage(site, articles, themes, global_header_scripts="", global_foot
 
 
 def build_article_page(article, site, image_url, photographer, themes, global_header_scripts="", global_footer_scripts=""):
-    t       = themes.get(site.get("theme", "minimal"), themes["minimal"])
+    """Build an article page wrapped in the homepage shell (header + footer + chrome
+    come straight from templates/<stem>-index.html, so they always match the homepage)."""
+    t       = SITE_THEMES.get(site.get("id"), themes.get(site.get("theme", "minimal"), themes["minimal"]))
+    # Article accent must match the site's homepage brand color (not a generic theme
+    # value). Pull it from the homepage's SHELL:ACCENT marker.
+    _acc = layout_shell.get_shell(_site_stem(site)).get("accent")
+    if _acc:
+        t = dict(t)
+        t["accent"]  = _acc
+        t["accent2"] = _acc
     layout  = site.get("article_layout", "standard")
     builder = ARTICLE_BUILDERS.get(layout, article_standard)
-    html    = builder(article, site, image_url, photographer, t)
-    custom  = site.get("custom_css", "").strip()
+    css, body = builder(article, site, image_url, photographer, t)
+
+    custom = site.get("custom_css", "").strip()
     if custom:
-        html = html.replace("</style>", f"\n/* custom */\n{custom}\n</style>", 1)
-    # Alt text is now applied directly in layout functions using image_alt field
-    # Affiliate link injection (text-node-safe, first-occurrence only)
+        css = f"{css}\n/* custom */\n{custom}"
+
+    author    = article.get("author", get_author_name(site))
+    date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
+    canonical = f"https://{site['domain']}/{article['slug']}/"
+    title     = f"{article['title']} | {_site_name(site)}"
+    seo       = _seo_meta(title, article["meta_description"], canonical,
+                          image_url or "", author, date_iso)
+
+    html = layout_shell.wrap_page(
+        _site_stem(site), title=title, description=article["meta_description"],
+        body_html=body, extra_css=css, head_meta=seo, depth=1,
+    )
+
     affiliate = site.get("affiliate_links", {})
     if affiliate:
         html = inject_affiliate_links(html, affiliate)
-    # Global scripts first, then site-level scripts (site can override/extend)
+
     header_scripts = "\n".join(filter(None, [global_header_scripts.strip(), site.get("header_scripts", "").strip()]))
     footer_scripts = "\n".join(filter(None, [global_footer_scripts.strip(), site.get("footer_scripts", "").strip()]))
     if header_scripts:
@@ -1845,14 +3440,24 @@ def load_article_index(repo, token):
     url     = f"https://api.github.com/repos/{repo}/contents/articles.json"
     headers = {"Authorization": f"token {token}"}
     r       = requests.get(url, headers=headers)
-    if r.status_code == 200:
-        content = base64.b64decode(r.json()["content"]).decode()
-        return json.loads(content)
-    return []
+    if r.status_code != 200:
+        return []
+    data = r.json()
+    # GitHub Contents API omits "content" for files > 1 MB - use blob URL instead
+    if "content" in data and data["content"]:
+        content = base64.b64decode(data["content"].replace("\n", "")).decode("utf-8")
+    elif "git_url" in data:
+        blob_r = requests.get(data["git_url"], headers={**headers, "Accept": "application/vnd.github.v3+json"})
+        if blob_r.status_code != 200:
+            return []
+        content = base64.b64decode(blob_r.json()["content"].replace("\n", "")).decode("utf-8")
+    else:
+        return []
+    return json.loads(content)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# NEWSLETTER — Brevo (free 300 emails/day)
+# NEWSLETTER - Brevo (free 300 emails/day)
 # ─────────────────────────────────────────────────────────────────────────────
 
 def send_newsletter(site, article, brevo_key):
@@ -1860,11 +3465,11 @@ def send_newsletter(site, article, brevo_key):
     if not brevo_key or not site.get("brevo_list_id"):
         return
 
-    t = THEMES.get(site.get("theme", "minimal"), THEMES["minimal"])
+    t = SITE_THEMES.get(site.get("id"), THEMES.get(site.get("theme", "minimal"), THEMES["minimal"]))
     html_body = f"""
 <div style="font-family:{t["font"]};max-width:600px;margin:0 auto;background:{t["bg"]};color:{t["text"]}">
   <div style="background:{t["bg2"]};padding:24px;border-bottom:3px solid {t["accent"]}">
-    <p style="font-size:20px;font-weight:700;margin:0;color:{t["accent"]}">{site["domain"]}</p>
+    <p style="font-size:20px;font-weight:700;margin:0;color:{t["accent"]}">{_site_name(site)}</p>
   </div>
   <div style="padding:32px 24px">
     <p style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:{t["meta"]}">{site["category"]}</p>
@@ -1913,6 +3518,83 @@ def send_newsletter(site, article, brevo_key):
             print(f"  Brevo error: {r.status_code} {r.text[:120]}")
     except Exception as e:
         print(f"  Newsletter failed: {e}")
+
+
+def send_nexus_digest(nexus_site, published_today, all_sites, brevo_key):
+    """Send a daily digest email to the Nexus list with all articles published today across the network."""
+    if not brevo_key or not nexus_site.get("brevo_list_id"):
+        return
+    if not published_today:
+        print("  Nexus digest: no articles published today, skipping")
+        return
+
+    site_map = {s["id"]: s for s in all_sites}
+
+    rows_html = ""
+    for entry in published_today:
+        src = site_map.get(entry.get("site_id"), {})
+        domain = src.get("domain", entry.get("site_id", ""))
+        category = src.get("category", "")
+        title = entry.get("title", "")
+        slug = entry.get("slug", "")
+        desc = entry.get("meta_description", "")
+        url = f"https://{domain}/{slug}/"
+        rows_html += f"""
+  <div style="border-bottom:1px solid #1a2e1e;padding:20px 0">
+    <p style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#3ecf8e;margin:0 0 6px">{category}</p>
+    <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;color:#e8f4ec;line-height:1.3">
+      <a href="{url}" style="color:#e8f4ec;text-decoration:none">{title}</a>
+    </h2>
+    <p style="font-size:14px;color:#8fb89c;margin:0 0 12px;line-height:1.6">{desc}</p>
+    <a href="{url}" style="font-size:12px;font-weight:700;color:#3ecf8e;text-decoration:none">Read on {domain} →</a>
+  </div>"""
+
+    html_body = f"""
+<div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;background:#060a07;color:#e8f4ec">
+  <div style="background:#0b1209;padding:28px 24px;border-bottom:3px solid #3ecf8e">
+    <p style="font-size:22px;font-weight:900;margin:0;letter-spacing:-0.5px;color:#3ecf8e">NEXUS</p>
+    <p style="font-size:12px;color:#4d7059;margin:6px 0 0;letter-spacing:1px;text-transform:uppercase">Daily Network Digest</p>
+  </div>
+  <div style="padding:24px">
+    <p style="font-size:13px;color:#4d7059;margin:0 0 20px">{len(published_today)} article{"s" if len(published_today)!=1 else ""} published across the network today</p>
+    {rows_html}
+  </div>
+  <div style="padding:16px 24px;border-top:1px solid #1a2e1e;font-size:11px;color:#4d7059">
+    You're receiving this because you subscribed to the Kavalsia Network digest.
+    <a href="{{{{unsubscribe}}}}" style="color:#4d7059">Unsubscribe</a>
+  </div>
+</div>"""
+
+    date_label = datetime.now().strftime("%B %d, %Y")
+    payload = {
+        "name":        f"Nexus Digest {date_label}",
+        "subject":     f"Today's reads: {len(published_today)} new article{'s' if len(published_today)!=1 else ''} from the network",
+        "sender":      {"name": "Nexus Network", "email": f"digest@{nexus_site['domain']}"},
+        "type":        "classic",
+        "htmlContent": html_body,
+        "recipients":  {"listIds": [nexus_site["brevo_list_id"]]},
+        "scheduledAt": datetime.now().strftime("%Y-%m-%dT%H:%M:%S+00:00"),
+    }
+    try:
+        r = requests.post(
+            "https://api.brevo.com/v3/emailCampaigns",
+            headers={"api-key": brevo_key, "Content-Type": "application/json"},
+            json=payload, timeout=15,
+        )
+        if r.status_code == 201:
+            campaign_id = r.json().get("id")
+            send_r = requests.post(
+                f"https://api.brevo.com/v3/emailCampaigns/{campaign_id}/sendNow",
+                headers={"api-key": brevo_key}, timeout=15,
+            )
+            if send_r.status_code in (200, 204):
+                print(f"  Nexus digest sent ({len(published_today)} articles, list {nexus_site['brevo_list_id']})")
+            else:
+                print(f"  Nexus digest sendNow failed: {send_r.status_code} {send_r.text[:120]}")
+        else:
+            print(f"  Nexus digest create failed: {r.status_code} {r.text[:120]}")
+    except Exception as e:
+        print(f"  Nexus digest failed: {e}")
 
 
 def send_telegram_notification(site, article, backlink_data, settings):
@@ -1974,6 +3656,45 @@ def send_telegram_notification(site, article, backlink_data, settings):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# REBUILD HOMEPAGES ONLY (fixes broken article links without new posts)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def rebuild_homepages_only(github_token, log=print):
+    """
+    Re-generate and push index.html for every active site using the current
+    bot.py templates + each site's existing articles.json from GitHub.
+    Fixes stale homepages with broken/root-relative article links.
+    """
+    active_sites, global_prompt, settings, global_client, global_negative_prompt, global_header_scripts, global_footer_scripts = load_network_config()
+    active_sites = [s for s in active_sites if s.get("active", True)]
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    ok_count = 0
+    for site in active_sites:
+        repo = site.get("repo", "")
+        if not repo:
+            continue
+        try:
+            articles = load_article_index(repo, github_token)
+            homepage_html = build_homepage(
+                site, articles, THEMES,
+                global_header_scripts=global_header_scripts,
+                global_footer_scripts=global_footer_scripts,
+            )
+            pushed = _retry(lambda: github_push(
+                repo, "index.html", homepage_html,
+                f"Rebuild homepage [{date_str}]", github_token,
+            ))
+            status = "✓" if pushed else "✗"
+            log(f"  {status} {site['domain']} ({len(articles)} articles)")
+            if pushed:
+                ok_count += 1
+        except Exception as e:
+            log(f"  ✗ {site['domain']}: {e}")
+    log(f"\nDone  -  {ok_count}/{len(active_sites)} homepages rebuilt.")
+    return ok_count
+
+
 # MAIN
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -1983,10 +3704,12 @@ def run(topic_overrides=None, site_filter=None):
     site_filter:     list of site ids or domains to restrict this run to
     Used by the Telegram bot or dashboard broadcast to publish specific topics.
     """
-    anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
-    pexels_key    = os.environ.get("PEXELS_API_KEY", "")
-    github_token  = os.environ.get("GITHUB_TOKEN")
-    brevo_key     = os.environ.get("BREVO_API_KEY", "")
+    anthropic_key  = os.environ.get("ANTHROPIC_API_KEY")
+    pexels_key     = os.environ.get("PEXELS_API_KEY", "")
+    unsplash_key   = os.environ.get("UNSPLASH_API_KEY", "")
+    replicate_key  = os.environ.get("REPLICATE_API_KEY", "")
+    github_token   = os.environ.get("GITHUB_TOKEN")
+    brevo_key      = os.environ.get("BREVO_API_KEY", "")
 
     if not anthropic_key or not github_token:
         raise SystemExit("Missing ANTHROPIC_API_KEY or GITHUB_TOKEN")
@@ -2007,6 +3730,7 @@ def run(topic_overrides=None, site_filter=None):
     client   = anthropic.Anthropic(api_key=anthropic_key)
     date_str = datetime.now().strftime("%Y-%m-%d")
     overrides = topic_overrides or {}
+    nexus_digest_articles = []  # collects {site_id, title, slug, meta_description} for Nexus digest
 
     # Check for broadcast.json (dashboard "post to all" feature)
     broadcast_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "broadcast.json")
@@ -2022,7 +3746,7 @@ def run(topic_overrides=None, site_filter=None):
                 overrides = {sid: topic_str for sid in target_ids}
             else:
                 overrides = {s["id"]: topic_str for s in active_sites}
-        # Rename instead of delete — preserves a record if the run crashes mid-way
+        # Rename instead of delete - preserves a record if the run crashes mid-way
         broadcast["_processed_at"] = datetime.now().isoformat()
         with open(broadcast_processed_path, "w") as f:
             json.dump(broadcast, f, indent=2)
@@ -2033,9 +3757,14 @@ def run(topic_overrides=None, site_filter=None):
         print(f"Site: {site['domain']}  [{site['layout']} / {site['article_layout']}]")
         print(f"{'='*62}")
 
+        # Nexus / mother-site: never generates articles - it aggregates content from the network
+        if site.get("is_mother_site") or site.get("layout") == "nexus" or site.get("id") == "nexus":
+            print("  SKIPPED - Nexus is a hub site and does not generate articles")
+            continue
+
         posts_per_run = max(1, int(site.get("posts_per_run", 1)))
 
-        # Randomize publish time — scatter sites across a window to break cadence fingerprint
+        # Randomize publish time - scatter sites across a window to break cadence fingerprint
         delay_max = int(site.get("publish_delay_max_seconds", 0))
         if delay_max > 0:
             delay = random.randint(0, delay_max)
@@ -2053,28 +3782,36 @@ def run(topic_overrides=None, site_filter=None):
                 if new_topics:
                     site["topics"] = topics + new_topics
 
-            # Warming check — skip if domain is too new for today's post
+            # Warming check - skip if domain is too new for today's post
             ok, warm_reason = should_post_today(site, articles)
             if not ok:
-                print(f"  SKIPPED — {warm_reason}")
+                print(f"  SKIPPED - {warm_reason}")
                 continue
 
             # Resolve client config once per site
             effective_client = get_effective_client(site, global_client)
 
+            # Build set of already-used image URLs for this site (dedup across runs)
+            used_image_urls = {a.get("image", "") for a in articles if a.get("image")}
+
             for post_num in range(posts_per_run):
                 print(f"  Post {post_num+1}/{posts_per_run}")
                 try:
                     is_client_post = not overrides.get(site["id"]) and is_client_post_due(len(articles), effective_client)
+                    is_roundup = (not is_client_post and not overrides.get(site["id"])
+                                  and post_num == 0 and is_roundup_due(site, articles))
 
                     if is_client_post:
                         topic = generate_client_topic(site, effective_client, client)
                         print(f"  CLIENT POST: {topic}")
+                    elif is_roundup:
+                        topic = roundup_topic(site)
+                        print(f"  WEEKLY ROUNDUP: {topic}")
                     else:
                         topic = overrides.get(site["id"]) or get_today_topic(site, len(articles))
                     print(f"  Topic: {topic}")
 
-                    author_name = get_author_name(site)
+                    author_name = get_author_name(site, settings)
 
                     web_context = search_web(topic, web_cfg)
                     internal_link_candidates = get_internal_link_candidates(articles, topic)
@@ -2099,6 +3836,8 @@ def run(topic_overrides=None, site_filter=None):
                     article["date"]     = article_date
                     article["date_iso"] = article_date_iso
                     article["author"]   = article.get("author") or author_name
+                    if is_roundup:
+                        article["category"] = ROUNDUP_CATEGORY
 
                     # Deduplicate slug against existing articles
                     existing_slugs = {a.get("slug", "") for a in articles}
@@ -2113,12 +3852,23 @@ def run(topic_overrides=None, site_filter=None):
 
                     article["slug"] = slug  # apply deduplicated slug
 
-                    image_url, photographer = fetch_image(article.get("image_query", "finance trading"), pexels_key)
+                    site_sources = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
+                    image_url, photographer = fetch_image(
+                        article.get("image_query", site.get("category", "lifestyle")),
+                        pexels_key, unsplash_key=unsplash_key or None,
+                        replicate_key=replicate_key or None,
+                        sources=site_sources,
+                        exclude_urls=used_image_urls,
+                    )
                     article["image"] = image_url or ""
+                    if image_url:
+                        used_image_urls.add(image_url)  # prevent reuse in subsequent posts this run
 
                     article_html = build_article_page(article, site, image_url, photographer, THEMES,
                                                       global_header_scripts=global_header_scripts,
                                                       global_footer_scripts=global_footer_scripts)
+
+                    article_html = insert_internal_links(article_html, articles, site["domain"], current_slug=slug)
 
                     pushed = _retry(lambda slug=slug: github_push(
                         repo    = site["repo"],
@@ -2129,7 +3879,7 @@ def run(topic_overrides=None, site_filter=None):
                     ))
                     print(f"  Article pushed: {pushed} → /{slug}/")
 
-                    articles.append({
+                    _idx_entry = {
                         "title":            article["title"],
                         "slug":             slug,
                         "meta_description": article["meta_description"],
@@ -2138,9 +3888,48 @@ def run(topic_overrides=None, site_filter=None):
                         "author":           article["author"],
                         "image":            article["image"],
                         "outbound_links":   article.get("outbound_links", []),
-                    })
+                    }
+                    if article.get("category"):
+                        _idx_entry["category"] = article["category"]
+                    articles.append(_idx_entry)
+
+                    # Auto-syndicate to mirrored destination sites.
+                    try:
+                        from sync_articles import (
+                            SYNC_MAP, rewrap_for_destination,
+                            gh_put as _sync_put, fetch_articles_json as _sync_get_idx,
+                        )
+                        src_stem = _site_stem(site)
+                        for dst_stem, srcs in SYNC_MAP.items():
+                            if src_stem not in srcs:
+                                continue
+                            dst_site = next((x for x in active_sites if _site_stem(x) == dst_stem), None)
+                            if not dst_site:
+                                continue
+                            rebuilt = rewrap_for_destination(article_html, _idx_entry, dst_stem,
+                                                             dst_site, dst_site.get("domain", ""))
+                            if not rebuilt:
+                                continue
+                            _sync_put(dst_site["repo"], f"{slug}/index.html", rebuilt, github_token,
+                                      msg=f"syndicate {slug} from {src_stem}")
+                            dst_arts, dst_sha = _sync_get_idx(dst_site["repo"], github_token)
+                            if not any(a.get("slug") == slug for a in dst_arts):
+                                dst_arts.append({**_idx_entry, "syndicated_from": src_stem})
+                                dst_arts.sort(key=lambda a: a.get("date_iso", ""), reverse=True)
+                                _sync_put(dst_site["repo"], "articles.json",
+                                          json.dumps(dst_arts, indent=2), github_token, sha=dst_sha,
+                                          msg=f"syndicate index: {slug}")
+                            print(f"  Syndicated -> {dst_stem}")
+                    except Exception as _e:
+                        print(f"  Syndication error: {_e}")
 
                     send_newsletter(site, article, brevo_key)
+                    nexus_digest_articles.append({
+                        "site_id":          site["id"],
+                        "title":            article["title"],
+                        "slug":             slug,
+                        "meta_description": article.get("meta_description", ""),
+                    })
                     broadcast_social(site, article, site.get("social_media", {}))
                     ping_google_indexing(f"https://{site['domain']}/{slug}/", indexing_cfg)
                     push_backlink_content(article, site, client, github_token, settings)
@@ -2155,7 +3944,7 @@ def run(topic_overrides=None, site_filter=None):
                 if post_num < posts_per_run - 1:
                     time.sleep(4)
 
-            # Always rebuild homepage, articles index, and sitemap — even if some posts failed
+            # Always rebuild homepage, articles index, and sitemap - even if some posts failed
             homepage_html = build_homepage(site, articles, THEMES,
                                           global_header_scripts=global_header_scripts,
                                           global_footer_scripts=global_footer_scripts)
@@ -2172,11 +3961,11 @@ def run(topic_overrides=None, site_filter=None):
             _retry(lambda: github_push(site["repo"], "sitemap.xml", sitemap_xml, f"Sitemap [{date_str}] ({len(articles)} URLs)", github_token))
             print(f"  Sitemap updated → {len(articles)} article URLs + homepage")
 
-            # Static pages (About, Contact, Privacy, ads.txt) — created once, never overwritten
-            t = THEMES.get(site.get("theme", "minimal"), THEMES["minimal"])
+            # Static pages (About, Contact, Privacy, ads.txt) - created once, never overwritten
+            t = SITE_THEMES.get(site.get("id"), THEMES.get(site.get("theme", "minimal"), THEMES["minimal"]))
             push_static_pages_if_missing(site, t, github_token)
 
-            # Scheduled comment growth — add 1-2 comments to older articles each run
+            # Scheduled comment growth - add 1-2 comments to older articles each run
             maybe_add_scheduled_comments(site, articles, client, github_token)
 
         except Exception as e:
@@ -2185,8 +3974,28 @@ def run(topic_overrides=None, site_filter=None):
 
         time.sleep(4)  # Rate-limit between sites
 
+    # Send Nexus daily digest if any articles were published today
+    nexus_site = next((s for s in active_sites if s.get("id") == "nexus"), None)
+    if nexus_site and nexus_digest_articles and brevo_key:
+        print(f"\n{'='*62}")
+        print("Nexus digest")
+        print(f"{'='*62}")
+        send_nexus_digest(nexus_site, nexus_digest_articles, active_sites, brevo_key)
+
     print("\n✓ All sites updated.")
 
 
 if __name__ == "__main__":
-    run()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--rebuild-homepages", action="store_true")
+    parser.add_argument("--gh-token", default="")
+    args, _ = parser.parse_known_args()
+
+    if args.rebuild_homepages:
+        token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
+        if not token:
+            raise SystemExit("--gh-token or GITHUB_TOKEN required")
+        rebuild_homepages_only(github_token=token, log=print)
+    else:
+        run()
