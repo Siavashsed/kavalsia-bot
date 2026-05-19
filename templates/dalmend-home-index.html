@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dalmend Home - Luxury Interior Design for High-End Houses and Mansions</title>
+<meta name="description" content="Dalmend Home is a luxury interior design studio decorating high-end houses and mansions - statement rooms, rare materials, sculptural lighting and curated collections. Part of the Dalmend Collective.">
+<meta name="author" content="Olivia Grant">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#0c0b0a;
+  --bg2:#121110;
+  --surface:#1a1816;
+  --surface2:#221f1c;
+  --primary:#a89a86;
+  --primary2:#c9bca6;
+  --accent:#c9a55c;
+  --accent2:#e3c987;
+  --accent-deep:#9c7f3f;
+  --text:#f3efe7;
+  --text-dim:#cabfae;
+  --muted:#8a8073;
+  --border:#2a2724;
+  --border2:#36322d;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Jost','Helvetica Neue',system-ui,sans-serif;
+  --shadow:0 2px 10px rgba(0,0,0,.5);
+  --shadow-md:0 8px 30px rgba(0,0,0,.6);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.7);
+  --gold-grad:linear-gradient(120deg,#9c7f3f 0%,#e3c987 45%,#c9a55c 70%,#8c7236 100%);
+  --radius:4px;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button,input{font-family:var(--sans)}
+::selection{background:rgba(201,165,92,.3);color:var(--text)}
+
+/* ── NAV ── */
+.nav{background:rgba(12,11,10,.78);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;transition:border-color .3s,box-shadow .3s,background .3s;border-bottom:1px solid transparent}
+.nav.scrolled{border-bottom:1px solid var(--border);box-shadow:var(--shadow);background:rgba(12,11,10,.94)}
+.nav-inner{max-width:1240px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:74px}
+.nav-mark{display:flex;align-items:center;gap:13px;margin-right:auto;flex-shrink:0}
+.nav-dh{width:38px;height:38px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:600;color:#171411;letter-spacing:.5px;flex-shrink:0}
+.nav-name{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--text);letter-spacing:.4px}
+.nav-name span{color:var(--accent)}
+.nav-links{display:flex;height:100%;align-items:center}
+.nav-links a{font-size:12px;font-weight:400;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);padding:0 19px;height:100%;display:flex;align-items:center;position:relative;transition:color .2s}
+.nav-links a::after{content:'';position:absolute;bottom:24px;left:19px;right:19px;height:1px;background:var(--accent);transform:scaleX(0);transition:transform .3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a.active{color:var(--accent2)}
+.nav-cta{font-size:11px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:#171411;background:var(--gold-grad);padding:11px 24px;border-radius:2px;transition:filter .2s,transform .2s;flex-shrink:0;margin-left:28px}
+.nav-cta:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.nav-burger{display:none;flex-direction:column;gap:6px;cursor:pointer;padding:6px;background:none;border:none;margin-left:16px}
+.nav-burger span{width:24px;height:1.5px;background:var(--primary);border-radius:1px;display:block;transition:transform .25s,opacity .25s}
+.nav-mobile{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border);flex-direction:column;z-index:199;box-shadow:var(--shadow-md)}
+.nav-mobile.open{display:flex}
+.nav-mobile a{font-size:13px;font-weight:400;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);padding:17px 32px;border-bottom:1px solid var(--border);transition:color .2s,background .2s}
+.nav-mobile a:hover{color:var(--accent);background:var(--surface)}
+.nav-mobile a:last-child{border-bottom:none}
+@media(max-width:860px){.nav-links,.nav-cta{display:none}.nav-burger{display:flex}}
+
+/* ── HERO ── */
+.hero{background:var(--bg);padding:96px 32px 104px;overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;top:-20%;right:-10%;width:60%;height:80%;background:radial-gradient(ellipse at center,rgba(201,165,92,.10) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
+.hero-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 470px;gap:80px;align-items:center;position:relative;z-index:2}
+.hero-kicker{display:inline-flex;align-items:center;gap:11px;font-size:11px;font-weight:500;letter-spacing:2.6px;text-transform:uppercase;color:var(--accent);margin-bottom:32px}
+.hero-kicker-line{width:32px;height:1px;background:var(--accent)}
+.hero-h1{font-family:var(--serif);font-size:clamp(48px,6.4vw,86px);font-weight:300;line-height:1.04;color:var(--text);margin-bottom:8px;letter-spacing:-1px}
+.hero-h1 em{font-style:italic;font-weight:400;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-h1-sub{font-family:var(--serif);font-size:clamp(34px,4.2vw,58px);font-weight:300;line-height:1.12;color:var(--primary);margin-bottom:30px;letter-spacing:-.3px}
+.hero-desc{font-size:16px;color:var(--text-dim);line-height:1.85;margin-bottom:38px;max-width:470px;font-weight:300}
+.hero-desc em{font-style:italic;color:var(--primary2)}
+.hero-desc a{color:var(--accent2);border-bottom:1px solid rgba(227,201,135,.35);transition:border-color .2s}
+.hero-desc a:hover{border-color:var(--accent2)}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap}
+.hero-cta-primary{font-size:12px;font-weight:500;letter-spacing:1.4px;text-transform:uppercase;color:#171411;background:var(--gold-grad);padding:16px 36px;border-radius:2px;transition:filter .2s,transform .2s;display:inline-block}
+.hero-cta-primary:hover{filter:brightness(1.12);transform:translateY(-2px)}
+.hero-cta-ghost{font-size:12px;font-weight:500;letter-spacing:1.4px;text-transform:uppercase;color:var(--text-dim);border:1px solid var(--border2);padding:15px 30px;border-radius:2px;transition:all .2s;display:inline-block}
+.hero-cta-ghost:hover{border-color:var(--accent);color:var(--accent2)}
+/* Hero room visual */
+.hero-visual{align-self:stretch;display:flex;align-items:stretch}
+.hero-room{flex:1;border-radius:5px;min-height:480px;position:relative;overflow:hidden;background:linear-gradient(165deg,#1d1a16 0%,#15120f 45%,#0f0d0b 100%);border:1px solid var(--border2);box-shadow:var(--shadow-lg)}
+.hero-room::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 25%,rgba(201,165,92,.22) 0%,transparent 55%)}
+.hero-room-frame{position:absolute;top:9%;left:9%;width:46%;height:40%;border:1px solid rgba(201,165,92,.3);border-radius:2px;background:linear-gradient(140deg,rgba(201,165,92,.10),rgba(201,165,92,.02))}
+.hero-room-frame2{position:absolute;top:9%;left:60%;width:24%;height:40%;border:1px solid rgba(201,165,92,.22);border-radius:2px}
+.hero-room-shelf{position:absolute;top:55%;left:9%;width:75%;height:1px;background:linear-gradient(90deg,rgba(201,165,92,.5),transparent)}
+.hero-room-rug{position:absolute;bottom:0;left:0;right:0;height:32%;background:linear-gradient(180deg,transparent 0%,rgba(201,165,92,.08) 100%)}
+.hero-room-lamp{position:absolute;top:14%;right:14%;width:3px;height:30%;background:rgba(201,165,92,.4);border-radius:2px}
+.hero-room-lamp::after{content:'';position:absolute;top:-18px;left:-15px;width:34px;height:18px;background:radial-gradient(ellipse at center top,rgba(227,201,135,.85),rgba(201,165,92,.15));border-radius:50% 50% 8px 8px;filter:blur(1px)}
+.hero-room-vase{position:absolute;bottom:32%;left:18%;width:26px;height:60px;background:linear-gradient(120deg,rgba(201,165,92,.4),rgba(201,165,92,.12));border-radius:14px 14px 6px 6px}
+.hero-room-caption{position:absolute;bottom:18px;left:18px;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);background:rgba(12,11,10,.7);padding:7px 13px;border-radius:2px;backdrop-filter:blur(4px);border:1px solid var(--border2)}
+
+/* ── MARQUEE / CREDIBILITY STRIP ── */
+.cred{background:var(--bg2);border-bottom:1px solid var(--border);overflow:hidden}
+.cred-inner{max-width:1240px;margin:0 auto;padding:24px 32px;display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}
+.cred-label{font-size:10px;font-weight:500;letter-spacing:2.4px;text-transform:uppercase;color:var(--muted)}
+.cred-item{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--text-dim);font-style:italic;letter-spacing:.3px;white-space:nowrap}
+.cred-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0}
+
+/* ── SECTION WRAPPERS ── */
+.section-wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.section-kicker{font-size:11px;font-weight:500;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.section-kicker::before{content:'';width:24px;height:1px;background:var(--accent)}
+.section-title{font-family:var(--serif);font-size:clamp(32px,4.4vw,50px);font-weight:300;color:var(--text);line-height:1.14;margin-bottom:12px;letter-spacing:-.4px}
+.section-title em{font-style:italic;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.section-sub{font-size:15px;color:var(--text-dim);font-weight:300;max-width:540px;line-height:1.8}
+.section-head-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;flex-wrap:wrap;gap:18px}
+.section-view-all{font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border2);padding-bottom:3px;transition:color .2s,border-color .2s}
+.section-view-all:hover{color:var(--accent2);border-color:var(--accent)}
+
+/* ── STORY ── */
+.story-section{padding:104px 0;position:relative}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.story-visual{position:relative}
+.story-panel{aspect-ratio:4/5;border-radius:5px;border:1px solid var(--border2);background:linear-gradient(160deg,#1c1915 0%,#13110e 60%,#0e0c0a 100%);position:relative;overflow:hidden;box-shadow:var(--shadow-lg)}
+.story-panel::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(201,165,92,.16),transparent 60%)}
+.story-panel-arch{position:absolute;top:14%;left:50%;transform:translateX(-50%);width:48%;height:62%;border:1px solid rgba(201,165,92,.32);border-radius:120px 120px 4px 4px;background:linear-gradient(180deg,rgba(201,165,92,.10),transparent)}
+.story-panel-floor{position:absolute;bottom:0;left:0;right:0;height:24%;background:linear-gradient(180deg,transparent,rgba(201,165,92,.07))}
+.story-badge{position:absolute;bottom:-28px;right:-20px;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:22px 26px;box-shadow:var(--shadow-md);max-width:220px}
+.story-badge-num{font-family:var(--serif);font-size:38px;font-weight:400;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.story-badge-text{font-size:12px;color:var(--text-dim);font-weight:300;margin-top:6px;line-height:1.5}
+.story-body p{font-size:16px;color:var(--text-dim);line-height:1.9;font-weight:300;margin-bottom:18px}
+.story-body p em{font-style:italic;color:var(--primary2)}
+.story-body a.story-brandlink{color:var(--accent2);font-weight:400;border-bottom:1px solid rgba(227,201,135,.4);transition:border-color .2s}
+.story-body a.story-brandlink:hover{border-color:var(--accent2)}
+.story-quote{font-family:var(--serif);font-size:24px;font-weight:300;font-style:italic;color:var(--text);line-height:1.5;border-left:2px solid var(--accent);padding-left:24px;margin:28px 0}
+.story-sign{display:flex;align-items:center;gap:14px;margin-top:28px}
+.story-sign-name{font-family:var(--serif);font-size:18px;color:var(--text);font-style:italic}
+.story-sign-role{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+
+/* ── SERVICE / PILLAR CARDS ── */
+.pillars-section{padding:104px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.pillar-card{background:var(--bg2);padding:42px 36px;transition:background .3s;position:relative}
+.pillar-card:hover{background:var(--surface)}
+.pillar-card::after{content:'';position:absolute;left:0;top:0;width:100%;height:2px;background:var(--gold-grad);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.pillar-card:hover::after{transform:scaleX(1)}
+.pillar-num{font-family:var(--serif);font-size:13px;color:var(--accent);letter-spacing:1px;margin-bottom:18px}
+.pillar-icon{width:46px;height:46px;display:flex;align-items:center;justify-content:center;color:var(--accent2);margin-bottom:22px;border:1px solid var(--border2);border-radius:50%}
+.pillar-icon svg{width:24px;height:24px;stroke-width:1.2}
+.pillar-title{font-family:var(--serif);font-size:23px;font-weight:500;color:var(--text);margin-bottom:11px;line-height:1.2}
+.pillar-desc{font-size:14px;color:var(--muted);line-height:1.8;font-weight:300}
+
+/* ── STATS BAND ── */
+.statsband{background:var(--bg);padding:88px 0;position:relative}
+.statsband::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.statsband-inner{max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.stat-cell{background:var(--bg);padding:8px 28px;text-align:center}
+.stat-number{font-family:var(--serif);font-size:clamp(46px,5.5vw,64px);font-weight:300;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px;line-height:1}
+.stat-label{font-size:12px;font-weight:400;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin-top:12px}
+.stat-desc{font-size:13px;color:var(--text-dim);font-weight:300;margin-top:8px;line-height:1.6}
+
+/* ── TOPICS GRID ── */
+.topics-section{padding:104px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:34px 30px;transition:transform .3s,border-color .3s,background .3s;position:relative;overflow:hidden}
+.topic-card:hover{transform:translateY(-5px);border-color:var(--border2);background:var(--surface2)}
+.topic-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(201,165,92,.12),transparent 70%);opacity:0;transition:opacity .3s}
+.topic-card:hover::before{opacity:1}
+.topic-icon{font-family:var(--serif);font-size:30px;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:16px;line-height:1}
+.topic-title{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--text);margin-bottom:9px;line-height:1.25}
+.topic-desc{font-size:13px;color:var(--muted);line-height:1.75;font-weight:300}
+
+/* ── GUIDES ── */
+.guides-section{padding:104px 0;background:var(--bg)}
+.guides-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.guide-card{background:var(--bg2);position:relative;overflow:hidden;cursor:pointer;transition:background .25s}
+.guide-card:hover{background:var(--surface)}
+.guide-visual{height:240px;position:relative;overflow:hidden}
+.guide-visual-a{background:linear-gradient(150deg,#221d15 0%,#181410 50%,#0f0d0a 100%)}
+.guide-visual-b{background:linear-gradient(150deg,#1e1a14 0%,#161310 50%,#100e0b 100%)}
+.guide-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 30%,rgba(201,165,92,.20),transparent 60%)}
+.guide-visual::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.5) 100%)}
+.guide-visual-frame{position:absolute;top:24px;left:24px;right:24px;bottom:24px;border:1px solid rgba(201,165,92,.22);border-radius:3px}
+.guide-body{padding:32px 36px 36px}
+.guide-tag{font-size:10px;font-weight:500;letter-spacing:2.2px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.guide-title{font-family:var(--serif);font-size:clamp(22px,2.6vw,29px);font-weight:500;color:var(--text);line-height:1.2;margin-bottom:13px;transition:color .25s}
+.guide-card:hover .guide-title{color:var(--accent2)}
+.guide-excerpt{font-size:14px;color:var(--muted);line-height:1.8;font-weight:300;margin-bottom:22px}
+.guide-read-link{font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);display:inline-flex;align-items:center;gap:7px;transition:gap .2s,color .2s}
+.guide-card:hover .guide-read-link{gap:12px;color:var(--accent2)}
+
+/* ── AUTHOR ── */
+.author-section{padding:104px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.author-card{background:linear-gradient(150deg,var(--surface),var(--bg2));border:1px solid var(--border2);border-radius:6px;padding:60px 64px;display:grid;grid-template-columns:200px 1fr;gap:64px;align-items:start;box-shadow:var(--shadow-md)}
+.author-avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:18px}
+.author-avatar{width:140px;height:140px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:38px;font-weight:400;color:#171411;letter-spacing:1px;flex-shrink:0;box-shadow:0 0 0 1px var(--border2),0 0 40px rgba(201,165,92,.18)}
+.author-social{display:flex;gap:11px}
+.author-social-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--muted);transition:color .2s,border-color .2s}
+.author-social-btn:hover{color:var(--accent2);border-color:var(--accent)}
+.author-social-btn svg{width:15px;height:15px}
+.author-name{font-family:var(--serif);font-size:36px;font-weight:500;color:var(--text);margin-bottom:5px;letter-spacing:-.3px}
+.author-title{font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:26px}
+.author-bio-text{font-size:15px;color:var(--text-dim);line-height:1.95;font-weight:300;margin-bottom:16px}
+.author-bio-text em{font-style:italic;color:var(--primary2)}
+.author-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.author-tag{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);background:var(--bg);border:1px solid var(--border2);padding:7px 15px;border-radius:2px}
+
+/* ── ARTICLES ── */
+.articles-section{padding:104px 0;background:var(--bg)}
+.article-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px}
+.filter-btn{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--border2);padding:9px 18px;border-radius:2px;cursor:pointer;transition:all .2s}
+.filter-btn:hover{color:var(--text-dim);border-color:var(--accent-deep)}
+.filter-btn.active{color:#171411;background:var(--gold-grad);border-color:transparent}
+.articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.article-card{background:var(--bg2);overflow:hidden;transition:background .25s;cursor:pointer;display:block}
+.article-card:hover{background:var(--surface)}
+.article-img{height:190px;position:relative;overflow:hidden}
+.article-img-a{background:linear-gradient(155deg,#221d15 0%,#16120e 100%)}
+.article-img-b{background:linear-gradient(155deg,#1e1a14 0%,#14110e 100%)}
+.article-img-c{background:linear-gradient(155deg,#1c1813 0%,#13110d 100%)}
+.article-img::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 65% 30%,rgba(201,165,92,.18),transparent 60%)}
+.article-img::after{content:'';position:absolute;inset:18px;border:1px solid rgba(201,165,92,.18);border-radius:2px}
+.article-body{padding:26px 30px 30px}
+.article-tag{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:11px}
+.article-title{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--text);line-height:1.28;margin-bottom:11px;transition:color .2s}
+.article-card:hover .article-title{color:var(--accent2)}
+.article-excerpt{font-size:13px;color:var(--muted);line-height:1.8;font-weight:300;margin-bottom:20px}
+.article-footer{display:flex;align-items:center;justify-content:space-between}
+.article-meta{font-size:11px;color:var(--muted);font-weight:300;letter-spacing:.3px}
+.article-link{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);transition:color .2s}
+.article-card:hover .article-link{color:var(--accent2)}
+
+/* ── FAQ ── */
+.faq-section{padding:104px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.faq-list{max-width:820px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{width:100%;background:none;border:none;text-align:left;cursor:pointer;padding:26px 8px;display:flex;align-items:center;justify-content:space-between;gap:24px;font-family:var(--serif);font-size:21px;font-weight:500;color:var(--text);transition:color .2s}
+.faq-q:hover{color:var(--accent2)}
+.faq-icon{flex-shrink:0;width:26px;height:26px;border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:18px;line-height:1;transition:transform .3s,border-color .3s}
+.faq-item.open .faq-icon{transform:rotate(45deg);border-color:var(--accent)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-a-inner{padding:0 8px 28px;font-size:14px;color:var(--text-dim);line-height:1.85;font-weight:300}
+.faq-a-inner a{color:var(--accent2);border-bottom:1px solid rgba(227,201,135,.35)}
+
+/* ── NEWSLETTER ── */
+.nl-section{padding:112px 0;background:var(--bg);position:relative}
+.nl-section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:340px;background:radial-gradient(ellipse at center top,rgba(201,165,92,.10),transparent 70%);pointer-events:none}
+.nl-inner{max-width:660px;margin:0 auto;text-align:center;position:relative;z-index:2}
+.nl-ornament{font-family:var(--serif);font-size:46px;font-weight:300;color:var(--accent);line-height:1;margin-bottom:14px;display:block}
+.nl-kicker{font-size:11px;font-weight:500;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;justify-content:center;gap:11px;margin-bottom:22px}
+.nl-kicker::before,.nl-kicker::after{content:'';width:30px;height:1px;background:var(--accent)}
+.nl-title{font-family:var(--serif);font-size:clamp(36px,5.4vw,58px);font-weight:300;color:var(--text);line-height:1.1;margin-bottom:16px;letter-spacing:-.6px}
+.nl-title em{font-style:italic;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nl-sub{font-size:15px;color:var(--text-dim);font-weight:300;line-height:1.85;margin-bottom:40px;max-width:480px;margin-left:auto;margin-right:auto}
+.nl-form{display:flex;max-width:460px;margin:0 auto 16px;border:1px solid var(--border2);border-radius:3px;overflow:hidden;background:var(--surface);transition:border-color .2s}
+.nl-form:focus-within{border-color:var(--accent)}
+.nl-form input{flex:1;background:transparent;border:none;padding:16px 22px;font-size:14px;font-family:var(--sans);outline:none;color:var(--text);min-width:0;font-weight:300}
+.nl-form input::placeholder{color:var(--muted)}
+.nl-form button{background:var(--gold-grad);color:#171411;border:none;padding:16px 28px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:filter .2s;font-family:var(--sans)}
+.nl-form button:hover{filter:brightness(1.12)}
+.nl-fine{font-size:11px;color:var(--muted);font-weight:300;letter-spacing:.4px}
+.nl-divider{width:52px;height:1px;background:var(--accent);margin:22px auto;opacity:.5}
+
+/* ── FOOTER ── */
+.footer{background:var(--bg2);border-top:1px solid var(--border)}
+.footer-upper{max-width:1240px;margin:0 auto;padding:72px 32px 56px;display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:56px}
+.footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.footer-brand-mark{width:36px;height:36px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;font-weight:600;color:#171411}
+.footer-brand-name{font-family:var(--serif);font-size:25px;font-weight:400;color:var(--text);letter-spacing:.3px}
+.footer-brand-sub{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.footer-desc{font-size:13px;color:var(--muted);line-height:1.9;font-weight:300;max-width:320px;margin-bottom:24px}
+.footer-desc a{color:var(--accent2);border-bottom:1px solid rgba(227,201,135,.3)}
+.footer-author-chip{display:inline-flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--border2);padding:9px 16px 9px 11px;border-radius:50px}
+.footer-author-initials{width:32px;height:32px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:12px;font-weight:600;color:#171411;flex-shrink:0}
+.footer-author-name{font-size:12px;font-weight:500;color:var(--text)}
+.footer-author-role{font-size:10px;color:var(--muted);font-weight:300}
+.footer-col-title{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:18px;padding-bottom:11px;border-bottom:1px solid var(--border2)}
+.footer-col a{display:block;font-size:13px;font-weight:300;color:var(--muted);padding:6px 0;transition:color .2s}
+.footer-col a:hover{color:var(--accent2)}
+.footer-nl-mini p{font-size:13px;color:var(--muted);font-weight:300;line-height:1.8;margin-bottom:14px}
+.footer-nl-mini-form{display:flex;flex-direction:column;gap:9px}
+.footer-nl-mini-input{background:var(--surface);border:1px solid var(--border2);border-radius:2px;padding:11px 15px;font-size:13px;font-family:var(--sans);outline:none;color:var(--text);transition:border-color .2s;font-weight:300}
+.footer-nl-mini-input:focus{border-color:var(--accent)}
+.footer-nl-mini-input::placeholder{color:var(--muted)}
+.footer-nl-mini-btn{background:var(--gold-grad);color:#171411;border:none;padding:11px 16px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:filter .2s;font-family:var(--sans);text-align:center}
+.footer-nl-mini-btn:hover{filter:brightness(1.12)}
+.footer-lower{background:var(--bg);border-top:1px solid var(--border);padding:0 32px}
+.footer-lower-inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px;flex-wrap:wrap;gap:10px}
+.footer-lower-copy{font-size:11px;color:var(--muted);font-weight:300;letter-spacing:.3px}
+.footer-lower-links{display:flex;gap:22px}
+.footer-lower-links a{font-size:11px;color:var(--muted);font-weight:300;letter-spacing:.3px;transition:color .2s}
+.footer-lower-links a:hover{color:var(--accent2)}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:52px}
+  .hero-visual{display:none}
+  .story-grid{grid-template-columns:1fr;gap:56px}
+  .story-badge{position:static;margin-top:24px;max-width:none}
+  .footer-upper{grid-template-columns:1fr 1fr;gap:44px}
+  .author-card{grid-template-columns:150px 1fr;gap:44px;padding:48px 44px}
+}
+@media(max-width:900px){
+  .pillars-grid{grid-template-columns:repeat(2,1fr)}
+  .topics-grid{grid-template-columns:repeat(2,1fr)}
+  .guides-grid{grid-template-columns:1fr}
+  .articles-grid{grid-template-columns:1fr}
+  .statsband-inner{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .hero{padding:64px 22px 72px}
+  .pillars-grid{grid-template-columns:1fr}
+  .topics-grid{grid-template-columns:1fr}
+  .author-card{grid-template-columns:1fr;gap:30px;padding:36px 28px;text-align:center}
+  .author-avatar-wrap{flex-direction:row;justify-content:center}
+  .author-tags{justify-content:center}
+  .cred-inner{gap:24px}
+  .footer-upper{grid-template-columns:1fr;gap:40px;padding:56px 22px 44px}
+  .footer-lower-inner{height:auto;padding:18px 0;flex-direction:column;align-items:flex-start;gap:12px}
+  .section-wrap{padding:0 22px}
+  .story-section,.pillars-section,.topics-section,.guides-section,.author-section,.articles-section,.faq-section,.nl-section,.statsband{padding:64px 0}
+  .statsband-inner{padding:0 22px}
+}
+@media(max-width:480px){
+  .statsband-inner{grid-template-columns:1fr}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .hero-cta-primary,.hero-cta-ghost{text-align:center}
+  .nl-form{flex-direction:column;border:none;background:transparent;gap:9px}
+  .nl-form input{border:1px solid var(--border2);border-radius:2px;background:var(--surface)}
+  .nl-form input:focus{border-color:var(--accent)}
+  .nl-form button{border-radius:2px}
+  .footer-lower-links{flex-wrap:wrap;gap:16px}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#c9a55c-->
+<!--SHELL:HEADER-->
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="./" class="nav-mark">
+      <div class="nav-dh">DH</div>
+      <span class="nav-name">Dalmend <span>Home</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="./#story" class="active">The Studio</a>
+      <a href="./#services">Services</a>
+      <a href="./#topics">What We Cover</a>
+      <a href="./#articles">Journal</a>
+      <a href="about.html">About</a>
+    </div>
+    <a href="./#newsletter" class="nav-cta">The Atelier Letter</a>
+    <button class="nav-burger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="./#story" onclick="document.getElementById('nav-mobile').classList.remove('open')">The Studio</a>
+    <a href="./#services" onclick="document.getElementById('nav-mobile').classList.remove('open')">Services</a>
+    <a href="./#topics" onclick="document.getElementById('nav-mobile').classList.remove('open')">What We Cover</a>
+    <a href="./#articles" onclick="document.getElementById('nav-mobile').classList.remove('open')">Journal</a>
+    <a href="about.html" onclick="document.getElementById('nav-mobile').classList.remove('open')">About</a>
+    <a href="./#newsletter" onclick="document.getElementById('nav-mobile').classList.remove('open')">The Atelier Letter</a>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-kicker">
+        <span class="hero-kicker-line"></span>
+        Luxury Interiors for Houses and Mansions
+      </div>
+      <h1 class="hero-h1">Rooms That Hold a<br><em>Quiet Power</em></h1>
+      <div class="hero-h1-sub">Interiors for the finest homes.</div>
+      <p class="hero-desc">Dalmend Home decorates high-end houses and grand mansions - statement rooms built from rare materials, sculptural lighting and collections worth a slow second look. A studio within the <a href="https://dalmend.com">Dalmend Collective</a>.</p>
+      <div class="hero-actions">
+        <a href="./#services" class="hero-cta-primary">Explore the Studio</a>
+        <a href="./#articles" class="hero-cta-ghost">Read the Journal</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-room">
+        <div class="hero-room-frame"></div>
+        <div class="hero-room-frame2"></div>
+        <div class="hero-room-shelf"></div>
+        <div class="hero-room-vase"></div>
+        <div class="hero-room-lamp"></div>
+        <div class="hero-room-rug"></div>
+        <div class="hero-room-caption">The Drawing Room - Estate Series</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDIBILITY STRIP -->
+<section class="cred reveal">
+  <div class="cred-inner">
+    <span class="cred-label">Trusted For</span>
+    <span class="cred-item">Private Estates</span>
+    <span class="cred-dot"></span>
+    <span class="cred-item">Mansion Renovations</span>
+    <span class="cred-dot"></span>
+    <span class="cred-item">Heritage Homes</span>
+    <span class="cred-dot"></span>
+    <span class="cred-item">Penthouse Residences</span>
+    <span class="cred-dot"></span>
+    <span class="cred-item">Waterfront Villas</span>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story-section" id="story">
+  <div class="section-wrap">
+    <div class="story-grid">
+      <div class="story-visual reveal">
+        <div class="story-panel">
+          <div class="story-panel-arch"></div>
+          <div class="story-panel-floor"></div>
+        </div>
+        <div class="story-badge">
+          <div class="story-badge-num">2009</div>
+          <div class="story-badge-text">Designing for grand residences since</div>
+        </div>
+      </div>
+      <div class="story-body reveal">
+        <div class="section-kicker">The Philosophy</div>
+        <h2 class="section-title">A Studio Within the <em>Dalmend Collective</em></h2>
+        <p>Dalmend Home is the residential interiors studio of the <a class="story-brandlink" href="https://dalmend.com">Dalmend Collective</a> - a family of design practices devoted to the craft of living well. Where the Collective shapes spaces of every scale, our studio gives its full attention to one thing: the high-end house and the mansion.</p>
+        <p>We believe true luxury is not loud. It is the depth of a hand-rubbed walnut panel, the weight of a brass door pull, the way late light falls across honed marble. <em>Restraint, material honesty and a sense of occasion</em> guide every room we touch.</p>
+        <div class="story-quote">"A great house is not decorated. It is composed - room by room, like movements in a quiet symphony."</div>
+        <p>From the entrance hall that sets the tone to the private library that ends the day, we curate interiors meant to be lived in for generations - not refreshed every season.</p>
+        <div class="story-sign">
+          <span class="story-sign-name">Olivia Grant</span>
+          <span class="story-sign-role">Founding Designer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES / PILLARS -->
+<section class="pillars-section" id="services">
+  <div class="section-wrap">
+    <div class="section-head-row reveal">
+      <div>
+        <div class="section-kicker">What the Studio Does</div>
+        <h2 class="section-title">The Art of the <em>Grand Interior</em></h2>
+        <p class="section-sub">Six disciplines that shape every Dalmend Home residence - from first sketch to the final placed object.</p>
+      </div>
+    </div>
+    <div class="pillars-grid reveal">
+
+      <div class="pillar-card">
+        <div class="pillar-num">01</div>
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div class="pillar-title">Whole-Home Design</div>
+        <div class="pillar-desc">Cohesive interior schemes for entire estates, where every room answers to a single, considered narrative of light, material and proportion.</div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-num">02</div>
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2L12 16.8 5.7 21l2.3-7.2-6-4.4h7.6z"/>
+          </svg>
+        </div>
+        <div class="pillar-title">Statement Rooms</div>
+        <div class="pillar-desc">Drawing rooms, grand staircases, dining halls and libraries designed as set pieces - the spaces a great house is remembered by.</div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-num">03</div>
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0-6 6c0 2.2 1.2 3.6 2.5 5 .8.9 1.5 1.7 1.5 3h4c0-1.3.7-2.1 1.5-3C16.8 12.6 18 11.2 18 9a6 6 0 0 0-6-6z"/><line x1="9" y1="21" x2="15" y2="21"/>
+          </svg>
+        </div>
+        <div class="pillar-title">Lighting Architecture</div>
+        <div class="pillar-desc">Layered schemes built around chandeliers, sculptural fixtures and concealed sources that flatter art, stone and skin alike.</div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-num">04</div>
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+          </svg>
+        </div>
+        <div class="pillar-title">Material Curation</div>
+        <div class="pillar-desc">Sourcing rare marble, figured timber, hand-applied plaster and bespoke metalwork - the substance behind every refined surface.</div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-num">05</div>
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <div class="pillar-title">Art and Object Placement</div>
+        <div class="pillar-desc">Collections, antiques and commissioned pieces hung and positioned so each holds its own conversation within the room.</div>
+      </div>
+
+      <div class="pillar-card">
+        <div class="pillar-num">06</div>
+        <div class="pillar-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 22h20M4 22V8l8-5 8 5v14M9 22v-6h6v6"/>
+          </svg>
+        </div>
+        <div class="pillar-title">Heritage Restoration</div>
+        <div class="pillar-desc">Returning period mansions to grace - cornices, panelling and proportion honoured, comfort and quiet technology added.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<section class="statsband reveal">
+  <div class="statsband-inner">
+    <div class="stat-cell">
+      <div class="stat-number" data-count="86">0</div>
+      <div class="stat-label">Estates Designed</div>
+      <div class="stat-desc">Private residences across three continents</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number" data-count="15" data-suffix="+">0</div>
+      <div class="stat-label">Years of Practice</div>
+      <div class="stat-desc">Devoted to high-end residential interiors</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number" data-count="240" data-suffix="+">0</div>
+      <div class="stat-label">Statement Rooms</div>
+      <div class="stat-desc">Halls, libraries and salons composed</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number" data-count="40" data-suffix="K">0</div>
+      <div class="stat-label">Square Metres</div>
+      <div class="stat-desc">Of grand interior delivered to date</div>
+    </div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section class="topics-section" id="topics">
+  <div class="section-wrap">
+    <div class="section-head-row reveal">
+      <div>
+        <div class="section-kicker">What We Cover</div>
+        <h2 class="section-title">The Vocabulary of a <em>Fine Home</em></h2>
+        <p class="section-sub">Our journal explores the elements that turn a large house into a remarkable one.</p>
+      </div>
+    </div>
+    <div class="topics-grid reveal">
+
+      <div class="topic-card">
+        <div class="topic-icon">&#9671;</div>
+        <div class="topic-title">Luxury Living Rooms</div>
+        <div class="topic-desc">Drawing rooms and salons designed for conversation, art and the long evening - generous, layered, never cluttered.</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">&#10070;</div>
+        <div class="topic-title">Marble and Stone</div>
+        <div class="topic-desc">Selecting, bookmatching and detailing natural stone for floors, fireplaces and the surfaces that anchor a room.</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">&#9788;</div>
+        <div class="topic-title">Sculptural Lighting</div>
+        <div class="topic-desc">Chandeliers, pendants and concealed light - how the right scheme gives a mansion its evening atmosphere.</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">&#9670;</div>
+        <div class="topic-title">Grand Entrances</div>
+        <div class="topic-desc">Entrance halls and staircases that announce the house - the first impression that every other room answers to.</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">&#9672;</div>
+        <div class="topic-title">Bespoke Joinery</div>
+        <div class="topic-desc">Panelled libraries, dressing rooms and cabinetry made by hand to the millimetre and to the client.</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-icon">&#10038;</div>
+        <div class="topic-title">Collecting and Curation</div>
+        <div class="topic-desc">Building, placing and living with art, antiques and rare objects so a home reads as a life, not a showroom.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED GUIDES -->
+<section class="guides-section" id="guides">
+  <div class="section-wrap">
+    <div class="section-head-row reveal">
+      <div>
+        <div class="section-kicker">From the Atelier</div>
+        <h2 class="section-title">Essential <em>Reading</em></h2>
+      </div>
+      <a href="./#articles" class="section-view-all">All guides</a>
+    </div>
+    <div class="guides-grid reveal">
+
+      <div class="guide-card">
+        <div class="guide-visual guide-visual-a"><div class="guide-visual-frame"></div></div>
+        <div class="guide-body">
+          <div class="guide-tag">Statement Rooms</div>
+          <div class="guide-title">Designing a Drawing Room That Commands the House</div>
+          <p class="guide-excerpt">The drawing room sets the register for an entire residence. We walk through scale, the placement of the fireplace, layered seating and the single sculptural gesture that gives the space its quiet authority - the moves that separate a grand room from a merely large one.</p>
+          <a href="./#articles" class="guide-read-link">Read guide <span>&#8594;</span></a>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-visual guide-visual-b"><div class="guide-visual-frame"></div></div>
+        <div class="guide-body">
+          <div class="guide-tag">Materials and Light</div>
+          <div class="guide-title">Choosing Marble and Lighting That Age With the Home</div>
+          <p class="guide-excerpt">Rare stone and considered light are the two investments a mansion never outgrows. This guide covers bookmatching, honed versus polished finishes, and a layered lighting plan that flatters every surface from morning to midnight.</p>
+          <a href="./#articles" class="guide-read-link">Read guide <span>&#8594;</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AUTHOR -->
+<section class="author-section" id="author">
+  <div class="section-wrap">
+    <div class="section-head-row reveal">
+      <div>
+        <div class="section-kicker">The Designer</div>
+        <h2 class="section-title">Behind the <em>Studio</em></h2>
+      </div>
+    </div>
+    <div class="author-card reveal">
+      <div class="author-avatar-wrap">
+        <div class="author-avatar">OG</div>
+        <div class="author-social">
+          <a href="./" class="author-social-btn" aria-label="Pinterest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.76 1.23-5.19 1.23-5.19s-.31-.63-.31-1.57c0-1.47.85-2.57 1.91-2.57.9 0 1.34.68 1.34 1.49 0 .91-.58 2.27-.88 3.53-.25 1.05.52 1.91 1.55 1.91 1.86 0 3.11-2.39 3.11-5.22 0-2.15-1.45-3.78-4.09-3.78-2.98 0-4.83 2.22-4.83 4.71 0 .86.24 1.46.62 1.93.17.2.19.28.13.51-.04.17-.14.57-.18.73-.06.23-.24.32-.45.23-1.67-.71-2.44-2.6-2.44-4.73 0-3.55 2.99-7.82 8.96-7.82 4.82 0 7.98 3.5 7.98 7.26 0 4.98-2.76 8.7-6.81 8.7-1.36 0-2.65-.73-3.09-1.56l-.84 3.22c-.3 1.15-.93 2.3-1.44 3.18.96.29 1.96.44 3 .44 5.52 0 10-4.48 10-10S17.52 2 12 2z"/>
+            </svg>
+          </a>
+          <a href="./" class="author-social-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="author-name">Olivia Grant</div>
+        <div class="author-title">Founding Designer - Dalmend Home</div>
+        <p class="author-bio-text">For over fifteen years I have designed interiors for private estates, heritage mansions and waterfront residences. My work begins not with a mood board but with the house itself - its light, its proportion, the way it wants to be lived in.</p>
+        <p class="author-bio-text">Dalmend Home is my studio within the <em>Dalmend Collective</em>, dedicated entirely to high-end houses. Here I share the thinking behind grand interiors: how to choose materials that age with grace, how to compose a statement room, and how to let a great house breathe.</p>
+        <div class="author-tags">
+          <span class="author-tag">Estate Interiors</span>
+          <span class="author-tag">Heritage Restoration</span>
+          <span class="author-tag">Material Curation</span>
+          <span class="author-tag">Statement Rooms</span>
+          <span class="author-tag">Dalmend Collective</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section class="articles-section" id="articles">
+  <div class="section-wrap">
+    <div class="section-head-row reveal">
+      <div>
+        <div class="section-kicker">The Journal</div>
+        <h2 class="section-title">Latest from the <em>Studio</em></h2>
+      </div>
+      <a href="./#newsletter" class="section-view-all">Subscribe</a>
+    </div>
+    <div class="article-filters reveal" id="article-filters"></div>
+    <div class="articles-grid reveal" id="articles-grid">
+      <p style="grid-column:1/-1;text-align:center;color:#9a8e7d;font-size:17px;padding:48px 20px">New articles from the studio are coming soon.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-wrap">
+    <div class="section-head-row reveal" style="justify-content:center;text-align:center;flex-direction:column;align-items:center">
+      <div>
+        <div class="section-kicker" style="justify-content:center">Questions</div>
+        <h2 class="section-title">Before You <em>Begin</em></h2>
+      </div>
+    </div>
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What kind of homes does Dalmend Home design?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Our studio works exclusively with high-end residences - private estates, mansions, heritage homes, penthouse residences and waterfront villas. Every project receives a whole-home approach, where each room is composed as part of a single design narrative.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How is Dalmend Home connected to the Dalmend Collective?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Dalmend Home is the residential interiors studio within the <a href="https://dalmend.com">Dalmend Collective</a>, a family of design practices devoted to the craft of living well. The studio gives its full attention to the high-end house and the mansion.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do you work with period and heritage properties?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Yes. Heritage restoration is one of our six core disciplines. We return period mansions to grace - honouring cornices, panelling and original proportion while quietly introducing modern comfort and considered technology.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Can you source rare materials and bespoke pieces?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">Material curation is central to our work. We source rare marble, figured timber, hand-applied plaster and bespoke metalwork, and we commission joinery and objects made by hand to each client and each room.</div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What does the journal cover?<span class="faq-icon">+</span></button>
+        <div class="faq-a"><div class="faq-a-inner">The journal explores the vocabulary of a fine home - luxury living rooms, marble and stone, sculptural lighting, grand entrances, bespoke joinery, and the art of collecting and curation. Subscribe to The Atelier Letter to receive new writing each month.</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="nl-section" id="newsletter">
+  <div class="section-wrap">
+    <div class="nl-inner reveal">
+      <span class="nl-ornament">&#10070;</span>
+      <div class="nl-kicker">Monthly Letter</div>
+      <h2 class="nl-title">The <em>Atelier Letter</em></h2>
+      <div class="nl-divider"></div>
+      <p class="nl-sub">Each month, the thinking behind grand interiors - materials worth the investment, statement rooms in detail, and a closer look at the houses we love. Considered writing for those who decorate to last.</p>
+      <form class="nl-form" id="nl-form" onsubmit="handleNlSubmit(event)">
+        <input type="email" placeholder="your@email.com" required aria-label="Email address">
+        <button type="submit">Subscribe</button>
+      </form>
+      <div class="nl-fine" id="nl-fine">No noise. Unsubscribe at any time. Always free.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<!--SHELL:FOOTER-->
+<footer class="footer">
+  <div class="footer-upper">
+
+    <div>
+      <div class="footer-brand">
+        <div class="footer-brand-mark">DH</div>
+        <div class="footer-brand-name">Dalmend Home</div>
+      </div>
+      <div class="footer-brand-sub">Luxury Interiors for Fine Houses</div>
+      <p class="footer-desc">The residential interiors studio of the <a href="https://dalmend.com">Dalmend Collective</a> - decorating high-end houses and mansions with restraint, rare materials and a sense of occasion.</p>
+      <div class="footer-author-chip">
+        <div class="footer-author-initials">OG</div>
+        <div>
+          <div class="footer-author-name">Olivia Grant</div>
+          <div class="footer-author-role">Founding Designer</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-col footer-col-links">
+        <div class="footer-col-title">Explore</div>
+        <a href="./#story">The Studio</a>
+        <a href="./#services">Services</a>
+        <a href="./#topics">What We Cover</a>
+        <a href="./#guides">Guides</a>
+        <a href="./#articles">Journal</a>
+        <a href="./#faq">Questions</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-col footer-col-links">
+        <div class="footer-col-title">Studio</div>
+        <a href="./">Home</a>
+        <a href="about.html">About</a>
+        <a href="./#author">The Designer</a>
+        <a href="https://dalmend.com">Dalmend Collective</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Use</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="footer-col-title">The Atelier Letter</div>
+      <div class="footer-nl-mini">
+        <p>Considered writing on grand interiors, delivered monthly.</p>
+        <form class="footer-nl-mini-form" onsubmit="handleFooterNl(event)">
+          <input type="email" class="footer-nl-mini-input" placeholder="your@email.com" required id="footer-nl-email">
+          <button type="submit" class="footer-nl-mini-btn" id="footer-nl-btn">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-lower">
+    <div class="footer-lower-inner">
+      <span class="footer-lower-copy">&copy; 2026 Dalmend Home, part of the Dalmend Collective. All rights reserved.</span>
+      <div class="footer-lower-links">
+        <a href="./">Home</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="https://dalmend.com">Dalmend Collective</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAV SCROLL BORDER ─────────────────────────────────────────────────────
+(function(){
+  var nav=document.getElementById('main-nav');
+  window.addEventListener('scroll',function(){
+    nav.classList.toggle('scrolled',window.pageYOffset>20);
+  },{passive:true});
+})();
+
+// ── ACTIVE NAV LINK ───────────────────────────────────────────────────────
+(function(){
+  var links=document.querySelectorAll('.nav-links a');
+  var sections=['story','services','topics','articles'];
+  window.addEventListener('scroll',function(){
+    var y=window.pageYOffset+120;
+    var cur=-1;
+    sections.forEach(function(id,i){
+      var el=document.getElementById(id);
+      if(el&&el.offsetTop<=y)cur=i;
+    });
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur||(cur===-1&&i===0));});
+  },{passive:true});
+})();
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────────────
+(function(){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+    });
+  },{threshold:0.06,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+})();
+
+// ── COUNT-UP STATS ────────────────────────────────────────────────────────
+(function(){
+  var done=false;
+  function run(){
+    if(done)return;done=true;
+    document.querySelectorAll('.stat-number[data-count]').forEach(function(el){
+      var target=parseInt(el.getAttribute('data-count'),10);
+      var suffix=el.getAttribute('data-suffix')||'';
+      var start=null,dur=1600;
+      function step(ts){
+        if(!start)start=ts;
+        var p=Math.min((ts-start)/dur,1);
+        var eased=1-Math.pow(1-p,3);
+        el.textContent=Math.round(target*eased)+suffix;
+        if(p<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  var band=document.querySelector('.statsband');
+  if(band){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){run();io.disconnect();}});
+    },{threshold:0.3});
+    io.observe(band);
+  }
+})();
+
+// ── FAQ ACCORDION ─────────────────────────────────────────────────────────
+function toggleFaq(btn){
+  var item=btn.parentElement;
+  var ans=item.querySelector('.faq-a');
+  var open=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(it){
+    it.classList.remove('open');
+    it.querySelector('.faq-a').style.maxHeight=null;
+  });
+  if(!open){
+    item.classList.add('open');
+    ans.style.maxHeight=ans.scrollHeight+'px';
+  }
+}
+
+// ── NEWSLETTER FORMS ──────────────────────────────────────────────────────
+function handleNlSubmit(e){
+  e.preventDefault();
+  var form=document.getElementById('nl-form');
+  var fine=document.getElementById('nl-fine');
+  form.outerHTML='<p style="font-family:\'Cormorant Garamond\',serif;font-size:22px;font-style:italic;color:#e3c987;padding:14px 0">You are on the list. Welcome to The Atelier Letter.</p>';
+  if(fine)fine.style.display='none';
+}
+function handleFooterNl(e){
+  e.preventDefault();
+  var btn=document.getElementById('footer-nl-btn');
+  var input=document.getElementById('footer-nl-email');
+  if(btn&&input){
+    input.value='';
+    input.placeholder='Subscribed - thank you';
+    input.disabled=true;
+    btn.textContent='Subscribed';
+    btn.disabled=true;
+    btn.style.filter='grayscale(.4)';
+  }
+}
+
+// ── ARTICLES JSON LOADER ──────────────────────────────────────────────────
+async function loadArticles(){
+  if(!document.getElementById('articles-grid'))return;
+  var grid=document.getElementById('articles-grid');
+  try{
+    var r=await fetch('./articles.json');
+    if(!r.ok)throw new Error('no articles');
+    var posts=await r.json();
+    if(!Array.isArray(posts))throw new Error('empty');
+    posts=posts.filter(function(p){return p&&p.slug&&p.title;});
+    if(!posts.length)throw new Error('empty');
+    var filterBar=document.getElementById('article-filters');
+    var imgClasses=['article-img-a','article-img-b','article-img-c'];
+    var fallbackTags=['Statement Rooms','Materials','Lighting','Grand Entrances','Curation'];
+
+    function cardHtml(p,i){
+      var cat=p.category||fallbackTags[i%fallbackTags.length];
+      return '<a class="article-card" href="./'+p.slug+'/" data-cat="'+cat+'">'+
+        '<div class="article-img '+imgClasses[i%3]+'"></div>'+
+        '<div class="article-body">'+
+        '<div class="article-tag">'+cat+'</div>'+
+        '<div class="article-title">'+p.title+'</div>'+
+        '<p class="article-excerpt">'+(p.meta_description||'').slice(0,150)+'</p>'+
+        '<div class="article-footer"><span class="article-meta">'+(p.author||'Olivia Grant')+'</span>'+
+        '<span class="article-link">Read Article</span></div>'+
+        '</div></a>';
+    }
+
+    function render(list){
+      grid.innerHTML=list.slice(0,6).map(cardHtml).join('');
+    }
+    render(posts);
+
+    // category filter
+    var cats=[];
+    posts.forEach(function(p){if(p.category&&cats.indexOf(p.category)<0)cats.push(p.category);});
+    if(filterBar&&cats.length>1){
+      var btns=['<button class="filter-btn active" data-f="all">All</button>']
+        .concat(cats.map(function(c){return '<button class="filter-btn" data-f="'+c+'">'+c+'</button>';}));
+      filterBar.innerHTML=btns.join('');
+      filterBar.addEventListener('click',function(e){
+        var b=e.target.closest('.filter-btn');
+        if(!b)return;
+        filterBar.querySelectorAll('.filter-btn').forEach(function(x){x.classList.remove('active');});
+        b.classList.add('active');
+        var f=b.getAttribute('data-f');
+        render(f==='all'?posts:posts.filter(function(p){return p.category===f;}));
+      });
+    }
+  }catch(e){
+    if(grid)grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#9a8e7d;font-size:17px;padding:48px 20px">New articles from the studio are coming soon.</p>';
+  }
+}
+loadArticles();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
