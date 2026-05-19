@@ -1,0 +1,148 @@
+<style>
+.ab-main{--ab-bg:#fffdf8;--ab-bg2:#fbf3e6;--ab-surface:#f6ead4;--ab-surface2:#efe0c2;--ab-mocha:#a9683b;--ab-dark:#7d4a28;--ab-deep:#5c3620;--ab-accent:#d98841;--ab-text:#2a1c10;--ab-muted:#7c6248;--ab-lmuted:#ab9170;--ab-border:#ead9bd;--ab-green:#3a7a5b;--ab-font:'Plus Jakarta Sans',system-ui,sans-serif;--ab-serif:'Fraunces',Georgia,serif;background:var(--ab-bg);color:var(--ab-text);font-family:var(--ab-font);display:block}
+.ab-wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.ab-label{font-size:12px;font-weight:700;color:var(--ab-mocha);text-transform:uppercase;letter-spacing:2.4px;margin-bottom:14px;display:inline-flex;align-items:center;gap:9px}
+.ab-label::before{content:'';width:22px;height:2px;background:var(--ab-mocha);border-radius:1px}
+.ab-main h1,.ab-main h2,.ab-main h3{font-family:var(--ab-serif)}
+
+/* HERO */
+.ab-hero{background:radial-gradient(ellipse 80% 60% at 80% 0%,#f7e4c4 0%,transparent 60%),linear-gradient(160deg,#fdf4e2,#fbf0dd 50%,var(--ab-bg));border-bottom:1px solid var(--ab-border)}
+.ab-hero-in{max-width:1140px;margin:0 auto;padding:84px 24px 72px}
+.ab-badge{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--ab-border);border-radius:100px;padding:7px 15px;margin-bottom:24px;box-shadow:0 3px 12px rgba(124,74,40,.07)}
+.ab-badge-dot{width:9px;height:9px;border-radius:50%;background:var(--ab-green);box-shadow:0 0 0 4px rgba(58,122,91,.16)}
+.ab-badge span{font-size:11px;font-weight:700;color:var(--ab-dark);text-transform:uppercase;letter-spacing:1.6px}
+.ab-hero h1{font-size:clamp(36px,5vw,60px);font-weight:600;line-height:1.1;letter-spacing:-.8px;margin-bottom:20px}
+.ab-hero h1 em{font-style:italic;color:var(--ab-mocha);font-weight:500}
+.ab-hero p{font-size:17px;color:var(--ab-muted);line-height:1.75;max-width:620px}
+
+/* SECTIONS */
+.ab-sec{padding:80px 0}
+.ab-sec.tint{background:var(--ab-bg2);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border)}
+.ab-h2{font-size:clamp(28px,4vw,44px);font-weight:600;line-height:1.14;letter-spacing:-.6px;margin-bottom:16px}
+.ab-h2 em{font-style:italic;color:var(--ab-mocha)}
+.ab-sub{font-size:16px;color:var(--ab-muted);line-height:1.75;max-width:620px}
+
+/* STORY */
+.ab-story{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.ab-story p{font-size:16px;color:var(--ab-muted);margin-bottom:16px;line-height:1.8}
+.ab-story p strong{color:var(--ab-text);font-weight:600}
+.ab-panel{background:#fff;border:1px solid var(--ab-border);border-radius:20px;padding:32px;box-shadow:0 16px 44px rgba(124,74,40,.09)}
+.ab-pillar{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--ab-border)}
+.ab-pillar:last-child{border-bottom:none;padding-bottom:0}
+.ab-pillar:first-child{padding-top:0}
+.ab-tick{width:28px;height:28px;border-radius:50%;background:var(--ab-surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.ab-tick svg{color:var(--ab-mocha)}
+.ab-pillar b{font-family:var(--ab-serif);font-size:16px;color:var(--ab-text);display:block;margin-bottom:3px}
+.ab-pillar p{font-size:14px;color:var(--ab-muted);margin:0;line-height:1.6}
+
+/* VALUE */
+.ab-vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.ab-vcard{background:#fff;border:1px solid var(--ab-border);border-radius:18px;padding:30px 26px;transition:transform .3s,box-shadow .3s}
+.ab-vcard:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(124,74,40,.13)}
+.ab-vicon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--ab-surface),var(--ab-surface2));display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.ab-vicon svg{color:var(--ab-dark)}
+.ab-vcard h3{font-size:20px;font-weight:600;margin-bottom:8px;letter-spacing:-.2px}
+.ab-vcard p{font-size:14.5px;color:var(--ab-muted);line-height:1.7}
+
+/* AUTHOR */
+.ab-author{background:#fff;border:1px solid var(--ab-border);border-radius:24px;padding:14px;display:grid;grid-template-columns:.8fr 1.2fr;gap:0;overflow:hidden;box-shadow:0 16px 44px rgba(124,74,40,.09)}
+.ab-author-vis{border-radius:18px;background:linear-gradient(155deg,var(--ab-surface),var(--ab-surface2));min-height:360px;display:flex;align-items:center;justify-content:center}
+.ab-author-vis svg{width:120px;height:120px;color:var(--ab-mocha);opacity:.55}
+.ab-author-body{padding:40px 42px}
+.ab-author-badge{font-size:11px;font-weight:700;color:var(--ab-green);text-transform:uppercase;letter-spacing:1.6px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.ab-author-badge::before{content:'';width:18px;height:2px;background:var(--ab-green);border-radius:1px}
+.ab-author-body h3{font-family:var(--ab-serif);font-size:28px;font-weight:600;margin-bottom:3px;letter-spacing:-.3px}
+.ab-author-role{font-size:13.5px;font-weight:600;color:var(--ab-mocha);margin-bottom:18px}
+.ab-author-body p{font-size:14.5px;color:var(--ab-muted);line-height:1.8;margin-bottom:12px}
+.ab-creds{display:flex;gap:24px;flex-wrap:wrap;margin-top:22px;padding-top:22px;border-top:1px solid var(--ab-border)}
+.ab-cred b{font-family:var(--ab-serif);font-size:22px;font-weight:700;color:var(--ab-dark);display:block;line-height:1}
+.ab-cred span{font-size:11px;color:var(--ab-lmuted);font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-top:5px;display:block}
+
+/* CTA */
+.ab-cta{background:linear-gradient(150deg,var(--ab-dark),var(--ab-deep));border-radius:24px;padding:56px 44px;text-align:center}
+.ab-cta h2{color:#fff;font-size:clamp(26px,3.6vw,38px);font-weight:600;margin-bottom:12px;letter-spacing:-.4px}
+.ab-cta p{color:rgba(255,255,255,.78);font-size:15.5px;max-width:480px;margin:0 auto 26px;line-height:1.7}
+.ab-btn{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:600;color:var(--ab-deep);background:#fff;padding:15px 30px;border-radius:100px;transition:transform .25s}
+.ab-btn:hover{transform:translateY(-2px)}
+
+@media(max-width:840px){.ab-story{grid-template-columns:1fr;gap:40px}.ab-vgrid{grid-template-columns:1fr}.ab-author{grid-template-columns:1fr}.ab-author-vis{min-height:240px}.ab-author-body{padding:30px 26px}}
+@media(max-width:600px){.ab-sec{padding:58px 0}.ab-cta{padding:42px 24px}}
+</style>
+
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-hero-in">
+      <div class="ab-badge"><span class="ab-badge-dot"></span><span>About Mochapoo Pets</span></div>
+      <h1>Dog care advice that comes<br><em>from the exam room.</em></h1>
+      <p>Mochapoo Pets is a veterinary-grade resource for people who love their dogs and want the truth about caring for them. Every guide here is written or reviewed by a practicing veterinarian - no breeder marketing, no recycled blog posts, no advice shaped by anyone with something to sell.</p>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-story">
+      <div>
+        <div class="ab-label">Why We Exist</div>
+        <h2 class="ab-h2">It started with the same <em>preventable problem</em>, over and over.</h2>
+        <p>For years, the founders of Mochapoo Pets watched loving, attentive owners walk into the clinic with issues that never had to happen. The cause was almost never neglect. It was confident, well-packaged advice from people whose real goal was a sale - a supplement, a feeding plan, a puppy.</p>
+        <p>So we built a different kind of resource. <strong>Every guide here is grounded in clinical experience and peer-reviewed research</strong>, and when the evidence is thin or contradictory, we say so out loud instead of hiding it behind a tidy headline.</p>
+        <p>The name is our brand, nothing more. What it stands for is simple: calm, accurate guidance for your dog or puppy, written the way a good vet would explain it if they had unlimited time to sit with you.</p>
+      </div>
+      <div class="ab-panel">
+        <div class="ab-pillar"><div class="ab-tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Evidence over tradition</b><p>If a popular practice does not hold up in the data, we will tell you - and explain what does.</p></div></div>
+        <div class="ab-pillar"><div class="ab-tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Plain language, no fear</b><p>Clear guidance you can act on today, written for real owners, not for other vets.</p></div></div>
+        <div class="ab-pillar"><div class="ab-tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div><b>Independent by design</b><p>No breeder partnerships and no pay-to-recommend deals shaping a single word.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec tint">
+    <div class="ab-wrap">
+      <div class="ab-label">What We Cover</div>
+      <h2 class="ab-h2">Everything your dog needs, <em>across every life stage</em></h2>
+      <p class="ab-sub">From the first weeks with a new puppy to the gentle adjustments of senior care, our guides meet the dog in front of you - because size, age and lifestyle change the right answer.</p>
+      <div class="ab-vgrid">
+        <div class="ab-vcard"><div class="ab-vicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Health &amp; Prevention</h3><p>Vaccinations, parasite control, dental care and the early warning signs every owner should recognize.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h3>Nutrition</h3><p>What the research actually says about diet, portions and treats - separated from the marketing on the bag.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div><h3>Training &amp; Behavior</h3><p>Humane, evidence-based methods for puppies and adult dogs, built on how dogs actually learn.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h3>Grooming &amp; Daily Care</h3><p>Coat, nails, ears and bathing routines explained simply, with the reasoning behind each step.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><h3>Puppy Foundations</h3><p>Socialization windows, crate training and the first-year habits that prevent costly problems later.</p></div>
+        <div class="ab-vcard"><div class="ab-vicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Senior Dog Support</h3><p>Mobility, comfort and quality-of-life guidance for the years when your dog needs you most.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap">
+      <div class="ab-author">
+        <div class="ab-author-vis">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div class="ab-author-body">
+          <div class="ab-author-badge">The Veterinarian Behind It</div>
+          <h3>Dr. Emily Ross, DVM</h3>
+          <div class="ab-author-role">Founder &amp; Lead Veterinary Editor, Mochapoo Pets</div>
+          <p>Dr. Ross has spent 14 years in clinical practice, and Mochapoo Pets grew directly out of that work. After thousands of exam-room conversations, she saw how much avoidable worry came from bad information rather than bad owners.</p>
+          <p>She founded this site to give that consultation-quality guidance to far more people than a single clinic could ever reach. Every article is written or reviewed against her standard: accurate, current, and honest about what is still uncertain.</p>
+          <p>"Owners do not need more opinions. They need the truth about their dog - and the calm to act on it."</p>
+          <div class="ab-creds">
+            <div class="ab-cred"><b>14</b><span>Years in practice</span></div>
+            <div class="ab-cred"><b>120k+</b><span>Owners helped</span></div>
+            <div class="ab-cred"><b>100%</b><span>Vet-checked content</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec tint">
+    <div class="ab-wrap">
+      <div class="ab-cta">
+        <h2>Care for your dog with confidence.</h2>
+        <p>Get veterinary-grade guidance delivered straight to your inbox - clear, calm, and never sponsored. Your dog will be glad you did.</p>
+        <a href="./" class="ab-btn">Explore the Guides
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
