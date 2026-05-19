@@ -59,7 +59,7 @@
   "sites": [
     {
       "id": "nexus",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/nexus",
       "repo": "Siavashsed/nexus",
       "category": "Content Network Hub",
@@ -74,7 +74,7 @@
     },
     {
       "id": "cryptopulse",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/cryptopulse",
       "repo": "Siavashsed/cryptopulse",
       "category": "Crypto & Algorithmic Trading",
@@ -140,11 +140,12 @@
         "David Kim",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "passive-wealth",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/passivewealthguide",
       "repo": "Siavashsed/passivewealthguide",
       "category": "Passive Income & Investing",
@@ -210,11 +211,12 @@
         "Tanya Kumar",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "trading-tech",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/tradingtechreview",
       "repo": "Siavashsed/tradingtechreview",
       "category": "Trading Tools & Technology",
@@ -280,7 +282,8 @@
         "Rachel Obi",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "ai-marketing",
@@ -350,7 +353,8 @@
         "Marcus Reid",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "ecommerce-edge",
@@ -420,11 +424,12 @@
         "Aisha Williams",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "mochapoo-pets",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/mochapoo-pets",
       "repo": "Siavashsed/mochapoo-pets",
       "category": "Pet Care & Products",
@@ -492,11 +497,12 @@
         "Maya Torres",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "supplement-verge",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/supplementverge",
       "repo": "Siavashsed/supplementverge",
       "category": "Supplement Reviews & Science",
@@ -562,11 +568,12 @@
         "Nina Patel",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "sight-reading",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/sightreadingacademy",
       "repo": "Siavashsed/sightreadingacademy",
       "category": "Music Education",
@@ -632,11 +639,12 @@
         "Jordan Webb",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "newborn-iq",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/newborniq",
       "repo": "Siavashsed/newborniq",
       "category": "Newborn Care & Parenting",
@@ -702,7 +710,8 @@
         "Ryan Park",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "dalmend-home",
@@ -772,7 +781,8 @@
         "Sophie Reid",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "onlinebiz-pro",
@@ -842,11 +852,12 @@
         "Keiko Adams",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "sportiq-pro",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/sportiqpro",
       "repo": "Siavashsed/sportiqpro",
       "category": "Sports Performance & Coaching",
@@ -912,11 +923,12 @@
         "Alex Nash",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "makeup-craft",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/makeupcraft",
       "repo": "Siavashsed/makeupcraft",
       "category": "Makeup & Beauty",
@@ -982,11 +994,12 @@
         "Maya Torres",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "dating-edge",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/datingedge",
       "repo": "Siavashsed/datingedge",
       "category": "Dating & Relationships",
@@ -1052,11 +1065,12 @@
         "Sarah Kim",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "fitpulse-pro",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/fitpulsepro",
       "repo": "Siavashsed/fitpulsepro",
       "category": "Fitness & Training",
@@ -1122,11 +1136,12 @@
         "Alex Nash",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "mashestate-home",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/mashestate-home",
       "repo": "Siavashsed/mashestate-home",
       "category": "Real Estate Investing",
@@ -1192,7 +1207,8 @@
         "Alex Morrison",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "kanona-events",
@@ -1263,11 +1279,12 @@
         "When food becomes philosophy: menus designed around a feeling"
       ],
       "articles_per_day": 1,
-      "nav_style": "dark"
+      "nav_style": "dark",
+      "posts_per_run": 1
     },
     {
       "id": "mashestate-construction",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/mashestate-construction",
       "repo": "Siavashsed/mashestate-construction",
       "category": "Construction & Renovation",
@@ -1333,11 +1350,12 @@
         "Rachel Webb",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "insight-insure",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/insightinsure",
       "repo": "Siavashsed/insightinsure",
       "category": "Insurance Advice & Comparisons",
@@ -1403,11 +1421,12 @@
         "Jordan Kim",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "carverge",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/carverge",
       "repo": "Siavashsed/carverge",
       "category": "EV & Automotive",
@@ -1473,11 +1492,12 @@
         "Rachel Cole",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "travelverge",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/travelverge",
       "repo": "Siavashsed/travelverge",
       "category": "Travel & Destinations",
@@ -1543,7 +1563,8 @@
         "Marcus Reid",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     },
     {
       "id": "topproduct",
@@ -1620,7 +1641,8 @@
         "Alex Torres",
         "Siavash Sadighi"
       ],
-      "use_random_author": true
+      "use_random_author": true,
+      "posts_per_run": 1
     }
   ]
 }
