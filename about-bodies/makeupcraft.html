@@ -1,0 +1,185 @@
+<style>
+.ab-page{background:var(--cream);color:var(--ink);font-family:var(--sans);font-weight:300}
+.ab-rev{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+.ab-rev.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.ab-rev{opacity:1;transform:none;transition:none}}
+.ab-wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.ab-eyebrow{font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--rose)}
+
+/* HERO */
+.ab-hero{background:linear-gradient(180deg,var(--cream) 0%,var(--blush) 100%);text-align:center;padding:92px 32px 96px}
+.ab-hero-in{max-width:760px;margin:0 auto}
+.ab-h1{font-family:var(--serif);font-size:clamp(44px,6vw,80px);font-weight:500;line-height:1.04;letter-spacing:-.01em;margin:20px 0 22px}
+.ab-h1 em{font-style:italic;color:var(--rose)}
+.ab-lead{font-size:17px;color:var(--muted);max-width:500px;margin:0 auto}
+
+/* STORY */
+.ab-sec{padding:92px 0}
+.ab-story{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.ab-story-imgs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ab-pi{background:var(--blush2);overflow:hidden}
+.ab-pi:nth-child(1){aspect-ratio:3/4;border-radius:140px 18px 18px 18px;background:linear-gradient(160deg,var(--blush2),var(--sand))}
+.ab-pi:nth-child(2){aspect-ratio:3/4;margin-top:48px;border-radius:18px 18px 18px 140px;background:linear-gradient(160deg,var(--sand),var(--blush2))}
+.ab-story-text h2{font-family:var(--serif);font-size:clamp(32px,4vw,50px);font-weight:500;line-height:1.1;margin:14px 0 20px}
+.ab-story-text h2 em{font-style:italic;color:var(--rose)}
+.ab-story-text p{color:var(--muted);margin-bottom:18px}
+.ab-story-text p strong{color:var(--ink);font-weight:400}
+.ab-sign{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--rose);margin-top:6px}
+
+/* PHILOSOPHY CARDS */
+.ab-philo{background:var(--cream2)}
+.ab-sec-head{text-align:center;max-width:600px;margin:0 auto 56px}
+.ab-sec-head h2{font-family:var(--serif);font-size:clamp(32px,4.4vw,52px);font-weight:500;line-height:1.08;margin:14px 0 12px}
+.ab-sec-head h2 em{font-style:italic;color:var(--rose)}
+.ab-sec-head p{color:var(--muted);font-size:16px}
+.ab-vals{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.ab-val{background:var(--cream);border:1px solid var(--line);border-radius:24px;padding:38px 32px;transition:transform .3s,box-shadow .3s}
+.ab-val:hover{transform:translateY(-6px);box-shadow:0 26px 50px rgba(58,50,45,.1)}
+.ab-val-ic{width:58px;height:58px;border-radius:50%;background:var(--blush);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.ab-val-ic svg{width:24px;height:24px;stroke:var(--rose-d);fill:none;stroke-width:1.5}
+.ab-val h3{font-family:var(--serif);font-size:25px;font-weight:600;margin-bottom:9px}
+.ab-val p{color:var(--muted);font-size:15px}
+
+/* AUTHOR */
+.ab-author{background:var(--blush)}
+.ab-author-in{display:grid;grid-template-columns:.85fr 1.15fr;gap:64px;align-items:center}
+.ab-author-img{aspect-ratio:1;border-radius:50%;overflow:hidden;background:linear-gradient(150deg,var(--blush2),var(--sand));max-width:360px;margin:0 auto;display:flex;align-items:center;justify-content:center}
+.ab-author-img span{font-family:var(--serif);font-style:italic;font-size:78px;font-weight:500;color:var(--rose)}
+.ab-author-text h2{font-family:var(--serif);font-size:clamp(32px,4vw,48px);font-weight:500;line-height:1.1;margin:14px 0 18px}
+.ab-author-text h2 em{font-style:italic;color:var(--rose)}
+.ab-author-text p{color:var(--muted);margin-bottom:18px}
+.ab-quote{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink);border-left:2px solid var(--rose);padding-left:20px;margin:22px 0}
+
+/* STANDARD ROWS */
+.ab-method{background:var(--cream)}
+.ab-steps{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+.ab-step{display:flex;gap:26px;padding:28px 0;border-bottom:1px solid var(--line)}
+.ab-step:last-child{border-bottom:none}
+.ab-step-n{font-family:var(--serif);font-size:34px;font-style:italic;color:var(--blush2);min-width:48px;flex-shrink:0;line-height:1}
+.ab-step h4{font-family:var(--serif);font-size:23px;font-weight:600;margin-bottom:7px}
+.ab-step p{color:var(--muted);font-size:15px}
+
+/* CTA */
+.ab-cta{background:var(--ink);color:var(--cream);text-align:center;padding:96px 32px}
+.ab-cta-in{max-width:540px;margin:0 auto}
+.ab-cta h2{font-family:var(--serif);font-size:clamp(32px,4vw,50px);font-weight:500;line-height:1.08;margin:14px 0 16px}
+.ab-cta h2 em{font-style:italic;color:var(--blush2)}
+.ab-cta p{color:rgba(250,245,239,.6);margin-bottom:32px;font-size:16px}
+.ab-cta .ce{color:var(--rose)}
+.ab-cta-btn{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;padding:16px 34px;border-radius:100px;background:var(--cream);color:var(--ink);transition:transform .2s}
+.ab-cta-btn:hover{transform:translateY(-2px)}
+
+@media(max-width:860px){
+  .ab-story,.ab-author-in{grid-template-columns:1fr;gap:44px}
+  .ab-vals{grid-template-columns:1fr}
+  .ab-pi:nth-child(2){margin-top:0}
+}
+</style>
+
+<main class="ab-page">
+  <section class="ab-hero">
+    <div class="ab-hero-in ab-rev">
+      <span class="ab-eyebrow">Our Story</span>
+      <h1 class="ab-h1">Beauty, written with a <em>quiet</em> kind of care.</h1>
+      <p class="ab-lead">MakeupCraft is a soft-luxury beauty journal - tutorials, skincare rituals, and honest reviews for everyone learning to glow their own way.</p>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-story">
+      <div class="ab-story-imgs ab-rev">
+        <div class="ab-pi"></div>
+        <div class="ab-pi"></div>
+      </div>
+      <div class="ab-story-text ab-rev">
+        <span class="ab-eyebrow">Why We Began</span>
+        <h2>A beauty space that <em>respects</em> the beginner.</h2>
+        <p>So much of beauty media is built to overwhelm - twelve-step routines, hundred-dollar shortcuts, and looks that demand a professional kit before you have learned to hold a brush. It can make something joyful feel like a test you are failing.</p>
+        <p>MakeupCraft was created as the gentle alternative. <strong>A library designed to grow with you</strong>, from your very first stroke to your signature look, where technique is broken into small, repeatable habits and nobody is rushed.</p>
+        <p>Tones, textures, and ages are all welcome here. Our looks are written to flatter real, beautifully different faces - not a single idealised one.</p>
+        <p class="ab-sign">- The MakeupCraft Studio</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec ab-philo">
+    <div class="ab-wrap">
+      <div class="ab-sec-head ab-rev">
+        <span class="ab-eyebrow">What Guides Us</span>
+        <h2>Three quiet <em>principles.</em></h2>
+        <p>Every tutorial, ritual, and review on MakeupCraft is held to the same soft standard.</p>
+      </div>
+      <div class="ab-vals">
+        <div class="ab-val ab-rev">
+          <div class="ab-val-ic"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <h3>Technique, slowly</h3>
+          <p>We teach the small habits professional artists rarely name - the ones that make beauty feel effortless once they become second nature.</p>
+        </div>
+        <div class="ab-val ab-rev">
+          <div class="ab-val-ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h3>Honest reviews</h3>
+          <p>Products are tried before they are written about. If something does not earn its place, we say so - softly, but plainly.</p>
+        </div>
+        <div class="ab-val ab-rev">
+          <div class="ab-val-ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-11a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 6.5-7 11-7 11z"/></svg></div>
+          <h3>Beauty for everyone</h3>
+          <p>Looks built for real, differing faces. Nothing here assumes one skin tone, one age, or one definition of radiant.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec ab-author">
+    <div class="ab-wrap ab-author-in">
+      <div class="ab-author-img ab-rev"><span>AV</span></div>
+      <div class="ab-author-text ab-rev">
+        <span class="ab-eyebrow">Meet the Artist</span>
+        <h2>Curated by <em>Amara Vale</em>, lead beauty editor.</h2>
+        <p>With over a decade behind the chair and the lens, Amara built MakeupCraft to share what professional artistry rarely tells you - the small, repeatable habits that make beauty effortless.</p>
+        <p class="ab-quote">"The best makeup doesn't hide you. It simply turns the volume up on what was already there."</p>
+        <p>Every tutorial on this site passes through her hands before it reaches yours - shaped by years of real clients, real faces, and a belief that beauty should feel like a ritual, never a chore.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec ab-method">
+    <div class="ab-wrap">
+      <div class="ab-sec-head ab-rev">
+        <span class="ab-eyebrow">Our Method</span>
+        <h2>How a guide reaches <em>you.</em></h2>
+      </div>
+      <div class="ab-steps">
+        <div class="ab-step ab-rev">
+          <span class="ab-step-n">i</span>
+          <div><h4>Tried, then refined</h4><p>Every technique is practised on real faces and reworked until even a first-timer can follow it without frustration.</p></div>
+        </div>
+        <div class="ab-step ab-rev">
+          <span class="ab-step-n">ii</span>
+          <div><h4>Written to be kind</h4><p>No jargon, no shaming, no assumption of a full kit. We meet you exactly where your skills are today.</p></div>
+        </div>
+        <div class="ab-step ab-rev">
+          <span class="ab-step-n">iii</span>
+          <div><h4>Edited with care</h4><p>Amara reviews every tutorial before it publishes, so the voice and the standard stay consistent across the whole library.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-cta">
+    <div class="ab-cta-in ab-rev">
+      <span class="ab-eyebrow ce">Stay Close</span>
+      <h2>The weekly <em>edit,</em> in your inbox.</h2>
+      <p>One soft email every Thursday - a tutorial, a product find, and a single technique tip worth keeping.</p>
+      <a href="./#newsletter" class="ab-cta-btn">Join The Journal</a>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}});
+  },{threshold:.13});
+  document.querySelectorAll(".ab-rev").forEach(function(el){io.observe(el);});
+})();
+</script>
