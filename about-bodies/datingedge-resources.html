@@ -1,0 +1,412 @@
+<style>
+.rs-wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.rs-hero{position:relative;overflow:hidden;background:
+  radial-gradient(640px 400px at 86% -10%,rgba(184,80,63,.16),transparent 70%),
+  radial-gradient(520px 360px at 6% 108%,rgba(201,139,58,.14),transparent 70%),
+  var(--bg)}
+.rs-hero-in{max-width:760px;margin:0 auto;padding:86px 24px 70px;text-align:center}
+.rs-kicker{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin-bottom:20px}
+.rs-kicker::before,.rs-kicker::after{content:"";width:26px;height:2px;background:var(--rose);border-radius:2px}
+.rs-h1{font-family:var(--serif);font-size:clamp(36px,5vw,58px);font-weight:600;line-height:1.08;letter-spacing:-.025em;color:var(--ink);margin-bottom:20px}
+.rs-h1 em{color:var(--rose);font-style:italic}
+.rs-lead{font-size:18px;color:var(--ink-soft);max-width:580px;margin:0 auto}
+
+.rs-section{padding:74px 0}
+.rs-section.alt{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.rs-head{max-width:660px;margin:0 auto 46px;text-align:center}
+.rs-sec-kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin-bottom:13px}
+.rs-sec-title{font-family:var(--serif);font-size:clamp(27px,3.4vw,40px);font-weight:600;line-height:1.16;letter-spacing:-.02em;color:var(--ink)}
+.rs-sec-sub{font-size:16.5px;color:var(--ink-soft);margin-top:13px}
+
+/* widget shell */
+.rs-widget{background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:38px 36px;box-shadow:0 26px 52px -32px rgba(58,39,48,.4)}
+.rs-section.alt .rs-widget{background:var(--bg)}
+.rs-widget-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start}
+.rs-wtag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);background:var(--soft);padding:6px 12px;border-radius:100px;margin-bottom:16px}
+.rs-wtitle{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--ink);letter-spacing:-.01em;margin-bottom:9px}
+.rs-wdesc{font-size:15px;color:var(--ink-soft);margin-bottom:22px}
+
+/* date idea widget */
+.rs-di-stage{background:linear-gradient(150deg,#3a2730,#b8503f);border-radius:16px;padding:34px 28px;text-align:center;min-height:208px;display:flex;flex-direction:column;justify-content:center;color:#fff}
+.rs-di-cat{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.rs-di-idea{font-family:var(--serif);font-size:23px;font-weight:600;line-height:1.32}
+.rs-di-note{font-size:13.5px;color:rgba(255,255,255,.78);margin-top:12px}
+.rs-controls{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0}
+.rs-pill{font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--bg);border:1px solid var(--border);padding:8px 16px;border-radius:100px;cursor:pointer;transition:all .15s}
+.rs-section.alt .rs-pill{background:var(--bg2)}
+.rs-pill:hover{border-color:var(--rose);color:var(--rose)}
+.rs-pill.on{background:var(--rose);border-color:var(--rose);color:#fff}
+.rs-btn{background:var(--rose);color:#fff;border:none;font-family:var(--sans);font-size:15px;font-weight:600;padding:14px 28px;border-radius:100px;cursor:pointer;transition:background .15s,transform .15s;box-shadow:0 10px 22px -10px rgba(184,80,63,.6)}
+.rs-btn:hover{background:var(--rose-d);transform:translateY(-2px)}
+.rs-btn-ghost{background:var(--bg2);color:var(--ink);border:1.6px solid var(--border);font-family:var(--sans);font-size:14px;font-weight:600;padding:12px 22px;border-radius:100px;cursor:pointer;transition:border-color .15s,color .15s}
+.rs-btn-ghost:hover{border-color:var(--rose);color:var(--rose)}
+.rs-field-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+
+/* audit widget */
+.rs-audit-list{display:flex;flex-direction:column;gap:2px;margin-bottom:18px}
+.rs-check{display:flex;gap:13px;align-items:flex-start;padding:13px 14px;border-radius:11px;cursor:pointer;transition:background .14s}
+.rs-check:hover{background:var(--soft)}
+.rs-section.alt .rs-check:hover{background:var(--bg2)}
+.rs-box{flex-shrink:0;width:23px;height:23px;border-radius:7px;border:2px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.rs-check.done .rs-box{background:var(--rose);border-color:var(--rose)}
+.rs-box svg{opacity:0;transition:opacity .14s}
+.rs-check.done .rs-box svg{opacity:1}
+.rs-check-txt{font-size:14.5px;color:var(--ink-soft)}
+.rs-check.done .rs-check-txt{color:var(--ink)}
+.rs-score{background:var(--soft);border-radius:16px;padding:24px;text-align:center}
+.rs-section.alt .rs-score{background:var(--bg2)}
+.rs-score-num{font-family:var(--serif);font-size:46px;font-weight:600;color:var(--rose);line-height:1}
+.rs-score-num em{font-size:24px;color:var(--muted);font-style:normal}
+.rs-meter{height:9px;border-radius:100px;background:var(--border);overflow:hidden;margin:16px 0 14px}
+.rs-meter-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#c98b3a,#b8503f);width:0;transition:width .4s ease}
+.rs-score-msg{font-size:14.5px;color:var(--ink-soft);min-height:44px}
+.rs-score-msg b{color:var(--ink)}
+
+/* info cards */
+.rs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.rs-card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:30px 26px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.rs-section.alt .rs-card{background:var(--bg)}
+.rs-card:hover{transform:translateY(-5px);box-shadow:0 24px 44px -24px rgba(58,39,48,.34);border-color:var(--rose)}
+.rs-ico{width:52px;height:52px;border-radius:13px;background:var(--soft);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.rs-card h3{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink);margin-bottom:8px;letter-spacing:-.01em}
+.rs-card p{font-size:14.5px;color:var(--ink-soft);margin-bottom:14px}
+.rs-mini{display:flex;flex-direction:column;gap:9px}
+.rs-mini li{list-style:none;display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--ink-soft)}
+.rs-mini li svg{flex-shrink:0;margin-top:3px}
+
+/* reading list */
+.rs-books{display:flex;flex-direction:column;gap:14px;max-width:780px;margin:0 auto}
+.rs-book{display:flex;gap:20px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px 24px;transition:border-color .15s}
+.rs-section.alt .rs-book{background:var(--bg)}
+.rs-book:hover{border-color:var(--rose)}
+.rs-spine{flex-shrink:0;width:46px;height:62px;border-radius:5px;background:linear-gradient(150deg,#3a2730,#b8503f)}
+.rs-book:nth-child(2) .rs-spine{background:linear-gradient(150deg,#b8503f,#c98b3a)}
+.rs-book:nth-child(3) .rs-spine{background:linear-gradient(150deg,#3a2730,#7c6f67)}
+.rs-book:nth-child(4) .rs-spine{background:linear-gradient(150deg,#963d2f,#c98b3a)}
+.rs-book h3{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.rs-book .rs-author{font-size:12.5px;font-weight:600;color:var(--rose);margin-bottom:7px}
+.rs-book p{font-size:13.5px;color:var(--ink-soft)}
+
+/* cta */
+.rs-cta{background:linear-gradient(135deg,#3a2730,#b8503f);border-radius:24px;padding:58px 40px;text-align:center;position:relative;overflow:hidden}
+.rs-cta::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;border:2px solid rgba(255,255,255,.12);top:-140px;left:-80px}
+.rs-cta-in{position:relative;max-width:520px;margin:0 auto}
+.rs-cta h2{font-family:var(--serif);font-size:clamp(26px,3.4vw,38px);font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.16;margin-bottom:12px}
+.rs-cta p{font-size:15.5px;color:rgba(255,255,255,.82);margin-bottom:26px}
+.rs-cta a{display:inline-block;background:#fff;color:var(--rose);font-size:15px;font-weight:600;padding:14px 30px;border-radius:100px;transition:transform .15s}
+.rs-cta a:hover{transform:translateY(-2px)}
+
+@media(max-width:860px){
+  .rs-widget-grid{grid-template-columns:1fr;gap:26px}
+  .rs-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .rs-section{padding:54px 0}
+  .rs-grid{grid-template-columns:1fr}
+  .rs-widget{padding:28px 22px}
+  .rs-book{flex-direction:column;gap:14px}
+}
+</style>
+
+<main>
+<section class="rs-hero">
+  <div class="rs-hero-in">
+    <div class="rs-kicker">Resources &amp; Tools</div>
+    <h1 class="rs-h1">Practical tools for <em>dating with intention.</em></h1>
+    <p class="rs-lead">A small toolkit to take the guesswork out of dating. Try the interactive widgets below, run a quick self-audit on your profile, and borrow our checklists whenever you need a steady hand.</p>
+  </div>
+</section>
+
+<!-- WIDGET 1: DATE IDEA RANDOMIZER -->
+<section class="rs-section">
+  <div class="rs-wrap">
+    <div class="rs-head">
+      <span class="rs-sec-kicker">Interactive Tool</span>
+      <h2 class="rs-sec-title">Date Idea Picker</h2>
+      <p class="rs-sec-sub">Stuck on the same coffee-and-a-walk routine? Pick a vibe and let it suggest something fresh.</p>
+    </div>
+    <div class="rs-widget">
+      <div class="rs-widget-grid">
+        <div>
+          <span class="rs-wtag">Date Randomizer</span>
+          <h3 class="rs-wtitle">What should we actually do?</h3>
+          <p class="rs-wdesc">Choose a mood, and we will pull a date idea worth saying yes to. Hit the button again for another.</p>
+          <div class="rs-field-label">Pick a vibe</div>
+          <div class="rs-controls" id="rsDiVibes">
+            <button class="rs-pill on" data-vibe="any">Surprise me</button>
+            <button class="rs-pill" data-vibe="cozy">Cozy</button>
+            <button class="rs-pill" data-vibe="adventurous">Adventurous</button>
+            <button class="rs-pill" data-vibe="creative">Creative</button>
+            <button class="rs-pill" data-vibe="lowkey">Low key</button>
+            <button class="rs-pill" data-vibe="budget">Free or cheap</button>
+          </div>
+          <button class="rs-btn" id="rsDiBtn">Pick a date idea</button>
+        </div>
+        <div class="rs-di-stage">
+          <div class="rs-di-cat" id="rsDiCat">Ready when you are</div>
+          <div class="rs-di-idea" id="rsDiIdea">Press the button to get your first idea.</div>
+          <div class="rs-di-note" id="rsDiNote">Tip: the best dates leave room to actually talk.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WIDGET 2: PROFILE SELF-AUDIT -->
+<section class="rs-section alt">
+  <div class="rs-wrap">
+    <div class="rs-head">
+      <span class="rs-sec-kicker">Interactive Tool</span>
+      <h2 class="rs-sec-title">Dating Profile Self-Audit</h2>
+      <p class="rs-sec-sub">Tick off everything your current profile already does well. Your score updates as you go.</p>
+    </div>
+    <div class="rs-widget">
+      <div class="rs-widget-grid">
+        <div>
+          <span class="rs-wtag">Profile Checklist</span>
+          <h3 class="rs-wtitle">Honest look at your profile</h3>
+          <p class="rs-wdesc">No score is a verdict on you - it just shows where a few small edits could help the right people notice you.</p>
+          <div class="rs-audit-list" id="rsAuditList"></div>
+          <button class="rs-btn-ghost" id="rsAuditReset">Reset checklist</button>
+        </div>
+        <div class="rs-score">
+          <div class="rs-score-num"><span id="rsScoreNum">0</span><em>/100</em></div>
+          <div class="rs-meter"><div class="rs-meter-fill" id="rsScoreFill"></div></div>
+          <div class="rs-score-msg" id="rsScoreMsg"><b>Start ticking boxes</b> to see how your profile is doing.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO CARD TOOLKIT -->
+<section class="rs-section">
+  <div class="rs-wrap">
+    <div class="rs-head">
+      <span class="rs-sec-kicker">Quick Toolkit</span>
+      <h2 class="rs-sec-title">Checklists and starters to keep close</h2>
+      <p class="rs-sec-sub">Reference these before a first date or whenever the nerves show up.</p>
+    </div>
+    <div class="rs-grid">
+      <div class="rs-card">
+        <div class="rs-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <h3>Conversation Starters</h3>
+        <p>Skip the small talk that goes nowhere. Open with questions that invite a real answer.</p>
+        <ul class="rs-mini">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>"What is something you changed your mind about recently?"</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>"What does an ideal slow Sunday look like for you?"</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>"What are you a little obsessed with right now?"</li>
+        </ul>
+      </div>
+      <div class="rs-card">
+        <div class="rs-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg></div>
+        <h3>Red-Flags Checklist</h3>
+        <p>Patterns worth pausing on - not to judge fast, but to stay clear-eyed early.</p>
+        <ul class="rs-mini">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Speaks about every ex as "crazy" or all to blame.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Pushes past a no, then frames you as the problem.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Love-bombs fast, then goes cold without warning.</li>
+        </ul>
+      </div>
+      <div class="rs-card">
+        <div class="rs-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <h3>Green-Flags Checklist</h3>
+        <p>The quieter signs of a good match - the things that matter more than chemistry alone.</p>
+        <ul class="rs-mini">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Curious about you without making it a quiz.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Handles a small letdown with grace, not sulking.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Their actions and their words tend to match.</li>
+        </ul>
+      </div>
+      <div class="rs-card">
+        <div class="rs-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M12 8v8M8 12h8"/><circle cx="12" cy="12" r="9"/></svg></div>
+        <h3>First-Date Prep</h3>
+        <p>A short routine to settle your nerves before you head out the door.</p>
+        <ul class="rs-mini">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Pick a public, easy-to-leave spot you both know.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Set a soft time limit so there is no pressure.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Aim to be curious, not impressive.</li>
+        </ul>
+      </div>
+      <div class="rs-card">
+        <div class="rs-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg></div>
+        <h3>Attachment Style Primer</h3>
+        <p>A plain-language map of secure, anxious, and avoidant patterns - and how they meet.</p>
+        <ul class="rs-mini">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Spot your default response to closeness and distance.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Learn which pairings need extra communication.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Styles can shift - none of them are a sentence.</li>
+        </ul>
+      </div>
+      <div class="rs-card">
+        <div class="rs-ico"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M3 6h18M3 12h18M3 18h12"/></svg></div>
+        <h3>Texting Without Spirals</h3>
+        <p>Simple rules to keep early texting calm instead of all-consuming.</p>
+        <ul class="rs-mini">
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Match effort roughly - do not chase or out-wait.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>Move toward a real plan within a few days.</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98b3a" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>A slow reply is data, not a personal verdict.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- READING LIST -->
+<section class="rs-section alt">
+  <div class="rs-wrap">
+    <div class="rs-head">
+      <span class="rs-sec-kicker">Recommended Reading</span>
+      <h2 class="rs-sec-title">Books we genuinely send people to</h2>
+      <p class="rs-sec-sub">No affiliate noise - just titles that hold up against the research.</p>
+    </div>
+    <div class="rs-books">
+      <div class="rs-book">
+        <div class="rs-spine"></div>
+        <div>
+          <h3>Attached</h3>
+          <div class="rs-author">Amir Levine &amp; Rachel Heller</div>
+          <p>The clearest mainstream introduction to attachment theory. If you have ever felt anxious or shut down in dating, this explains why - without shame.</p>
+        </div>
+      </div>
+      <div class="rs-book">
+        <div class="rs-spine"></div>
+        <div>
+          <h3>Hold Me Tight</h3>
+          <div class="rs-author">Dr. Sue Johnson</div>
+          <p>Written for couples, but useful far earlier. It reframes conflict as a bid for connection rather than a sign something is broken.</p>
+        </div>
+      </div>
+      <div class="rs-book">
+        <div class="rs-spine"></div>
+        <div>
+          <h3>How to Not Die Alone</h3>
+          <div class="rs-author">Logan Ury</div>
+          <p>A practical, kind look at the habits that quietly sabotage dating, from a behavioral scientist who has coached thousands.</p>
+        </div>
+      </div>
+      <div class="rs-book">
+        <div class="rs-spine"></div>
+        <div>
+          <h3>The Course of Love</h3>
+          <div class="rs-author">Alain de Botton</div>
+          <p>A novel that doubles as relationship education - honest about what long-term love really asks of two ordinary people.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="rs-section">
+  <div class="rs-wrap">
+    <div class="rs-cta">
+      <div class="rs-cta-in">
+        <h2>Want these tools in your inbox?</h2>
+        <p>Our weekly email pairs one honest insight with a small, doable exercise. No pressure, no toxic advice, unsubscribe anytime.</p>
+        <a href="./#newsletter">Get the Free Guide</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+/* ---- date idea picker ---- */
+(function(){
+  var IDEAS=[
+    {v:'cozy',cat:'Cozy',t:'Cook one shared recipe neither of you has tried.',n:'Mistakes in the kitchen make great conversation.'},
+    {v:'cozy',cat:'Cozy',t:'Build a two-person book or record exchange.',n:'Bring one thing you love and trade for the evening.'},
+    {v:'cozy',cat:'Cozy',t:'Slow breakfast date at an off-peak hour.',n:'Mornings reveal a calmer side of a person.'},
+    {v:'adventurous',cat:'Adventurous',t:'Pick a bus or train line and get off at a stop you have never seen.',n:'Low stakes, high novelty - and easy to laugh through.'},
+    {v:'adventurous',cat:'Adventurous',t:'Try a beginner class in something neither of you is good at.',n:'Being a beginner together levels the playing field.'},
+    {v:'adventurous',cat:'Adventurous',t:'Sunrise or sunset hike with coffee at the top.',n:'A small shared effort builds a surprising amount of warmth.'},
+    {v:'creative',cat:'Creative',t:'Visit a museum and each pick the piece that best describes the other.',n:'It turns a quiet space into a real conversation.'},
+    {v:'creative',cat:'Creative',t:'Pottery, painting, or a printmaking workshop.',n:'Making something with your hands eases the nerves.'},
+    {v:'creative',cat:'Creative',t:'Photo walk - one phone, ten photos, swap and explain.',n:'You learn how someone sees the world.'},
+    {v:'lowkey',cat:'Low key',t:'Browse a bookshop, then compare what you each picked up.',n:'No performance required - just easy company.'},
+    {v:'lowkey',cat:'Low key',t:'Farmers market stroll with a snack you split.',n:'Walking side by side takes the pressure off eye contact.'},
+    {v:'lowkey',cat:'Low key',t:'Board game cafe with one quick, silly game.',n:'A shared activity gives shy people something to do.'},
+    {v:'budget',cat:'Free or cheap',t:'Picnic in a park with whatever you each bring.',n:'Generosity shows up clearly in small gestures.'},
+    {v:'budget',cat:'Free or cheap',t:'Free gallery night or a community event.',n:'Costs nothing and gives you plenty to react to.'},
+    {v:'budget',cat:'Free or cheap',t:'Long walk with a planned coffee stop halfway.',n:'A route gives the date a gentle shape.'}
+  ];
+  var vibe='any',last=-1;
+  var box=document.getElementById('rsDiVibes'),
+      btn=document.getElementById('rsDiBtn'),
+      catEl=document.getElementById('rsDiCat'),
+      ideaEl=document.getElementById('rsDiIdea'),
+      noteEl=document.getElementById('rsDiNote');
+  if(!box)return;
+  box.querySelectorAll('.rs-pill').forEach(function(p){
+    p.addEventListener('click',function(){
+      box.querySelectorAll('.rs-pill').forEach(function(x){x.classList.remove('on');});
+      p.classList.add('on');vibe=p.getAttribute('data-vibe');
+    });
+  });
+  btn.addEventListener('click',function(){
+    var pool=vibe==='any'?IDEAS:IDEAS.filter(function(i){return i.v===vibe;});
+    if(!pool.length)return;
+    var idx;
+    do{idx=Math.floor(Math.random()*pool.length);}while(pool.length>1&&pool[idx]===IDEAS[last]);
+    var pick=pool[idx];last=IDEAS.indexOf(pick);
+    catEl.textContent=pick.cat;
+    ideaEl.textContent=pick.t;
+    noteEl.textContent=pick.n;
+    btn.textContent='Pick another idea';
+  });
+})();
+
+/* ---- profile self-audit ---- */
+(function(){
+  var ITEMS=[
+    'My main photo is a clear, recent shot of just me, smiling naturally.',
+    'I have a mix of photos: a close-up, a full-body, and one showing an interest.',
+    'My bio is specific - it names real things I like, not just generic adjectives.',
+    'I give a date something easy to message me about (a hook or a question).',
+    'I am honest about what I am looking for, casual or serious.',
+    'There are no group photos where it is unclear which person is me.',
+    'My tone sounds warm and like a real person, not a list of demands.',
+    'I have read it out loud and it does not sound bitter or jokey-negative.'
+  ];
+  var list=document.getElementById('rsAuditList'),
+      numEl=document.getElementById('rsScoreNum'),
+      fillEl=document.getElementById('rsScoreFill'),
+      msgEl=document.getElementById('rsScoreMsg'),
+      resetBtn=document.getElementById('rsAuditReset');
+  if(!list)return;
+  var state=ITEMS.map(function(){return false;});
+  function tick(){
+    return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4"><path d="M5 13l4 4L19 7"/></svg>';
+  }
+  function render(){
+    list.innerHTML=ITEMS.map(function(t,i){
+      return '<div class="rs-check'+(state[i]?' done':'')+'" data-i="'+i+'">'
+        +'<span class="rs-box">'+tick()+'</span>'
+        +'<span class="rs-check-txt">'+t+'</span></div>';
+    }).join('');
+    list.querySelectorAll('.rs-check').forEach(function(c){
+      c.addEventListener('click',function(){
+        var i=+c.getAttribute('data-i');state[i]=!state[i];render();score();
+      });
+    });
+  }
+  function score(){
+    var done=state.filter(Boolean).length,
+        pct=Math.round(done/ITEMS.length*100);
+    numEl.textContent=pct;
+    fillEl.style.width=pct+'%';
+    var msg;
+    if(pct===0)msg='<b>Start ticking boxes</b> to see how your profile is doing.';
+    else if(pct<40)msg='<b>Lots of room to grow.</b> Pick one unchecked item and fix just that this week.';
+    else if(pct<70)msg='<b>Solid foundation.</b> A couple of small edits will help the right people stop and read.';
+    else if(pct<100)msg='<b>Looking strong.</b> You are nearly there - close the last gap and you are set.';
+    else msg='<b>Genuinely great.</b> Your profile is honest, clear, and inviting. Now focus on the conversations.';
+    msgEl.innerHTML=msg;
+  }
+  resetBtn.addEventListener('click',function(){
+    state=ITEMS.map(function(){return false;});render();score();
+  });
+  render();score();
+})();
+</script>
