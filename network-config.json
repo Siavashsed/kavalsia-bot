@@ -1,7 +1,7 @@
 {
   "_name": "Kavalsia Network",
   "global_prompt": "Write like a seasoned human expert with direct experience, not an AI assistant. Use contractions, vary sentence length, reference your own experience at least twice, include one specific data point or study reference with a year. Take a clear editorial position. NEVER use em-dashes. NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion. Somewhere in the article - not at the start, not as the conclusion - include one paragraph that reads like a real human wrote it in a slightly different mood: uncertain phrasing, an offhand mention of someone ('my friend tried this and honestly...'), a personal anecdote that is specific and slightly embarrassing or funny, or a moment of genuine doubt ('I'm not 100% sure this works for everyone, but...'). The tone of this paragraph can be looser, funnier, or more uncertain than the rest. It should feel like the writer briefly forgot they were writing an article.",
-  "global_negative_prompt": "DO NOT EVER USE \" —\" (em-dash). NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion, in summary, to summarize, it is important to note, as an AI language model.",
+  "global_negative_prompt": "DO NOT EVER USE \" \u2014\" (em-dash). NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion, in summary, to summarize, it is important to note, as an AI language model.",
   "global_header_scripts": "",
   "global_footer_scripts": "",
   "global_client": {
@@ -103,7 +103,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -124,9 +124,9 @@
         "How exchange APIs enable fully automated trading strategies",
         "Bitcoin volatility patterns institutional traders actually track",
         "On-chain metrics that preceded the last three market tops",
-        "Grid bots vs trend-following bots — a real head-to-head comparison",
+        "Grid bots vs trend-following bots \u2014 a real head-to-head comparison",
         "Understanding funding rates and why they matter for futures traders",
-        "Dollar-cost averaging into crypto — the math behind why it works",
+        "Dollar-cost averaging into crypto \u2014 the math behind why it works",
         "How to build a trading bot without losing your shirt",
         "The psychology of FOMO and how algorithms exploit it",
         "Crypto market cycles: reading data not headlines"
@@ -174,7 +174,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -192,12 +192,12 @@
       "footer_scripts": "",
       "topics": [
         "How dividend stocks build passive income over time",
-        "REITs vs rental property — a real numbers comparison",
+        "REITs vs rental property \u2014 a real numbers comparison",
         "Building a $1,000/month passive income stream from scratch",
         "Why index funds beat 90% of active fund managers",
         "How to evaluate a high-yield savings account in 2025",
         "Peer-to-peer lending: what the platforms don't tell you",
-        "Passive income with digital products — realistic expectations",
+        "Passive income with digital products \u2014 realistic expectations",
         "Tax-efficient investing strategies most people ignore",
         "How compound interest actually works over 30 years",
         "Side hustles that become passive income streams"
@@ -245,7 +245,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -264,7 +264,7 @@
       "topics": [
         "Best Python libraries for backtesting trading strategies",
         "How to connect to Binance API without getting rate-limited",
-        "TradingView Pine Script vs Python — which to learn first",
+        "TradingView Pine Script vs Python \u2014 which to learn first",
         "Building a real-time crypto screener with WebSockets",
         "Backtest vs live trading: why results always differ",
         "How professional trading desks evaluate new tools",
@@ -316,7 +316,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -335,10 +335,10 @@
       "topics": [
         "How AI copywriting tools actually perform in real A/B tests",
         "Using Claude to write better ad copy than your agency",
-        "AI-generated vs human-written email sequences — the open rate data",
+        "AI-generated vs human-written email sequences \u2014 the open rate data",
         "How to automate your content calendar with AI tools",
         "Building an AI-powered lead scoring system",
-        "ChatGPT vs Claude vs Gemini for marketing copy — honest comparison",
+        "ChatGPT vs Claude vs Gemini for marketing copy \u2014 honest comparison",
         "How to use AI for competitor analysis at scale",
         "Automating social media with AI without losing authenticity",
         "AI tools that actually save time in a marketing workflow",
@@ -387,7 +387,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -411,7 +411,7 @@
         "Pricing psychology: why 97 beats 99 in most markets",
         "Building a profitable subscription box from scratch",
         "How to source products from manufacturers without minimum orders",
-        "TikTok Shop vs Instagram Shopping — where to focus in 2025",
+        "TikTok Shop vs Instagram Shopping \u2014 where to focus in 2025",
         "Reducing customer acquisition cost through referral loops",
         "The ecommerce metrics that actually predict profitability"
       ],
@@ -458,7 +458,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -531,7 +531,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -549,12 +549,12 @@
       "footer_scripts": "",
       "topics": [
         "Creatine monohydrate: what 500+ studies actually show",
-        "Does pre-workout actually improve performance — the evidence",
+        "Does pre-workout actually improve performance \u2014 the evidence",
         "Protein timing: does when you eat matter as much as how much",
-        "Vitamin D deficiency — why most people are getting the dose wrong",
+        "Vitamin D deficiency \u2014 why most people are getting the dose wrong",
         "Ashwagandha for stress: what the human trials found",
         "Sleep supplements ranked by evidence quality",
-        "Magnesium forms compared — glycinate vs citrate vs oxide",
+        "Magnesium forms compared \u2014 glycinate vs citrate vs oxide",
         "The supplement stack a competitive athlete actually uses",
         "How to read a supplement label for actual quality signals",
         "Which protein powder survives third-party testing"
@@ -602,7 +602,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -626,7 +626,7 @@
         "The interval recognition method most teachers skip",
         "Building a sight-reading library on any budget",
         "How professionals prepare for a sight-reading audition",
-        "Treble vs bass clef — strategies for the weaker hand",
+        "Treble vs bass clef \u2014 strategies for the weaker hand",
         "Sight-reading in different time signatures without counting out loud",
         "How long it actually takes to become a confident sight-reader"
       ],
@@ -673,7 +673,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -691,11 +691,11 @@
       "footer_scripts": "",
       "topics": [
         "Newborn sleep cycles: what to actually expect in week one",
-        "How to swaddle correctly — and when to stop",
+        "How to swaddle correctly \u2014 and when to stop",
         "Breastfeeding latch issues: the fixes that actually work",
         "What a newborn's cry actually means (a frequency guide)",
         "Safe sleep guidelines: what the AAP says in plain English",
-        "Newborn feeding schedule vs on-demand — the evidence",
+        "Newborn feeding schedule vs on-demand \u2014 the evidence",
         "How to tell if your newborn is getting enough milk",
         "Baby gear worth buying vs what wastes your money",
         "Postpartum recovery: what nobody tells you in the hospital",
@@ -744,7 +744,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -815,7 +815,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -886,7 +886,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -903,15 +903,15 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
-        "Periodization models compared — linear vs undulating vs block",
+        "Periodization models compared \u2014 linear vs undulating vs block",
         "How to program deload weeks without losing strength gains",
         "Plyometric training for athletes who also lift heavy",
         "Speed development: what sprints alone cannot fix",
-        "How recovery actually works — the physiology explained simply",
+        "How recovery actually works \u2014 the physiology explained simply",
         "Mobility vs flexibility: the difference that matters for athletes",
         "Building a 12-week strength program from scratch",
         "How elite coaches program the off-season differently",
-        "Nutrition timing around training — what the latest research says",
+        "Nutrition timing around training \u2014 what the latest research says",
         "Why most athletes train too much and recover too little"
       ],
       "articles_per_day": 1,
@@ -957,7 +957,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -975,14 +975,14 @@
       "footer_scripts": "",
       "topics": [
         "Foundation matching: the undertone guide that actually works",
-        "Eye makeup for different eye shapes — a real breakdown",
+        "Eye makeup for different eye shapes \u2014 a real breakdown",
         "How to make eyeshadow stay on all day without creasing",
-        "Blush placement by face shape — and why most guides get it wrong",
+        "Blush placement by face shape \u2014 and why most guides get it wrong",
         "Skincare vs makeup: what you should fix before you apply",
         "Drugstore products that outperform luxury counterparts",
         "Building a minimal makeup kit that handles any occasion",
         "How to photograph makeup correctly for social media",
-        "Setting spray vs setting powder — when to use which",
+        "Setting spray vs setting powder \u2014 when to use which",
         "The application tools that make the biggest difference"
       ],
       "articles_per_day": 1,
@@ -1028,7 +1028,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1046,10 +1046,10 @@
       "footer_scripts": "",
       "topics": [
         "Why your dating app profile isn't getting matches (and how to fix it)",
-        "Attachment styles explained — and how they wreck your relationships",
+        "Attachment styles explained \u2014 and how they wreck your relationships",
         "First date mistakes that signal low confidence",
         "How to tell if someone is genuinely interested or just bored",
-        "Building attraction through delayed availability — the psychology",
+        "Building attraction through delayed availability \u2014 the psychology",
         "Why texting too much kills romantic tension",
         "The conversation topics that create real connection on a first date",
         "How to recover from a bad first impression",
@@ -1099,7 +1099,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1118,10 +1118,10 @@
       "topics": [
         "The beginner lifting program that builds real muscle in 12 weeks",
         "Why cardio alone never results in significant fat loss",
-        "Progressive overload explained — the only variable that matters long-term",
+        "Progressive overload explained \u2014 the only variable that matters long-term",
         "Home workout programs that actually build muscle",
         "How to train around injuries without losing momentum",
-        "The protein intake question — finally answered with research",
+        "The protein intake question \u2014 finally answered with research",
         "Sleep and fitness: why 7 hours beats 2-a-day training",
         "How to build a sustainable calorie deficit without misery",
         "Gym anxiety: the honest advice nobody gives beginners",
@@ -1170,7 +1170,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1188,12 +1188,12 @@
       "footer_scripts": "",
       "topics": [
         "How to analyze a rental property in 30 minutes flat",
-        "Cap rate vs cash-on-cash return — which metric matters more",
+        "Cap rate vs cash-on-cash return \u2014 which metric matters more",
         "House hacking: how to live for free while building equity",
         "The hidden costs of owning rental property first-timers miss",
         "How to find off-market deals before they hit the MLS",
         "BRRRR strategy: a realistic look at what it takes to execute",
-        "Property management vs self-managing — the honest math",
+        "Property management vs self-managing \u2014 the honest math",
         "How real estate creates tax advantages other assets cannot",
         "Short-term vs long-term rental: the 2025 numbers",
         "Reading a real estate market before everyone else does"
@@ -1250,7 +1250,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1313,7 +1313,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1339,7 +1339,7 @@
         "How to read a construction bid and spot red flags",
         "The renovation order that avoids expensive rework",
         "Foundation issues: what's serious and what's cosmetic",
-        "How long a renovation actually takes — a realistic timeline"
+        "How long a renovation actually takes \u2014 a realistic timeline"
       ],
       "articles_per_day": 2,
       "nav_style": "dark",
@@ -1384,7 +1384,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1402,9 +1402,9 @@
       "footer_scripts": "",
       "topics": [
         "How to actually compare car insurance quotes correctly",
-        "Life insurance at 30 — term vs whole, the honest answer",
+        "Life insurance at 30 \u2014 term vs whole, the honest answer",
         "What renters insurance covers that most people don't realize",
-        "Health insurance deductibles vs premiums — how to do the math",
+        "Health insurance deductibles vs premiums \u2014 how to do the math",
         "The insurance policies you probably don't have but should",
         "How insurance companies calculate your premium (and how to lower it)",
         "Travel insurance: what it covers and what it definitely doesn't",
@@ -1455,7 +1455,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1472,7 +1472,7 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
-        "EV range anxiety in 2025 — is it still a real problem?",
+        "EV range anxiety in 2025 \u2014 is it still a real problem?",
         "How to evaluate a used EV before buying",
         "Tesla vs other EVs: a technical comparison beyond brand loyalty",
         "Home charging setup: what you actually need",
@@ -1526,7 +1526,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
@@ -1548,7 +1548,7 @@
         "Finding accommodation that locals actually use",
         "The travel insurance claim I almost had to make in Lisbon",
         "How to navigate a country where you don't speak the language",
-        "Slow travel vs fast travel — what you actually remember",
+        "Slow travel vs fast travel \u2014 what you actually remember",
         "The packing list I've settled on after 60 countries",
         "How to find non-touristy food in a tourist city",
         "Border crossings: what no travel blog prepares you for",
@@ -1599,7 +1599,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
+        "enabled": false,
         "started": "",
         "phase": "new"
       },
