@@ -1,0 +1,160 @@
+<style>
+.ab-page{background:var(--bg);color:var(--text);font-family:var(--sans)}
+.ab-rev{opacity:0;transform:translateY(24px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.ab-rev.in{opacity:1;transform:none}
+.ab-rev.d1{transition-delay:.12s}.ab-rev.d2{transition-delay:.24s}.ab-rev.d3{transition-delay:.36s}
+@media(prefers-reduced-motion:reduce){.ab-rev{opacity:1;transform:none;transition:none}}
+.ab-shell{max-width:var(--maxw);margin:0 auto;padding:0 56px}
+@media(max-width:760px){.ab-shell{padding:0 22px}}
+
+.ab-kicker{font-size:9px;letter-spacing:2.4px;text-transform:uppercase;color:var(--gold);font-weight:500}
+.ab-rule{width:1px;height:54px;background:linear-gradient(to bottom,var(--gold),transparent);margin:0 auto}
+
+/* HERO */
+.ab-hero{position:relative;padding:148px 0 96px;text-align:center;border-bottom:1px solid var(--border)}
+.ab-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(196,160,93,.07),transparent 70%);pointer-events:none}
+.ab-hero-in{position:relative;max-width:760px;margin:0 auto;padding:0 22px}
+.ab-h1{font-family:var(--serif);font-weight:300;font-size:clamp(40px,6vw,76px);line-height:1.04;letter-spacing:.5px;margin:22px 0 26px}
+.ab-h1 i{font-style:italic;color:var(--gold)}
+.ab-deck{font-size:14px;color:var(--text2);line-height:1.85;max-width:520px;margin:0 auto;font-weight:300}
+
+/* SECTION */
+.ab-sec{padding:96px 0;border-bottom:1px solid var(--border)}
+.ab-sec-tag{font-size:9px;letter-spacing:2.4px;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.ab-h2{font-family:var(--serif);font-weight:300;font-size:clamp(28px,3.6vw,44px);line-height:1.12;letter-spacing:.4px;margin-bottom:26px}
+.ab-h2 i{font-style:italic;color:var(--gold)}
+.ab-narrow{max-width:680px}
+.ab-prose p{font-size:14px;color:var(--text2);line-height:1.95;margin-bottom:20px;font-weight:300}
+.ab-prose p i{color:var(--text);font-style:italic}
+
+/* PHILOSOPHY ROWS */
+.ab-phi{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:8px}
+.ab-phi-cell{background:var(--surface);padding:40px 32px}
+.ab-phi-num{font-family:var(--serif);font-size:30px;font-style:italic;color:var(--gold2);margin-bottom:18px}
+.ab-phi-cell h3{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.3px;margin-bottom:12px}
+.ab-phi-cell p{font-size:13px;color:var(--text2);line-height:1.85;font-weight:300}
+
+/* CREATOR */
+.ab-creator{display:grid;grid-template-columns:300px 1fr;gap:64px;align-items:center}
+.ab-portrait{position:relative;aspect-ratio:3/4;background:linear-gradient(160deg,var(--surface2),var(--bg2));border:1px solid var(--border2);display:flex;align-items:center;justify-content:center}
+.ab-portrait .mono{font-family:var(--serif);font-style:italic;font-size:64px;font-weight:300;color:var(--gold);opacity:.85}
+.ab-portrait::after{content:'';position:absolute;inset:14px;border:1px solid var(--gold-dim)}
+.ab-creator-role{font-size:9px;letter-spacing:2.4px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.ab-creator-name{font-family:var(--serif);font-weight:300;font-size:34px;letter-spacing:.4px;margin-bottom:18px}
+.ab-creator p{font-size:14px;color:var(--text2);line-height:1.92;margin-bottom:18px;font-weight:300}
+.ab-sig{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--gold);margin-top:6px}
+
+/* STAT ROW */
+.ab-stats{display:flex;justify-content:center;gap:64px;flex-wrap:wrap;text-align:center}
+.ab-stat-n{font-family:var(--serif);font-weight:300;font-size:clamp(40px,5vw,62px);color:var(--text);line-height:1}
+.ab-stat-l{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:12px}
+
+/* CTA */
+.ab-cta{padding:118px 0;text-align:center}
+.ab-cta-in{max-width:560px;margin:0 auto;padding:0 22px}
+.ab-cta h2{font-family:var(--serif);font-weight:300;font-size:clamp(30px,4vw,50px);line-height:1.1;margin:22px 0 20px}
+.ab-cta h2 i{font-style:italic;color:var(--gold)}
+.ab-cta p{font-size:13px;color:var(--text2);line-height:1.85;margin-bottom:34px;font-weight:300}
+.ab-cta-btn{display:inline-block;font-size:9px;letter-spacing:1.6px;text-transform:uppercase;font-weight:500;color:var(--bg);background:var(--gold);padding:15px 34px;transition:opacity .25s}
+.ab-cta-btn:hover{opacity:.82}
+
+@media(max-width:760px){
+  .ab-sec{padding:64px 0}
+  .ab-phi{grid-template-columns:1fr}
+  .ab-creator{grid-template-columns:1fr;gap:36px;text-align:center}
+  .ab-portrait{max-width:260px;margin:0 auto}
+  .ab-stats{gap:40px}
+}
+</style>
+
+<main class="ab-page">
+  <section class="ab-hero">
+    <div class="ab-hero-in ab-rev">
+      <div class="ab-kicker">The Studio</div>
+      <h1 class="ab-h1">An event is a <i>feeling</i> a person carries home.</h1>
+      <p class="ab-deck">Kanona Events is a curation studio for gatherings designed around atmosphere - the scent at the door, the weight of the silence, the warmth of a single candle.</p>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-shell">
+      <div class="ab-rule ab-rev"></div>
+      <div class="ab-narrow" style="margin:46px auto 0">
+        <div class="ab-sec-tag ab-rev">How It Began</div>
+        <h2 class="ab-h2 ab-rev d1">A simple <i>observation</i> about the evenings we remember.</h2>
+        <div class="ab-prose ab-rev d2">
+          <p>The mechanics of an event - the seating chart, the schedule, the catering count - are almost always solved with care. The atmosphere is left to chance. Yet the things a guest actually remembers are the emotional ones: the quality of the light, the silence between courses, the first breath of air as the door opens.</p>
+          <p>Kanona Events began to correct that imbalance. We treat <i>the sensory layer of an evening as a thing to be composed</i>, not assumed. Scent, sound, light, pacing, and the chemistry of the room are designed with the same intent most studios reserve for the floor plan.</p>
+          <p>The studio holds one event at a time. It is a deliberate constraint - the only way to give a single occasion the attention an experience of this kind requires.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-shell">
+      <div class="ab-sec-tag ab-rev">The Method</div>
+      <h2 class="ab-h2 ab-rev d1">Three layers, <i>composed in order.</i></h2>
+      <div class="ab-phi">
+        <div class="ab-phi-cell ab-rev">
+          <div class="ab-phi-num">i</div>
+          <h3>The scent, first</h3>
+          <p>Before guests see the room or hear the music, they smell it. A single note - cedar, white tea, aged wood - tells the body where it is before the mind catches up. The olfactory layer is designed before anything else.</p>
+        </div>
+        <div class="ab-phi-cell ab-rev d1">
+          <div class="ab-phi-num">ii</div>
+          <h3>The light and the sound</h3>
+          <p>We walk the space at the exact hour the event will run, tuning light and sound score until the room itself speaks the right first sentence. Surprises are designed out before a guest ever arrives.</p>
+        </div>
+        <div class="ab-phi-cell ab-rev d2">
+          <div class="ab-phi-num">iii</div>
+          <h3>The one occasion</h3>
+          <p>The specific combination of people, room, weather, and conversation cannot be recreated. We design for the single evening in front of us, never the template, never the repeat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-shell">
+      <div class="ab-creator">
+        <div class="ab-portrait ab-rev"><span class="mono">KS</span></div>
+        <div class="ab-rev d1">
+          <div class="ab-creator-role">Experiential Curator &middot; Founder</div>
+          <div class="ab-creator-name">Kani Sedighi</div>
+          <p>I design gatherings as sensory experiments. The scent of a room, the weight of silence before music begins, the specific warmth of a single candle - these are as deliberate as the guest list. Every detail is a decision about what feeling a person carries home.</p>
+          <p>Kanona Events grew out of years spent noticing that the most memorable evenings were rarely the most lavish - they were the most considered. The studio is small on purpose, and the work is unhurried on purpose. An atmosphere worth remembering cannot be rushed.</p>
+          <p class="ab-sig">- Kani Sedighi</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-shell">
+      <div class="ab-stats">
+        <div class="ab-rev"><div class="ab-stat-n">One</div><div class="ab-stat-l">Event at a time</div></div>
+        <div class="ab-rev d1"><div class="ab-stat-n">10&ndash;20</div><div class="ab-stat-l">Guests, the studio's instinct</div></div>
+        <div class="ab-rev d2"><div class="ab-stat-n">3</div><div class="ab-stat-l">Sensory layers, composed</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-cta">
+    <div class="ab-cta-in ab-rev">
+      <div class="ab-kicker">An Invitation</div>
+      <h2>Let us design the <i>evening</i> they remember.</h2>
+      <p>Tell us about the occasion. We will tell you what it could feel like - and whether the studio is the right hands for it.</p>
+      <a href="./#contact" class="ab-cta-btn">Begin A Conversation</a>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}});
+  },{threshold:.14});
+  document.querySelectorAll(".ab-rev").forEach(function(el){io.observe(el);});
+})();
+</script>
