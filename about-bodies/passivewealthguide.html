@@ -1,0 +1,162 @@
+<style>
+.ab-main{--ab-bg:#faf8f2;--ab-bg2:#f3f0e8;--ab-surface:#ece8dc;--ab-primary:#1a4731;--ab-primary2:#15803d;--ab-gold:#b45309;--ab-text:#1c1a14;--ab-muted:#7a7060;--ab-muted2:#9a8e80;--ab-border:#d8d0bc;--ab-white:#fff;--ab-serif:'Playfair Display',Georgia,serif;--ab-body:'Lora',Georgia,serif;--ab-r:3px;background:var(--ab-bg);color:var(--ab-text);font-family:var(--ab-body);font-size:15px;line-height:1.75;display:block}
+.ab-container{max-width:1100px;margin:0 auto;padding:0 24px}
+.ab-kicker{font-family:var(--ab-body);font-size:10px;font-weight:700;color:var(--ab-primary);text-transform:uppercase;letter-spacing:2.5px;display:block;margin-bottom:12px;opacity:.85}
+.ab-main h1,.ab-main h2,.ab-main h3{font-family:var(--ab-serif);font-weight:800;color:var(--ab-text);letter-spacing:-.4px;line-height:1.14}
+
+/* HERO */
+.ab-hero{background:var(--ab-bg);border-bottom:1px solid var(--ab-border);position:relative;overflow:hidden}
+.ab-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:600px;height:600px;background:radial-gradient(ellipse at 80% 40%,rgba(26,71,49,.055),transparent 65%);pointer-events:none}
+.ab-hero-in{max-width:1100px;margin:0 auto;padding:80px 24px 72px;position:relative}
+.ab-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;color:var(--ab-primary);letter-spacing:2px;text-transform:uppercase;margin-bottom:22px}
+.ab-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--ab-gold)}
+.ab-hero h1{font-size:clamp(36px,5vw,58px);margin-bottom:20px;line-height:1.06}
+.ab-hero h1 em{font-style:italic;color:var(--ab-primary)}
+.ab-hero p{font-size:17px;color:var(--ab-muted);line-height:1.85;max-width:560px;font-style:italic}
+
+/* SECTION */
+.ab-section{padding:72px 0}
+.ab-section.alt{background:var(--ab-bg2)}
+.ab-h2{font-size:clamp(26px,3.6vw,40px);margin-bottom:14px}
+.ab-section-sub{font-size:15px;color:var(--ab-muted);font-style:italic;max-width:560px;line-height:1.85}
+
+/* STORY */
+.ab-story p{font-size:15.5px;color:var(--ab-muted);line-height:1.9;margin-bottom:16px;max-width:680px}
+.ab-story p strong{font-weight:700;color:var(--ab-text)}
+
+/* PRINCIPLES */
+.ab-pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ab-border);margin-top:38px}
+.ab-pcard{background:var(--ab-white);padding:34px 28px;position:relative;overflow:hidden}
+.ab-pcard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ab-primary);transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.ab-pcard:hover::after{transform:scaleX(1)}
+.ab-pnum{font-family:var(--ab-serif);font-size:11px;font-weight:700;color:var(--ab-muted2);letter-spacing:1px;display:block;margin-bottom:14px}
+.ab-pcard h3{font-size:19px;font-weight:700;margin-bottom:10px}
+.ab-pcard p{font-size:13px;color:var(--ab-muted);line-height:1.8}
+
+/* COVERAGE */
+.ab-cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:38px}
+.ab-crow{background:var(--ab-white);border:1px solid var(--ab-border);border-radius:4px;padding:24px 26px;position:relative;overflow:hidden}
+.ab-crow::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ab-primary);transform:scaleY(0);transform-origin:bottom;transition:transform .3s}
+.ab-crow:hover::after{transform:scaleY(1)}
+.ab-crow h3{font-size:18px;font-weight:700;margin-bottom:7px}
+.ab-crow p{font-size:13px;color:var(--ab-muted);line-height:1.8}
+
+/* AUTHOR */
+.ab-author{background:var(--ab-bg);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border)}
+.ab-author-in{max-width:900px;margin:0 auto;padding:72px 24px;display:grid;grid-template-columns:200px 1fr;gap:56px;align-items:start}
+.ab-author-left{display:flex;flex-direction:column;align-items:center;gap:18px}
+.ab-avatar{width:150px;height:150px;border-radius:50%;background:var(--ab-primary);display:flex;align-items:center;justify-content:center;border:4px solid var(--ab-border);box-shadow:0 6px 24px rgba(26,71,49,.18)}
+.ab-avatar span{font-family:var(--ab-serif);font-size:42px;font-weight:700;color:#fff}
+.ab-creds{display:flex;flex-direction:column;gap:8px;width:100%}
+.ab-cred{background:var(--ab-bg2);border:1px solid var(--ab-border);border-radius:var(--ab-r);padding:8px 12px;text-align:center}
+.ab-cred b{font-family:var(--ab-serif);font-size:14px;font-weight:700;color:var(--ab-primary);display:block;line-height:1.2}
+.ab-cred span{font-size:9px;color:var(--ab-muted);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-top:2px;display:block}
+.ab-author-name{font-size:30px;margin-bottom:4px}
+.ab-author-title{font-family:var(--ab-body);font-size:12px;font-weight:600;color:var(--ab-primary);text-transform:uppercase;letter-spacing:1.2px;background:var(--ab-bg2);border:1px solid var(--ab-border);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:20px}
+.ab-author-body p{font-size:15px;color:var(--ab-muted);line-height:1.88;margin-bottom:14px}
+
+/* DISCLAIMER */
+.ab-disc{background:var(--ab-surface);border-top:1px solid var(--ab-border);padding:18px 24px}
+.ab-disc-in{max-width:1100px;margin:0 auto;display:flex;gap:12px;align-items:flex-start}
+.ab-disc svg{color:var(--ab-muted);flex-shrink:0;opacity:.5;margin-top:2px}
+.ab-disc p{font-size:11px;color:var(--ab-muted);line-height:1.75;font-style:italic}
+.ab-disc strong{font-style:normal;font-weight:700;color:var(--ab-text)}
+
+/* CTA */
+.ab-cta{max-width:620px;margin:0 auto;background:var(--ab-white);border:1px solid var(--ab-border);border-radius:4px;padding:54px 48px;text-align:center;position:relative;box-shadow:0 16px 48px rgba(28,26,20,.12)}
+.ab-cta::before{content:'';position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,var(--ab-primary),var(--ab-gold),var(--ab-primary),transparent)}
+.ab-cta h2{font-size:clamp(24px,3.4vw,36px);margin-bottom:12px}
+.ab-cta p{font-size:14px;color:var(--ab-muted);font-style:italic;max-width:440px;margin:0 auto 26px;line-height:1.8}
+.ab-btn{display:inline-block;background:var(--ab-primary);color:#fff;font-family:var(--ab-body);font-size:14px;font-weight:600;padding:14px 32px;border-radius:var(--ab-r);box-shadow:0 4px 16px rgba(26,71,49,.22);transition:background .2s,transform .2s}
+.ab-btn:hover{background:var(--ab-primary2);transform:translateY(-1px)}
+
+@media(max-width:760px){.ab-pgrid,.ab-cgrid{grid-template-columns:1fr}.ab-author-in{grid-template-columns:1fr;gap:32px}.ab-author-left{flex-direction:row;align-items:flex-start}.ab-creds{flex-direction:row;flex-wrap:wrap}.ab-cred{flex:1;min-width:70px}}
+@media(max-width:480px){.ab-author-left{flex-direction:column;align-items:center}.ab-cta{padding:40px 24px}}
+</style>
+
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-hero-in">
+      <div class="ab-eyebrow"><span class="ab-eyebrow-dot"></span>About Passive Wealth Guide</div>
+      <h1>The honest version of <em>building income.</em></h1>
+      <p>Passive Wealth Guide is written for people who want the realistic path to financial independence - the math, the timeline, and the hard parts that most income content quietly leaves out.</p>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-container ab-story">
+      <span class="ab-kicker">Why This Site Exists</span>
+      <h2 class="ab-h2">Most passive income content sells a fantasy.</h2>
+      <p>"Earn while you sleep" is true, eventually. But the way it is usually packaged - quick, easy, and a short course away - is not. That gap between the promise and the reality is where most people give up, somewhere around year three, right before the math starts working in their favor.</p>
+      <p>Passive Wealth Guide was built to close that gap with honesty. <strong>Every strategy here is explained with its real timeline, its real risk profile, and its real tax treatment.</strong> When a path takes a decade, we say a decade. When the first dividend check is underwhelming, we say so - because it is, and that is normal.</p>
+      <p>There is no sponsored content and no course promising results in ninety days. Just evidence-based, jargon-light guidance from someone who built passive income the slow way and reached financial independence because of it.</p>
+    </div>
+  </section>
+
+  <section class="ab-section alt">
+    <div class="ab-container">
+      <span class="ab-kicker">The Standard</span>
+      <h2 class="ab-h2">Three commitments behind every article</h2>
+      <p class="ab-section-sub">These principles decide what gets published - and why this guide reads differently from the rest.</p>
+      <div class="ab-pgrid">
+        <div class="ab-pcard"><span class="ab-pnum">01</span><h3>Show the math</h3><p>Every projection includes its assumptions. Return rates, withdrawal rates, taxes and fees are stated openly, never buried, so you can judge the numbers yourself.</p></div>
+        <div class="ab-pcard"><span class="ab-pnum">02</span><h3>Tell the real timeline</h3><p>Passive income compounds slowly before it compounds fast. We map the full fifteen-year arc, including the frustrating middle years most content skips.</p></div>
+        <div class="ab-pcard"><span class="ab-pnum">03</span><h3>Stay independent</h3><p>No sponsored strategies, no affiliate-driven recommendations. The guidance answers to the reader's results, not to a partnership.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-container">
+      <span class="ab-kicker">What We Cover</span>
+      <h2 class="ab-h2">Six pillars of durable passive income</h2>
+      <div class="ab-cgrid">
+        <div class="ab-crow"><h3>Dividend Stocks &amp; Index Funds</h3><p>The backbone of most early-retirement portfolios - dividend growth, payout ratios, and the discipline of doing nothing during downturns.</p></div>
+        <div class="ab-crow"><h3>REITs</h3><p>Real estate cash flow without a down payment or a midnight tenant call, evaluated honestly beyond headline yield.</p></div>
+        <div class="ab-crow"><h3>Rental Income</h3><p>The most labor-intensive stream on the list - with candid math on cash-on-cash returns, vacancy, and year-one costs.</p></div>
+        <div class="ab-crow"><h3>Digital Products &amp; Tax Strategy</h3><p>High-margin income once established, plus the asset-location and tax decisions that quietly change your effective yield.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-author">
+    <div class="ab-author-in">
+      <div class="ab-author-left">
+        <div class="ab-avatar"><span>SM</span></div>
+        <div class="ab-creds">
+          <div class="ab-cred"><b>CFP</b><span>Certified</span></div>
+          <div class="ab-cred"><b>15 Yrs</b><span>Investing</span></div>
+          <div class="ab-cred"><b>Age 41</b><span>Retired</span></div>
+        </div>
+      </div>
+      <div>
+        <span class="ab-kicker">The Person Behind It</span>
+        <h2 class="ab-author-name">Sarah Mills</h2>
+        <span class="ab-author-title">Certified Financial Planner</span>
+        <div class="ab-author-body">
+          <p>I retired at 41 by building passive income streams over 15 years - dividend portfolios, REITs, a small rental, and eventually a digital product. None of it happened fast, and that is precisely the point of this site.</p>
+          <p>As a Certified Financial Planner, I spent years watching clients get sold the highlight reel. Passive Wealth Guide is the correction: how long it actually takes, what the taxes really look like, and which strategies are worth their complexity.</p>
+          <p>My approach is evidence-based, jargon-light, and honest about the difficult parts - because the strategies that genuinely work demand a patience that most content never prepares you for. Everything here is written in a personal capacity, for informational purposes only.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section alt">
+    <div class="ab-container">
+      <div class="ab-cta">
+        <span class="ab-kicker" style="text-align:center">The Wealth Letter</span>
+        <h2>Build income the honest way.</h2>
+        <p>Monthly passive income strategies and investing insight from a CFP who has lived it. No fluff, no sponsored content - just the real numbers.</p>
+        <a href="./#newsletter" class="ab-btn">Subscribe Free</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="ab-disc">
+    <div class="ab-disc-in">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p><strong>Disclaimer:</strong> All content on Passive Wealth Guide is for informational and educational purposes only. Nothing here constitutes financial, investment, tax, or legal advice. All income examples are illustrative and do not represent guaranteed returns. Past performance is not indicative of future results. Investing involves risk, including possible loss of principal. Consult a qualified financial professional before making investment decisions. Sarah Mills is a Certified Financial Planner and writes in a personal capacity.</p>
+    </div>
+  </div>
+</main>
