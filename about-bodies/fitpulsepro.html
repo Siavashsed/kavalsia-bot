@@ -1,0 +1,187 @@
+<style>
+.ab-main{background:var(--bg);color:var(--text)}
+.ab-wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.ab-rev{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.ab-rev.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.ab-rev{opacity:1;transform:none;transition:none}}
+
+.ab-hero{position:relative;overflow:hidden;padding:78px 0 72px;text-align:center;border-bottom:1px solid var(--border)}
+.ab-hero-bg{position:absolute;inset:0;z-index:0}
+.ab-glow{position:absolute;border-radius:50%;filter:blur(95px);opacity:.42}
+.ab-glow.a{width:480px;height:480px;background:var(--violet);top:-200px;left:-130px}
+.ab-glow.b{width:420px;height:420px;background:var(--lime);bottom:-240px;right:-100px}
+.ab-grid-lines{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:.22;mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,#000,transparent)}
+.ab-hero-in{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:0 24px}
+.ab-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--head);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lime);margin-bottom:16px}
+.ab-eyebrow::before{content:"";width:22px;height:2px;background:var(--lime)}
+.ab-h1{font-family:var(--head);font-size:clamp(36px,5.6vw,62px);font-weight:800;line-height:1.05;letter-spacing:-.04em;margin-bottom:18px}
+.ab-h1 .g{background:linear-gradient(100deg,var(--lime),#7cffb0 45%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ab-lead{font-size:clamp(15px,1.7vw,18px);color:var(--muted);max-width:560px;margin:0 auto}
+
+.ab-section{padding:78px 0}
+.ab-sec-title{font-family:var(--head);font-size:clamp(26px,3.6vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.12;margin-bottom:14px}
+.ab-story{display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:start}
+.ab-story p{color:var(--muted);margin-bottom:16px}
+.ab-story p strong{color:var(--text);font-weight:600}
+.ab-side{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:28px}
+.ab-side h4{font-family:var(--head);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:16px}
+.ab-side-row{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px}
+.ab-side-row:last-child{border-bottom:none}
+.ab-side-row b{font-family:var(--head);font-weight:700}
+.ab-side-row span{color:var(--muted)}
+
+.ab-method{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ab-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px}
+.ab-step{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;transition:transform .2s,border-color .2s}
+.ab-step:hover{transform:translateY(-6px);border-color:var(--lime)}
+.ab-step .num{font-family:var(--head);font-size:14px;font-weight:800;color:#0c0e14;background:var(--lime);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.ab-step h3{font-family:var(--head);font-size:18px;font-weight:700;margin-bottom:7px}
+.ab-step p{font-size:14px;color:var(--muted)}
+
+.ab-coach{display:grid;grid-template-columns:260px 1fr;gap:44px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:42px}
+.ab-coach-photo{aspect-ratio:1/1;border-radius:20px;background:linear-gradient(150deg,var(--bg3),#0c0e14);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+.ab-coach-photo .ava{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--lime),var(--lime2));display:flex;align-items:center;justify-content:center;font-family:var(--head);font-size:42px;font-weight:800;color:#0c0e14;box-shadow:0 0 50px rgba(214,255,63,.32)}
+.ab-coach-text h2{margin-bottom:14px}
+.ab-coach-text p{color:var(--muted);margin-bottom:14px}
+.ab-creds{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.ab-cred{font-size:12px;font-weight:600;background:var(--bg3);border:1px solid var(--border);padding:7px 13px;border-radius:8px}
+
+.ab-values{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:36px}
+.ab-val{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:26px;display:flex;gap:16px}
+.ab-val .chk{flex-shrink:0;width:30px;height:30px;border-radius:9px;background:rgba(214,255,63,.13);display:flex;align-items:center;justify-content:center}
+.ab-val .chk svg{width:15px;height:15px;fill:var(--lime)}
+.ab-val h3{font-family:var(--head);font-size:16px;font-weight:700;margin-bottom:5px}
+.ab-val p{font-size:13.5px;color:var(--muted)}
+
+.ab-cta{text-align:center}
+.ab-cta-box{position:relative;background:linear-gradient(135deg,#1a1e2c,#12151f);border:1px solid var(--border);border-radius:26px;padding:56px 40px;overflow:hidden}
+.ab-cta-box::before{content:"";position:absolute;width:320px;height:320px;background:var(--lime);filter:blur(120px);opacity:.15;top:-150px;right:-70px}
+.ab-cta-box h2{position:relative;font-family:var(--head);font-size:clamp(26px,3.4vw,38px);font-weight:800;margin-bottom:12px}
+.ab-cta-box p{position:relative;color:var(--muted);max-width:480px;margin:0 auto 26px}
+.ab-btn{position:relative;display:inline-flex;align-items:center;gap:9px;font-family:var(--head);font-weight:700;font-size:15px;padding:15px 30px;border-radius:12px;background:var(--lime);color:#0c0e14;transition:transform .16s,box-shadow .16s}
+.ab-btn:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(214,255,63,.34)}
+.ab-btn svg{width:17px;height:17px}
+
+@media(max-width:920px){
+  .ab-story{grid-template-columns:1fr;gap:34px}
+  .ab-steps{grid-template-columns:1fr}
+  .ab-values{grid-template-columns:1fr}
+  .ab-coach{grid-template-columns:1fr;text-align:center;padding:32px}
+  .ab-coach-photo{max-width:220px;margin:0 auto}
+  .ab-creds{justify-content:center}
+}
+@media(max-width:600px){.ab-section{padding:56px 0}.ab-hero{padding:54px 0 52px}.ab-cta-box{padding:42px 22px}}
+</style>
+
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-hero-bg" aria-hidden="true">
+      <div class="ab-grid-lines"></div>
+      <div class="ab-glow a"></div>
+      <div class="ab-glow b"></div>
+    </div>
+    <div class="ab-hero-in">
+      <div class="ab-eyebrow">About FitPulse Pro</div>
+      <h1 class="ab-h1">Fitness built for people who <span class="g">actually show up.</span></h1>
+      <p class="ab-lead">No 12-week transformations. No miracle splits. Just structured, evidence-based training for the lifters living the rest of their lives around the gym.</p>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap ab-story ab-rev">
+      <div>
+        <div class="ab-eyebrow">Why We Exist</div>
+        <h2 class="ab-sec-title">The fitness internet had a credibility problem.</h2>
+        <p>FitPulse Pro started with a frustration most lifters know well. Search for a workout program and you get recycled myths, screenshot abs, and plans that quietly fall apart the first week real life intervenes. The advice was loud, confident, and rarely tied to anything you could verify.</p>
+        <p>We built the opposite. <strong>Every guide we publish is periodized, sourced, and honest about its tradeoffs.</strong> If the research is mixed, we say so. If a method only works for a narrow set of people, we tell you who. We would rather lose a click than sell a promise we cannot back up.</p>
+        <p>The result is a library of programming, nutrition, and recovery content built for one kind of reader: the person balancing training with a job, a family, and a calendar that does not care about their split. Sustainable, repeatable, and built for the long game.</p>
+      </div>
+      <div class="ab-side">
+        <h4>FitPulse In Numbers</h4>
+        <div class="ab-side-row"><b>48k</b><span>Active members</span></div>
+        <div class="ab-side-row"><b>220+</b><span>Free training guides</span></div>
+        <div class="ab-side-row"><b>88%</b><span>Members who hit their goal</span></div>
+        <div class="ab-side-row"><b>12 yr</b><span>Coaching experience</span></div>
+        <div class="ab-side-row"><b>4.9</b><span>Average member rating</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-method">
+    <div class="ab-wrap ab-rev">
+      <div class="ab-eyebrow">Our Standard</div>
+      <h2 class="ab-sec-title">How a guide earns a spot on FitPulse Pro.</h2>
+      <p style="color:var(--muted);max-width:560px">Nothing ships until it clears three checks. It is slower than churning out content, and that is the point.</p>
+      <div class="ab-steps">
+        <div class="ab-step">
+          <div class="num">1</div>
+          <h3>Coached, not theorized</h3>
+          <p>Every program is written by someone who has programmed it for real clients and watched it work across hundreds of cases - not pulled from a blog.</p>
+        </div>
+        <div class="ab-step">
+          <div class="num">2</div>
+          <h3>Evidence checked</h3>
+          <p>Claims get traced back to the research. Where the science is uncertain, we flag it instead of dressing guesswork up as fact.</p>
+        </div>
+        <div class="ab-step">
+          <div class="num">3</div>
+          <h3>Built to scale</h3>
+          <p>If it cannot adapt to a busy week, a home setup, or a beginner, it gets reworked until it can. Real lives, not ideal ones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap">
+      <div class="ab-coach ab-rev">
+        <div class="ab-coach-photo"><div class="ava">FP</div></div>
+        <div class="ab-coach-text">
+          <div class="ab-eyebrow">The Coaching Desk</div>
+          <h2 class="ab-sec-title">12 years under the bar, in service of your training.</h2>
+          <p>FitPulse Pro is led by a team of certified strength and nutrition coaches who have spent over a decade programming for everyday lifters - not pros, not models, just people who want to get stronger without their training taking over their lives.</p>
+          <p>Between them, our coaches have guided more than 500 clients through structured strength, hypertrophy, and conditioning blocks. That hands-on history is the filter every published word has to pass through.</p>
+          <div class="ab-creds">
+            <span class="ab-cred">Certified Strength Coaches</span>
+            <span class="ab-cred">Nutrition Specialists</span>
+            <span class="ab-cred">500+ Clients Coached</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-method">
+    <div class="ab-wrap ab-rev">
+      <div class="ab-eyebrow">What We Cover</div>
+      <h2 class="ab-sec-title">Six focus areas, one evidence-first approach.</h2>
+      <div class="ab-values">
+        <div class="ab-val"><span class="chk"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><div><h3>Strength &amp; Programming</h3><p>Barbell fundamentals, progressive overload, and periodized blocks mapped set by set.</p></div></div>
+        <div class="ab-val"><span class="chk"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><div><h3>Honest Nutrition</h3><p>Protein targets, macro frameworks, and meal prep that survives a real week.</p></div></div>
+        <div class="ab-val"><span class="chk"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><div><h3>HIIT &amp; Conditioning</h3><p>Efficient interval work that builds an engine without wrecking recovery.</p></div></div>
+        <div class="ab-val"><span class="chk"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span><div><h3>Recovery Science</h3><p>Sleep, mobility, and deload strategy so adaptation actually happens.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-cta">
+    <div class="ab-wrap">
+      <div class="ab-cta-box ab-rev">
+        <h2>Train with a plan, not a guess.</h2>
+        <p>Join 48,000+ lifters getting one free program or guide every Monday. No fluff, no upsells - just something useful to train with.</p>
+        <a href="./#newsletter" class="ab-btn">Start Training Free
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}});
+  },{threshold:.12});
+  document.querySelectorAll(".ab-rev").forEach(function(el){io.observe(el);});
+})();
+</script>
