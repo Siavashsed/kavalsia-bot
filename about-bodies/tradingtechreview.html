@@ -1,0 +1,156 @@
+<style>
+.ab-main{--c-bg:#000;--c-bg2:#08080b;--c-card:#0d0d12;--c-card2:#131319;--c-line:rgba(255,255,255,.07);--c-line2:rgba(255,255,255,.13);--c-orange:#f97316;--c-orange2:#ea580c;--c-cyan:#22d3ee;--c-green:#22c55e;--c-red:#ef4444;--c-amber:#fbbf24;--c-text:#f4f4f5;--c-text2:#a1a1aa;--c-text3:#5b5b66;--c-font:'Inter',system-ui,sans-serif;--c-mono:'JetBrains Mono',ui-monospace,monospace;background:var(--c-bg);color:var(--c-text);font-family:var(--c-font);font-size:15px;line-height:1.6}
+.ab-wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.ab-kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--c-mono);font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--c-orange)}
+.ab-kicker::before{content:'';width:22px;height:1px;background:var(--c-orange)}
+.ab-h2{font-size:clamp(26px,3.6vw,42px);font-weight:800;letter-spacing:-1.3px;line-height:1.12;color:#fff;margin-top:16px}
+.ab-h2 .hl{color:var(--c-orange)}
+.ab-lead{font-size:16px;color:var(--c-text2);line-height:1.75;max-width:600px;margin-top:14px}
+
+/* HERO */
+.ab-hero{padding:96px 0 70px;position:relative;overflow:hidden}
+.ab-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(249,115,22,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(249,115,22,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000,transparent);-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000,transparent);pointer-events:none}
+.ab-hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:760px;height:520px;background:radial-gradient(ellipse,rgba(249,115,22,.13) 0%,transparent 68%);pointer-events:none}
+.ab-hero-in{position:relative;z-index:1;max-width:760px}
+.ab-badge{display:inline-flex;align-items:center;gap:9px;font-family:var(--c-mono);font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--c-text2);background:rgba(255,255,255,.04);border:1px solid var(--c-line);padding:6px 13px;border-radius:100px;margin-bottom:24px}
+.ab-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--c-green);box-shadow:0 0 8px var(--c-green)}
+.ab-hero h1{font-size:clamp(34px,5vw,62px);font-weight:900;color:#fff;line-height:1.04;letter-spacing:-2.2px;margin-bottom:20px}
+.ab-hero h1 .hl{color:var(--c-orange)}
+.ab-hero p{font-size:17px;color:var(--c-text2);line-height:1.72;max-width:560px}
+.ab-hero p b{color:var(--c-text);font-weight:600}
+
+/* SECTION */
+.ab-sec{padding:84px 0;border-top:1px solid var(--c-line)}
+.ab-sec.alt{background:var(--c-bg2)}
+
+/* TERMINAL */
+.ab-term{background:#0a0a0d;border:1px solid var(--c-line2);border-radius:16px;overflow:hidden;box-shadow:0 0 90px rgba(249,115,22,.08),0 30px 80px rgba(0,0,0,.85);margin-top:32px;max-width:680px}
+.ab-tbar{background:#111114;padding:13px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--c-line)}
+.ab-tdot{width:11px;height:11px;border-radius:50%}
+.ab-ttitle{font-family:var(--c-mono);font-size:11px;color:var(--c-text3);margin-left:6px}
+.ab-tbody{padding:22px;font-family:var(--c-mono);font-size:12.5px;line-height:2.05}
+.ab-tbody .l{display:block;white-space:pre-wrap}
+.ab-c-prompt{color:var(--c-cyan)}.ab-c-comment{color:#3a3a44}.ab-c-orange{color:var(--c-orange)}.ab-c-green{color:var(--c-green)}.ab-c-white{color:#e2e2e6}
+
+/* PROSE */
+.ab-prose{max-width:680px}
+.ab-prose p{font-size:15px;color:var(--c-text2);line-height:1.8;margin-top:16px}
+.ab-prose p b{color:var(--c-text);font-weight:600}
+
+/* VS ROWS */
+.ab-vs{display:grid;gap:12px;margin-top:32px;max-width:680px}
+.ab-vsrow{display:flex;gap:14px;align-items:flex-start;background:var(--c-card);border:1px solid var(--c-line);border-radius:10px;padding:18px 20px}
+.ab-vsrow.bad{border-left:3px solid var(--c-red)}
+.ab-vsrow.good{border-left:3px solid var(--c-green)}
+.ab-vsico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--c-mono);font-weight:800;font-size:14px}
+.ab-vsrow.bad .ab-vsico{background:rgba(239,68,68,.13);color:var(--c-red)}
+.ab-vsrow.good .ab-vsico{background:rgba(34,197,94,.13);color:var(--c-green)}
+.ab-vsrow b{font-size:14px;display:block;color:#fff;margin-bottom:3px}
+.ab-vsrow span{font-size:13px;color:var(--c-text2)}
+
+/* STEPS */
+.ab-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.ab-step{background:var(--c-card);border:1px solid var(--c-line);border-radius:12px;padding:24px;transition:border-color .15s}
+.ab-step:hover{border-color:var(--c-line2)}
+.ab-step .n{font-family:var(--c-mono);font-size:13px;font-weight:800;color:var(--c-orange);margin-bottom:14px}
+.ab-step h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px}
+.ab-step p{font-size:13px;color:var(--c-text2);line-height:1.65}
+
+/* REVIEWER */
+.ab-rev{background:var(--c-card);border:1px solid var(--c-line);border-radius:16px;padding:36px;display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:start;max-width:880px;margin-top:32px}
+.ab-rev-av{width:96px;height:96px;border-radius:50%;border:2px solid var(--c-line2);background:linear-gradient(135deg,var(--c-orange),var(--c-orange2));display:flex;align-items:center;justify-content:center;font-family:var(--c-mono);font-size:26px;font-weight:800;color:#000;flex-shrink:0}
+.ab-rev-name{font-size:20px;font-weight:800;color:#fff}
+.ab-rev-role{font-family:var(--c-mono);font-size:11px;color:var(--c-orange);text-transform:uppercase;letter-spacing:1.5px;margin:5px 0 16px}
+.ab-rev p{font-size:14.5px;color:var(--c-text2);line-height:1.8;margin-bottom:12px}
+.ab-rev p b{color:var(--c-text);font-weight:600}
+
+/* CTA */
+.ab-cta{padding:84px 0;text-align:center}
+.ab-cta-in{max-width:600px;margin:0 auto}
+.ab-cta-in p{font-size:15px;color:var(--c-text2);line-height:1.7;margin:14px 0 26px}
+.ab-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--c-mono);font-size:13px;font-weight:700;letter-spacing:.3px;color:#000;background:var(--c-orange);padding:14px 28px;border-radius:8px;transition:transform .15s,box-shadow .15s,background .15s}
+.ab-btn:hover{background:#fb8c3c;transform:translateY(-2px);box-shadow:0 14px 34px rgba(249,115,22,.32)}
+
+@media(max-width:900px){.ab-steps{grid-template-columns:repeat(2,1fr)}.ab-rev{grid-template-columns:1fr}}
+@media(max-width:560px){.ab-steps{grid-template-columns:1fr}}
+</style>
+
+<main class="ab-main">
+  <header class="ab-hero">
+    <div class="ab-hero-grid"></div>
+    <div class="ab-hero-glow"></div>
+    <div class="ab-wrap ab-hero-in">
+      <div class="ab-badge"><span class="dot"></span> Independent. Zero sponsored reviews.</div>
+      <div class="ab-kicker">About TradingTech Review</div>
+      <h1>Reviews you can <span class="hl">trade on.</span></h1>
+      <p>TradingTech Review benchmarks trading platforms, APIs, and Python libraries in <b>real production conditions</b> - real capital, real slippage, real failure modes - and publishes exactly what broke.</p>
+    </div>
+  </header>
+
+  <section class="ab-sec">
+    <div class="ab-wrap">
+      <div class="ab-kicker">Why This Site Exists</div>
+      <h2 class="ab-h2">The review you read was written by the <span class="hl">company selling it.</span></h2>
+      <div class="ab-prose">
+        <p>Most reviews of trading tools are vendor marketing in a different font. Demo-mode screenshots, affiliate-driven rankings, and "it works great" with no numbers attached. The reviewer rarely traded a live dollar through the thing.</p>
+        <p>I learned that the expensive way - shipping a strategy that backtested beautifully and bled capital in week one. The tool was not broken. The <b>review was.</b> So I started benchmarking everything myself, in production, and writing down what actually happened.</p>
+        <p>TradingTech Review is the resource I needed and could not find: every tool run with real money, fees and slippage on, then documented in full - benchmarks, code, and failure modes included.</p>
+      </div>
+      <div class="ab-vs">
+        <div class="ab-vsrow bad"><div class="ab-vsico">&#10005;</div><div><b>Typical tool reviews</b><span>Affiliate-driven. Demo-mode screenshots. No live capital. Vague praise with no data.</span></div></div>
+        <div class="ab-vsrow good"><div class="ab-vsico">&#10003;</div><div><b>TradingTech Review</b><span>Every tool run with real capital, fees and slippage on. Benchmarks, code, and failure modes published in full.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec alt">
+    <div class="ab-wrap">
+      <div class="ab-kicker">The Method</div>
+      <h2 class="ab-h2">How a tool gets <span class="hl">reviewed.</span></h2>
+      <p class="ab-lead">Every review on this site follows the same four-stage process. No shortcuts.</p>
+      <div class="ab-steps">
+        <div class="ab-step"><div class="n">01</div><h3>Install &amp; Wire In</h3><p>The tool is set up the way a real desk would use it - live data, real account, full configuration.</p></div>
+        <div class="ab-step"><div class="n">02</div><h3>Run With Real Capital</h3><p>Strategies execute with actual money, fees and slippage on, so the numbers reflect production, not theory.</p></div>
+        <div class="ab-step"><div class="n">03</div><h3>Benchmark &amp; Break</h3><p>Latency, fill quality, and edge cases get measured until the failure modes surface and get logged.</p></div>
+        <div class="ab-step"><div class="n">04</div><h3>Publish In Full</h3><p>The verdict ships with the scripts, config, and benchmarks used, so you can reproduce every result.</p></div>
+      </div>
+      <div class="ab-term">
+        <div class="ab-tbar"><span class="ab-tdot" style="background:#ff5f57"></span><span class="ab-tdot" style="background:#febc2e"></span><span class="ab-tdot" style="background:#28c840"></span><span class="ab-ttitle">review-pipeline.log</span></div>
+        <div class="ab-tbody">
+<span class="l"><span class="ab-c-comment"># every tool, same treatment</span></span>
+<span class="l"><span class="ab-c-prompt">$</span> <span class="ab-c-white">run benchmark --capital live --fees on --slippage on</span></span>
+<span class="l"><span class="ab-c-green">[OK]</span> <span class="ab-c-comment">latency, fills and failure modes recorded</span></span>
+<span class="l"><span class="ab-c-orange">[VERDICT]</span> <span class="ab-c-white">published with code + config attached</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap">
+      <div class="ab-kicker">Who Writes This</div>
+      <h2 class="ab-h2">One engineer. <span class="hl">Real money on the line.</span></h2>
+      <div class="ab-rev">
+        <div class="ab-rev-av">AR</div>
+        <div>
+          <div class="ab-rev-name">Alex Rivera</div>
+          <div class="ab-rev-role">Software Engineer &amp; Algorithmic Trader</div>
+          <p>I started as a software engineer building data pipelines, then spent three years writing and running my own algo strategies with real capital. I have <b>used, broken, and benchmarked</b> most of the tools in this space - and lost money to a few of them.</p>
+          <p>TradingTech Review exists because the coverage I needed did not exist. It was either vendor marketing or a surface-level tutorial. So every tool here gets the same treatment my own trading capital depends on: <b>if it does not hold up under real conditions, I say so plainly.</b></p>
+          <p>There are zero sponsored reviews and zero vendor deals. Some articles use affiliate links, disclosed at the top, and they never change a verdict. A tool that fails the benchmark gets a failing review regardless of who pays.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-cta">
+    <div class="ab-wrap ab-cta-in">
+      <div class="ab-kicker" style="justify-content:center">The Newsletter</div>
+      <h2 class="ab-h2">Get every benchmark the week it ships.</h2>
+      <p>New tool reviews, head-to-head benchmarks, and the failure modes worth knowing - sent the week they go live. No vendor noise.</p>
+      <a href="./#newsletter" class="ab-btn">Subscribe to the feed
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </section>
+</main>
