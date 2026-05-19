@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Passive Wealth Guide - Build Income That Doesn't Require You</title>
+<meta name="description" content="Realistic passive income strategies from a CFP who retired at 41. Dividends, REITs, rental income - the math, the timeline, the real results.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#faf8f2;
+  --bg2:#f3f0e8;
+  --surface:#ece8dc;
+  --primary:#1a4731;
+  --primary2:#15803d;
+  --primary3:#166534;
+  --gold:#b45309;
+  --gold2:#d97706;
+  --text:#1c1a14;
+  --muted:#7a7060;
+  --muted2:#9a8e80;
+  --border:#d8d0bc;
+  --border2:#e8e2d6;
+  --white:#fff;
+  --shadow:0 1px 4px rgba(28,26,20,.07),0 1px 2px rgba(28,26,20,.05);
+  --shadow-md:0 4px 18px rgba(28,26,20,.10);
+  --shadow-lg:0 8px 32px rgba(28,26,20,.12);
+  --shadow-xl:0 16px 48px rgba(28,26,20,.15);
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Lora',Georgia,serif;
+  --r:3px;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.75;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* ── UTILITIES ── */
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+.section{padding:76px 0}
+.section-alt{background:var(--bg2)}
+.section-head{text-align:center;margin-bottom:54px}
+.kicker{font-family:var(--body);font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:2.5px;display:block;margin-bottom:12px;opacity:.8}
+.section-title{font-family:var(--serif);font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--text);line-height:1.12;margin-bottom:14px;letter-spacing:-.4px}
+.section-sub{font-family:var(--body);font-size:15px;color:var(--muted);line-height:1.85;max-width:540px;margin:0 auto;font-style:italic}
+
+/* ── NAV ── */
+.nav{background:rgba(250,248,242,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;transition:box-shadow .25s}
+.nav.scrolled{box-shadow:var(--shadow-md)}
+.nav-inner{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:68px;gap:0}
+.nav-logo{display:flex;align-items:center;gap:11px;margin-right:40px;flex-shrink:0}
+.nav-logo-mark{width:38px;height:38px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(26,71,49,.3)}
+.nav-logo-mark span{font-family:var(--serif);font-size:13px;font-weight:700;color:#fff}
+.nav-logo-text{line-height:1.2}
+.nav-logo-name{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--text)}
+.nav-logo-tag{font-family:var(--body);font-size:10px;font-weight:400;color:var(--muted);font-style:italic;letter-spacing:.3px}
+.nav-links{display:flex;gap:0;height:100%;flex:1}
+.nav-links a{font-family:var(--body);font-size:13px;font-weight:500;color:var(--muted);padding:0 15px;height:100%;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px}
+.nav-links a:hover,.nav-links a.active{color:var(--primary);border-bottom-color:var(--primary)}
+.nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-left:auto}
+.nav-cta{font-family:var(--body);font-size:12px;font-weight:600;color:var(--white);background:var(--primary);padding:9px 20px;border-radius:var(--r);transition:background .2s;letter-spacing:.2px;white-space:nowrap}
+.nav-cta:hover{background:var(--primary2)}
+.nav-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.nav-burger span{width:22px;height:1.5px;background:var(--text);border-radius:1px;display:block;transition:all .25s}
+.nav-mobile{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);flex-direction:column;z-index:199;box-shadow:var(--shadow-md)}
+.nav-mobile.open{display:flex}
+.nav-mobile a{font-family:var(--body);font-size:14px;font-weight:500;color:var(--text);padding:15px 24px;border-bottom:1px solid var(--border)}
+.nav-mobile a:hover{color:var(--primary);background:var(--bg2)}
+@media(max-width:768px){.nav-links{display:none}.nav-cta{display:none}.nav-burger{display:flex}}
+
+/* ── HERO ── */
+.hero{background:var(--bg);border-bottom:1px solid var(--border);padding:88px 24px 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:700px;height:700px;background:radial-gradient(ellipse at 80% 40%,rgba(26,71,49,.055) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-40px;width:400px;height:400px;background:radial-gradient(circle,rgba(180,83,9,.035) 0%,transparent 65%);pointer-events:none}
+.hero-inner{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 420px;gap:80px;align-items:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--body);font-size:11px;font-weight:600;color:var(--primary);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.hero-h1{font-family:var(--serif);font-size:clamp(38px,5.5vw,66px);font-weight:800;line-height:1.04;color:var(--text);margin-bottom:22px;letter-spacing:-.6px}
+.hero-h1 em{font-style:italic;color:var(--primary)}
+.hero-lead{font-family:var(--body);font-size:17px;color:var(--muted);line-height:1.85;margin-bottom:36px;max-width:500px;font-style:italic}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px}
+.btn-primary{font-family:var(--body);font-size:14px;font-weight:600;color:var(--white);background:var(--primary);padding:15px 32px;border-radius:var(--r);transition:all .2s;display:inline-block;letter-spacing:.2px;box-shadow:0 4px 16px rgba(26,71,49,.22)}
+.btn-primary:hover{background:var(--primary2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,71,49,.28)}
+.btn-ghost{font-family:var(--body);font-size:14px;font-weight:600;color:var(--primary);border:1.5px solid var(--border);padding:14px 28px;border-radius:var(--r);transition:all .2s;display:inline-block}
+.btn-ghost:hover{border-color:var(--primary);background:var(--bg2)}
+.hero-trust{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.hero-trust-item{display:flex;align-items:center;gap:7px;font-family:var(--body);font-size:12px;color:var(--muted);font-style:italic}
+.hero-trust-dot{width:3px;height:3px;border-radius:50%;background:var(--border);flex-shrink:0}
+
+/* Hero card */
+.hero-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:30px;box-shadow:var(--shadow-xl);position:relative}
+.hero-card-top{height:3px;background:linear-gradient(90deg,var(--primary),var(--gold));border-radius:4px 4px 0 0;position:absolute;top:0;left:0;right:0}
+.hero-card-label{font-family:var(--body);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.8px;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.hero-card-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.income-streams{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
+.is-row{display:flex;align-items:center;gap:10px}
+.is-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.is-label{font-family:var(--body);font-size:12px;color:var(--muted);width:96px;flex-shrink:0}
+.is-bar-wrap{flex:1;height:5px;background:var(--surface);border-radius:3px;overflow:hidden}
+.is-bar{height:100%;border-radius:3px;transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+.is-val{font-family:var(--serif);font-size:12px;font-weight:700;width:48px;text-align:right;flex-shrink:0}
+.hero-card-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--border);padding-top:16px;margin-top:4px}
+.total-label{font-family:var(--body);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.total-val{font-family:var(--serif);font-size:26px;font-weight:800;color:var(--text)}
+.total-note{font-family:var(--body);font-size:10px;color:var(--muted);font-style:italic;margin-top:4px;text-align:right}
+.hero-card-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(26,71,49,.07);border:1px solid rgba(26,71,49,.12);border-radius:20px;padding:4px 12px;font-family:var(--body);font-size:11px;color:var(--primary);font-weight:600;margin-top:14px}
+
+@media(max-width:1040px){.hero-inner{grid-template-columns:1fr;gap:48px}.hero-card{max-width:480px}}
+@media(max-width:640px){.hero{padding:64px 24px 60px}.hero-actions{flex-direction:column;align-items:flex-start}}
+
+/* ── STATS BAR ── */
+.stats-bar{background:var(--primary)}
+.stats-inner{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:24px;border-right:1px solid rgba(255,255,255,.1);text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+.stat:last-child{border-right:none}
+.stat-val{font-family:var(--serif);font-size:24px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.stat-label{font-family:var(--body);font-size:11px;color:rgba(255,255,255,.55);font-style:italic;letter-spacing:.3px}
+@media(max-width:640px){.stats-inner{grid-template-columns:repeat(2,1fr)}.stat{border-bottom:1px solid rgba(255,255,255,.08)}.stat:nth-child(even){border-right:none}.stat:nth-last-child(-n+2){border-bottom:none}}
+
+/* ── INCOME PILLARS ── */
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.pillar{background:var(--white);padding:34px 28px;transition:background .2s;position:relative;overflow:hidden}
+.pillar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--primary);transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.pillar:hover{background:var(--bg)}
+.pillar:hover::after{transform:scaleX(1)}
+.pillar-num{font-family:var(--serif);font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:1px;margin-bottom:14px;display:block}
+.pillar-icon{width:46px;height:46px;background:var(--bg2);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:18px;color:var(--primary);transition:all .25s}
+.pillar:hover .pillar-icon{background:var(--surface);border-color:var(--primary)}
+.pillar-name{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.25}
+.pillar-desc{font-family:var(--body);font-size:13px;color:var(--muted);line-height:1.78}
+.pillar-meta{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.pillar-badge{font-family:var(--body);font-size:10px;font-weight:700;color:var(--primary);background:rgba(26,71,49,.07);border:1px solid rgba(26,71,49,.12);padding:3px 9px;border-radius:20px;letter-spacing:.5px;white-space:nowrap}
+@media(max-width:900px){.pillars-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.pillars-grid{grid-template-columns:1fr}}
+
+/* ── CALCULATOR ── */
+.calc-section{background:var(--bg);padding:76px 0;border-top:1px solid var(--border)}
+.calc-wrap{max-width:820px;margin:0 auto;background:var(--white);border:1px solid var(--border);border-radius:4px;padding:48px;box-shadow:var(--shadow-lg);position:relative}
+.calc-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--gold));border-radius:4px 4px 0 0}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:32px}
+.calc-field{display:flex;flex-direction:column;gap:8px}
+.calc-label{font-family:var(--body);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+.calc-input-wrap{position:relative}
+.calc-prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:var(--body);font-size:14px;color:var(--muted);pointer-events:none}
+.calc-input{width:100%;font-family:var(--body);font-size:16px;font-weight:600;color:var(--text);background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px 12px 28px;outline:none;transition:border-color .2s}
+.calc-input:focus{border-color:var(--primary);background:var(--white)}
+.calc-input-no-prefix{padding-left:14px}
+.calc-range{display:flex;flex-direction:column;gap:6px}
+.calc-slider{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--surface);outline:none;cursor:pointer}
+.calc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;box-shadow:0 2px 6px rgba(26,71,49,.3)}
+.calc-slider-labels{display:flex;justify-content:space-between;font-family:var(--body);font-size:10px;color:var(--muted2)}
+.calc-results{background:var(--primary);border-radius:var(--r);padding:28px 32px;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background-clip:padding-box;overflow:hidden}
+.calc-result-item{background:var(--primary);padding:16px 20px;text-align:center}
+.calc-result-item:not(:last-child){border-right:1px solid rgba(255,255,255,.1)}
+.calc-result-val{font-family:var(--serif);font-size:28px;font-weight:800;color:#fff;display:block;margin-bottom:4px;letter-spacing:-.5px}
+.calc-result-label{font-family:var(--body);font-size:11px;color:rgba(255,255,255,.55);font-style:italic}
+.calc-note{text-align:center;margin-top:16px;font-family:var(--body);font-size:11px;color:var(--muted);font-style:italic}
+@media(max-width:700px){.calc-grid{grid-template-columns:1fr}.calc-results{grid-template-columns:1fr}.calc-result-item:not(:last-child){border-right:none;border-bottom:1px solid rgba(255,255,255,.1)}.calc-wrap{padding:32px 20px}}
+
+/* ── TIMELINE ── */
+.timeline-section{background:var(--bg2);padding:76px 0}
+.timeline{display:flex;flex-direction:column;gap:0;max-width:780px;margin:0 auto;position:relative}
+.timeline::before{content:'';position:absolute;left:52px;top:0;bottom:0;width:1px;background:var(--border)}
+.timeline-item{display:flex;gap:32px;align-items:flex-start;padding-bottom:40px;position:relative}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-marker{width:26px;height:26px;border-radius:50%;background:var(--white);border:2px solid var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;margin-left:40px;margin-top:4px}
+.timeline-marker-inner{width:10px;height:10px;border-radius:50%;background:var(--primary);transition:transform .3s}
+.timeline-item:hover .timeline-marker-inner{transform:scale(1.3)}
+.timeline-content{flex:1}
+.timeline-year{font-family:var(--serif);font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.5px;margin-bottom:4px}
+.timeline-title{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3}
+.timeline-desc{font-family:var(--body);font-size:13px;color:var(--muted);line-height:1.8}
+.timeline-income{display:inline-flex;align-items:center;gap:6px;background:rgba(26,71,49,.07);border:1px solid rgba(26,71,49,.12);border-radius:20px;padding:4px 12px;font-family:var(--body);font-size:11px;font-weight:700;color:var(--primary);margin-top:12px}
+@media(max-width:640px){.timeline::before{left:12px}.timeline-item{gap:20px}.timeline-marker{margin-left:0;width:22px;height:22px}}
+
+/* ── AUTHOR ── */
+.author-section{background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:76px 24px}
+.author-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:200px 1fr;gap:60px;align-items:start}
+.author-left{display:flex;flex-direction:column;align-items:center;gap:18px}
+.author-avatar{width:150px;height:150px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;border:4px solid var(--border);box-shadow:0 6px 24px rgba(26,71,49,.18)}
+.author-initials{font-family:var(--serif);font-size:42px;font-weight:700;color:#fff}
+.author-creds{display:flex;flex-direction:column;gap:8px;width:100%}
+.author-cred-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:8px 12px;text-align:center}
+.cred-val{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--primary);display:block;line-height:1.2}
+.cred-label{font-family:var(--body);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-top:2px;display:block}
+.author-name{font-family:var(--serif);font-size:30px;font-weight:800;color:var(--text);margin-bottom:4px}
+.author-title{font-family:var(--body);font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:1.2px;background:var(--bg2);border:1px solid var(--border);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:20px}
+.author-bio p{font-family:var(--body);font-size:15px;color:var(--muted);line-height:1.88}
+.author-bio p+p{margin-top:14px}
+.author-link{display:inline-flex;align-items:center;gap:8px;margin-top:24px;font-family:var(--body);font-size:13px;font-weight:600;color:var(--primary);border:1.5px solid var(--border);padding:10px 22px;border-radius:var(--r);transition:all .2s}
+.author-link:hover{background:var(--bg2);border-color:var(--primary)}
+@media(max-width:700px){.author-inner{grid-template-columns:1fr}.author-left{flex-direction:row;align-items:flex-start}.author-creds{flex-direction:row;flex-wrap:wrap}.author-cred-item{flex:1;min-width:70px}}
+@media(max-width:420px){.author-left{flex-direction:column;align-items:center}}
+
+/* ── ARTICLES ── */
+.articles-section{background:var(--bg2);padding:76px 0}
+.articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)}
+.article-card{background:var(--white);padding:32px 28px 28px;display:flex;flex-direction:column;transition:background .2s;position:relative;overflow:hidden}
+.article-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--primary);transform:scaleY(0);transform-origin:bottom;transition:transform .3s}
+.article-card:hover{background:var(--bg)}
+.article-card:hover::after{transform:scaleY(1)}
+.article-tag{font-family:var(--body);font-size:10px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1.8px;margin-bottom:14px;opacity:.8}
+.article-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--text);line-height:1.28;margin-bottom:14px;transition:color .2s}
+.article-card:hover .article-title{color:var(--primary)}
+.article-excerpt{font-family:var(--body);font-size:13px;color:var(--muted);line-height:1.8;flex:1;margin-bottom:20px}
+.article-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:16px;margin-top:auto}
+.article-meta{font-family:var(--body);font-size:11px;color:var(--muted2)}
+.article-link{font-family:var(--body);font-size:12px;font-weight:700;color:var(--primary)}
+.articles-more{text-align:center;margin-top:40px}
+.articles-more-link{font-family:var(--body);font-size:13px;font-weight:700;color:var(--primary);border-bottom:1px solid var(--border);padding-bottom:2px;transition:border-color .2s;letter-spacing:.2px}
+.articles-more-link:hover{border-color:var(--primary)}
+@media(max-width:900px){.articles-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.articles-grid{grid-template-columns:1fr}}
+
+/* ── FREE RESOURCES ── */
+.resources-section{background:var(--bg);padding:76px 0}
+.resources-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.resource-card{background:var(--white);border:1px solid var(--border);border-radius:4px;padding:24px 20px;transition:all .2s;cursor:default}
+.resource-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.resource-icon{width:44px;height:44px;background:rgba(26,71,49,.07);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--primary);margin-bottom:14px}
+.resource-name{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3}
+.resource-desc{font-family:var(--body);font-size:12px;color:var(--muted);line-height:1.7}
+.resource-free{display:inline-block;margin-top:12px;font-family:var(--body);font-size:10px;font-weight:700;color:var(--primary);background:rgba(26,71,49,.07);border:1px solid rgba(26,71,49,.12);padding:3px 10px;border-radius:20px;letter-spacing:.8px;text-transform:uppercase}
+@media(max-width:900px){.resources-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.resources-grid{grid-template-columns:1fr}}
+
+/* ── NEWSLETTER ── */
+.newsletter-section{background:var(--bg2);padding:88px 24px;position:relative;overflow:hidden}
+.newsletter-section::before{content:'';position:absolute;top:-100px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(26,71,49,.06) 0%,transparent 65%);pointer-events:none}
+.nl-card{max-width:620px;margin:0 auto;background:var(--white);border:1px solid var(--border);border-radius:4px;padding:56px 52px;text-align:center;position:relative;box-shadow:var(--shadow-xl)}
+.nl-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,var(--primary),var(--gold),var(--primary),transparent);border-radius:2px}
+.nl-icon{color:var(--primary);opacity:.35;margin:0 auto 22px}
+.nl-headline{font-family:var(--serif);font-size:clamp(26px,4vw,38px);font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.16;letter-spacing:-.4px}
+.nl-sub{font-family:var(--body);font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.85;font-style:italic}
+.nl-form{display:flex;gap:0;max-width:440px;margin:0 auto 16px;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s;box-shadow:var(--shadow)}
+.nl-form:focus-within{border-color:var(--primary)}
+.nl-form input{flex:1;background:transparent;border:none;padding:14px 16px;font-size:14px;font-family:var(--body);outline:none;min-width:0;color:var(--text)}
+.nl-form input::placeholder{color:var(--muted);font-style:italic}
+.nl-form button{background:var(--primary);color:#fff;border:none;padding:14px 24px;font-size:13px;font-weight:700;font-family:var(--body);cursor:pointer;white-space:nowrap;transition:background .2s;letter-spacing:.2px}
+.nl-form button:hover{background:var(--primary2)}
+.nl-fine{font-family:var(--body);font-size:11px;color:var(--muted);font-style:italic}
+.nl-social-proof{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;font-family:var(--body);font-size:12px;color:var(--muted2);font-style:italic}
+@media(max-width:600px){.nl-card{padding:40px 24px}.nl-form{flex-direction:column;border:none;box-shadow:none}.nl-form input,.nl-form button{border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:8px;padding:14px 16px;width:100%}}
+
+/* ── DISCLAIMER ── */
+.disclaimer{background:var(--surface);border-top:1px solid var(--border);padding:18px 24px}
+.disclaimer-inner{max-width:1180px;margin:0 auto;display:flex;gap:12px;align-items:flex-start}
+.disclaimer-icon{color:var(--muted);flex-shrink:0;opacity:.5;margin-top:2px}
+.disclaimer-text{font-family:var(--body);font-size:11px;color:var(--muted);line-height:1.75;font-style:italic}
+.disclaimer-text strong{font-style:normal;font-weight:700;color:var(--text)}
+
+/* ── FOOTER ── */
+.footer{background:var(--primary)}
+.footer-top{max-width:1180px;margin:0 auto;padding:60px 24px 52px;display:grid;grid-template-columns:1.8fr 1fr 1fr 1.4fr;gap:52px}
+.foot-logo{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.foot-logo-mark{width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:50%;border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.foot-logo-mark span{font-family:var(--serif);font-size:14px;font-weight:700;color:#fff}
+.foot-brand-name{font-family:var(--serif);font-size:17px;font-weight:700;color:#fff;line-height:1.2}
+.foot-brand-tag{font-family:var(--body);font-size:10px;color:rgba(255,255,255,.45);font-style:italic;margin-top:1px}
+.foot-desc{font-family:var(--body);font-size:12px;color:rgba(255,255,255,.6);line-height:1.85}
+.foot-head{font-family:var(--body);font-size:10px;font-weight:700;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.foot-col a{display:block;font-family:var(--body);font-size:12px;color:rgba(255,255,255,.6);padding:5px 0;transition:color .2s}
+.foot-col a:hover{color:#fff}
+.foot-post-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.foot-post-item:last-child{border-bottom:none}
+.foot-post-title{font-family:var(--serif);font-size:12px;color:rgba(255,255,255,.65);line-height:1.4;font-style:italic;display:block;transition:color .2s}
+.foot-post-title:hover{color:#fff}
+.foot-post-cat{font-family:var(--body);font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.footer-bottom{background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.07)}
+.footer-bottom-inner{max-width:1180px;margin:0 auto;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.foot-copy{font-family:var(--body);font-size:11px;color:rgba(255,255,255,.35)}
+.foot-links{display:flex;gap:20px}
+.foot-links a{font-family:var(--body);font-size:11px;color:rgba(255,255,255,.35);transition:color .2s}
+.foot-links a:hover{color:rgba(255,255,255,.7)}
+@media(max-width:960px){.footer-top{grid-template-columns:1fr 1fr;gap:36px}}
+@media(max-width:580px){.footer-top{grid-template-columns:1fr;padding:40px 24px 32px}}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:none}
+#strategies,#calculator,#articles,#about,#newsletter{scroll-margin-top:72px}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#1a4731-->
+<!--SHELL:HEADER-->
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="./" class="nav-logo">
+      <div class="nav-logo-mark"><span>PWG</span></div>
+      <div class="nav-logo-text">
+        <div class="nav-logo-name">Passive Wealth Guide</div>
+        <div class="nav-logo-tag">Building Income While You Sleep</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#strategies" class="active">Strategies</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#articles">Articles</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="nav-right">
+      <a href="#newsletter" class="nav-cta">The Wealth Letter</a>
+      <button class="nav-burger" onclick="document.getElementById('nav-mob').classList.toggle('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="nav-mobile" id="nav-mob">
+    <a href="#strategies" onclick="document.getElementById('nav-mob').classList.remove('open')">Strategies</a>
+    <a href="#calculator" onclick="document.getElementById('nav-mob').classList.remove('open')">Calculator</a>
+    <a href="#articles" onclick="document.getElementById('nav-mob').classList.remove('open')">Articles</a>
+    <a href="#about" onclick="document.getElementById('nav-mob').classList.remove('open')">About</a>
+    <a href="#newsletter" onclick="document.getElementById('nav-mob').classList.remove('open')">The Wealth Letter</a>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Passive Income &amp; Investing</div>
+      <h1 class="hero-h1">The Honest Path<br>to Income That<br><em>Doesn't Require You.</em></h1>
+      <p class="hero-lead">Realistic passive income strategies from a CFP who retired early building them. The math, the timeline, the real results - not the highlight reel.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#strategies">Explore Strategies</a>
+        <a class="btn-ghost" href="#calculator">Try the Calculator</a>
+      </div>
+      <div class="hero-trust">
+        <span class="hero-trust-item">CFP Certified</span>
+        <span class="hero-trust-dot"></span>
+        <span class="hero-trust-item">Retired at 41</span>
+        <span class="hero-trust-dot"></span>
+        <span class="hero-trust-item">15 Years of Real Results</span>
+      </div>
+    </div>
+    <div>
+      <div class="hero-card">
+        <div class="hero-card-top"></div>
+        <div class="hero-card-label">Illustrative Income Mix - Year 12</div>
+        <div class="income-streams">
+          <div class="is-row">
+            <div class="is-dot" style="background:#1a4731"></div>
+            <span class="is-label">Dividends</span>
+            <div class="is-bar-wrap"><div class="is-bar" data-w="78" style="width:0%;background:#1a4731"></div></div>
+            <span class="is-val" style="color:#1a4731">$1,820</span>
+          </div>
+          <div class="is-row">
+            <div class="is-dot" style="background:#15803d"></div>
+            <span class="is-label">REITs</span>
+            <div class="is-bar-wrap"><div class="is-bar" data-w="52" style="width:0%;background:#15803d"></div></div>
+            <span class="is-val" style="color:#15803d">$960</span>
+          </div>
+          <div class="is-row">
+            <div class="is-dot" style="background:#b45309"></div>
+            <span class="is-label">Rental</span>
+            <div class="is-bar-wrap"><div class="is-bar" data-w="40" style="width:0%;background:#b45309"></div></div>
+            <span class="is-val" style="color:#b45309">$740</span>
+          </div>
+          <div class="is-row">
+            <div class="is-dot" style="background:#7a7060"></div>
+            <span class="is-label">Digital</span>
+            <div class="is-bar-wrap"><div class="is-bar" data-w="33" style="width:0%;background:#7a7060"></div></div>
+            <span class="is-val" style="color:#7a7060">$610</span>
+          </div>
+        </div>
+        <div class="hero-card-total">
+          <span class="total-label">Monthly Total</span>
+          <span class="total-val">$4,130</span>
+        </div>
+        <div class="total-note">Illustrative - not a guarantee of returns</div>
+        <div class="hero-card-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          Built over 15 years, layer by layer
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-val">Retired at 41</div>
+      <div class="stat-label">Mission accomplished</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">15 Years</div>
+      <div class="stat-label">Patient, methodical growth</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">CFP</div>
+      <div class="stat-label">Certified Financial Planner</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">4 Streams</div>
+      <div class="stat-label">Diversified &amp; durable income</div>
+    </div>
+  </div>
+</div>
+
+<!-- INCOME PILLARS -->
+<section class="section section-alt" id="strategies">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">The Framework</span>
+      <h2 class="section-title">Six Pillars of Passive Income</h2>
+      <p class="section-sub">Each strategy has a different risk profile, timeline, and tax treatment. Understanding all six is how you build something that lasts.</p>
+    </div>
+    <div class="pillars-grid reveal">
+      <div class="pillar">
+        <span class="pillar-num">01</span>
+        <div class="pillar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <h3 class="pillar-name">Dividend Stocks</h3>
+        <p class="pillar-desc">The backbone of most early retirement portfolios. Dividend growth stocks compound quietly for years before you feel the income. Yield vs. growth tradeoffs, payout ratios, and how to build a portfolio that raises your income every year.</p>
+        <div class="pillar-meta">
+          <span class="pillar-badge">Low Effort</span>
+          <span class="pillar-badge">Tax-Efficient</span>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">02</span>
+        <div class="pillar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3 class="pillar-name">REITs</h3>
+        <p class="pillar-desc">Real estate exposure without a down payment or a tenant calling at midnight. REITs must distribute 90% of income, making them unusually reliable cash flow instruments - once you understand how to evaluate them beyond yield alone.</p>
+        <div class="pillar-meta">
+          <span class="pillar-badge">90% Payout Required</span>
+          <span class="pillar-badge">High Yield</span>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">03</span>
+        <div class="pillar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3 class="pillar-name">Index Funds</h3>
+        <p class="pillar-desc">The silent wealth builder. Total market index funds outperform the majority of active managers over 20-year periods. The real skill is doing nothing during downturns - which is harder than it sounds and worth writing about honestly.</p>
+        <div class="pillar-meta">
+          <span class="pillar-badge">Set-and-Forget</span>
+          <span class="pillar-badge">Lowest Cost</span>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">04</span>
+        <div class="pillar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+        </div>
+        <h3 class="pillar-name">Rental Income</h3>
+        <p class="pillar-desc">The most labor-intensive passive income on this list - and the one with the best tax treatment. Honest math on cash-on-cash returns, vacancy rates, and why most landlords underestimate their true costs in year one.</p>
+        <div class="pillar-meta">
+          <span class="pillar-badge">Best Tax Treatment</span>
+          <span class="pillar-badge">Leverage</span>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">05</span>
+        <div class="pillar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3 class="pillar-name">Digital Products</h3>
+        <p class="pillar-desc">The highest-margin income stream once established. Courses, templates, and financial guides have zero inventory cost. The catch: they require significant upfront effort and a distribution channel most people underestimate.</p>
+        <div class="pillar-meta">
+          <span class="pillar-badge">100% Margin</span>
+          <span class="pillar-badge">Scales Infinitely</span>
+        </div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-num">06</span>
+        <div class="pillar-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="pillar-name">Tax Strategy</h3>
+        <p class="pillar-desc">The difference between a 3% and 4.5% effective yield is often just tax placement. Asset location, qualified dividends, depreciation recapture on rentals - the tax layer is where most passive income guides go silent.</p>
+        <div class="pillar-meta">
+          <span class="pillar-badge">Often Overlooked</span>
+          <span class="pillar-badge">High Impact</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSIVE INCOME CALCULATOR -->
+<section class="calc-section" id="calculator">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">Run the Numbers</span>
+      <h2 class="section-title">Passive Income Calculator</h2>
+      <p class="section-sub">See how long it realistically takes to reach your income target - and what monthly contribution gets you there.</p>
+    </div>
+    <div class="calc-wrap reveal">
+      <div class="calc-grid">
+        <div class="calc-field">
+          <label class="calc-label">Monthly Investment</label>
+          <div class="calc-input-wrap">
+            <span class="calc-prefix">$</span>
+            <input class="calc-input" id="calc-monthly" type="number" value="1500" min="100" max="50000" oninput="calcUpdate()">
+          </div>
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Target Monthly Income</label>
+          <div class="calc-input-wrap">
+            <span class="calc-prefix">$</span>
+            <input class="calc-input" id="calc-target" type="number" value="4000" min="500" max="100000" oninput="calcUpdate()">
+          </div>
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Annual Return Rate: <strong id="calc-rate-label">7%</strong></label>
+          <div class="calc-range">
+            <input class="calc-slider" id="calc-rate" type="range" min="3" max="12" value="7" step="0.5" oninput="calcRateLabel();calcUpdate()">
+            <div class="calc-slider-labels"><span>3% (Conservative)</span><span>7.5% (Balanced)</span><span>12% (Aggressive)</span></div>
+          </div>
+        </div>
+        <div class="calc-field">
+          <label class="calc-label">Withdrawal Rate: <strong id="calc-wr-label">4%</strong></label>
+          <div class="calc-range">
+            <input class="calc-slider" id="calc-wr" type="range" min="2" max="6" value="4" step="0.5" oninput="calcWrLabel();calcUpdate()">
+            <div class="calc-slider-labels"><span>2% (Safe)</span><span>4% (Classic)</span><span>6% (Aggressive)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="calc-results">
+        <div class="calc-result-item">
+          <span class="calc-result-val" id="calc-years">--</span>
+          <span class="calc-result-label">Years to Target</span>
+        </div>
+        <div class="calc-result-item">
+          <span class="calc-result-val" id="calc-portfolio">--</span>
+          <span class="calc-result-label">Portfolio Needed</span>
+        </div>
+        <div class="calc-result-item">
+          <span class="calc-result-val" id="calc-income">--</span>
+          <span class="calc-result-label">Annual Passive Income</span>
+        </div>
+      </div>
+      <p class="calc-note">Illustrative projections based on compound growth. Not financial advice. Taxes, inflation, and fees will affect real results.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-section" id="roadmap">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="kicker">The Real Timeline</span>
+      <h2 class="section-title">How Passive Income Actually Builds</h2>
+      <p class="section-sub">Not the highlight reel - the full 15-year arc from first dividend to financial independence.</p>
+    </div>
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-marker"><div class="timeline-marker-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">Year 1 - 2</div>
+          <h3 class="timeline-title">Building the Foundation</h3>
+          <p class="timeline-desc">Opening a brokerage account, setting up automatic investments, and learning how dividends actually work. The first $50 dividend check is underwhelming. That's normal. Compound interest is a long game.</p>
+          <span class="timeline-income">$40 - $120/month</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker"><div class="timeline-marker-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">Year 3 - 5</div>
+          <h3 class="timeline-title">Adding the Second Layer</h3>
+          <p class="timeline-desc">Dividend income starts covering small bills. Adding REITs to the portfolio for higher yield. First real estate research begins. The gap between effort and income is still frustrating - this is where most people give up.</p>
+          <span class="timeline-income">$300 - $700/month</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker"><div class="timeline-marker-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">Year 6 - 9</div>
+          <h3 class="timeline-title">Acceleration Phase</h3>
+          <p class="timeline-desc">Compound growth becomes visible. Reinvested dividends add meaningful capital every quarter. First rental property purchased. Digital product side project generates sporadic but real income. Total passive income covers a significant monthly expense.</p>
+          <span class="timeline-income">$1,200 - $2,400/month</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker"><div class="timeline-marker-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">Year 10 - 13</div>
+          <h3 class="timeline-title">The Inflection Point</h3>
+          <p class="timeline-desc">Passive income exceeds $3,000/month. The psychological shift from "building wealth" to "living off wealth" begins. Tax strategy becomes as important as investment selection. Portfolio generates more per year than annual contributions.</p>
+          <span class="timeline-income">$3,000 - $4,500/month</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-marker"><div class="timeline-marker-inner"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-year">Year 15+</div>
+          <h3 class="timeline-title">Financial Independence</h3>
+          <p class="timeline-desc">Income from investments, rentals, and digital products fully replaces employment income. Work becomes optional. The system runs without daily management. Retired at 41.</p>
+          <span class="timeline-income">$5,000+/month</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTHOR BIO -->
+<section class="author-section reveal" id="about">
+  <div class="author-inner">
+    <div class="author-left">
+      <div class="author-avatar"><span class="author-initials">SM</span></div>
+      <div class="author-creds">
+        <div class="author-cred-item">
+          <span class="cred-val">CFP</span>
+          <span class="cred-label">Certified</span>
+        </div>
+        <div class="author-cred-item">
+          <span class="cred-val">15 Yrs</span>
+          <span class="cred-label">Investing</span>
+        </div>
+        <div class="author-cred-item">
+          <span class="cred-val">Age 41</span>
+          <span class="cred-label">Retired</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2 class="author-name">Sarah Mills</h2>
+      <span class="author-title">Certified Financial Planner</span>
+      <div class="author-bio">
+        <p>I retired at 41 by building passive income streams over 15 years - dividend portfolios, REITs, a small rental, and eventually a digital product. None of it happened fast, and that's kind of the point.</p>
+        <p>Passive Wealth Guide is written for people who want the realistic version: how long it actually takes, what the taxes look like, and which strategies are worth the complexity. I'm not selling a course that promises results in 90 days.</p>
+        <p>My approach is evidence-based, jargon-light, and honest about the hard parts - because the strategies that actually work require patience that most content doesn't prepare you for.</p>
+      </div>
+      <a href="#about" class="author-link">Full methodology and background &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<!-- RECENT ARTICLES -->
+<section class="articles-section reveal" id="articles">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Writing</span>
+      <h2 class="section-title">Recent Articles</h2>
+      <p class="section-sub">Long-form guides that don't skip the math, the timeline, or the tax implications.</p>
+    </div>
+    <div class="articles-grid" id="articles-grid"></div>
+  </div>
+</section>
+
+<!-- FREE RESOURCES -->
+<section class="resources-section reveal">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Free Tools</span>
+      <h2 class="section-title">Resources for Building Passive Income</h2>
+      <p class="section-sub">Templates, guides, and calculators to accelerate your passive income journey.</p>
+    </div>
+    <div class="resources-grid">
+      <div class="resource-card">
+        <div class="resource-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="resource-name">Dividend Portfolio Spreadsheet</h3>
+        <p class="resource-desc">Track yield, payout ratios, and dividend growth across your holdings. Includes annual income projection.</p>
+        <span class="resource-free">Free Download</span>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3 class="resource-name">Rental Property Cash Flow Analyzer</h3>
+        <p class="resource-desc">Calculate true cash-on-cash return including vacancy, CapEx reserves, property management, and financing.</p>
+        <span class="resource-free">Free Download</span>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3 class="resource-name">FIRE Number Calculator</h3>
+        <p class="resource-desc">Calculate your financial independence number based on your target annual expenses and chosen withdrawal rate.</p>
+        <span class="resource-free">Use Above</span>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3 class="resource-name">Passive Income Timeline Guide</h3>
+        <p class="resource-desc">A realistic year-by-year roadmap for building $5k/month in passive income starting from different capital levels.</p>
+        <span class="resource-free">Free Guide</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section reveal" id="newsletter">
+  <div class="nl-card">
+    <div class="nl-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12C12 6 17 3 20 3c0 4-2 9-8 9z"/><path d="M12 12C12 6 7 3 4 3c0 4 2 9 8 9z"/></svg>
+    </div>
+    <h2 class="nl-headline">The Wealth Letter</h2>
+    <p class="nl-sub">Monthly passive income strategies and investing insights from a CFP who has lived it. No fluff, no sponsored content - just the real numbers.</p>
+    <form class="nl-form" onsubmit="this.outerHTML='<p style=\'font-family:Georgia,serif;color:#1a4731;font-size:16px;font-weight:600;padding:14px 0;text-align:center\'>You\'re subscribed. Welcome to the letter.</p>';event.preventDefault()">
+      <input type="email" placeholder="your@email.com" required>
+      <button type="submit">Subscribe Free</button>
+    </form>
+    <p class="nl-fine">No spam. Unsubscribe anytime. 100% free. Join thousands of investors.</p>
+    <div class="nl-social-proof">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Written every month since 2018
+    </div>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer" id="disclaimer">
+  <div class="disclaimer-inner">
+    <div class="disclaimer-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <p class="disclaimer-text"><strong>Disclaimer:</strong> All content on Passive Wealth Guide is for informational and educational purposes only. Nothing here constitutes financial, investment, tax, or legal advice. All income examples are illustrative and do not represent guaranteed returns. Past performance is not indicative of future results. Investing involves risk, including possible loss of principal. Consult a qualified financial professional before making investment decisions. Sarah Mills is a Certified Financial Planner and writes in a personal capacity.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<!--SHELL:FOOTER-->
+<footer class="footer">
+  <div class="footer-top">
+    <div>
+      <div class="foot-logo">
+        <div class="foot-logo-mark"><span>PWG</span></div>
+        <div>
+          <div class="foot-brand-name">Passive Wealth Guide</div>
+          <div class="foot-brand-tag">Building Income While You Sleep</div>
+        </div>
+      </div>
+      <p class="foot-desc">Realistic passive income guidance from a certified financial planner who built it herself. Evidence-based, jargon-light, and honest about the hard parts.</p>
+    </div>
+    <div class="foot-col">
+      <div class="foot-head">Strategies</div>
+      <a href="#strategies">Dividend Stocks</a>
+      <a href="#strategies">REITs</a>
+      <a href="#strategies">Index Funds</a>
+      <a href="#strategies">Rental Income</a>
+      <a href="#strategies">Digital Products</a>
+      <a href="#strategies">Tax Strategy</a>
+    </div>
+    <div class="foot-col">
+      <div class="foot-head">Site</div>
+      <a href="./">Home</a>
+      <a href="#articles">Articles</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#about">About</a>
+      <a href="#newsletter">Newsletter</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+    <div class="foot-col">
+      <div class="foot-head">Recent Posts</div>
+      <div id="foot-posts">
+        <div class="foot-post-item">
+          <span class="foot-post-title">New articles coming soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <span class="foot-copy">&#169; 2026 Passive Wealth Guide by Sarah Mills, CFP. For informational purposes only.</span>
+      <div class="foot-links">
+        <a href="./">Home</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="./#disclaimer">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+(function(){
+  var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});},{threshold:.06});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+})();
+
+// Nav scroll shadow
+window.addEventListener('scroll',function(){
+  document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>10);
+},{passive:true});
+
+// Animate hero bars
+setTimeout(function(){
+  document.querySelectorAll('.is-bar[data-w]').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});
+},350);
+
+// Active nav on scroll
+(function(){
+  var links=document.querySelectorAll('.nav-links a');
+  var secs=['strategies','calculator','articles','about'];
+  window.addEventListener('scroll',function(){
+    var y=window.pageYOffset+80;
+    var cur='strategies';
+    secs.forEach(function(id){var el=document.getElementById(id);if(el&&el.offsetTop<=y)cur=id;});
+    links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href').replace('#','')===(cur));});
+  },{passive:true});
+})();
+
+// Calculator
+var calcRate=7,calcWr=4;
+function calcRateLabel(){calcRate=+document.getElementById('calc-rate').value;document.getElementById('calc-rate-label').textContent=calcRate+'%';}
+function calcWrLabel(){calcWr=+document.getElementById('calc-wr').value;document.getElementById('calc-wr-label').textContent=calcWr+'%';}
+function calcUpdate(){
+  var monthly=+document.getElementById('calc-monthly').value||0;
+  var target=+document.getElementById('calc-target').value||0;
+  var rate=calcRate/100/12;
+  var portfolioNeeded=target*12/calcWr*100;
+  if(!monthly||!target||!portfolioNeeded){
+    document.getElementById('calc-years').textContent='--';
+    document.getElementById('calc-portfolio').textContent='--';
+    document.getElementById('calc-income').textContent='--';
+    return;
+  }
+  // Months to reach portfolio
+  var months=0;
+  var bal=0;
+  while(bal<portfolioNeeded&&months<600){
+    bal=bal*(1+rate)+monthly;
+    months++;
+  }
+  var years=months>=600?'50+':Math.ceil(months/12);
+  document.getElementById('calc-years').textContent=years+(typeof years==='number'?' yrs':'');
+  document.getElementById('calc-portfolio').textContent='$'+(portfolioNeeded>=1e6?(portfolioNeeded/1e6).toFixed(2)+'M':Math.round(portfolioNeeded).toLocaleString());
+  document.getElementById('calc-income').textContent='$'+Math.round(target*12).toLocaleString()+'/yr';
+}
+calcUpdate();
+
+// Load articles.json
+(async function(){
+  if(!document.getElementById('articles-grid'))return;
+  var posts=[];
+  try{
+    var r=await fetch('./articles.json');
+    if(r.ok){var d=await r.json();if(Array.isArray(d))posts=d;}
+  }catch(e){}
+  posts=posts.filter(function(p){return p&&p.slug&&p.title;});
+  var grid=document.getElementById('articles-grid');
+  if(grid){
+    if(!posts.length){
+      grid.innerHTML='<p style="grid-column:1/-1;text-align:center;font-family:Georgia,serif;font-style:italic;color:#7a7060;padding:32px 0">New articles coming soon.</p>';
+    }else{
+      grid.innerHTML=posts.slice(0,3).map(function(p){
+        return '<a href="./'+p.slug+'/" class="article-card">'
+          +'<div class="article-tag">'+((p.category)||'Passive Income')+'</div>'
+          +'<h3 class="article-title">'+p.title+'</h3>'
+          +'<p class="article-excerpt">'+((p.meta_description||p.excerpt||'').slice(0,180))+'</p>'
+          +'<div class="article-footer">'
+          +'<span class="article-meta">Sarah Mills, CFP</span>'
+          +'<span class="article-link">Read article &#8594;</span>'
+          +'</div></a>';
+      }).join('');
+    }
+  }
+  var fp=document.getElementById('foot-posts');
+  if(fp&&posts.length){
+    fp.innerHTML=posts.slice(0,3).map(function(p){
+      return '<div class="foot-post-item"><a href="./'+p.slug+'/" class="foot-post-title">'+p.title+'</a><div class="foot-post-cat">'+((p.category)||'Passive Income')+'</div></div>';
+    }).join('');
+  }
+})();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
