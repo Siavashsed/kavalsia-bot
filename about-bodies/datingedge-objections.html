@@ -1,0 +1,283 @@
+<style>
+.ob-wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.ob-hero{position:relative;overflow:hidden;background:
+  radial-gradient(640px 400px at 86% -10%,rgba(184,80,63,.16),transparent 70%),
+  radial-gradient(520px 360px at 6% 108%,rgba(201,139,58,.14),transparent 70%),
+  var(--bg)}
+.ob-hero-in{max-width:760px;margin:0 auto;padding:86px 24px 70px;text-align:center}
+.ob-kicker{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin-bottom:20px}
+.ob-kicker::before,.ob-kicker::after{content:"";width:26px;height:2px;background:var(--rose);border-radius:2px}
+.ob-h1{font-family:var(--serif);font-size:clamp(36px,5vw,58px);font-weight:600;line-height:1.08;letter-spacing:-.025em;color:var(--ink);margin-bottom:20px}
+.ob-h1 em{color:var(--rose);font-style:italic}
+.ob-lead{font-size:18px;color:var(--ink-soft);max-width:580px;margin:0 auto}
+
+.ob-section{padding:74px 0}
+.ob-section.alt{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ob-head{max-width:680px;margin:0 auto 44px;text-align:center}
+.ob-sec-kicker{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rose);margin-bottom:13px}
+.ob-sec-title{font-family:var(--serif);font-size:clamp(27px,3.4vw,40px);font-weight:600;line-height:1.16;letter-spacing:-.02em;color:var(--ink)}
+.ob-sec-sub{font-size:16.5px;color:var(--ink-soft);margin-top:13px}
+
+/* intro note */
+.ob-note{max-width:720px;margin:0 auto;background:var(--bg2);border:1px solid var(--border);border-left:4px solid var(--rose);border-radius:14px;padding:26px 28px}
+.ob-section.alt .ob-note{background:var(--bg)}
+.ob-note p{font-size:15.5px;color:var(--ink-soft)}
+.ob-note p b{color:var(--ink)}
+
+/* accordion */
+.ob-list{max-width:780px;margin:0 auto}
+.ob-item{border:1px solid var(--border);background:var(--bg2);border-radius:15px;margin-bottom:14px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.ob-section.alt .ob-item{background:var(--bg)}
+.ob-item.open{border-color:var(--rose);box-shadow:0 18px 38px -26px rgba(58,39,48,.4)}
+.ob-q{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.ob-q-txt{display:flex;flex-direction:column;gap:4px}
+.ob-q-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rose)}
+.ob-q-main{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--ink);line-height:1.32}
+.ob-icon{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--rose);font-size:19px;font-weight:600;transition:transform .22s,background .22s,color .22s}
+.ob-item.open .ob-icon{transform:rotate(45deg);background:var(--rose);color:#fff}
+.ob-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.ob-a-in{padding:0 24px 24px}
+.ob-a-in p{font-size:15px;color:var(--ink-soft);margin-bottom:12px}
+.ob-a-in p:last-child{margin-bottom:0}
+.ob-a-in p b{color:var(--ink)}
+.ob-truth{display:flex;gap:12px;align-items:flex-start;background:var(--soft);border-radius:12px;padding:15px 17px;margin-top:14px}
+.ob-section.alt .ob-truth{background:var(--bg2)}
+.ob-truth svg{flex-shrink:0;margin-top:2px}
+.ob-truth span{font-size:14px;color:var(--ink-soft)}
+.ob-truth span b{color:var(--ink)}
+
+/* values strip */
+.ob-vals{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:980px;margin:0 auto}
+.ob-val{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px 26px;text-align:center}
+.ob-section.alt .ob-val{background:var(--bg)}
+.ob-val-ico{width:50px;height:50px;border-radius:13px;background:var(--soft);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.ob-val h3{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);margin-bottom:7px}
+.ob-val p{font-size:14px;color:var(--ink-soft)}
+
+/* cta */
+.ob-cta{background:linear-gradient(135deg,#3a2730,#b8503f);border-radius:24px;padding:58px 40px;text-align:center;position:relative;overflow:hidden}
+.ob-cta::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;border:2px solid rgba(255,255,255,.12);bottom:-150px;right:-80px}
+.ob-cta-in{position:relative;max-width:520px;margin:0 auto}
+.ob-cta h2{font-family:var(--serif);font-size:clamp(26px,3.4vw,38px);font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.16;margin-bottom:12px}
+.ob-cta p{font-size:15.5px;color:rgba(255,255,255,.82);margin-bottom:26px}
+.ob-cta a{display:inline-block;background:#fff;color:var(--rose);font-size:15px;font-weight:600;padding:14px 30px;border-radius:100px;transition:transform .15s}
+.ob-cta a:hover{transform:translateY(-2px)}
+
+@media(max-width:760px){
+  .ob-vals{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .ob-section{padding:54px 0}
+  .ob-q{padding:18px 18px}
+  .ob-q-main{font-size:17px}
+}
+</style>
+
+<main>
+<section class="ob-hero">
+  <div class="ob-hero-in">
+    <div class="ob-kicker">Honest Answers</div>
+    <h1 class="ob-h1">The doubts you have are <em>completely fair.</em></h1>
+    <p class="ob-lead">Most people come to dating advice already a little tired, a little skeptical, or a little burned. Here are honest, no-spin answers to the things people quietly believe - or say out loud - about dating.</p>
+  </div>
+</section>
+
+<section class="ob-section">
+  <div class="ob-wrap">
+    <div class="ob-note">
+      <p><b>A quick promise before you read.</b> We are not going to tell you that you are doing everything wrong, or that one trick will fix it. Some of these doubts are partly true. Our job is to be straight with you about which parts, and what actually helps - without making you feel like a project.</p>
+    </div>
+  </div>
+</section>
+
+<section class="ob-section alt">
+  <div class="ob-wrap">
+    <div class="ob-head">
+      <span class="ob-sec-kicker">Common Objections</span>
+      <h2 class="ob-sec-title">What people tell us before they trust us</h2>
+      <p class="ob-sec-sub">Tap any one to read the honest version of the answer.</p>
+    </div>
+    <div class="ob-list" id="obList">
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"Online dating just doesn't work."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>It often does not feel like it works, and that feeling is real. Endless swiping, dry conversations, plans that fall through - that is a genuinely draining experience, and being tired of it does not mean you are bad at it.</p>
+          <p>But "it doesn't work" usually means "the way I am using it isn't working." The apps reward volume, so most people swipe on autopilot, message half-heartedly, and never get to a real conversation. That is a process problem, not a you problem.</p>
+          <p>What helps: treat apps as one channel, not your whole strategy. Use them deliberately for short stretches, message fewer people with more attention, and move toward a low-pressure meet-up sooner. Plenty of lasting relationships started online - just rarely on autopilot.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg><span><b>Honest take:</b> apps are a tool with a steep boredom tax. Used in small, intentional doses, they still work fine.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"I'm too old for this."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>This one deserves a gentle, direct answer: no, you are not. People form real, loving relationships in their 40s, 50s, 60s and beyond - that is not a consolation prize, it is just true.</p>
+          <p>What does change with age is the dating culture around you, and that can feel isolating if your friends are all partnered. The dating pool looks different, but it is also full of people who, like you, know themselves better and waste less time on the wrong things.</p>
+          <p>Honestly, self-knowledge is an advantage here. You are clearer about what you need, quicker to spot what you do not, and far less likely to perform a version of yourself. That tends to make connection faster, not slower.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg><span><b>Honest take:</b> "too old" is almost always fear of starting over, not a real ceiling. The reset is worth it.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"I'm too busy to date right now."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>Sometimes this is genuinely true. If you are in a hard season - a demanding job stretch, caregiving, recovering from something - it is completely valid to put dating down for a while. That is a choice, not a failure.</p>
+          <p>But "too busy" is also one of the most comfortable ways to avoid the vulnerability of dating, because nobody can argue with it. Only you know which one it is for you, and that is worth being honest with yourself about.</p>
+          <p>If you do want a relationship, the good news is it does not require huge amounts of time - it requires a little consistent attention. One real conversation a week beats a frantic weekend of swiping. You are not behind for going slowly.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg><span><b>Honest take:</b> dating well takes less time than people fear. Ask whether "busy" is the reason or the shield.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"I'm too shy and awkward to date."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>Being shy is not a defect, and it is not a disqualifier. Plenty of warm, thoughtful, deeply loved people are shy. The goal is never to become a loud, slick version of yourself - that would not even be appealing to the people who are right for you.</p>
+          <p>What helps shy people is not personality surgery, it is structure. Choose date settings that have a built-in activity so silence is not a threat. Prepare a couple of genuine questions in advance. Let yourself be a good listener, which is its own kind of charm.</p>
+          <p>And remember the other person is usually nervous too. Awkward moments are not the end of a date - shared awkwardness, handled with a little humour, is often where the warmth starts.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>Honest take:</b> the right person will like your quiet. You need skills and settings, not a new personality.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"All the good ones are already taken."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>This is what discouragement sounds like, and discouragement is understandable. But it does not hold up. People become single all the time - relationships end, people move, life changes. The pool is not a fixed set of leftovers.</p>
+          <p>What is true is that good, available people often are not visible in the same loud way. They are not always on the apps, not always at the bar. They are frequently met through shared activities, mutual friends, and ordinary repeated contact.</p>
+          <p>It is also worth noticing the quiet self-criticism hiding in this thought - the idea that the good ones would not be available to you. They would. Widening where you meet people, and softening that inner story, both matter here.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M3 12h18M12 3v18"/></svg><span><b>Honest take:</b> the good ones are not gone - they are just not all in the obvious places.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"I always get ghosted."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>First, the important part: being ghosted is not a measure of your worth. It is mostly a measure of the other person's comfort with conflict. Ghosting is an avoidance habit the apps make easy - it says far more about them than about you.</p>
+          <p>That said, "always" is worth gently examining. If it keeps happening, look at patterns you can actually influence: are you investing heavily before you have met, reading early texts as commitment, or staying with people who were lukewarm from the start?</p>
+          <p>Keeping your feet under you early - matching someone's effort, not racing ahead - means a fade hurts less and tells you something useful sooner. You cannot ghost-proof dating, but you can stop ghosting from defining your sense of yourself.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M21 11.5a8.38 8.38 0 01-9 8.5 8.38 8.38 0 01-9-8.5A8.5 8.5 0 0112 3a8.5 8.5 0 019 8.5z"/><path d="M8 12h.01M12 12h.01M16 12h.01"/></svg><span><b>Honest take:</b> ghosting is their unfinished sentence, not your verdict. Pace your investment to soften the sting.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"Dating advice is cringe and manipulative."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>A lot of it genuinely is, and we will not pretend otherwise. Scripts, negging, "high-value" posturing, rules about waiting exactly so many hours to text - that whole genre treats other people as obstacles to outmaneuver. It is cringe because it is dishonest.</p>
+          <p>If that is your picture of dating advice, your guard is in the right place. Good advice does not hand you lines to perform. It helps you understand yourself, communicate clearly, and notice what is actually happening between two people.</p>
+          <p>The simple test: does the advice make you more honest, or less? Anything that asks you to fake interest, hide your needs, or play a character is not strategy, it is just a slower way to be lonely.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg><span><b>Honest take:</b> if advice asks you to be less yourself, ignore it. Real advice makes honesty easier, not optional.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"I've been hurt before - I don't want to go through that again."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>That is not pessimism, it is your nervous system doing its job. After a real hurt, caution is a reasonable, even healthy response. We would never tell you to just "get over it" and dive back in.</p>
+          <p>But there is a difference between caution and a closed door. Caution lets you move slowly, notice red flags, and choose better. A closed door pre-decides that everyone will hurt you, which quietly guarantees the loneliness you are trying to avoid.</p>
+          <p>You do not have to be fully healed to date again - you have to feel steady enough to walk away from something wrong without it wrecking you. Go at the pace that keeps you honest with yourself. There is no schedule here.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg><span><b>Honest take:</b> caution is wisdom; a permanent wall is just the hurt deciding for you. Slow is allowed.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"I'm not attractive or interesting enough."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>Almost everyone privately believes some version of this, including people you would assume never would. It feels like an objective fact, but it is usually a feeling wearing the costume of one.</p>
+          <p>Attraction is far more varied and personal than the narrow images we are sold. People are drawn to warmth, ease, curiosity, the way someone listens, a particular sense of humour. Those are not fixed traits - they are things you can lean into.</p>
+          <p>And "interesting" is not about having an extraordinary life. It is about being genuinely engaged with your own, and curious about someone else's. You do not need to be more impressive. You need to let the real you actually show up.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M12 2l2.4 7.4H22l-6 4.5 2.3 7.1L12 16.9 5.7 21l2.3-7.1-6-4.5h7.6z"/></svg><span><b>Honest take:</b> you do not need to become more. You need to stop hiding the parts that are already enough.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"I should be able to figure this out on my own."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>Nobody figures relationships out purely on their own. We all learn from somewhere - parents, friends, films, past relationships. The question is never whether you had input, only whether the input was any good.</p>
+          <p>Reading thoughtful advice is not a sign of failing at something everyone else finds easy. It is the same as reading about anything else you care about. Plenty of people quietly struggling are simply working from a patchy, accidental education in love.</p>
+          <p>Use advice the way you would use a map, not a script. It points out terrain you might not have noticed. You still walk the path yourself - it just helps to know what is ahead.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M4 19V5a2 2 0 012-2h9l5 5v11a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 11h8M8 15h6"/></svg><span><b>Honest take:</b> wanting guidance is not weakness - it is just refusing to keep guessing about something this important.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"Dating is exhausting - I'm thinking of just giving up."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>If you are this tired, please take that seriously. Burnout is real, and pushing through it rarely leads anywhere good. Taking a deliberate break - weeks, even months - is a wise move, not a defeat.</p>
+          <p>There is a meaningful difference between "I am giving up forever" and "I need to step away and refill." The first is exhaustion making a permanent decision in a temporary mood. The second is you taking care of yourself.</p>
+          <p>When you do return, the goal is to date in a way that does not drain you: fewer matches with more attention, clear limits on app time, and the freedom to walk away from anything lukewarm. The aim is not to date more. It is to date in a way you can sustain.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><span><b>Honest take:</b> rest, do not quit. Burnout makes terrible long-term decisions. Step back, then return lighter.</span></div>
+        </div></div>
+      </div>
+
+      <div class="ob-item">
+        <button class="ob-q"><span class="ob-q-txt"><span class="ob-q-label">The Doubt</span><span class="ob-q-main">"Why bother - relationships never last anyway."</span></span><span class="ob-icon">+</span></button>
+        <div class="ob-a"><div class="ob-a-in">
+          <p>It is easy to land here, especially after watching relationships around you fall apart. But "never last" is a story, and it leaves out every relationship that quietly does last - which is a lot of them.</p>
+          <p>It also frames a relationship as worthwhile only if it is permanent. By that logic, almost no experience counts. Connection, being known, growing alongside someone - these have real value even when a relationship turns out to be a chapter rather than the whole book.</p>
+          <p>What helps lasting love is not luck or fate. It is two people with reasonable self-awareness who keep choosing to communicate and repair. That is learnable. A relationship ending is not proof the next one will - it is just one outcome among many.</p>
+          <div class="ob-truth"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.4"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg><span><b>Honest take:</b> plenty of love lasts. And even the love that does not is rarely time wasted.</span></div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="ob-section">
+  <div class="ob-wrap">
+    <div class="ob-head">
+      <span class="ob-sec-kicker">How We Answer</span>
+      <h2 class="ob-sec-title">The standard every answer here is held to</h2>
+    </div>
+    <div class="ob-vals">
+      <div class="ob-val">
+        <div class="ob-val-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/><path d="M12 8v4l3 2"/></svg></div>
+        <h3>Honest, not flattering</h3>
+        <p>If part of a doubt is true, we say so. Comfort that bends the facts is not actually comforting.</p>
+      </div>
+      <div class="ob-val">
+        <div class="ob-val-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg></div>
+        <h3>Warm, never preachy</h3>
+        <p>These are real fears, not flaws to scold. We answer the way a steady friend would.</p>
+      </div>
+      <div class="ob-val">
+        <div class="ob-val-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b8503f" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg></div>
+        <h3>Useful, not just kind</h3>
+        <p>Every answer points to something you can actually do or think differently - no empty reassurance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ob-section alt">
+  <div class="ob-wrap">
+    <div class="ob-cta">
+      <div class="ob-cta-in">
+        <h2>Still have a doubt we didn't cover?</h2>
+        <p>Our weekly email tackles the honest questions readers send in - one at a time, with no spin and no pressure. Bring your skepticism along.</p>
+        <a href="./#newsletter">Get the Free Guide</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+  var items=document.querySelectorAll('#obList .ob-item');
+  items.forEach(function(item){
+    var q=item.querySelector('.ob-q'),a=item.querySelector('.ob-a');
+    q.addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      items.forEach(function(it){
+        it.classList.remove('open');
+        it.querySelector('.ob-a').style.maxHeight=null;
+      });
+      if(!open){
+        item.classList.add('open');
+        a.style.maxHeight=a.scrollHeight+'px';
+      }
+    });
+  });
+})();
+</script>
