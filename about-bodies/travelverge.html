@@ -1,0 +1,203 @@
+<style>
+.ab-main{--c-bg:#0d1a1e;--c-bg2:#132028;--c-bg3:#1a2d38;--c-teal:#14b8a6;--c-teal2:#0d9488;--c-light:#5eead4;--c-text:#f1f7f5;--c-heading:#fff;--c-muted:#9cbdb5;--c-border:#27414d;--c-serif:'Merriweather',serif;--c-sans:'Inter',sans-serif;background:var(--c-bg);color:var(--c-text);font-family:var(--c-sans);font-size:16px;line-height:1.7}
+.ab-container{max-width:1240px;margin:0 auto;padding:0 24px}
+.ab-eyebrow{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--c-teal);margin-bottom:12px}
+.ab-sec-title{font-family:var(--c-serif);font-size:clamp(26px,3.4vw,40px);font-weight:900;color:var(--c-heading);letter-spacing:-.02em;line-height:1.2}
+
+/* HERO */
+.ab-hero{position:relative;min-height:480px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.ab-hero-bg{position:absolute;inset:0;z-index:0}
+.ab-hero-bg img{width:100%;height:100%;object-fit:cover}
+.ab-hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,26,30,.94) 0%,rgba(13,26,30,.6) 55%,rgba(13,26,30,.45) 100%),linear-gradient(to bottom,rgba(13,26,30,.2) 0%,rgba(13,26,30,.96) 92%)}
+.ab-hero-in{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:130px 24px 64px;width:100%}
+.ab-hero-region{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--c-light);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.ab-hero-region::before{content:"";width:28px;height:2px;background:var(--c-teal)}
+.ab-hero h1{font-family:var(--c-serif);font-size:clamp(38px,5.2vw,64px);font-weight:900;line-height:1.12;letter-spacing:-.025em;color:#fff;margin-bottom:16px;max-width:760px}
+.ab-hero h1 em{color:var(--c-light);font-style:italic}
+.ab-hero p{font-size:17px;color:#dbe9e5;max-width:580px;line-height:1.8}
+
+/* SECTION */
+.ab-section{padding:84px 0}
+.ab-story{background:var(--c-bg2);border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border)}
+.ab-story-in{max-width:1240px;margin:0 auto;padding:84px 24px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.ab-story-visual{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/5;border:1px solid var(--c-border)}
+.ab-story-visual img{width:100%;height:100%;object-fit:cover}
+.ab-story-badge{position:absolute;bottom:18px;left:18px;background:rgba(13,26,30,.85);backdrop-filter:blur(6px);border:1px solid var(--c-border);padding:14px 18px;border-radius:8px}
+.ab-story-badge .num{font-family:var(--c-serif);font-size:24px;font-weight:900;color:var(--c-light)}
+.ab-story-badge .lbl{font-size:11px;color:var(--c-muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.ab-story-text h2{font-family:var(--c-serif);font-size:clamp(26px,3.4vw,40px);font-weight:900;color:var(--c-heading);line-height:1.22;letter-spacing:-.02em;margin-bottom:18px}
+.ab-story-text p{font-size:15.5px;color:var(--c-text);line-height:1.9;margin-bottom:16px}
+.ab-story-text p strong{color:var(--c-light);font-weight:700}
+.ab-story-list{margin-top:24px;display:flex;flex-direction:column;gap:14px}
+.ab-story-li{display:flex;gap:13px;align-items:flex-start;font-size:14.5px;color:var(--c-text)}
+.ab-story-li svg{width:20px;height:20px;flex-shrink:0;margin-top:2px}
+
+/* STATS */
+.ab-stats{background:linear-gradient(135deg,var(--c-teal2),#0a5f57);padding:64px 0}
+.ab-stats-in{max-width:1100px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.ab-stat .num{font-family:var(--c-serif);font-size:clamp(36px,4.6vw,52px);font-weight:900;color:#fff;line-height:1;letter-spacing:-.02em}
+.ab-stat .lbl{font-size:13px;font-weight:600;color:#cdeee9;margin-top:10px}
+
+/* VALUE GRID */
+.ab-vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:14px}
+.ab-vcard{background:var(--c-bg2);border:1px solid var(--c-border);border-radius:12px;padding:32px 28px;transition:transform .2s,border-color .2s}
+.ab-vcard:hover{transform:translateY(-4px);border-color:var(--c-teal)}
+.ab-vicon{width:52px;height:52px;border-radius:11px;background:linear-gradient(135deg,var(--c-teal),var(--c-teal2));display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.ab-vicon svg{width:26px;height:26px}
+.ab-vcard h3{font-family:var(--c-serif);font-size:20px;font-weight:700;color:var(--c-heading);margin-bottom:10px;letter-spacing:-.01em}
+.ab-vcard p{font-size:14px;color:var(--c-muted);line-height:1.8}
+
+/* AUTHOR */
+.ab-author{background:var(--c-bg2);border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border)}
+.ab-author-in{max-width:1240px;margin:0 auto;padding:84px 24px;display:grid;grid-template-columns:300px 1fr;gap:56px;align-items:center}
+.ab-author-photo{position:relative}
+.ab-author-photo img{width:100%;border-radius:14px;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--c-border)}
+.ab-author-tag{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:var(--c-teal);color:#06231f;font-size:11px;font-weight:700;padding:7px 16px;border-radius:6px;white-space:nowrap;letter-spacing:.04em}
+.ab-author-title{font-family:var(--c-serif);font-size:clamp(24px,3vw,34px);font-weight:900;color:var(--c-heading);margin-bottom:14px;letter-spacing:-.02em;line-height:1.25}
+.ab-author-text p{font-size:15px;color:var(--c-text);line-height:1.9;margin-bottom:14px}
+.ab-author-sig{margin-top:20px}
+.ab-sig-name{font-family:var(--c-serif);font-weight:700;font-size:15px;color:var(--c-light)}
+.ab-sig-role{font-size:12px;color:var(--c-muted)}
+
+/* CTA */
+.ab-cta{background:linear-gradient(135deg,var(--c-teal),var(--c-teal2));padding:80px 0}
+.ab-cta-in{max-width:560px;margin:0 auto;padding:0 24px;text-align:center}
+.ab-cta-ey{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#06231f;margin-bottom:14px;opacity:.8}
+.ab-cta-in h2{font-family:var(--c-serif);font-size:clamp(26px,3.6vw,40px);font-weight:900;color:#fff;line-height:1.15;margin-bottom:12px}
+.ab-cta-in p{font-size:15px;color:#ddf3ef;margin-bottom:26px;line-height:1.7}
+.ab-btn{display:inline-block;background:#06231f;color:#fff;font-size:14px;font-weight:700;padding:15px 32px;border-radius:7px;transition:background .15s,transform .15s}
+.ab-btn:hover{background:#0d1a1e;transform:translateY(-2px)}
+
+@media(max-width:980px){.ab-vgrid{grid-template-columns:1fr 1fr}.ab-story-in{grid-template-columns:1fr;gap:40px}.ab-author-in{grid-template-columns:1fr;gap:36px;text-align:center}.ab-author-photo{max-width:240px;margin:0 auto}.ab-stats-in{grid-template-columns:1fr 1fr;gap:40px}}
+@media(max-width:600px){.ab-vgrid{grid-template-columns:1fr}}
+</style>
+
+<main class="ab-main">
+  <header class="ab-hero">
+    <div class="ab-hero-bg">
+      <img src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=1600&q=80" alt="Traveler walking a remote trail at golden hour">
+    </div>
+    <div class="ab-hero-in">
+      <div class="ab-hero-region">About TravelVerge</div>
+      <h1>The travel guide that <em>tells you the truth.</em></h1>
+      <p>TravelVerge is independent travel intelligence for people who travel on their own terms - destination deep-dives, real costs, and field-tested advice, with no sponsored noise.</p>
+    </div>
+  </header>
+
+  <section class="ab-story">
+    <div class="ab-story-in">
+      <div class="ab-story-visual">
+        <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80" alt="Winding coastal road through green hills">
+        <div class="ab-story-badge">
+          <div class="num">120+</div>
+          <div class="lbl">Destinations covered</div>
+        </div>
+      </div>
+      <div class="ab-story-text">
+        <div class="ab-eyebrow">Why TravelVerge Exists</div>
+        <h2>Guidebooks tell you where to go. We tell you how to actually get there.</h2>
+        <p>Most travel content is written to sell something - a tour, a hotel, an affiliate link. Somewhere in the polished itineraries and sponsored hotel reviews, the honest answer goes missing: what things really cost, when to book, and what the brochure quietly leaves out.</p>
+        <p>TravelVerge was built on a simpler idea: <strong>tell travelers the truth.</strong> Every guide is written by someone who spent weeks in the place, not an afternoon. We test the routes, count the costs, and report the parts that did not work as honestly as the parts that did.</p>
+        <div class="ab-story-list">
+          <div class="ab-story-li">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+            Logistics-first guides: transport, timing, booking windows
+          </div>
+          <div class="ab-story-li">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+            Honest cost breakdowns for every budget level
+          </div>
+          <div class="ab-story-li">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+            Field-tested packing systems that survive real trips
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-stats">
+    <div class="ab-stats-in">
+      <div class="ab-stat"><div class="num">120+</div><div class="lbl">Destinations covered</div></div>
+      <div class="ab-stat"><div class="num">48</div><div class="lbl">Countries explored</div></div>
+      <div class="ab-stat"><div class="num">600+</div><div class="lbl">Field-tested guides</div></div>
+      <div class="ab-stat"><div class="num">92k</div><div class="lbl">Travelers reading monthly</div></div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-container">
+      <div class="ab-eyebrow">What We Cover</div>
+      <h2 class="ab-sec-title">A travel resource for every stage of the trip</h2>
+      <div class="ab-vgrid">
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg viewBox="0 0 24 24" fill="none" stroke="#06231f" stroke-width="2"><path d="M3 6l9-3 9 3-9 3-9-3z"/><path d="M3 6v8l9 3 9-3V6"/></svg></div>
+          <h3>Destination Deep-Dives</h3>
+          <p>Multi-week itineraries that move at a human pace, covering the routes and day trips generic guides skip entirely.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg viewBox="0 0 24 24" fill="none" stroke="#06231f" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></div>
+          <h3>Packing Systems</h3>
+          <p>Carry-on-only loadouts tested across climates and trip lengths. The gear that earns its place, and what to leave behind.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg viewBox="0 0 24 24" fill="none" stroke="#06231f" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <h3>Budget &amp; Booking Strategy</h3>
+          <p>City-by-city cost breakdowns plus the flight tactics - fare alerts, flexible routing, booking windows - that consistently work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section" style="padding-top:0">
+    <div class="ab-container">
+      <div class="ab-eyebrow">Our Standard</div>
+      <h2 class="ab-sec-title">How a guide earns its place on the site</h2>
+      <div class="ab-vgrid">
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg viewBox="0 0 24 24" fill="none" stroke="#06231f" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h3>Written On The Ground</h3>
+          <p>Every guide comes from a writer who actually travelled the route, not a desk researcher rewriting press kits.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg viewBox="0 0 24 24" fill="none" stroke="#06231f" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h3>No Paid Placements</h3>
+          <p>We do not run sponsored itineraries. A route, hostel, or booking trick is recommended only because it earned the spot.</p>
+        </div>
+        <div class="ab-vcard">
+          <div class="ab-vicon"><svg viewBox="0 0 24 24" fill="none" stroke="#06231f" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+          <h3>Refreshed Every Season</h3>
+          <p>Costs and transport change fast, so guides are revisited on a rolling schedule and the last update is noted inside.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-author">
+    <div class="ab-author-in">
+      <div class="ab-author-photo">
+        <img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=900&q=80" alt="TravelVerge editorial team member">
+        <span class="ab-author-tag">Field Editor</span>
+      </div>
+      <div class="ab-author-text">
+        <div class="ab-eyebrow">The People Behind The Guides</div>
+        <h2 class="ab-author-title">Written by travelers who made the beginner mistakes first</h2>
+        <p>TravelVerge is a small editorial team of long-term travelers, ex-tour leaders, and slow-travel writers. Between us we have missed the trains, overpacked the bags, and booked the wrong season - so you do not have to.</p>
+        <p>We do not accept paid placements in our guides. When we recommend a route, a hostel, or a booking strategy, it is because it earned its place on a real trip. That independence is the entire point of TravelVerge, and it always will be.</p>
+        <div class="ab-author-sig">
+          <div class="ab-sig-name">The TravelVerge Editorial Team</div>
+          <div class="ab-sig-role">Independent travel writers and field editors</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-cta">
+    <div class="ab-cta-in">
+      <div class="ab-cta-ey">The Weekly Dispatch</div>
+      <h2>One destination. One practical tip. Every Friday.</h2>
+      <p>Join thousands of independent travelers who get one destination, one practical tip, and one thing most travelers miss - before they start planning the next trip.</p>
+      <a href="./#newsletter" class="ab-btn">Join the Weekly Dispatch</a>
+    </div>
+  </section>
+</main>
