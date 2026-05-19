@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dalmend Gifts - Thoughtful Gift Curation</title>
+<meta name="description" content="Curated gift guides, lifestyle picks, and occasion-based ideas for every person and budget.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fdf9f4;
+  --bg2:#fff;
+  --bg3:#faf5ef;
+  --amber:#b5651d;
+  --amber2:#9a5218;
+  --warm:#e8d5bc;
+  --tan:#d4a97a;
+  --text:#1c1410;
+  --muted:#8a7b6e;
+  --border:#e5d9cc;
+  --serif:'Fraunces',serif;
+  --sans:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* NAV */
+.site-nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:40px}
+.nav-logo{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.nav-logo em{color:var(--amber);font-style:italic}
+.nav-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}
+.nav-links a{font-size:13px;font-weight:500;padding:0 16px;height:64px;display:flex;align-items:center;color:var(--muted);transition:color .15s}
+.nav-links a:hover{color:var(--text)}
+.nav-finder{margin-left:auto;background:var(--amber);color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:4px;transition:background .15s}
+.nav-finder:hover{background:var(--amber2)}
+
+/* HERO - editorial gift magazine */
+.hero{background:var(--bg3);border-bottom:1px solid var(--border);padding:60px 0}
+.hero-in{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.hero-text{}
+.hero-season{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);background:var(--warm);padding:5px 12px;border-radius:3px;margin-bottom:20px}
+.hero-h1{font-family:var(--serif);font-size:clamp(40px,5vw,62px);font-weight:600;line-height:1.1;letter-spacing:-.02em;color:var(--text);margin-bottom:16px}
+.hero-h1 em{color:var(--amber);font-style:italic}
+.hero-desc{font-size:15px;color:var(--muted);max-width:420px;margin-bottom:32px;line-height:1.8}
+.occasion-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px}
+.occasion-btn{background:var(--bg2);border:1.5px solid var(--border);padding:14px 16px;text-align:center;transition:all .15s;cursor:pointer}
+.occasion-btn:hover{border-color:var(--amber);background:var(--bg3)}
+.occasion-icon{font-size:20px;margin-bottom:4px}
+.occasion-label{font-size:12px;font-weight:600;color:var(--text)}
+.hero-main-card{background:var(--bg2);border:1px solid var(--border);overflow:hidden}
+.hero-card-img{aspect-ratio:4/3;background:var(--warm);overflow:hidden}
+.hero-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.hero-main-card:hover .hero-card-img img{transform:scale(1.03)}
+.hero-card-body{padding:24px}
+.hero-card-tag{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.hero-card-title{font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.3;color:var(--text);margin-bottom:8px;transition:color .15s;letter-spacing:-.01em}
+.hero-main-card:hover .hero-card-title{color:var(--amber)}
+.hero-card-meta{font-size:12px;color:var(--muted)}
+.hero-side-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.side-item{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
+.side-item-img{aspect-ratio:1;background:var(--warm);overflow:hidden;border-radius:2px}
+.side-item-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.side-item:hover .side-item-img img{transform:scale(1.04)}
+.side-item-tag{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:3px}
+.side-item-title{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--text);line-height:1.35;transition:color .15s}
+.side-item:hover .side-item-title{color:var(--amber)}
+
+/* OCCASION TABS */
+.occ-tabs{background:var(--bg2);border-bottom:1px solid var(--border);padding:0}
+.occ-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+.occ-in::-webkit-scrollbar{display:none}
+.occ-tab{font-size:13px;font-weight:500;padding:16px 20px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.occ-tab:hover,.occ-tab.active{color:var(--text);border-color:var(--amber)}
+
+/* GUIDE GRID */
+.section{padding:52px 0}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+.sec-title{font-family:var(--serif);font-size:clamp(24px,3vw,32px);font-weight:600;color:var(--text);letter-spacing:-.01em}
+.sec-see-all{font-size:13px;font-weight:600;color:var(--amber);transition:opacity .15s}
+.sec-see-all:hover{opacity:.7}
+.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.guide-card{background:var(--bg2);border:1px solid var(--border);overflow:hidden;transition:box-shadow .2s}
+.guide-card:hover{box-shadow:0 8px 24px rgba(28,20,16,.08)}
+.guide-card-img{aspect-ratio:4/3;background:var(--warm);overflow:hidden;position:relative}
+.guide-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.guide-card:hover .guide-card-img img{transform:scale(1.03)}
+.guide-badge{position:absolute;top:12px;left:12px;background:var(--amber);color:#fff;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px}
+.guide-card-body{padding:20px}
+.guide-occasion{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.guide-title{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:8px;letter-spacing:-.01em;transition:color .15s}
+.guide-card:hover .guide-title{color:var(--amber)}
+.guide-excerpt{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.guide-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:500}
+
+/* PRICE FILTERS */
+.price-row{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+.price-chip{font-size:12px;font-weight:600;color:var(--muted);background:var(--bg3);border:1px solid var(--border);padding:6px 14px;border-radius:100px;cursor:pointer;transition:all .15s}
+.price-chip:hover,.price-chip.active{background:var(--amber);border-color:var(--amber);color:#fff}
+
+/* MOOD FEATURE */
+.mood-feature{background:var(--amber);padding:60px 0}
+.mood-in{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.mood-text{}
+.mood-eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:10px}
+.mood-title{font-family:var(--serif);font-size:clamp(30px,4vw,48px);font-weight:600;color:#fff;line-height:1.15;margin-bottom:14px}
+.mood-body{font-size:14px;color:rgba(255,255,255,.75);line-height:1.8;margin-bottom:24px}
+.mood-btn{background:#fff;color:var(--amber);font-size:13px;font-weight:700;padding:12px 24px;border-radius:4px;display:inline-block;transition:opacity .15s}
+.mood-btn:hover{opacity:.9}
+.mood-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mood-card{background:rgba(255,255,255,.12);padding:20px}
+.mood-card-icon{font-size:24px;margin-bottom:8px}
+.mood-card-label{font-family:var(--serif);font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
+.mood-card-sub{font-size:12px;color:rgba(255,255,255,.6)}
+
+/* NEWSLETTER */
+.newsletter{background:var(--bg3);border-top:1px solid var(--border);padding:60px 0}
+.nl-in{max-width:520px;margin:0 auto;padding:0 24px;text-align:center}
+.nl-title{font-family:var(--serif);font-size:clamp(28px,4vw,38px);font-weight:600;color:var(--text);line-height:1.2;margin-bottom:10px}
+.nl-title em{color:var(--amber);font-style:italic}
+.nl-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+.nl-form{display:flex;gap:8px;flex-wrap:wrap}
+.nl-input{flex:1;min-width:200px;background:var(--bg2);border:1.5px solid var(--border);color:var(--text);font-size:14px;font-family:var(--sans);padding:12px 18px;border-radius:4px;outline:none;transition:border-color .15s}
+.nl-input:focus{border-color:var(--amber)}
+.nl-input::placeholder{color:var(--muted)}
+.nl-btn{background:var(--amber);color:#fff;font-size:13px;font-weight:700;padding:12px 22px;border:none;border-radius:4px;cursor:pointer;font-family:var(--sans);transition:background .15s;white-space:nowrap}
+.nl-btn:hover{background:var(--amber2)}
+
+/* FOOTER */
+footer{background:var(--text);padding:48px 0 24px}
+.footer-in{max-width:1200px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:32px}
+.footer-logo{font-family:var(--serif);font-size:22px;font-weight:600;color:#fff;margin-bottom:8px}
+.footer-logo em{color:var(--tan);font-style:italic}
+.footer-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6}
+.footer-head{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.5);transition:color .15s}
+.footer-links a:hover{color:var(--tan)}
+.footer-bottom{max-width:1200px;margin:0 auto;padding:24px 24px 0;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.25)}
+
+@media(max-width:900px){
+  .hero-in{grid-template-columns:1fr}
+  .guide-grid{grid-template-columns:1fr 1fr}
+  .mood-in{grid-template-columns:1fr}
+  .footer-in{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .guide-grid{grid-template-columns:1fr}
+  .footer-in{grid-template-columns:1fr}
+  .occasion-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#b5651d-->
+<!--SHELL:HEADER-->
+
+<nav class="site-nav">
+  <div class="nav-in">
+    <a href="./" class="nav-logo">Dalmend <em>Gifts</em></a>
+    <div class="nav-links">
+      <a href="./">By Occasion</a>
+      <a href="./">For Him</a>
+      <a href="./">For Her</a>
+      <a href="./">Experiences</a>
+      <a href="./">Budget Picks</a>
+    </div>
+    <a href="./" class="nav-finder">Gift Finder</a>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<section class="hero">
+  <div class="hero-in">
+    <div class="hero-text">
+      <div class="hero-season">Find the perfect gift</div>
+      <h1 class="hero-h1">Gifts that<em> actually land.</em></h1>
+      <p class="hero-desc">Thoughtful gift guides for every person, occasion, and budget. No generic listicles - just real picks that people remember.</p>
+      <div class="occasion-grid">
+        <div class="occasion-btn" onclick="setFilter('birthday')"><div class="occasion-icon">&#127873;</div><div class="occasion-label">Birthday</div></div>
+        <div class="occasion-btn" onclick="setFilter('anniversary')"><div class="occasion-icon">&#10084;</div><div class="occasion-label">Anniversary</div></div>
+        <div class="occasion-btn" onclick="setFilter('holiday')"><div class="occasion-icon">&#127876;</div><div class="occasion-label">Holiday</div></div>
+        <div class="occasion-btn" onclick="setFilter('housewarming')"><div class="occasion-icon">&#127968;</div><div class="occasion-label">Housewarming</div></div>
+      </div>
+    </div>
+    <div>
+      <a href="./" class="hero-main-card" id="heroCard">
+        <div class="hero-card-img"><img src="https://images.unsplash.com/photo-1513201099705-a9746f6aa1a8?w=700&q=80" alt="Gift Guide"></div>
+        <div class="hero-card-body">
+          <div class="hero-card-tag">Featured Guide</div>
+          <h2 class="hero-card-title">Thoughtful gift guides for every occasion</h2>
+          <div class="hero-card-meta">Curated picks across all ages and interests</div>
+        </div>
+      </a>
+      <div class="hero-side-list" id="heroSideList"></div>
+    </div>
+  </div>
+</section>
+
+<div class="occ-tabs">
+  <div class="occ-in">
+    <div class="occ-tab active" onclick="setFilter('all')">All Guides</div>
+    <div class="occ-tab" onclick="setFilter('birthday')">Birthday</div>
+    <div class="occ-tab" onclick="setFilter('anniversary')">Anniversary</div>
+    <div class="occ-tab" onclick="setFilter('holiday')">Holiday</div>
+    <div class="occ-tab" onclick="setFilter('for-him')">For Him</div>
+    <div class="occ-tab" onclick="setFilter('for-her')">For Her</div>
+    <div class="occ-tab" onclick="setFilter('experience')">Experiences</div>
+    <div class="occ-tab" onclick="setFilter('budget')">Under $50</div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-hd">
+      <h2 class="sec-title">Gift Guides</h2>
+      <a href="./" class="sec-see-all">See all &rarr;</a>
+    </div>
+    <div class="price-row">
+      <span class="price-chip active" onclick="setPriceFilter('all')">All Budgets</span>
+      <span class="price-chip" onclick="setPriceFilter('under25')">Under $25</span>
+      <span class="price-chip" onclick="setPriceFilter('under50')">Under $50</span>
+      <span class="price-chip" onclick="setPriceFilter('under100')">Under $100</span>
+      <span class="price-chip" onclick="setPriceFilter('splurge')">Splurge</span>
+    </div>
+    <div class="guide-grid" id="guideGrid"></div>
+  </div>
+</section>
+
+<section class="mood-feature">
+  <div class="mood-in">
+    <div class="mood-text">
+      <div class="mood-eyebrow">Gift by Mood</div>
+      <h2 class="mood-title">Not sure where to start?</h2>
+      <p class="mood-body">Answer five quick questions about the person you're buying for and we'll match you with the right guide - no decision paralysis required.</p>
+      <a href="./" class="mood-btn">Try the Gift Finder</a>
+    </div>
+    <div class="mood-cards">
+      <div class="mood-card"><div class="mood-card-icon">&#127932;</div><div class="mood-card-label">The Homebody</div><div class="mood-card-sub">Cozy, sensory, nesting gifts</div></div>
+      <div class="mood-card"><div class="mood-card-icon">&#9992;</div><div class="mood-card-label">The Adventurer</div><div class="mood-card-sub">Experiences and gear gifts</div></div>
+      <div class="mood-card"><div class="mood-card-icon">&#128218;</div><div class="mood-card-label">The Learner</div><div class="mood-card-sub">Skills, books, subscriptions</div></div>
+      <div class="mood-card"><div class="mood-card-icon">&#127358;</div><div class="mood-card-label">The Minimalist</div><div class="mood-card-sub">Useful, quality, lasting</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-hd">
+      <h2 class="sec-title">More Guides</h2>
+    </div>
+    <div class="guide-grid" id="moreGrid"></div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="nl-in">
+    <h2 class="nl-title">Great gift ideas,<em> delivered.</em></h2>
+    <p class="nl-sub">Weekly gift inspiration for every occasion and budget. Be the person who always finds the right thing.</p>
+    <form class="nl-form" onsubmit="return false">
+      <input class="nl-input" type="email" placeholder="your@email.com">
+      <button class="nl-btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer>
+  <div class="footer-in">
+    <div>
+      <div class="footer-logo">Dalmend <em>Gifts</em></div>
+      <p class="footer-desc">Thoughtful, curated gift guides that make gifting feel personal again.</p>
+    </div>
+    <div>
+      <div class="footer-head">By Occasion</div>
+      <div class="footer-links">
+        <a href="./">Birthday</a>
+        <a href="./">Anniversary</a>
+        <a href="./">Holiday</a>
+        <a href="./">Housewarming</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-head">By Person</div>
+      <div class="footer-links">
+        <a href="./">For Him</a>
+        <a href="./">For Her</a>
+        <a href="./">For Parents</a>
+        <a href="./">For Kids</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-head">Site</div>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 Dalmend Gifts. All rights reserved.</div>
+    <div class="footer-copy">Thoughtful gift curation.</div>
+  </div>
+</footer>
+
+<script>
+const IMGS=[
+  'https://images.unsplash.com/photo-1513201099705-a9746f6aa1a8?w=600&q=75',
+  'https://images.unsplash.com/photo-1549465220-1a629cc1ecb0?w=600&q=75',
+  'https://images.unsplash.com/photo-1607344645866-009c320b8ced?w=600&q=75',
+  'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600&q=75',
+  'https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=600&q=75',
+  'https://images.unsplash.com/photo-1512909006721-3d6018887383?w=600&q=75',
+];
+const IMGS_SM=[
+  'https://images.unsplash.com/photo-1513201099705-a9746f6aa1a8?w=200&q=75',
+  'https://images.unsplash.com/photo-1549465220-1a629cc1ecb0?w=200&q=75',
+  'https://images.unsplash.com/photo-1607344645866-009c320b8ced?w=200&q=75',
+];
+
+let arts=[];
+let activeFilter="all";
+
+function setFilter(f){
+  activeFilter=f;
+  document.querySelectorAll(".occ-tab").forEach(t=>t.classList.toggle("active",t.textContent.toLowerCase()===f||(f==="all"&&t.textContent==="All Guides")));
+  renderGrid();
+}
+
+function setPriceFilter(f){
+  document.querySelectorAll(".price-chip").forEach(c=>c.classList.remove("active"));
+  event.target.classList.add("active");
+}
+
+const EMPTY_MSG='<div style="grid-column:1/-1;text-align:center;padding:48px 20px;color:#9a8f86;font-size:15px">New gift guides coming soon.</div>';
+
+function renderGrid(){
+  const g=document.getElementById("guideGrid");
+  if(!g)return;
+  const filtered=activeFilter==="all"?arts:arts.filter(a=>a.cat===activeFilter);
+  if(!filtered.length){g.innerHTML=EMPTY_MSG;return;}
+  g.innerHTML=filtered.slice(0,6).map((a,i)=>`
+    <a href="./${a.slug}/" class="guide-card">
+      <div class="guide-card-img">
+        <img src="${IMGS[i%IMGS.length]}" alt="${a.title}" loading="lazy">
+        ${a.badge?`<span class="guide-badge">${a.badge}</span>`:""}
+      </div>
+      <div class="guide-card-body">
+        <div class="guide-occasion">${a.cat||""}</div>
+        <h3 class="guide-title">${a.title}</h3>
+        <p class="guide-excerpt">${a.excerpt||a.meta_description||""}</p>
+        <div class="guide-meta"><span>${a.mins?a.mins+" min read":""}</span></div>
+      </div>
+    </a>`).join("");
+}
+
+function renderMore(){
+  const m=document.getElementById("moreGrid");
+  if(!m)return;
+  if(arts.length<=6){m.innerHTML=EMPTY_MSG;return;}
+  m.innerHTML=arts.slice(6).map((a,i)=>`
+    <a href="./${a.slug}/" class="guide-card">
+      <div class="guide-card-img"><img src="${IMGS[(i+3)%IMGS.length]}" alt="${a.title}" loading="lazy"></div>
+      <div class="guide-card-body">
+        <div class="guide-occasion">${a.cat||""}</div>
+        <h3 class="guide-title">${a.title}</h3>
+        <p class="guide-excerpt">${a.excerpt||a.meta_description||""}</p>
+        <div class="guide-meta"><span>${a.mins?a.mins+" min read":""}</span></div>
+      </div>
+    </a>`).join("");
+}
+
+function renderSideList(items){
+  const s=document.getElementById("heroSideList");
+  if(!s)return;
+  s.innerHTML=items.slice(1,4).map((a,i)=>`
+    <a href="./${a.slug}/" class="side-item">
+      <div class="side-item-img"><img src="${IMGS_SM[i%IMGS_SM.length]}" alt="${a.title}" loading="lazy"></div>
+      <div><div class="side-item-tag">${a.cat||""}</div><div class="side-item-title">${a.title}</div></div>
+    </a>`).join("");
+}
+
+async function load(){
+  if(!document.getElementById("guideGrid"))return;
+  try{
+    const r=await fetch("./articles.json");
+    if(!r.ok)throw 0;
+    const d=await r.json();
+    arts=Array.isArray(d)?d.filter(a=>a&&a.slug&&a.title):[];
+  }catch(e){arts=[];}
+  renderGrid();
+  renderMore();
+  renderSideList(arts);
+  const hc=document.getElementById("heroCard");
+  if(hc&&arts[0]){
+    hc.querySelector(".hero-card-title").textContent=arts[0].title;
+    hc.querySelector(".hero-card-tag").textContent=arts[0].cat||"Featured Guide";
+    hc.href=`./${arts[0].slug}/`;
+  }
+}
+load();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
