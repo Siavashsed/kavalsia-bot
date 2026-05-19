@@ -1,0 +1,196 @@
+<style>
+.ab-page{background:var(--bg);color:var(--txt);font-family:var(--font)}
+.ab-rev{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.ab-rev.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.ab-rev{opacity:1;transform:none;transition:none}}
+.ab-wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+
+/* HERO */
+.ab-hero{background:linear-gradient(135deg,#fff7ed 0%,#ffffff 52%,#f0fdf4 100%);border-bottom:1px solid var(--brd);position:relative;overflow:hidden;padding:64px 20px 60px}
+.ab-hero::before{content:'';position:absolute;top:-90px;right:-80px;width:460px;height:460px;background:radial-gradient(circle,rgba(249,115,22,.1) 0%,transparent 70%);pointer-events:none}
+.ab-hero-in{max-width:1280px;margin:0 auto;position:relative}
+.ab-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--org);background:#fff7ed;border:1px solid #fed7aa;padding:5px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:18px}
+.ab-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--org)}
+.ab-h1{font-size:clamp(30px,4.6vw,52px);font-weight:800;line-height:1.07;letter-spacing:-1.5px;max-width:760px;margin-bottom:16px}
+.ab-h1 em{font-style:normal;color:var(--org)}
+.ab-lead{font-size:16px;color:var(--txt2);line-height:1.75;max-width:560px}
+
+/* STAT STRIP */
+.ab-stats{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg3);border-bottom:1px solid var(--brd)}
+.ab-stat{padding:24px;border-right:1px solid var(--brd)}
+.ab-stat:last-child{border-right:none}
+.ab-stat-v{font-size:26px;font-weight:800;color:var(--txt);letter-spacing:-1px}
+.ab-stat-l{font-size:12px;color:var(--muted);font-weight:500;margin-top:3px}
+
+/* SECTION */
+.ab-sec{padding:56px 0;border-bottom:1px solid var(--brd)}
+.ab-sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--brd);flex-wrap:wrap;gap:8px}
+.ab-sec-title{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.ab-sec-title span{color:var(--org)}
+.ab-kicker{font-size:11px;font-weight:700;color:var(--org);text-transform:uppercase;letter-spacing:1px}
+
+.ab-prose{max-width:720px}
+.ab-prose p{font-size:15px;color:var(--txt2);line-height:1.78;margin-bottom:16px}
+.ab-prose p strong{color:var(--txt);font-weight:700}
+
+/* METHOD CARDS */
+.ab-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--brd);border:1px solid var(--brd)}
+.ab-mcard{background:#fff;padding:26px}
+.ab-mcard .ic{width:38px;height:38px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;display:flex;align-items:center;justify-content:center;color:var(--org);margin-bottom:14px}
+.ab-mcard .ic svg{width:19px;height:19px}
+.ab-mcard h3{font-size:15px;font-weight:800;margin-bottom:6px}
+.ab-mcard p{font-size:13px;color:var(--muted);line-height:1.65}
+
+/* AUTHOR */
+.ab-author{display:grid;grid-template-columns:120px 1fr;gap:28px;align-items:start;background:#fff;border:1px solid var(--brd);box-shadow:var(--shadow);padding:30px}
+.ab-avatar{width:120px;height:120px;border-radius:12px;background:linear-gradient(135deg,var(--org),var(--org2));display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;color:#fff}
+.ab-author-name{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.ab-author-role{font-size:12px;color:var(--org);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:4px 0 14px}
+.ab-author p{font-size:14px;color:var(--txt2);line-height:1.75;margin-bottom:12px}
+.ab-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.ab-tag{font-size:11px;font-weight:700;color:var(--txt2);background:var(--bg3);border:1px solid var(--brd);padding:5px 11px;border-radius:6px}
+
+/* COVERAGE LIST */
+.ab-cov{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--brd);border:1px solid var(--brd)}
+.ab-cov-item{background:#fff;padding:20px 22px;display:flex;gap:12px}
+.ab-cov-item .n{font-size:13px;font-weight:800;color:var(--org);flex-shrink:0}
+.ab-cov-item h4{font-size:14px;font-weight:700;margin-bottom:3px}
+.ab-cov-item p{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* DISCLAIMER */
+.ab-disc{background:var(--bg3);border:1px solid var(--brd);padding:18px 22px;font-size:12.5px;color:var(--muted);line-height:1.7}
+.ab-disc strong{color:var(--txt2)}
+
+/* CTA */
+.ab-cta{background:var(--org);text-align:center;padding:52px 20px}
+.ab-cta h2{font-size:clamp(22px,3vw,32px);font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:10px}
+.ab-cta p{font-size:14px;color:rgba(255,255,255,.9);max-width:480px;margin:0 auto 22px}
+.ab-cta-btn{display:inline-block;font-size:14px;font-weight:700;color:var(--org);background:#fff;padding:13px 28px;border-radius:8px;transition:transform .15s}
+.ab-cta-btn:hover{transform:translateY(-2px)}
+
+@media(max-width:768px){
+  .ab-stats{grid-template-columns:1fr 1fr}
+  .ab-stat:nth-child(2){border-right:none}
+  .ab-grid3{grid-template-columns:1fr}
+  .ab-cov{grid-template-columns:1fr}
+  .ab-author{grid-template-columns:1fr}
+  .ab-avatar{width:84px;height:84px;font-size:32px}
+}
+</style>
+
+<main class="ab-page">
+  <section class="ab-hero">
+    <div class="ab-hero-in ab-rev">
+      <div class="ab-badge"><span class="ab-badge-dot"></span> About Ecommerce Edge</div>
+      <h1 class="ab-h1">DTC strategy that runs on <em>numbers,</em> not opinions.</h1>
+      <p class="ab-lead">Ecommerce Edge is an independent resource for direct-to-consumer founders and operators who are tired of vague advice and want frameworks they can model in a spreadsheet.</p>
+    </div>
+  </section>
+
+  <div class="ab-stats ab-rev">
+    <div class="ab-stat"><div class="ab-stat-v">50+</div><div class="ab-stat-l">Stores launched &amp; scaled</div></div>
+    <div class="ab-stat"><div class="ab-stat-v">$50M+</div><div class="ab-stat-l">Top client revenue</div></div>
+    <div class="ab-stat"><div class="ab-stat-v">2019</div><div class="ab-stat-l">Shopify Plus Partner since</div></div>
+    <div class="ab-stat"><div class="ab-stat-v">0</div><div class="ab-stat-l">Sponsored posts, ever</div></div>
+  </div>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-rev">
+      <div class="ab-sec-head">
+        <div class="ab-sec-title">Why <span>Ecommerce Edge</span> exists</div>
+        <span class="ab-kicker">The Story</span>
+      </div>
+      <div class="ab-prose">
+        <p>After a decade inside DTC brands, one pattern kept repeating. Founders were drowning in ecommerce content, yet almost none of it survived contact with a profit-and-loss statement. Blog posts promised "scaling secrets" with no margin math. Agencies sold tactics that ignored CAC. Influencers reviewed tools they were paid to recommend.</p>
+        <p>Ecommerce Edge was built to be the resource that consultant wished existed: <strong>data-driven, unsponsored, and honest about the numbers that actually decide whether a store makes money.</strong></p>
+        <p>Everything here documents what works in practice - the conversion tests with measured results, the ad structures that survived iOS 14.5, and the unit economics that separate a growing brand from a busy one. If a tactic cannot be defended with data, it does not get published.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-rev">
+      <div class="ab-sec-head">
+        <div class="ab-sec-title">The <span>method</span> behind every piece</div>
+        <span class="ab-kicker">Our Standard</span>
+      </div>
+      <div class="ab-grid3">
+        <div class="ab-mcard">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg></div>
+          <h3>Tested on real stores</h3>
+          <p>Frameworks come from live brands across fashion, supplements, home goods, and pet - not theory.</p>
+        </div>
+        <div class="ab-mcard">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M5 7l7-5 7 5M5 17l7 5 7-5"/></svg></div>
+          <h3>Margin math first</h3>
+          <p>Every tactic is checked against breakeven ROAS, contribution margin, and LTV before it ships.</p>
+        </div>
+        <div class="ab-mcard">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h3>Independent &amp; free</h3>
+          <p>No sponsorships, no affiliate-driven verdicts. The calculators need no signup and never will.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-rev">
+      <div class="ab-sec-head">
+        <div class="ab-sec-title">Who's <span>behind it</span></div>
+        <span class="ab-kicker">The Author</span>
+      </div>
+      <div class="ab-author">
+        <div class="ab-avatar">NP</div>
+        <div>
+          <div class="ab-author-name">Nina Patel</div>
+          <div class="ab-author-role">Shopify Plus Consultant &middot; DTC Growth Advisor</div>
+          <p>I've spent the last decade building and scaling DTC brands - from $0 to $1M, from $1M through $10M, and a few past $50M. I've been Shopify Plus Partner certified since 2019 and have consulted for brands across fashion, supplements, home goods, and pet products.</p>
+          <p>Ecommerce Edge is where I document what actually works: the conversion tests with real results, the ad structures that survived iOS 14.5, and the margin math that makes or breaks a DTC business. No sponsored posts. No agency fluff. Just numbers and tactics.</p>
+          <div class="ab-tags">
+            <span class="ab-tag">Conversion Optimization</span>
+            <span class="ab-tag">Paid Acquisition</span>
+            <span class="ab-tag">Unit Economics</span>
+            <span class="ab-tag">Retention &amp; LTV</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-rev">
+      <div class="ab-sec-head">
+        <div class="ab-sec-title">What we <span>cover</span></div>
+        <span class="ab-kicker">Topics</span>
+      </div>
+      <div class="ab-cov">
+        <div class="ab-cov-item"><span class="n">01</span><div><h4>Conversion &amp; CRO</h4><p>Product page, checkout, and offer tests with measured lift.</p></div></div>
+        <div class="ab-cov-item"><span class="n">02</span><div><h4>Ad Profitability</h4><p>Breakeven ROAS, attribution, and creative structures that scale.</p></div></div>
+        <div class="ab-cov-item"><span class="n">03</span><div><h4>Free Profit Tools</h4><p>Margin, LTV, and ad ROI calculators - no signup required.</p></div></div>
+        <div class="ab-cov-item"><span class="n">04</span><div><h4>Scaling Playbooks</h4><p>The operational moves that take a brand from one tier to the next.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-rev">
+      <div class="ab-disc"><strong>A note on the content:</strong> Everything on Ecommerce Edge is for informational and educational purposes. Nothing here is financial, investment, or business advice. Results vary with product, market, and execution. The calculators are decision aids, not guarantees. Always validate assumptions against your own data and consult qualified professionals before significant business decisions.</div>
+    </div>
+  </section>
+
+  <section class="ab-cta ab-rev">
+    <h2>Build your store on real data.</h2>
+    <p>Get the conversion tests, ad profitability breakdowns, and scaling frameworks - straight to your inbox, always free.</p>
+    <a href="./#newsletter" class="ab-cta-btn">Get The Playbooks</a>
+  </section>
+</main>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}});
+  },{threshold:.12});
+  document.querySelectorAll(".ab-rev").forEach(function(el){io.observe(el);});
+})();
+</script>
