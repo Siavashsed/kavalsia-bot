@@ -1,0 +1,41 @@
+name: Sync Sites
+
+# Auto-propagates homepage changes to every site's static pages and articles.
+# Triggers whenever a homepage template (or the shell machinery) changes.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'templates/**'
+      - 'layout_shell.py'
+      - 'push-sites.py'
+      - 'rebuild-articles.py'
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Comma-separated site stems (blank = all)'
+        required: false
+        default: ''
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Propagate homepage changes
+        # NETWORK_PAT must be a Personal Access Token with 'repo' scope that can
+        # write to every Siavashsed/<site> repo (the built-in GITHUB_TOKEN only
+        # has access to this repo, so a PAT is required for cross-repo pushes).
+        run: python3 sync.py "${{ secrets.NETWORK_PAT }}" --only "${{ github.event.inputs.only }}"
