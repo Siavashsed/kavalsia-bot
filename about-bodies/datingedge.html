@@ -1,0 +1,121 @@
+<style>
+.ab-main{--ab-bg:#fbf6f1;--ab-bg2:#ffffff;--ab-ink:#221a16;--ab-ink-soft:#4a3f39;--ab-muted:#7c6f67;--ab-rose:#b8503f;--ab-rose-d:#963d2f;--ab-plum:#3a2730;--ab-gold:#c98b3a;--ab-soft:#f3e8e0;--ab-border:#e8dcd3;--ab-serif:'Fraunces',Georgia,serif;--ab-sans:'Inter',system-ui,sans-serif;background:var(--ab-bg);color:var(--ab-ink);font-family:var(--ab-sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+.ab-main *{box-sizing:border-box}
+
+.ab-hero{padding:96px 24px 76px;text-align:center;border-bottom:1px solid var(--ab-border);background:linear-gradient(180deg,var(--ab-soft),var(--ab-bg))}
+.ab-wrap{max-width:760px;margin:0 auto}
+.ab-eyebrow{display:inline-block;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ab-rose);background:var(--ab-bg2);border:1px solid var(--ab-border);padding:6px 14px;border-radius:50px;margin-bottom:22px}
+.ab-h1{font-family:var(--ab-serif);font-size:clamp(38px,5.2vw,62px);font-weight:600;line-height:1.08;letter-spacing:-.025em;margin-bottom:20px}
+.ab-h1 em{color:var(--ab-rose);font-style:italic}
+.ab-lede{font-size:18px;color:var(--ab-muted);line-height:1.7;max-width:560px;margin:0 auto}
+
+.ab-section{padding:76px 24px}
+.ab-alt{background:var(--ab-bg2);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border)}
+.ab-wrap-wide{max-width:920px;margin:0 auto}
+.ab-kicker{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ab-rose);margin-bottom:12px}
+.ab-h2{font-family:var(--ab-serif);font-size:clamp(27px,3.5vw,40px);font-weight:600;line-height:1.15;letter-spacing:-.02em;margin-bottom:20px}
+.ab-h2 em{color:var(--ab-rose);font-style:italic}
+.ab-p{font-size:16px;color:var(--ab-ink-soft);line-height:1.8;margin-bottom:16px;max-width:640px}
+.ab-p strong{color:var(--ab-ink);font-weight:600}
+
+.ab-pull{font-family:var(--ab-serif);font-size:25px;font-style:italic;line-height:1.5;color:var(--ab-plum);background:var(--ab-soft);border-radius:14px;padding:34px 36px;margin-top:30px}
+
+.ab-vals{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+.ab-vcard{background:var(--ab-bg);border:1px solid var(--ab-border);border-radius:14px;padding:30px}
+.ab-vmark{width:38px;height:38px;border-radius:10px;background:var(--ab-rose);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--ab-serif);font-size:19px;font-weight:600;margin-bottom:16px}
+.ab-vtitle{font-family:var(--ab-serif);font-size:20px;font-weight:600;margin-bottom:8px}
+.ab-vdesc{font-size:14px;color:var(--ab-muted);line-height:1.7}
+
+.ab-topics{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.ab-topic{font-size:14px;font-weight:500;color:var(--ab-plum);background:var(--ab-bg2);border:1px solid var(--ab-border);padding:9px 18px;border-radius:50px}
+
+.ab-coach{display:grid;grid-template-columns:130px 1fr;gap:36px;align-items:start;background:var(--ab-bg);border:1px solid var(--ab-border);border-radius:18px;padding:42px;max-width:840px;margin:30px auto 0}
+.ab-avatar{width:130px;height:130px;border-radius:50%;background:var(--ab-plum);display:flex;align-items:center;justify-content:center;font-family:var(--ab-serif);font-size:38px;font-weight:600;color:var(--ab-bg)}
+.ab-coach-name{font-family:var(--ab-serif);font-size:30px;font-weight:600;margin-bottom:4px}
+.ab-coach-role{font-size:14px;font-weight:500;color:var(--ab-rose);margin-bottom:18px}
+.ab-coach-bio{font-size:15px;color:var(--ab-ink-soft);line-height:1.8;margin-bottom:12px}
+.ab-coach-bio strong{color:var(--ab-ink);font-weight:600}
+.ab-creds{display:flex;gap:26px;flex-wrap:wrap;margin-top:22px;padding-top:22px;border-top:1px solid var(--ab-border)}
+.ab-cred .ab-cn{font-family:var(--ab-serif);font-size:24px;font-weight:600;color:var(--ab-rose)}
+.ab-cred .ab-cl{font-size:12px;color:var(--ab-muted);margin-top:2px}
+
+.ab-cta{text-align:center}
+.ab-cta .ab-p{margin-left:auto;margin-right:auto}
+.ab-cta-btn{display:inline-block;margin-top:22px;font-size:15px;font-weight:600;color:#fff;background:var(--ab-rose);padding:14px 32px;border-radius:10px;transition:background .15s}
+.ab-cta-btn:hover{background:var(--ab-rose-d)}
+
+@media(max-width:720px){.ab-vals{grid-template-columns:1fr}.ab-coach{grid-template-columns:1fr;padding:32px;justify-items:center;text-align:center}}
+</style>
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-wrap">
+      <span class="ab-eyebrow">About DatingEdge</span>
+      <h1 class="ab-h1">Dating advice that respects your <em>intelligence.</em></h1>
+      <p class="ab-lede">DatingEdge is honest, research-backed relationship guidance for people who want real connection - not just better tactics.</p>
+    </div>
+  </section>
+
+  <section class="ab-section ab-alt">
+    <div class="ab-wrap-wide">
+      <div class="ab-kicker">Why we exist</div>
+      <h2 class="ab-h2">Most dating advice is built to <em>sell</em>, not to help</h2>
+      <p class="ab-p">The dating advice world is loud, and most of it is hollow. Pickup scripts. Manipulation framed as confidence. Endless promises that the right line will fix everything. It gets clicks, and it leaves good people more anxious and more cynical than before.</p>
+      <p class="ab-p">DatingEdge was founded as the alternative. Every framework here is grounded in <strong>peer-reviewed psychology - attachment theory, communication research, and behavioral science</strong> - then translated into plain language anyone can use. No games. No tactics designed to win over someone you would not actually respect.</p>
+      <div class="ab-pull">"We will never teach you pickup lines or manipulation. We teach self-respect, communication, and the patience real connection asks for."</div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap-wide">
+      <div class="ab-kicker">What we stand for</div>
+      <h2 class="ab-h2">Our standards</h2>
+      <p class="ab-p">Three commitments shape everything published on DatingEdge.</p>
+      <div class="ab-vals">
+        <div class="ab-vcard"><div class="ab-vmark">1</div><div class="ab-vtitle">Evidence First</div><div class="ab-vdesc">Every claim traces back to real research. If the science is uncertain, we say so plainly.</div></div>
+        <div class="ab-vcard"><div class="ab-vmark">2</div><div class="ab-vtitle">Honesty Over Hype</div><div class="ab-vdesc">No magic fixes, no shortcuts. Real connection takes self-awareness, and we treat readers as adults.</div></div>
+        <div class="ab-vcard"><div class="ab-vmark">3</div><div class="ab-vtitle">Respect, Always</div><div class="ab-vdesc">For you and for the people you date. We will never frame manipulation as a skill worth having.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-alt">
+    <div class="ab-wrap-wide">
+      <div class="ab-kicker">What we cover</div>
+      <h2 class="ab-h2">From first message to <em>lasting</em> bond</h2>
+      <p class="ab-p">DatingEdge covers the full arc of modern dating - the practical skills and the inner work that real relationships are built on.</p>
+      <div class="ab-topics">
+        <span class="ab-topic">Attachment Styles</span><span class="ab-topic">Healthy Communication</span><span class="ab-topic">Online Dating</span><span class="ab-topic">First Dates</span><span class="ab-topic">Building Confidence</span><span class="ab-topic">Setting Boundaries</span><span class="ab-topic">Recognizing Red Flags</span><span class="ab-topic">Long-Term Connection</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap-wide">
+      <div class="ab-kicker">Meet the coach</div>
+      <h2 class="ab-h2">The person behind <em>DatingEdge</em></h2>
+      <div class="ab-coach">
+        <div class="ab-avatar">LH</div>
+        <div>
+          <div class="ab-coach-name">Dr. Lena Hart</div>
+          <div class="ab-coach-role">Relationship Psychologist &amp; Founder of DatingEdge</div>
+          <p class="ab-coach-bio">After nine years counseling couples and singles, I grew tired of watching good people get hurt by bad advice. I founded DatingEdge to put <strong>honest, evidence-based guidance</strong> within everyone's reach - not just those who can afford weekly sessions.</p>
+          <p class="ab-coach-bio">My work blends attachment science with practical communication skills - the same approach I use one-on-one, written here for anyone ready to date with more self-respect and more clarity.</p>
+          <div class="ab-creds">
+            <div class="ab-cred"><div class="ab-cn">9 yrs</div><div class="ab-cl">Clinical practice</div></div>
+            <div class="ab-cred"><div class="ab-cn">2,400+</div><div class="ab-cl">Clients counseled</div></div>
+            <div class="ab-cred"><div class="ab-cn">PhD</div><div class="ab-cl">Relationship Psychology</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-alt ab-cta">
+    <div class="ab-wrap">
+      <div class="ab-kicker">Start here</div>
+      <h2 class="ab-h2">Date with more <em>clarity</em></h2>
+      <p class="ab-p">Join thousands of readers getting research-backed dating guidance - the honest kind, sent straight to your inbox.</p>
+      <a href="#newsletter" class="ab-cta-btn">Join DatingEdge</a>
+    </div>
+  </section>
+</main>
