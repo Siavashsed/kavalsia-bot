@@ -1,0 +1,156 @@
+<style>
+.ab-main{--ab-bg:#070708;--ab-bg2:#0d0d10;--ab-surface:#131318;--ab-surface2:#1a1a21;--ab-accent:#6c5ce7;--ab-accent2:#a78bfa;--ab-accent3:#22d3ee;--ab-lime:#bef264;--ab-text:#f4f4f6;--ab-muted:#8b8b97;--ab-dim:#5c5c68;--ab-border:#222229;--ab-border2:#2c2c36;--ab-font:'Inter',system-ui,sans-serif;--ab-display:'Space Grotesk','Inter',sans-serif;background:var(--ab-bg);color:var(--ab-text);font-family:var(--ab-font);font-size:15px;line-height:1.65;display:block}
+.ab-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+.ab-kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--ab-accent2);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.ab-kicker::before{content:'';width:18px;height:1px;background:var(--ab-accent2)}
+.ab-main h1,.ab-main h2,.ab-main h3{font-family:var(--ab-display);font-weight:700;letter-spacing:-.6px;line-height:1.1}
+.ab-grad{background:linear-gradient(120deg,var(--ab-accent2),var(--ab-accent3) 55%,var(--ab-lime));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* HERO */
+.ab-hero{position:relative;border-bottom:1px solid var(--ab-border);background:radial-gradient(700px circle at 78% 0%,rgba(108,92,231,.14),transparent 65%),var(--ab-bg2);overflow:hidden}
+.ab-hero-in{max-width:1100px;margin:0 auto;padding:90px 24px 78px}
+.ab-pill{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ab-muted);padding:7px 14px;border-radius:30px;border:1px solid var(--ab-border2);background:rgba(255,255,255,.025);margin-bottom:22px}
+.ab-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--ab-lime);box-shadow:0 0 10px var(--ab-lime)}
+.ab-hero h1{font-size:clamp(36px,5.5vw,64px);margin-bottom:18px}
+.ab-hero p{font-size:17px;color:var(--ab-muted);max-width:620px;line-height:1.7}
+
+/* SECTION */
+.ab-section{padding:80px 0}
+.ab-section.alt{background:var(--ab-bg2);border-block:1px solid var(--ab-border)}
+.ab-h2{font-size:clamp(26px,4vw,42px);margin-bottom:14px}
+.ab-sub{font-size:16px;color:var(--ab-muted);max-width:620px;line-height:1.7}
+
+/* STORY */
+.ab-story p{font-size:15.5px;color:var(--ab-muted);line-height:1.85;margin-bottom:16px;max-width:680px}
+.ab-story p strong{color:var(--ab-text);font-weight:600}
+.ab-story .lead{font-family:var(--ab-display);font-size:20px;color:var(--ab-text);font-weight:500;margin-bottom:20px;line-height:1.4}
+
+/* PRINCIPLES */
+.ab-pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ab-border);border:1px solid var(--ab-border);border-radius:18px;overflow:hidden;margin-top:38px}
+.ab-pcard{background:var(--ab-bg2);padding:32px 28px;transition:background .25s}
+.ab-pcard:hover{background:var(--ab-surface)}
+.ab-picon{width:44px;height:44px;border-radius:12px;background:var(--ab-surface2);border:1px solid var(--ab-border2);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.ab-picon svg{width:22px;height:22px;color:var(--ab-accent2)}
+.ab-pcard h3{font-size:18px;margin-bottom:8px}
+.ab-pcard p{font-size:14px;color:var(--ab-muted);line-height:1.7}
+
+/* TOPICS */
+.ab-tgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:38px}
+.ab-tcard{background:var(--ab-surface);border:1px solid var(--ab-border);border-radius:16px;padding:26px 26px;transition:border-color .25s,transform .25s}
+.ab-tcard:hover{border-color:var(--ab-border2);transform:translateY(-4px)}
+.ab-tnum{font-family:var(--ab-display);font-size:13px;font-weight:700;color:var(--ab-accent3)}
+.ab-tcard h3{font-size:19px;margin:10px 0 8px}
+.ab-tcard p{font-size:14px;color:var(--ab-muted);line-height:1.7}
+
+/* AUTHOR */
+.ab-author{display:grid;grid-template-columns:240px 1fr;gap:48px;align-items:start;background:var(--ab-surface);border:1px solid var(--ab-border2);border-radius:20px;padding:44px 40px;position:relative;overflow:hidden}
+.ab-author::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--ab-accent2),transparent)}
+.ab-author-card{text-align:center}
+.ab-avatar{width:110px;height:110px;border-radius:50%;margin:0 auto 16px;background:linear-gradient(135deg,var(--ab-accent),var(--ab-accent3));display:flex;align-items:center;justify-content:center;font-family:var(--ab-display);font-size:36px;font-weight:700;color:#fff}
+.ab-author-card .n{font-family:var(--ab-display);font-size:18px;font-weight:600}
+.ab-author-card .r{font-size:12px;color:var(--ab-accent2);font-weight:600;margin-top:3px}
+.ab-author-name{font-family:var(--ab-display);font-size:28px;font-weight:700;letter-spacing:-1px;margin-bottom:4px}
+.ab-author-title{font-size:12px;font-weight:600;color:var(--ab-accent2);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px}
+.ab-author p{font-size:15px;color:var(--ab-muted);line-height:1.85;margin-bottom:14px}
+.ab-author p strong{color:var(--ab-text);font-weight:600}
+.ab-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.ab-tag-chip{font-size:11px;font-weight:600;color:var(--ab-accent2);background:rgba(108,92,231,.1);border:1px solid rgba(108,92,231,.2);padding:5px 12px;border-radius:20px}
+
+/* CTA */
+.ab-cta{background:linear-gradient(135deg,var(--ab-surface),var(--ab-bg2));border:1px solid var(--ab-border2);border-radius:22px;padding:56px 40px;text-align:center;position:relative;overflow:hidden}
+.ab-cta::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ab-accent2),transparent)}
+.ab-cta h2{font-size:clamp(26px,4vw,40px);margin-bottom:12px}
+.ab-cta p{font-size:15.5px;color:var(--ab-muted);max-width:480px;margin:0 auto 26px}
+.ab-btn{display:inline-flex;align-items:center;gap:9px;font-size:14.5px;font-weight:600;color:#fff;padding:15px 30px;border-radius:11px;background:linear-gradient(135deg,var(--ab-accent),#5546d6)}
+.ab-btn:hover{transform:translateY(-2px)}
+
+@media(max-width:760px){.ab-pgrid,.ab-tgrid{grid-template-columns:1fr}.ab-author{grid-template-columns:1fr;gap:28px;padding:32px 24px}}
+@media(max-width:600px){.ab-section{padding:58px 0}.ab-cta{padding:42px 24px}}
+</style>
+
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-hero-in">
+      <div class="ab-pill"><span class="dot"></span>About OnlineBiz Pro</div>
+      <h1>The operator's playbook <span class="ab-grad">for building online.</span></h1>
+      <p>OnlineBiz Pro is straight talk on building, scaling and exiting online businesses. No guru theatrics, no vanity metrics, no course funnel hiding behind the advice - just operating experience, shared with the numbers attached.</p>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-inner ab-story">
+      <div class="ab-kicker">Why This Exists</div>
+      <h2 class="ab-h2">Most online business advice is written to sell you something.</h2>
+      <p class="lead">This is written by someone who has built and sold real companies - and shows you the math behind every claim.</p>
+      <p>Search "how to build an online business" and you get a wall of content engineered to funnel you toward a $2,000 course. The screenshots are cherry-picked, the timelines are fantasy, and the person teaching has usually never run the thing they are teaching.</p>
+      <p>OnlineBiz Pro was built as the antidote. <strong>Every framework here comes from businesses that were actually built, operated and sold</strong> - content sites, SaaS tools, productized services. When we talk about pricing, hiring or churn, there is a real P&amp;L behind the words.</p>
+      <p>The goal is not motivation. It is to compress years of expensive mistakes into guidance you can act on - so you build something durable, profitable, and capable of running without you in the room.</p>
+    </div>
+  </section>
+
+  <section class="ab-section alt">
+    <div class="ab-inner">
+      <div class="ab-kicker">How We Operate</div>
+      <h2 class="ab-h2">Three rules every article follows</h2>
+      <p class="ab-sub">These are the editorial standards that separate operator content from guru content.</p>
+      <div class="ab-pgrid">
+        <div class="ab-pcard"><div class="ab-picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><h3>Numbers, not hype</h3><p>Every claim comes with the math - margins, CAC, churn, multiples. If we cannot show the numbers, we do not make the claim.</p></div>
+        <div class="ab-pcard"><div class="ab-picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></svg></div><h3>Built from experience</h3><p>Frameworks come from businesses actually operated and exited - not from interviewing someone who once read about it.</p></div>
+        <div class="ab-pcard"><div class="ab-picon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h3>Honest about the hard parts</h3><p>We cover the failed launches and the slow quarters too. A playbook that only shows wins is just marketing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-inner">
+      <div class="ab-kicker">What We Cover</div>
+      <h2 class="ab-h2">The full lifecycle of an online business</h2>
+      <div class="ab-tgrid">
+        <div class="ab-tcard"><span class="ab-tnum">01</span><h3>Build &amp; Validate</h3><p>Picking a model that compounds, validating demand cheaply, and getting to first revenue without burning a runway you do not have.</p></div>
+        <div class="ab-tcard"><span class="ab-tnum">02</span><h3>Pricing &amp; Monetization</h3><p>The pricing decisions that quietly double a business - tiers, positioning, and the math most founders never run.</p></div>
+        <div class="ab-tcard"><span class="ab-tnum">03</span><h3>Systems &amp; Hiring</h3><p>Documenting operations so the work outlives the founder, and making first hires that add leverage instead of overhead.</p></div>
+        <div class="ab-tcard"><span class="ab-tnum">04</span><h3>Acquisitions &amp; Exits</h3><p>How online businesses are valued, what buyers actually check in diligence, and how to engineer a clean exit.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section alt">
+    <div class="ab-inner">
+      <div class="ab-kicker">The Founder</div>
+      <h2 class="ab-h2" style="margin-bottom:32px">Who is behind OnlineBiz Pro</h2>
+      <div class="ab-author">
+        <div class="ab-author-card">
+          <div class="ab-avatar">RC</div>
+          <div class="n">Ryan Cho</div>
+          <div class="r">Founder, OnlineBiz Pro</div>
+        </div>
+        <div>
+          <div class="ab-author-name">Ryan Cho</div>
+          <div class="ab-author-title">Serial Entrepreneur &amp; Startup Advisor</div>
+          <p>I have built and sold three online businesses over the last eight years - a content site, a SaaS tool, and a productized service. <strong>None of them required venture money or a big team.</strong> All three were bootstrapped, run lean, and exited cleanly.</p>
+          <p>I started OnlineBiz Pro because the advice that helped me most never came from courses. It came from other operators who would tell me the real numbers - what their churn actually was, what a hire actually cost, what the buyer actually paid. That kind of candor is rare, and it is what this site is built to deliver.</p>
+          <p>If you want a shortcut to overnight riches, this is not it. If you want operator-level guidance for a real online business, you are in the right place.</p>
+          <div class="ab-tags">
+            <span class="ab-tag-chip">3 Exits</span>
+            <span class="ab-tag-chip">Content Site Veteran</span>
+            <span class="ab-tag-chip">SaaS Builder</span>
+            <span class="ab-tag-chip">Startup Advisor</span>
+            <span class="ab-tag-chip">Fully Bootstrapped</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-inner">
+      <div class="ab-cta">
+        <h2>Build something that runs without you.</h2>
+        <p>Join 7,200+ founders getting operator-level playbooks on building, scaling and exiting online. Always free, no spam.</p>
+        <a href="./#newsletter" class="ab-btn">Get the Playbook
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
