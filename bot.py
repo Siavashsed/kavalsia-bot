@@ -3893,35 +3893,9 @@ def run(topic_overrides=None, site_filter=None):
                         _idx_entry["category"] = article["category"]
                     articles.append(_idx_entry)
 
-                    # Auto-syndicate to mirrored destination sites.
-                    try:
-                        from sync_articles import (
-                            SYNC_MAP, rewrap_for_destination,
-                            gh_put as _sync_put, fetch_articles_json as _sync_get_idx,
-                        )
-                        src_stem = _site_stem(site)
-                        for dst_stem, srcs in SYNC_MAP.items():
-                            if src_stem not in srcs:
-                                continue
-                            dst_site = next((x for x in active_sites if _site_stem(x) == dst_stem), None)
-                            if not dst_site:
-                                continue
-                            rebuilt = rewrap_for_destination(article_html, _idx_entry, dst_stem,
-                                                             dst_site, dst_site.get("domain", ""))
-                            if not rebuilt:
-                                continue
-                            _sync_put(dst_site["repo"], f"{slug}/index.html", rebuilt, github_token,
-                                      msg=f"syndicate {slug} from {src_stem}")
-                            dst_arts, dst_sha = _sync_get_idx(dst_site["repo"], github_token)
-                            if not any(a.get("slug") == slug for a in dst_arts):
-                                dst_arts.append({**_idx_entry, "syndicated_from": src_stem})
-                                dst_arts.sort(key=lambda a: a.get("date_iso", ""), reverse=True)
-                                _sync_put(dst_site["repo"], "articles.json",
-                                          json.dumps(dst_arts, indent=2), github_token, sha=dst_sha,
-                                          msg=f"syndicate index: {slug}")
-                            print(f"  Syndicated -> {dst_stem}")
-                    except Exception as _e:
-                        print(f"  Syndication error: {_e}")
+                    # Each site's freshly-published daily article stays exclusive to it -
+                    # NOT auto-syndicated to mirrored destinations. Cross-site syndication
+                    # is a one-time backfill of older articles only (see sync_articles.py).
 
                     send_newsletter(site, article, brevo_key)
                     nexus_digest_articles.append({
