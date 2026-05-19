@@ -1,0 +1,112 @@
+<style>
+.ab-main{--ab-bg:#05080d;--ab-bg2:#080c14;--ab-surface:#0c1320;--ab-surface2:#101a2c;--ab-blue:#5b9dff;--ab-blue2:#2563eb;--ab-cyan:#34d6e8;--ab-text:#eef3fb;--ab-muted:#7c93b3;--ab-muted2:#5a6e8c;--ab-border:#172439;--ab-font:'Inter',system-ui,sans-serif;--ab-display:'Space Grotesk','Inter',sans-serif;--ab-mono:'JetBrains Mono',ui-monospace,monospace;background:var(--ab-bg);color:var(--ab-text);font-family:var(--ab-font);-webkit-font-smoothing:antialiased}
+.ab-main *{box-sizing:border-box}
+
+.ab-hero{padding:104px 24px 84px;background:linear-gradient(180deg,var(--ab-bg2),var(--ab-bg));border-bottom:1px solid var(--ab-border);position:relative;overflow:hidden}
+.ab-hero::before{content:'';position:absolute;top:-160px;right:-120px;width:560px;height:560px;background:radial-gradient(circle,rgba(91,157,255,.1) 0%,transparent 70%);pointer-events:none}
+.ab-wrap{max-width:1000px;margin:0 auto;position:relative;z-index:1}
+.ab-eyebrow{font-family:var(--ab-mono);font-size:11px;color:var(--ab-cyan);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.ab-h1{font-family:var(--ab-display);font-size:clamp(34px,5vw,56px);font-weight:700;line-height:1.08;letter-spacing:-1.5px;margin-bottom:20px;max-width:760px}
+.ab-h1 .ab-hl{color:var(--ab-blue)}
+.ab-lede{font-size:18px;font-weight:300;color:var(--ab-muted);line-height:1.7;max-width:620px}
+
+.ab-section{padding:80px 24px}
+.ab-alt{background:var(--ab-bg2);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border)}
+.ab-kicker{font-family:var(--ab-mono);font-size:11px;color:var(--ab-cyan);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px}
+.ab-h2{font-family:var(--ab-display);font-size:clamp(24px,3.4vw,34px);font-weight:700;letter-spacing:-.8px;margin-bottom:20px}
+.ab-p{font-size:16px;font-weight:300;color:var(--ab-muted);line-height:1.78;margin-bottom:14px;max-width:680px}
+.ab-p strong{color:var(--ab-text);font-weight:600}
+
+.ab-specs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
+.ab-spec{background:linear-gradient(165deg,var(--ab-surface2),var(--ab-surface));border:1px solid var(--ab-border);border-radius:14px;padding:26px}
+.ab-spec-val{font-family:var(--ab-mono);font-size:30px;font-weight:500;color:var(--ab-blue);letter-spacing:-1px;margin-bottom:6px}
+.ab-spec-lbl{font-size:13px;color:var(--ab-muted);line-height:1.5}
+
+.ab-method{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:32px}
+.ab-mcard{background:var(--ab-surface);border:1px solid var(--ab-border);border-radius:14px;padding:28px;position:relative}
+.ab-mcard::before{content:'';position:absolute;top:0;left:28px;right:28px;height:2px;background:linear-gradient(90deg,var(--ab-blue2),var(--ab-cyan));border-radius:2px}
+.ab-mtag{font-family:var(--ab-mono);font-size:10px;color:var(--ab-cyan);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.ab-mtitle{font-family:var(--ab-display);font-size:17px;font-weight:600;margin-bottom:8px}
+.ab-mdesc{font-size:14px;font-weight:300;color:var(--ab-muted);line-height:1.7}
+
+.ab-author-wrap{display:grid;grid-template-columns:auto 1fr;gap:40px;background:linear-gradient(165deg,var(--ab-surface2),var(--ab-surface));border:1px solid var(--ab-border);border-radius:18px;padding:44px;max-width:880px;margin:32px auto 0}
+.ab-avatar{width:104px;height:104px;border-radius:18px;background:linear-gradient(140deg,var(--ab-blue2),var(--ab-cyan));display:flex;align-items:center;justify-content:center;font-family:var(--ab-display);font-size:34px;font-weight:700;color:#fff;box-shadow:0 12px 30px rgba(91,157,255,.3)}
+.ab-author-badge{font-family:var(--ab-mono);font-size:11px;color:var(--ab-cyan);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.ab-author-name{font-family:var(--ab-display);font-size:24px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px}
+.ab-author-role{font-family:var(--ab-mono);font-size:13px;color:var(--ab-muted);margin-bottom:18px}
+.ab-author-bio{font-size:15px;font-weight:300;color:var(--ab-muted);line-height:1.75;margin-bottom:12px}
+.ab-author-bio strong{color:var(--ab-text);font-weight:600}
+.ab-creds{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}
+.ab-cred{font-family:var(--ab-mono);font-size:11px;color:var(--ab-muted);background:var(--ab-surface);border:1px solid var(--ab-border);padding:6px 12px;border-radius:7px}
+
+.ab-cta{text-align:center}
+.ab-cta .ab-h2,.ab-cta .ab-p{margin-left:auto;margin-right:auto}
+.ab-cta-btn{display:inline-block;margin-top:22px;font-family:var(--ab-display);font-size:14px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--ab-blue2),var(--ab-blue));padding:14px 30px;border-radius:10px;box-shadow:0 10px 26px rgba(91,157,255,.28);transition:transform .2s}
+.ab-cta-btn:hover{transform:translateY(-2px)}
+
+@media(max-width:760px){.ab-specs{grid-template-columns:1fr}.ab-method{grid-template-columns:1fr}.ab-author-wrap{grid-template-columns:1fr;padding:32px;gap:24px}.ab-avatar{width:74px;height:74px;font-size:24px}}
+</style>
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-wrap">
+      <div class="ab-eyebrow">About CarVerge</div>
+      <h1 class="ab-h1">Automotive coverage that understands how cars <span class="ab-hl">actually work.</span></h1>
+      <p class="ab-lede">CarVerge analyzes EVs and modern vehicles the way an engineer would - battery chemistry, real-world range, and cost-of-ownership math, written so a buyer and an engineer can both use it.</p>
+    </div>
+  </section>
+
+  <section class="ab-section ab-alt">
+    <div class="ab-wrap">
+      <div class="ab-kicker">Why CarVerge exists</div>
+      <h2 class="ab-h2">The engineering reality, not the press kit</h2>
+      <p class="ab-p">Most automotive coverage is built around manufacturer talking points and spec sheets that look impressive and explain nothing. A range figure on a brochure is a lab number. A 0-60 time tells you almost nothing about how a battery degrades over five winters.</p>
+      <p class="ab-p">CarVerge was started to close that gap. Every article works backward from the physics: <strong>how the powertrain is built, what the chemistry can sustain, and what it costs to live with</strong>. The goal is coverage you can actually make a purchase decision on.</p>
+      <div class="ab-specs">
+        <div class="ab-spec"><div class="ab-spec-val">15 yrs</div><div class="ab-spec-lbl">OEM powertrain engineering experience behind the analysis</div></div>
+        <div class="ab-spec"><div class="ab-spec-val">0</div><div class="ab-spec-lbl">Manufacturer-sponsored reviews or paid placements</div></div>
+        <div class="ab-spec"><div class="ab-spec-val">100%</div><div class="ab-spec-lbl">Claims traced back to measurable engineering data</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap">
+      <div class="ab-kicker">What we cover</div>
+      <h2 class="ab-h2">From the cell up</h2>
+      <p class="ab-p">Coverage focuses on the parts of a vehicle that decide whether it is a good buy - the systems most reviews skim over.</p>
+      <div class="ab-method">
+        <div class="ab-mcard"><div class="ab-mtag">Battery and Powertrain</div><div class="ab-mtitle">Chemistry and Degradation</div><div class="ab-mdesc">How different cell chemistries behave over time, in heat and cold, and what that means for resale and long-term range.</div></div>
+        <div class="ab-mcard"><div class="ab-mtag">Real-World Data</div><div class="ab-mtitle">Range and Efficiency</div><div class="ab-mdesc">Tested range against rated range, charging curves, and efficiency under conditions drivers actually face.</div></div>
+        <div class="ab-mcard"><div class="ab-mtag">Ownership Math</div><div class="ab-mtitle">Total Cost of Ownership</div><div class="ab-mdesc">Energy, maintenance, depreciation, and insurance modeled honestly - the full number, not just the sticker price.</div></div>
+        <div class="ab-mcard"><div class="ab-mtag">Buyer Guidance</div><div class="ab-mtitle">Engineering-Led Comparisons</div><div class="ab-mdesc">Vehicle-to-vehicle analysis that weighs how a car is built, not just how it spec-sheets.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-alt">
+    <div class="ab-wrap">
+      <div class="ab-kicker">The person behind it</div>
+      <h2 class="ab-h2">Meet the founder</h2>
+      <div class="ab-author-wrap">
+        <div class="ab-avatar">JC</div>
+        <div>
+          <div class="ab-author-badge">Lead analyst &amp; founder</div>
+          <div class="ab-author-name">James Carr</div>
+          <div class="ab-author-role">Automotive engineer - 15 years OEM powertrain</div>
+          <p class="ab-author-bio">Fifteen years designing powertrains at an OEM left me with a very specific allergy: I cannot stand automotive coverage that does not understand how cars actually work. Spec sheets get repeated, marketing claims get printed, and the buyer is left guessing.</p>
+          <p class="ab-author-bio">CarVerge is the answer to that. <strong>Battery chemistry, real-world range data, and cost-of-ownership math</strong> - written without a manufacturer relationship to protect. If a vehicle is well engineered, the data will show it. If it is not, the data shows that too.</p>
+          <div class="ab-creds"><span class="ab-cred">OEM powertrain design</span><span class="ab-cred">EV systems</span><span class="ab-cred">Independent &amp; unsponsored</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-cta">
+    <div class="ab-wrap">
+      <div class="ab-kicker">Stay current</div>
+      <h2 class="ab-h2">Read the analysis the spec sheet leaves out</h2>
+      <p class="ab-p">New EV breakdowns, range tests, and ownership-cost teardowns - delivered without the marketing gloss.</p>
+      <a href="#newsletter" class="ab-cta-btn">Get CarVerge Updates</a>
+    </div>
+  </section>
+</main>
