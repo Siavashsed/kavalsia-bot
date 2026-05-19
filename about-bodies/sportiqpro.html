@@ -1,0 +1,150 @@
+<style>
+.ab-main{--c-bg:#0a0d12;--c-bg2:#11151c;--c-bg3:#1a2029;--c-acc:#fa4a1e;--c-acc2:#ff6a3c;--c-lime:#c6f24e;--c-text:#eef0f3;--c-muted:#9aa1ac;--c-border:#232b36;--c-cond:'Barlow Condensed',sans-serif;--c-body:'Barlow',sans-serif;background:var(--c-bg);color:var(--c-text);font-family:var(--c-body);line-height:1.7}
+.ab-wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.ab-eyebrow{font-family:var(--c-cond);font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--c-acc)}
+.ab-h2{font-family:var(--c-cond);font-size:clamp(30px,4.4vw,52px);font-weight:900;line-height:.98;letter-spacing:-.01em;text-transform:uppercase;color:#fff}
+
+/* HERO */
+.ab-hero{position:relative;overflow:hidden;border-bottom:1px solid var(--c-border);background:radial-gradient(900px 500px at 82% -10%,rgba(250,74,30,.22),transparent 60%),radial-gradient(700px 500px at 0% 120%,rgba(198,242,78,.10),transparent 55%),var(--c-bg)}
+.ab-hero-grid{position:absolute;inset:0;opacity:.5;background-image:linear-gradient(var(--c-border) 1px,transparent 1px),linear-gradient(90deg,var(--c-border) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(680px 420px at 70% 30%,#000,transparent 75%)}
+.ab-hero-in{position:relative;z-index:2;padding:88px 0 80px;max-width:760px}
+.ab-hero h1{font-family:var(--c-cond);font-size:clamp(48px,6.6vw,84px);font-weight:900;line-height:.92;letter-spacing:-.015em;text-transform:uppercase;color:#fff;margin:18px 0 20px}
+.ab-hero h1 em{color:var(--c-acc);font-style:normal}
+.ab-hero p{font-size:16px;color:var(--c-muted);max-width:560px}
+
+/* SECTION */
+.ab-sec{padding:80px 0;border-bottom:1px solid var(--c-border)}
+.ab-sec.alt{background:var(--c-bg2)}
+.ab-grid2{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.ab-prose p{font-size:15px;color:var(--c-muted);margin-top:16px;line-height:1.85}
+.ab-prose p:first-of-type{margin-top:18px}
+
+/* STAT CARDS */
+.ab-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ab-card{border:1px solid var(--c-border);border-radius:14px;padding:24px;background:linear-gradient(160deg,var(--c-bg3),var(--c-bg))}
+.ab-card .n{font-family:var(--c-cond);font-size:44px;font-weight:900;line-height:1;color:var(--c-acc)}
+.ab-card .cap{font-size:13px;color:var(--c-muted);margin-top:7px}
+
+/* METHOD */
+.ab-steps{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:42px}
+.ab-step{background:var(--c-bg);border:1px solid var(--c-border);border-radius:14px;padding:28px;transition:border-color .2s,transform .2s}
+.ab-step:hover{border-color:var(--c-acc);transform:translateY(-4px)}
+.ab-step .num{font-family:var(--c-cond);font-size:13px;font-weight:900;color:var(--c-bg);background:var(--c-lime);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.ab-step h3{font-family:var(--c-cond);font-size:21px;font-weight:800;text-transform:uppercase;color:#fff;margin-bottom:8px}
+.ab-step p{font-size:14px;color:var(--c-muted)}
+
+/* COACH */
+.ab-coach{display:grid;grid-template-columns:260px 1fr;gap:48px;align-items:center}
+.ab-portrait{aspect-ratio:1;border-radius:18px;border:1px solid var(--c-border);background:linear-gradient(160deg,var(--c-bg3),var(--c-bg));display:flex;align-items:center;justify-content:center}
+.ab-quote{font-size:16px;color:var(--c-text);line-height:1.85;border-left:3px solid var(--c-acc);padding-left:18px;margin:18px 0}
+.ab-cred{display:flex;gap:24px;flex-wrap:wrap;margin-top:18px}
+.ab-cred div b{font-family:var(--c-cond);font-size:26px;font-weight:900;color:var(--c-acc);display:block}
+.ab-cred div span{font-size:12px;color:var(--c-muted)}
+.ab-name{font-family:var(--c-cond);font-size:22px;font-weight:800;text-transform:uppercase;color:#fff;margin-top:20px}
+.ab-role{font-size:13px;color:var(--c-muted)}
+
+/* CTA */
+.ab-cta{padding:84px 0}
+.ab-cta-box{position:relative;overflow:hidden;border-radius:20px;padding:60px 40px;text-align:center;background:radial-gradient(600px 300px at 22% 0%,rgba(250,74,30,.3),transparent 60%),linear-gradient(150deg,var(--c-bg3),var(--c-bg2));border:1px solid var(--c-border)}
+.ab-cta-box p{font-size:15px;color:var(--c-muted);max-width:480px;margin:14px auto 28px}
+.ab-btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--c-cond);font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:15px 30px;border-radius:8px;background:var(--c-acc);color:#fff;transition:background .15s,transform .15s}
+.ab-btn:hover{background:var(--c-acc2);transform:translateY(-2px)}
+
+@media(max-width:900px){.ab-grid2,.ab-coach{grid-template-columns:1fr;gap:34px}.ab-steps,.ab-cards{grid-template-columns:1fr}}
+</style>
+
+<main class="ab-main">
+  <header class="ab-hero">
+    <div class="ab-hero-grid"></div>
+    <div class="ab-wrap ab-hero-in">
+      <div class="ab-eyebrow">About SportIQ Pro</div>
+      <h1>Smarter Training,<br><em>Measured.</em></h1>
+      <p>SportIQ Pro is a performance-intelligence resource for athletes who want results they can verify, not slogans they have to believe. We turn sports science into protocols you can run in your next session.</p>
+    </div>
+  </header>
+
+  <section class="ab-sec">
+    <div class="ab-wrap ab-grid2">
+      <div class="ab-prose">
+        <div class="ab-eyebrow">Why We Exist</div>
+        <h2 class="ab-h2">Built to Replace<br>Gym-Bro Guesswork</h2>
+        <p>Most training advice online is recycled opinion dressed up as expertise. A trend goes viral, gets repeated a thousand times, and suddenly it is treated as fact. The athlete loses, because the actual research rarely makes it into the feed.</p>
+        <p>SportIQ Pro started with a simple frustration: there was no single place to find training, recovery, and nutrition guidance that was both grounded in peer-reviewed evidence and written to be used. The studies existed. The clear, honest translation did not.</p>
+        <p>So we built it. Every guide we publish starts in the literature and ends as a protocol with sets, reps, timing, and a way to measure whether it worked. No magic supplements, no 30-day transformation promises, just systems that compound over months and years.</p>
+      </div>
+      <div class="ab-cards">
+        <div class="ab-card"><div class="n">200+</div><div class="cap">Peer-reviewed studies referenced across the training library.</div></div>
+        <div class="ab-card"><div class="n">340+</div><div class="cap">Field-tested training guides, from beginner to elite.</div></div>
+        <div class="ab-card"><div class="n">18</div><div class="cap">Step-by-step recovery protocols, each one usable today.</div></div>
+        <div class="ab-card"><div class="n">92%</div><div class="cap">Of readers report measurable gains within twelve weeks.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec alt">
+    <div class="ab-wrap">
+      <div class="ab-eyebrow">What We Cover</div>
+      <h2 class="ab-h2">A Full Performance System</h2>
+      <p style="color:var(--c-muted);max-width:560px;margin-top:14px;font-size:15px">Five pillars work together. Train hard, recover smart, fuel right, track honestly, and the gains take care of themselves.</p>
+      <div class="ab-steps">
+        <div class="ab-step"><div class="num">01</div><h3>Strength &amp; Power</h3><p>Progressive overload, periodization, and lift technique grounded in biomechanics, not bravado.</p></div>
+        <div class="ab-step"><div class="num">02</div><h3>Endurance &amp; Conditioning</h3><p>Zone-based cardio and aerobic base work that raises your ceiling without burning you out.</p></div>
+        <div class="ab-step"><div class="num">03</div><h3>Recovery Science</h3><p>Sleep architecture, HRV, and exposure protocols that turn training stress into adaptation.</p></div>
+        <div class="ab-step"><div class="num">04</div><h3>Fueling &amp; Mindset</h3><p>Protein timing, supplement evidence, and the focus systems elite competitors use under pressure.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec">
+    <div class="ab-wrap">
+      <div class="ab-eyebrow">Our Standard</div>
+      <h2 class="ab-h2">How Every Guide Earns Its Place</h2>
+      <p style="color:var(--c-muted);max-width:560px;margin-top:14px;font-size:15px">Nothing reaches the library on opinion alone. This is the bar a guide has to clear.</p>
+      <div class="ab-steps">
+        <div class="ab-step"><div class="num">01</div><h3>Start in the Research</h3><p>Every claim begins with peer-reviewed human studies, and the citations stay attached to the guide.</p></div>
+        <div class="ab-step"><div class="num">02</div><h3>Translate to a Protocol</h3><p>Findings become a clear, repeatable plan with the numbers an athlete actually needs.</p></div>
+        <div class="ab-step"><div class="num">03</div><h3>Stress-Test in the Field</h3><p>Protocols are checked across experience levels before they go live, with scaling notes included.</p></div>
+        <div class="ab-step"><div class="num">04</div><h3>Review Quarterly</h3><p>Guides are revisited on a rolling cycle so the advice stays current as new research lands.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-sec alt">
+    <div class="ab-wrap ab-coach">
+      <div class="ab-portrait">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+          <defs><linearGradient id="abcg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fa4a1e"/><stop offset="1" stop-color="#ff6a3c"/></linearGradient></defs>
+          <circle cx="60" cy="44" r="24" fill="url(#abcg)"/>
+          <path d="M18 108c0-23 19-38 42-38s42 15 42 38" fill="url(#abcg)"/>
+          <path d="M48 44l8 8 18-18" stroke="#0a0d12" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="ab-eyebrow">Who Builds This</div>
+        <h2 class="ab-h2">The Coaches Behind It</h2>
+        <blockquote class="ab-quote">"The athletes who win long-term are not the ones who train hardest in a single week. They are the ones who train smart, recover on purpose, and let the system compound."</blockquote>
+        <p style="color:var(--c-muted);font-size:15px">SportIQ Pro is led by a team of certified strength coaches and sports scientists with two decades of combined work in the lab and on the field. Every guide carries that same accountability: if the evidence does not support it, it does not get published.</p>
+        <div class="ab-cred">
+          <div><b>20+</b><span>Years coaching</span></div>
+          <div><b>500+</b><span>Athletes guided</span></div>
+          <div><b>CSCS</b><span>Certified staff</span></div>
+        </div>
+        <div class="ab-name">The SportIQ Pro Coaching Team</div>
+        <div class="ab-role">Strength &amp; Conditioning - Sports Science - Performance Nutrition</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-cta">
+    <div class="ab-wrap">
+      <div class="ab-cta-box">
+        <div class="ab-eyebrow">Train With Us</div>
+        <h2 class="ab-h2">Put the Science to Work</h2>
+        <p>Browse the free training library or join the Weekly Performance Brief and get a free four-week starter program. No filler, no hype.</p>
+        <a href="./#newsletter" class="ab-btn">Get the Free Program
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
