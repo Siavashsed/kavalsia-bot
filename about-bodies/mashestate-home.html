@@ -1,0 +1,164 @@
+<style>
+.ab-main{--ab-bg:#0c1018;--ab-soft:#10151f;--ab-panel:#141b28;--ab-line:rgba(255,255,255,.09);--ab-ink:#f4f6fa;--ab-muted:#9aa6bc;--ab-faint:#697489;--ab-gold:#c8a96a;--ab-goldsoft:#e3cfa3;--ab-blue:#5b8cff;--ab-serif:'Fraunces',Georgia,serif;--ab-sans:'Inter',system-ui,sans-serif;background:var(--ab-bg);color:var(--ab-ink);font-family:var(--ab-sans);display:block}
+.ab-wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.ab-eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--ab-gold);display:inline-flex;align-items:center;gap:8px}
+.ab-eyebrow::before{content:"";width:22px;height:1px;background:var(--ab-gold);opacity:.6}
+.ab-main h1,.ab-main h2,.ab-main h3{font-family:var(--ab-serif);font-weight:600;letter-spacing:-.01em;line-height:1.14}
+
+/* HERO */
+.ab-hero{position:relative;border-bottom:1px solid var(--ab-line);background:radial-gradient(ellipse 70% 60% at 75% 20%,rgba(91,140,255,.10),transparent 70%),var(--ab-soft);overflow:hidden}
+.ab-hero-in{max-width:1240px;margin:0 auto;padding:104px 24px 88px}
+.ab-hero h1{font-size:clamp(38px,6vw,68px);margin:22px 0 0}
+.ab-hero h1 em{font-style:italic;color:var(--ab-goldsoft)}
+.ab-hero p{font-size:clamp(15px,2vw,18px);color:var(--ab-muted);margin-top:22px;max-width:600px;line-height:1.75}
+
+/* BLOCK */
+.ab-block{padding:90px 0}
+.ab-block.alt{background:var(--ab-soft);border-block:1px solid var(--ab-line)}
+.ab-head{max-width:680px;margin-bottom:44px}
+.ab-head h2{font-size:clamp(26px,4vw,42px);margin:14px 0 0}
+.ab-head p{color:var(--ab-muted);margin-top:14px}
+
+/* STORY */
+.ab-story{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+.ab-story p{color:var(--ab-muted);margin-bottom:16px}
+.ab-story h2{font-size:clamp(24px,3.4vw,38px);margin:14px 0 18px}
+.ab-figure{aspect-ratio:4/5;border-radius:18px;overflow:hidden;border:1px solid var(--ab-line);background:linear-gradient(160deg,#1a2435,#0e131d);position:relative;display:flex;align-items:flex-end;padding:24px}
+.ab-figure svg{position:absolute;inset:0;width:100%;height:100%}
+.ab-figure-tag{position:relative;background:rgba(12,16,24,.8);backdrop-filter:blur(8px);border:1px solid var(--ab-line);border-radius:12px;padding:14px 18px}
+.ab-figure-tag strong{font-family:var(--ab-serif);font-size:22px;color:var(--ab-goldsoft);display:block}
+.ab-figure-tag span{font-size:11.5px;color:var(--ab-muted)}
+
+/* PRINCIPLES */
+.ab-pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.ab-pcard{background:var(--ab-panel);border:1px solid var(--ab-line);border-radius:16px;padding:30px 26px;transition:border-color .25s,transform .25s}
+.ab-pcard:hover{border-color:rgba(200,169,106,.4);transform:translateY(-4px)}
+.ab-pnum{font-family:var(--ab-serif);font-size:13px;color:var(--ab-gold);letter-spacing:.1em}
+.ab-pcard h3{font-size:20px;margin:12px 0 8px}
+.ab-pcard p{font-size:14px;color:var(--ab-muted)}
+
+/* COVERAGE */
+.ab-cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.ab-crow{display:flex;gap:14px;background:var(--ab-panel);border:1px solid var(--ab-line);border-radius:13px;padding:20px 22px}
+.ab-crow svg{flex-shrink:0;color:var(--ab-gold);margin-top:2px}
+.ab-crow h4{font-family:var(--ab-serif);font-size:17px;margin-bottom:4px}
+.ab-crow p{font-size:13.5px;color:var(--ab-faint)}
+
+/* AUTHOR */
+.ab-author{display:grid;grid-template-columns:300px 1fr;gap:54px;align-items:center}
+.ab-portrait{aspect-ratio:1;border-radius:20px;overflow:hidden;border:1px solid var(--ab-line);background:linear-gradient(150deg,#1c2740,#0e131d);position:relative}
+.ab-portrait svg{position:absolute;inset:0;width:100%;height:100%}
+.ab-author-text h2{font-size:clamp(24px,3.4vw,36px);margin:12px 0 14px}
+.ab-author-text p{color:var(--ab-muted);margin-bottom:14px}
+.ab-quote{border-left:2px solid var(--ab-gold);padding-left:20px;font-family:var(--ab-serif);font-style:italic;font-size:18px;color:var(--ab-ink);margin:20px 0}
+.ab-sig{font-family:var(--ab-serif);font-size:22px;color:var(--ab-goldsoft)}
+.ab-role{font-size:12.5px;color:var(--ab-faint)}
+
+/* CTA */
+.ab-cta{background:linear-gradient(155deg,#18223a,#0e131d);border:1px solid var(--ab-line);border-radius:24px;padding:60px 40px;text-align:center;position:relative;overflow:hidden}
+.ab-cta::before{content:"";position:absolute;width:320px;height:320px;background:radial-gradient(circle,rgba(200,169,106,.18),transparent 70%);top:-130px;right:-90px}
+.ab-cta h2{font-size:clamp(26px,4vw,40px);position:relative}
+.ab-cta p{color:var(--ab-muted);margin:14px auto 28px;max-width:480px;position:relative}
+.ab-btn{position:relative;display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600;padding:15px 30px;border-radius:11px;background:linear-gradient(180deg,var(--ab-goldsoft),var(--ab-gold));color:#0c1018}
+.ab-btn:hover{transform:translateY(-2px)}
+
+@media(max-width:1000px){.ab-story,.ab-author{grid-template-columns:1fr;gap:40px}.ab-pgrid{grid-template-columns:1fr}.ab-portrait{max-width:300px}}
+@media(max-width:680px){.ab-wrap,.ab-hero-in{padding-left:18px;padding-right:18px}.ab-block{padding:60px 0}.ab-cgrid{grid-template-columns:1fr}.ab-cta{padding:44px 22px}}
+</style>
+
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-hero-in">
+      <span class="ab-eyebrow">About MashEstate Home</span>
+      <h1>The full picture, before<br><em>you sign anything.</em></h1>
+      <p>MashEstate Home is an independent real estate intelligence platform. We exist for one reason - so that buyers, sellers and investors walk into the largest transaction of their lives with the same data the professionals on the other side of the table already have.</p>
+    </div>
+  </section>
+
+  <section class="ab-block">
+    <div class="ab-wrap ab-story">
+      <div class="ab-figure">
+        <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs><linearGradient id="abmsg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f2c44"/><stop offset="1" stop-color="#0d121c"/></linearGradient></defs>
+          <rect width="400" height="500" fill="url(#abmsg)"/>
+          <g stroke="#c8a96a" stroke-width="1.4" fill="none" opacity=".75"><path d="M70 360V190l130-92 130 92v170H70Z"/><path d="M70 360h260M120 360v-90h70v90M210 270h60v90h-60z"/><path d="M200 98v-26"/></g>
+          <g stroke="#5b8cff" stroke-width="1" opacity=".35" fill="none"><path d="M30 60h120M30 60v60"/><path d="M370 460h-110M370 460v-70"/></g>
+        </svg>
+        <div class="ab-figure-tag"><strong>18 yrs</strong><span>of market cycles analyzed</span></div>
+      </div>
+      <div class="ab-story-text">
+        <span class="ab-eyebrow">Why We Exist</span>
+        <h2>Built from a frustration with how property gets sold.</h2>
+        <p>Most real estate content is produced to move a listing. The polished photo, the confident headline, the urgency - all of it answers to a commission, not to the buyer. The result is a market where the person spending the money is, almost always, the least informed party in the room.</p>
+        <p>MashEstate Home was created to close that gap. We are not a brokerage and we never broker the deals we write about. That separation is the whole point. With no listing fee at stake, our analysis can do the one thing sales-driven advice cannot - tell you when to walk away.</p>
+        <p>Every guide, market report and checklist on this site is built from verified transaction records and almost two decades of watching markets expand, cool and turn. It is the perspective of an experienced advisor, written in plain language and given to you for free.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-block alt">
+    <div class="ab-wrap">
+      <div class="ab-head">
+        <span class="ab-eyebrow">The Standard</span>
+        <h2>Three principles behind every page.</h2>
+        <p>These are not marketing values. They are the editorial rules that decide what gets published and what gets cut.</p>
+      </div>
+      <div class="ab-pgrid">
+        <div class="ab-pcard"><span class="ab-pnum">01</span><h3>Independence first</h3><p>No commissions, no listing partnerships, no pay-to-feature deals. We never have a financial stake in the homes we analyze, so the guidance answers to you alone.</p></div>
+        <div class="ab-pcard"><span class="ab-pnum">02</span><h3>Verified, dated data</h3><p>Market reports are refreshed weekly from real transaction records and rate sources. Every figure is dated, so you always know how fresh the numbers behind a decision are.</p></div>
+        <div class="ab-pcard"><span class="ab-pnum">03</span><h3>Clarity over jargon</h3><p>Cap rate, comps, carrying costs and resale ceilings explained for buyers, not for an industry audience. If a guide cannot be acted on, it does not ship.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-block">
+    <div class="ab-wrap">
+      <div class="ab-head">
+        <span class="ab-eyebrow">What We Cover</span>
+        <h2>From your first set of keys to a full portfolio.</h2>
+      </div>
+      <div class="ab-cgrid">
+        <div class="ab-crow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7M5 9.5V20h14V9.5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><div><h4>First-Time Buyers</h4><p>Down payments, mortgage pre-approval and the offer process, demystified step by step.</p></div></div>
+        <div class="ab-crow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 20V8l8-5 8 5v12M4 20h16" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg><div><h4>Luxury &amp; High-End Homes</h4><p>Evaluating premium finishes, land value and the rarity premiums that hold their worth.</p></div></div>
+        <div class="ab-crow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19h16M7 19V9m5 10V5m5 14v-7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><div><h4>Investment Property</h4><p>Rental cash flow, cap rates and the math of scaling a durable property portfolio.</p></div></div>
+        <div class="ab-crow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><div><h4>Market Timing &amp; Finance</h4><p>Reading cycles and rate moves, plus structuring the mortgage behind the purchase.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-block alt">
+    <div class="ab-wrap ab-author">
+      <div class="ab-portrait">
+        <svg viewBox="0 0 300 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs><linearGradient id="abmag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22304c"/><stop offset="1" stop-color="#0e131d"/></linearGradient></defs>
+          <rect width="300" height="300" fill="url(#abmag)"/>
+          <circle cx="150" cy="120" r="52" fill="#c8a96a" opacity=".9"/>
+          <path d="M62 300c0-58 40-96 88-96s88 38 88 96" fill="#c8a96a" opacity=".9"/>
+          <circle cx="150" cy="120" r="68" fill="none" stroke="#5b8cff" stroke-width="1.4" opacity=".4"/>
+        </svg>
+      </div>
+      <div class="ab-author-text">
+        <span class="ab-eyebrow">The Person Behind It</span>
+        <h2>Diane Marchetti, Founder</h2>
+        <p>Diane spent 18 years brokering residential and luxury property before founding MashEstate Home. She saw the same pattern in deal after deal - buyers committing hundreds of thousands of dollars with a fraction of the information their agent held.</p>
+        <div class="ab-quote">"A great home is not the one with the best photos. It is the one whose value still makes sense in ten years."</div>
+        <p>She built this platform to put that experience on the buyer's side of the table. Every guide here is written or reviewed to her standard - practical, honest, and structured to protect the person making the purchase first.</p>
+        <div class="ab-sig">Diane Marchetti</div>
+        <div class="ab-role">Founder &amp; Lead Real Estate Advisor, MashEstate Home</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-block">
+    <div class="ab-wrap">
+      <div class="ab-cta">
+        <span class="ab-eyebrow" style="justify-content:center">Start With the Brief</span>
+        <h2>Buy with conviction, not hope.</h2>
+        <p>Join more than 60,000 buyers and investors reading the Weekly Property Brief - rate changes, inventory swings and buying strategy in one focused email.</p>
+        <a href="./#newsletter" class="ab-btn">Get the Weekly Brief
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
