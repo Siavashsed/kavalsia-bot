@@ -3176,7 +3176,7 @@ def article_standard(article, site, image_url, photographer, t):
 
     css = f"""
 .art{{max-width:760px;margin:48px auto;padding:0 24px 80px}}
-.art h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.2;margin-bottom:16px;color:{t["text"]}}}
+.art h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.1;margin-bottom:14px;color:{t["text"]}}}
 .art p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
 .art .intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
 .art .concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
@@ -3209,7 +3209,7 @@ def article_sidebar(article, site, image_url, photographer, t):
 .art-grid .art-side{{position:sticky;top:24px;background:{t["bg2"]};border:1px solid {t["border"]};border-top:3px solid {t["accent"]};border-radius:8px;padding:20px}}
 .art-grid .art-side h3{{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]};margin-bottom:12px}}
 .art-grid .art-side ul{{list-style:none;border-left:2px solid {t["accent"]};padding-left:12px;opacity:.7}}
-.art-grid h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.2;margin-bottom:16px;color:{t["text"]}}}
+.art-grid h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.1;margin-bottom:14px;color:{t["text"]}}}
 .art-grid p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
 .art-grid .intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
 .art-grid .concl{{background:{t["bg3"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
@@ -3244,7 +3244,7 @@ def article_magazine(article, site, image_url, photographer, t):
     css = f"""
 .mag-hero{{background:{t["bg3"]};padding:60px 0 0;text-align:center}}
 .mag-hero-inner{{max-width:800px;margin:0 auto;padding:0 24px}}
-.mag-hero h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,48px);font-weight:900;line-height:1.15;margin-bottom:20px;color:{t["text"]}}}
+.mag-hero h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,48px);font-weight:900;line-height:1.05;margin-bottom:18px;color:{t["text"]}}}
 .mag-hero .lead{{font-size:19px;line-height:1.65;color:{t["text2"]};column-count:2;column-gap:32px;margin-bottom:32px}}
 .mag-body{{max-width:740px;margin:40px auto;padding:0 24px 80px}}
 .mag-body p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8}}
@@ -3279,7 +3279,7 @@ def article_minimal(article, site, image_url, photographer, t):
 
     css = f"""
 .art-min{{max-width:680px;margin:0 auto;padding:48px 24px 100px;font-size:19px;line-height:1.8}}
-.art-min h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-0.5px;color:{t["text"]}}}
+.art-min h1{{font-family:{t["heading_font"]};font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.05;margin-bottom:18px;letter-spacing:-0.5px;color:{t["text"]}}}
 .art-min h2{{font-family:{t["heading_font"]};font-size:24px;font-weight:700;margin:48px 0 16px;color:{t["text"]}}}
 .art-min p{{margin-bottom:24px;color:{t["text2"]}}}
 .art-min .intro{{font-size:22px;font-style:italic;color:{t["text"]};border-bottom:1px solid {t["border"]};padding-bottom:32px;margin-bottom:32px}}
