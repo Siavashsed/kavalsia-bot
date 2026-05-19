@@ -1341,7 +1341,7 @@
         "Foundation issues: what's serious and what's cosmetic",
         "How long a renovation actually takes — a realistic timeline"
       ],
-      "articles_per_day": 1,
+      "articles_per_day": 2,
       "nav_style": "dark",
       "author_names": [
         "Tom Mash",
@@ -1351,7 +1351,7 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 2
     },
     {
       "id": "insight-insure",
@@ -1412,7 +1412,7 @@
         "How to switch insurance providers without a gap in coverage",
         "The fine print in insurance policies that costs people the most"
       ],
-      "articles_per_day": 1,
+      "articles_per_day": 2,
       "nav_style": "grid",
       "author_names": [
         "Ryan Mitchell",
@@ -1422,7 +1422,7 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 2
     },
     {
       "id": "carverge",
@@ -1483,7 +1483,7 @@
         "EV battery degradation: what owners actually report",
         "Hybrid vs full EV: the decision framework"
       ],
-      "articles_per_day": 1,
+      "articles_per_day": 2,
       "nav_style": "carverge",
       "author_names": [
         "Alex Turner",
@@ -1493,7 +1493,7 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 2
     },
     {
       "id": "travelverge",
@@ -1632,7 +1632,7 @@
         "The best running shoes for flat feet tested by a podiatrist",
         "Coffee gear worth buying if you want to stop spending at cafes"
       ],
-      "articles_per_day": 1,
+      "articles_per_day": 2,
       "nav_style": "dark",
       "author_names": [
         "Jamie Cole",
@@ -1642,7 +1642,7 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 2
     }
   ]
 }
