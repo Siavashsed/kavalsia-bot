@@ -1,0 +1,137 @@
+<style>
+.ab-main{--ab-bg:#08060f;--ab-bg2:#100c1a;--ab-surface:#17122a;--ab-primary:#a855f7;--ab-primary2:#7c3aed;--ab-secondary:#06b6d4;--ab-text:#f0e8ff;--ab-muted:#9575cd;--ab-border:#2a1f45;--ab-font:'Space Grotesk',system-ui,sans-serif;--ab-mono:'DM Mono',monospace;background:var(--ab-bg);color:var(--ab-text);font-family:var(--ab-font)}
+.ab-main *{box-sizing:border-box}
+@keyframes ab-pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
+@keyframes ab-grid-fade{0%,100%{opacity:.03}50%{opacity:.06}}
+
+.ab-hero{position:relative;overflow:hidden;padding:96px 24px 72px;border-bottom:1px solid var(--ab-border)}
+.ab-hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(168,85,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,.04) 1px,transparent 1px);background-size:48px 48px;animation:ab-grid-fade 6s ease-in-out infinite;pointer-events:none}
+.ab-hero-radial{position:absolute;top:-220px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse at center top,rgba(168,85,247,.13) 0%,rgba(124,58,237,.06) 40%,transparent 70%);pointer-events:none}
+.ab-hero-inner{max-width:820px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.ab-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--ab-mono);font-size:11px;color:var(--ab-secondary);background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);padding:6px 14px;border-radius:20px;margin-bottom:26px;letter-spacing:.5px;text-transform:uppercase}
+.ab-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--ab-secondary);box-shadow:0 0 8px var(--ab-secondary);animation:ab-pulse-dot 2s ease-in-out infinite}
+.ab-h1{font-size:clamp(32px,5vw,56px);font-weight:700;line-height:1.1;letter-spacing:-1.5px;margin-bottom:20px}
+.ab-h1 .ab-grad{background:linear-gradient(90deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ab-lede{font-size:17px;color:var(--ab-muted);line-height:1.8;max-width:600px;margin:0 auto}
+
+.ab-section{padding:72px 24px}
+.ab-wrap{max-width:900px;margin:0 auto}
+.ab-kicker{font-family:var(--ab-mono);font-size:11px;color:var(--ab-secondary);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.ab-kicker::before{content:'';width:24px;height:1px;background:var(--ab-secondary);box-shadow:0 0 8px var(--ab-secondary)}
+.ab-h2{font-size:clamp(24px,3.4vw,34px);font-weight:700;letter-spacing:-1px;margin-bottom:18px}
+.ab-h2 .ab-grad{background:linear-gradient(90deg,var(--ab-primary),var(--ab-secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ab-p{font-size:15px;color:var(--ab-muted);line-height:1.85;margin-bottom:14px}
+.ab-p strong{color:var(--ab-text);font-weight:600}
+
+.ab-story{background:var(--ab-bg2);border-top:1px solid var(--ab-border);border-bottom:1px solid var(--ab-border)}
+
+.ab-terminal{max-width:560px;margin:36px auto 0;background:var(--ab-surface);border:1px solid var(--ab-border);border-radius:10px;overflow:hidden;box-shadow:0 0 40px rgba(168,85,247,.18)}
+.ab-term-bar{background:rgba(42,31,69,.8);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--ab-border)}
+.ab-tdot{width:10px;height:10px;border-radius:50%}
+.ab-term-label{font-family:var(--ab-mono);font-size:11px;color:var(--ab-muted);margin-left:auto}
+.ab-term-body{padding:20px}
+.ab-tline{font-family:var(--ab-mono);font-size:12px;line-height:2}
+.ab-tprompt{color:var(--ab-primary)}
+.ab-tout{color:var(--ab-muted)}
+.ab-tok{color:#34d399}
+
+.ab-method{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--ab-border);border:1px solid var(--ab-border);border-radius:12px;overflow:hidden;margin-top:32px}
+.ab-mcard{background:var(--ab-surface);padding:28px}
+.ab-mnum{font-family:var(--ab-mono);font-size:11px;color:var(--ab-secondary);letter-spacing:1px;margin-bottom:10px}
+.ab-mtitle{font-size:16px;font-weight:600;margin-bottom:8px;letter-spacing:-.3px}
+.ab-mdesc{font-size:13px;color:var(--ab-muted);line-height:1.7}
+
+.ab-author{max-width:820px;margin:0 auto;background:var(--ab-surface);border:1px solid var(--ab-border);border-radius:16px;padding:44px;position:relative;overflow:hidden;box-shadow:0 0 20px rgba(168,85,247,.3)}
+.ab-author::before{content:'';position:absolute;top:-100px;right:-100px;width:380px;height:380px;background:radial-gradient(circle,rgba(168,85,247,.07) 0%,transparent 70%);pointer-events:none}
+.ab-author-inner{display:grid;grid-template-columns:90px 1fr;gap:32px;position:relative}
+.ab-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--ab-primary2),var(--ab-primary));display:flex;align-items:center;justify-content:center;font-family:var(--ab-mono);font-size:24px;font-weight:700;color:#fff;box-shadow:0 0 30px rgba(168,85,247,.4);border:2px solid rgba(168,85,247,.3)}
+.ab-author-name{font-size:23px;font-weight:700;letter-spacing:-.5px}
+.ab-author-role{font-family:var(--ab-mono);font-size:11px;color:var(--ab-secondary);text-transform:uppercase;letter-spacing:1.5px;margin:5px 0 18px}
+.ab-author-bio p{font-size:14px;color:var(--ab-muted);line-height:1.85;margin-bottom:11px}
+.ab-cred{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font-family:var(--ab-mono);font-size:11px;color:var(--ab-primary);background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);padding:7px 14px;border-radius:6px}
+.ab-cred-dot{width:6px;height:6px;border-radius:50%;background:var(--ab-primary);box-shadow:0 0 8px var(--ab-primary)}
+
+.ab-cta{text-align:center;background:var(--ab-bg2);border-top:1px solid var(--ab-border)}
+.ab-cta-btn{display:inline-block;margin-top:22px;font-size:14px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--ab-primary2),var(--ab-primary));padding:14px 30px;border-radius:8px;box-shadow:0 0 24px rgba(168,85,247,.4);transition:transform .2s}
+.ab-cta-btn:hover{transform:translateY(-2px)}
+
+@media(max-width:680px){.ab-method{grid-template-columns:1fr}.ab-author-inner{grid-template-columns:1fr}.ab-avatar{display:none}.ab-author{padding:32px 24px}}
+</style>
+<main class="ab-main">
+  <section class="ab-hero">
+    <div class="ab-hero-grid"></div>
+    <div class="ab-hero-radial"></div>
+    <div class="ab-hero-inner">
+      <div class="ab-badge"><span class="ab-badge-dot"></span>About AI Marketing Pro</div>
+      <h1 class="ab-h1">Built by a marketer who got tired of <span class="ab-grad">AI hype.</span></h1>
+      <p class="ab-lede">AI Marketing Pro exists to answer one question honestly: what do AI tools actually do for marketing performance when you measure them with real ad spend?</p>
+    </div>
+  </section>
+
+  <section class="ab-section ab-story">
+    <div class="ab-wrap">
+      <div class="ab-kicker">Why this site exists</div>
+      <h2 class="ab-h2">Tested, not <span class="ab-grad">demoed.</span></h2>
+      <p class="ab-p">Every week a new AI tool launches with a polished landing page, a vendor case study, and a sandbox demo that looks incredible. None of that tells you whether it moves ROAS on a live campaign.</p>
+      <p class="ab-p">AI Marketing Pro was started because that gap kept costing money. The site does one thing: it runs AI marketing tools through <strong>real campaigns with real budgets</strong>, then reports the before-and-after metrics accurately. Tools get named. Numbers get attached. If something underperforms, that gets said too.</p>
+      <p class="ab-p">No affiliate-driven rankings. No "10x your output" promises. Just the engineering reality of where AI saves time, where it improves conversion, and where it quietly adds revision overhead.</p>
+      <div class="ab-terminal">
+        <div class="ab-term-bar">
+          <div class="ab-tdot" style="background:#ff5f57"></div>
+          <div class="ab-tdot" style="background:#ffbd2e"></div>
+          <div class="ab-tdot" style="background:#28c840"></div>
+          <span class="ab-term-label">about.sh -- standards</span>
+        </div>
+        <div class="ab-term-body">
+          <div class="ab-tline"><span class="ab-tprompt">$</span> verify --claim "AI cuts content cost"</div>
+          <div class="ab-tline"><span class="ab-tout">Running on live workflow data...</span></div>
+          <div class="ab-tline"><span class="ab-tout">Result: <span class="ab-tok">confirmed</span> -- cost/piece $420 to $168</span></div>
+          <div class="ab-tline"><span class="ab-tprompt">$</span> publish --with-evidence</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section">
+    <div class="ab-wrap">
+      <div class="ab-kicker">What gets covered</div>
+      <h2 class="ab-h2">Performance, end to <span class="ab-grad">end.</span></h2>
+      <p class="ab-p">Coverage spans the categories where AI is genuinely changing marketing economics - each one evaluated with live campaign data rather than vendor claims.</p>
+      <div class="ab-method">
+        <div class="ab-mcard"><div class="ab-mnum">01</div><div class="ab-mtitle">Paid Media and Creative</div><div class="ab-mdesc">AI creative scoring, copy rotation, and fatigue detection on Meta, Google, and TikTok - measured by ROAS and CPL.</div></div>
+        <div class="ab-mcard"><div class="ab-mnum">02</div><div class="ab-mtitle">Content Operations</div><div class="ab-mdesc">Workflows that cut production time and cost without sacrificing SEO performance or brand voice.</div></div>
+        <div class="ab-mcard"><div class="ab-mnum">03</div><div class="ab-mtitle">CRO and Testing</div><div class="ab-mdesc">AI-assisted hypothesis generation and landing page optimization, with lift measured on real traffic.</div></div>
+        <div class="ab-mcard"><div class="ab-mnum">04</div><div class="ab-mtitle">Analytics and Attribution</div><div class="ab-mdesc">AI layers on GA4 and triple-attribution tools - where they sharpen signal and where they add noise.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-story">
+    <div class="ab-wrap">
+      <div class="ab-kicker">Who writes this</div>
+      <div class="ab-author">
+        <div class="ab-author-inner">
+          <div class="ab-avatar">JB</div>
+          <div>
+            <div class="ab-author-name">Jordan Blake</div>
+            <div class="ab-author-role">Performance Marketing Director</div>
+            <div class="ab-author-bio">
+              <p>I have run over $12 million in paid ad spend and managed content operations for both B2B and DTC brands. When AI tools started arriving in my workflow, I tested them the way I test any media channel - with a budget, a baseline, and a control.</p>
+              <p>AI Marketing Pro is the resource I wished existed when I started integrating AI into campaigns. Not a pitch for replacing marketers, and not a doom forecast. Just a documented record of what works, measured by results that hold up.</p>
+            </div>
+            <div class="ab-cred"><span class="ab-cred-dot"></span>$12M+ in verified paid ad spend managed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ab-section ab-cta">
+    <div class="ab-wrap">
+      <div class="ab-kicker" style="justify-content:center"><span style="width:0"></span>Get the brief</div>
+      <h2 class="ab-h2">Read what is working <span class="ab-grad">this week.</span></h2>
+      <p class="ab-p" style="max-width:520px;margin:0 auto">The AI Marketing Brief is one email a week - practical, tested, no fluff. If you spend money on marketing, it will pay for itself.</p>
+      <a href="#newsletter" class="ab-cta-btn">Subscribe to the Brief</a>
+    </div>
+  </section>
+</main>
