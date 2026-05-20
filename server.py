@@ -16,6 +16,10 @@ CONFIG_PATH          = BASE_DIR / "network-config.json"
 CHANGELOG_PATH       = BASE_DIR / "changelog.json"
 BACKLINKS_PATH       = BASE_DIR / "backlinks-tracker.json"
 CLAUDE_HISTORY_PATH  = BASE_DIR / "claude_history.json"
+# Secrets live in the user's home so they are NEVER tracked by git or pushed by
+# deploy-bot.py. Any browser/device hitting the local server reads the same
+# file, so opening the dashboard fresh auto-loads every API key + token.
+SECRETS_PATH         = Path.home() / ".kavalsia" / "secrets.json"
 PORT                 = 8765
 
 app = Flask(__name__, static_folder=str(BASE_DIR))
@@ -26,7 +30,10 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB max
 PAGES = {
     "home":      "start.html",
     "start":     "start.html",
-    "hub":       "hub.html",
+    # /hub is the Editor (global prompt, negative prompt, global scripts, sponsor
+    # posts, per-site overrides). It used to redirect to /dashboard, but the
+    # dashboard duplicates none of the global-prompt UI - the editor owns it.
+    "hub":       "editor.html",
     "dashboard": "dashboard.html",
     "megadash":  "megadash.html",
     "mega":      "megadash.html",
@@ -92,6 +99,72 @@ def config_hash():
         return jsonify({"hash": h, "mtime": CONFIG_PATH.stat().st_mtime})
     except Exception:
         return jsonify({"hash": "", "mtime": 0})
+
+
+# ── Secrets vault (API keys + tokens, persisted to disk) ──────────────────────
+# Stored at ~/.kavalsia/secrets.json. Never committed, never deployed. Read by
+# every browser tab that opens the dashboard so a new browser does not need to
+# re-enter keys. Whitelisted set of allowed key names defended at write time.
+SECRET_KEYS_ALLOWED = {
+    "anthropicKey", "claudeModel", "ghToken", "pexelsKey", "brevoKey",
+    "hubApiUrl", "botRepo", "branch", "workflow",
+    "telegramToken", "telegramChatId",
+    "cfToken", "cfDomToken",
+    "metaPixelId", "metaCapiToken", "metaTestEvent",
+    "wpUrl", "wpUser", "wpAppPass",
+    "wooKey", "wooSecret",
+    "shopifyDomain", "shopifyToken",
+    "ghlWebhook", "ghlApiKey",
+}
+
+
+def _load_secrets_file():
+    if not SECRETS_PATH.exists():
+        return {}
+    try:
+        return json.loads(SECRETS_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _write_secrets_file(d):
+    SECRETS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    # Restrict file perms so other users on the machine cannot read it.
+    SECRETS_PATH.write_text(json.dumps(d, indent=2), encoding="utf-8")
+    try:
+        SECRETS_PATH.chmod(0o600)
+    except Exception:
+        pass
+
+
+@app.route("/api/secrets", methods=["GET"])
+def get_secrets():
+    """Return the on-disk secrets dict. Localhost-only since the Flask server
+    binds to 127.0.0.1; never exposed externally."""
+    return jsonify(_load_secrets_file())
+
+
+@app.route("/api/secrets", methods=["POST"])
+def save_secrets():
+    """Merge incoming dict into the on-disk secrets file. Unknown keys rejected
+    (whitelist) so a stray POST cannot pollute the file with arbitrary data."""
+    body = request.get_json(silent=True) or {}
+    if not isinstance(body, dict):
+        return jsonify({"error": "body must be an object"}), 400
+    bad = [k for k in body if k not in SECRET_KEYS_ALLOWED]
+    if bad:
+        return jsonify({"error": f"unknown secret keys: {', '.join(bad)}"}), 400
+    cur = _load_secrets_file()
+    # Only string values; empty string clears that key.
+    for k, v in body.items():
+        v = "" if v is None else str(v)
+        if v:
+            cur[k] = v
+        else:
+            cur.pop(k, None)
+    _write_secrets_file(cur)
+    return jsonify({"ok": True, "path": str(SECRETS_PATH), "count": len(cur)})
+
 
 # ── Changelog read / write ────────────────────────────────────────────────────
 @app.route("/api/changelog", methods=["GET"])
@@ -184,6 +257,58 @@ def logo_bar_rebuild():
     import logo_bar_builder
     html = logo_bar_builder.write_logo_bar()
     return jsonify({"ok": True, "html": html, "path": "snippets/logo-bar.html"})
+
+# Per-site include/exclude toggles for the logo bar. Stored as a small JSON
+# file so the value is portable across redeploys and easy to inspect by hand.
+LOGO_BAR_EXCLUDES_PATH = BASE_DIR / "snippets" / "logo-bar.excludes.json"
+
+def _logo_bar_read_excludes():
+    try:
+        raw = LOGO_BAR_EXCLUDES_PATH.read_text(encoding="utf-8")
+        data = json.loads(raw)
+    except (FileNotFoundError, ValueError):
+        return []
+    out = data.get("excluded") if isinstance(data, dict) else None
+    if not isinstance(out, list):
+        return []
+    return [str(x) for x in out if isinstance(x, str)]
+
+@app.route("/api/logo-bar/sites", methods=["GET"])
+def logo_bar_sites():
+    """Return the canonical site roster (push-sites.py SITES + Nexus) plus the
+    current excludes list, so the dashboard can render the toggle UI."""
+    import importlib.util as _ilu, sys as _sys
+    spec = _ilu.spec_from_file_location("_push_sites_dash", str(BASE_DIR / "push-sites.py"))
+    mod  = _ilu.module_from_spec(spec)
+    _sys.modules["_push_sites_dash"] = mod
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    sites = [{"id": s["id"], "name": s["name"], "primary": s.get("primary") or "#9ca3af"}
+             for s in mod.SITES]
+    sites.append({"id": "nexus", "name": "Nexus", "primary": "#4f8ef7"})
+    return jsonify({"ok": True, "sites": sites, "excluded": _logo_bar_read_excludes()})
+
+@app.route("/api/logo-bar/excludes", methods=["GET"])
+def logo_bar_excludes_get():
+    return jsonify({"ok": True, "excluded": _logo_bar_read_excludes()})
+
+@app.route("/api/logo-bar/excludes", methods=["POST"])
+def logo_bar_excludes_set():
+    body = request.get_json(silent=True) or {}
+    raw = body.get("excluded")
+    if not isinstance(raw, list) or not all(isinstance(x, str) for x in raw):
+        return jsonify({"ok": False, "error": "excluded must be a list of strings"}), 400
+    # Deduplicate while preserving order.
+    seen = set()
+    cleaned = []
+    for x in raw:
+        if x and x not in seen:
+            seen.add(x)
+            cleaned.append(x)
+    LOGO_BAR_EXCLUDES_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LOGO_BAR_EXCLUDES_PATH.write_text(
+        json.dumps({"excluded": cleaned}, indent=2), encoding="utf-8"
+    )
+    return jsonify({"ok": True, "excluded": cleaned})
 
 # ── Security headers ─────────────────────────────────────────────────────────
 @app.after_request
@@ -599,6 +724,39 @@ def rebuild_homepages():
 
     return Response(generate(), mimetype="text/plain",
                     headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"})
+
+# ── Per-site article rebuild (re-wrap with current shell + current author) ───
+# Used after Site Settings → Save when the user changes the author name (or
+# bio/title) so every already-published article picks up the new author in the
+# byline, SEO meta, and JSON-LD without a full network sync.
+@app.route("/api/site-rebuild-articles", methods=["POST"])
+def site_rebuild_articles():
+    data    = request.get_json(force=True, silent=True) or {}
+    token   = (data.get("token") or "").strip()
+    site_id = (data.get("site_id") or "").strip()
+    # Token may come from secrets vault if dashboard did not pass one explicitly.
+    if not token:
+        token = (_load_secrets_file().get("ghToken") or "").strip()
+    if not token:
+        return jsonify({"error": "GitHub token required (set it in Settings -> API Keys)"}), 400
+    if not site_id:
+        return jsonify({"error": "site_id required"}), 400
+    cmd = ["python3", str(BASE_DIR / "rebuild-articles.py"), token, "--only", site_id]
+    env = dict(os.environ, GITHUB_TOKEN=token)
+
+    def generate():
+        proc = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            cwd=str(BASE_DIR), text=True, bufsize=1, env=env,
+        )
+        for line in proc.stdout:
+            yield line.rstrip("\n") + "\n"
+        proc.wait()
+        yield f"__EXIT__{proc.returncode}\n"
+
+    return Response(generate(), mimetype="text/plain",
+                    headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"})
+
 
 # ── Fix double nav (patch existing articles) ──────────────────────────────────
 @app.route("/api/fix-double-nav", methods=["POST"])
@@ -1199,6 +1357,8 @@ ALLOWED_SITE_FIELDS = {
     # Posting Schedule (canonical fields the bot reads)
     "posts_per_day_new", "posts_per_week", "historical_mode",
     "historical_per_week", "warming",
+    # Pipeline on/off toggles. new_posts_enabled defaults to true if missing.
+    "new_posts_enabled",
     # UI round-trip fields so the unit dropdown reopens with the user's choice
     "posts_count", "posts_unit", "historical_count", "historical_unit",
     # Content Pipeline
@@ -1217,10 +1377,11 @@ SITE_FIELD_VALIDATORS = {
     "posts_per_week":      lambda v: isinstance(v, int) and 0 <= v <= 50,
     "historical_per_week": lambda v: isinstance(v, int) and 0 <= v <= 70,
     "posts_count":         lambda v: isinstance(v, int) and 0 <= v <= 200,
-    "posts_unit":          lambda v: v in ("day", "week", "month"),
+    "posts_unit":          lambda v: v in ("day", "week", "month", "year"),
     "historical_count":    lambda v: isinstance(v, int) and 0 <= v <= 200,
-    "historical_unit":     lambda v: v in ("day", "week", "month"),
+    "historical_unit":     lambda v: v in ("day", "week", "month", "year"),
     "historical_mode":     lambda v: isinstance(v, bool),
+    "new_posts_enabled":   lambda v: isinstance(v, bool),
     "author_names":        lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
     "topics":              lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
     "categories":          lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
@@ -2537,6 +2698,445 @@ def sponsors_run():
 
     return Response(generate(), mimetype="text/plain",
                     headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"})
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MANUAL POST: hand-written articles, optional schedule, optional auto-expire.
+# Queue persists in manual-post-queue.json. Background thread sweeps every 60s.
+# ─────────────────────────────────────────────────────────────────────────────
+import base64 as _b64
+import random as _mp_rand
+from datetime import datetime as _dt, timezone as _tz
+
+MP_QUEUE_PATH = BASE_DIR / "manual-post-queue.json"
+_MP_LOCK      = threading.Lock()
+
+
+def _mp_load_queue():
+    if not MP_QUEUE_PATH.exists():
+        return []
+    try:
+        data = json.loads(MP_QUEUE_PATH.read_text(encoding="utf-8"))
+        return data if isinstance(data, list) else []
+    except Exception:
+        return []
+
+
+def _mp_save_queue(items):
+    MP_QUEUE_PATH.write_text(json.dumps(items, indent=2), encoding="utf-8")
+
+
+def _mp_token():
+    """Resolve the GitHub token from secrets vault."""
+    s = _load_secrets_file()
+    return (s.get("ghToken") or os.environ.get("GITHUB_TOKEN", "")).strip()
+
+
+def _mp_parse_dt(s):
+    """Accept ISO/datetime-local. Return aware UTC datetime or None."""
+    if not s:
+        return None
+    s = str(s).strip().replace("Z", "+00:00")
+    try:
+        d = _dt.fromisoformat(s)
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=_tz.utc)
+        return d.astimezone(_tz.utc)
+    except Exception:
+        return None
+
+
+def _mp_now():
+    return _dt.now(_tz.utc)
+
+
+def _mp_slugify(s):
+    s = (s or "").lower().strip()
+    out = []
+    for ch in s:
+        if ch.isalnum():
+            out.append(ch)
+        elif ch in " -_":
+            out.append("-")
+    slug = "".join(out)
+    while "--" in slug:
+        slug = slug.replace("--", "-")
+    return slug.strip("-")
+
+
+def _mp_resolve_author(site, mode, pool_value, custom, rnd_seed=None):
+    mode = (mode or "site_default").strip()
+    if mode == "custom":
+        return (custom or "").strip() or _mp_default_author(site)
+    if mode == "pick":
+        return (pool_value or "").strip() or _mp_default_author(site)
+    if mode == "random":
+        names = site.get("author_names") or []
+        if names:
+            r = _mp_rand.Random(rnd_seed) if rnd_seed else _mp_rand
+            return r.choice(names)
+        return _mp_default_author(site)
+    return _mp_default_author(site)
+
+
+def _mp_default_author(site):
+    return (site.get("default_author") or site.get("author") or "Editorial Team").strip() or "Editorial Team"
+
+
+def _mp_get_site(site_id):
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    for s in cfg.get("sites", []) or []:
+        if s.get("id") == site_id:
+            return s
+    return None
+
+
+def _mp_build_sections(payload):
+    """Return list of {heading,content} sections from payload.
+    Supports: explicit `sections` list, OR a `body` string with '## Heading' markers."""
+    secs = payload.get("sections")
+    if isinstance(secs, list) and secs:
+        out = []
+        for s in secs:
+            h = (s.get("heading") or "").strip()
+            c = (s.get("content") or "").strip()
+            if h or c:
+                out.append({"heading": h or "Section", "content": c if c.startswith("<") else f"<p>{c}</p>"})
+        if out:
+            return out
+    body = (payload.get("body") or "").strip()
+    if not body:
+        return []
+    parts, current = [], {"heading": "", "buf": []}
+    for line in body.splitlines():
+        if line.startswith("## "):
+            if current["heading"] or current["buf"]:
+                parts.append(current)
+            current = {"heading": line[3:].strip(), "buf": []}
+        else:
+            current["buf"].append(line)
+    if current["heading"] or current["buf"]:
+        parts.append(current)
+    out = []
+    for p in parts:
+        text = "\n".join(p["buf"]).strip()
+        if not text and not p["heading"]:
+            continue
+        html = text if text.startswith("<") else "".join(
+            f"<p>{para.strip()}</p>" for para in text.split("\n\n") if para.strip()
+        )
+        out.append({"heading": p["heading"] or "Section", "content": html or "<p></p>"})
+    return out
+
+
+def _mp_publish_one(entry, site_id, token):
+    """Build + push a single article to one site. Returns (ok, msg)."""
+    site = _mp_get_site(site_id)
+    if not site:
+        return False, f"site not found: {site_id}"
+    try:
+        import bot as _bot
+    except Exception as e:
+        return False, f"bot import failed: {e}"
+
+    author = _mp_resolve_author(
+        site,
+        entry.get("author_mode"),
+        entry.get("author_pool"),
+        entry.get("custom_author"),
+        rnd_seed=f"{entry.get('id','')}-{site_id}",
+    )
+    article = {
+        "title":            entry.get("title", "").strip(),
+        "slug":             entry.get("slug", "").strip(),
+        "meta_description": entry.get("meta_description", "").strip(),
+        "intro":            (entry.get("intro") or "").strip(),
+        "intro2":           (entry.get("intro2") or "").strip(),
+        "sections":         entry.get("_sections") or _mp_build_sections(entry),
+        "conclusion":       (entry.get("conclusion") or "").strip(),
+        "author":           author,
+        "date_iso":         entry.get("date_iso") or _mp_now().strftime("%Y-%m-%d"),
+        "image":            entry.get("image", "").strip(),
+        "category":         (entry.get("category") or "").strip(),
+    }
+    try:
+        themes = _bot.THEMES if hasattr(_bot, "THEMES") else {}
+        html = _bot.build_article_page(
+            article, site, article["image"], "Manual", themes,
+            global_header_scripts="", global_footer_scripts=""
+        )
+    except Exception as e:
+        return False, f"build failed: {e}"
+
+    repo = site.get("repo", "")
+    if not repo:
+        return False, f"site {site_id} has no repo"
+    slug = article["slug"]
+    path = f"{slug}/index.html"
+    data = html.encode("utf-8")
+    remote_sha, _ = _gh_get_remote_sha(repo, path, token)
+    ok, status, msg = _gh_put_file(repo, path, data, f"Manual post: {article['title']}", remote_sha, token)
+    if not ok and status == 409:
+        remote_sha, _ = _gh_get_remote_sha(repo, path, token)
+        ok, status, msg = _gh_put_file(repo, path, data, f"Manual post: {article['title']}", remote_sha, token)
+    if not ok:
+        return False, f"push {status}: {msg}"
+
+    # Update articles.json
+    try:
+        existing = _bot.load_article_index(repo, token) or []
+    except Exception:
+        existing = []
+    by_slug = {a.get("slug"): a for a in existing}
+    by_slug[slug] = {
+        "title": article["title"], "slug": slug,
+        "date":  article["date_iso"], "date_iso": article["date_iso"],
+        "author": author, "category": article["category"],
+        "image": article["image"], "meta_description": article["meta_description"],
+        "tags": entry.get("tags") or [],
+        "featured": bool(entry.get("featured")),
+    }
+    merged = list(by_slug.values())
+    merged.sort(key=lambda x: x.get("date_iso", x.get("date", "")), reverse=True)
+    try:
+        _bot.github_push(repo, "articles.json", json.dumps(merged, indent=2),
+                         f"Manual post index: {slug}", token)
+    except Exception as e:
+        return True, f"published but index update failed: {e}"
+
+    # Optional newsletter
+    if entry.get("send_newsletter"):
+        try:
+            s = _load_secrets_file()
+            bk = (s.get("brevoKey") or "").strip()
+            if bk and site.get("brevo_list_id"):
+                _bot.send_newsletter(site, article, bk)
+        except Exception:
+            pass
+    return True, "ok"
+
+
+def _mp_expire_one(entry, site_id, token):
+    """Delete <slug>/index.html on GitHub and remove its articles.json entry."""
+    site = _mp_get_site(site_id)
+    if not site:
+        return False, f"site not found: {site_id}"
+    repo = site.get("repo", "")
+    if not repo:
+        return False, "no repo"
+    slug = entry.get("slug", "")
+    if not slug:
+        return False, "no slug"
+    path = f"{slug}/index.html"
+    sha, _ = _gh_get_remote_sha(repo, path, token)
+    if sha:
+        try:
+            r = requests.delete(
+                f"https://api.github.com/repos/{repo}/contents/{path}",
+                headers=_gh_headers(token),
+                json={"message": f"Manual post expired: {slug}", "sha": sha},
+                timeout=20,
+            )
+            if r.status_code not in (200, 204):
+                return False, f"delete {r.status_code}: {r.text[:160]}"
+        except Exception as e:
+            return False, f"delete error: {e}"
+    # Remove from articles.json
+    try:
+        import bot as _bot
+        existing = _bot.load_article_index(repo, token) or []
+        filtered = [a for a in existing if a.get("slug") != slug]
+        if len(filtered) != len(existing):
+            _bot.github_push(repo, "articles.json", json.dumps(filtered, indent=2),
+                             f"Manual post expired index: {slug}", token)
+    except Exception:
+        pass
+    return True, "expired"
+
+
+def _mp_validate(body):
+    req = ["title", "slug", "meta_description"]
+    missing = [k for k in req if not (body.get(k) or "").strip()]
+    if missing:
+        return f"missing required fields: {', '.join(missing)}"
+    site_ids = body.get("site_ids") or []
+    if not isinstance(site_ids, list) or not site_ids:
+        return "site_ids must be a non-empty list"
+    return None
+
+
+@app.route("/api/manual-post", methods=["POST"])
+def manual_post_create():
+    body = request.get_json(force=True, silent=True) or {}
+    err = _mp_validate(body)
+    if err:
+        return jsonify({"error": err}), 400
+    token = _mp_token()
+    if not token:
+        return jsonify({"error": "GitHub token missing. Add ghToken in Settings > API Keys."}), 401
+
+    publish_at = _mp_parse_dt(body.get("publish_at")) or _mp_now()
+    expires_at = None if body.get("lifetime") else _mp_parse_dt(body.get("expires_at"))
+    now        = _mp_now()
+    site_ids   = body.get("site_ids") or []
+    entry_id   = f"mp-{int(time.time()*1000)}-{_mp_rand.randint(100,999)}"
+
+    # Pre-resolve sections once so the queue stores a stable copy.
+    sections = _mp_build_sections(body)
+
+    entry = {
+        "id": entry_id,
+        "title": body.get("title", "").strip(),
+        "slug":  _mp_slugify(body.get("slug") or body.get("title")),
+        "meta_description": body.get("meta_description", "").strip(),
+        "intro":  (body.get("intro") or "").strip(),
+        "intro2": (body.get("intro2") or "").strip(),
+        "conclusion": (body.get("conclusion") or "").strip(),
+        "_sections": sections,
+        "body":   body.get("body") or "",
+        "image":  (body.get("image") or "").strip(),
+        "category": (body.get("category") or "").strip(),
+        "author_mode": body.get("author_mode") or "site_default",
+        "author_pool": body.get("author_pool") or "",
+        "custom_author": body.get("custom_author") or "",
+        "site_ids": list(site_ids),
+        "publish_at": publish_at.isoformat(),
+        "expires_at": expires_at.isoformat() if expires_at else None,
+        "lifetime": bool(body.get("lifetime")),
+        "tags": body.get("tags") or [],
+        "featured": bool(body.get("featured")),
+        "send_newsletter": bool(body.get("send_newsletter")),
+        "date_iso": publish_at.strftime("%Y-%m-%d"),
+        "created_at": now.isoformat(),
+        "status": "queued",
+        "site_results": {},
+    }
+
+    published, scheduled, errors = [], [], []
+    if publish_at <= now:
+        # Publish immediately to every site.
+        for sid in site_ids:
+            ok, msg = _mp_publish_one(entry, sid, token)
+            entry["site_results"][sid] = {"ok": ok, "msg": msg, "at": _mp_now().isoformat()}
+            (published if ok else errors).append(sid)
+        entry["status"] = "published" if published else "failed"
+        entry["published_at"] = _mp_now().isoformat()
+    else:
+        scheduled = list(site_ids)
+        entry["status"] = "scheduled"
+
+    with _MP_LOCK:
+        q = _mp_load_queue()
+        q.append(entry)
+        _mp_save_queue(q)
+
+    return jsonify({
+        "ok": True, "id": entry_id,
+        "published": published, "scheduled": scheduled, "errors": errors,
+        "entry": entry,
+    })
+
+
+@app.route("/api/manual-post/queue", methods=["GET"])
+def manual_post_queue():
+    return jsonify({"items": _mp_load_queue()})
+
+
+@app.route("/api/manual-post/cancel", methods=["POST"])
+def manual_post_cancel():
+    body = request.get_json(force=True, silent=True) or {}
+    eid  = (body.get("id") or "").strip()
+    if not eid:
+        return jsonify({"error": "id required"}), 400
+    with _MP_LOCK:
+        q = _mp_load_queue()
+        found = False
+        for it in q:
+            if it.get("id") == eid:
+                it["status"] = "cancelled"
+                it["cancelled_at"] = _mp_now().isoformat()
+                found = True
+                break
+        if found:
+            _mp_save_queue(q)
+    return jsonify({"ok": True, "found": found})
+
+
+@app.route("/api/manual-post/expire-check", methods=["POST"])
+def manual_post_expire_check():
+    res = _mp_sweep_once(force=True)
+    return jsonify(res)
+
+
+def _mp_sweep_once(force=False):
+    """Sweep queue once: publish scheduled items whose time has come,
+    expire published items past their expiry."""
+    token = _mp_token()
+    if not token:
+        return {"ok": False, "error": "no GitHub token in secrets"}
+    out = {"published": [], "expired": [], "errors": []}
+    now = _mp_now()
+    with _MP_LOCK:
+        q = _mp_load_queue()
+        changed = False
+        for entry in q:
+            status = entry.get("status")
+            # Publish scheduled posts whose time has come
+            if status == "scheduled":
+                pub = _mp_parse_dt(entry.get("publish_at"))
+                if pub and pub <= now:
+                    for sid in entry.get("site_ids", []):
+                        ok, msg = _mp_publish_one(entry, sid, token)
+                        entry.setdefault("site_results", {})[sid] = {
+                            "ok": ok, "msg": msg, "at": _mp_now().isoformat()
+                        }
+                        if ok:
+                            out["published"].append({"id": entry["id"], "site": sid})
+                        else:
+                            out["errors"].append({"id": entry["id"], "site": sid, "msg": msg})
+                    entry["status"] = "published"
+                    entry["published_at"] = _mp_now().isoformat()
+                    changed = True
+            # Expire published posts whose expiry has passed
+            elif status == "published" and not entry.get("lifetime"):
+                exp = _mp_parse_dt(entry.get("expires_at"))
+                if exp and exp <= now:
+                    for sid in entry.get("site_ids", []):
+                        ok, msg = _mp_expire_one(entry, sid, token)
+                        entry.setdefault("expire_results", {})[sid] = {
+                            "ok": ok, "msg": msg, "at": _mp_now().isoformat()
+                        }
+                        if ok:
+                            out["expired"].append({"id": entry["id"], "site": sid})
+                        else:
+                            out["errors"].append({"id": entry["id"], "site": sid, "msg": msg})
+                    entry["status"] = "expired"
+                    entry["expired_at"] = _mp_now().isoformat()
+                    changed = True
+        if changed:
+            _mp_save_queue(q)
+    out["ok"] = True
+    return out
+
+
+def _mp_scheduler_loop():
+    """Daemon thread: sweep every 60 seconds."""
+    while True:
+        try:
+            _mp_sweep_once()
+        except Exception as e:
+            try:
+                print(f"[manual-post scheduler] error: {e}")
+            except Exception:
+                pass
+        time.sleep(60)
+
+
+_MP_THREAD = threading.Thread(target=_mp_scheduler_loop, name="manual-post-scheduler", daemon=True)
+_MP_THREAD.start()
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
