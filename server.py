@@ -2379,6 +2379,143 @@ def meta_audience_sync():
     except Exception as e:
         return jsonify({"ok": False, "error": f"Network error reaching Facebook: {e}"}), 502
 
+# ── Sponsors (config-driven backlink injector) ────────────────────────────────
+DEFAULT_SPONSOR_SEED = [{
+    "id": "dalmend-candles",
+    "name": "Dalmend Candles",
+    "enabled": True,
+    "scope": "global",
+    "exclude_sites": [],
+    "url": "https://dalmend.com/",
+    "eyebrow": "Sponsored - Dalmend Candles",
+    "blurb": "Set the mood the way it deserves. Dalmend Candles are hand-poured, long-burning, with restrained scent profiles designed for high-end spaces.",
+    "cta_text": "Explore the collection at dalmend.com",
+    "accent": "#c9a55c",
+    "fit_keywords": [
+        "candle","fragrance","scent","aroma","ambient","ambiance","ambience","mood lighting",
+        "interior","decor","decorating","living room","bedroom","dining","entryway","hallway",
+        "design tip","luxury","high-end","high end","mansion","villa","estate","penthouse",
+        "home","house","gift","gifting","present","holiday","cozy","atmosphere","relaxation",
+        "self-care","spa","ritual","apartment","loft"
+    ],
+    "utm_campaign": "backlink",
+    "utm_content": "candles",
+}]
+
+
+def _load_cfg_for_sponsors():
+    cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    settings = cfg.setdefault("settings", {})
+    if "sponsors" not in settings or settings["sponsors"] is None:
+        settings["sponsors"] = json.loads(json.dumps(DEFAULT_SPONSOR_SEED))
+        _atomic_write_config(cfg)
+    return cfg
+
+
+def _atomic_write_config(cfg):
+    tmp = CONFIG_PATH.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(cfg, indent=2, ensure_ascii=False), encoding="utf-8")
+    os.replace(tmp, CONFIG_PATH)
+
+
+@app.route("/api/sponsors", methods=["GET"])
+def sponsors_get():
+    cfg = _load_cfg_for_sponsors()
+    site_overrides = {}
+    for s in cfg.get("sites", []) or []:
+        if isinstance(s.get("sponsors"), list):
+            site_overrides[s.get("id","")] = s["sponsors"]
+    return jsonify({
+        "sponsors": (cfg.get("settings", {}) or {}).get("sponsors", []) or [],
+        "site_overrides": site_overrides,
+    })
+
+
+@app.route("/api/sponsors", methods=["POST"])
+def sponsors_save():
+    body = request.get_json(force=True, silent=True) or {}
+    sponsors = body.get("sponsors")
+    if not isinstance(sponsors, list):
+        return jsonify({"error": "sponsors must be a list"}), 400
+    # Light validation: each entry needs an id.
+    seen = set()
+    for sp in sponsors:
+        if not isinstance(sp, dict) or not sp.get("id"):
+            return jsonify({"error": "every sponsor needs an id"}), 400
+        if sp["id"] in seen:
+            return jsonify({"error": f"duplicate sponsor id: {sp['id']}"}), 400
+        seen.add(sp["id"])
+    cfg = _load_cfg_for_sponsors()
+    cfg.setdefault("settings", {})["sponsors"] = sponsors
+    _atomic_write_config(cfg)
+    return jsonify({"ok": True, "count": len(sponsors)})
+
+
+@app.route("/api/sponsors/site", methods=["POST"])
+def sponsors_save_site():
+    body = request.get_json(force=True, silent=True) or {}
+    site_id  = (body.get("site_id") or "").strip()
+    sponsors = body.get("sponsors")
+    if not site_id:
+        return jsonify({"error": "site_id required"}), 400
+    if sponsors is not None and not isinstance(sponsors, list):
+        return jsonify({"error": "sponsors must be a list or null"}), 400
+    cfg = _load_cfg_for_sponsors()
+    found = False
+    for s in cfg.get("sites", []) or []:
+        if s.get("id") == site_id:
+            if sponsors is None or len(sponsors) == 0:
+                s.pop("sponsors", None)
+            else:
+                s["sponsors"] = sponsors
+            found = True
+            break
+    if not found:
+        return jsonify({"error": f"site not found: {site_id}"}), 404
+    _atomic_write_config(cfg)
+    return jsonify({"ok": True})
+
+
+@app.route("/api/sponsors/run", methods=["POST"])
+def sponsors_run():
+    body = request.get_json(force=True, silent=True) or {}
+    token = (request.headers.get("X-GH-Token")
+             or body.get("gh_token")
+             or os.environ.get("GITHUB_TOKEN", "")).strip()
+    if not token:
+        return jsonify({"error": "GitHub token required (X-GH-Token header or gh_token body)"}), 400
+
+    script = BASE_DIR / "inject_sponsors.py"
+    if not script.exists():
+        return jsonify({"error": "inject_sponsors.py not found"}), 404
+
+    cmd = ["python3", str(script), "--gh-token", token]
+    sponsor_id = (body.get("sponsor_id") or "").strip()
+    site_id    = (body.get("site_id") or "").strip()
+    remove     = bool(body.get("remove"))
+    if site_id:
+        cmd += ["--only", site_id]
+    if remove and sponsor_id:
+        cmd += ["--remove", sponsor_id]
+    elif sponsor_id:
+        cmd += ["--sponsor", sponsor_id]
+    if body.get("dry_run"):
+        cmd += ["--dry-run"]
+
+    def generate():
+        proc = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            cwd=str(BASE_DIR), text=True, bufsize=1,
+        )
+        for line in proc.stdout:
+            yield line.rstrip("\n") + "\n"
+        proc.wait()
+        yield f"__EXIT__{proc.returncode}\n"
+
+    return Response(generate(), mimetype="text/plain",
+                    headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"})
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 def open_browser():
     time.sleep(2.5)
