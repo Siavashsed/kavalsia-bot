@@ -86,6 +86,17 @@ textarea{resize:vertical;line-height:1.6}
 .promo-site-chip input{accent-color:var(--accent);width:13px;height:13px;flex-shrink:0}
 .promo-site-chip-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .promo-site-chip-cat{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Sponsors: site chips, helper text, live preview */
+.sp-chip-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sp-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:12px;line-height:1;height:28px;white-space:nowrap;cursor:pointer;user-select:none;background:transparent;border:1px solid var(--border2);color:var(--text2);transition:background .12s,border-color .12s,color .12s}
+.sp-chip:hover{border-color:var(--accent)}
+.sp-chip input{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+.sp-chip.is-on{background:var(--accent);border-color:var(--accent);color:#0b1410;font-weight:600}
+.sp-help{font-size:11px;color:var(--text3);line-height:1.5;margin:4px 2px 0}
+.sp-subhead{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin:14px 0 8px;padding-bottom:6px;border-bottom:1px dashed var(--border2)}
+.sp-preview-wrap{background:#ffffff;border:1px solid var(--border2);border-radius:8px;padding:18px;color:#1a1a1a;font-family:Georgia,'Times New Roman',serif}
+.sp-preview-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:6px}
+.sp-tip{font-size:11px;color:var(--text2);background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:6px;padding:8px 12px;margin-top:8px;line-height:1.5}
 /* ── 2-second hover tooltip ── */
 .nav-btn[data-tip]{position:relative}
 .nav-btn[data-tip]::after{content:attr(data-tip);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:9px 13px;font-size:11px;color:var(--text2);width:210px;white-space:normal;line-height:1.55;z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s ease 2s;box-shadow:0 6px 20px rgba(0,0,0,.5)}
@@ -258,6 +269,25 @@ textarea{resize:vertical;line-height:1.6}
 .panel-iframe.active{display:flex}
 .panel-iframe iframe{flex:1;width:100%;border:none;background:var(--bg)}
 .panel-iframe-bar{display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;font-size:12px;color:var(--text3)}
+
+/* ── Toasts (global save / action confirmations) ── */
+.toast-stack{position:fixed;bottom:24px;right:24px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;max-width:min(420px,calc(100vw - 48px))}
+.toast{pointer-events:auto;display:flex;align-items:flex-start;gap:10px;min-width:240px;max-width:420px;padding:11px 14px 11px 14px;border-radius:10px;font-size:13px;font-weight:600;line-height:1.45;color:#fff;background:var(--bg4);border:1px solid var(--border2);box-shadow:0 8px 24px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.35);transform:translateX(120%);opacity:0;transition:transform .28s cubic-bezier(.2,.8,.25,1),opacity .28s ease;cursor:pointer;backdrop-filter:blur(4px)}
+.toast.show{transform:translateX(0);opacity:1}
+.toast.leaving{transform:translateX(20%);opacity:0}
+.toast-icon{flex-shrink:0;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;margin-top:1px}
+.toast-msg{flex:1;min-width:0;word-wrap:break-word;overflow-wrap:anywhere}
+.toast-x{flex-shrink:0;background:none;border:none;color:inherit;opacity:.6;font-size:15px;line-height:1;padding:0 2px;cursor:pointer;margin-left:4px;border-radius:4px}
+.toast-x:hover{opacity:1;background:rgba(255,255,255,.12)}
+.toast-ok{background:linear-gradient(135deg,rgba(62,207,142,.18),rgba(62,207,142,.10));border-color:rgba(62,207,142,.55);color:#eafff4}
+.toast-ok .toast-icon{background:var(--accent);color:#0b1410}
+.toast-error{background:linear-gradient(135deg,rgba(239,68,68,.20),rgba(239,68,68,.10));border-color:rgba(239,68,68,.55);color:#ffecec}
+.toast-error .toast-icon{background:var(--red);color:#fff}
+.toast-warn{background:linear-gradient(135deg,rgba(245,158,11,.20),rgba(245,158,11,.10));border-color:rgba(245,158,11,.55);color:#fff5e3}
+.toast-warn .toast-icon{background:var(--amber);color:#1a1209}
+.toast-info{background:linear-gradient(135deg,rgba(56,189,248,.18),rgba(56,189,248,.10));border-color:rgba(56,189,248,.50);color:#e6f6ff}
+.toast-info .toast-icon{background:var(--blue);color:#06182a}
+@media (max-width:560px){.toast-stack{left:12px;right:12px;bottom:12px;max-width:none}.toast{min-width:0;width:100%}}
 </style>
 </head>
 <body>
@@ -1034,7 +1064,7 @@ textarea{resize:vertical;line-height:1.6}
     <div class="card" style="margin-bottom:14px">
       <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
         <span>Custom Domain</span>
-        <button class="btn btn-sm" type="button" onclick="ssDomainRefresh()" id="ss-dom-refresh"
+        <button class="btn btn-sm" type="button" onclick="ssDomainRefresh._userInvoked=true;ssDomainRefresh()" id="ss-dom-refresh"
                 style="font-weight:600">Refresh status</button>
       </div>
       <div class="form-group" style="margin-bottom:10px">
@@ -3935,19 +3965,71 @@ function clearHistory() {
 }
 
 // ── Logs ───────────────────────────────────────────────────────────────────
-function showToast(msg, color) {
-  let t = document.getElementById('_toast');
-  if (!t) {
-    t = document.createElement('div');
-    t.id = '_toast';
-    t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:opacity .3s';
-    document.body.appendChild(t);
+// ── Toast (global save / action confirmations) ─────────────────────────────
+// toast('Saved') | toast('Error: foo', 'error') | toast('Heads up', 'warn')
+// kind: 'ok' | 'error' | 'warn' | 'info'. Stacks bottom-right, hover-pause,
+// click to dismiss, X close button. Reuses --accent for ok.
+function toast(message, kind, duration) {
+  kind = kind || 'ok';
+  if (typeof duration !== 'number') duration = (kind === 'error' ? 5000 : 3000);
+  let stack = document.getElementById('_toast_stack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = '_toast_stack';
+    stack.className = 'toast-stack';
+    document.body.appendChild(stack);
   }
-  t.textContent = msg;
-  t.style.background = color || 'var(--accent)';
-  t.style.opacity = '1';
-  clearTimeout(t._tid);
-  t._tid = setTimeout(() => { t.style.opacity = '0'; }, 2500);
+  const el = document.createElement('div');
+  el.className = 'toast toast-' + kind;
+  const icon = kind === 'ok' ? '✓' : (kind === 'error' ? '!' : (kind === 'warn' ? '!' : 'i'));
+  const msg = String(message == null ? '' : message);
+  // Trim very long messages to ~280 chars to keep toast compact
+  const display = msg.length > 280 ? (msg.slice(0, 277) + '...') : msg;
+  el.innerHTML = '<span class="toast-icon" aria-hidden="true"></span>'
+               + '<span class="toast-msg"></span>'
+               + '<button class="toast-x" aria-label="Dismiss" type="button">×</button>';
+  el.querySelector('.toast-icon').textContent = icon;
+  el.querySelector('.toast-msg').textContent = display;
+  stack.appendChild(el);
+  // Slide in next frame
+  requestAnimationFrame(() => { el.classList.add('show'); });
+  let timer = null;
+  const dismiss = () => {
+    if (el._dismissed) return;
+    el._dismissed = true;
+    if (timer) { clearTimeout(timer); timer = null; }
+    el.classList.add('leaving');
+    el.classList.remove('show');
+    setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 320);
+  };
+  const arm = () => { if (timer) clearTimeout(timer); timer = setTimeout(dismiss, duration); };
+  arm();
+  el.addEventListener('mouseenter', () => { if (timer) { clearTimeout(timer); timer = null; } });
+  el.addEventListener('mouseleave', arm);
+  el.addEventListener('click', (ev) => {
+    // Click anywhere on toast (including X) dismisses
+    if (ev.target && ev.target.classList && ev.target.classList.contains('toast-x')) ev.stopPropagation();
+    dismiss();
+  });
+  return el;
+}
+
+// Back-compat: legacy showToast(msg, color) calls map to toast().
+// If color contains red/error hex (#c0392b / #ef4444 / #f44), surface as error.
+function showToast(msg, color) {
+  let kind = 'ok';
+  if (color && /#(c0|ef|f4|f8)/i.test(String(color))) kind = 'error';
+  return toast(msg, kind);
+}
+
+// Short helper to extract a short error message from a fetch response/data blob.
+function _toastErrMsg(prefix, data, status) {
+  let m = '';
+  if (data && (data.error || data.message || data.msg)) m = String(data.error || data.message || data.msg);
+  else if (status) m = 'HTTP ' + status;
+  else m = 'unknown error';
+  if (m.length > 120) m = m.slice(0, 117) + '...';
+  return (prefix ? prefix + ': ' : 'Error: ') + m;
 }
 
 function addLog(type, category, message) {
@@ -4103,6 +4185,7 @@ function tvSaveAll() {
   loadSettings();
   tvLoad();
   addLog('ok', 'info', 'All tokens saved to vault');
+  toast('Saved', 'ok');
 }
 
 function updateKeysBanner() {
@@ -4252,7 +4335,7 @@ async function pmCancelQueued(i) {
   const hdrs = { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
   const body = { message: 'Cancel queued post via hub', content: btoa(JSON.stringify(queue, null, 2)), sha };
   const r = await fetch(`https://api.github.com/repos/${_pmCurrentRepo}/contents/queue.json`, { method: 'PUT', headers: hdrs, body: JSON.stringify(body) });
-  if (r.ok) { await pmLoadQueue(); } else { alert('Failed to update queue: ' + r.status); }
+  if (r.ok) { await pmLoadQueue(); toast('Deleted', 'ok'); } else { alert('Failed to update queue: ' + r.status); toast('Error: Failed to update queue (HTTP ' + r.status + ')', 'error'); }
 }
 
 async function pmDeletePost(i) {
@@ -4287,6 +4370,7 @@ async function pmDeletePost(i) {
     });
   }
   pmRenderPosts();
+  toast('Deleted', 'ok');
 }
 
 async function pmOpenEdit(i) {
@@ -4353,10 +4437,12 @@ async function pmSaveEdit() {
     }
     resEl.style.color = 'var(--green,#4caf50)';
     resEl.textContent = 'Saved and pushed to GitHub.';
+    toast('Pushed to live', 'ok');
     pmRenderPosts();
   } else {
     resEl.style.color = 'var(--red,#f44)';
     resEl.textContent = 'Push failed: ' + r.status + ' - check token and permissions.';
+    toast('Error: Push failed (HTTP ' + r.status + ') - check token', 'error');
   }
 }
 
@@ -4512,6 +4598,7 @@ async function aaSave(i) {
     if (!r.ok) {
       resEl.style.color = 'var(--red,#f44)';
       resEl.textContent = 'Fail: ' + ((data && data.error) || ('HTTP ' + r.status));
+      toast(_toastErrMsg('Error saving author', data, r.status), 'error');
       return;
     }
     art.author = newAuthor;
@@ -4527,12 +4614,18 @@ async function aaSave(i) {
         resEl.style.color = '#f59e0b';
         resEl.textContent = 'Saved (warn)';
         resEl.title = ws.join('\n');
+        toast('Saved (with warnings)', 'warn');
+      } else {
+        toast('Saved', 'ok');
       }
+    } else {
+      toast('Saved', 'ok');
     }
   } catch(e) {
     resEl.style.color = 'var(--red,#f44)';
     resEl.textContent = 'Network error';
     resEl.title = String(e);
+    toast('Error: ' + (e.message || 'network'), 'error');
   }
 }
 
@@ -4796,8 +4889,17 @@ async function ssDomainRefresh() {
       enf.disabled = !canEnforce;
       enf.style.opacity = canEnforce ? 1 : .55;
     }
+    // Only toast when invoked from a user click (button has focus / explicit call)
+    if (ssDomainRefresh._userInvoked) {
+      ssDomainRefresh._userInvoked = false;
+      toast('Domain status refreshed', 'info');
+    }
   } catch (e) {
     if (row) row.innerHTML = ssDomPill('Network error: ' + e.message, 'red');
+    if (ssDomainRefresh._userInvoked) {
+      ssDomainRefresh._userInvoked = false;
+      toast('Error: ' + (e.message || 'network'), 'error');
+    }
   }
 }
 async function ssDomainApply() {
@@ -4833,6 +4935,7 @@ async function ssDomainApply() {
     if (!r.ok) {
       if (msg) { msg.style.color = 'var(--red,#f44)';
         msg.textContent = 'Fail: ' + (data.error || ('HTTP ' + r.status)); }
+      toast(_toastErrMsg('Apply failed', data, r.status), 'error');
       return;
     }
     // Reflect in-memory cfg
@@ -4844,10 +4947,13 @@ async function ssDomainApply() {
     ).join(' / ');
     if (msg) { msg.style.color = data.ok ? 'var(--green,#4caf50)' : 'var(--amber,#ffc107)';
       msg.textContent = (data.ok ? 'Applied. ' : 'Partial. ') + summary; }
+    if (data.ok) toast('Pushed to live: ' + (summary || 'domain applied'), 'ok');
+    else toast('Partial: ' + (summary || 'some steps failed'), 'warn');
     ssDomRenderCurrent(domain);
     setTimeout(ssDomainRefresh, 1200);
   } catch (e) {
     if (msg) { msg.style.color = 'var(--red,#f44)'; msg.textContent = 'Network error: ' + e.message; }
+    toast('Error: ' + (e.message || 'network'), 'error');
   } finally {
     if (btn) { btn.disabled = false; btn.style.opacity = 1; }
   }
@@ -4874,12 +4980,15 @@ async function ssDomainEnforce() {
     if (!r.ok || !data.ok) {
       if (msg) { msg.style.color = 'var(--red,#f44)';
         msg.textContent = 'Fail: ' + (data.error || data.msg || ('HTTP ' + r.status)); }
+      toast(_toastErrMsg('Enforce HTTPS failed', data, r.status), 'error');
       return;
     }
     if (msg) { msg.style.color = 'var(--green,#4caf50)'; msg.textContent = 'HTTPS enforced.'; }
+    toast('Pushed to live: HTTPS enforced', 'ok');
     setTimeout(ssDomainRefresh, 1000);
   } catch (e) {
     if (msg) { msg.style.color = 'var(--red,#f44)'; msg.textContent = 'Network error: ' + e.message; }
+    toast('Error: ' + (e.message || 'network'), 'error');
   }
 }
 
@@ -4939,21 +5048,25 @@ async function ssSaveAll() {
   const statusEl = document.getElementById('ss-save-status');
   if (!site) {
     if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Pick a site first.'; }
+    toast('Error: Pick a site first.', 'error');
     return;
   }
 
   // Validate
   const ppdn = parseInt(ssVal('ss-ppdn'), 10);
   if (!Number.isFinite(ppdn) || ppdn < 1 || ppdn > 5) {
-    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'New posts per day must be 1-5.'; return;
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'New posts per day must be 1-5.';
+    toast('Error: New posts per day must be 1-5.', 'error'); return;
   }
   const ppw = parseInt(ssVal('ss-ppw'), 10);
   if (!Number.isFinite(ppw) || ppw < 0 || ppw > 50) {
-    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Posts per week cap must be 0-50.'; return;
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Posts per week cap must be 0-50.';
+    toast('Error: Posts per week cap must be 0-50.', 'error'); return;
   }
   const hpw = parseInt(ssVal('ss-hpw'), 10);
   if (!Number.isFinite(hpw) || hpw < 0 || hpw > 14) {
-    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Historical per week must be 0-14.'; return;
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Historical per week must be 0-14.';
+    toast('Error: Historical per week must be 0-14.', 'error'); return;
   }
 
   const authorNames = ssVal('ss-author-names')
@@ -5037,16 +5150,19 @@ async function ssSaveAll() {
     if (!r.ok) {
       statusEl.style.color = 'var(--red,#f44)';
       statusEl.textContent = 'Fail: ' + ((data && data.error) || ('HTTP ' + r.status));
+      toast(_toastErrMsg('Error', data, r.status), 'error');
       return;
     }
     // Update in-memory cfg
     Object.assign(site, fields);
     statusEl.style.color = 'var(--green,#4caf50)';
     statusEl.textContent = 'Saved network-config.json';
+    toast('Saved', 'ok');
     setTimeout(() => { if (statusEl.textContent.startsWith('Saved')) statusEl.textContent = ''; }, 3500);
   } catch(e) {
     statusEl.style.color = 'var(--red,#f44)';
     statusEl.textContent = 'Network error: ' + e.message;
+    toast('Error: ' + (e.message || 'network'), 'error');
   }
 }
 
@@ -5117,6 +5233,7 @@ async function pubRefresh() {
       const msg = (data && data.error) || ('HTTP ' + r.status);
       listEl.innerHTML = `<div class="empty"><b>Scan failed</b>${pubEsc(msg)}</div>`;
       statusEl.textContent = '';
+      toast('Error: Refresh failed - ' + String(msg).slice(0,120), 'error');
       return;
     }
     _pubPending = Array.isArray(data.pending) ? data.pending : [];
@@ -5132,9 +5249,11 @@ async function pubRefresh() {
       errsEl.innerHTML = '<b>Scan warnings:</b><br>' + data.errors.map(pubEsc).join('<br>');
     }
     pubRender();
+    toast(`Refreshed: ${_pubPending.length} pending change${_pubPending.length === 1 ? '' : 's'}`, 'ok');
   } catch(e) {
     listEl.innerHTML = `<div class="empty"><b>Scan error</b>${pubEsc(e.message || e)}</div>`;
     statusEl.textContent = '';
+    toast('Error: ' + String(e.message || e).slice(0,120), 'error');
   }
 }
 
@@ -5232,7 +5351,7 @@ async function pubPublishSelected() {
     showPanel('settings'); return;
   }
   const selected = _pubPending.filter(p => _pubChecked[p.id]);
-  if (!selected.length) { alert('Nothing selected.'); return; }
+  if (!selected.length) { alert('Nothing selected.'); toast('Nothing selected', 'warn'); return; }
 
   _pubBusy = true;
   const btn = document.getElementById('pub-publish-btn');
@@ -5266,6 +5385,7 @@ async function pubPublishSelected() {
         }
       });
       btn.textContent = origLabel;
+      toast(_toastErrMsg('Publish failed', data, r.status), 'error');
       return;
     }
     const results = (data && data.results) || [];
@@ -5285,6 +5405,10 @@ async function pubPublishSelected() {
       }
     });
     btn.textContent = `Done: ${okN} / ${selected.length} ok`;
+    const failN = selected.length - okN;
+    if (failN === 0) toast(`Pushed to live: ${okN} of ${selected.length} ok`, 'ok');
+    else if (okN > 0) toast(`Pushed: ${okN} ok, ${failN} failed`, 'warn');
+    else toast(`Error: 0 of ${selected.length} pushed (${failN} failed)`, 'error');
     // After a moment, refresh the list so already-pushed items disappear.
     setTimeout(() => { pubRefresh(); btn.textContent = origLabel; }, 1800);
   } catch(e) {
@@ -5296,6 +5420,7 @@ async function pubPublishSelected() {
       }
     });
     btn.textContent = origLabel;
+    toast('Error: ' + String(e.message || e).slice(0,120), 'error');
   } finally {
     _pubBusy = false;
     btn.disabled = false; refreshBtn.disabled = false;
@@ -5377,9 +5502,11 @@ async function publishConfig(silent = false) {
     mlog('ok', '✓ network-config.json pushed');
     addLog('ok', 'info', `Config published to ${repo}`);
     markConfigClean();
+    if (!silent) toast('Pushed to live: network-config.json', 'ok');
   } catch(e) {
     mlog('err', '✗ ' + e.message);
     addLog('err', 'info', 'Publish failed: ' + e.message);
+    if (!silent) toast('Error: ' + (e.message || 'publish failed').toString().slice(0,120), 'error');
   }
 }
 
@@ -5657,7 +5784,7 @@ function saveSettings() {
     saveConfigToServer();
   }
   addLog('ok', 'info', 'All settings saved');
-  showToast('Settings saved');
+  toast('Saved', 'ok');
 }
 
 function renderSiteToggles() {
@@ -5765,7 +5892,7 @@ function saveSiteToggles() {
   if (gApd) lss('globalArticlesPerDay', gApd.value || '1');
   saveConfigToServer();
   addLog('ok', 'info', 'Site toggles + frequency saved');
-  showToast('Site settings saved');
+  toast('Saved', 'ok');
   renderDashboard();
 }
 
@@ -5862,11 +5989,14 @@ async function _ghlPostTest(body, statusEl, outEl) {
       outEl.style.display = 'block';
       outEl.textContent = JSON.stringify(data, null, 2);
     }
+    if (r.ok && data && data.ok) toast('Test ok (HTTP ' + (data.status_code || r.status) + ')', 'ok');
+    else toast(_toastErrMsg('GHL test failed', data, r.status), 'error');
   } catch(e) {
     if (statusEl) {
       statusEl.style.color = 'var(--red,#f44)';
       statusEl.textContent = 'Network error: ' + e.message;
     }
+    toast('Error: ' + (e.message || 'network'), 'error');
   }
 }
 
@@ -5924,9 +6054,12 @@ async function _metaPost(path, body, statusEl, outEl) {
     let data = null;
     try { data = await r.json(); } catch(_) { data = { error: 'Non-JSON response', status: r.status }; }
     _metaShowOut(outEl, statusEl, !!data.ok, data);
+    if (data && data.ok) toast('Test ok (HTTP ' + (data.status || r.status) + ')', 'ok');
+    else toast(_toastErrMsg('Meta test failed', data, r.status), 'error');
     return data;
   } catch (e) {
     _metaShowOut(outEl, statusEl, false, { error: 'Network error: ' + e.message });
+    toast('Error: ' + (e.message || 'network'), 'error');
     return null;
   }
 }
@@ -6055,11 +6188,14 @@ async function _intgPost(endpoint, body, statusEl, outEl) {
       outEl.style.display = 'block';
       outEl.textContent = JSON.stringify(data, null, 2);
     }
+    if (data && data.ok) toast('Test ok (HTTP ' + (data.status || r.status) + ')', 'ok');
+    else toast(_toastErrMsg('Connection test failed', data, (data && data.status) || r.status), 'error');
   } catch(e) {
     if (statusEl) {
       statusEl.style.color = 'var(--red,#f44)';
       statusEl.textContent = 'Network error: ' + e.message;
     }
+    toast('Error: ' + (e.message || 'network'), 'error');
   }
 }
 
@@ -6986,14 +7122,17 @@ async function cfSetupDomain(zoneId, domain, repo) {
 
     if (errors.length) {
       status.innerHTML = `<span style="color:var(--amber)">Partial: ${created} records created. Errors: ${errors.join(' | ')}</span>`;
+      toast('Partial: ' + created + ' records created, ' + errors.length + ' error(s)', 'warn');
     } else {
       status.innerHTML = `<span style="color:var(--green)">✓ ${created} records created! SSL set to ${sslMode}.</span><br><span style="color:var(--text3);font-size:11px">Next: Go to your GitHub repo → Settings → Pages → Custom domain → enter <strong>${bare}</strong> → Save.</span>`;
       addLog('ok', 'domains', `DNS set up for ${domain} → ${ghTarget}`);
+      toast('Pushed to live: ' + created + ' DNS records for ' + bare, 'ok');
     }
     cfRenderSites();
     await cfRefreshRecords();
   } catch(e) {
     status.innerHTML = `<span style="color:var(--red)">Error: ${e.message}</span>`;
+    toast('Error: ' + (e.message || 'setup failed').slice(0,120), 'error');
   } finally {
     btn.disabled = false;
   }
@@ -7168,6 +7307,8 @@ async function backupRun() {
         if (line.startsWith('__EXIT__')) {
           const code = parseInt(line.replace('__EXIT__',''));
           log.textContent += code === 0 ? '\n✅ Done!' : '\n❌ Backup ended with errors.';
+          if (code === 0) toast('Backup complete', 'ok');
+          else toast('Error: Backup ended with errors', 'error');
         } else {
           log.textContent += line + '\n';
         }
@@ -7177,6 +7318,7 @@ async function backupRun() {
   } catch(e) {
     log.textContent += '\nError: ' + e.message;
     addLog('err', 'backup', 'Backup failed: ' + e.message);
+    toast('Error: ' + (e.message || 'backup failed').slice(0,120), 'error');
   } finally {
     btn.style.display = ''; thinking.classList.remove('show');
     backupLoadStatus();
@@ -9086,6 +9228,73 @@ function sponsorsRender() {
     label: s.id || s.repo || '(unnamed)'
   }));
   list.innerHTML = sponsors.map((sp, idx) => sponsorCardHTML(sp, idx, allSites)).join('');
+  sponsorsBindEvents();
+}
+
+function sponsorsBindEvents() {
+  // Live-update preview on copy/style edits.
+  const liveFields = new Set(['name','url','eyebrow','blurb','cta_text','accent','accent_hex','utm_campaign','utm_content']);
+  document.querySelectorAll('#sponsors-list [data-sp-field]').forEach(el => {
+    if (el.dataset.spBound) return;
+    el.dataset.spBound = '1';
+    const handler = () => {
+      const idx = parseInt(el.getAttribute('data-sp-idx'), 10);
+      const field = el.getAttribute('data-sp-field');
+      const sp = sponsorsState.sponsors[idx];
+      if (!sp) return;
+      if (field === 'enabled') { sp.enabled = el.checked; return; }
+      if (field === 'accent' || field === 'accent_hex') {
+        sp.accent = el.value;
+        // Keep the paired color picker / hex input in visual sync.
+        const partner = document.querySelector(
+          `[data-sp-idx="${idx}"][data-sp-field="${field === 'accent' ? 'accent_hex' : 'accent'}"]`);
+        if (partner && partner.value !== el.value) partner.value = el.value;
+      } else if (liveFields.has(field)) {
+        sp[field] = el.value;
+      }
+      if (liveFields.has(field)) sponsorRefreshPreview(idx);
+    };
+    el.addEventListener('input', handler);
+    el.addEventListener('change', handler);
+  });
+  // Scope radio toggle: switch which group shows.
+  document.querySelectorAll('#sponsors-list input[type="radio"][data-sp-scope]').forEach(r => {
+    if (r.dataset.spBound) return;
+    r.dataset.spBound = '1';
+    r.addEventListener('change', () => {
+      const idx = r.getAttribute('data-sp-idx');
+      const which = r.getAttribute('data-sp-scope');
+      const sel = document.querySelector(`[data-sp-scope-section="selected"][data-sp-idx="${idx}"]`);
+      const glob = document.querySelector(`[data-sp-scope-section="global"][data-sp-idx="${idx}"]`);
+      if (sel) sel.style.display = which === 'selected' ? 'block' : 'none';
+      if (glob) glob.style.display = which === 'global' ? 'block' : 'none';
+    });
+  });
+  // Chip toggle: keep visual state synced to checkbox.
+  document.querySelectorAll('#sponsors-list .sp-chip input[type="checkbox"]').forEach(cb => {
+    if (cb.dataset.spBound) return;
+    cb.dataset.spBound = '1';
+    cb.addEventListener('change', () => {
+      const label = cb.closest('.sp-chip');
+      if (!label) return;
+      const idx = parseInt(cb.getAttribute('data-sp-idx'), 10);
+      const sp = sponsorsState.sponsors[idx];
+      const accent = (sp && sp.accent) || '#c9a55c';
+      if (cb.checked) {
+        label.classList.add('is-on');
+        label.style.cssText = `background:${accent};border-color:${accent};color:#0b1410;font-weight:600`;
+      } else {
+        label.classList.remove('is-on');
+        label.style.cssText = '';
+      }
+    });
+  });
+}
+
+function sponsorPrettyName(id) {
+  // Turn "mochapoo-pets" or "mochapoo_pets" into "Mochapoo Pets".
+  return String(id || '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim()
+    .split(' ').map(w => w ? w[0].toUpperCase() + w.slice(1) : w).join(' ');
 }
 
 function sponsorCardHTML(sp, idx, sites) {
@@ -9098,9 +9307,11 @@ function sponsorCardHTML(sp, idx, sites) {
 
   const chipFor = (siteList, selected) => sites.map(s => {
     const on = selected.includes(s.id) || selected.includes(s.stem);
-    return `<label style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;margin:3px;border:1px solid ${on?accent:'var(--border2)'};border-radius:100px;background:${on?accent+'22':'var(--bg3)'};font-size:11px;cursor:pointer">
-      <input type="checkbox" data-sp-idx="${idx}" data-sp-${siteList}="${sponsorEscape(s.id)}" ${on?'checked':''} style="margin:0">
-      ${sponsorEscape(s.id)}
+    const pretty = sponsorPrettyName(s.id);
+    const styleOn = on ? `background:${accent};border-color:${accent};color:#0b1410;font-weight:600` : '';
+    return `<label class="sp-chip ${on?'is-on':''}" title="${sponsorEscape(s.id)}" style="${styleOn}">
+      <input type="checkbox" data-sp-idx="${idx}" data-sp-${siteList}="${sponsorEscape(s.id)}" ${on?'checked':''}>
+      ${sponsorEscape(pretty)}
     </label>`;
   }).join('');
 
@@ -9125,19 +9336,31 @@ function sponsorCardHTML(sp, idx, sites) {
         <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">URL</label>
         <input type="url" data-sp-field="url" data-sp-idx="${idx}" value="${sponsorEscape(sp.url||'')}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
       </div>
+    </div>
+
+    <div class="sp-subhead">Callout copy <span style="color:var(--text3);font-weight:500;letter-spacing:.5px;text-transform:none">(what readers actually see)</span></div>
+    <div class="grid2" style="gap:12px;margin-bottom:10px">
       <div class="form-group">
-        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Eyebrow (small italic label)</label>
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Eyebrow</label>
         <input type="text" data-sp-field="eyebrow" data-sp-idx="${idx}" value="${sponsorEscape(sp.eyebrow||'')}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+        <div class="sp-help">Small italic uppercase label above the blurb. Example: "Sponsored - Dalmend Candles".</div>
       </div>
       <div class="form-group">
         <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">CTA text</label>
         <input type="text" data-sp-field="cta_text" data-sp-idx="${idx}" value="${sponsorEscape(sp.cta_text||'')}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+        <div class="sp-help">The link text the reader clicks. Example: "Explore the collection at dalmend.com".</div>
       </div>
     </div>
 
     <div class="form-group" style="margin-bottom:10px">
       <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Blurb</label>
       <textarea data-sp-field="blurb" data-sp-idx="${idx}" rows="2" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%;resize:vertical">${sponsorEscape(sp.blurb||'')}</textarea>
+      <div class="sp-help">1 to 3 short sentences describing the sponsor. Appears as the main paragraph of the callout.</div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:14px">
+      <div class="sp-preview-label">Live preview (renders exactly as it appears in articles)</div>
+      <div class="sp-preview-wrap" data-sp-preview="${idx}">${sponsorPreviewHTML(sp)}</div>
     </div>
 
     <div class="grid2" style="gap:12px;margin-bottom:10px">
@@ -9167,13 +9390,13 @@ function sponsorCardHTML(sp, idx, sites) {
           <input type="radio" name="sp-scope-${idx}" data-sp-idx="${idx}" data-sp-scope="selected" ${!scopeIsGlobal?'checked':''}> Selected sites only
         </label>
       </div>
-      <div data-sp-scope-section="selected" data-sp-idx="${idx}" style="display:${scopeIsGlobal?'none':'block'};padding:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px">
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Include sites</div>
-        ${chipFor('include', scopeList)}
+      <div data-sp-scope-section="selected" data-sp-idx="${idx}" style="display:${scopeIsGlobal?'none':'block'};padding:10px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Selected sites only</div>
+        <div class="sp-chip-row">${chipFor('include', scopeList)}</div>
       </div>
-      <div data-sp-scope-section="global" data-sp-idx="${idx}" style="display:${scopeIsGlobal?'block':'none'};padding:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px">
-        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Exclude sites</div>
-        ${chipFor('exclude', excludeList)}
+      <div data-sp-scope-section="global" data-sp-idx="${idx}" style="display:${scopeIsGlobal?'block':'none'};padding:10px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Exclude sites</div>
+        <div class="sp-chip-row">${chipFor('exclude', excludeList)}</div>
       </div>
     </div>
 
@@ -9188,7 +9411,35 @@ function sponsorCardHTML(sp, idx, sites) {
       <button class="btn btn-sm" onclick="sponsorRunOne(${idx}, true)" title="Remove this sponsor's callout from every article it had been injected into">Remove from all articles</button>
       <button class="btn btn-sm" style="margin-left:auto;color:#ef4444" onclick="sponsorDelete(${idx})">Delete sponsor</button>
     </div>
+    <div class="sp-tip" data-sp-tip="${idx}" style="display:none"></div>
   </div>`;
+}
+
+function sponsorPreviewHTML(sp) {
+  // Mirrors callout_html() in inject_sponsors.py so the preview matches the live output.
+  const esc = (s) => String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const accent = sp.accent || '#c9a55c';
+  const eyebrow = sp.eyebrow || ('Sponsored - ' + (sp.name || ''));
+  const blurb = sp.blurb || '';
+  const cta = sp.cta_text || 'Visit sponsor';
+  const base = (sp.url || '#').trim();
+  const utm = `utm_source=preview&utm_medium=article&utm_campaign=${encodeURIComponent(sp.utm_campaign||'backlink')}&utm_content=${encodeURIComponent(sp.utm_content || sp.id || 'sponsor')}&utm_term=preview`;
+  const sep = base.indexOf('?') >= 0 ? '&' : '?';
+  const href = base + sep + utm;
+  return (
+    `<aside style="margin:0;padding:22px 24px;border:1px solid ${accent}59;border-radius:12px;background:linear-gradient(135deg,${accent}14,transparent);font-size:14px;line-height:1.7;color:#1a1a1a">`
+    + `<div style="font-family:Georgia,serif;font-style:italic;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${accent};margin-bottom:6px">${esc(eyebrow)}</div>`
+    + `<div>${esc(blurb)} <a href="${esc(href)}" target="_blank" rel="noopener sponsored" style="color:${accent};font-weight:600;text-decoration:underline">${esc(cta)}</a>.</div>`
+    + `</aside>`
+  );
+}
+
+function sponsorRefreshPreview(idx) {
+  const sp = sponsorsState.sponsors[idx];
+  if (!sp) return;
+  const node = document.querySelector(`[data-sp-preview="${idx}"]`);
+  if (node) node.innerHTML = sponsorPreviewHTML(sp);
 }
 
 function _spReadFromDom() {
@@ -9225,7 +9476,7 @@ function _spReadFromDom() {
   });
 }
 
-async function sponsorsSaveAll() {
+async function sponsorsSaveAll(_silent) {
   _spReadFromDom();
   const top = document.getElementById('sponsors-top-status');
   if (top) top.textContent = 'Saving...';
@@ -9238,19 +9489,30 @@ async function sponsorsSaveAll() {
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || ('HTTP '+r.status));
     if (top) top.textContent = 'Saved ' + j.count + ' sponsor(s).';
+    if (!_silent) toast('Saved', 'ok');
     setTimeout(() => { if (top) top.textContent = ''; }, 2500);
+    return j;
   } catch (e) {
     if (top) top.textContent = 'Save failed: ' + (e.message||e);
+    toast('Error: ' + (e.message || 'save failed').toString().slice(0,120), 'error');
+    throw e;
   }
 }
 
 async function sponsorSaveOne(idx) {
-  await sponsorsSaveAll();
+  try { await sponsorsSaveAll(true); } catch(_) { return; }
   const st = document.querySelector(`[data-sp-status="${idx}"]`);
   if (st) {
     st.textContent = 'Saved.';
     setTimeout(() => { st.textContent = ''; }, 2000);
   }
+  const tip = document.querySelector(`[data-sp-tip="${idx}"]`);
+  if (tip) {
+    tip.innerHTML = 'Saved. To push changes to the network, click "Run injection now" on this sponsor\'s card. To remove the existing callout, click "Remove from all articles".';
+    tip.style.display = 'block';
+  }
+  sponsorRefreshPreview(idx);
+  toast('Saved', 'ok');
 }
 
 function sponsorAdd() {
@@ -9269,6 +9531,7 @@ function sponsorAdd() {
     fit_keywords: [], utm_campaign: 'backlink', utm_content: id,
   });
   sponsorsRender();
+  toast('Sponsor added', 'ok');
 }
 
 async function sponsorDelete(idx) {
@@ -9278,7 +9541,7 @@ async function sponsorDelete(idx) {
   _spReadFromDom();
   sponsorsState.sponsors.splice(idx, 1);
   sponsorsRender();
-  await sponsorsSaveAll();
+  try { await sponsorsSaveAll(true); toast('Deleted', 'ok'); } catch(_) {}
 }
 
 async function sponsorRunOne(idx, remove) {
@@ -9290,20 +9553,28 @@ async function sponsorRunOne(idx, remove) {
   if (st) st.textContent = remove ? 'Removing...' : 'Injecting...';
   try {
     // Save first so the run reflects current edits.
-    await sponsorsSaveAll();
+    try { await sponsorsSaveAll(true); } catch(_) {}
     const r = await fetch('/api/sponsors/run', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-GH-Token': token },
       body: JSON.stringify({ sponsor_id: sp.id, remove: !!remove }),
     });
     const text = await r.text();
+    let summary = 'Run complete.';
     if (st) {
       const m = text.match(/Done\.\s*(\d+)\s*callouts?\s*(\w+)/);
-      st.textContent = m ? `${m[2]} ${m[1]} callout(s).` : 'Run complete.';
+      summary = m ? `${m[2]} ${m[1]} callout(s).` : 'Run complete.';
+      st.textContent = summary;
     }
     addLog && addLog('info', 'info', `Sponsor ${remove?'remove':'inject'} ${sp.id}:\n` + text);
+    if (r.ok) {
+      toast((remove ? 'Removed from all articles: ' : 'Injection complete: ') + summary, 'ok');
+    } else {
+      toast('Error: Run failed (HTTP ' + r.status + ')', 'error');
+    }
   } catch (e) {
     if (st) st.textContent = 'Run failed: ' + (e.message||e);
+    toast('Error: ' + (e.message || 'run failed').toString().slice(0,120), 'error');
   }
 }
 
@@ -9312,7 +9583,7 @@ async function sponsorRunAllActive() {
   if (!token) return;
   const top = document.getElementById('sponsors-top-status');
   if (top) top.textContent = 'Running all active sponsors...';
-  await sponsorsSaveAll();
+  try { await sponsorsSaveAll(true); } catch(_) {}
   try {
     const r = await fetch('/api/sponsors/run', {
       method: 'POST',
@@ -9320,13 +9591,18 @@ async function sponsorRunAllActive() {
       body: JSON.stringify({}),
     });
     const text = await r.text();
+    let summary = 'Run complete.';
     if (top) {
       const m = text.match(/Done\.\s*(\d+)\s*callouts?\s*(\w+)/);
-      top.textContent = m ? `${m[2]} ${m[1]} callout(s) across all active sponsors.` : 'Run complete.';
+      summary = m ? `${m[2]} ${m[1]} callout(s) across all active sponsors.` : 'Run complete.';
+      top.textContent = summary;
     }
     addLog && addLog('info', 'info', 'Sponsors run-all:\n' + text);
+    if (r.ok) toast('Injection complete: ' + summary, 'ok');
+    else toast('Error: Run failed (HTTP ' + r.status + ')', 'error');
   } catch (e) {
     if (top) top.textContent = 'Run failed: ' + (e.message||e);
+    toast('Error: ' + (e.message || 'run failed').toString().slice(0,120), 'error');
   }
 }
 
