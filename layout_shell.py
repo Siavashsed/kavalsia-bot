@@ -127,13 +127,22 @@ def _rewrite_one(value, up):
 
 def rewrite_links(html, depth):
     """Prefix relative href/src in `html` for a page nested `depth` levels below the
-    site root. depth 0 (static pages, same dir as homepage) returns html unchanged."""
-    if depth <= 0:
+    site root. depth 0 = static pages (same dir as homepage) - we still need to
+    rewrite homepage in-page anchors (#section) to `./#section` so they navigate
+    back to the homepage and scroll there instead of pointing at a non-existent id
+    on the current page. depth >= 1 = articles, all relative paths get prefixed."""
+    if depth < 0:
         return html
-    up = "../" * depth
+    up = "./" if depth == 0 else ("../" * depth)
 
     def repl(mtch):
         attr, q, val = mtch.group(1), mtch.group(2), mtch.group(3)
+        v = val.strip()
+        if depth == 0:
+            # Only rewrite homepage anchors; leave same-dir paths (about.html, etc.) untouched.
+            if v.startswith("#"):
+                return f'{attr}={q}{up}{v}{q}'
+            return mtch.group(0)
         return f'{attr}={q}{_rewrite_one(val, up)}{q}'
 
     return re.sub(r'\b(href|src)=(["\'])(.*?)\2', repl, html, flags=re.IGNORECASE)
