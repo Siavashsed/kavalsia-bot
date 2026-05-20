@@ -186,7 +186,7 @@ def wrap_page(stem, *, title, body_html, description="", extra_css="",
 {shell["style"]}{page_css}
 </style>
 </head>
-<body>
+<body data-page-depth="{depth}">
 {header}
 {body_html}
 {footer}
