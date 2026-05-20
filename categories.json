@@ -1,269 +1,2000 @@
 {
   "cryptopulse": {
-    "categories": ["On-Chain Analysis", "Algorithmic Trading", "Market Structure", "DeFi", "Macro & Bitcoin", "Altcoins"],
+    "categories": [
+      "On-Chain Analysis",
+      "Algorithmic Trading",
+      "Market Structure",
+      "DeFi",
+      "Macro & Bitcoin",
+      "Altcoins"
+    ],
     "keywords": {
-      "On-Chain Analysis": ["on-chain", "onchain", "on chain", "glassnode", "whale", "netflow", "mvrv", "sopr", "exchange flow", "wallet", "active addresses", "supply"],
-      "Algorithmic Trading": ["algo", "algorithmic", "bot", "quant", "backtest", "strategy", "signal", "indicator", "automated", "systematic"],
-      "Market Structure": ["liquidity", "order book", "funding rate", "open interest", "futures", "perp", "spot", "market maker", "volatility", "spread"],
-      "DeFi": ["defi", "yield", "liquidity pool", "amm", "staking", "lending", "uniswap", "aave", "tvl", "smart contract", "protocol"],
-      "Macro & Bitcoin": ["bitcoin", "btc", "macro", "halving", "fed", "inflation", "rates", "etf", "institutional", "cycle"],
-      "Altcoins": ["ethereum", "eth", "altcoin", "solana", "sol", "layer 2", "l2", "token", "meme coin", "rotation"]
+      "On-Chain Analysis": [
+        "on-chain",
+        "onchain",
+        "on chain",
+        "glassnode",
+        "whale",
+        "netflow",
+        "mvrv",
+        "sopr",
+        "exchange flow",
+        "wallet",
+        "active addresses",
+        "supply"
+      ],
+      "Algorithmic Trading": [
+        "algo",
+        "algorithmic",
+        "bot",
+        "quant",
+        "backtest",
+        "strategy",
+        "signal",
+        "indicator",
+        "automated",
+        "systematic"
+      ],
+      "Market Structure": [
+        "liquidity",
+        "order book",
+        "funding rate",
+        "open interest",
+        "futures",
+        "perp",
+        "spot",
+        "market maker",
+        "volatility",
+        "spread"
+      ],
+      "DeFi": [
+        "defi",
+        "yield",
+        "liquidity pool",
+        "amm",
+        "staking",
+        "lending",
+        "uniswap",
+        "aave",
+        "tvl",
+        "smart contract",
+        "protocol"
+      ],
+      "Macro & Bitcoin": [
+        "bitcoin",
+        "btc",
+        "macro",
+        "halving",
+        "fed",
+        "inflation",
+        "rates",
+        "etf",
+        "institutional",
+        "cycle"
+      ],
+      "Altcoins": [
+        "ethereum",
+        "eth",
+        "altcoin",
+        "solana",
+        "sol",
+        "layer 2",
+        "l2",
+        "token",
+        "meme coin",
+        "rotation"
+      ]
     },
     "default": "Market Structure"
   },
   "tradingtechreview": {
-    "categories": ["Backtesting", "APIs & Data", "Python", "Execution", "Risk Management", "Open Source"],
+    "categories": [
+      "Backtesting",
+      "APIs & Data",
+      "Python",
+      "Execution",
+      "Risk Management",
+      "Open Source"
+    ],
     "keywords": {
-      "Backtesting": ["backtest", "backtesting", "vectorbt", "backtrader", "zipline", "quantconnect", "historical", "simulate", "strategy test", "paper trade"],
-      "APIs & Data": ["api", "binance", "alpaca", "polygon", "ccxt", "data feed", "websocket", "rate limit", "market data", "ohlcv", "real-time data"],
-      "Python": ["python", "pandas", "numpy", "ta-lib", "scikit", "library", "libraries", "pip", "jupyter", "matplotlib", "scipy"],
-      "Execution": ["execution", "order", "broker", "slippage", "live trading", "latency", "routing", "fill", "oms"],
-      "Risk Management": ["risk", "drawdown", "position sizing", "var", "portfolio", "kelly", "stop loss", "hedge", "volatility"],
-      "Open Source": ["open source", "freqtrade", "hummingbot", "jesse", "github", "bot", "free", "repository"]
+      "Backtesting": [
+        "backtest",
+        "backtesting",
+        "vectorbt",
+        "backtrader",
+        "zipline",
+        "quantconnect",
+        "historical",
+        "simulate",
+        "strategy test",
+        "paper trade"
+      ],
+      "APIs & Data": [
+        "api",
+        "binance",
+        "alpaca",
+        "polygon",
+        "ccxt",
+        "data feed",
+        "websocket",
+        "rate limit",
+        "market data",
+        "ohlcv",
+        "real-time data"
+      ],
+      "Python": [
+        "python",
+        "pandas",
+        "numpy",
+        "ta-lib",
+        "scikit",
+        "library",
+        "libraries",
+        "pip",
+        "jupyter",
+        "matplotlib",
+        "scipy"
+      ],
+      "Execution": [
+        "execution",
+        "order",
+        "broker",
+        "slippage",
+        "live trading",
+        "latency",
+        "routing",
+        "fill",
+        "oms"
+      ],
+      "Risk Management": [
+        "risk",
+        "drawdown",
+        "position sizing",
+        "var",
+        "portfolio",
+        "kelly",
+        "stop loss",
+        "hedge",
+        "volatility"
+      ],
+      "Open Source": [
+        "open source",
+        "freqtrade",
+        "hummingbot",
+        "jesse",
+        "github",
+        "bot",
+        "free",
+        "repository"
+      ]
     },
     "default": "Backtesting"
   },
   "carverge": {
-    "categories": ["Battery Technology", "Powertrain", "Real-World Range", "Cost of Ownership", "Charging & Infrastructure", "Reviews & Comparisons"],
+    "categories": [
+      "Battery Technology",
+      "Powertrain",
+      "Real-World Range",
+      "Cost of Ownership",
+      "Charging & Infrastructure",
+      "Reviews & Comparisons"
+    ],
     "keywords": {
-      "Battery Technology": ["battery", "lithium", "lfp", "nmc", "solid state", "cell", "pack", "degradation", "chemistry", "energy density", "kwh"],
-      "Powertrain": ["motor", "powertrain", "drivetrain", "torque", "horsepower", "awd", "rwd", "gearbox", "inverter", "efficiency"],
-      "Real-World Range": ["range", "epa", "wltp", "highway range", "real world", "winter range", "cold weather", "mileage", "test drive"],
-      "Cost of Ownership": ["cost", "price", "tco", "ownership", "insurance", "depreciation", "maintenance", "tax credit", "incentive", "lease"],
-      "Charging & Infrastructure": ["charging", "charger", "supercharger", "level 2", "dc fast", "nacs", "ccs", "home charging", "network", "kw"],
-      "Reviews & Comparisons": ["review", "vs", "comparison", "tested", "first drive", "long term", "model y", "model 3", "rivian", "ford", "hyundai"]
+      "Battery Technology": [
+        "battery",
+        "lithium",
+        "lfp",
+        "nmc",
+        "solid state",
+        "cell",
+        "pack",
+        "degradation",
+        "chemistry",
+        "energy density",
+        "kwh"
+      ],
+      "Powertrain": [
+        "motor",
+        "powertrain",
+        "drivetrain",
+        "torque",
+        "horsepower",
+        "awd",
+        "rwd",
+        "gearbox",
+        "inverter",
+        "efficiency"
+      ],
+      "Real-World Range": [
+        "range",
+        "epa",
+        "wltp",
+        "highway range",
+        "real world",
+        "winter range",
+        "cold weather",
+        "mileage",
+        "test drive"
+      ],
+      "Cost of Ownership": [
+        "cost",
+        "price",
+        "tco",
+        "ownership",
+        "insurance",
+        "depreciation",
+        "maintenance",
+        "tax credit",
+        "incentive",
+        "lease"
+      ],
+      "Charging & Infrastructure": [
+        "charging",
+        "charger",
+        "supercharger",
+        "level 2",
+        "dc fast",
+        "nacs",
+        "ccs",
+        "home charging",
+        "network",
+        "kw"
+      ],
+      "Reviews & Comparisons": [
+        "review",
+        "vs",
+        "comparison",
+        "tested",
+        "first drive",
+        "long term",
+        "model y",
+        "model 3",
+        "rivian",
+        "ford",
+        "hyundai"
+      ]
     },
     "default": "Reviews & Comparisons"
   },
   "aimarketingpro": {
-    "categories": ["AI Copywriting", "Paid Media", "Automation", "Conversion & CRO", "Attribution & Analytics", "Email Marketing"],
+    "categories": [
+      "AI Copywriting",
+      "Paid Media",
+      "Automation",
+      "Conversion & CRO",
+      "Attribution & Analytics",
+      "Email Marketing"
+    ],
     "keywords": {
-      "AI Copywriting": ["copy", "copywriting", "headline", "ad copy", "chatgpt", "gpt", "claude", "prompt", "writing", "messaging", "creative"],
-      "Paid Media": ["paid", "ads", "meta ads", "google ads", "tiktok ads", "facebook ads", "cpc", "cpm", "roas", "media buying", "campaign"],
-      "Automation": ["automation", "workflow", "zapier", "make.com", "n8n", "agent", "automated", "integration", "trigger", "ai automation"],
-      "Conversion & CRO": ["cro", "conversion", "landing page", "ab test", "a/b test", "split test", "optimization", "checkout", "funnel", "lift"],
-      "Attribution & Analytics": ["attribution", "tracking", "ga4", "pixel", "utm", "analytics", "incrementality", "first party", "hyros", "triple whale"],
-      "Email Marketing": ["email", "newsletter", "klaviyo", "mailchimp", "drip", "sequence", "subject line", "open rate", "deliverability", "flow"]
+      "AI Copywriting": [
+        "copy",
+        "copywriting",
+        "headline",
+        "ad copy",
+        "chatgpt",
+        "gpt",
+        "claude",
+        "prompt",
+        "writing",
+        "messaging",
+        "creative"
+      ],
+      "Paid Media": [
+        "paid",
+        "ads",
+        "meta ads",
+        "google ads",
+        "tiktok ads",
+        "facebook ads",
+        "cpc",
+        "cpm",
+        "roas",
+        "media buying",
+        "campaign"
+      ],
+      "Automation": [
+        "automation",
+        "workflow",
+        "zapier",
+        "make.com",
+        "n8n",
+        "agent",
+        "automated",
+        "integration",
+        "trigger",
+        "ai automation"
+      ],
+      "Conversion & CRO": [
+        "cro",
+        "conversion",
+        "landing page",
+        "ab test",
+        "a/b test",
+        "split test",
+        "optimization",
+        "checkout",
+        "funnel",
+        "lift"
+      ],
+      "Attribution & Analytics": [
+        "attribution",
+        "tracking",
+        "ga4",
+        "pixel",
+        "utm",
+        "analytics",
+        "incrementality",
+        "first party",
+        "hyros",
+        "triple whale"
+      ],
+      "Email Marketing": [
+        "email",
+        "newsletter",
+        "klaviyo",
+        "mailchimp",
+        "drip",
+        "sequence",
+        "subject line",
+        "open rate",
+        "deliverability",
+        "flow"
+      ]
     },
     "default": "Paid Media"
   },
   "dalmend-home": {
-    "categories": ["Statement Rooms", "Materials and Light", "Estate Interiors", "Heritage Restoration", "Art and Collecting", "Bespoke Joinery"],
+    "categories": [
+      "Statement Rooms",
+      "Materials and Light",
+      "Estate Interiors",
+      "Heritage Restoration",
+      "Art and Collecting",
+      "Bespoke Joinery"
+    ],
     "keywords": {
-      "Statement Rooms": ["living room", "drawing room", "statement", "entrance", "foyer", "grand", "salon", "study", "library room", "dining room"],
-      "Materials and Light": ["marble", "stone", "lighting", "chandelier", "sconce", "fabric", "velvet", "silk", "brass", "patina", "material"],
-      "Estate Interiors": ["estate", "mansion", "whole home", "scheme", "cohesive", "manor", "country house", "townhouse", "residence", "floorplan"],
-      "Heritage Restoration": ["heritage", "restoration", "period", "georgian", "victorian", "edwardian", "listed", "historic", "preserve", "original"],
-      "Art and Collecting": ["art", "painting", "sculpture", "collection", "collector", "curation", "antique", "gallery", "object", "provenance"],
-      "Bespoke Joinery": ["joinery", "bespoke", "cabinetry", "millwork", "panelling", "paneling", "carpentry", "custom", "built in", "craftsman"]
+      "Statement Rooms": [
+        "living room",
+        "drawing room",
+        "statement",
+        "entrance",
+        "foyer",
+        "grand",
+        "salon",
+        "study",
+        "library room",
+        "dining room"
+      ],
+      "Materials and Light": [
+        "marble",
+        "stone",
+        "lighting",
+        "chandelier",
+        "sconce",
+        "fabric",
+        "velvet",
+        "silk",
+        "brass",
+        "patina",
+        "material"
+      ],
+      "Estate Interiors": [
+        "estate",
+        "mansion",
+        "whole home",
+        "scheme",
+        "cohesive",
+        "manor",
+        "country house",
+        "townhouse",
+        "residence",
+        "floorplan"
+      ],
+      "Heritage Restoration": [
+        "heritage",
+        "restoration",
+        "period",
+        "georgian",
+        "victorian",
+        "edwardian",
+        "listed",
+        "historic",
+        "preserve",
+        "original"
+      ],
+      "Art and Collecting": [
+        "art",
+        "painting",
+        "sculpture",
+        "collection",
+        "collector",
+        "curation",
+        "antique",
+        "gallery",
+        "object",
+        "provenance"
+      ],
+      "Bespoke Joinery": [
+        "joinery",
+        "bespoke",
+        "cabinetry",
+        "millwork",
+        "panelling",
+        "paneling",
+        "carpentry",
+        "custom",
+        "built in",
+        "craftsman"
+      ]
     },
     "default": "Statement Rooms"
   },
   "datingedge": {
-    "categories": ["First Dates", "Long-Term Love", "Communication", "Psychology", "Self-Worth", "Moving On"],
+    "categories": [
+      "First Dates",
+      "Long-Term Love",
+      "Communication",
+      "Psychology",
+      "Self-Worth",
+      "Moving On"
+    ],
     "keywords": {
-      "First Dates": ["first date", "first message", "online dating", "dating app", "tinder", "hinge", "bumble", "profile", "opener", "early dating"],
-      "Long-Term Love": ["relationship", "partner", "marriage", "engaged", "couple", "long term", "living together", "commitment", "anniversary"],
-      "Communication": ["communicate", "communication", "talk", "conversation", "argument", "fight", "listen", "boundaries", "honesty", "conflict"],
-      "Psychology": ["psychology", "attachment", "anxious", "avoidant", "secure", "trauma", "therapy", "research", "study", "behavior"],
-      "Self-Worth": ["self worth", "self esteem", "confidence", "self love", "validation", "insecurity", "single", "alone", "healing", "growth"],
-      "Moving On": ["breakup", "break up", "ex", "moving on", "divorce", "heartbreak", "rejection", "ghosted", "ghosting", "closure"]
+      "First Dates": [
+        "first date",
+        "first message",
+        "online dating",
+        "dating app",
+        "tinder",
+        "hinge",
+        "bumble",
+        "profile",
+        "opener",
+        "early dating"
+      ],
+      "Long-Term Love": [
+        "relationship",
+        "partner",
+        "marriage",
+        "engaged",
+        "couple",
+        "long term",
+        "living together",
+        "commitment",
+        "anniversary"
+      ],
+      "Communication": [
+        "communicate",
+        "communication",
+        "talk",
+        "conversation",
+        "argument",
+        "fight",
+        "listen",
+        "boundaries",
+        "honesty",
+        "conflict"
+      ],
+      "Psychology": [
+        "psychology",
+        "attachment",
+        "anxious",
+        "avoidant",
+        "secure",
+        "trauma",
+        "therapy",
+        "research",
+        "study",
+        "behavior"
+      ],
+      "Self-Worth": [
+        "self worth",
+        "self esteem",
+        "confidence",
+        "self love",
+        "validation",
+        "insecurity",
+        "single",
+        "alone",
+        "healing",
+        "growth"
+      ],
+      "Moving On": [
+        "breakup",
+        "break up",
+        "ex",
+        "moving on",
+        "divorce",
+        "heartbreak",
+        "rejection",
+        "ghosted",
+        "ghosting",
+        "closure"
+      ]
     },
     "default": "Communication"
   },
   "ecommerceedge": {
-    "categories": ["Shopify & Platforms", "Paid Acquisition", "Conversion Rate", "Retention & Email", "Operations & Fulfillment", "Brand & Product"],
+    "categories": [
+      "Shopify & Platforms",
+      "Paid Acquisition",
+      "Conversion Rate",
+      "Retention & Email",
+      "Operations & Fulfillment",
+      "Brand & Product"
+    ],
     "keywords": {
-      "Shopify & Platforms": ["shopify", "woocommerce", "bigcommerce", "platform", "theme", "app", "shopify plus", "headless", "store setup", "checkout"],
-      "Paid Acquisition": ["meta ads", "facebook ads", "google ads", "tiktok ads", "paid", "cac", "roas", "acquisition", "campaign", "media buying"],
-      "Conversion Rate": ["cro", "conversion rate", "product page", "pdp", "checkout", "cart", "abandoned", "ab test", "optimization", "ux"],
-      "Retention & Email": ["email", "klaviyo", "sms", "retention", "ltv", "lifetime value", "subscription", "loyalty", "flow", "winback"],
-      "Operations & Fulfillment": ["fulfillment", "shipping", "inventory", "3pl", "warehouse", "supplier", "logistics", "returns", "operations", "sku"],
-      "Brand & Product": ["brand", "branding", "product launch", "packaging", "positioning", "dtc", "merchandising", "catalog", "founder", "story"]
+      "Shopify & Platforms": [
+        "shopify",
+        "woocommerce",
+        "bigcommerce",
+        "platform",
+        "theme",
+        "app",
+        "shopify plus",
+        "headless",
+        "store setup",
+        "checkout"
+      ],
+      "Paid Acquisition": [
+        "meta ads",
+        "facebook ads",
+        "google ads",
+        "tiktok ads",
+        "paid",
+        "cac",
+        "roas",
+        "acquisition",
+        "campaign",
+        "media buying"
+      ],
+      "Conversion Rate": [
+        "cro",
+        "conversion rate",
+        "product page",
+        "pdp",
+        "checkout",
+        "cart",
+        "abandoned",
+        "ab test",
+        "optimization",
+        "ux"
+      ],
+      "Retention & Email": [
+        "email",
+        "klaviyo",
+        "sms",
+        "retention",
+        "ltv",
+        "lifetime value",
+        "subscription",
+        "loyalty",
+        "flow",
+        "winback"
+      ],
+      "Operations & Fulfillment": [
+        "fulfillment",
+        "shipping",
+        "inventory",
+        "3pl",
+        "warehouse",
+        "supplier",
+        "logistics",
+        "returns",
+        "operations",
+        "sku"
+      ],
+      "Brand & Product": [
+        "brand",
+        "branding",
+        "product launch",
+        "packaging",
+        "positioning",
+        "dtc",
+        "merchandising",
+        "catalog",
+        "founder",
+        "story"
+      ]
     },
     "default": "Paid Acquisition"
   },
   "fitpulsepro": {
-    "categories": ["Strength Training", "HIIT & Conditioning", "Mobility & Movement", "Nutrition", "Recovery", "Gear & Setup"],
+    "categories": [
+      "Strength Training",
+      "HIIT & Conditioning",
+      "Mobility & Movement",
+      "Nutrition",
+      "Recovery",
+      "Gear & Setup"
+    ],
     "keywords": {
-      "Strength Training": ["strength", "lift", "lifting", "barbell", "squat", "deadlift", "bench", "hypertrophy", "powerlifting", "muscle", "progressive overload"],
-      "HIIT & Conditioning": ["hiit", "conditioning", "cardio", "interval", "metcon", "endurance", "vo2", "running", "rowing", "sprint"],
-      "Mobility & Movement": ["mobility", "stretch", "stretching", "flexibility", "warm up", "warm-up", "movement", "yoga", "foam roll", "posture"],
-      "Nutrition": ["nutrition", "protein", "calorie", "macro", "diet", "meal", "cutting", "bulking", "carb", "fat loss"],
-      "Recovery": ["recovery", "sleep", "rest", "deload", "sauna", "ice bath", "cold plunge", "soreness", "doms", "regeneration"],
-      "Gear & Setup": ["gear", "equipment", "home gym", "rack", "dumbbell", "kettlebell", "shoes", "review", "garage gym", "setup"]
+      "Strength Training": [
+        "strength",
+        "lift",
+        "lifting",
+        "barbell",
+        "squat",
+        "deadlift",
+        "bench",
+        "hypertrophy",
+        "powerlifting",
+        "muscle",
+        "progressive overload"
+      ],
+      "HIIT & Conditioning": [
+        "hiit",
+        "conditioning",
+        "cardio",
+        "interval",
+        "metcon",
+        "endurance",
+        "vo2",
+        "running",
+        "rowing",
+        "sprint"
+      ],
+      "Mobility & Movement": [
+        "mobility",
+        "stretch",
+        "stretching",
+        "flexibility",
+        "warm up",
+        "warm-up",
+        "movement",
+        "yoga",
+        "foam roll",
+        "posture"
+      ],
+      "Nutrition": [
+        "nutrition",
+        "protein",
+        "calorie",
+        "macro",
+        "diet",
+        "meal",
+        "cutting",
+        "bulking",
+        "carb",
+        "fat loss"
+      ],
+      "Recovery": [
+        "recovery",
+        "sleep",
+        "rest",
+        "deload",
+        "sauna",
+        "ice bath",
+        "cold plunge",
+        "soreness",
+        "doms",
+        "regeneration"
+      ],
+      "Gear & Setup": [
+        "gear",
+        "equipment",
+        "home gym",
+        "rack",
+        "dumbbell",
+        "kettlebell",
+        "shoes",
+        "review",
+        "garage gym",
+        "setup"
+      ]
     },
     "default": "Strength Training"
   },
   "insightinsure": {
-    "categories": ["Auto", "Home", "Life", "Health", "Travel"],
+    "categories": [
+      "Auto",
+      "Home",
+      "Life",
+      "Health",
+      "Travel"
+    ],
     "keywords": {
-      "Auto": ["car", "auto", "vehicle", "driver", "road", "crash", "collision", "liability", "deductible", "quote"],
-      "Home": ["home", "house", "renters", "rent", "property", "flood", "fire", "theft", "dwelling", "landlord"],
-      "Life": ["life insurance", "term life", "whole life", "death", "beneficiary", "premium", "life policy", "estate", "term vs whole"],
-      "Health": ["health", "medical", "doctor", "hospital", "copay", "dental", "vision", "hmo", "ppo", "medicare"],
-      "Travel": ["travel", "trip", "abroad", "flight", "cruise", "medical abroad", "emergency", "evacuation", "international"]
+      "Auto": [
+        "car",
+        "auto",
+        "vehicle",
+        "driver",
+        "road",
+        "crash",
+        "collision",
+        "liability",
+        "deductible",
+        "quote"
+      ],
+      "Home": [
+        "home",
+        "house",
+        "renters",
+        "rent",
+        "property",
+        "flood",
+        "fire",
+        "theft",
+        "dwelling",
+        "landlord"
+      ],
+      "Life": [
+        "life insurance",
+        "term life",
+        "whole life",
+        "death",
+        "beneficiary",
+        "premium",
+        "life policy",
+        "estate",
+        "term vs whole"
+      ],
+      "Health": [
+        "health",
+        "medical",
+        "doctor",
+        "hospital",
+        "copay",
+        "dental",
+        "vision",
+        "hmo",
+        "ppo",
+        "medicare"
+      ],
+      "Travel": [
+        "travel",
+        "trip",
+        "abroad",
+        "flight",
+        "cruise",
+        "medical abroad",
+        "emergency",
+        "evacuation",
+        "international"
+      ]
     },
     "default": "Auto"
   },
   "kanona-events": {
-    "categories": ["Private Dinners", "Brand Experiences", "Venue & Atmosphere", "Guest Curation", "Sound & Music", "Creative Direction"],
+    "categories": [
+      "Private Dinners",
+      "Brand Experiences",
+      "Venue & Atmosphere",
+      "Guest Curation",
+      "Sound & Music",
+      "Creative Direction"
+    ],
     "keywords": {
-      "Private Dinners": ["dinner", "private dinner", "supper", "salon", "intimate", "table", "menu", "chef", "tasting", "dining"],
-      "Brand Experiences": ["brand", "launch", "activation", "experiential", "campaign", "client event", "pop up", "pop-up", "product launch", "press event"],
-      "Venue & Atmosphere": ["venue", "space", "location", "atmosphere", "ambience", "setting", "loft", "gallery", "estate", "ballroom"],
-      "Guest Curation": ["guest list", "curation", "invite", "invitation", "rsvp", "audience", "vip", "host", "introduction", "community"],
-      "Sound & Music": ["music", "sound", "dj", "playlist", "live music", "band", "acoustic", "score", "scoring", "sonic"],
-      "Creative Direction": ["creative direction", "concept", "design", "moodboard", "narrative", "production", "styling", "art direction", "vision", "brief"]
+      "Private Dinners": [
+        "dinner",
+        "private dinner",
+        "supper",
+        "salon",
+        "intimate",
+        "table",
+        "menu",
+        "chef",
+        "tasting",
+        "dining"
+      ],
+      "Brand Experiences": [
+        "brand",
+        "launch",
+        "activation",
+        "experiential",
+        "campaign",
+        "client event",
+        "pop up",
+        "pop-up",
+        "product launch",
+        "press event"
+      ],
+      "Venue & Atmosphere": [
+        "venue",
+        "space",
+        "location",
+        "atmosphere",
+        "ambience",
+        "setting",
+        "loft",
+        "gallery",
+        "estate",
+        "ballroom"
+      ],
+      "Guest Curation": [
+        "guest list",
+        "curation",
+        "invite",
+        "invitation",
+        "rsvp",
+        "audience",
+        "vip",
+        "host",
+        "introduction",
+        "community"
+      ],
+      "Sound & Music": [
+        "music",
+        "sound",
+        "dj",
+        "playlist",
+        "live music",
+        "band",
+        "acoustic",
+        "score",
+        "scoring",
+        "sonic"
+      ],
+      "Creative Direction": [
+        "creative direction",
+        "concept",
+        "design",
+        "moodboard",
+        "narrative",
+        "production",
+        "styling",
+        "art direction",
+        "vision",
+        "brief"
+      ]
     },
     "default": "Creative Direction"
   },
   "makeupcraft": {
-    "categories": ["Skincare", "Colour & Palette", "Technique", "Routines", "Product Edit", "Slow Beauty"],
+    "categories": [
+      "Skincare",
+      "Colour & Palette",
+      "Technique",
+      "Routines",
+      "Product Edit",
+      "Slow Beauty"
+    ],
     "keywords": {
-      "Skincare": ["skin", "skincare", "serum", "moisturizer", "moisturiser", "cleanser", "acne", "retinol", "spf", "barrier"],
-      "Colour & Palette": ["colour", "color", "palette", "shade", "tone", "undertone", "lipstick", "blush", "eyeshadow", "foundation"],
-      "Technique": ["technique", "how to", "tutorial", "application", "brush", "blend", "contour", "highlight", "winged", "smokey"],
-      "Routines": ["routine", "morning routine", "evening routine", "daily", "ritual", "everyday", "minimal", "five minute", "no makeup", "everyday look"],
-      "Product Edit": ["review", "edit", "best", "favourite", "favorite", "new launch", "tested", "drugstore", "luxury", "must have"],
-      "Slow Beauty": ["slow beauty", "considered", "philosophy", "ritual", "self care", "wellness", "minimal", "less is more", "intentional", "essence"]
+      "Skincare": [
+        "skin",
+        "skincare",
+        "serum",
+        "moisturizer",
+        "moisturiser",
+        "cleanser",
+        "acne",
+        "retinol",
+        "spf",
+        "barrier"
+      ],
+      "Colour & Palette": [
+        "colour",
+        "color",
+        "palette",
+        "shade",
+        "tone",
+        "undertone",
+        "lipstick",
+        "blush",
+        "eyeshadow",
+        "foundation"
+      ],
+      "Technique": [
+        "technique",
+        "how to",
+        "tutorial",
+        "application",
+        "brush",
+        "blend",
+        "contour",
+        "highlight",
+        "winged",
+        "smokey"
+      ],
+      "Routines": [
+        "routine",
+        "morning routine",
+        "evening routine",
+        "daily",
+        "ritual",
+        "everyday",
+        "minimal",
+        "five minute",
+        "no makeup",
+        "everyday look"
+      ],
+      "Product Edit": [
+        "review",
+        "edit",
+        "best",
+        "favourite",
+        "favorite",
+        "new launch",
+        "tested",
+        "drugstore",
+        "luxury",
+        "must have"
+      ],
+      "Slow Beauty": [
+        "slow beauty",
+        "considered",
+        "philosophy",
+        "ritual",
+        "self care",
+        "wellness",
+        "minimal",
+        "less is more",
+        "intentional",
+        "essence"
+      ]
     },
     "default": "Technique"
   },
   "mashestate-construction": {
-    "categories": ["Planning & Permits", "Budget & Costs", "Contractor Vetting", "Demolition & Rough-In", "Finishes & Sign-Off", "Common Mistakes"],
+    "categories": [
+      "Planning & Permits",
+      "Budget & Costs",
+      "Contractor Vetting",
+      "Demolition & Rough-In",
+      "Finishes & Sign-Off",
+      "Common Mistakes"
+    ],
     "keywords": {
-      "Planning & Permits": ["plan", "permit", "drawing", "blueprint", "architect", "scope", "design phase", "zoning", "code", "approval"],
-      "Budget & Costs": ["budget", "cost", "price per square", "estimate", "bid", "contingency", "allowance", "financing", "loan", "spend"],
-      "Contractor Vetting": ["contractor", "gc", "general contractor", "vetting", "reference", "license", "insurance", "hiring", "subcontractor", "trade"],
-      "Demolition & Rough-In": ["demo", "demolition", "rough in", "rough-in", "framing", "plumbing rough", "electrical rough", "hvac", "inspection", "mobilize"],
-      "Finishes & Sign-Off": ["finish", "finishes", "tile", "cabinet", "countertop", "paint", "trim", "punch list", "walk through", "sign off"],
-      "Common Mistakes": ["mistake", "disaster", "horror", "wrong", "avoid", "regret", "lesson", "warning", "red flag", "scam"]
+      "Planning & Permits": [
+        "plan",
+        "permit",
+        "drawing",
+        "blueprint",
+        "architect",
+        "scope",
+        "design phase",
+        "zoning",
+        "code",
+        "approval"
+      ],
+      "Budget & Costs": [
+        "budget",
+        "cost",
+        "price per square",
+        "estimate",
+        "bid",
+        "contingency",
+        "allowance",
+        "financing",
+        "loan",
+        "spend"
+      ],
+      "Contractor Vetting": [
+        "contractor",
+        "gc",
+        "general contractor",
+        "vetting",
+        "reference",
+        "license",
+        "insurance",
+        "hiring",
+        "subcontractor",
+        "trade"
+      ],
+      "Demolition & Rough-In": [
+        "demo",
+        "demolition",
+        "rough in",
+        "rough-in",
+        "framing",
+        "plumbing rough",
+        "electrical rough",
+        "hvac",
+        "inspection",
+        "mobilize"
+      ],
+      "Finishes & Sign-Off": [
+        "finish",
+        "finishes",
+        "tile",
+        "cabinet",
+        "countertop",
+        "paint",
+        "trim",
+        "punch list",
+        "walk through",
+        "sign off"
+      ],
+      "Common Mistakes": [
+        "mistake",
+        "disaster",
+        "horror",
+        "wrong",
+        "avoid",
+        "regret",
+        "lesson",
+        "warning",
+        "red flag",
+        "scam"
+      ]
     },
     "default": "Planning & Permits"
   },
   "mashestate-home": {
-    "categories": ["First-Time Buyers", "Luxury Homes", "Investment Property", "Market Timing", "Mortgage & Finance", "Neighborhood Analysis", "New Construction", "Selling Strategy"],
+    "categories": [
+      "First-Time Buyers",
+      "Luxury Homes",
+      "Investment Property",
+      "Market Timing",
+      "Mortgage & Finance",
+      "Neighborhood Analysis",
+      "New Construction",
+      "Selling Strategy"
+    ],
     "keywords": {
-      "First-Time Buyers": ["first time", "first-time", "first home", "starter home", "buyer guide", "down payment", "fha", "closing cost", "earnest", "buying process"],
-      "Luxury Homes": ["luxury", "high end", "high-end", "estate", "mansion", "waterfront", "penthouse", "premium", "ultra luxury", "trophy"],
-      "Investment Property": ["investment", "rental", "landlord", "cash flow", "cap rate", "noi", "brrrr", "flip", "passive income", "portfolio"],
-      "Market Timing": ["market", "timing", "forecast", "trend", "bubble", "crash", "cycle", "appreciation", "inventory", "days on market"],
-      "Mortgage & Finance": ["mortgage", "rate", "refinance", "loan", "lender", "preapproval", "pre-approval", "fixed", "arm", "jumbo"],
-      "Neighborhood Analysis": ["neighborhood", "neighbourhood", "school district", "walkability", "comps", "comparable", "zip code", "area", "location", "block"],
-      "New Construction": ["new construction", "new build", "builder", "spec home", "tract", "custom build", "lot", "pre construction", "warranty", "punch list"],
-      "Selling Strategy": ["selling", "seller", "listing", "stage", "staging", "price strategy", "open house", "offer", "negotiation", "closing"]
+      "First-Time Buyers": [
+        "first time",
+        "first-time",
+        "first home",
+        "starter home",
+        "buyer guide",
+        "down payment",
+        "fha",
+        "closing cost",
+        "earnest",
+        "buying process"
+      ],
+      "Luxury Homes": [
+        "luxury",
+        "high end",
+        "high-end",
+        "estate",
+        "mansion",
+        "waterfront",
+        "penthouse",
+        "premium",
+        "ultra luxury",
+        "trophy"
+      ],
+      "Investment Property": [
+        "investment",
+        "rental",
+        "landlord",
+        "cash flow",
+        "cap rate",
+        "noi",
+        "brrrr",
+        "flip",
+        "passive income",
+        "portfolio"
+      ],
+      "Market Timing": [
+        "market",
+        "timing",
+        "forecast",
+        "trend",
+        "bubble",
+        "crash",
+        "cycle",
+        "appreciation",
+        "inventory",
+        "days on market"
+      ],
+      "Mortgage & Finance": [
+        "mortgage",
+        "rate",
+        "refinance",
+        "loan",
+        "lender",
+        "preapproval",
+        "pre-approval",
+        "fixed",
+        "arm",
+        "jumbo"
+      ],
+      "Neighborhood Analysis": [
+        "neighborhood",
+        "neighbourhood",
+        "school district",
+        "walkability",
+        "comps",
+        "comparable",
+        "zip code",
+        "area",
+        "location",
+        "block"
+      ],
+      "New Construction": [
+        "new construction",
+        "new build",
+        "builder",
+        "spec home",
+        "tract",
+        "custom build",
+        "lot",
+        "pre construction",
+        "warranty",
+        "punch list"
+      ],
+      "Selling Strategy": [
+        "selling",
+        "seller",
+        "listing",
+        "stage",
+        "staging",
+        "price strategy",
+        "open house",
+        "offer",
+        "negotiation",
+        "closing"
+      ]
     },
     "default": "First-Time Buyers"
   },
   "mochapoo-pets": {
-    "categories": ["Health & Wellness", "Nutrition & Feeding", "Training & Behavior", "Puppy Care", "Grooming & Coat", "Everyday Wellbeing"],
+    "categories": [
+      "Health & Wellness",
+      "Nutrition & Feeding",
+      "Training & Behavior",
+      "Puppy Care",
+      "Grooming & Coat",
+      "Everyday Wellbeing"
+    ],
     "keywords": {
-      "Health & Wellness": ["health", "vet", "veterinary", "symptom", "illness", "vaccine", "medication", "prevention", "disease", "checkup"],
-      "Nutrition & Feeding": ["food", "diet", "feeding", "nutrition", "kibble", "raw", "treat", "meal", "portion", "ingredient"],
-      "Training & Behavior": ["training", "behavior", "behaviour", "obedience", "command", "leash", "socialization", "anxiety", "aggression", "reactive"],
-      "Puppy Care": ["puppy", "new puppy", "crate", "potty train", "house train", "socialise", "socialize", "teething", "first weeks", "young dog"],
-      "Grooming & Coat": ["grooming", "groom", "coat", "brush", "bath", "shed", "shedding", "nail", "haircut", "fur"],
-      "Everyday Wellbeing": ["walk", "exercise", "play", "enrichment", "toy", "routine", "happiness", "bond", "sleep", "lifestyle"]
+      "Health & Wellness": [
+        "health",
+        "vet",
+        "veterinary",
+        "symptom",
+        "illness",
+        "vaccine",
+        "medication",
+        "prevention",
+        "disease",
+        "checkup"
+      ],
+      "Nutrition & Feeding": [
+        "food",
+        "diet",
+        "feeding",
+        "nutrition",
+        "kibble",
+        "raw",
+        "treat",
+        "meal",
+        "portion",
+        "ingredient"
+      ],
+      "Training & Behavior": [
+        "training",
+        "behavior",
+        "behaviour",
+        "obedience",
+        "command",
+        "leash",
+        "socialization",
+        "anxiety",
+        "aggression",
+        "reactive"
+      ],
+      "Puppy Care": [
+        "puppy",
+        "new puppy",
+        "crate",
+        "potty train",
+        "house train",
+        "socialise",
+        "socialize",
+        "teething",
+        "first weeks",
+        "young dog"
+      ],
+      "Grooming & Coat": [
+        "grooming",
+        "groom",
+        "coat",
+        "brush",
+        "bath",
+        "shed",
+        "shedding",
+        "nail",
+        "haircut",
+        "fur"
+      ],
+      "Everyday Wellbeing": [
+        "walk",
+        "exercise",
+        "play",
+        "enrichment",
+        "toy",
+        "routine",
+        "happiness",
+        "bond",
+        "sleep",
+        "lifestyle"
+      ]
     },
     "default": "Health & Wellness"
   },
   "newborniq": {
-    "categories": ["Newborn Basics", "Feeding", "Sleep", "Health & Safety", "Development & Milestones", "Parenting Support"],
+    "categories": [
+      "Newborn Basics",
+      "Feeding",
+      "Sleep",
+      "Health & Safety",
+      "Development & Milestones",
+      "Parenting Support"
+    ],
     "keywords": {
-      "Newborn Basics": ["newborn", "first weeks", "swaddle", "diaper", "umbilical", "bath", "going home", "hospital", "first day", "first month"],
-      "Feeding": ["feed", "feeding", "breastfeed", "breastfeeding", "formula", "bottle", "latch", "burp", "pump", "lactation"],
-      "Sleep": ["sleep", "nap", "bedtime", "wake window", "sleep regression", "night feed", "swaddle", "drowsy", "schedule", "soothing"],
-      "Health & Safety": ["health", "fever", "pediatrician", "vaccine", "rash", "safety", "car seat", "sids", "checkup", "symptom"],
-      "Development & Milestones": ["milestone", "development", "tummy time", "rolling", "crawl", "sitting", "first word", "motor", "cognitive", "growth"],
-      "Parenting Support": ["parent", "mom", "dad", "postpartum", "mental health", "anxiety", "support", "partner", "self care", "relationship"]
+      "Newborn Basics": [
+        "newborn",
+        "first weeks",
+        "swaddle",
+        "diaper",
+        "umbilical",
+        "bath",
+        "going home",
+        "hospital",
+        "first day",
+        "first month"
+      ],
+      "Feeding": [
+        "feed",
+        "feeding",
+        "breastfeed",
+        "breastfeeding",
+        "formula",
+        "bottle",
+        "latch",
+        "burp",
+        "pump",
+        "lactation"
+      ],
+      "Sleep": [
+        "sleep",
+        "nap",
+        "bedtime",
+        "wake window",
+        "sleep regression",
+        "night feed",
+        "swaddle",
+        "drowsy",
+        "schedule",
+        "soothing"
+      ],
+      "Health & Safety": [
+        "health",
+        "fever",
+        "pediatrician",
+        "vaccine",
+        "rash",
+        "safety",
+        "car seat",
+        "sids",
+        "checkup",
+        "symptom"
+      ],
+      "Development & Milestones": [
+        "milestone",
+        "development",
+        "tummy time",
+        "rolling",
+        "crawl",
+        "sitting",
+        "first word",
+        "motor",
+        "cognitive",
+        "growth"
+      ],
+      "Parenting Support": [
+        "parent",
+        "mom",
+        "dad",
+        "postpartum",
+        "mental health",
+        "anxiety",
+        "support",
+        "partner",
+        "self care",
+        "relationship"
+      ]
     },
     "default": "Newborn Basics"
   },
   "onlinebizpro": {
-    "categories": ["Content Sites", "SaaS Products", "Productized Services", "Acquisitions & Exits", "Team & Hiring", "Pricing Strategy"],
+    "categories": [
+      "Content Sites",
+      "SaaS Products",
+      "Productized Services",
+      "Acquisitions & Exits",
+      "Team & Hiring",
+      "Pricing Strategy"
+    ],
     "keywords": {
-      "Content Sites": ["content site", "blog", "seo", "affiliate", "niche site", "traffic", "google", "publisher", "ad revenue", "display ads"],
-      "SaaS Products": ["saas", "software", "mrr", "arr", "churn", "subscription", "product", "feature", "onboarding", "user"],
-      "Productized Services": ["productized", "agency", "service", "fixed scope", "package", "retainer", "client", "delivery", "ops", "fulfillment"],
-      "Acquisitions & Exits": ["acquisition", "acquire", "exit", "sell", "sold", "buyer", "valuation", "multiple", "due diligence", "deal"],
-      "Team & Hiring": ["hire", "hiring", "team", "remote", "contractor", "employee", "delegate", "sop", "manager", "first hire"],
-      "Pricing Strategy": ["pricing", "price", "tier", "package pricing", "value based", "discount", "upsell", "anchor", "raise prices", "monetization"]
+      "Content Sites": [
+        "content site",
+        "blog",
+        "seo",
+        "affiliate",
+        "niche site",
+        "traffic",
+        "google",
+        "publisher",
+        "ad revenue",
+        "display ads"
+      ],
+      "SaaS Products": [
+        "saas",
+        "software",
+        "mrr",
+        "arr",
+        "churn",
+        "subscription",
+        "product",
+        "feature",
+        "onboarding",
+        "user"
+      ],
+      "Productized Services": [
+        "productized",
+        "agency",
+        "service",
+        "fixed scope",
+        "package",
+        "retainer",
+        "client",
+        "delivery",
+        "ops",
+        "fulfillment"
+      ],
+      "Acquisitions & Exits": [
+        "acquisition",
+        "acquire",
+        "exit",
+        "sell",
+        "sold",
+        "buyer",
+        "valuation",
+        "multiple",
+        "due diligence",
+        "deal"
+      ],
+      "Team & Hiring": [
+        "hire",
+        "hiring",
+        "team",
+        "remote",
+        "contractor",
+        "employee",
+        "delegate",
+        "sop",
+        "manager",
+        "first hire"
+      ],
+      "Pricing Strategy": [
+        "pricing",
+        "price",
+        "tier",
+        "package pricing",
+        "value based",
+        "discount",
+        "upsell",
+        "anchor",
+        "raise prices",
+        "monetization"
+      ]
     },
     "default": "Content Sites"
   },
   "passivewealthguide": {
-    "categories": ["Dividend Stocks", "REITs", "Index Funds", "Rental Income", "Digital Products", "Tax Strategy"],
+    "categories": [
+      "Dividend Stocks",
+      "REITs",
+      "Index Funds",
+      "Rental Income",
+      "Digital Products",
+      "Tax Strategy"
+    ],
     "keywords": {
-      "Dividend Stocks": ["dividend", "yield", "payout", "dividend stock", "dividend growth", "drip", "aristocrat", "income stock", "ex dividend", "qualified"],
-      "REITs": ["reit", "real estate trust", "mreit", "industrial reit", "residential reit", "ffo", "affo", "real estate fund", "data center reit", "healthcare reit"],
-      "Index Funds": ["index fund", "etf", "vti", "voo", "s&p 500", "boglehead", "three fund", "expense ratio", "passive index", "vanguard"],
-      "Rental Income": ["rental", "rental property", "landlord", "tenant", "cash flow", "cap rate", "brrrr", "airbnb", "short term rental", "property manager"],
-      "Digital Products": ["digital product", "ebook", "course", "membership", "saas income", "royalty", "stock photo", "print on demand", "kindle", "udemy"],
-      "Tax Strategy": ["tax", "roth", "401k", "ira", "tax loss", "depreciation", "1031", "capital gains", "tax shelter", "hsa"]
+      "Dividend Stocks": [
+        "dividend",
+        "yield",
+        "payout",
+        "dividend stock",
+        "dividend growth",
+        "drip",
+        "aristocrat",
+        "income stock",
+        "ex dividend",
+        "qualified"
+      ],
+      "REITs": [
+        "reit",
+        "real estate trust",
+        "mreit",
+        "industrial reit",
+        "residential reit",
+        "ffo",
+        "affo",
+        "real estate fund",
+        "data center reit",
+        "healthcare reit"
+      ],
+      "Index Funds": [
+        "index fund",
+        "etf",
+        "vti",
+        "voo",
+        "s&p 500",
+        "boglehead",
+        "three fund",
+        "expense ratio",
+        "passive index",
+        "vanguard"
+      ],
+      "Rental Income": [
+        "rental",
+        "rental property",
+        "landlord",
+        "tenant",
+        "cash flow",
+        "cap rate",
+        "brrrr",
+        "airbnb",
+        "short term rental",
+        "property manager"
+      ],
+      "Digital Products": [
+        "digital product",
+        "ebook",
+        "course",
+        "membership",
+        "saas income",
+        "royalty",
+        "stock photo",
+        "print on demand",
+        "kindle",
+        "udemy"
+      ],
+      "Tax Strategy": [
+        "tax",
+        "roth",
+        "401k",
+        "ira",
+        "tax loss",
+        "depreciation",
+        "1031",
+        "capital gains",
+        "tax shelter",
+        "hsa"
+      ]
     },
     "default": "Index Funds"
   },
   "sightreadingacademy": {
-    "categories": ["Sight-Reading", "Rhythm", "Ear Training", "Music Theory", "Practice Systems", "Piano"],
+    "categories": [
+      "Sight-Reading",
+      "Rhythm",
+      "Ear Training",
+      "Music Theory",
+      "Practice Systems",
+      "Piano"
+    ],
     "keywords": {
-      "Sight-Reading": ["sight read", "sight-read", "sight reading", "score reading", "fluency", "fixation", "eye movement", "saccade", "prima vista", "read at sight"],
-      "Rhythm": ["rhythm", "rhythmic", "meter", "time signature", "subdivision", "polyrhythm", "compound meter", "counting", "tempo", "metronome"],
-      "Ear Training": ["ear training", "ear", "interval", "relative pitch", "absolute pitch", "perfect pitch", "solfege", "dictation", "aural", "listening"],
-      "Music Theory": ["theory", "harmony", "harmonic", "functional harmony", "chord", "cadence", "key signature", "modulation", "voice leading", "counterpoint"],
-      "Practice Systems": ["practice", "protocol", "routine", "daily practice", "deliberate practice", "schedule", "progress", "habit", "discipline", "regimen"],
-      "Piano": ["piano", "keyboard", "hands together", "fingering", "pianist", "repertoire", "etude", "scales", "pedal", "technique"]
+      "Sight-Reading": [
+        "sight read",
+        "sight-read",
+        "sight reading",
+        "score reading",
+        "fluency",
+        "fixation",
+        "eye movement",
+        "saccade",
+        "prima vista",
+        "read at sight"
+      ],
+      "Rhythm": [
+        "rhythm",
+        "rhythmic",
+        "meter",
+        "time signature",
+        "subdivision",
+        "polyrhythm",
+        "compound meter",
+        "counting",
+        "tempo",
+        "metronome"
+      ],
+      "Ear Training": [
+        "ear training",
+        "ear",
+        "interval",
+        "relative pitch",
+        "absolute pitch",
+        "perfect pitch",
+        "solfege",
+        "dictation",
+        "aural",
+        "listening"
+      ],
+      "Music Theory": [
+        "theory",
+        "harmony",
+        "harmonic",
+        "functional harmony",
+        "chord",
+        "cadence",
+        "key signature",
+        "modulation",
+        "voice leading",
+        "counterpoint"
+      ],
+      "Practice Systems": [
+        "practice",
+        "protocol",
+        "routine",
+        "daily practice",
+        "deliberate practice",
+        "schedule",
+        "progress",
+        "habit",
+        "discipline",
+        "regimen"
+      ],
+      "Piano": [
+        "piano",
+        "keyboard",
+        "hands together",
+        "fingering",
+        "pianist",
+        "repertoire",
+        "etude",
+        "scales",
+        "pedal",
+        "technique"
+      ]
     },
     "default": "Sight-Reading"
   },
   "sportiqpro": {
-    "categories": ["Strength", "Endurance", "Recovery", "Nutrition", "Mindset", "Readiness"],
+    "categories": [
+      "Strength",
+      "Endurance",
+      "Recovery",
+      "Nutrition",
+      "Mindset",
+      "Readiness"
+    ],
     "keywords": {
-      "Strength": ["strength", "lift", "lifting", "squat", "deadlift", "bench", "power", "max", "1rm", "barbell"],
-      "Endurance": ["endurance", "cardio", "vo2", "running", "cycling", "rowing", "aerobic", "zone 2", "marathon", "interval"],
-      "Recovery": ["recovery", "sleep", "rest", "deload", "sauna", "ice bath", "cold plunge", "soreness", "regeneration", "massage"],
-      "Nutrition": ["nutrition", "protein", "carb", "macro", "calorie", "fuel", "hydration", "meal", "diet", "supplement"],
-      "Mindset": ["mindset", "mental", "focus", "discipline", "motivation", "confidence", "visualization", "pressure", "psychology", "performance mindset"],
-      "Readiness": ["readiness", "hrv", "resting heart rate", "whoop", "oura", "garmin", "fatigue", "training load", "tsb", "ctl"]
+      "Strength": [
+        "strength",
+        "lift",
+        "lifting",
+        "squat",
+        "deadlift",
+        "bench",
+        "power",
+        "max",
+        "1rm",
+        "barbell"
+      ],
+      "Endurance": [
+        "endurance",
+        "cardio",
+        "vo2",
+        "running",
+        "cycling",
+        "rowing",
+        "aerobic",
+        "zone 2",
+        "marathon",
+        "interval"
+      ],
+      "Recovery": [
+        "recovery",
+        "sleep",
+        "rest",
+        "deload",
+        "sauna",
+        "ice bath",
+        "cold plunge",
+        "soreness",
+        "regeneration",
+        "massage"
+      ],
+      "Nutrition": [
+        "nutrition",
+        "protein",
+        "carb",
+        "macro",
+        "calorie",
+        "fuel",
+        "hydration",
+        "meal",
+        "diet",
+        "supplement"
+      ],
+      "Mindset": [
+        "mindset",
+        "mental",
+        "focus",
+        "discipline",
+        "motivation",
+        "confidence",
+        "visualization",
+        "pressure",
+        "psychology",
+        "performance mindset"
+      ],
+      "Readiness": [
+        "readiness",
+        "hrv",
+        "resting heart rate",
+        "whoop",
+        "oura",
+        "garmin",
+        "fatigue",
+        "training load",
+        "tsb",
+        "ctl"
+      ]
     },
     "default": "Strength"
   },
   "supplementverge": {
-    "categories": ["Strength & Power", "Endurance & Performance", "Sleep & Recovery", "Brain & Focus", "Heart & Longevity", "Immune & General Health"],
+    "categories": [
+      "Strength & Power",
+      "Endurance & Performance",
+      "Sleep & Recovery",
+      "Brain & Focus",
+      "Heart & Longevity",
+      "Immune & General Health"
+    ],
     "keywords": {
-      "Strength & Power": ["strength", "power", "muscle", "creatine", "hmb", "beta alanine", "protein", "leucine", "hypertrophy", "1rm"],
-      "Endurance & Performance": ["endurance", "performance", "vo2", "lactate", "nitrate", "beetroot", "caffeine", "carb", "cardio", "stamina"],
-      "Sleep & Recovery": ["sleep", "recovery", "melatonin", "magnesium", "glycine", "ashwagandha", "cortisol", "stress", "rest", "doms"],
-      "Brain & Focus": ["brain", "focus", "cognitive", "nootropic", "memory", "alpha gpc", "lions mane", "l theanine", "concentration", "mental"],
-      "Heart & Longevity": ["heart", "cardiovascular", "longevity", "omega 3", "fish oil", "coq10", "berberine", "blood pressure", "cholesterol", "anti aging"],
-      "Immune & General Health": ["immune", "vitamin c", "vitamin d", "zinc", "elderberry", "probiotic", "gut", "bone health", "multivitamin", "general health"]
+      "Strength & Power": [
+        "strength",
+        "power",
+        "muscle",
+        "creatine",
+        "hmb",
+        "beta alanine",
+        "protein",
+        "leucine",
+        "hypertrophy",
+        "1rm"
+      ],
+      "Endurance & Performance": [
+        "endurance",
+        "performance",
+        "vo2",
+        "lactate",
+        "nitrate",
+        "beetroot",
+        "caffeine",
+        "carb",
+        "cardio",
+        "stamina"
+      ],
+      "Sleep & Recovery": [
+        "sleep",
+        "recovery",
+        "melatonin",
+        "magnesium",
+        "glycine",
+        "ashwagandha",
+        "cortisol",
+        "stress",
+        "rest",
+        "doms"
+      ],
+      "Brain & Focus": [
+        "brain",
+        "focus",
+        "cognitive",
+        "nootropic",
+        "memory",
+        "alpha gpc",
+        "lions mane",
+        "l theanine",
+        "concentration",
+        "mental"
+      ],
+      "Heart & Longevity": [
+        "heart",
+        "cardiovascular",
+        "longevity",
+        "omega 3",
+        "fish oil",
+        "coq10",
+        "berberine",
+        "blood pressure",
+        "cholesterol",
+        "anti aging"
+      ],
+      "Immune & General Health": [
+        "immune",
+        "vitamin c",
+        "vitamin d",
+        "zinc",
+        "elderberry",
+        "probiotic",
+        "gut",
+        "bone health",
+        "multivitamin",
+        "general health"
+      ]
     },
     "default": "Strength & Power"
   },
   "topproduct": {
-    "categories": ["Tech & Gadgets", "Home & Living", "Beauty & Skincare", "Fitness & Wellness", "Kitchen & Gear", "TikTok & Viral Finds"],
+    "categories": [
+      "Tech & Gadgets",
+      "Home & Living",
+      "Beauty & Skincare",
+      "Fitness & Wellness",
+      "Kitchen & Gear",
+      "TikTok & Viral Finds"
+    ],
     "keywords": {
-      "Tech & Gadgets": ["tech", "gadget", "phone", "laptop", "headphone", "earbud", "smartwatch", "wearable", "charger", "electronics"],
-      "Home & Living": ["home", "living", "furniture", "decor", "organizer", "vacuum", "cleaning", "bedding", "lamp", "storage"],
-      "Beauty & Skincare": ["beauty", "skincare", "serum", "moisturizer", "lipstick", "mascara", "foundation", "cleanser", "spf", "makeup"],
-      "Fitness & Wellness": ["fitness", "wellness", "yoga mat", "resistance band", "dumbbell", "tracker", "recovery", "massage gun", "workout gear", "supplement"],
-      "Kitchen & Gear": ["kitchen", "cookware", "pan", "knife", "blender", "air fryer", "coffee", "espresso", "appliance", "utensil"],
-      "TikTok & Viral Finds": ["tiktok", "viral", "trending", "amazon find", "hyped", "going viral", "tiktok made me", "as seen on", "buzz", "internet famous"]
+      "Tech & Gadgets": [
+        "tech",
+        "gadget",
+        "phone",
+        "laptop",
+        "headphone",
+        "earbud",
+        "smartwatch",
+        "wearable",
+        "charger",
+        "electronics"
+      ],
+      "Home & Living": [
+        "home",
+        "living",
+        "furniture",
+        "decor",
+        "organizer",
+        "vacuum",
+        "cleaning",
+        "bedding",
+        "lamp",
+        "storage"
+      ],
+      "Beauty & Skincare": [
+        "beauty",
+        "skincare",
+        "serum",
+        "moisturizer",
+        "lipstick",
+        "mascara",
+        "foundation",
+        "cleanser",
+        "spf",
+        "makeup"
+      ],
+      "Fitness & Wellness": [
+        "fitness",
+        "wellness",
+        "yoga mat",
+        "resistance band",
+        "dumbbell",
+        "tracker",
+        "recovery",
+        "massage gun",
+        "workout gear",
+        "supplement"
+      ],
+      "Kitchen & Gear": [
+        "kitchen",
+        "cookware",
+        "pan",
+        "knife",
+        "blender",
+        "air fryer",
+        "coffee",
+        "espresso",
+        "appliance",
+        "utensil"
+      ],
+      "TikTok & Viral Finds": [
+        "tiktok",
+        "viral",
+        "trending",
+        "amazon find",
+        "hyped",
+        "going viral",
+        "tiktok made me",
+        "as seen on",
+        "buzz",
+        "internet famous"
+      ]
     },
     "default": "Tech & Gadgets"
   },
   "travelverge": {
-    "categories": ["Destination Deep-Dives", "Flight & Booking Strategy", "Packing Systems", "Budget Travel", "Trip Planning", "Solo & Safe Travel", "Europe", "Asia"],
+    "categories": [
+      "Destination Deep-Dives",
+      "Flight & Booking Strategy",
+      "Packing Systems",
+      "Budget Travel",
+      "Trip Planning",
+      "Solo & Safe Travel",
+      "Europe",
+      "Asia"
+    ],
     "keywords": {
-      "Destination Deep-Dives": ["deep dive", "guide to", "city guide", "destination", "neighborhood", "things to do", "best of", "where to stay", "itinerary", "local"],
-      "Flight & Booking Strategy": ["flight", "airfare", "booking", "miles", "points", "award", "cheap flight", "google flights", "skyscanner", "airline"],
-      "Packing Systems": ["packing", "carry on", "carry-on", "luggage", "suitcase", "backpack", "travel gear", "pack list", "essentials", "minimalist"],
-      "Budget Travel": ["budget", "cheap", "affordable", "save money", "backpacker", "hostel", "free", "low cost", "shoestring", "deal"],
-      "Trip Planning": ["plan a trip", "itinerary", "trip planning", "vacation planning", "visa", "insurance", "checklist", "preparation", "research", "schedule"],
-      "Solo & Safe Travel": ["solo", "solo travel", "safe", "safety", "solo female", "alone", "first time abroad", "scam", "stay safe", "solo trip"],
-      "Europe": ["europe", "paris", "rome", "london", "barcelona", "amsterdam", "berlin", "lisbon", "prague", "italy", "spain", "france"],
-      "Asia": ["asia", "japan", "thailand", "vietnam", "bali", "indonesia", "tokyo", "bangkok", "korea", "seoul", "singapore", "philippines"]
+      "Destination Deep-Dives": [
+        "deep dive",
+        "guide to",
+        "city guide",
+        "destination",
+        "neighborhood",
+        "things to do",
+        "best of",
+        "where to stay",
+        "itinerary",
+        "local"
+      ],
+      "Flight & Booking Strategy": [
+        "flight",
+        "airfare",
+        "booking",
+        "miles",
+        "points",
+        "award",
+        "cheap flight",
+        "google flights",
+        "skyscanner",
+        "airline"
+      ],
+      "Packing Systems": [
+        "packing",
+        "carry on",
+        "carry-on",
+        "luggage",
+        "suitcase",
+        "backpack",
+        "travel gear",
+        "pack list",
+        "essentials",
+        "minimalist"
+      ],
+      "Budget Travel": [
+        "budget",
+        "cheap",
+        "affordable",
+        "save money",
+        "backpacker",
+        "hostel",
+        "free",
+        "low cost",
+        "shoestring",
+        "deal"
+      ],
+      "Trip Planning": [
+        "plan a trip",
+        "itinerary",
+        "trip planning",
+        "vacation planning",
+        "visa",
+        "insurance",
+        "checklist",
+        "preparation",
+        "research",
+        "schedule"
+      ],
+      "Solo & Safe Travel": [
+        "solo",
+        "solo travel",
+        "safe",
+        "safety",
+        "solo female",
+        "alone",
+        "first time abroad",
+        "scam",
+        "stay safe",
+        "solo trip"
+      ],
+      "Europe": [
+        "europe",
+        "paris",
+        "rome",
+        "london",
+        "barcelona",
+        "amsterdam",
+        "berlin",
+        "lisbon",
+        "prague",
+        "italy",
+        "spain",
+        "france"
+      ],
+      "Asia": [
+        "asia",
+        "japan",
+        "thailand",
+        "vietnam",
+        "bali",
+        "indonesia",
+        "tokyo",
+        "bangkok",
+        "korea",
+        "seoul",
+        "singapore",
+        "philippines"
+      ]
     },
     "default": "Trip Planning"
+  },
+  "mindframe": {
+    "categories": [
+      "Memory",
+      "Sleep",
+      "Attention",
+      "Emotion",
+      "Habits",
+      "Cognition",
+      "Self-Tests"
+    ],
+    "keywords": {
+      "Memory": [
+        "memory",
+        "recall",
+        "forgetting",
+        "retention",
+        "consolidation",
+        "hippocampus",
+        "encoding",
+        "retrieval"
+      ],
+      "Sleep": [
+        "sleep",
+        "rem",
+        "circadian",
+        "insomnia",
+        "melatonin",
+        "dreaming",
+        "wake",
+        "nap"
+      ],
+      "Attention": [
+        "attention",
+        "focus",
+        "distraction",
+        "adhd",
+        "flow",
+        "concentration",
+        "multitask"
+      ],
+      "Emotion": [
+        "emotion",
+        "feeling",
+        "amygdala",
+        "anxiety",
+        "stress",
+        "mood",
+        "depression",
+        "regulation"
+      ],
+      "Habits": [
+        "habit",
+        "behavior",
+        "routine",
+        "willpower",
+        "reward",
+        "craving",
+        "cue",
+        "automaticity"
+      ],
+      "Cognition": [
+        "cognition",
+        "reasoning",
+        "bias",
+        "decision",
+        "metacognition",
+        "thinking",
+        "perception",
+        "intuition"
+      ],
+      "Self-Tests": [
+        "quiz",
+        "test",
+        "self-assessment",
+        "personality",
+        "attachment",
+        "reaction time",
+        "digit span"
+      ]
+    },
+    "default": "Cognition"
   }
 }
