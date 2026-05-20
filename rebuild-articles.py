@@ -19,6 +19,7 @@ This is the article half of sync.py. Run it whenever a homepage changes.
 
 import os, sys, json, base64, re, time, argparse
 import requests
+from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
