@@ -485,6 +485,9 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-backlinks" onclick="showPanel('backlinks')"
         data-tip="Track all backlinks posted to Reddit, LinkedIn, Quora, and other platforms across the entire network. Per-site backlinks also appear inside Site Settings.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> Backlinks</button>
+      <button class="nav-btn" id="nav-sponsors" onclick="showPanel('sponsors');sponsorsInit()"
+        data-tip="Manage sponsor backlinks. Pre-seeded with Dalmend Candles. Add, enable/disable, scope, and re-run injection across your network.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span> Sponsors</button>
       <button class="nav-btn" id="nav-promo" onclick="showPanel('promo');promoInit()"
         data-tip="Sell sponsored posts across your network. Choose sites, write a brief, generate a featured kit with logos + article links.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span> Promotions</button>
@@ -2502,6 +2505,22 @@ textarea{resize:vertical;line-height:1.6}
       <div style="font-size:12px;color:var(--text2)" id="promo-summary"></div>
     </div>
   </div>
+</div>
+
+<!-- ════════ SPONSORS ════════ -->
+<div class="panel" id="panel-sponsors">
+  <div class="pg-title">Sponsors</div>
+  <div class="pg-sub">Register paid sponsors. Each active sponsor injects a tasteful inline callout into any published article that matches its fit keywords. Scope to all sites or a specific subset. Idempotent per sponsor.</div>
+
+  <div class="card" style="margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+    <button class="btn btn-accent btn-sm" onclick="sponsorAdd()">+ Add sponsor</button>
+    <button class="btn btn-sm" onclick="sponsorsSaveAll()">Save all</button>
+    <button class="btn btn-sm btn-green" onclick="sponsorRunAllActive()">Run all active</button>
+    <button class="btn btn-sm" onclick="sponsorsInit()">Refresh</button>
+    <span id="sponsors-top-status" style="font-size:12px;color:var(--text3);margin-left:auto"></span>
+  </div>
+
+  <div id="sponsors-list"><div style="padding:24px;color:var(--text3);text-align:center">Loading sponsors...</div></div>
 </div>
 
 <!-- ════════ COMMENTS ════════ -->
@@ -9030,12 +9049,318 @@ async function loadDailyReport(days) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// SPONSORS PANEL
+// ═══════════════════════════════════════════════════════════
+let sponsorsState = { sponsors: [], site_overrides: {} };
+
+async function sponsorsInit() {
+  const list = document.getElementById('sponsors-list');
+  if (!list) return;
+  list.innerHTML = '<div style="padding:24px;color:var(--text3);text-align:center">Loading sponsors...</div>';
+  try {
+    const r = await fetch('/api/sponsors');
+    const j = await r.json();
+    sponsorsState = j || { sponsors: [], site_overrides: {} };
+    sponsorsRender();
+  } catch (e) {
+    list.innerHTML = '<div style="padding:24px;color:#ef4444;text-align:center">Failed to load sponsors: ' + (e.message||e) + '</div>';
+  }
+}
+
+function sponsorEscape(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function sponsorsRender() {
+  const list = document.getElementById('sponsors-list');
+  if (!list) return;
+  const sponsors = sponsorsState.sponsors || [];
+  if (sponsors.length === 0) {
+    list.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text3)">No sponsors yet. Click "+ Add sponsor" to create one.</div>';
+    return;
+  }
+  const allSites = ((cfg && cfg.sites) || []).map(s => ({
+    id: s.id || '',
+    stem: (s.repo || '').split('/').pop() || s.id || '',
+    label: s.id || s.repo || '(unnamed)'
+  }));
+  list.innerHTML = sponsors.map((sp, idx) => sponsorCardHTML(sp, idx, allSites)).join('');
+}
+
+function sponsorCardHTML(sp, idx, sites) {
+  const scopeIsGlobal = !Array.isArray(sp.scope);
+  const scopeList = Array.isArray(sp.scope) ? sp.scope : [];
+  const excludeList = Array.isArray(sp.exclude_sites) ? sp.exclude_sites : [];
+  const fitKw = Array.isArray(sp.fit_keywords) ? sp.fit_keywords.join('\n') : (sp.fit_keywords || '');
+  const accent = sp.accent || '#c9a55c';
+  const enabled = sp.enabled !== false;
+
+  const chipFor = (siteList, selected) => sites.map(s => {
+    const on = selected.includes(s.id) || selected.includes(s.stem);
+    return `<label style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;margin:3px;border:1px solid ${on?accent:'var(--border2)'};border-radius:100px;background:${on?accent+'22':'var(--bg3)'};font-size:11px;cursor:pointer">
+      <input type="checkbox" data-sp-idx="${idx}" data-sp-${siteList}="${sponsorEscape(s.id)}" ${on?'checked':''} style="margin:0">
+      ${sponsorEscape(s.id)}
+    </label>`;
+  }).join('');
+
+  return `
+  <div class="card sponsor-card" data-sp-idx="${idx}" style="margin-bottom:14px;border-left:3px solid ${accent}">
+    <div class="section-head" style="display:flex;align-items:center;gap:12px;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px">
+        <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;cursor:pointer">
+          <input type="checkbox" data-sp-field="enabled" data-sp-idx="${idx}" ${enabled?'checked':''}> Enabled
+        </label>
+        <span style="color:var(--text3);font-size:11px;font-family:ui-monospace,monospace">id: ${sponsorEscape(sp.id||'')}</span>
+      </div>
+      <span class="sp-status" data-sp-status="${idx}" style="font-size:11px;color:var(--text3)"></span>
+    </div>
+
+    <div class="grid2" style="gap:12px;margin-bottom:10px">
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Name</label>
+        <input type="text" data-sp-field="name" data-sp-idx="${idx}" value="${sponsorEscape(sp.name||'')}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">URL</label>
+        <input type="url" data-sp-field="url" data-sp-idx="${idx}" value="${sponsorEscape(sp.url||'')}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Eyebrow (small italic label)</label>
+        <input type="text" data-sp-field="eyebrow" data-sp-idx="${idx}" value="${sponsorEscape(sp.eyebrow||'')}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">CTA text</label>
+        <input type="text" data-sp-field="cta_text" data-sp-idx="${idx}" value="${sponsorEscape(sp.cta_text||'')}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%">
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:10px">
+      <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Blurb</label>
+      <textarea data-sp-field="blurb" data-sp-idx="${idx}" rows="2" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;width:100%;resize:vertical">${sponsorEscape(sp.blurb||'')}</textarea>
+    </div>
+
+    <div class="grid2" style="gap:12px;margin-bottom:10px">
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Accent color</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="color" data-sp-field="accent" data-sp-idx="${idx}" value="${sponsorEscape(accent)}" style="width:44px;height:36px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:2px;cursor:pointer">
+          <input type="text" data-sp-field="accent_hex" data-sp-idx="${idx}" value="${sponsorEscape(accent)}" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;flex:1;font-family:ui-monospace,monospace">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">UTM campaign / content</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" data-sp-field="utm_campaign" data-sp-idx="${idx}" value="${sponsorEscape(sp.utm_campaign||'backlink')}" placeholder="utm_campaign" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;flex:1">
+          <input type="text" data-sp-field="utm_content" data-sp-idx="${idx}" value="${sponsorEscape(sp.utm_content||'')}" placeholder="utm_content" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;flex:1">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:10px">
+      <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Scope</label>
+      <div style="display:flex;gap:14px;margin-bottom:8px;font-size:12px">
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="sp-scope-${idx}" data-sp-idx="${idx}" data-sp-scope="global" ${scopeIsGlobal?'checked':''}> Global (all sites)
+        </label>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="radio" name="sp-scope-${idx}" data-sp-idx="${idx}" data-sp-scope="selected" ${!scopeIsGlobal?'checked':''}> Selected sites only
+        </label>
+      </div>
+      <div data-sp-scope-section="selected" data-sp-idx="${idx}" style="display:${scopeIsGlobal?'none':'block'};padding:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Include sites</div>
+        ${chipFor('include', scopeList)}
+      </div>
+      <div data-sp-scope-section="global" data-sp-idx="${idx}" style="display:${scopeIsGlobal?'block':'none'};padding:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px">Exclude sites</div>
+        ${chipFor('exclude', excludeList)}
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:14px">
+      <label class="form-label" style="font-size:11px;color:var(--text2);font-weight:600">Fit keywords <span style="color:var(--text3);font-weight:400">(one per line or comma-separated; article body must contain at least one)</span></label>
+      <textarea data-sp-field="fit_keywords" data-sp-idx="${idx}" rows="4" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;color:var(--text);font-size:12px;width:100%;font-family:ui-monospace,monospace;resize:vertical">${sponsorEscape(fitKw)}</textarea>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:1px solid var(--border);padding-top:12px">
+      <button class="btn btn-sm btn-accent" onclick="sponsorSaveOne(${idx})">Save</button>
+      <button class="btn btn-sm btn-green" onclick="sponsorRunOne(${idx}, false)">Run injection now</button>
+      <button class="btn btn-sm" onclick="sponsorRunOne(${idx}, true)" title="Remove this sponsor's callout from every article it had been injected into">Remove from all articles</button>
+      <button class="btn btn-sm" style="margin-left:auto;color:#ef4444" onclick="sponsorDelete(${idx})">Delete sponsor</button>
+    </div>
+  </div>`;
+}
+
+function _spReadFromDom() {
+  // Sync DOM state back into sponsorsState before saving.
+  const sponsors = sponsorsState.sponsors || [];
+  document.querySelectorAll('[data-sp-field]').forEach(el => {
+    const idx = parseInt(el.getAttribute('data-sp-idx'), 10);
+    const field = el.getAttribute('data-sp-field');
+    if (!sponsors[idx]) return;
+    if (field === 'enabled') {
+      sponsors[idx].enabled = el.checked;
+    } else if (field === 'fit_keywords') {
+      sponsors[idx].fit_keywords = el.value
+        .split(/[\n,]/).map(s => s.trim()).filter(Boolean);
+    } else if (field === 'accent' || field === 'accent_hex') {
+      sponsors[idx].accent = el.value;
+    } else {
+      sponsors[idx][field] = el.value;
+    }
+  });
+  // Scope radios + chips.
+  sponsors.forEach((sp, idx) => {
+    const sel = document.querySelector(`input[name="sp-scope-${idx}"]:checked`);
+    if (!sel) return;
+    if (sel.getAttribute('data-sp-scope') === 'global') {
+      sp.scope = 'global';
+      sp.exclude_sites = Array.from(document.querySelectorAll(`[data-sp-exclude][data-sp-idx="${idx}"]`))
+        .filter(c => c.checked).map(c => c.getAttribute('data-sp-exclude'));
+    } else {
+      sp.scope = Array.from(document.querySelectorAll(`[data-sp-include][data-sp-idx="${idx}"]`))
+        .filter(c => c.checked).map(c => c.getAttribute('data-sp-include'));
+      sp.exclude_sites = [];
+    }
+  });
+}
+
+async function sponsorsSaveAll() {
+  _spReadFromDom();
+  const top = document.getElementById('sponsors-top-status');
+  if (top) top.textContent = 'Saving...';
+  try {
+    const r = await fetch('/api/sponsors', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sponsors: sponsorsState.sponsors }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || ('HTTP '+r.status));
+    if (top) top.textContent = 'Saved ' + j.count + ' sponsor(s).';
+    setTimeout(() => { if (top) top.textContent = ''; }, 2500);
+  } catch (e) {
+    if (top) top.textContent = 'Save failed: ' + (e.message||e);
+  }
+}
+
+async function sponsorSaveOne(idx) {
+  await sponsorsSaveAll();
+  const st = document.querySelector(`[data-sp-status="${idx}"]`);
+  if (st) {
+    st.textContent = 'Saved.';
+    setTimeout(() => { st.textContent = ''; }, 2000);
+  }
+}
+
+function sponsorAdd() {
+  const id = (prompt('New sponsor id (slug, e.g. acme-coffee):') || '').trim()
+    .toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+  if (!id) return;
+  if ((sponsorsState.sponsors || []).some(s => s.id === id)) {
+    alert('A sponsor with that id already exists.');
+    return;
+  }
+  _spReadFromDom();
+  sponsorsState.sponsors.push({
+    id, name: id, enabled: true, scope: 'global', exclude_sites: [],
+    url: 'https://example.com/', eyebrow: 'Sponsored - ' + id,
+    blurb: '', cta_text: 'Learn more', accent: '#3ecf8e',
+    fit_keywords: [], utm_campaign: 'backlink', utm_content: id,
+  });
+  sponsorsRender();
+}
+
+async function sponsorDelete(idx) {
+  const sp = sponsorsState.sponsors[idx];
+  if (!sp) return;
+  if (!confirm(`Delete sponsor "${sp.name || sp.id}"? This only removes it from the config. To strip its existing callouts from articles, run "Remove from all articles" first.`)) return;
+  _spReadFromDom();
+  sponsorsState.sponsors.splice(idx, 1);
+  sponsorsRender();
+  await sponsorsSaveAll();
+}
+
+async function sponsorRunOne(idx, remove) {
+  const sp = sponsorsState.sponsors[idx];
+  if (!sp) return;
+  const token = (typeof ls === 'function' ? ls('ghToken') : null) || localStorage.getItem('ghToken') || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  const st = document.querySelector(`[data-sp-status="${idx}"]`);
+  if (st) st.textContent = remove ? 'Removing...' : 'Injecting...';
+  try {
+    // Save first so the run reflects current edits.
+    await sponsorsSaveAll();
+    const r = await fetch('/api/sponsors/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-GH-Token': token },
+      body: JSON.stringify({ sponsor_id: sp.id, remove: !!remove }),
+    });
+    const text = await r.text();
+    if (st) {
+      const m = text.match(/Done\.\s*(\d+)\s*callouts?\s*(\w+)/);
+      st.textContent = m ? `${m[2]} ${m[1]} callout(s).` : 'Run complete.';
+    }
+    addLog && addLog('info', 'info', `Sponsor ${remove?'remove':'inject'} ${sp.id}:\n` + text);
+  } catch (e) {
+    if (st) st.textContent = 'Run failed: ' + (e.message||e);
+  }
+}
+
+async function sponsorRunAllActive() {
+  const token = (typeof ls === 'function' ? ls('ghToken') : null) || localStorage.getItem('ghToken') || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  const top = document.getElementById('sponsors-top-status');
+  if (top) top.textContent = 'Running all active sponsors...';
+  await sponsorsSaveAll();
+  try {
+    const r = await fetch('/api/sponsors/run', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-GH-Token': token },
+      body: JSON.stringify({}),
+    });
+    const text = await r.text();
+    if (top) {
+      const m = text.match(/Done\.\s*(\d+)\s*callouts?\s*(\w+)/);
+      top.textContent = m ? `${m[2]} ${m[1]} callout(s) across all active sponsors.` : 'Run complete.';
+    }
+    addLog && addLog('info', 'info', 'Sponsors run-all:\n' + text);
+  } catch (e) {
+    if (top) top.textContent = 'Run failed: ' + (e.message||e);
+  }
+}
+
+// Toggle scope sections live when radios change.
+document.addEventListener('change', function(e) {
+  const r = e.target;
+  if (r && r.getAttribute && r.getAttribute('data-sp-scope') != null) {
+    const idx = r.getAttribute('data-sp-idx');
+    const which = r.getAttribute('data-sp-scope');
+    document.querySelectorAll(`[data-sp-scope-section][data-sp-idx="${idx}"]`).forEach(el => {
+      el.style.display = (el.getAttribute('data-sp-scope-section') === which) ? 'block' : 'none';
+    });
+  }
+  // Keep color picker + hex input in sync.
+  if (r && r.getAttribute && r.getAttribute('data-sp-field') === 'accent') {
+    const idx = r.getAttribute('data-sp-idx');
+    const hex = document.querySelector(`[data-sp-field="accent_hex"][data-sp-idx="${idx}"]`);
+    if (hex) hex.value = r.value;
+  }
+  if (r && r.getAttribute && r.getAttribute('data-sp-field') === 'accent_hex') {
+    const idx = r.getAttribute('data-sp-idx');
+    const col = document.querySelector(`input[type="color"][data-sp-field="accent"][data-sp-idx="${idx}"]`);
+    if (col && /^#[0-9a-fA-F]{6}$/.test(r.value)) col.value = r.value;
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
 // INIT HOOKS
 // ═══════════════════════════════════════════════════════════
 const _origShowPanel = window.showPanel;
 window.showPanel = function(name) {
   _origShowPanel(name);
   if (name==='terminal' && !termCurrent) termInit();
+  if (name==='sponsors') sponsorsInit();
 };
 </script>
 
