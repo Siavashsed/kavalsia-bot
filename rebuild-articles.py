@@ -24,8 +24,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import layout_shell
-from bot import (_seo_meta, _comments_section_js, THEMES, SITE_THEMES,
-                 assign_category, _count_words, _site_name)
+from bot import (_seo_meta, _seo_title_tag, _comments_section_js, THEMES, SITE_THEMES,
+                 assign_category, _count_words, _site_name, _resolve_author)
 
 
 def _theme_for(site):
@@ -184,6 +184,14 @@ def patch_site(stem, site, token, log):
             continue
 
         body, css = extract_body_and_css(original)
+        if body:
+            # Collapse legacy nested <time><time>...</time></time> chains from
+            # earlier rebuilds that re-wrapped an already-wrapped date.
+            prev = None
+            while prev != body:
+                prev = body
+                body = re.sub(r'<time\b[^>]*>\s*(<time\b[^>]*>)', r'\1', body, flags=re.IGNORECASE)
+                body = re.sub(r'</time>\s*</time>', '</time>', body, flags=re.IGNORECASE)
         if not body:
             log(f"  [{i+1}] x {slug}  -  could not locate article body")
             fail += 1
@@ -224,28 +232,58 @@ def patch_site(stem, site, token, log):
         if category and not article.get("category"):
             article["category"] = category  # persist back into articles.json later
 
+        ainfo = _resolve_author(site, article)
+        # Visible-byline substitution: when the site's author changed in the
+        # dashboard, the SEO meta below gets the fresh name automatically but
+        # the byline text physically baked into the article body still reads
+        # the old name. Swap common byline patterns so the rendered page also
+        # shows the new author. Conservative: only inside attribution markers
+        # (By / by / itemprop="author" / <strong> wrappers around the name).
+        old_author = (article.get("author") or "").strip()
+        new_author = ainfo["name"]
+        if old_author and old_author != new_author:
+            import re as _re
+            safe = _re.escape(old_author)
+            patterns = [
+                (rf"(By\s*<strong[^>]*>){safe}(</strong>)",     rf"\g<1>{new_author}\g<2>"),
+                (rf"(by\s*<strong[^>]*>){safe}(</strong>)",     rf"\g<1>{new_author}\g<2>"),
+                (rf"(>\s*By\s+){safe}(\s*<)",                   rf"\g<1>{new_author}\g<2>"),
+                (rf"(>\s*by\s+){safe}(\s*<)",                   rf"\g<1>{new_author}\g<2>"),
+                (rf'(itemprop="author"[^>]*>){safe}(<)',        rf"\g<1>{new_author}\g<2>"),
+                (rf'(class="[^"]*author[^"]*"[^>]*>\s*){safe}', rf"\g<1>{new_author}"),
+            ]
+            for pat, repl in patterns:
+                body = _re.sub(pat, repl, body, flags=_re.IGNORECASE)
+            article["author"] = new_author  # persist the resolved name back to articles.json
         seo = _seo_meta(
             title, desc, canonical, article.get("image", ""),
-            article.get("author", ""), article.get("date_iso", ""),
+            ainfo["name"], article.get("date_iso", ""),
             modified_iso=datetime.now().strftime("%Y-%m-%d"),
             category=category,
             site_name=_site_name(site),
             site_url=f"https://{domain}/" if domain else "",
             word_count=_count_words(body),
             keywords=category,
+            author_title=ainfo["title"],
+            author_bio=ainfo["bio"],
         )
 
-        # Semantic <time> on the byline date for Google date detection.
+        # Semantic <time> on the byline date for Google date detection. Skip
+        # if the body already contains a <time> tag for this date (otherwise
+        # repeated rebuilds nest <time><time><time>... infinitely).
         disp_date = article.get("date", "")
-        if disp_date and article.get("date_iso"):
+        if disp_date and article.get("date_iso") and "<time" not in body:
             body = body.replace(disp_date, f'<time datetime="{article["date_iso"]}">{disp_date}</time>', 1)
 
         # Wrap content in <article> for stronger schema signal.
         body = f'<article itemscope itemtype="https://schema.org/Article">{body}</article>'
 
         try:
+            # Full title -> og/twitter/JSON-LD (uncapped). Shortened tag_title
+            # -> <title> only, so SERP truncation at ~60 chars never bites.
+            tag_title = _seo_title_tag(title, _site_name(site))
             rebuilt = layout_shell.wrap_page(
-                stem, title=title, description=desc, body_html=body,
+                stem, title=tag_title, description=desc, body_html=body,
                 extra_css=css, head_meta=seo, depth=1,
             )
         except Exception as e:
@@ -298,7 +336,10 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--gh-token", default=os.environ.get("GH_TOKEN", "") or os.environ.get("GITHUB_TOKEN", ""))
     p.add_argument("--only", default="", help="Comma-separated template stems (default: all)")
+    p.add_argument("gh_token_pos", nargs="?", default="", help="Positional GH token (alternative to --gh-token)")
     args = p.parse_args()
+    if not args.gh_token and args.gh_token_pos:
+        args.gh_token = args.gh_token_pos
 
     if not args.gh_token:
         print("Error: --gh-token is required")
