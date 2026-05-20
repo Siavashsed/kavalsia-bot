@@ -466,6 +466,10 @@ body::before{
 }
 .exp-card:hover{background:var(--surface)}
 .exp-card:hover::after{opacity:.6}
+.exp-thumb{position:relative;margin:-40px -34px 24px;height:200px;overflow:hidden;background:var(--surface)}
+.exp-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease);filter:saturate(.85) brightness(.92)}
+.exp-card:hover .exp-thumb img{transform:scale(1.04)}
+.exp-thumb.has-img+.exp-n{display:none}
 .exp-n{
   font-family:var(--serif);
   font-size:34px;font-weight:300;
@@ -1555,7 +1559,10 @@ if(!REDUCED&&window.matchMedia('(hover:hover)').matches){
       var n=(i+1)<10?'0'+(i+1):''+(i+1);
       var desc=(a.meta_description||a.description||'');
       if(desc.length>118)desc=desc.slice(0,118)+'...';
+      var hasImg=a.image&&typeof a.image==='string';
+      var thumb=hasImg?'<div class="exp-thumb has-img"><img src="'+a.image+'" alt="'+(a.title||'').replace(/"/g,'&quot;')+'" loading="lazy" onerror="this.style.display=\'none\'; this.parentNode.classList.remove(\'has-img\');"></div>':'';
       return '<a class="exp-card" href="./'+a.slug+'/">'
+        +thumb
         +'<div class="exp-n">'+n+'</div>'
         +'<div class="exp-tag">'+(a.category||'Journal')+'</div>'
         +'<div class="exp-title">'+(a.title||'Untitled')+'</div>'
