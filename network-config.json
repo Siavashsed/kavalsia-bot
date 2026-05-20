@@ -220,7 +220,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "passive-wealth",
@@ -304,7 +304,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "trading-tech",
@@ -388,7 +388,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "ai-marketing",
@@ -472,7 +472,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "ai-marketing",
       "default_author": "",
       "custom_prompt": "",
@@ -632,7 +632,7 @@
       "posts_unit": "week",
       "historical_count": 14,
       "historical_unit": "week",
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "mochapoo-pets",
@@ -722,7 +722,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "mochapoo-pets",
       "default_author": "",
       "custom_prompt": "Open with a small playful hook or observation about the pet (one line, max). Use light humor sparingly through the piece - one or two dry asides per article, never forced. Always pay the joke off with real, specific, owner-actionable advice. End every article with a quick 'TL;DR' style summary the reader can act on this week.",
@@ -863,7 +863,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "sight-reading",
@@ -946,7 +946,7 @@
       "posts_unit": "week",
       "historical_count": 14,
       "historical_unit": "week",
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "newborn-iq",
@@ -1030,7 +1030,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "dalmend-home",
@@ -1127,7 +1127,7 @@
       "posts_unit": "week",
       "historical_count": 14,
       "historical_unit": "week",
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "onlinebiz-pro",
@@ -1211,7 +1211,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "sportiq-pro",
@@ -1295,7 +1295,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "makeup-craft",
@@ -1379,7 +1379,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "dating-edge",
@@ -1547,7 +1547,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "fitpulse-pro",
       "default_author": "",
       "custom_prompt": "",
@@ -1800,7 +1800,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": false
     },
     {
       "id": "mashestate-construction",
@@ -2011,7 +2011,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "insight-insure",
       "default_author": "",
       "custom_prompt": "",
@@ -2452,7 +2452,8 @@
         "window_to": "22:00",
         "delay_days": 1,
         "target": "recent"
-      }
+      },
+      "active": true
     },
     {
       "id": "folioatelier",
@@ -2492,7 +2493,8 @@
         "window_to": "22:00",
         "delay_days": 1,
         "target": "recent"
-      }
+      },
+      "active": true
     },
     {
       "id": "modeformstudio",
@@ -2532,7 +2534,8 @@
         "window_to": "22:00",
         "delay_days": 1,
         "target": "recent"
-      }
+      },
+      "active": true
     },
     {
       "id": "calibernotes",
@@ -2572,7 +2575,8 @@
         "window_to": "22:00",
         "delay_days": 1,
         "target": "recent"
-      }
+      },
+      "active": true
     },
     {
       "id": "crestcharter",
@@ -2612,7 +2616,8 @@
         "window_to": "22:00",
         "delay_days": 1,
         "target": "recent"
-      }
+      },
+      "active": true
     },
     {
       "id": "strobeatlas",
@@ -2668,7 +2673,8 @@
         "window_to": "22:00",
         "delay_days": 1,
         "target": "recent"
-      }
+      },
+      "active": true
     }
   ]
 }
