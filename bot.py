@@ -3933,7 +3933,7 @@ def run(topic_overrides=None, site_filter=None):
 
     for site in active_sites:
         print(f"\n{'='*62}")
-        print(f"Site: {site['domain']}  [{site['layout']} / {site['article_layout']}]")
+        print(f"Site: {site.get('domain','?')}  [{site.get('layout','cards')} / {site.get('article_layout','standard')}]")
         print(f"{'='*62}")
 
         # Nexus / mother-site: never generates articles - it aggregates content from the network
