@@ -1018,6 +1018,39 @@ textarea{resize:vertical;line-height:1.6}
       </div>
     </div>
 
+    <!-- ── Custom Domain ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Custom Domain</span>
+        <button class="btn btn-sm" type="button" onclick="ssDomainRefresh()" id="ss-dom-refresh"
+                style="font-weight:600">Refresh status</button>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <div class="form-label">Current domain</div>
+        <div id="ss-dom-current" style="font-size:13px;color:var(--text2)">
+          <span style="color:var(--text3)">No site selected.</span>
+        </div>
+      </div>
+      <div class="settings-row" style="align-items:flex-end">
+        <div class="form-group" style="flex:1;min-width:240px">
+          <div class="form-label">Set / change custom domain
+            <span style="color:var(--text3)">(e.g. example.com)</span>
+          </div>
+          <input type="text" id="ss-dom-input" placeholder="example.com" autocomplete="off">
+        </div>
+        <div class="form-group" style="flex:0 0 auto;display:flex;gap:8px">
+          <button class="btn btn-accent" type="button" id="ss-dom-apply" onclick="ssDomainApply()"
+                  style="font-weight:700">Apply</button>
+          <button class="btn btn-sm" type="button" id="ss-dom-enforce" onclick="ssDomainEnforce()"
+                  disabled style="font-weight:600;opacity:.55">Enforce HTTPS</button>
+        </div>
+      </div>
+      <div id="ss-dom-status-row" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;font-size:11px">
+        <span style="color:var(--text3)">Pick a site to see status.</span>
+      </div>
+      <div id="ss-dom-msg" style="font-size:12px;color:var(--text3);margin-top:8px;min-height:14px"></div>
+    </div>
+
     <!-- ── Posting Schedule ── -->
     <div class="card" style="margin-bottom:14px">
       <div class="section-head">Posting Schedule</div>
@@ -4000,6 +4033,197 @@ function ssLoadSite() {
   aaLoadArticles();
   if (typeof pmLoadQueue === 'function') { try { pmLoadQueue(); } catch(_) {} }
   if (typeof ssRenderSiteBacklinks === 'function') ssRenderSiteBacklinks();
+  if (typeof ssDomainRefresh === 'function') ssDomainRefresh();
+}
+
+// ── Custom Domain card (per-site) ────────────────────────────────────────
+// Reads/writes network-config.json `sites[i].domain`, the repo CNAME file,
+// and the GitHub Pages cname + https_enforced flags via /api/domain-*.
+function ssDomEsc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function ssDomPill(label, tone, title) {
+  const colors = {
+    green: { bg:'rgba(76,175,80,.15)', fg:'#4caf50', bd:'rgba(76,175,80,.45)' },
+    red:   { bg:'rgba(244,67,54,.15)', fg:'#f44336', bd:'rgba(244,67,54,.45)' },
+    amber: { bg:'rgba(255,193,7,.15)', fg:'#ffc107', bd:'rgba(255,193,7,.45)' },
+    grey:  { bg:'rgba(160,160,160,.12)', fg:'var(--text3)', bd:'var(--border)' },
+  };
+  const c = colors[tone] || colors.grey;
+  const t = title ? ` title="${ssDomEsc(title)}"` : '';
+  return `<span${t} style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:999px;`
+       + `background:${c.bg};color:${c.fg};border:1px solid ${c.bd};font-weight:600;font-size:11px;`
+       + `letter-spacing:.2px">${ssDomEsc(label)}</span>`;
+}
+function ssDomIsPlaceholder(d) {
+  if (!d) return true;
+  return String(d).toLowerCase().startsWith('siavashsed.github.io');
+}
+function ssDomRenderCurrent(domain) {
+  const el = document.getElementById('ss-dom-current');
+  if (!el) return;
+  if (!domain) { el.innerHTML = '<span style="color:var(--text3)">(none)</span>'; return; }
+  if (ssDomIsPlaceholder(domain)) {
+    el.innerHTML = `<span style="color:var(--amber,#ffc107)">No custom domain yet</span>`
+                 + ` <span style="color:var(--text3);margin-left:6px">(falling back to <code>${ssDomEsc(domain)}</code>)</span>`;
+    return;
+  }
+  el.innerHTML = `<a href="https://${ssDomEsc(domain)}/" target="_blank" rel="noopener" class="post-link"`
+               + ` style="font-weight:600">${ssDomEsc(domain)}</a>`;
+}
+async function ssDomainRefresh() {
+  const site = _aaCurrentSite;
+  const row  = document.getElementById('ss-dom-status-row');
+  const msg  = document.getElementById('ss-dom-msg');
+  const enf  = document.getElementById('ss-dom-enforce');
+  if (msg) msg.textContent = '';
+  if (!site) {
+    ssDomRenderCurrent('');
+    if (row) row.innerHTML = '<span style="color:var(--text3)">Pick a site to see status.</span>';
+    return;
+  }
+  const domain = (site.domain || '').trim();
+  ssDomRenderCurrent(domain);
+  const inp = document.getElementById('ss-dom-input');
+  if (inp && !inp.value) inp.value = ssDomIsPlaceholder(domain) ? '' : domain;
+
+  if (ssDomIsPlaceholder(domain)) {
+    if (row) row.innerHTML = ssDomPill('No custom domain set', 'grey');
+    if (enf) { enf.disabled = true; enf.style.opacity = .55; }
+    return;
+  }
+  if (row) row.innerHTML = ssDomPill('Checking...', 'grey');
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || '';
+  try {
+    const headers = token ? { 'X-GH-Token': token } : {};
+    const r = await fetch(`/api/domain-status?site_id=${encodeURIComponent(site.id)}`, { headers });
+    const data = await r.json();
+    if (!r.ok) {
+      if (row) row.innerHTML = ssDomPill('Error: ' + (data.error || r.status), 'red');
+      return;
+    }
+    const pills = [];
+    // DNS
+    if (data.dns_ok === 'yes') pills.push(ssDomPill('DNS resolves', 'green'));
+    else if (data.dns_ok === 'no') pills.push(ssDomPill('DNS not resolving', 'red'));
+    else pills.push(ssDomPill('DNS pending', 'amber'));
+    // GH cname
+    if (data.cname_match === true) pills.push(ssDomPill('GH cname matches', 'green',
+      'GitHub Pages cname: ' + (data.gh_cname || '(none)')));
+    else if (data.cname_match === false) pills.push(ssDomPill(
+      'GH cname mismatch (' + (data.gh_cname || 'none') + ')', 'red',
+      'Expected: ' + domain + ' / Got: ' + (data.gh_cname || '(none)')));
+    else pills.push(ssDomPill('GH cname unknown', 'grey',
+      'Set a GitHub token in the Token Vault to check.'));
+    // HTTPS state
+    const st = (data.https_state || 'none').toLowerCase();
+    const stTone = st === 'approved' ? 'green' : (st === 'errored' ? 'red'
+                 : (st === 'pending' ? 'amber' : 'grey'));
+    pills.push(ssDomPill('HTTPS cert: ' + st, stTone));
+    // HTTPS enforced
+    if (data.https_enforced === true) pills.push(ssDomPill('HTTPS enforced', 'green'));
+    else if (data.https_enforced === false) pills.push(ssDomPill('HTTPS not enforced', 'amber'));
+    else pills.push(ssDomPill('HTTPS enforced unknown', 'grey'));
+    // HTTP probe
+    const code = data.http_status;
+    if (code === 200) pills.push(ssDomPill('HTTP ' + code + ' OK', 'green'));
+    else if (code && code > 0) pills.push(ssDomPill('HTTP ' + code, 'red'));
+    else pills.push(ssDomPill('HTTP probe failed', 'red',
+      data.http_error || 'No response from the site.'));
+    if (row) row.innerHTML = pills.join(' ');
+    // Enable enforce button only when cert is approved and not yet enforced
+    if (enf) {
+      const canEnforce = (st === 'approved') && (data.https_enforced !== true);
+      enf.disabled = !canEnforce;
+      enf.style.opacity = canEnforce ? 1 : .55;
+    }
+  } catch (e) {
+    if (row) row.innerHTML = ssDomPill('Network error: ' + e.message, 'red');
+  }
+}
+async function ssDomainApply() {
+  const site = _aaCurrentSite;
+  const msg  = document.getElementById('ss-dom-msg');
+  const btn  = document.getElementById('ss-dom-apply');
+  if (!site) { if (msg) { msg.style.color = 'var(--red,#f44)'; msg.textContent = 'Pick a site first.'; } return; }
+  const domain = (document.getElementById('ss-dom-input').value || '').trim().toLowerCase();
+  if (!domain || domain.indexOf('.') < 0 || domain.indexOf('/') >= 0 || domain.indexOf(' ') >= 0) {
+    if (msg) { msg.style.color = 'var(--red,#f44)'; msg.textContent = 'Enter a valid bare domain like example.com.'; }
+    return;
+  }
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || '';
+  if (!token) {
+    if (msg) { msg.style.color = 'var(--red,#f44)';
+      msg.textContent = 'GitHub token required. Save it in the Token Vault first.'; }
+    return;
+  }
+  if (!confirm('Apply custom domain "' + domain + '" to site "' + (site.name || site.id) + '"?\n\n'
+             + 'This will:\n  1. Update network-config.json\n'
+             + '  2. PUT a CNAME file to ' + (site.repo || '?') + '\n'
+             + '  3. Configure the GitHub Pages cname')) return;
+
+  if (btn) { btn.disabled = true; btn.style.opacity = .6; }
+  if (msg) { msg.style.color = 'var(--text2)'; msg.textContent = 'Applying...'; }
+  try {
+    const r = await fetch('/api/domain-apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-GH-Token': token },
+      body:    JSON.stringify({ site_id: site.id, domain }),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      if (msg) { msg.style.color = 'var(--red,#f44)';
+        msg.textContent = 'Fail: ' + (data.error || ('HTTP ' + r.status)); }
+      return;
+    }
+    // Reflect in-memory cfg
+    site.domain = domain;
+    _pmCurrentDomain = domain;
+    const steps = data.steps || {};
+    const summary = Object.keys(steps).map(k =>
+      k + ': ' + (steps[k].ok ? 'ok' : ('fail' + (steps[k].status ? ' ' + steps[k].status : '')))
+    ).join(' / ');
+    if (msg) { msg.style.color = data.ok ? 'var(--green,#4caf50)' : 'var(--amber,#ffc107)';
+      msg.textContent = (data.ok ? 'Applied. ' : 'Partial. ') + summary; }
+    ssDomRenderCurrent(domain);
+    setTimeout(ssDomainRefresh, 1200);
+  } catch (e) {
+    if (msg) { msg.style.color = 'var(--red,#f44)'; msg.textContent = 'Network error: ' + e.message; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.style.opacity = 1; }
+  }
+}
+async function ssDomainEnforce() {
+  const site = _aaCurrentSite;
+  const msg  = document.getElementById('ss-dom-msg');
+  const btn  = document.getElementById('ss-dom-enforce');
+  if (!site) return;
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || '';
+  if (!token) {
+    if (msg) { msg.style.color = 'var(--red,#f44)'; msg.textContent = 'GitHub token required.'; }
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.style.opacity = .6; }
+  if (msg) { msg.style.color = 'var(--text2)'; msg.textContent = 'Enforcing HTTPS...'; }
+  try {
+    const r = await fetch('/api/domain-enforce-https', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-GH-Token': token },
+      body:    JSON.stringify({ site_id: site.id }),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || !data.ok) {
+      if (msg) { msg.style.color = 'var(--red,#f44)';
+        msg.textContent = 'Fail: ' + (data.error || data.msg || ('HTTP ' + r.status)); }
+      return;
+    }
+    if (msg) { msg.style.color = 'var(--green,#4caf50)'; msg.textContent = 'HTTPS enforced.'; }
+    setTimeout(ssDomainRefresh, 1000);
+  } catch (e) {
+    if (msg) { msg.style.color = 'var(--red,#f44)'; msg.textContent = 'Network error: ' + e.message; }
+  }
 }
 
 // Filter the global backlinks store to just the rows for the current site.
