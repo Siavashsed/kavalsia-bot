@@ -125,7 +125,7 @@ code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
   <div class="brand">
     <div>
       <div class="brand-name">KAVALSIA NETWORK</div>
-      <div class="brand-sub">Kavalsia · 22 Sites</div>
+      <div class="brand-sub">Kavalsia · <span class="js-site-count">22</span> Sites</div>
     </div>
   </div>
   <div class="srv-pill" id="srv-pill">
@@ -173,9 +173,9 @@ code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
         <div class="tc-icon" style="background:#38bdf818">
           <svg width="20" height="20" fill="none" stroke="#38bdf8" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z"/></svg>
         </div>
-        <div><div class="tc-name">Dashboard</div><div class="tc-tag">22 Sites</div></div>
+        <div><div class="tc-name">Dashboard</div><div class="tc-tag"><span class="js-site-count">22</span> Sites</div></div>
       </div>
-      <div class="tc-desc">All 22 sites with live status, visit links, site editor, manual posting, backlink matrix, and newsletter setup.</div>
+      <div class="tc-desc">All <span class="js-site-count">22</span> sites with live status, visit links, site editor, manual posting, backlink matrix, and newsletter setup.</div>
       <div class="tc-url">localhost:8765/dashboard</div>
     </a>
 
@@ -186,7 +186,7 @@ code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
         </div>
         <div><div class="tc-name">Mega Dashboard</div><div class="tc-tag">Network View</div></div>
       </div>
-      <div class="tc-desc">Visual overview of all 22 sites with sparkline charts, traffic trends, article counts, and AI-generated summaries.</div>
+      <div class="tc-desc">Visual overview of all <span class="js-site-count">22</span> sites with sparkline charts, traffic trends, article counts, and AI-generated summaries.</div>
       <div class="tc-url">localhost:8765/megadash</div>
     </a>
 
@@ -266,7 +266,7 @@ code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
         </tr>
         <tr>
           <td><span class="file-name">dashboard.html</span></td>
-          <td style="color:var(--text2)">22-site control panel - status, visit links, manual post, backlink matrix. Works as file:// too.</td>
+          <td style="color:var(--text2)"><span class="js-site-count">22</span>-site control panel - status, visit links, manual post, backlink matrix. Works as file:// too.</td>
           <td><span class="file-tag tag-ui">UI</span></td>
         </tr>
         <tr>
@@ -301,7 +301,7 @@ code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
         </tr>
         <tr>
           <td><span class="file-name">network-config.json</span></td>
-          <td style="color:var(--text2)">Master config - all 22 sites, personas, topics, settings. Edited via Hub or directly.</td>
+          <td style="color:var(--text2)">Master config - all <span class="js-site-count">22</span> sites, personas, topics, settings. Edited via Hub or directly.</td>
           <td><span class="file-tag tag-config">Config</span></td>
         </tr>
         <tr>
@@ -396,6 +396,13 @@ function checkServer() {
 }
 checkServer();
 setInterval(checkServer, 8000);
+
+// Live site count - pulls from network-config.json so the page always reflects reality.
+fetch('/api/config').then(r => r.ok ? r.json() : null).then(cfg => {
+  if (!cfg || !Array.isArray(cfg.sites)) return;
+  const n = cfg.sites.filter(s => s && s.id !== 'nexus' && !s.is_mother_site).length;
+  document.querySelectorAll('.js-site-count').forEach(el => { el.textContent = n; });
+}).catch(()=>{});
 </script>
 </body>
 </html>
