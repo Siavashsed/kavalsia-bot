@@ -142,7 +142,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 3,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -215,7 +215,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -288,7 +288,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -361,7 +361,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -434,7 +434,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -509,7 +509,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -582,7 +582,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -655,7 +655,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -728,7 +728,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -801,7 +801,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -874,7 +874,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -947,7 +947,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1020,7 +1020,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1093,7 +1093,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1166,7 +1166,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1239,7 +1239,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1313,7 +1313,7 @@
       "nav_style": "dark",
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1386,7 +1386,7 @@
       "use_random_author": true,
       "posts_per_run": 2,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1459,7 +1459,7 @@
       "use_random_author": true,
       "posts_per_run": 2,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1532,7 +1532,7 @@
       "use_random_author": true,
       "posts_per_run": 2,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1605,7 +1605,7 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     },
     {
@@ -1685,7 +1685,7 @@
       "use_random_author": true,
       "posts_per_run": 2,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "posts_per_day_new": 1
     }
   ]
