@@ -154,8 +154,12 @@ img{max-width:100%;display:block}
 .art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .art-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
 .art-card:hover{transform:translateY(-6px);border-color:var(--accent)}
-.art-thumb{height:158px;position:relative;display:flex;align-items:flex-end;padding:14px}
+.art-thumb{height:158px;position:relative;display:flex;align-items:flex-end;padding:14px;overflow:hidden}
 .art-thumb svg.bgmesh{position:absolute;inset:0;width:100%;height:100%}
+.art-thumb img.art-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;z-index:0}
+.art-card:hover .art-thumb img.art-img{transform:scale(1.06)}
+.art-thumb.has-img svg.bgmesh{display:none}
+.art-thumb.has-img .art-cat{z-index:1}
 .art-cat{position:relative;font-family:var(--cond);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);padding:5px 11px;border-radius:5px}
 .art-body{padding:20px;display:flex;flex-direction:column;flex:1}
 .art-title{font-family:var(--cond);font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.01em;line-height:1.12;color:#fff;transition:color .15s}
@@ -653,8 +657,10 @@ function thumbSVG(i){
 let arts=[], activeCat="All";
 
 function articleCard(a,i){
+  const hasImg=!!a.image;
+  const imgTag=hasImg?`<img class="art-img" src="${a.image}" alt="" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.remove('has-img');">`:'';
   return `<a href="./${a.slug}/" class="art-card">
-    <div class="art-thumb">${thumbSVG(i)}<span class="art-cat">${a.cat}</span></div>
+    <div class="art-thumb${hasImg?' has-img':''}">${imgTag}${thumbSVG(i)}<span class="art-cat">${a.cat}</span></div>
     <div class="art-body">
       <div class="art-title">${a.title}</div>
       <p class="art-excerpt">${a.excerpt||""}</p>
