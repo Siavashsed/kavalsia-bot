@@ -1284,9 +1284,25 @@ img{{max-width:100%;display:block;height:auto}}
 <body>"""
 
 
+def _seo_title_tag(full_title, site_name=""):
+    """Return the string to render inside <title>...</title>. Google truncates
+    SERP titles at roughly 60 chars, so: try 'Title | Site' first; if too long,
+    drop the ' | Site' suffix; if the bare title still overflows, hard-truncate
+    to 57 chars + '...'. The FULL untruncated title is still passed to
+    _seo_meta() for og:title / twitter:title / JSON-LD headline (no SERP cap)."""
+    LIMIT = 60
+    if site_name:
+        combined = f"{full_title} | {site_name}"
+        if len(combined) <= LIMIT:
+            return combined
+    if len(full_title) <= LIMIT:
+        return full_title
+    return full_title[:57].rstrip() + "..."
+
+
 def _seo_meta(title, description, canonical="", og_image="", author="", date_iso="",
               modified_iso="", category="", site_name="", site_url="", word_count=0,
-              keywords=""):
+              keywords="", author_title="", author_bio=""):
     """Build Google-grade SEO + Open Graph + JSON-LD tags for an article page.
 
     Emits: canonical, robots, keywords meta, full Open Graph + Twitter Card,
@@ -1327,6 +1343,8 @@ def _seo_meta(title, description, canonical="", og_image="", author="", date_iso
             f'<meta name="googlebot" content="index,follow">'
             + (f'<meta name="keywords" content="{_html.escape(kw_meta)}">' if kw_meta else "")
             + (f'<meta name="author" content="{_html.escape(author)}">' if author else "")
+            + (f'<meta property="article:author" content="{_html.escape(author)}">' if author else "")
+            + (f'<meta name="twitter:creator" content="{_html.escape(author)}">' if author else "")
             + (f'<meta property="og:site_name" content="{_html.escape(sn)}">' if sn else "")
             + f'<meta property="og:title" content="{_html.escape(title)}">'
             + f'<meta property="og:description" content="{_html.escape(description)}">'
@@ -1353,7 +1371,15 @@ def _seo_meta(title, description, canonical="", og_image="", author="", date_iso
     if img_url:
         article_ld["image"] = [img_url]
     if author:
-        article_ld["author"] = {"@type": "Person", "name": author}
+        author_node = {"@type": "Person", "name": author}
+        if site_url:
+            author_node["url"] = site_url.rstrip("/") + "/about.html"
+        if author_title:
+            author_node["jobTitle"] = author_title
+        if author_bio:
+            short_bio = author_bio if len(author_bio) <= 280 else author_bio[:277].rstrip() + "..."
+            author_node["description"] = short_bio
+        article_ld["author"] = author_node
     if sn:
         publisher = {"@type": "Organization", "name": sn}
         if site_url:
@@ -1411,6 +1437,45 @@ def _foot(domain, category, t, signup_url="", depth=0):
 <p style="font-size:11px;color:{t["meta"]};margin:0 0 8px">For informational purposes only. Not financial, legal, or professional advice.</p>
 <p style="font-size:10px;color:{t["meta"]};margin:0">&copy; {datetime.now().year} {domain}</p>
 </footer></body></html>"""
+
+
+def _resolve_author(site, article=None):
+    """Single source of truth for the author surface on every article.
+
+    Resolution order for NAME:
+      1. article["author"] if present (per-article override),
+      2. site["default_author"] or site["author"],
+      3. get_author_name(site) (legacy fallback into author_names / persona).
+
+    Title comes from site["author_title"] or the second comma-clause of the
+    site persona. Bio comes from site["author_bio"] (preferred), then a short
+    synthesis from persona / tagline / category. The returned dict is the only
+    place article builders should pull this data from."""
+    article = article or {}
+
+    name = (article.get("author") or "").strip()
+    if not name:
+        name = (site.get("default_author") or site.get("author") or "").strip()
+    if not name:
+        name = get_author_name(site)
+
+    title = (site.get("author_title") or "").strip()
+    if not title:
+        persona_parts = (site.get("persona") or "").split(",", 1)
+        if len(persona_parts) > 1:
+            title = persona_parts[1].strip()
+    if not title:
+        title = site.get("category", "Contributing Writer") or "Contributing Writer"
+
+    bio = (site.get("author_bio") or "").strip()
+    if not bio:
+        tagline = (site.get("tagline") or "").strip()
+        if tagline:
+            bio = f"{tagline} Written by {name}, {title}."
+        else:
+            bio = f"{name} is a {title}."
+
+    return {"name": name, "title": title, "bio": bio}
 
 
 def get_author_name(site, settings=None):
@@ -2125,15 +2190,19 @@ def _site_name(site):
     return site["id"].replace("-", " ").replace("_", " ").title()
 
 
-def _author_card(site, author_name, t):
-    """Author bio card shown below article body  -  uses persona for niche-specific bio."""
-    persona      = site.get("persona", "")
-    parts        = persona.split(",", 1)
-    author_title = parts[1].strip() if len(parts) > 1 else site.get("category", "Expert")
-    initials     = "".join(w[0].upper() for w in author_name.split()[:2]) or "AU"
+def _author_card(site, author_name, t, article=None):
+    """Author bio card shown below article body. Pulls name+title+bio from the
+    single _resolve_author() source of truth so every surface stays consistent."""
+    info = _resolve_author(site, article)
+    # If caller passed an explicit author_name (current builders do), respect it
+    # so per-article overrides remain visible even if `article` was not passed.
+    if author_name:
+        info["name"] = author_name
+    author_title = info["title"]
+    bio          = info["bio"]
+    initials     = "".join(w[0].upper() for w in info["name"].split()[:2]) or "AU"
     accent       = t.get("accent", "#3ecf8e")
-    # Bio sentence: "Sarah Mills is a certified financial planner who retired at 41..."
-    bio = f"{author_name} is a {author_title}." if author_title else f"Expert in {site.get('category','').lower()}."
+    author_name  = info["name"]
     return f"""<div style="max-width:760px;margin:48px auto 0;padding:0 24px">
   <div style="border:1px solid {t["border"]};border-radius:12px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start;background:{t["bg2"]}">
     <div style="width:54px;height:54px;border-radius:50%;background:{accent};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0;letter-spacing:-1px">{initials}</div>
@@ -2509,10 +2578,44 @@ def _sources_block(article, t):
 <ul style="list-style:none;padding:0;margin:0">{items}</ul>
 </div>"""
 
+_BLOCK_OPENERS = ("<p", "<h1", "<h2", "<h3", "<h4", "<h5", "<h6",
+                  "<ul", "<ol", "<div", "<blockquote", "<section", "<article",
+                  "<figure", "<table", "<pre")
+
+
+def _wrap_block(content, tag="p", cls=""):
+    """Wrap raw text in a single <tag class=cls>...</tag> unless it already
+    begins with a block-level element. Prevents the nested-<p><p> anti-pattern
+    when an upstream field already contains paragraphed HTML."""
+    if content is None:
+        content = ""
+    s = content.strip()
+    if not s:
+        return ""
+    lo = s.lower()
+    if lo.startswith(_BLOCK_OPENERS):
+        return s
+    attr = f' class="{cls}"' if cls else ""
+    return f"<{tag}{attr}>{s}</{tag}>"
+
+
+def _article_section_css(t):
+    """Per-theme class rules for heading levels inside article body, replacing
+    the legacy per-element inline styles emitted by _article_sections() and
+    article_sidebar(). Kept tiny so it can be appended to any builder's CSS."""
+    return (
+        f".art-h2{{font-family:{t['heading_font']};font-size:22px;font-weight:700;"
+        f"margin:40px 0 14px;color:{t['text']}}}"
+        f".art-h3{{font-family:{t['heading_font']};font-size:18px;font-weight:700;"
+        f"margin:28px 0 12px;color:{t['text']}}}"
+    )
+
+
 def _article_sections(sections, t):
-    return "\n".join([f"""
-<h2 style="font-family:{t["heading_font"]};font-size:22px;font-weight:700;margin:40px 0 14px;color:{t["text"]}">{s["heading"]}</h2>
-<div>{s["content"]}</div>""" for s in sections])
+    return "\n".join(
+        f'<h2 class="art-h2">{s["heading"]}</h2>\n<div>{s["content"]}</div>'
+        for s in sections
+    )
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3303,16 +3406,17 @@ def article_standard(article, site, image_url, photographer, t):
 .art p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
 .art .intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
 .art .concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
-.art .meta{{font-size:13px;color:{t["meta"]};margin-bottom:24px}}"""
+.art .meta{{font-size:13px;color:{t["meta"]};margin-bottom:24px}}
+{_article_section_css(t)}"""
 
-    author = article.get("author", get_author_name(site))
+    author = _resolve_author(site, article)["name"]
     body = f"""<div class="art">
   <div class="meta"><span style="color:{t["meta"]}">{article.get("date","")} &nbsp;·&nbsp; {site["category"]}</span></div>
   <h1>{article["title"]}</h1>
   <div style="font-size:13px;color:{t["meta"]};margin-bottom:24px">By <strong style="color:{t["text2"]}">{author}</strong></div>
   {img}
-  <p class="intro">{article["intro"]}</p>
-  <p>{article["intro2"]}</p>
+  {_wrap_block(article["intro"], "p", "intro")}
+  {_wrap_block(article["intro2"], "p")}
   {sections}
   <div class="concl">{article["conclusion"]}</div>
   {_sources_block(article, t)}
@@ -3324,7 +3428,7 @@ def article_sidebar(article, site, image_url, photographer, t):
     """Two-column: article body + sticky TOC sidebar."""
     sections    = article["sections"]
     toc_items   = "".join([f'<li><a href="#s{i}" style="color:{t["text2"]};font-size:13px;line-height:1.8;transition:color .2s;text-decoration:none" onmouseover="this.style.color=\'{t["accent"]}\'" onmouseout="this.style.color=\'{t["text2"]}\'">{s["heading"]}</a></li>' for i, s in enumerate(sections)])
-    body_html   = "".join([f'<h2 id="s{i}" style="font-family:{t["heading_font"]};font-size:22px;font-weight:700;margin:40px 0 14px;color:{t["text"]}">{s["heading"]}</h2><div>{s["content"]}</div>' for i, s in enumerate(sections)])
+    body_html   = "".join([f'<h2 id="s{i}" class="art-h2">{s["heading"]}</h2><div>{s["content"]}</div>' for i, s in enumerate(sections)])
     img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;height:380px;object-fit:cover;border-radius:8px;margin:24px 0"><p style="font-size:11px;color:{t["meta"]};margin-top:-12px">Photo: {photographer} / Pexels</p>' if image_url else ""
 
     css = f"""
@@ -3336,21 +3440,22 @@ def article_sidebar(article, site, image_url, photographer, t):
 .art-grid p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
 .art-grid .intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
 .art-grid .concl{{background:{t["bg3"]};border-left:4px solid {t["accent"]};padding:20px 24px;border-radius:0 8px 8px 0;margin-top:40px}}
-@media(max-width:800px){{.art-grid{{grid-template-columns:1fr}}.art-grid .art-side{{display:none}}}}"""
+@media(max-width:800px){{.art-grid{{grid-template-columns:1fr}}.art-grid .art-side{{display:none}}}}
+{_article_section_css(t)}"""
 
-    author = article.get("author", get_author_name(site))
+    author = _resolve_author(site, article)["name"]
     body = (f"""<div class="art-grid">
-  <article>
+  <section class="article-content">
     <div style="font-size:12px;color:{t["meta"]};margin-bottom:20px">{article.get("date","")} &nbsp;·&nbsp; {site["category"]}</div>
     <h1>{article["title"]}</h1>
     <div style="font-size:13px;color:{t["meta"]};margin-bottom:20px">By <strong style="color:{t["text2"]}">{author}</strong></div>
     {img}
-    <p class="intro">{article["intro"]}</p>
-    <p>{article["intro2"]}</p>
+    {_wrap_block(article["intro"], "p", "intro")}
+    {_wrap_block(article["intro2"], "p")}
     {body_html}
     <div class="concl">{article["conclusion"]}</div>
   {_sources_block(article, t)}
-  </article>
+  </section>
   <aside class="art-side">
     <h3>Contents</h3>
     <ul>{toc_items}</ul>
@@ -3373,9 +3478,11 @@ def article_magazine(article, site, image_url, photographer, t):
 .mag-body p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8}}
 .mag-body .pull{{font-size:22px;font-style:italic;color:{t["accent"]};border-top:3px solid {t["accent"]};border-bottom:1px solid {t["border"]};padding:20px 0;margin:32px 0;line-height:1.4}}
 .mag-body .concl{{border-top:2px solid {t["text"]};padding-top:24px;margin-top:40px}}
-@media(max-width:600px){{.mag-hero .lead{{column-count:1}}}}"""
+.mag-body .intro2{{font-size:18px;color:{t["text"]}}}
+@media(max-width:600px){{.mag-hero .lead{{column-count:1}}}}
+{_article_section_css(t)}"""
 
-    author = article.get("author", get_author_name(site))
+    author = _resolve_author(site, article)["name"]
     body = (f"""<div class="mag-hero">
   <div class="mag-hero-inner">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:16px">{site["category"]}</div>
@@ -3386,7 +3493,7 @@ def article_magazine(article, site, image_url, photographer, t):
   {img}
 </div>
 <div class="mag-body">
-  <p style="font-size:18px;color:{t["text"]}">{article["intro2"]}</p>
+  {_wrap_block(article["intro2"], "p", "intro2")}
   {sections}
   <div class="pull">"{article.get("meta_description","")}"</div>
   <div class="concl">{article["conclusion"]}</div>
@@ -3407,15 +3514,16 @@ def article_minimal(article, site, image_url, photographer, t):
 .art-min p{{margin-bottom:24px;color:{t["text2"]}}}
 .art-min .intro{{font-size:22px;font-style:italic;color:{t["text"]};border-bottom:1px solid {t["border"]};padding-bottom:32px;margin-bottom:32px}}
 .art-min .byline{{font-size:14px;color:{t["meta"]};margin-bottom:48px}}
-.art-min .concl{{font-size:18px;font-weight:500;color:{t["text"]};border-top:1px solid {t["border"]};padding-top:32px;margin-top:48px}}"""
+.art-min .concl{{font-size:18px;font-weight:500;color:{t["text"]};border-top:1px solid {t["border"]};padding-top:32px;margin-top:48px}}
+{_article_section_css(t)}"""
 
-    author = article.get("author", get_author_name(site))
+    author = _resolve_author(site, article)["name"]
     body = (f"""<div class="art-min">
   <h1>{article["title"]}</h1>
   <div class="byline">{author} &nbsp;·&nbsp; {article.get("date","")} &nbsp;·&nbsp; {site["category"]}</div>
   {img}
   <div class="intro">{article["intro"]}</div>
-  <p>{article["intro2"]}</p>
+  {_wrap_block(article["intro2"], "p")}
   {sections}
   <div class="concl">{article["conclusion"]}</div>
   {_sources_block(article, t)}
@@ -3437,9 +3545,10 @@ def article_immersive(article, site, image_url, photographer, t):
 .imm-body{{max-width:760px;margin:52px auto;padding:0 24px 80px}}
 .imm-body p{{margin-bottom:20px;color:{t["text2"]};line-height:1.8;font-size:17px}}
 .imm-body .intro{{font-size:20px;line-height:1.7;color:{t["text"]};border-bottom:1px solid {t["border"]};padding-bottom:28px;margin-bottom:28px}}
-.imm-body .concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:24px;border-radius:0 8px 8px 0;margin-top:40px}}"""
+.imm-body .concl{{background:{t["bg2"]};border-left:4px solid {t["accent"]};padding:24px;border-radius:0 8px 8px 0;margin-top:40px}}
+{_article_section_css(t)}"""
 
-    author = article.get("author", get_author_name(site))
+    author = _resolve_author(site, article)["name"]
     body = (f"""<div class="imm-hero">
   <div class="imm-overlay"></div>
   <div class="imm-content">
@@ -3449,8 +3558,8 @@ def article_immersive(article, site, image_url, photographer, t):
   </div>
 </div>
 <div class="imm-body">
-  <p class="intro">{article["intro"]}</p>
-  <p>{article["intro2"]}</p>
+  {_wrap_block(article["intro"], "p", "intro")}
+  {_wrap_block(article["intro2"], "p")}
   {sections}
   <div class="concl">{article["conclusion"]}</div>
   {_sources_block(article, t)}
@@ -3463,7 +3572,7 @@ def article_neuro(article, site, image_url, photographer, t):
     sections_list = article.get("sections", []) or []
     sections_html = _article_sections(sections_list, t)
 
-    author = article.get("author", get_author_name(site))
+    author = _resolve_author(site, article)["name"]
     role = article.get("author_role", "Contributing writer")
 
     # Initials avatar
@@ -3558,7 +3667,7 @@ def article_neuro(article, site, image_url, photographer, t):
     date_str = article.get("date", "")
 
     body = (f"""<div class="art-neuro-wrap">
-  <article class="art-neuro">
+  <section class="art-neuro article-content">
     <div class="art-neuro-eyebrow">
       <span>{site.get("category","")}</span>
       <span class="dot"></span>
@@ -3579,15 +3688,15 @@ def article_neuro(article, site, image_url, photographer, t):
       <div class="lbl">TL;DR</div>
       <ul>{tldr_html}</ul>
     </div>
-    <p class="art-neuro-intro">{article["intro"]}</p>
-    <p>{article["intro2"]}</p>
+    {_wrap_block(article["intro"], "p", "art-neuro-intro")}
+    {_wrap_block(article["intro2"], "p")}
     {sections_html}
     <div class="art-neuro-final">
       <div class="lbl">Final note</div>
       <p>{article["conclusion"]}</p>
     </div>
     {_sources_block(article, t)}
-  </article>
+  </section>
   <aside class="art-neuro-margin">
     <div class="block">
       <div class="lbl">Read time</div>
@@ -3904,12 +4013,16 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     if custom:
         css = f"{css}\n/* custom */\n{custom}"
 
-    author    = article.get("author", get_author_name(site))
-    date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
-    canonical = f"https://{site['domain']}/{article['slug']}/"
-    title     = f"{article['title']} | {_site_name(site)}"
-    stem      = _site_stem(site)
-    category  = article.get("category") or assign_category(
+    author_info = _resolve_author(site, article)
+    author      = author_info["name"]
+    date_iso    = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
+    canonical   = f"https://{site['domain']}/{article['slug']}/"
+    # Split: full_title -> og/twitter/JSON-LD (no SERP cap). tag_title -> <title>.
+    full_title  = article["title"]
+    tag_title   = _seo_title_tag(full_title, _site_name(site))
+    title       = full_title  # passed to _seo_meta below (full, untruncated)
+    stem        = _site_stem(site)
+    category    = article.get("category") or assign_category(
         (article.get("intro", "") + " " + article.get("intro2", "") + " " + (article.get("title") or "")),
         stem,
     )
@@ -3921,6 +4034,8 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
         site_url=f"https://{site['domain']}/",
         word_count=_count_words(body),
         keywords=category,
+        author_title=author_info["title"],
+        author_bio=author_info["bio"],
     )
 
     # Semantic <time> for byline dates (Google reads it; helps date detection).
@@ -3932,7 +4047,7 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     body = f'<article itemscope itemtype="https://schema.org/Article">{body}</article>'
 
     html = layout_shell.wrap_page(
-        _site_stem(site), title=title, description=article["meta_description"],
+        _site_stem(site), title=tag_title, description=article["meta_description"],
         body_html=body, extra_css=css, head_meta=seo, depth=1,
     )
 
@@ -4304,14 +4419,26 @@ def run(topic_overrides=None, site_filter=None):
         # HISTORICAL_BULK env (e.g. set via workflow_dispatch input) overrides the daily
         # plan and posts N historicals per site instead - used for one-shot backfills.
         bulk_hist = int(os.environ.get("HISTORICAL_BULK", "0") or 0)
+        # Per-pipeline kill switches set from the dashboard. new_posts_enabled
+        # defaults to True if missing; historical pipeline gated by historical_mode.
+        new_on  = site.get("new_posts_enabled", True) is not False
+        hist_on = site.get("historical_mode", False) is True
         if bulk_hist > 0:
+            # Bulk backfill ignores new_posts_enabled (it is historical-only by intent)
+            # but still requires historical_mode so a site that opted out is not bulk-fed.
+            if not hist_on:
+                print("  SKIPPED - historical pipeline OFF (historical_mode=false)")
+                continue
             new_count = 0
             hist_due  = True
             posts_per_run = bulk_hist
         else:
-            new_count = max(1, int(site.get("posts_per_day_new", site.get("posts_per_run", 1)) or 1))
-            hist_due  = is_historical_due(site, articles)
+            new_count = max(1, int(site.get("posts_per_day_new", site.get("posts_per_run", 1)) or 1)) if new_on else 0
+            hist_due  = hist_on and is_historical_due(site, articles)
             posts_per_run = new_count + (1 if hist_due else 0)
+            if posts_per_run == 0:
+                print(f"  SKIPPED - both pipelines OFF (new_posts_enabled={new_on}, historical_mode={hist_on})")
+                continue
 
         # Randomize publish time - scatter sites across a window to break cadence fingerprint
         delay_max = int(site.get("publish_delay_max_seconds", 0))
