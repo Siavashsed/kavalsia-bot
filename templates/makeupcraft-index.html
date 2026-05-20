@@ -595,7 +595,8 @@ function renderGrid(){
   g.innerHTML=arts.map((a,i)=>`
     <a href="./${a.slug}/" class="art-card reveal in">
       <div class="art-img">
-        <img src="${a.image||IMGS[i%IMGS.length]}" alt="${a.title}" loading="lazy">
+        <img src="${a.image||IMGS[i%IMGS.length]}" alt="${a.title}" loading="lazy" onerror="this.style.display='none'">
+
         <span class="art-num">N&#176; ${String(i+1).padStart(2,'0')}</span>
       </div>
       <span class="art-cat">${a.cat||a.category||'Beauty'}</span>
