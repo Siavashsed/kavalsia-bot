@@ -445,7 +445,45 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "ai-marketing",
+      "default_author": "",
+      "custom_prompt": "",
+      "custom_css": "",
+      "categories": [],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      }
     },
     {
       "id": "ecommerce-edge",
@@ -574,7 +612,7 @@
       "theme": "light",
       "layout": "magazine",
       "article_layout": "standard",
-      "tone": "warm and enthusiastic, like a vet who also happens to be a lifelong dog lover. Science-backed but accessible.",
+      "tone": "warm and enthusiastic, like a vet who also happens to be a lifelong dog lover. Science-backed but accessible. Plus a touch of playful humor - one or two dry asides per article, the occasional self-aware joke, treats the pet like a small family member with opinions. The humor never undercuts the practical advice.",
       "persona": "Dr. Emily Ross, veterinarian and dog nutrition specialist",
       "brevo_list_id": 10,
       "signup_url": "",
@@ -612,6 +650,7 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
+        "Top 3 products for your pet this week - vet-tested picks, $20 to $200 tier, one budget / one mid / one splurge",
         "Mochapoo temperament: what first-time owners need to know",
         "Best food for Mochapoo puppies - ingredient-by-ingredient breakdown",
         "How to crate train a Mochapoo without stress",
@@ -623,7 +662,11 @@
         "Mochapoo vs Labradoodle: which is right for your lifestyle",
         "Understanding separation anxiety in Poodle mix breeds",
         "Sphynx cats: the science behind their extraordinary personality and social intelligence",
-        "What makes the Sphynx cat different from every other breed you have ever met"
+        "What makes the Sphynx cat different from every other breed you have ever met",
+        "Top 3 dog chews of the week (rated by destruction speed)",
+        "Top 3 cat toys this week (tested by an actually fussy cat)",
+        "Top 3 calming aids for anxious dogs (what worked, what was a candle in a sock)",
+        "Top 3 puppy training treats of the week (bribery, but make it nutrition)"
       ],
       "articles_per_day": 1,
       "nav_style": "leaf",
@@ -631,8 +674,7 @@
         "Jamie Park",
         "Rachel Green",
         "Tom Hensley",
-        "Maya Torres",
-        "Siavash Sadighi"
+        "Maya Torres"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -645,7 +687,64 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "mochapoo-pets",
+      "default_author": "",
+      "custom_prompt": "Open with a small playful hook or observation about the pet (one line, max). Use light humor sparingly through the piece - one or two dry asides per article, never forced. Always pay the joke off with real, specific, owner-actionable advice. End every article with a quick 'TL;DR' style summary the reader can act on this week.",
+      "custom_css": "",
+      "categories": [
+        "Health & Wellness",
+        "Nutrition & Feeding",
+        "Training & Behavior",
+        "Puppy Care",
+        "Grooming & Coat",
+        "Everyday Wellbeing",
+        "Top Pet Brands"
+      ],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      },
+      "weekly_roundup": {
+        "enabled": true,
+        "topic_template": "Top 3 {category} this week",
+        "weekday": "friday",
+        "categories": [
+          "dog products",
+          "cat products",
+          "calming aids",
+          "training treats"
+        ]
+      }
     },
     {
       "id": "supplement-verge",
@@ -1377,7 +1476,45 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "fitpulse-pro",
+      "default_author": "",
+      "custom_prompt": "",
+      "custom_css": "",
+      "categories": [],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      }
     },
     {
       "id": "mashestate-home",
@@ -1443,8 +1580,7 @@
         "Tom Mash",
         "Jordan Webb",
         "Sarah Cole",
-        "Alex Morrison",
-        "Siavash Sadighi"
+        "Alex Morrison"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1457,7 +1593,54 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "mashestate-home",
+      "default_author": "",
+      "custom_prompt": "",
+      "custom_css": "",
+      "categories": [
+        "First-Time Buyers",
+        "Luxury Homes",
+        "Investment Property",
+        "Market Timing",
+        "Mortgage & Finance",
+        "Neighborhood Analysis",
+        "New Construction",
+        "Selling Strategy"
+      ],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      }
     },
     {
       "id": "kanona-events",
@@ -1604,8 +1787,7 @@
         "Tom Mash",
         "Alex Morrison",
         "Jake Turner",
-        "Rachel Webb",
-        "Siavash Sadighi"
+        "Rachel Webb"
       ],
       "use_random_author": true,
       "posts_per_run": 2,
@@ -1618,7 +1800,52 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "mashestate-construction",
+      "default_author": "",
+      "custom_prompt": "",
+      "custom_css": "",
+      "categories": [
+        "Planning & Permits",
+        "Budget & Costs",
+        "Contractor Vetting",
+        "Demolition & Rough-In",
+        "Finishes & Sign-Off",
+        "Common Mistakes"
+      ],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      }
     },
     {
       "id": "insight-insure",
@@ -1684,8 +1911,7 @@
         "Ryan Mitchell",
         "Sarah Clarke",
         "Marcus Cole",
-        "Jordan Kim",
-        "Siavash Sadighi"
+        "Jordan Kim"
       ],
       "use_random_author": true,
       "posts_per_run": 2,
@@ -1698,7 +1924,45 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "insight-insure",
+      "default_author": "",
+      "custom_prompt": "",
+      "custom_css": "",
+      "categories": [],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      }
     },
     {
       "id": "carverge",
@@ -1764,8 +2028,7 @@
         "Alex Turner",
         "Marcus Webb",
         "Jake Morrison",
-        "Rachel Cole",
-        "Siavash Sadighi"
+        "Rachel Cole"
       ],
       "use_random_author": true,
       "posts_per_run": 2,
@@ -1778,7 +2041,52 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "carverge",
+      "default_author": "",
+      "custom_prompt": "",
+      "custom_css": "",
+      "categories": [
+        "Battery Technology",
+        "Powertrain",
+        "Real-World Range",
+        "Cost of Ownership",
+        "Charging & Infrastructure",
+        "Reviews & Comparisons"
+      ],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      }
     },
     {
       "id": "travelverge",
@@ -1844,8 +2152,7 @@
         "Ana Verge",
         "Jordan Clarke",
         "Sophie Kim",
-        "Marcus Reid",
-        "Siavash Sadighi"
+        "Marcus Reid"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1858,7 +2165,54 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": false,
+      "name": "travelverge",
+      "default_author": "",
+      "custom_prompt": "Find top hotels around the world and write article about them and use their own site's image in the article",
+      "custom_css": "",
+      "categories": [
+        "Destination Deep-Dives",
+        "Flight & Booking Strategy",
+        "Packing Systems",
+        "Budget Travel",
+        "Trip Planning",
+        "Solo & Safe Travel",
+        "Europe",
+        "Asia"
+      ],
+      "default_category": "",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      }
     },
     {
       "id": "topproduct",
