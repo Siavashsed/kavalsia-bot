@@ -3458,12 +3458,161 @@ def article_immersive(article, site, image_url, photographer, t):
     return css, body
 
 
+def article_neuro(article, site, image_url, photographer, t):
+    """Science-press editorial layout (Nature / Aeon / Quanta inspired). Reading column with margin notes."""
+    sections_list = article.get("sections", []) or []
+    sections_html = _article_sections(sections_list, t)
+
+    author = article.get("author", get_author_name(site))
+    role = article.get("author_role", "Contributing writer")
+
+    # Initials avatar
+    parts = [p for p in author.split() if p]
+    initials = ((parts[0][:1] + (parts[-1][:1] if len(parts) > 1 else "")) or "A").upper()
+
+    # Word count + read time
+    def _strip(s):
+        return re.sub(r"<[^>]+>", " ", s or "")
+    body_text = " ".join([_strip(article.get("intro","")), _strip(article.get("intro2",""))] +
+                         [_strip(s.get("content","")) for s in sections_list] +
+                         [_strip(article.get("conclusion",""))])
+    word_count = len([w for w in body_text.split() if w.strip()])
+    read_time = max(1, round(word_count / 220))
+
+    # TL;DR bullets
+    tldr_items = []
+    for s in sections_list[:3]:
+        txt = _strip(s.get("content","")).strip()
+        if not txt:
+            continue
+        first = re.split(r"(?<=[.!?])\s+", txt, maxsplit=1)[0]
+        if first:
+            tldr_items.append(first.strip())
+    if not tldr_items and article.get("meta_description"):
+        md = article["meta_description"]
+        tldr_items = [s.strip() for s in re.split(r"(?<=[.!?])\s+", md) if s.strip()][:3]
+    tldr_html = "".join(f"<li>{x}</li>" for x in tldr_items[:3]) or f"<li>{article.get('meta_description','')}</li>"
+
+    # Hero image
+    img = (f'<figure class="art-neuro-hero"><img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy">'
+           f'<figcaption>Photograph by {photographer} / Pexels</figcaption></figure>') if image_url else ""
+
+    # Margin TOC + takeaways
+    toc_items = "".join(
+        f'<li><a href="#nsec{i}">{s.get("heading","")}</a></li>'
+        for i, s in enumerate(sections_list)
+    )
+    takeaway_items = "".join(f"<li>{x}</li>" for x in tldr_items[:3]) or "<li>See summary above.</li>"
+
+    # Section rendering with anchor IDs (override anchor by replacing _article_sections output)
+    sec_html_parts = []
+    for i, s in enumerate(sections_list):
+        sec_html_parts.append(
+            f'<h2 id="nsec{i}" class="art-neuro-h2">{s.get("heading","")}</h2>'
+            f'<div class="art-neuro-sec">{s.get("content","")}</div>'
+        )
+    sections_html = "".join(sec_html_parts) if sec_html_parts else sections_html
+
+    css = f"""
+.art-neuro-wrap{{max-width:1180px;margin:40px auto 0;padding:0 24px;display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:56px;align-items:start}}
+.art-neuro{{max-width:700px;margin:0;font-family:Georgia,'Iowan Old Style','Times New Roman',serif;color:{t["text2"]}}}
+.art-neuro .art-neuro-eyebrow{{display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-family:{t["heading_font"]};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:18px}}
+.art-neuro .art-neuro-eyebrow .dot{{width:4px;height:4px;border-radius:50%;background:{t["border"]};display:inline-block}}
+.art-neuro .art-neuro-eyebrow .ref-badge{{font-size:10px;letter-spacing:1.5px;border:1px solid {t["accent"]};color:{t["accent"]};padding:3px 8px;border-radius:99px;font-weight:700}}
+.art-neuro h1.art-neuro-title{{font-family:{t["heading_font"]};font-weight:800;font-size:clamp(30px,4.6vw,52px);line-height:1.08;letter-spacing:-0.5px;color:{t["text"]};margin:0 0 20px}}
+.art-neuro .art-neuro-byline{{display:flex;align-items:center;gap:14px;border-top:1px solid {t["border"]};border-bottom:1px solid {t["border"]};padding:14px 0;margin:24px 0 32px}}
+.art-neuro .art-neuro-avatar{{width:42px;height:42px;border-radius:50%;background:{t["accent"]};color:#fff;display:flex;align-items:center;justify-content:center;font-family:{t["heading_font"]};font-weight:700;font-size:15px;letter-spacing:0.5px;flex-shrink:0}}
+.art-neuro .art-neuro-byline .who{{font-family:{t["heading_font"]};font-size:15px;color:{t["text"]};font-weight:600;line-height:1.3}}
+.art-neuro .art-neuro-byline .role{{font-size:12px;color:{t["meta"]};margin-top:2px}}
+.art-neuro .art-neuro-byline .when{{margin-left:auto;font-size:12px;color:{t["meta"]};text-align:right}}
+.art-neuro figure.art-neuro-hero{{margin:0 0 32px;width:100%}}
+.art-neuro figure.art-neuro-hero img{{width:100%;height:auto;max-height:520px;object-fit:cover;border-radius:4px;display:block}}
+.art-neuro figure.art-neuro-hero figcaption{{font-family:{t["heading_font"]};font-size:12px;color:{t["meta"]};margin-top:10px;letter-spacing:0.3px}}
+.art-neuro .art-neuro-tldr{{background:{t["bg2"]};border-left:3px solid {t["accent"]};padding:20px 24px;margin:0 0 36px;border-radius:0 6px 6px 0}}
+.art-neuro .art-neuro-tldr .lbl{{font-family:{t["heading_font"]};font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2.2px;color:{t["accent"]};margin-bottom:10px}}
+.art-neuro .art-neuro-tldr ul{{margin:0;padding-left:20px}}
+.art-neuro .art-neuro-tldr li{{font-family:{t["heading_font"]};font-size:15px;line-height:1.55;color:{t["text"]};margin-bottom:6px}}
+.art-neuro p,.art-neuro .art-neuro-sec p{{font-size:18px;line-height:1.85;color:{t["text2"]};margin:0 0 22px;max-width:68ch}}
+.art-neuro .art-neuro-intro{{font-size:21px;line-height:1.6;color:{t["text"]};font-style:italic;margin-bottom:26px}}
+.art-neuro h2.art-neuro-h2{{font-family:{t["heading_font"]};font-weight:700;font-size:26px;line-height:1.25;color:{t["text"]};margin:48px 0 18px;padding-top:18px;position:relative;letter-spacing:-0.2px}}
+.art-neuro h2.art-neuro-h2::before{{content:"";position:absolute;top:0;left:0;width:48px;height:2px;background:{t["accent"]}}}
+.art-neuro .art-neuro-sec h3{{font-family:{t["heading_font"]};font-size:18px;font-weight:700;color:{t["text"]};margin:28px 0 12px}}
+.art-neuro blockquote{{border-left:3px solid {t["accent"]};padding:6px 0 6px 22px;margin:30px 0;font-family:{t["heading_font"]};font-style:italic;font-size:22px;line-height:1.45;color:{t["text"]}}}
+.art-neuro .art-neuro-final{{margin-top:48px;padding:24px 26px;background:{t["bg2"]};border-left:4px solid {t["accent"]};border-radius:0 8px 8px 0}}
+.art-neuro .art-neuro-final .lbl{{font-family:{t["heading_font"]};font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2.2px;color:{t["accent"]};margin-bottom:10px}}
+.art-neuro .art-neuro-final p{{font-size:17px;line-height:1.75;color:{t["text"]};margin:0}}
+.art-neuro-margin{{position:sticky;top:24px;font-family:{t["heading_font"]};border-left:1px solid {t["border"]};padding-left:24px}}
+.art-neuro-margin .block{{margin-bottom:28px}}
+.art-neuro-margin .lbl{{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:10px}}
+.art-neuro-margin .stat{{font-size:14px;color:{t["text2"]};line-height:1.6}}
+.art-neuro-margin .stat strong{{color:{t["text"]};font-weight:700}}
+.art-neuro-margin ul{{list-style:none;padding:0;margin:0}}
+.art-neuro-margin ul li{{margin-bottom:8px;font-size:13px;line-height:1.5}}
+.art-neuro-margin ul li a{{color:{t["text2"]};text-decoration:none;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}}
+.art-neuro-margin ul li a:hover{{color:{t["accent"]};border-bottom-color:{t["accent"]}}}
+.art-neuro-margin .take li{{font-size:13px;color:{t["text2"]};line-height:1.55;padding-left:14px;position:relative;margin-bottom:10px}}
+.art-neuro-margin .take li::before{{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;background:{t["accent"]};border-radius:50%}}
+@media(max-width:900px){{.art-neuro-wrap{{grid-template-columns:1fr;gap:0}}.art-neuro-margin{{display:none}}}}
+@media(max-width:600px){{.art-neuro-wrap{{padding:0 18px}}.art-neuro h1.art-neuro-title{{font-size:clamp(26px,7vw,38px);line-height:1.12}}.art-neuro p{{font-size:17px;line-height:1.8}}.art-neuro .art-neuro-byline .when{{display:none}}}}"""
+
+    date_str = article.get("date", "")
+
+    body = (f"""<div class="art-neuro-wrap">
+  <article class="art-neuro">
+    <div class="art-neuro-eyebrow">
+      <span>{site.get("category","")}</span>
+      <span class="dot"></span>
+      <span>{read_time} min read</span>
+      <span class="ref-badge">Peer-style references</span>
+    </div>
+    <h1 class="art-neuro-title">{article["title"]}</h1>
+    <div class="art-neuro-byline">
+      <div class="art-neuro-avatar">{initials}</div>
+      <div>
+        <div class="who">{author}</div>
+        <div class="role">{role}</div>
+      </div>
+      <div class="when">{date_str}</div>
+    </div>
+    {img}
+    <div class="art-neuro-tldr">
+      <div class="lbl">TL;DR</div>
+      <ul>{tldr_html}</ul>
+    </div>
+    <p class="art-neuro-intro">{article["intro"]}</p>
+    <p>{article["intro2"]}</p>
+    {sections_html}
+    <div class="art-neuro-final">
+      <div class="lbl">Final note</div>
+      <p>{article["conclusion"]}</p>
+    </div>
+    {_sources_block(article, t)}
+  </article>
+  <aside class="art-neuro-margin">
+    <div class="block">
+      <div class="lbl">Read time</div>
+      <div class="stat"><strong>{read_time} min</strong> &nbsp; · &nbsp; {word_count:,} words</div>
+    </div>
+    <div class="block">
+      <div class="lbl">Key takeaways</div>
+      <ul class="take">{takeaway_items}</ul>
+    </div>
+    <div class="block">
+      <div class="lbl">Skim section</div>
+      <ul>{toc_items}</ul>
+    </div>
+  </aside>
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site))
+    return css, body
+
+
 ARTICLE_BUILDERS = {
     "standard":  article_standard,
     "sidebar":   article_sidebar,
     "magazine":  article_magazine,
     "minimal":   article_minimal,
     "immersive": article_immersive,
+    "neuro":     article_neuro,
 }
 
 
