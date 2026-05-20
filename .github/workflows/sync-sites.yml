@@ -3,14 +3,11 @@ name: Sync Sites
 # Auto-propagates homepage changes to every site's static pages and articles.
 # Triggers whenever a homepage template (or the shell machinery) changes.
 
+# MANUAL-ONLY: the push-trigger was removed because deploys are driven from the
+# dashboard's Publish panel, and the auto-firing version requires a NETWORK_PAT
+# secret to push cross-repo. Run this workflow by hand from the Actions tab
+# when you actually want to re-sync the network from the bot repo.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'templates/**'
-      - 'layout_shell.py'
-      - 'push-sites.py'
-      - 'rebuild-articles.py'
   workflow_dispatch:
     inputs:
       only:
