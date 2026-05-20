@@ -1284,30 +1284,104 @@ img{{max-width:100%;display:block;height:auto}}
 <body>"""
 
 
-def _seo_meta(title, description, canonical="", og_image="", author="", date_iso=""):
-    """Build SEO / Open Graph / JSON-LD <head> tags for an article page.
-    Returned as a raw tag string for layout_shell.wrap_page(head_meta=...)."""
+def _seo_meta(title, description, canonical="", og_image="", author="", date_iso="",
+              modified_iso="", category="", site_name="", site_url="", word_count=0,
+              keywords=""):
+    """Build Google-grade SEO + Open Graph + JSON-LD tags for an article page.
+
+    Emits: canonical, robots, keywords meta, full Open Graph + Twitter Card,
+    Article schema (datePublished + dateModified, publisher with logo, articleSection,
+    keywords, wordCount, mainEntityOfPage), and a BreadcrumbList schema (Home > Category > Article).
+    Date fields are emitted in ISO 8601 with timezone offset so Google reads them reliably."""
     if not canonical:
         return ""
-    og_img = (f'<meta property="og:image" content="{og_image}">'
-              f'<meta name="twitter:image" content="{og_image}">' if og_image else "")
+
+    import html as _html
+    import json as _json
+
+    def _iso(d):
+        # Ensure a full ISO 8601 timestamp Google trusts.
+        if not d:
+            return ""
+        try:
+            return datetime.strptime(d, "%Y-%m-%d").strftime("%Y-%m-%dT09:00:00+00:00")
+        except ValueError:
+            return d
+
+    pub_iso = _iso(date_iso)
+    mod_iso = _iso(modified_iso) or pub_iso
+    img_url = og_image or ""
+    section = category or ""
+    kw_meta = keywords or section
+
+    og_img = (f'<meta property="og:image" content="{img_url}">'
+              f'<meta property="og:image:alt" content="{_html.escape(title)}">'
+              f'<meta name="twitter:image" content="{img_url}">' if img_url else "")
+    art_section = (f'<meta property="article:section" content="{_html.escape(section)}">' if section else "")
+    pub_tag     = (f'<meta property="article:published_time" content="{pub_iso}">' if pub_iso else "")
+    mod_tag     = (f'<meta property="article:modified_time" content="{mod_iso}">' if mod_iso else "")
+    sn = site_name or ""
+
     tags = (f'<link rel="canonical" href="{canonical}">'
-            f'<meta property="og:title" content="{title}">'
-            f'<meta property="og:description" content="{description}">'
-            f'<meta property="og:url" content="{canonical}">'
-            f'<meta property="og:type" content="article">'
-            f'<meta name="twitter:card" content="summary_large_image">'
-            f'<meta name="twitter:title" content="{title}">'
-            f'<meta name="twitter:description" content="{description}">{og_img}')
+            f'<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">'
+            f'<meta name="googlebot" content="index,follow">'
+            + (f'<meta name="keywords" content="{_html.escape(kw_meta)}">' if kw_meta else "")
+            + (f'<meta name="author" content="{_html.escape(author)}">' if author else "")
+            + (f'<meta property="og:site_name" content="{_html.escape(sn)}">' if sn else "")
+            + f'<meta property="og:title" content="{_html.escape(title)}">'
+            + f'<meta property="og:description" content="{_html.escape(description)}">'
+            + f'<meta property="og:url" content="{canonical}">'
+            + f'<meta property="og:type" content="article">'
+            + f'<meta property="og:locale" content="en_US">'
+            + f'<meta name="twitter:card" content="summary_large_image">'
+            + f'<meta name="twitter:title" content="{_html.escape(title)}">'
+            + f'<meta name="twitter:description" content="{_html.escape(description)}">'
+            + og_img + pub_tag + mod_tag + art_section)
+
+    # Article JSON-LD.
+    article_ld = {
+        "@context":      "https://schema.org",
+        "@type":         "Article",
+        "headline":      title,
+        "description":   description,
+        "datePublished": pub_iso,
+        "dateModified":  mod_iso,
+        "url":           canonical,
+        "mainEntityOfPage": {"@type": "WebPage", "@id": canonical},
+        "inLanguage":    "en",
+    }
+    if img_url:
+        article_ld["image"] = [img_url]
     if author:
-        img_prop = f',"image":"{og_image}"' if og_image else ""
-        st = title.replace('"', '\\"')
-        sd = description.replace('"', '\\"')
-        sa = author.replace('"', '\\"')
-        tags += (f'<script type="application/ld+json">{{"@context":"https://schema.org",'
-                 f'"@type":"Article","headline":"{st}","description":"{sd}",'
-                 f'"author":{{"@type":"Person","name":"{sa}"}},'
-                 f'"datePublished":"{date_iso}","url":"{canonical}"{img_prop}}}</script>')
+        article_ld["author"] = {"@type": "Person", "name": author}
+    if sn:
+        publisher = {"@type": "Organization", "name": sn}
+        if site_url:
+            publisher["url"] = site_url
+            publisher["logo"] = {"@type": "ImageObject",
+                                 "url": site_url.rstrip("/") + "/favicon.ico"}
+        article_ld["publisher"] = publisher
+    if section:
+        article_ld["articleSection"] = section
+    if word_count:
+        article_ld["wordCount"] = int(word_count)
+    if kw_meta:
+        article_ld["keywords"] = kw_meta
+    tags += f'<script type="application/ld+json">{_json.dumps(article_ld, ensure_ascii=False)}</script>'
+
+    # BreadcrumbList JSON-LD: Home > Category > Article.
+    if site_url:
+        crumbs = [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": site_url},
+        ]
+        pos = 2
+        if section:
+            crumbs.append({"@type": "ListItem", "position": pos, "name": section, "item": site_url})
+            pos += 1
+        crumbs.append({"@type": "ListItem", "position": pos, "name": title, "item": canonical})
+        breadcrumb_ld = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": crumbs}
+        tags += f'<script type="application/ld+json">{_json.dumps(breadcrumb_ld, ensure_ascii=False)}</script>'
+
     return tags
 
 
@@ -3402,6 +3476,42 @@ def _site_stem(site):
     return site.get("repo", "").rsplit("/", 1)[-1] or site.get("id", "")
 
 
+_CATEGORIES_CACHE = None
+
+
+def _load_categories():
+    """Load per-site category + keyword config from categories.json (cached)."""
+    global _CATEGORIES_CACHE
+    if _CATEGORIES_CACHE is None:
+        p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "categories.json")
+        try:
+            with open(p, "r", encoding="utf-8") as f:
+                _CATEGORIES_CACHE = json.load(f)
+        except Exception:
+            _CATEGORIES_CACHE = {}
+    return _CATEGORIES_CACHE
+
+
+def assign_category(text, stem):
+    """Return the best-matching category for an article based on the site's keyword
+    config in categories.json. Falls back to the site's 'default' category or empty."""
+    cfg = _load_categories().get(stem)
+    if not cfg:
+        return ""
+    txt = (text or "").lower()
+    best, best_n = cfg.get("default", ""), 0
+    for cat, kws in (cfg.get("keywords") or {}).items():
+        n = sum(1 for k in kws if k.lower() in txt)
+        if n > best_n:
+            best, best_n = cat, n
+    return best
+
+
+def _count_words(html):
+    """Rough word count from HTML (strips tags) for Article schema wordCount."""
+    return len(re.sub(r"<[^>]+>", " ", html or "").split())
+
+
 def build_homepage(site, articles, themes, global_header_scripts="", global_footer_scripts=""):
     """The homepage is the stored templates/<stem>-index.html - the single source of
     truth for the whole site's chrome. The article grid loads client-side from
@@ -3442,8 +3552,28 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     date_iso  = article.get("date_iso", datetime.now().strftime("%Y-%m-%d"))
     canonical = f"https://{site['domain']}/{article['slug']}/"
     title     = f"{article['title']} | {_site_name(site)}"
-    seo       = _seo_meta(title, article["meta_description"], canonical,
-                          image_url or "", author, date_iso)
+    stem      = _site_stem(site)
+    category  = article.get("category") or assign_category(
+        (article.get("intro", "") + " " + article.get("intro2", "") + " " + (article.get("title") or "")),
+        stem,
+    )
+    seo = _seo_meta(
+        title, article["meta_description"], canonical, image_url or "", author, date_iso,
+        modified_iso=datetime.now().strftime("%Y-%m-%d"),
+        category=category,
+        site_name=_site_name(site),
+        site_url=f"https://{site['domain']}/",
+        word_count=_count_words(body),
+        keywords=category,
+    )
+
+    # Semantic <time> for byline dates (Google reads it; helps date detection).
+    disp_date = article.get("date", "")
+    if disp_date and date_iso:
+        body = body.replace(disp_date, f'<time datetime="{date_iso}">{disp_date}</time>', 1)
+
+    # Wrap body in semantic <article> for stronger schema signal.
+    body = f'<article itemscope itemtype="https://schema.org/Article">{body}</article>'
 
     html = layout_shell.wrap_page(
         _site_stem(site), title=title, description=article["meta_description"],
