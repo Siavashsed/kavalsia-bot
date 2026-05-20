@@ -608,6 +608,52 @@ PEXELS_QUERIES = {
 
 
 # ── Shared template helpers ────────────────────────────────────────────────────
+def _shell_body_colors(stem, fallback_text="#1a1a1a", fallback_bg="#ffffff"):
+    """Read the homepage template and return the actual body{background, color}
+    pair (resolving one level of var(--name)) so generated pages (about, legal)
+    use ink that always contrasts with the page background, even if the SITES
+    color tokens are tuned for the nav region instead of the body. Prevents
+    invisible-headline bugs like MindFrame's about page rendering cream on cream."""
+    import re as _re
+    p = layout_shell.template_path(stem)
+    if not p.exists():
+        return fallback_text, fallback_bg
+    txt = p.read_text(encoding="utf-8")
+    def _resolve(val):
+        val = val.strip()
+        if val.startswith("var("):
+            name = val[4:-1].split(",")[0].strip()
+            m = _re.search(rf"{_re.escape(name)}\s*:\s*(#[0-9a-fA-F]{{3,8}})", txt)
+            return m.group(1) if m else None
+        if val.startswith("#"):
+            return val
+        return None
+    color = bg = None
+    body = _re.search(r"\bbody\s*\{([^}]*)\}", txt)
+    if body:
+        block = body.group(1)
+        mc = _re.search(r"\bcolor\s*:\s*([^;]+);", block)
+        mb = _re.search(r"\bbackground(?:-color)?\s*:\s*([^;]+);", block)
+        if mc: color = _resolve(mc.group(1))
+        if mb:
+            # background may be "var(--paper)" or "var(--paper) url(...) ..." - take first token
+            first = mb.group(1).strip().split()[0]
+            bg = _resolve(first)
+    return color or fallback_text, bg or fallback_bg
+
+
+def _ink_for(s):
+    """Page-body text color guaranteed to contrast with the page background.
+    Used by gen_about / legal pages instead of raw s['text']."""
+    text, _ = _shell_body_colors(s['id'], fallback_text=s.get('text', '#1a1a1a'))
+    return text
+
+
+def _page_bg_for(s):
+    _, bg = _shell_body_colors(s['id'], fallback_bg=s.get('surface') or s.get('bg', '#ffffff'))
+    return bg
+
+
 def _story_html(s, css_class='abt-p'):
     """Render story paragraphs from STORIES dict, fallback to bio1/bio2."""
     paras = STORIES.get(s['id'], [s['bio1'], s['bio2']])
@@ -3430,12 +3476,13 @@ def _legal_page(s, page_title, page_slug, body_html):
     """Wrap legal content in the site's homepage shell (header + footer + chrome).
     Content styling is self-contained with literal site colors so it never depends
     on or disturbs the homepage CSS variables."""
+    ink = _ink_for(s)
     css = f""".lg-wrap{{max-width:820px;margin:0 auto;padding:52px 24px 84px}}
-.lg-title{{font-family:{s['font_head']};font-size:clamp(26px,4vw,34px);font-weight:800;margin:0 0 8px;line-height:1.15;color:{s['text']}}}
+.lg-title{{font-family:{s['font_head']};font-size:clamp(26px,4vw,34px);font-weight:800;margin:0 0 8px;line-height:1.15;color:{ink}}}
 .lg-meta{{font-size:12px;color:{s['muted']};margin-bottom:36px;padding-bottom:20px;border-bottom:1px solid {s['brd']}}}
 .lg-h2{{font-family:{s['font_head']};font-size:18px;font-weight:700;margin:30px 0 10px;color:{s['primary']}}}
 .lg-p{{color:{s['muted']};margin-bottom:13px;line-height:1.85;font-size:15px}}
-.lg-p b,.lg-p strong{{color:{s['text']}}}
+.lg-p b,.lg-p strong{{color:{ink}}}
 .lg-p a{{color:{s['primary']}}}
 .lg-ul{{color:{s['muted']};margin:0 0 13px 22px;line-height:1.9;font-size:15px}}
 .lg-ul li{{margin-bottom:4px}}
@@ -3717,9 +3764,10 @@ def gen_meta_policy(s):
 def gen_404(s):
     """404 page wrapped in the homepage shell. The Back link is resolved by a small
     script so it points to the site root regardless of the missing URL's depth."""
+    ink = _ink_for(s)
     css = f""".e404{{max-width:560px;margin:0 auto;padding:88px 24px 96px;text-align:center}}
 .e404-code{{font-family:{s['font_head']};font-size:96px;font-weight:900;color:{s['primary']};opacity:.28;line-height:1;margin-bottom:8px}}
-.e404-title{{font-family:{s['font_head']};font-size:26px;font-weight:800;margin-bottom:12px;color:{s['text']}}}
+.e404-title{{font-family:{s['font_head']};font-size:26px;font-weight:800;margin-bottom:12px;color:{ink}}}
 .e404-sub{{font-size:15px;color:{s['muted']};line-height:1.75;margin-bottom:28px}}
 .e404-back{{display:inline-block;background:{s['primary']};color:{s['bg']};border-radius:6px;padding:12px 28px;font-size:15px;font-weight:700;text-decoration:none;transition:opacity .2s}}
 .e404-back:hover{{opacity:.85}}"""
@@ -3761,26 +3809,32 @@ def gen_about(s):
         <div class="ab-card-bio">{c['bio']}</div>
       </div>""" for c in contributors)
 
+    # Use the actual page-body ink (parsed from the homepage shell) for headings/names
+    # so they stay readable even when SITES['text'] is tuned for the nav (e.g. cream-on-dark)
+    # while the page body is light (e.g. MindFrame's cream paper body).
+    ink     = _ink_for(s)
+    on_ink  = s.get('bg') or '#0b0b0b'  # text-on-primary buttons/avatars
+
     css = f""".ab{{max-width:840px;margin:0 auto;padding:56px 24px 88px}}
 .ab-kicker{{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:{s['primary']};margin-bottom:14px}}
-.ab-title{{font-family:{s['font_head']};font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.15;color:{s['text']};margin:0 0 16px}}
+.ab-title{{font-family:{s['font_head']};font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.15;color:{ink};margin:0 0 16px}}
 .ab-lead{{font-size:17px;line-height:1.7;color:{s['muted']};margin-bottom:40px}}
 .ab-author{{display:flex;gap:16px;align-items:center;background:{s['bg2']};border:1px solid {s['brd']};border-radius:10px;padding:20px 22px;margin-bottom:32px}}
-.ab-avatar{{width:56px;height:56px;border-radius:50%;background:{s['primary']};color:{s['bg']};font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}}
-.ab-name{{font-size:17px;font-weight:700;color:{s['text']}}}
+.ab-avatar{{width:56px;height:56px;border-radius:50%;background:{s['primary']};color:{on_ink};font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}}
+.ab-name{{font-size:17px;font-weight:700;color:{ink}}}
 .ab-role{{font-size:13px;color:{s['primary']};font-weight:600;margin-top:2px}}
-.ab-h2{{font-family:{s['font_head']};font-size:20px;font-weight:700;color:{s['text']};margin:40px 0 14px}}
+.ab-h2{{font-family:{s['font_head']};font-size:20px;font-weight:700;color:{ink};margin:40px 0 14px}}
 .ab-p{{font-size:15px;line-height:1.85;color:{s['muted']};margin-bottom:14px}}
 .ab-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:14px}}
 .ab-card{{background:{s['bg2']};border:1px solid {s['brd']};border-radius:10px;padding:18px}}
-.ab-card-av{{width:38px;height:38px;border-radius:50%;background:{s['primary']};color:{s['bg']};font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}}
-.ab-card-name{{font-size:14px;font-weight:700;color:{s['text']}}}
+.ab-card-av{{width:38px;height:38px;border-radius:50%;background:{s['primary']};color:{on_ink};font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}}
+.ab-card-name{{font-size:14px;font-weight:700;color:{ink}}}
 .ab-card-role{{font-size:11px;font-weight:600;color:{s['primary']};margin:2px 0 7px}}
 .ab-card-bio{{font-size:12px;line-height:1.65;color:{s['muted']}}}
 .ab-cta{{margin-top:44px;background:{s['bg2']};border:1px solid {s['brd']};border-radius:12px;padding:30px 26px;text-align:center}}
-.ab-cta h3{{font-family:{s['font_head']};font-size:19px;font-weight:700;color:{s['text']};margin:0 0 8px}}
+.ab-cta h3{{font-family:{s['font_head']};font-size:19px;font-weight:700;color:{ink};margin:0 0 8px}}
 .ab-cta p{{font-size:14px;color:{s['muted']};margin:0 0 18px}}
-.ab-cta a{{display:inline-block;background:{s['primary']};color:{s['bg']};padding:11px 28px;border-radius:7px;font-size:14px;font-weight:700;text-decoration:none}}"""
+.ab-cta a{{display:inline-block;background:{s['primary']};color:{on_ink};padding:11px 28px;border-radius:7px;font-size:14px;font-weight:700;text-decoration:none}}"""
 
     body = f"""<main class="ab">
   <div class="ab-kicker">About {s['name']}</div>
@@ -5772,6 +5826,56 @@ def _meta_inject(html, site_obj_inline):
     return snip + html
 
 
+# Niche assignment for the Nexus mosaic. Every site in network-config.json must
+# have a niche id here that matches one of the NICHES entries in nexus.html.
+# Add a one-line entry when a new site joins the network. Sites not in this map
+# fall back to NEXUS_DEFAULT_NICHE so they still appear (just under a generic niche).
+NEXUS_SITE_NICHES = {
+  "cryptopulse":"finance","tradingtechreview":"finance","passivewealthguide":"finance","insightinsure":"finance",
+  "mashestate-home":"realestate","mashestate-construction":"realestate",
+  "aimarketingpro":"business","onlinebizpro":"business","ecommerceedge":"business","topproduct":"business",
+  "fitpulsepro":"health","sportiqpro":"health","supplementverge":"health",
+  "datingedge":"lifestyle","newborniq":"lifestyle","mochapoo-pets":"lifestyle",
+  "dalmend-home":"home",
+  "travelverge":"travel","kanona-events":"travel",
+  "carverge":"auto",
+  "makeupcraft":"beauty",
+  "sightreadingacademy":"education",
+  "mindframe":"wellness",
+  "folioatelier":"arts",
+  "modeformstudio":"fashion",
+  "calibernotes":"watches",
+  "crestcharter":"luxury",
+  "strobeatlas":"nightlife",
+}
+NEXUS_DEFAULT_NICHE = "business"
+
+
+def _sync_nexus_sites_array(html):
+    """Rewrite the `const SITES=[ ... ];` block in nexus.html so every site in
+    this module's SITES list appears in the Nexus mosaic. Source of truth is
+    push-sites.py SITES (it has the canonical id, friendly name, and homepage
+    accent color, all aligned with the template/repo). Niche comes from
+    NEXUS_SITE_NICHES; unmapped sites fall back to NEXUS_DEFAULT_NICHE so they
+    still appear. Add a new site to SITES + one line in NEXUS_SITE_NICHES and
+    it shows up on Nexus the next push - no nexus.html edit needed."""
+    import re as _re
+    rows = []
+    for s in SITES:
+        sid = s.get("id")
+        if not sid or sid == "nexus":
+            continue
+        name  = s.get("name") or sid
+        niche = NEXUS_SITE_NICHES.get(sid, NEXUS_DEFAULT_NICHE)
+        color = s.get("primary") or "#4f8ef7"
+        rows.append(f"  {{id:'{sid}', name:'{name}', niche:'{niche}', color:'{color}'}}")
+    new_block = "const SITES=[\n" + ",\n".join(rows) + "\n];"
+    new_html, n = _re.subn(r"const SITES\s*=\s*\[[\s\S]*?\];", new_block, html, count=1)
+    if n == 0:
+        new_html = html.replace("</script>", new_block + "\n</script>", 1)
+    return new_html
+
+
 def push_nexus(token):
     """Push the Nexus mother site (nexus.html + about.html) to Siavashsed/nexus."""
     import json as _json
@@ -5783,6 +5887,9 @@ def push_nexus(token):
     ok = True
     if nexus_src.exists():
         html = nexus_src.read_text()
+        # Auto-sync the in-page SITES array to network-config.json so any newly
+        # added site appears in the Nexus mosaic without a manual nexus.html edit.
+        html = _sync_nexus_sites_array(html)
         # Inject hub API URL so the subscribe form knows where to POST
         hub_url = ""
         if cfg_path.exists():
