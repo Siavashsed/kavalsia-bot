@@ -499,12 +499,9 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-posts" onclick="showPanel('posts')"
         data-tip="Browse, edit, or delete published articles on any site. Edit titles, body text, and push updates directly to GitHub.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span> Manage Posts</button>
-      <button class="nav-btn" id="nav-authors" onclick="showPanel('authors')"
-        data-tip="Change the displayed author (byline) of any published article on any site. Updates both articles.json (homepage card) and the article HTML.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Article Authors</button>
-      <button class="nav-btn" id="nav-schedule" onclick="showPanel('schedule')"
-        data-tip="Per-site posting cadence: how many current articles each day, plus optional historical backfill (notable events from 2019-2024 dated to when they happened).">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Posting Schedule</button>
+      <button class="nav-btn" id="nav-site" onclick="showPanel('site')"
+        data-tip="One panel for every per-site control: identity and persona, posting schedule, content pipeline (topics + categories), and the per-article author editor.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> Site Settings</button>
       <button class="nav-btn" id="nav-analytics" onclick="showPanel('analytics')"
         data-tip="Traffic data from Cloudflare for all 22 sites  -  page views, unique visitors, and bandwidth usage.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> Analytics</button>
@@ -1051,45 +1048,155 @@ textarea{resize:vertical;line-height:1.6}
 </div>
 
 <!-- ════════ ARTICLE AUTHORS ════════ -->
-<div class="panel" id="panel-authors">
-  <div class="pg-title">Article Authors</div>
-  <div class="pg-sub">Change the displayed author (byline) of any published article. Saves to both <code>articles.json</code> (homepage card) and the article HTML (article-page byline) on GitHub.</div>
+<!-- ════════ SITE SETTINGS (consolidated per-site panel) ════════ -->
+<!--
+  Replaces the deprecated panels: panel-authors and panel-schedule.
+  All per-site controls live here, grouped by section. Pick a site from the
+  dropdown to load every editable field for that site. One top SAVE button
+  persists the whole form via /api/site-settings. The Articles section keeps
+  its own per-row Save (each row hits /api/article-author, since each article
+  requires a separate GitHub commit).
+-->
+<div class="panel" id="panel-site">
+  <div class="pg-title">Site Settings</div>
+  <div class="pg-sub">Every per-site control in one place. Pick a site, edit any field, click Save All to persist to <code>network-config.json</code>. The Articles section saves each row individually.</div>
 
   <div class="card" style="margin-bottom:14px">
-    <div class="section-head">Select Site</div>
     <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
-      <div class="form-group" style="flex:1;min-width:220px">
+      <div class="form-group" style="flex:1;min-width:240px;margin-bottom:0">
         <div class="form-label">Site</div>
-        <select id="aa-site-select" onchange="aaLoadArticles()">
+        <select id="ss-site-select" onchange="ssLoadSite()">
           <option value="">-- choose a site --</option>
         </select>
       </div>
-      <button class="btn btn-sm btn-blue" onclick="aaLoadArticles()" style="margin-bottom:1px">Reload</button>
-      <div style="font-size:11px;color:var(--text3);margin-left:auto;align-self:center">Tip: use the dropdown for known authors in the site pool, or type a custom name.</div>
+      <button class="btn btn-sm btn-blue" onclick="ssLoadSite()" style="margin-bottom:1px">Reload</button>
+      <button class="btn btn-accent" id="ss-save-all" onclick="ssSaveAll()" style="margin-bottom:1px;font-weight:700">Save All Settings</button>
+      <span id="ss-save-status" style="font-size:12px;color:var(--text3);align-self:center"></span>
     </div>
-    <div id="aa-status" style="font-size:12px;color:var(--text3);margin-top:10px"></div>
   </div>
 
-  <div class="card">
-    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
-      <span>Articles</span>
-      <span id="aa-count" style="font-size:11px;color:var(--text3)"></span>
-    </div>
-    <div id="aa-list"><div class="empty"><b>No site selected</b>Choose a site above to load its articles.</div></div>
-  </div>
-</div>
+  <div id="ss-body" style="display:none">
 
-<!-- ════════ POSTING SCHEDULE ════════ -->
-<div class="panel" id="panel-schedule">
-  <div class="pg-title">Posting Schedule</div>
-  <div class="pg-sub">Per-site posting cadence. Each daily run publishes <code>posts_per_day_new</code> current articles. If <code>historical_mode</code> is on and fewer than <code>historical_per_week</code> historical posts ran in the last 7 days, the site also publishes ONE backdated article about a notable 2019-2024 event in its niche (dated to when it actually happened). Saved to <code>network-config.json</code>.</div>
-
-  <div class="card">
-    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
-      <span>Sites</span>
-      <span id="ps-count" style="font-size:11px;color:var(--text3)"></span>
+    <!-- ── Identity & Persona ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">Identity &amp; Persona</div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Brand / Site Name</div>
+          <input type="text" id="ss-name" placeholder="e.g. CryptoPulse">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Default Author <span style="color:var(--text3)">(byline used when no per-article author is set)</span></div>
+          <input type="text" id="ss-default-author" placeholder="e.g. Marcus Webb" list="ss-author-pool-dl">
+          <datalist id="ss-author-pool-dl"></datalist>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Author Pool <span style="color:var(--text3)">(comma-separated; bot picks from this list)</span></div>
+        <input type="text" id="ss-author-names" placeholder="Marcus Webb, Jordan Osei, Elena Vasquez">
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Persona <span style="color:var(--text3)">(short bio line for the bot)</span></div>
+          <input type="text" id="ss-persona" placeholder="e.g. Ex-quant trader covering algorithmic crypto">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Tone</div>
+          <input type="text" id="ss-tone" placeholder="analytical and data-driven...">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Custom Prompt <span style="color:var(--text3)">(extra instructions appended to the article generation prompt)</span></div>
+        <textarea id="ss-custom-prompt" rows="3" placeholder="Optional - leave blank to use defaults" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Custom CSS <span style="color:var(--text3)">(injected into every page of this site)</span></div>
+        <textarea id="ss-custom-css" rows="4" placeholder="/* optional CSS overrides */" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:ui-monospace,Menlo,monospace;resize:vertical"></textarea>
+      </div>
     </div>
-    <div id="ps-list"><div class="empty"><b>Loading…</b>Reading network-config.json.</div></div>
+
+    <!-- ── Posting Schedule ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">Posting Schedule</div>
+      <div class="settings-row" style="align-items:center">
+        <div class="form-group">
+          <div class="form-label">New posts per day <span style="color:var(--text3)">(1-5)</span></div>
+          <input type="number" id="ss-ppdn" min="1" max="5" value="1">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Posts per week cap <span style="color:var(--text3)">(0 = no cap)</span></div>
+          <input type="number" id="ss-ppw" min="0" max="50" value="0">
+        </div>
+      </div>
+      <div class="settings-row" style="align-items:center">
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+            <input type="checkbox" id="ss-hist-mode" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+            Historical mode <span style="color:var(--text3);font-size:11px">(backfill notable events from prior years, dated to when they happened)</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Historical per week <span style="color:var(--text3)">(0-14)</span></div>
+          <input type="number" id="ss-hpw" min="0" max="14" value="0">
+        </div>
+      </div>
+      <div class="settings-row" style="align-items:center">
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+            <input type="checkbox" id="ss-warming" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+            Warming mode <span style="color:var(--text3);font-size:11px">(gentler cadence while the site is new)</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Content Pipeline ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">Content Pipeline</div>
+      <div class="form-group">
+        <div class="form-label">Topics <span style="color:var(--text3)">(one per line - article seeds for the bot)</span></div>
+        <textarea id="ss-topics" rows="6" placeholder="one topic per line" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:ui-monospace,Menlo,monospace;resize:vertical"></textarea>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Categories <span style="color:var(--text3)">(one per line - from categories.json)</span></div>
+          <textarea id="ss-categories" rows="6" placeholder="one category per line" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:ui-monospace,Menlo,monospace;resize:vertical"></textarea>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Default Category</div>
+          <input type="text" id="ss-default-category" placeholder="e.g. Algorithmic Trading" list="ss-cat-dl">
+          <datalist id="ss-cat-dl"></datalist>
+          <div style="margin-top:14px"></div>
+          <div class="form-label">Signup URL <span style="color:var(--text3)">(newsletter / lead form)</span></div>
+          <input type="text" id="ss-signup-url" placeholder="https://...">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Header Scripts <span style="color:var(--text3)">(injected into &lt;head&gt;)</span></div>
+        <textarea id="ss-header-scripts" rows="3" placeholder="&lt;link rel=&quot;stylesheet&quot; href=&quot;...&quot;&gt;" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:ui-monospace,Menlo,monospace;resize:vertical"></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Footer Scripts <span style="color:var(--text3)">(injected before &lt;/body&gt;)</span></div>
+        <textarea id="ss-footer-scripts" rows="3" placeholder="&lt;script&gt;...&lt;/script&gt;" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:ui-monospace,Menlo,monospace;resize:vertical"></textarea>
+      </div>
+    </div>
+
+    <!-- ── Articles (per-row Save - absorbs old Article Authors panel) ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Articles <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">edit per-article author byline - saves to articles.json + article HTML</span></span>
+        <span>
+          <button class="btn btn-sm btn-blue" onclick="aaLoadArticles()">Reload Articles</button>
+          <span id="aa-count" style="font-size:11px;color:var(--text3);margin-left:8px"></span>
+        </span>
+      </div>
+      <div id="aa-status" style="font-size:12px;color:var(--text3);margin:6px 0 10px"></div>
+      <div id="aa-list"><div class="empty"><b>No site selected</b>Choose a site above to load its articles.</div></div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin:6px 0 20px">
+      <button class="btn btn-accent" onclick="ssSaveAll()" style="font-weight:700">Save All Settings</button>
+    </div>
   </div>
 </div>
 
@@ -3828,8 +3935,11 @@ let _aaArticles = [];
 let _aaCurrentSite = null;     // full site object from cfg
 let _aaAuthorPool = [];
 
+// Populates the (shared) Site Settings site dropdown. Called when the
+// consolidated panel-site is shown. Kept name "aaInit" so existing call sites
+// continue to work, but it now targets ss-site-select.
 function aaInit() {
-  const sel = document.getElementById('aa-site-select');
+  const sel = document.getElementById('ss-site-select');
   if (!sel) return;
   while (sel.options.length > 1) sel.remove(1);
   const sites = (cfg && cfg.sites) ? cfg.sites : [];
@@ -3838,7 +3948,7 @@ function aaInit() {
     .forEach(site => {
       const opt = document.createElement('option');
       opt.value = site.id;
-      opt.textContent = `${site.id} — ${site.domain || ''}`;
+      opt.textContent = `${site.id} - ${site.domain || ''}`;
       sel.appendChild(opt);
     });
   // Preserve current selection if any
@@ -3846,8 +3956,8 @@ function aaInit() {
 }
 
 async function aaLoadArticles() {
-  const sel = document.getElementById('aa-site-select');
-  const sid = sel.value;
+  const sel = document.getElementById('ss-site-select');
+  const sid = sel ? sel.value : '';
   const listEl   = document.getElementById('aa-list');
   const countEl  = document.getElementById('aa-count');
   const statusEl = document.getElementById('aa-status');
@@ -3991,119 +4101,192 @@ async function aaSave(i) {
   }
 }
 
-// ── Posting Schedule ──────────────────────────────────────────────────────
-function psEscape(s) {
+// ── Site Settings (consolidated per-site panel) ───────────────────────────
+// Loads the selected site from cfg into the form, then ssSaveAll() persists
+// the entire form via POST /api/site-settings { site_id, fields:{...} }.
+// The Articles sub-section keeps its own per-row Save via /api/article-author.
+function ssEsc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
     { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
   ));
 }
 
-function psRender() {
-  const listEl  = document.getElementById('ps-list');
-  const countEl = document.getElementById('ps-count');
-  if (!listEl) return;
-  const sites = (cfg && cfg.sites) ? cfg.sites.filter(s => !s.is_mother_site) : [];
-  if (!sites.length) {
-    listEl.innerHTML = '<div class="empty"><b>No sites</b>No sites found in network-config.json.</div>';
-    countEl.textContent = '';
-    return;
-  }
-  countEl.textContent = `${sites.length} sites`;
-  const rows = sites.map((s, i) => {
-    const histOn = s.historical_mode === true;
-    const ppdn   = Number.isFinite(+s.posts_per_day_new) ? +s.posts_per_day_new : 1;
-    const hpw    = Number.isFinite(+s.historical_per_week) ? +s.historical_per_week : 0;
-    const name   = s.name || s.id;
-    const domain = s.domain || '';
-    const homeUrl = postUrl(domain, '');
-    const nameHtml = postLink(homeUrl, psEscape(name));
-    const domainHtml = postLink(homeUrl, psEscape(domain));
-    return `
-      <div class="pm-post-row" style="align-items:center" data-sid="${psEscape(s.id)}">
-        <div class="pm-post-info" style="min-width:0">
-          <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nameHtml}</div>
-          <div class="pm-post-meta">${domainHtml} - <code style="opacity:.7">${psEscape(s.id)}</code></div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer;user-select:none">
-            <input type="checkbox" id="ps-hist-${i}" ${histOn ? 'checked' : ''}
-              style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
-            Historical
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)">
-            New/day
-            <input type="number" id="ps-ppdn-${i}" min="1" max="5" value="${ppdn}"
-              style="width:60px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;text-align:center">
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)">
-            Hist/week
-            <input type="number" id="ps-hpw-${i}" min="0" max="14" value="${hpw}"
-              style="width:60px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;text-align:center">
-          </label>
-          <button class="btn btn-sm btn-green" onclick="psSave(${i})">Save</button>
-          <span id="ps-result-${i}" style="font-size:11px;color:var(--text3);min-width:60px"></span>
-        </div>
-      </div>`;
-  }).join('');
-  listEl.innerHTML = rows;
+function ssVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+function ssSetVal(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.value = (v == null ? '' : v);
+}
+function ssSetChk(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.checked = !!v;
 }
 
-async function psSave(i) {
-  const sites = (cfg && cfg.sites) ? cfg.sites.filter(s => !s.is_mother_site) : [];
-  const site = sites[i];
-  const resEl = document.getElementById('ps-result-' + i);
-  if (!site || !resEl) return;
-
-  const histEl = document.getElementById('ps-hist-' + i);
-  const ppdnEl = document.getElementById('ps-ppdn-' + i);
-  const hpwEl  = document.getElementById('ps-hpw-' + i);
-  const histOn = !!(histEl && histEl.checked);
-  const ppdn   = parseInt(ppdnEl.value, 10);
-  const hpw    = parseInt(hpwEl.value, 10);
-
-  if (!Number.isFinite(ppdn) || ppdn < 1 || ppdn > 5) {
-    resEl.style.color = 'var(--red,#f44)'; resEl.textContent = 'New/day 1-5'; return;
+function ssLoadSite() {
+  const sel = document.getElementById('ss-site-select');
+  const body = document.getElementById('ss-body');
+  const sid = sel ? sel.value : '';
+  if (!sid) {
+    body.style.display = 'none';
+    _aaCurrentSite = null;
+    return;
   }
-  if (!Number.isFinite(hpw) || hpw < 0 || hpw > 14) {
-    resEl.style.color = 'var(--red,#f44)'; resEl.textContent = 'Hist/week 0-14'; return;
+  const site = (cfg.sites || []).find(s => s.id === sid);
+  if (!site) {
+    body.style.display = 'none';
+    return;
   }
+  _aaCurrentSite = site;
+  _aaAuthorPool = Array.isArray(site.author_names) ? site.author_names.slice() : [];
+  body.style.display = 'block';
 
-  resEl.style.color = 'var(--text2)';
-  resEl.textContent = 'Saving...';
+  // Identity & Persona
+  ssSetVal('ss-name', site.name || site.id);
+  ssSetVal('ss-default-author', site.default_author || '');
+  ssSetVal('ss-author-names', Array.isArray(site.author_names) ? site.author_names.join(', ') : '');
+  ssSetVal('ss-persona', site.persona || '');
+  ssSetVal('ss-tone', site.tone || '');
+  ssSetVal('ss-custom-prompt', site.custom_prompt || '');
+  ssSetVal('ss-custom-css', site.custom_css || '');
+
+  // Posting Schedule
+  const ppdn = Number.isFinite(+site.posts_per_day_new) ? +site.posts_per_day_new : 1;
+  const ppw  = Number.isFinite(+site.posts_per_week) ? +site.posts_per_week : 0;
+  const hpw  = Number.isFinite(+site.historical_per_week) ? +site.historical_per_week : 0;
+  ssSetVal('ss-ppdn', ppdn);
+  ssSetVal('ss-ppw', ppw);
+  ssSetVal('ss-hpw', hpw);
+  ssSetChk('ss-hist-mode', site.historical_mode === true);
+  ssSetChk('ss-warming', !!(site.warming && site.warming.enabled));
+
+  // Content Pipeline - topics list
+  const topics = Array.isArray(site.topics) ? site.topics : [];
+  ssSetVal('ss-topics', topics.join('\n'));
+  ssSetVal('ss-signup-url', site.signup_url || '');
+  ssSetVal('ss-header-scripts', site.header_scripts || '');
+  ssSetVal('ss-footer-scripts', site.footer_scripts || '');
+
+  // Categories - merge categories.json (if available) with current site
+  // categories override. We surface the current per-site list (defaults
+  // to the categories.json list if none).
+  let cats = Array.isArray(site.categories) ? site.categories.slice() : null;
+  if (!cats && typeof CATS_BY_SITE === 'object' && CATS_BY_SITE && CATS_BY_SITE[sid]) {
+    cats = (CATS_BY_SITE[sid].categories) || [];
+  }
+  cats = cats || [];
+  ssSetVal('ss-categories', cats.join('\n'));
+  ssSetVal('ss-default-category', site.default_category || '');
+
+  // Datalists for autocomplete
+  const catDl = document.getElementById('ss-cat-dl');
+  if (catDl) catDl.innerHTML = cats.map(c => `<option value="${ssEsc(c)}">`).join('');
+  const authDl = document.getElementById('ss-author-pool-dl');
+  if (authDl) authDl.innerHTML = _aaAuthorPool.map(n => `<option value="${ssEsc(n)}">`).join('');
+
+  // Auto-load Articles for this site
+  aaLoadArticles();
+}
+
+// Fetched once per session (best effort) so the Categories dropdowns can suggest
+// the per-site canonical list from categories.json.
+let CATS_BY_SITE = null;
+async function ssLoadCategories() {
+  if (CATS_BY_SITE) return CATS_BY_SITE;
   try {
-    const r = await fetch('/api/site-schedule', {
-      method:  'POST',
+    const r = await fetch('/categories.json', { cache: 'no-cache' });
+    if (r.ok) CATS_BY_SITE = await r.json();
+  } catch(_) { CATS_BY_SITE = {}; }
+  return CATS_BY_SITE;
+}
+
+async function ssSaveAll() {
+  const site = _aaCurrentSite;
+  const statusEl = document.getElementById('ss-save-status');
+  if (!site) {
+    if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Pick a site first.'; }
+    return;
+  }
+
+  // Validate
+  const ppdn = parseInt(ssVal('ss-ppdn'), 10);
+  if (!Number.isFinite(ppdn) || ppdn < 1 || ppdn > 5) {
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'New posts per day must be 1-5.'; return;
+  }
+  const ppw = parseInt(ssVal('ss-ppw'), 10);
+  if (!Number.isFinite(ppw) || ppw < 0 || ppw > 50) {
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Posts per week cap must be 0-50.'; return;
+  }
+  const hpw = parseInt(ssVal('ss-hpw'), 10);
+  if (!Number.isFinite(hpw) || hpw < 0 || hpw > 14) {
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Historical per week must be 0-14.'; return;
+  }
+
+  const authorNames = ssVal('ss-author-names')
+    .split(',').map(s => s.trim()).filter(Boolean);
+  const topics = ssVal('ss-topics').split('\n').map(s => s.trim()).filter(Boolean);
+  const categories = ssVal('ss-categories').split('\n').map(s => s.trim()).filter(Boolean);
+  const histMode = !!document.getElementById('ss-hist-mode').checked;
+  const warmingOn = !!document.getElementById('ss-warming').checked;
+
+  // Build fields dict - only fields we manage in this panel. Server merges
+  // these into the site object in network-config.json.
+  const fields = {
+    name:                ssVal('ss-name').trim() || site.id,
+    default_author:      ssVal('ss-default-author').trim(),
+    author_names:        authorNames,
+    persona:             ssVal('ss-persona').trim(),
+    tone:                ssVal('ss-tone').trim(),
+    custom_prompt:       ssVal('ss-custom-prompt'),
+    custom_css:          ssVal('ss-custom-css'),
+    posts_per_day_new:   ppdn,
+    posts_per_week:      ppw,
+    historical_mode:     histMode,
+    historical_per_week: hpw,
+    topics:              topics,
+    categories:          categories,
+    default_category:    ssVal('ss-default-category').trim(),
+    signup_url:          ssVal('ss-signup-url').trim(),
+    header_scripts:      ssVal('ss-header-scripts'),
+    footer_scripts:      ssVal('ss-footer-scripts'),
+    // Nested merge for warming.enabled
+    warming: Object.assign({}, site.warming || {}, { enabled: warmingOn }),
+  };
+
+  statusEl.style.color = 'var(--text2)';
+  statusEl.textContent = 'Saving...';
+  try {
+    const r = await fetch('/api/site-settings', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        site_id:             site.id,
-        historical_mode:     histOn,
-        posts_per_day_new:   ppdn,
-        historical_per_week: hpw,
-      }),
+      body: JSON.stringify({ site_id: site.id, fields: fields }),
     });
     let data = null;
     try { data = await r.json(); } catch(_) {}
     if (!r.ok) {
-      resEl.style.color = 'var(--red,#f44)';
-      resEl.textContent = 'Fail: ' + ((data && data.error) || ('HTTP ' + r.status));
+      statusEl.style.color = 'var(--red,#f44)';
+      statusEl.textContent = 'Fail: ' + ((data && data.error) || ('HTTP ' + r.status));
       return;
     }
-    // Update in-memory cfg so future renders show the new values
-    const liveSite = (cfg.sites || []).find(s => s.id === site.id);
-    if (liveSite) {
-      liveSite.historical_mode     = histOn;
-      liveSite.posts_per_day_new   = ppdn;
-      liveSite.historical_per_week = hpw;
-    }
-    resEl.style.color = 'var(--green,#4caf50)';
-    resEl.textContent = 'Saved';
-    setTimeout(() => { if (resEl.textContent === 'Saved') resEl.textContent = ''; }, 2500);
+    // Update in-memory cfg
+    Object.assign(site, fields);
+    statusEl.style.color = 'var(--green,#4caf50)';
+    statusEl.textContent = 'Saved network-config.json';
+    setTimeout(() => { if (statusEl.textContent.startsWith('Saved')) statusEl.textContent = ''; }, 3500);
   } catch(e) {
-    resEl.style.color = 'var(--red,#f44)';
-    resEl.textContent = 'Network error';
-    resEl.title = String(e);
+    statusEl.style.color = 'var(--red,#f44)';
+    statusEl.textContent = 'Network error: ' + e.message;
   }
 }
+
+// ── Deprecated psRender/psSave (panel-schedule was folded into Site Settings).
+// Stubs kept as no-ops so any leftover call sites do not throw.
+function psRender() { /* removed - see ssLoadSite */ }
+async function psSave() { /* removed - see ssSaveAll */ }
+
+// (legacy panel-schedule code removed - posting schedule now lives in Site Settings.)
+
 
 // ── Publish / Sync Center ─────────────────────────────────────────────────
 let _pubPending = [];      // [{id, kind, path, target_repo, label, summary, ...}]
@@ -5800,8 +5983,12 @@ function showPanel(id) {
   if (id === 'history') renderHistory();
   if (id === 'settings') loadSettings();
   if (id === 'posts') pmRefreshSiteSelect();
-  if (id === 'authors') aaInit();
-  if (id === 'schedule') psRender();
+  // Deprecated panels (authors, schedule) are folded into the unified Site
+  // Settings panel. Old IDs still route here so any stale link keeps working.
+  if (id === 'authors' || id === 'schedule' || id === 'site') {
+    aaInit();
+    if (typeof ssLoadCategories === 'function') ssLoadCategories();
+  }
   if (id === 'publish') pubInit();
   if (id === 'tokens') tvLoad();
   if (id === 'settings') renderSiteToggles();
