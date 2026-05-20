@@ -1755,6 +1755,42 @@
       "historical_mode": true,
       "historical_per_week": 14,
       "posts_per_day_new": 1
+    },
+    {
+      "id": "mindframe",
+      "name": "MindFrame",
+      "repo": "Siavashsed/mindframe",
+      "domain": "siavashsed.github.io/mindframe",
+      "category": "Psychology & Neurobiology",
+      "layout": "cards",
+      "article_layout": "neuro",
+      "theme": "dark",
+      "nav_style": "default",
+      "topics": [
+        "How memory consolidation happens during sleep",
+        "Why your brain confuses familiarity with truth",
+        "The neuroscience of procrastination",
+        "How dopamine shapes goal-directed behavior",
+        "Attachment styles and adult relationships",
+        "Cognitive biases worth knowing",
+        "The science of habit formation",
+        "How chronic stress reshapes the prefrontal cortex"
+      ],
+      "author": "Dr. Maya Holloway",
+      "author_names": [
+        "Dr. Maya Holloway",
+        "Dr. Idris Kelman",
+        "Dr. Priya Ramani"
+      ],
+      "posts_per_day_new": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "warming": {
+        "enabled": false
+      },
+      "header_scripts": "",
+      "footer_scripts": "",
+      "custom_css": ""
     }
   ]
 }
