@@ -3512,6 +3512,211 @@ def _count_words(html):
     return len(re.sub(r"<[^>]+>", " ", html or "").split())
 
 
+# ── GHL (GoHighLevel) capture snippet ────────────────────────────────────────
+# Returns a <script> block that auto-attaches a submit handler to any form on
+# the page containing an email input, and POSTs a JSON payload to the resolved
+# webhook URL. Per-site overrides global. If both are disabled or no URL is
+# resolved, returns "" (no capture).
+_GHL_SETTINGS_CACHE = {"loaded": False, "settings": {}}
+
+def _load_ghl_global_settings():
+    """Cached read of settings.ghl from network-config.json (cheap, but skip re-read)."""
+    if _GHL_SETTINGS_CACHE["loaded"]:
+        return _GHL_SETTINGS_CACHE["settings"]
+    try:
+        cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "network-config.json")
+        with open(cfg_path) as f:
+            cfg = json.load(f)
+        _GHL_SETTINGS_CACHE["settings"] = (cfg.get("settings") or {}).get("ghl") or {}
+    except Exception:
+        _GHL_SETTINGS_CACHE["settings"] = {}
+    _GHL_SETTINGS_CACHE["loaded"] = True
+    return _GHL_SETTINGS_CACHE["settings"]
+
+
+def resolve_ghl_for_site(site, global_ghl=None):
+    """
+    Resolve effective GHL config for a site:
+      enabled     : site override else global enabled (must be True)
+      webhook_url : site override else global webhook_url
+      tags        : merged list of [site_id] + site.tags + global.default_tags (deduped)
+    Returns dict or None if disabled / no URL.
+    """
+    gg = global_ghl if global_ghl is not None else _load_ghl_global_settings()
+    sg = (site.get("ghl") or {}) if isinstance(site, dict) else {}
+
+    enabled = sg.get("enabled") if "enabled" in sg else gg.get("enabled", False)
+    if not enabled:
+        return None
+
+    url = (sg.get("webhook_url") or "").strip() or (gg.get("webhook_url") or "").strip()
+    if not url:
+        return None
+
+    site_id = site.get("id", "") if isinstance(site, dict) else ""
+    tags = []
+    if site_id:
+        tags.append(site_id)
+    for t in (sg.get("tags") or []):
+        if isinstance(t, str) and t.strip():
+            tags.append(t.strip())
+    for t in (gg.get("default_tags") or []):
+        if isinstance(t, str) and t.strip():
+            tags.append(t.strip())
+    # Dedupe preserving order
+    seen = set(); deduped = []
+    for t in tags:
+        if t not in seen:
+            seen.add(t); deduped.append(t)
+
+    return {
+        "enabled": True,
+        "webhook_url": url,
+        "tags": deduped,
+        "site_id": site_id,
+        "site_name": site.get("name") or site.get("id") or "",
+    }
+
+
+def build_ghl_capture_snippet(site, global_ghl=None):
+    """Returns a self-contained <script> string or '' if GHL capture is off."""
+    eff = resolve_ghl_for_site(site, global_ghl=global_ghl)
+    if not eff:
+        return ""
+    cfg_json = json.dumps({
+        "webhook_url": eff["webhook_url"],
+        "site_id":     eff["site_id"],
+        "site_name":   eff["site_name"],
+        "tags":        eff["tags"],
+    })
+    # Keep this tiny + defensive. No exceptions surfaced to user.
+    return (
+        "<script>(function(){try{"
+        "var GHL=" + cfg_json + ";"
+        "function utm(){var p=new URLSearchParams(location.search),o={},k=['utm_source','utm_medium','utm_campaign','utm_term','utm_content','gclid','fbclid'];"
+        "k.forEach(function(x){var v=p.get(x);if(v)o[x]=v;});return o;}"
+        "function send(email){if(!email||!/.+@.+\\..+/.test(email))return;"
+        "var body={email:email,site_id:GHL.site_id,site_name:GHL.site_name,page_url:location.href,page_title:document.title,referrer:document.referrer||'',tags:GHL.tags,utm:utm(),submitted_at:new Date().toISOString()};"
+        "fetch(GHL.webhook_url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),mode:'cors',keepalive:true})"
+        ".catch(function(e){try{console.warn('[GHL] capture failed',e);}catch(_){};});}"
+        "function attach(){var forms=document.querySelectorAll('form');forms.forEach(function(f){"
+        "if(f.__ghlBound)return;var em=f.querySelector('input[type=email],input[name*=email i]');if(!em)return;"
+        "f.__ghlBound=true;f.addEventListener('submit',function(){try{send((em.value||'').trim());}catch(_){};},true);});"
+        "var btns=document.querySelectorAll('button,[role=button]');btns.forEach(function(b){"
+        "if(b.__ghlBound)return;var fn=(b.getAttribute('onclick')||'')+' '+(b.textContent||'');"
+        "if(/nlSubscribe|subscribe\\(/i.test(fn)||/subscribe|sign\\s*up|join/i.test(b.textContent||'')){"
+        "b.__ghlBound=true;b.addEventListener('click',function(){"
+        "var em=document.querySelector('input[type=email]');if(em)try{send((em.value||'').trim());}catch(_){};},true);}});}"
+        "if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',attach);}else{attach();}"
+        "setTimeout(attach,1500);"
+        "}catch(e){try{console.warn('[GHL] init failed',e);}catch(_){};}})();</script>"
+    )
+
+
+# ── Meta Pixel + CAPI snippet ────────────────────────────────────────────────
+# Independent of the GHL snippet. Resolves settings.meta (global) merged with
+# sites[i].meta (per-site overrides), then returns a <script> block that loads
+# fbevents.js, fires PageView (when enabled), a custom "<Site Name> Visit"
+# event on every page load, and a "<Site Name> NewsletterSignup" event when a
+# form with an email field is submitted (email is SHA-256 hashed client-side).
+# Returns "" when Meta is disabled or no pixel_id is configured.
+_META_SETTINGS_CACHE = {"loaded": False, "settings": {}}
+
+def _load_meta_global_settings():
+    if _META_SETTINGS_CACHE["loaded"]:
+        return _META_SETTINGS_CACHE["settings"]
+    try:
+        cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "network-config.json")
+        with open(cfg_path) as f:
+            cfg = json.load(f)
+        _META_SETTINGS_CACHE["settings"] = (cfg.get("settings") or {}).get("meta") or {}
+    except Exception:
+        _META_SETTINGS_CACHE["settings"] = {}
+    _META_SETTINGS_CACHE["loaded"] = True
+    return _META_SETTINGS_CACHE["settings"]
+
+def _resolve_meta(site):
+    g = _load_meta_global_settings()
+    out = {
+        "enabled":            bool(g.get("enabled", False)),
+        "pixel_id":           str(g.get("pixel_id", "") or ""),
+        "capi_token":         str(g.get("capi_token", "") or ""),
+        "capi_dataset_id":    str(g.get("capi_dataset_id", "") or ""),
+        "test_event_code":    str(g.get("test_event_code", "") or ""),
+        "fire_pageview":      bool(g.get("fire_pageview", True)),
+        "custom_audience_id": str(g.get("custom_audience_id", "") or ""),
+    }
+    s = (site or {}).get("meta") or {}
+    if not isinstance(s, dict):
+        s = {}
+    if "enabled" in s:        out["enabled"]       = bool(s.get("enabled"))
+    if "fire_pageview" in s:  out["fire_pageview"] = bool(s.get("fire_pageview"))
+    for k in ("pixel_id", "capi_token", "capi_dataset_id", "test_event_code", "custom_audience_id"):
+        v = s.get(k)
+        if isinstance(v, str) and v.strip():
+            out[k] = v.strip()
+    return out
+
+def _meta_site_display_name(site):
+    return (site.get("name") or site.get("id") or "Site").strip() or "Site"
+
+def build_meta_pixel_snippet(site):
+    """Return the Meta Pixel <script> block for this site, or '' if disabled."""
+    if not site:
+        return ""
+    r = _resolve_meta(site)
+    if not r["enabled"]:
+        return ""
+    pixel_id = r["pixel_id"]
+    if not pixel_id:
+        return ""
+    site_name  = _meta_site_display_name(site)
+    site_id    = site.get("id", "")
+    visit_evt  = f"{site_name} Visit"
+    signup_evt = f"{site_name} NewsletterSignup"
+    fire_pv    = "true" if r["fire_pageview"] else "false"
+    mirror_capi = "true" if (r["capi_token"] and r["capi_dataset_id"]) else "false"
+    return (
+        "<!-- Meta Pixel (Kavalsia network) -->\n"
+        "<script>\n"
+        "(function(){\n"
+        "if(window.__KAVALSIA_META_LOADED)return;window.__KAVALSIA_META_LOADED=true;\n"
+        "!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?"
+        "n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;"
+        "n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;"
+        "t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,"
+        "document,'script','https://connect.facebook.net/en_US/fbevents.js');\n"
+        f"fbq('init', {json.dumps(pixel_id)});\n"
+        f"var FIRE_PV={fire_pv},SITE_ID={json.dumps(site_id)},VISIT_EVT={json.dumps(visit_evt)},"
+        f"SIGNUP_EVT={json.dumps(signup_evt)},MIRROR_CAPI={mirror_capi};\n"
+        "if(FIRE_PV){try{fbq('track','PageView');}catch(e){}}\n"
+        "try{fbq('trackCustom',VISIT_EVT,{site_id:SITE_ID,page_path:location.pathname,"
+        "page_title:document.title,referrer:document.referrer||''});}catch(e){}\n"
+        "function sha256Hex(str){if(!window.crypto||!crypto.subtle)return Promise.resolve('');"
+        "var buf=new TextEncoder().encode(String(str||'').trim().toLowerCase());"
+        "return crypto.subtle.digest('SHA-256',buf).then(function(h){"
+        "return Array.prototype.map.call(new Uint8Array(h),function(b){"
+        "return ('00'+b.toString(16)).slice(-2);}).join('');});}\n"
+        "function mirrorCAPI(evtName,payload){if(!MIRROR_CAPI)return;try{"
+        "var hub=(window.KAVALSIA_HUB_URL||'').replace(/\\/$/,'');if(!hub)return;"
+        "fetch(hub+'/api/meta-capi',{method:'POST',headers:{'Content-Type':'application/json'},"
+        "body:JSON.stringify({site_id:SITE_ID,event_name:evtName,payload:payload})})"
+        ".catch(function(){});}catch(e){}}\n"
+        "mirrorCAPI(VISIT_EVT,{page_path:location.pathname});\n"
+        "document.addEventListener('submit',function(ev){try{var f=ev.target;"
+        "if(!f||!f.tagName||f.tagName.toLowerCase()!=='form')return;"
+        "var emailEl=f.querySelector('input[type=email], input[name*=email i]');"
+        "if(!emailEl||!emailEl.value)return;var email=emailEl.value;"
+        "sha256Hex(email).then(function(h){try{fbq('trackCustom',SIGNUP_EVT,{email_hashed:h});}catch(e){}"
+        "mirrorCAPI(SIGNUP_EVT,{email_hashed:h});});}catch(e){}},true);\n"
+        "})();\n"
+        "</script>\n"
+        f"<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" "
+        f"src=\"https://www.facebook.com/tr?id={pixel_id}&ev=PageView&noscript=1\"/></noscript>\n"
+        "<!-- End Meta Pixel -->\n"
+    )
+
+
 def build_homepage(site, articles, themes, global_header_scripts="", global_footer_scripts=""):
     """The homepage is the stored templates/<stem>-index.html - the single source of
     truth for the whole site's chrome. The article grid loads client-side from
@@ -3520,7 +3725,9 @@ def build_homepage(site, articles, themes, global_header_scripts="", global_foot
     custom = site.get("custom_css", "").strip()
     if custom and "</style>" in html:
         html = html.replace("</style>", f"\n/* custom */\n{custom}\n</style>", 1)
-    header_scripts = "\n".join(filter(None, [global_header_scripts.strip(), site.get("header_scripts", "").strip()]))
+    ghl_snippet  = build_ghl_capture_snippet(site)
+    meta_snippet = build_meta_pixel_snippet(site)
+    header_scripts = "\n".join(filter(None, [global_header_scripts.strip(), ghl_snippet, meta_snippet, site.get("header_scripts", "").strip()]))
     footer_scripts = "\n".join(filter(None, [global_footer_scripts.strip(), site.get("footer_scripts", "").strip()]))
     if header_scripts:
         html = html.replace("</head>", f"{header_scripts}\n</head>", 1)
@@ -3584,7 +3791,9 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     if affiliate:
         html = inject_affiliate_links(html, affiliate)
 
-    header_scripts = "\n".join(filter(None, [global_header_scripts.strip(), site.get("header_scripts", "").strip()]))
+    ghl_snippet  = build_ghl_capture_snippet(site)
+    meta_snippet = build_meta_pixel_snippet(site)
+    header_scripts = "\n".join(filter(None, [global_header_scripts.strip(), ghl_snippet, meta_snippet, site.get("header_scripts", "").strip()]))
     footer_scripts = "\n".join(filter(None, [global_footer_scripts.strip(), site.get("footer_scripts", "").strip()]))
     if header_scripts:
         html = html.replace("</head>", f"{header_scripts}\n</head>", 1)
