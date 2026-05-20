@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MindFrame - Evidence-Based Psychology and Neurobiology for Curious Adults</title>
+<meta name="description" content="MindFrame publishes serious, readable, evidence-based writing on psychology and neurobiology. Working memory, attention, attachment, habits, sleep - plus a lab of five interactive self-tests.">
+<meta property="og:title" content="MindFrame - Evidence-Based Psychology and Neurobiology">
+<meta property="og:description" content="A science publication for curious adults. Five interactive psychology tests, three behavior-change tools, and rigorous editorial coverage.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+:root{
+  --ink:#0b1224;
+  --ink2:#141d36;
+  --ink3:#1f2a47;
+  --line:rgba(255,255,255,.10);
+  --line2:rgba(255,255,255,.18);
+  --cream:#f5f1e8;
+  --cream2:#ece6d6;
+  --cream3:#dcd4be;
+  --paper:#fbf8f1;
+  --text:#0b1224;
+  --text2:#3a4258;
+  --muted:#7a8094;
+  --accent:#ff5a4e;
+  --accent2:#e64438;
+  --accent-soft:rgba(255,90,78,.12);
+  --good:#3aa276;
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+body{background:var(--paper);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:var(--sans);cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:var(--sans);font-size:15px}
+::selection{background:var(--accent);color:#fff}
+
+/* ───── NAV ───── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(11,18,36,.55);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line);transition:background .25s}
+.nav.scrolled{background:rgba(11,18,36,.92)}
+.nav-inner{max-width:1240px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;flex-shrink:0}
+.brand-mark{width:34px;height:34px;border:1.5px solid var(--accent);border-radius:8px;display:grid;place-items:center;flex-shrink:0;position:relative;overflow:hidden}
+.brand-mark svg{display:block}
+.brand-name{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:-.5px;line-height:1}
+.brand-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:3px}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,.7);padding:8px 12px;border-radius:6px;transition:color .15s,background .15s}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nav-cta{font-size:12.5px;font-weight:600;color:#fff;background:var(--accent);padding:9px 16px;border-radius:6px;transition:background .15s}
+.nav-cta:hover{background:var(--accent2)}
+.nav-burger{display:none;width:38px;height:38px;border-radius:8px;color:#fff;align-items:center;justify-content:center}
+.nav-burger:hover{background:rgba(255,255,255,.08)}
+@media(max-width:820px){
+  .nav-links{position:absolute;top:100%;left:0;right:0;background:rgba(11,18,36,.98);flex-direction:column;align-items:stretch;padding:8px 18px 18px;gap:2px;display:none;border-bottom:1px solid var(--line)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 14px;font-size:14px}
+  .nav-burger{display:flex}
+  .brand-tag{display:none}
+}
+
+/* ───── HERO ───── */
+.hero{position:relative;background:var(--ink);color:#fff;overflow:hidden;padding:88px 0 110px}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(255,90,78,.13),transparent 55%),radial-gradient(ellipse at 90% 90%,rgba(58,123,255,.10),transparent 50%);pointer-events:none}
+.hero-net{position:absolute;inset:0;opacity:.55;pointer-events:none}
+.hero-inner{max-width:1240px;margin:0 auto;padding:0 28px;position:relative;z-index:2;display:grid;grid-template-columns:1.2fr .8fr;gap:60px;align-items:center}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);padding:6px 12px;border:1px solid rgba(255,90,78,.35);border-radius:100px;margin-bottom:24px}
+.kicker .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 0 4px rgba(255,90,78,.18)}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(36px,5.4vw,68px);line-height:1.04;letter-spacing:-1.5px;margin-bottom:22px}
+.hero h1 em{font-style:italic;color:var(--accent);font-weight:500}
+.hero p.lede{font-size:clamp(15px,1.4vw,18px);line-height:1.65;color:rgba(255,255,255,.72);max-width:560px;margin-bottom:32px;font-weight:300}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600;padding:13px 22px;border-radius:8px;transition:all .18s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:#fff;border:1px solid var(--line2)}
+.btn-ghost:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.35)}
+.btn svg{width:14px;height:14px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:24px;font-size:12.5px;color:rgba(255,255,255,.5)}
+.hero-meta span{display:inline-flex;align-items:center;gap:8px}
+.hero-meta strong{color:#fff;font-weight:600}
+
+/* hero panel - brainwave card */
+.hero-panel{position:relative;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:26px;backdrop-filter:blur(8px)}
+.hp-label{font-family:var(--mono);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.42);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.hp-label::after{content:'';flex:1;height:1px;background:var(--line)}
+.hp-title{font-family:var(--serif);font-size:22px;font-weight:500;line-height:1.25;margin-bottom:8px}
+.hp-sub{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:18px}
+.hp-wave{height:80px;width:100%;margin-bottom:18px}
+.hp-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;padding-top:18px;border-top:1px solid var(--line)}
+.hp-stat .v{font-family:var(--serif);font-size:24px;font-weight:600;color:#fff;line-height:1}
+.hp-stat .v small{font-size:12px;color:var(--accent);font-weight:500;margin-left:2px}
+.hp-stat .l{font-size:10.5px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-top:6px}
+
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:40px}.hero{padding:60px 0 70px}}
+@media(max-width:480px){.hero-inner{padding:0 20px}.hero-ctas .btn{flex:1;justify-content:center}}
+
+/* ───── TRUST STRIP ───── */
+.trust{background:var(--ink2);color:rgba(255,255,255,.6);padding:18px 0;border-bottom:1px solid var(--line)}
+.trust-inner{max-width:1240px;margin:0 auto;padding:0 28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px;font-size:12.5px}
+.trust-item{display:flex;align-items:center;gap:9px}
+.trust-item svg{width:15px;height:15px;color:var(--accent);flex-shrink:0}
+
+/* ───── SECTIONS ───── */
+section{padding:90px 0}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+.sec-head{margin-bottom:48px;max-width:760px}
+.sec-tag{font-family:var(--mono);font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-tag::before{content:'';width:24px;height:1px;background:var(--accent)}
+.sec-title{font-family:var(--serif);font-size:clamp(28px,3.4vw,44px);font-weight:500;line-height:1.1;letter-spacing:-1px;margin-bottom:14px}
+.sec-sub{font-size:16px;color:var(--text2);line-height:1.65;max-width:620px}
+.sec-head.center{text-align:center;margin-left:auto;margin-right:auto}
+.sec-head.center .sec-tag{justify-content:center}
+.sec-head.center .sec-sub{margin-left:auto;margin-right:auto}
+
+/* ───── WHY ───── */
+.why{background:var(--paper);position:relative}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.why-prose p{font-family:var(--serif);font-size:19px;line-height:1.65;color:var(--text);margin-bottom:18px}
+.why-prose p:first-of-type::first-letter{font-family:var(--serif);font-size:54px;font-weight:600;color:var(--accent);float:left;line-height:.9;padding:6px 10px 0 0}
+.why-side{background:var(--cream);border:1px solid var(--cream3);border-radius:14px;padding:30px;position:sticky;top:90px}
+.why-side h4{font-family:var(--mono);font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--text2);margin-bottom:16px}
+.why-side ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+.why-side li{display:flex;gap:12px;font-size:14.5px;color:var(--text);line-height:1.55}
+.why-side li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:9px;flex-shrink:0}
+@media(max-width:820px){.why-grid{grid-template-columns:1fr;gap:36px}.why-side{position:static}}
+
+/* ───── LAB (TESTS) ───── */
+.lab{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.lab::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 10%,rgba(255,90,78,.10),transparent 50%);pointer-events:none}
+.lab .sec-title{color:#fff}
+.lab .sec-sub{color:rgba(255,255,255,.6)}
+.lab .sec-tag{color:var(--accent)}
+.lab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;position:relative;z-index:2}
+.lab-card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:28px;display:flex;flex-direction:column;transition:border-color .2s,background .2s}
+.lab-card:hover{border-color:var(--line2);background:rgba(255,255,255,.05)}
+.lab-card.full{grid-column:1 / -1}
+.lab-head{display:flex;align-items:flex-start;gap:18px;margin-bottom:14px}
+.lab-num{font-family:var(--mono);font-size:11px;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:100px;letter-spacing:1px;flex-shrink:0;border:1px solid rgba(255,90,78,.25)}
+.lab-meta{font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,.4);letter-spacing:1.4px;text-transform:uppercase;margin-left:auto}
+.lab-title{font-family:var(--serif);font-size:24px;font-weight:500;letter-spacing:-.4px;margin-bottom:8px;color:#fff;line-height:1.2}
+.lab-desc{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:20px;flex:1}
+.lab-btn{align-self:flex-start;font-size:13px;font-weight:600;color:#fff;background:var(--accent);padding:10px 20px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;transition:background .15s}
+.lab-btn:hover{background:var(--accent2)}
+.lab-btn .ic{width:14px;height:14px}
+.lab-body{display:none;margin-top:22px;padding-top:22px;border-top:1px solid var(--line);animation:fade .25s ease}
+.lab-card.open .lab-body{display:block}
+.lab-card.open .lab-btn{display:none}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.disclaimer{margin-top:34px;text-align:center;font-size:12px;color:rgba(255,255,255,.4);font-style:italic}
+@media(max-width:780px){.lab-grid{grid-template-columns:1fr}}
+
+/* test ui shared */
+.q{padding:14px 0;border-bottom:1px solid var(--line);font-size:14.5px;color:#fff}
+.q:last-child{border-bottom:none}
+.q-text{margin-bottom:12px;line-height:1.45;color:rgba(255,255,255,.88)}
+.likert{display:flex;gap:6px;flex-wrap:wrap}
+.likert label{flex:1;min-width:46px;text-align:center;padding:10px 4px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;cursor:pointer;font-size:11.5px;color:rgba(255,255,255,.6);transition:all .12s;display:block}
+.likert label:hover{background:rgba(255,90,78,.10);border-color:rgba(255,90,78,.4);color:#fff}
+.likert input{display:none}
+.likert input:checked + span{color:#fff}
+.likert label:has(input:checked){background:var(--accent);border-color:var(--accent);color:#fff}
+.choice{display:block;padding:13px 16px;margin:7px 0;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;cursor:pointer;font-size:14px;color:rgba(255,255,255,.85);transition:all .12s}
+.choice:hover{background:rgba(255,90,78,.10);border-color:rgba(255,90,78,.4);color:#fff}
+.choice input{display:none}
+.choice:has(input:checked){background:var(--accent-soft);border-color:var(--accent);color:#fff}
+.t-actions{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.t-submit{font-size:13px;font-weight:600;color:#fff;background:var(--accent);padding:10px 22px;border-radius:8px}
+.t-submit:hover{background:var(--accent2)}
+.t-reset{font-size:12.5px;color:rgba(255,255,255,.55);padding:10px 14px;border-radius:8px}
+.t-reset:hover{color:#fff;background:rgba(255,255,255,.05)}
+.t-err{font-size:12.5px;color:var(--accent);font-style:italic}
+.t-result{margin-top:22px;padding:22px;background:rgba(255,90,78,.06);border:1px solid rgba(255,90,78,.25);border-radius:12px;animation:fade .3s ease}
+.t-result h4{font-family:var(--serif);font-size:22px;font-weight:600;color:#fff;margin-bottom:6px}
+.t-result .score{font-family:var(--mono);font-size:13px;color:var(--accent);margin-bottom:14px;letter-spacing:.5px}
+.t-result p{font-size:14px;color:rgba(255,255,255,.78);line-height:1.6;margin-bottom:10px}
+.t-result .share{margin-top:14px;font-size:12px;color:var(--accent);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.t-result .share:hover{text-decoration:underline}
+.t-result table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+.t-result td{padding:8px 0;border-bottom:1px solid var(--line);color:rgba(255,255,255,.75)}
+.t-result td:last-child{text-align:right;font-family:var(--mono);color:#fff}
+
+/* reaction test */
+.rt-box{height:240px;border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,.03);font-size:15px;color:rgba(255,255,255,.7);text-align:center;padding:20px;transition:background .15s;user-select:none}
+.rt-box.ready{background:rgba(255,90,78,.18);color:#fff}
+.rt-box.go{background:var(--good);color:#fff;font-size:22px;font-weight:600}
+.rt-box.early{background:rgba(255,90,78,.5);color:#fff}
+.rt-trials{margin-top:14px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.55);text-align:center}
+
+/* digit span */
+.ds-display{height:120px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:56px;color:#fff;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;letter-spacing:8px;margin-bottom:14px}
+.ds-display.recall{font-size:18px;color:rgba(255,255,255,.5);letter-spacing:0}
+.ds-input{width:100%;padding:14px;font-size:18px;text-align:center;letter-spacing:6px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;color:#fff;font-family:var(--mono)}
+.ds-input:focus{outline:none;border-color:var(--accent)}
+.ds-status{margin-top:10px;text-align:center;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.55)}
+
+/* radar */
+.radar-wrap{display:flex;justify-content:center;margin:16px 0}
+.radar{width:100%;max-width:320px;height:auto}
+
+/* ───── TOOLS ───── */
+.tools{background:var(--cream)}
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.tool-card{background:var(--paper);border:1px solid var(--cream3);border-radius:14px;padding:28px;display:flex;flex-direction:column}
+.tool-icon{width:42px;height:42px;border-radius:10px;background:var(--ink);color:var(--accent);display:grid;place-items:center;margin-bottom:18px}
+.tool-icon svg{width:20px;height:20px}
+.tool-title{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:-.3px;margin-bottom:8px}
+.tool-desc{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px;flex:1}
+.tool-card label{display:block;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin:10px 0 6px}
+.tool-card input,.tool-card textarea,.tool-card select{width:100%;padding:11px 13px;border:1px solid var(--cream3);border-radius:8px;background:#fff;color:var(--text);font-size:14px}
+.tool-card input:focus,.tool-card textarea:focus,.tool-card select:focus{outline:none;border-color:var(--accent)}
+.tool-card textarea{min-height:80px;resize:vertical;font-family:var(--sans)}
+.tool-card .check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);margin:5px 0;font-weight:400;text-transform:none;letter-spacing:0}
+.tool-card .check input{width:auto;margin:0}
+.tool-run{margin-top:14px;font-size:13px;font-weight:600;color:#fff;background:var(--ink);padding:11px 20px;border-radius:8px;align-self:flex-start;transition:background .15s}
+.tool-run:hover{background:var(--accent)}
+.tool-out{margin-top:16px;padding:16px;background:var(--cream2);border-radius:8px;font-size:13.5px;line-height:1.6;color:var(--text);display:none;border-left:3px solid var(--accent)}
+.tool-out.show{display:block;animation:fade .25s ease}
+.tool-out strong{color:var(--ink);font-weight:600}
+@media(max-width:820px){.tools-grid{grid-template-columns:1fr}}
+
+/* ───── TOPICS ───── */
+.topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.topic{background:var(--paper);border:1px solid var(--cream3);border-radius:14px;padding:28px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:14px;transition:transform .2s,border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
+.topic:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 14px 40px rgba(11,18,36,.08)}
+.topic-icon{width:48px;height:48px;border-radius:12px;background:var(--ink);color:var(--accent);display:grid;place-items:center}
+.topic-icon svg{width:22px;height:22px}
+.topic-name{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.3px}
+.topic-desc{font-size:14px;color:var(--text2);line-height:1.55}
+.topic-arrow{font-size:12px;color:var(--accent);font-weight:600;display:flex;align-items:center;gap:6px;margin-top:auto}
+@media(max-width:820px){.topics-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.topics-grid{grid-template-columns:1fr}}
+
+/* ───── FEATURED EDITORIAL ───── */
+.featured{background:var(--paper)}
+.feat-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:24px}
+.feat-card{background:#fff;border:1px solid var(--cream3);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s}
+.feat-card:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(11,18,36,.10)}
+.feat-card:hover .feat-img img{transform:scale(1.06)}
+.feat-img{aspect-ratio:16/10;overflow:hidden;background:var(--cream2)}
+.feat-card.lead .feat-img{aspect-ratio:5/4}
+.feat-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.feat-body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:10px;flex:1}
+.feat-cat{font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);font-weight:500}
+.feat-card.lead h3{font-family:var(--serif);font-size:28px;font-weight:600;line-height:1.18;letter-spacing:-.5px}
+.feat-card h3{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.25;letter-spacing:-.3px}
+.feat-dek{font-size:14px;color:var(--text2);line-height:1.55}
+.feat-meta{margin-top:auto;font-size:12px;color:var(--muted);display:flex;gap:14px;padding-top:6px}
+@media(max-width:980px){.feat-grid{grid-template-columns:1fr 1fr}.feat-card.lead{grid-column:1 / -1}}
+@media(max-width:560px){.feat-grid{grid-template-columns:1fr}}
+
+/* ───── LATEST ARTICLES ───── */
+.latest{background:var(--cream)}
+.arts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.art-card{background:var(--paper);border:1px solid var(--cream3);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s}
+.art-card:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(11,18,36,.08)}
+.art-card:hover .art-img img{transform:scale(1.05)}
+.art-img{aspect-ratio:16/10;overflow:hidden;background:var(--cream2)}
+.art-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.art-body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
+.art-cat{font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);font-weight:500}
+.art-card h4{font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.3;letter-spacing:-.2px}
+.art-dek{font-size:13.5px;color:var(--text2);line-height:1.55;flex:1}
+.art-meta{font-size:11.5px;color:var(--muted);display:flex;gap:12px;padding-top:6px}
+.empty{padding:60px 24px;text-align:center;background:var(--paper);border:1px dashed var(--cream3);border-radius:12px;color:var(--muted);font-size:14px;grid-column:1 / -1}
+.empty h4{font-family:var(--serif);font-size:20px;color:var(--text);font-weight:600;margin-bottom:6px}
+@media(max-width:820px){.arts-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.arts-grid{grid-template-columns:1fr}}
+
+/* ───── CONTRIBUTORS ───── */
+.contrib{background:var(--paper)}
+.contrib-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.contrib-card{background:var(--cream);border:1px solid var(--cream3);border-radius:14px;padding:30px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.contrib-av{width:64px;height:64px;border-radius:50%;background:var(--ink);color:var(--accent);display:grid;place-items:center;font-family:var(--serif);font-size:24px;font-weight:600;border:2px solid var(--accent)}
+.contrib-name{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:-.3px}
+.contrib-role{font-family:var(--mono);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-top:-8px}
+.contrib-bio{font-size:14px;color:var(--text2);line-height:1.6}
+@media(max-width:820px){.contrib-grid{grid-template-columns:1fr}}
+
+/* ───── FAQ ───── */
+.faq{background:var(--cream)}
+.faq-list{max-width:820px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--cream3)}
+.faq-q{width:100%;text-align:left;padding:22px 0;font-family:var(--serif);font-size:19px;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:18px;letter-spacing:-.2px}
+.faq-q .plus{width:24px;height:24px;border-radius:50%;border:1px solid var(--cream3);display:grid;place-items:center;flex-shrink:0;font-size:16px;color:var(--accent);transition:transform .25s,background .15s}
+.faq-item.open .faq-q .plus{transform:rotate(45deg);background:var(--accent);color:#fff;border-color:var(--accent)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:15px;color:var(--text2);line-height:1.7}
+.faq-item.open .faq-a{max-height:400px;padding-bottom:24px}
+
+/* ───── NEWSLETTER ───── */
+.newsletter{background:var(--ink);color:#fff;text-align:center}
+.newsletter .sec-title{color:#fff}
+.nl-form{display:flex;gap:10px;max-width:480px;margin:24px auto 12px;flex-wrap:wrap}
+.nl-form input{flex:1;min-width:200px;padding:14px 18px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:#fff;font-size:14px}
+.nl-form input::placeholder{color:rgba(255,255,255,.4)}
+.nl-form input:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,.09)}
+.nl-form button{background:var(--accent);color:#fff;padding:14px 24px;border-radius:8px;font-weight:600;font-size:14px}
+.nl-form button:hover{background:var(--accent2)}
+.nl-note{font-size:12px;color:rgba(255,255,255,.45)}
+.nl-ok{color:var(--good);font-size:14px;margin-top:12px;display:none}
+.nl-ok.show{display:block}
+
+/* ───── FOOTER ───── */
+footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;border-top:1px solid var(--line)}
+.foot-grid{max-width:1240px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.foot-brand .brand{margin-bottom:14px}
+.foot-about{font-size:13.5px;line-height:1.65;max-width:340px}
+.foot-col h5{font-family:var(--mono);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#fff;margin-bottom:16px}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.foot-col a{font-size:13.5px;color:rgba(255,255,255,.55);transition:color .15s}
+.foot-col a:hover{color:var(--accent)}
+.foot-bottom{max-width:1240px;margin:0 auto;padding:24px 28px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.4);flex-wrap:wrap;gap:14px}
+@media(max-width:820px){.foot-grid{grid-template-columns:1fr 1fr;gap:30px}}
+@media(max-width:480px){.foot-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!--SHELL:ACCENT:#ff5a4e-->
+<!--SHELL:HEADER-->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="./" class="brand" aria-label="MindFrame home">
+      <div class="brand-mark">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="#ff5a4e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 6c-3 0-5 2-5 5 0 1 .3 2 .7 2.6C5.7 14.4 5 15.7 5 17c0 1.8 1.3 3.3 3 3.8 0 2.3 1.8 4.2 4 4.2 1 0 2-.4 2.7-1V6.7c-.7-.4-1.7-.7-2.7-.7zM21 6c3 0 5 2 5 5 0 1-.3 2-.7 2.6 1 .8 1.7 2.1 1.7 3.4 0 1.8-1.3 3.3-3 3.8 0 2.3-1.8 4.2-4 4.2-1 0-2-.4-2.7-1V6.7c.7-.4 1.7-.7 2.7-.7z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">MindFrame</div>
+        <div class="brand-tag">Psychology · Neurobiology</div>
+      </div>
+    </a>
+    <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="./#lab">The Lab</a>
+      <a href="./#tools">Tools</a>
+      <a href="./#topics">Topics</a>
+      <a href="./#articles">Articles</a>
+      <a href="about.html">About</a>
+      <a href="./#newsletter" class="nav-cta">Subscribe</a>
+    </nav>
+  </div>
+</header>
+<!--/SHELL:HEADER-->
+
+<!-- HERO -->
+<section class="hero" role="banner">
+  <svg class="hero-net" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="nodeG" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ff5a4e" stop-opacity=".9"/>
+        <stop offset="100%" stop-color="#ff5a4e" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g stroke="rgba(255,255,255,.10)" stroke-width=".7" fill="none">
+      <path d="M100 120 L260 200 L180 340 L320 420 L240 560 L420 600"/>
+      <path d="M260 200 L420 160 L560 260 L520 400 L660 480 L820 420"/>
+      <path d="M420 160 L580 80 L740 140 L900 100 L1060 180"/>
+      <path d="M560 260 L740 140 M740 140 L820 280 L960 320 L1100 280"/>
+      <path d="M520 400 L660 480 M960 320 L1080 460 L900 540 L1060 600"/>
+      <path d="M180 340 L320 420 M420 600 L580 540 L660 480"/>
+      <path d="M820 280 L900 100 M900 540 L1060 600 L1100 460"/>
+    </g>
+    <g fill="url(#nodeG)">
+      <circle cx="100" cy="120" r="5"/><circle cx="260" cy="200" r="4"/><circle cx="420" cy="160" r="6"/>
+      <circle cx="580" cy="80" r="4"/><circle cx="740" cy="140" r="5"/><circle cx="900" cy="100" r="4"/>
+      <circle cx="1060" cy="180" r="5"/><circle cx="180" cy="340" r="4"/><circle cx="320" cy="420" r="5"/>
+      <circle cx="560" cy="260" r="6"/><circle cx="820" cy="280" r="4"/><circle cx="960" cy="320" r="5"/>
+      <circle cx="1100" cy="280" r="4"/><circle cx="240" cy="560" r="4"/><circle cx="420" cy="600" r="5"/>
+      <circle cx="580" cy="540" r="4"/><circle cx="660" cy="480" r="5"/><circle cx="820" cy="420" r="4"/>
+      <circle cx="900" cy="540" r="5"/><circle cx="1060" cy="600" r="4"/><circle cx="1080" cy="460" r="4"/>
+      <circle cx="520" cy="400" r="5"/>
+    </g>
+  </svg>
+  <div class="hero-inner">
+    <div>
+      <div class="kicker"><span class="dot"></span>Issue 014 · May 2026</div>
+      <h1>The science of <em>how you think</em>, written for people who like to think.</h1>
+      <p class="lede">MindFrame publishes serious, readable, evidence-based writing on psychology and neurobiology. No clickbait, no horoscopes, no certainty where the data doesn't support it. Plus a lab of five interactive self-tests you can take right now.</p>
+      <div class="hero-ctas">
+        <a href="#lab" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6l-5 8a3 3 0 0 0 3 4h10a3 3 0 0 0 3-4l-5-8V3"/><path d="M8 3h8"/></svg>
+          Take a test
+        </a>
+        <a href="#articles" class="btn btn-ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M4 4v12a4 4 0 0 0 4 4"/></svg>
+          Read latest
+        </a>
+      </div>
+      <div class="hero-meta">
+        <span><strong>42</strong> peer-reviewed sources cited this week</span>
+        <span><strong>5</strong> interactive lab tests</span>
+        <span><strong>0</strong> AI-generated filler</span>
+      </div>
+    </div>
+    <aside class="hero-panel" aria-label="This week in the lab">
+      <div class="hp-label">In the lab this week</div>
+      <div class="hp-title">Working memory is not what most people think it is.</div>
+      <div class="hp-sub">Three minutes, fifteen digits. Find out where you actually sit.</div>
+      <svg class="hp-wave" viewBox="0 0 320 80" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="wg" x1="0" x2="1">
+            <stop offset="0%" stop-color="#ff5a4e" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#ff5a4e"/>
+            <stop offset="100%" stop-color="#ff5a4e" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M0 40 Q 20 40 30 30 T 50 40 T 70 36 T 90 22 T 110 50 T 130 14 T 150 56 T 170 24 T 190 44 T 210 30 T 230 50 T 250 20 T 270 42 T 290 38 T 320 40" fill="none" stroke="url(#wg)" stroke-width="1.6"/>
+        <path d="M0 40 Q 40 60 80 40 T 160 40 T 240 40 T 320 40" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1" stroke-dasharray="2 3"/>
+      </svg>
+      <div class="hp-stats">
+        <div class="hp-stat"><div class="v">7<small>±2</small></div><div class="l">avg span</div></div>
+        <div class="hp-stat"><div class="v">62<small>%</small></div><div class="l">trainable</div></div>
+        <div class="hp-stat"><div class="v">3<small>min</small></div><div class="l">test time</div></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<div class="trust">
+  <div class="trust-inner">
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6z"/><path d="M9 12l2 2 4-4"/></svg> Evidence-based, no clickbait</span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Peer-reviewed citations on every claim</span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg> Effect sizes, not just p-values</span>
+    <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 11V7a4 4 0 0 0-8 0v4"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg> No personal data stored</span>
+  </div>
+</div>
+
+<main>
+
+<!-- WHY -->
+<section class="why" id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Why this exists</div>
+      <h2 class="sec-title">Popular psychology gets a lot of attention. Most of it is wrong.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-prose">
+        <p>Half of what shows up on social feeds under the banner of "psychology" was either never replicated, comes from a single small study, or is a confident generalization built on a foundation of almost nothing. The other half is fine, but framed for outrage rather than understanding.</p>
+        <p>MindFrame exists because there is a real, growing literature on how minds work - on attention, memory, sleep, habit formation, emotional regulation, and the wet biology underneath - and most of it never reaches the people who would benefit from it. Researchers write for other researchers. Journalists write for clicks. We try to write for the adult in between.</p>
+        <p>Every claim on this site is cited. Every effect size we mention is given context. When the evidence is mixed, we say so. When a popular idea has not held up to replication, we say that too.</p>
+      </div>
+      <aside class="why-side">
+        <h4>Our editorial standards</h4>
+        <ul>
+          <li>We cite primary sources, not other blogs that cite the sources.</li>
+          <li>Effect sizes are reported in context. A statistically significant result is not the same as a meaningful one.</li>
+          <li>Pre-registration, sample size, and replication status are flagged where relevant.</li>
+          <li>If a topic is contested, the article shows the dissenting evidence.</li>
+          <li>No affiliate links inside research-driven articles.</li>
+          <li>Authors disclose conflicts of interest.</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- THE LAB -->
+<section class="lab" id="lab">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">The Lab</div>
+      <h2 class="sec-title">Five short tests. Real instruments, faithfully implemented.</h2>
+      <p class="sec-sub">Each test runs entirely in your browser. Nothing is sent to a server, nothing is stored. Results appear inline and you can copy a sharable link with your result encoded in the URL.</p>
+    </div>
+
+    <div class="lab-grid">
+
+      <!-- TEST 1: Big Five -->
+      <article class="lab-card" id="t1">
+        <div class="lab-head">
+          <span class="lab-num">Test 01</span>
+          <span class="lab-meta">25 items · 4 min</span>
+        </div>
+        <h3 class="lab-title">Big Five (OCEAN) Personality Snapshot</h3>
+        <p class="lab-desc">A short version of the five-factor personality model: Openness, Conscientiousness, Extraversion, Agreeableness, Neuroticism. Five questions per trait, likert response.</p>
+        <button class="lab-btn" onclick="openTest('t1')">Start the test <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="lab-body"><div id="t1-body"></div></div>
+      </article>
+
+      <!-- TEST 2: Attachment -->
+      <article class="lab-card" id="t2">
+        <div class="lab-head">
+          <span class="lab-num">Test 02</span>
+          <span class="lab-meta">12 items · 3 min</span>
+        </div>
+        <h3 class="lab-title">Adult Attachment Style</h3>
+        <p class="lab-desc">A short forced-choice quiz mapping responses onto the four-category attachment model (Secure, Anxious, Avoidant, Disorganized). Useful for context, not diagnosis.</p>
+        <button class="lab-btn" onclick="openTest('t2')">Start the test <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="lab-body"><div id="t2-body"></div></div>
+      </article>
+
+      <!-- TEST 3: CRT-7 -->
+      <article class="lab-card" id="t3">
+        <div class="lab-head">
+          <span class="lab-num">Test 03</span>
+          <span class="lab-meta">7 items · 3 min</span>
+        </div>
+        <h3 class="lab-title">Cognitive Reflection Test (CRT-7)</h3>
+        <p class="lab-desc">Seven trick questions that have an obvious wrong answer and a less obvious right one. Measures your tendency to override intuitive responses with deliberation.</p>
+        <button class="lab-btn" onclick="openTest('t3')">Start the test <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="lab-body"><div id="t3-body"></div></div>
+      </article>
+
+      <!-- TEST 4: Reaction -->
+      <article class="lab-card" id="t4">
+        <div class="lab-head">
+          <span class="lab-num">Test 04</span>
+          <span class="lab-meta">5 trials · 1 min</span>
+        </div>
+        <h3 class="lab-title">Visual Reaction Time</h3>
+        <p class="lab-desc">Press space or tap when the panel turns green. Five trials, slowest dropped. Compare your average to age-banded norms from the published reaction-time literature.</p>
+        <button class="lab-btn" onclick="openTest('t4')">Start the test <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="lab-body"><div id="t4-body"></div></div>
+      </article>
+
+      <!-- TEST 5: Digit Span -->
+      <article class="lab-card full" id="t5">
+        <div class="lab-head">
+          <span class="lab-num">Test 05</span>
+          <span class="lab-meta">Adaptive · 3 min</span>
+        </div>
+        <h3 class="lab-title">Digit Span - Working Memory</h3>
+        <p class="lab-desc">A sequence of digits flashes briefly. Type them back in order. The sequence grows by one each round until you miss twice in a row. Your highest correct length is your span.</p>
+        <button class="lab-btn" onclick="openTest('t5')">Start the test <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="lab-body"><div id="t5-body"></div></div>
+      </article>
+
+    </div>
+    <p class="disclaimer">These are educational self-assessments, not clinical diagnoses.</p>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="tools" id="tools">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Tools</div>
+      <h2 class="sec-title">Three small utilities, built from the literature.</h2>
+      <p class="sec-sub">Lightweight tools you can use in under a minute. Each is grounded in a specific research tradition - implementation intentions, cognitive-behavioral reframing, and the spacing effect.</p>
+    </div>
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+        <h3 class="tool-title">Habit Stack Generator</h3>
+        <p class="tool-desc">Pair a new behavior to an existing one using an implementation-intention prompt (Gollwitzer 1999), the single most reliable nudge in the behavior-change literature.</p>
+        <label for="hs-anchor">Existing daily habit (anchor)</label>
+        <input id="hs-anchor" placeholder="e.g. pouring my morning coffee">
+        <label for="hs-new">New habit you want to build</label>
+        <input id="hs-new" placeholder="e.g. five push-ups">
+        <button class="tool-run" onclick="genHabit()">Generate stack</button>
+        <div class="tool-out" id="hs-out"></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M8 10s1-2 4-2 4 2 4 2"/><path d="M9 15h6"/></svg></div>
+        <h3 class="tool-title">Cognitive Distortion Identifier</h3>
+        <p class="tool-desc">Type a thought, check the patterns that fit, get a CBT-style reframe template you can adapt. Based on Burns' original list of cognitive distortions.</p>
+        <label for="cd-thought">The thought</label>
+        <textarea id="cd-thought" placeholder="e.g. They didn't reply, so they must be angry with me."></textarea>
+        <label>Distortions present</label>
+        <label class="check"><input type="checkbox" value="all-or-nothing"> All-or-nothing thinking</label>
+        <label class="check"><input type="checkbox" value="catastrophizing"> Catastrophizing</label>
+        <label class="check"><input type="checkbox" value="mind-reading"> Mind reading</label>
+        <label class="check"><input type="checkbox" value="personalization"> Personalization</label>
+        <label class="check"><input type="checkbox" value="should"> Should statements</label>
+        <label class="check"><input type="checkbox" value="labelling"> Labelling</label>
+        <button class="tool-run" onclick="genReframe()">Generate reframe</button>
+        <div class="tool-out" id="cd-out"></div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3 class="tool-title">Sleep-Memory Optimizer</h3>
+        <p class="tool-desc">Given when you studied and when you sleep, this gives the schedule for two review sessions that bracket sleep-dependent consolidation and use expanding intervals (spacing effect, Cepeda et al. 2008).</p>
+        <label for="so-study">Study session ended (24h)</label>
+        <input id="so-study" type="time" value="20:30">
+        <label for="so-bed">Bedtime</label>
+        <input id="so-bed" type="time" value="23:00">
+        <label for="so-wake">Wake time</label>
+        <input id="so-wake" type="time" value="07:00">
+        <button class="tool-run" onclick="genSleep()">Plan reviews</button>
+        <div class="tool-out" id="so-out"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TOPICS -->
+<section id="topics">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Topics</div>
+      <h2 class="sec-title">Six areas we cover in depth.</h2>
+      <p class="sec-sub">Each topic is a long-running editorial line, not a tag. Browse by what you want to understand.</p>
+    </div>
+    <div class="topics-grid">
+      <a href="./#articles" class="topic"><div class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a4 4 0 0 0-4 4v1a3 3 0 0 0-2 5 3 3 0 0 0 2 5v1a4 4 0 0 0 8 0v-1a3 3 0 0 0 2-5 3 3 0 0 0-2-5V7a4 4 0 0 0-4-4z"/></svg></div><h3 class="topic-name">Memory</h3><p class="topic-desc">Encoding, retrieval, sleep-dependent consolidation, and why your memory of yesterday is a reconstruction.</p><span class="topic-arrow">Explore articles &rarr;</span></a>
+      <a href="./#articles" class="topic"><div class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c0 3 2 5 5 5s5-2 5 5z"/></svg></div><h3 class="topic-name">Sleep</h3><p class="topic-desc">Architecture of a night, the role of REM and slow-wave sleep, and what shift work really does.</p><span class="topic-arrow">Explore articles &rarr;</span></a>
+      <a href="./#articles" class="topic"><div class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M3 12a9 9 0 0 0 18 0 9 9 0 0 0-18 0z"/></svg></div><h3 class="topic-name">Attention</h3><p class="topic-desc">Focus, distraction, the cost of task switching, and the difference between attention and willpower.</p><span class="topic-arrow">Explore articles &rarr;</span></a>
+      <a href="./#articles" class="topic"><div class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-11a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 6.5-7 11-7 11z"/></svg></div><h3 class="topic-name">Emotion</h3><p class="topic-desc">Affect labelling, regulation strategies, and the modern reappraisal of emotion as construction rather than reflex.</p><span class="topic-arrow">Explore articles &rarr;</span></a>
+      <a href="./#articles" class="topic"><div class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5-2-2 4-4 2 2 5-5"/><path d="M14 4h6v6"/></svg></div><h3 class="topic-name">Habits</h3><p class="topic-desc">Cue-response loops, implementation intentions, and the small body of evidence behind the "21 days" myth.</p><span class="topic-arrow">Explore articles &rarr;</span></a>
+      <a href="./#articles" class="topic"><div class="topic-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4a3 3 0 0 1-3 3H3"/><path d="M15 21v-4a3 3 0 0 1 3-3h3"/><path d="M3 14h3a3 3 0 0 1 3 3v4"/><path d="M21 10h-3a3 3 0 0 1-3-3V3"/></svg></div><h3 class="topic-name">Cognition</h3><p class="topic-desc">Heuristics, reasoning, the two-system framing, and what has actually replicated since Kahneman.</p><span class="topic-arrow">Explore articles &rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED EDITORIAL -->
+<section class="featured">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Editor's picks</div>
+      <h2 class="sec-title">This week's three deep reads.</h2>
+    </div>
+    <div class="feat-grid">
+      <a href="./#articles" class="feat-card lead">
+        <div class="feat-img"><img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=900&q=80&auto=format" alt="Abstract neural rendering" loading="lazy" onerror="this.parentElement.style.background='var(--ink)';this.remove()"></div>
+        <div class="feat-body">
+          <span class="feat-cat">Memory · 14 min read</span>
+          <h3>Why your most confident memories are often the least accurate ones.</h3>
+          <p class="feat-dek">The flashbulb-memory literature, four decades on. What survived replication, what didn't, and what to do with the difference between vividness and truth.</p>
+          <div class="feat-meta"><span>By Dr. Maya Holloway</span><span>May 16, 2026</span></div>
+        </div>
+      </a>
+      <a href="./#articles" class="feat-card">
+        <div class="feat-img"><img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=700&q=80&auto=format" alt="Sleeping figure in soft light" loading="lazy" onerror="this.parentElement.style.background='var(--ink)';this.remove()"></div>
+        <div class="feat-body">
+          <span class="feat-cat">Sleep · 9 min read</span>
+          <h3>The case against the 90-minute sleep-cycle rule.</h3>
+          <p class="feat-dek">A staple of productivity advice that the underlying polysomnography never really supported.</p>
+          <div class="feat-meta"><span>By Dr. Idris Kelman</span><span>May 12, 2026</span></div>
+        </div>
+      </a>
+      <a href="./#articles" class="feat-card">
+        <div class="feat-img"><img src="https://images.unsplash.com/photo-1517842645767-c639042777db?w=700&q=80&auto=format" alt="Open journal and pen" loading="lazy" onerror="this.parentElement.style.background='var(--ink)';this.remove()"></div>
+        <div class="feat-body">
+          <span class="feat-cat">Habits · 11 min read</span>
+          <h3>What habit research actually says about willpower (and why it's the wrong word).</h3>
+          <p class="feat-dek">The strength-model of self-control was the central idea of a generation. The replication crisis has not been kind to it.</p>
+          <div class="feat-meta"><span>By Dr. Priya Ramani</span><span>May 9, 2026</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- LATEST ARTICLES -->
+<section class="latest" id="articles">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Latest</div>
+      <h2 class="sec-title">From the editorial feed.</h2>
+      <p class="sec-sub">New writing, fresh from the queue. Updated weekly.</p>
+    </div>
+    <div class="arts-grid" id="arts-grid">
+      <div class="empty" id="arts-empty">
+        <h4>No articles published yet</h4>
+        <p>The first set of articles will appear here as the publication launches.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRIBUTORS -->
+<section class="contrib">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-tag">Contributors</div>
+      <h2 class="sec-title">Written by working researchers and clinicians.</h2>
+    </div>
+    <div class="contrib-grid">
+      <article class="contrib-card">
+        <div class="contrib-av">MH</div>
+        <div>
+          <h3 class="contrib-name">Dr. Maya Holloway</h3>
+          <div class="contrib-role">Cognitive Neuroscientist</div>
+        </div>
+        <p class="contrib-bio">Memory researcher with a decade of work on consolidation and reconsolidation. Writes about memory, learning, and the science of forgetting.</p>
+      </article>
+      <article class="contrib-card">
+        <div class="contrib-av">IK</div>
+        <div>
+          <h3 class="contrib-name">Dr. Idris Kelman</h3>
+          <div class="contrib-role">Sleep Medicine</div>
+        </div>
+        <p class="contrib-bio">Board-certified sleep physician and circadian biology researcher. Covers sleep architecture, shift work, and the practical science of rest.</p>
+      </article>
+      <article class="contrib-card">
+        <div class="contrib-av">PR</div>
+        <div>
+          <h3 class="contrib-name">Dr. Priya Ramani</h3>
+          <div class="contrib-role">Clinical Psychology</div>
+        </div>
+        <p class="contrib-bio">CBT-trained clinician and behavior-change researcher. Writes about habits, emotion regulation, and what works in therapy outside the consulting room.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="sec-tag">FAQ</div>
+      <h2 class="sec-title">Reasonable questions, honest answers.</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q">Are the lab tests scientifically valid?<span class="plus">+</span></button><div class="faq-a"><p>The instruments are based on validated paradigms used in academic research (Big Five inventories, Frederick's Cognitive Reflection Test, the Brief Attachment Scale, classic reaction-time tasks, and the digit-span subtest of the WAIS). However, we use shortened versions, the testing context is informal, and your phone or laptop is not a calibrated lab. Treat the results as a thoughtful nudge, not a measurement.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Is any of my test data stored?<span class="plus">+</span></button><div class="faq-a"><p>No. All tests run in your browser. Results are computed locally and never sent to a server. The "share my result" link encodes your score directly into a URL hash so we never see it.</p></div></div>
+      <div class="faq-item"><button class="faq-q">How do you decide what to publish?<span class="plus">+</span></button><div class="faq-a"><p>Three editors review every piece. Claims must be sourced to primary literature, effect sizes have to be reported in context, and contested findings have to be presented as contested. Pieces that don't meet the standard are rewritten or shelved.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Do you accept reader submissions?<span class="plus">+</span></button><div class="faq-a"><p>Yes, from researchers, clinicians, and graduate students. Pitches go through the contact form on the About page. We do not pay for pitches but we do pay for commissioned pieces.</p></div></div>
+      <div class="faq-item"><button class="faq-q">How is MindFrame funded?<span class="plus">+</span></button><div class="faq-a"><p>The publication is currently independent and reader-supported through the newsletter and a small set of carefully chosen partnerships disclosed at the foot of relevant articles. No paid placements appear inside research-driven pieces.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Can I use a test result for therapy or a diagnosis?<span class="plus">+</span></button><div class="faq-a"><p>No. These are educational self-assessments. A clinical diagnosis requires a structured interview with a qualified professional. If a result here prompts a real concern, that is a good reason to make an appointment, not a substitute for one.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter" id="newsletter">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="sec-tag">Newsletter</div>
+      <h2 class="sec-title">One careful email a week.</h2>
+      <p class="sec-sub">A short note from the editors, the week's deep read, one tool, and one thing that didn't replicate. No tracking pixels, unsubscribe in one click.</p>
+    </div>
+    <form class="nl-form" onsubmit="event.preventDefault();document.getElementById('nl-ok').classList.add('show');this.reset();">
+      <input type="email" placeholder="your@email.com" required aria-label="Email">
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="nl-note">No spam, ever. Roughly 5,200 readers and growing.</p>
+    <p class="nl-ok" id="nl-ok">Thanks, please check your inbox to confirm.</p>
+  </div>
+</section>
+
+</main>
+
+<!--SHELL:FOOTER-->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a href="./" class="brand">
+        <div class="brand-mark">
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="#ff5a4e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 6c-3 0-5 2-5 5 0 1 .3 2 .7 2.6C5.7 14.4 5 15.7 5 17c0 1.8 1.3 3.3 3 3.8 0 2.3 1.8 4.2 4 4.2 1 0 2-.4 2.7-1V6.7c-.7-.4-1.7-.7-2.7-.7zM21 6c3 0 5 2 5 5 0 1-.3 2-.7 2.6 1 .8 1.7 2.1 1.7 3.4 0 1.8-1.3 3.3-3 3.8 0 2.3-1.8 4.2-4 4.2-1 0-2-.4-2.7-1V6.7c.7-.4 1.7-.7 2.7-.7z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">MindFrame</div>
+          <div class="brand-tag">Psychology · Neurobiology</div>
+        </div>
+      </a>
+      <p class="foot-about">An evidence-based publication on how minds work, written for curious adults. Part of the Kavalsia editorial network.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Read</h5>
+      <ul>
+        <li><a href="./">Home</a></li>
+        <li><a href="./#articles">Articles</a></li>
+        <li><a href="./#topics">Topics</a></li>
+        <li><a href="./#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>The Lab</h5>
+      <ul>
+        <li><a href="./#lab">All tests</a></li>
+        <li><a href="./#tools">Tools</a></li>
+        <li><a href="./#newsletter">Newsletter</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>About</h5>
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="terms.html">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>&copy; <span id="yr"></span> MindFrame. Editorial network: Kavalsia.</span>
+    <span>Educational self-assessments are not clinical diagnoses.</span>
+  </div>
+</footer>
+<!--/SHELL:FOOTER-->
+
+<script>
+// ───── BASICS ─────
+document.getElementById('yr').textContent = new Date().getFullYear();
+const nav = document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>20)},{passive:true});
+const burger = document.getElementById('burger');
+const navLinks = document.getElementById('navLinks');
+burger.addEventListener('click',()=>{const o=navLinks.classList.toggle('open');burger.setAttribute('aria-expanded',o)});
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{navLinks.classList.remove('open');burger.setAttribute('aria-expanded',false)}));
+
+// FAQ accordion
+document.querySelectorAll('.faq-item').forEach(it=>{
+  it.querySelector('.faq-q').addEventListener('click',()=>it.classList.toggle('open'));
+});
+
+// ───── ARTICLE LOADER ─────
+async function loadArticles(){
+  if(!document.getElementById('arts-grid'))return;
+  try{
+    const r = await fetch('./articles.json');
+    if(!r.ok)return;
+    const data = await r.json();
+    const list = Array.isArray(data)?data:(data.articles||[]);
+    if(!list.length)return;
+    const grid = document.getElementById('arts-grid');
+    grid.innerHTML = list.slice(0,9).map(a=>`
+      <a class="art-card" href="${a.url||a.slug||'#'}">
+        <div class="art-img"><img src="${a.image||''}" alt="${(a.title||'').replace(/"/g,'&quot;')}" loading="lazy" onerror="this.parentElement.style.background='var(--cream2)';this.remove()"></div>
+        <div class="art-body">
+          <span class="art-cat">${a.category||'Article'}${a.readTime?' · '+a.readTime:''}</span>
+          <h4>${a.title||'Untitled'}</h4>
+          <p class="art-dek">${a.excerpt||a.description||''}</p>
+          <div class="art-meta">${a.author?'<span>'+a.author+'</span>':''}${a.date?'<span>'+a.date+'</span>':''}</div>
+        </div>
+      </a>
+    `).join('');
+  }catch(e){}
+}
+loadArticles();
+
+// ───── LAB ─────
+function openTest(id){
+  const c = document.getElementById(id);
+  c.classList.add('open');
+  const body = document.getElementById(id+'-body');
+  if(!body.dataset.built){ buildTest(id, body); body.dataset.built='1'; }
+  c.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function buildTest(id, body){
+  if(id==='t1') buildBigFive(body);
+  if(id==='t2') buildAttachment(body);
+  if(id==='t3') buildCRT(body);
+  if(id==='t4') buildReaction(body);
+  if(id==='t5') buildDigitSpan(body);
+}
+function shareLink(prefix, data){
+  const h = '#'+prefix+'='+encodeURIComponent(btoa(JSON.stringify(data)));
+  const url = location.origin + location.pathname + h;
+  navigator.clipboard.writeText(url).then(()=>{},()=>{});
+  return url;
+}
+
+// ─── TEST 1: BIG FIVE ───
+const BIG5 = [
+  // O
+  {t:'I have a vivid imagination and enjoy abstract ideas.',f:'O',r:false},
+  {t:'I am quick to spot artistic, emotional, or unconventional perspectives.',f:'O',r:false},
+  {t:'I prefer routine and familiar things over novelty.',f:'O',r:true},
+  {t:'I have a wide range of intellectual interests.',f:'O',r:false},
+  {t:'I rarely think about philosophical or abstract questions.',f:'O',r:true},
+  // C
+  {t:'I finish what I start, even when it stops being fun.',f:'C',r:false},
+  {t:'I keep my workspace organized.',f:'C',r:false},
+  {t:'I tend to procrastinate on important tasks.',f:'C',r:true},
+  {t:'I follow through on commitments I make to others.',f:'C',r:false},
+  {t:'I often forget to put things back in their place.',f:'C',r:true},
+  // E
+  {t:'I feel energized after spending time in a group.',f:'E',r:false},
+  {t:'I am usually the one who starts conversations.',f:'E',r:false},
+  {t:'I prefer quiet evenings alone to social gatherings.',f:'E',r:true},
+  {t:'I enjoy being the center of attention.',f:'E',r:false},
+  {t:'I find small talk draining.',f:'E',r:true},
+  // A
+  {t:'I trust people until they give me a reason not to.',f:'A',r:false},
+  {t:'I go out of my way to help people, even strangers.',f:'A',r:false},
+  {t:'I find it hard to forgive when I have been wronged.',f:'A',r:true},
+  {t:'I try to see disagreements from the other side.',f:'A',r:false},
+  {t:'I can be sharp or sarcastic when I disagree with someone.',f:'A',r:true},
+  // N
+  {t:'I worry about things more than most people I know.',f:'N',r:false},
+  {t:'Small setbacks can ruin my whole day.',f:'N',r:false},
+  {t:'I stay calm under pressure.',f:'N',r:true},
+  {t:'I often feel down for no clear reason.',f:'N',r:false},
+  {t:'I recover quickly from stressful events.',f:'N',r:true}
+];
+function buildBigFive(body){
+  body.innerHTML = BIG5.map((q,i)=>`
+    <div class="q">
+      <div class="q-text"><b>${i+1}.</b> ${q.t}</div>
+      <div class="likert">
+        ${[1,2,3,4,5].map(v=>`<label><input type="radio" name="b5-${i}" value="${v}"><span>${['Strongly disagree','Disagree','Neutral','Agree','Strongly agree'][v-1]}</span></label>`).join('')}
+      </div>
+    </div>`).join('') + `
+    <div class="t-actions">
+      <button class="t-submit" onclick="scoreBigFive(this)">See results</button>
+      <button class="t-reset" onclick="this.closest('.lab-body').querySelectorAll('input').forEach(i=>i.checked=false);this.parentElement.nextElementSibling&&this.parentElement.nextElementSibling.remove()">Reset</button>
+      <span class="t-err" id="b5-err"></span>
+    </div>`;
+}
+function scoreBigFive(btn){
+  const body = btn.closest('.lab-body');
+  const answers = BIG5.map((q,i)=>{
+    const sel = body.querySelector(`input[name="b5-${i}"]:checked`);
+    return sel?parseInt(sel.value):null;
+  });
+  if(answers.some(a=>a===null)){body.querySelector('#b5-err').textContent='Please answer all 25 questions.';return}
+  const scores={O:0,C:0,E:0,A:0,N:0},cnt={O:0,C:0,E:0,A:0,N:0};
+  BIG5.forEach((q,i)=>{const v=q.r?(6-answers[i]):answers[i];scores[q.f]+=v;cnt[q.f]++});
+  const pct={};Object.keys(scores).forEach(k=>{pct[k]=Math.round(((scores[k]-cnt[k])/(cnt[k]*4))*100)});
+  const names={O:'Openness',C:'Conscientiousness',E:'Extraversion',A:'Agreeableness',N:'Neuroticism'};
+  const interp={
+    O:p=>p>=70?'A strong taste for novelty, abstraction, and ideas for their own sake.':p>=40?'A balance between curiosity for new ideas and comfort with the familiar.':'A preference for the practical, the concrete, and the tested.',
+    C:p=>p>=70?'High follow-through and self-discipline; you finish what you start.':p>=40?'Reliable on what matters, flexible on what does not.':'Spontaneous and adaptive; long-running projects benefit from external structure.',
+    E:p=>p>=70?'Energized by people and external activity.':p>=40?'Comfortable in both social and solitary modes.':'Recharges through quiet time; deep over wide social ties.',
+    A:p=>p>=70?'Cooperative, trusting, and quick to give others the benefit of the doubt.':p>=40?'Cooperative when warranted, willing to push back when needed.':'Direct and skeptical; values honest disagreement over surface harmony.',
+    N:p=>p>=70?'High emotional reactivity; small events register loudly.':p>=40?'Emotionally responsive but not easily destabilized.':'Even-keeled; recovers quickly from setbacks.'
+  };
+  // radar
+  const cx=160,cy=160,R=120,labels=['O','C','E','A','N'];
+  const pts = labels.map((k,i)=>{const a=-Math.PI/2 + i*(2*Math.PI/5);const r=R*pct[k]/100;return [cx+Math.cos(a)*r, cy+Math.sin(a)*r]});
+  const axisPts = labels.map((k,i)=>{const a=-Math.PI/2 + i*(2*Math.PI/5);return [cx+Math.cos(a)*R, cy+Math.sin(a)*R]});
+  const labelPts = labels.map((k,i)=>{const a=-Math.PI/2 + i*(2*Math.PI/5);return [cx+Math.cos(a)*(R+22), cy+Math.sin(a)*(R+22)]});
+  const radar = `<svg class="radar" viewBox="0 0 320 320" aria-label="Big Five radar chart">
+    ${[0.25,0.5,0.75,1].map(s=>`<polygon points="${axisPts.map(p=>(cx+(p[0]-cx)*s)+','+(cy+(p[1]-cy)*s)).join(' ')}" fill="none" stroke="rgba(255,255,255,.10)"/>`).join('')}
+    ${axisPts.map(p=>`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="rgba(255,255,255,.10)"/>`).join('')}
+    <polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="rgba(255,90,78,.30)" stroke="#ff5a4e" stroke-width="2"/>
+    ${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#ff5a4e"/>`).join('')}
+    ${labels.map((k,i)=>`<text x="${labelPts[i][0]}" y="${labelPts[i][1]}" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="14" font-family="Newsreader,serif" font-weight="600">${k}</text>`).join('')}
+  </svg>`;
+  let html = `<div class="t-result"><h4>Your five-factor profile</h4>
+    <div class="score">Higher means more of the trait. Mid-range is the norm.</div>
+    <div class="radar-wrap">${radar}</div>
+    <table>${labels.map(k=>`<tr><td><b>${names[k]}</b><br><span style="color:rgba(255,255,255,.55);font-size:12px">${interp[k](pct[k])}</span></td><td>${pct[k]}%</td></tr>`).join('')}</table>
+    <span class="share" onclick="shareLink('b5',${JSON.stringify(pct)});this.textContent='Link copied to clipboard'">Copy share link</span>
+  </div>`;
+  const old = body.querySelector('.t-result');if(old)old.remove();
+  body.querySelector('.t-actions').insertAdjacentHTML('afterend',html);
+}
+
+// ─── TEST 2: ATTACHMENT ───
+const ATT = [
+  {q:'When someone I care about feels distant, my first reaction is:',a:[['I assume something is going on with them and check in calmly.','S'],['I worry that I have done something wrong and want to talk it through right away.','Ax'],['I give them space and turn my attention elsewhere.','Av'],['I feel both pulled toward them and wary of being hurt.','D']]},
+  {q:'In a new relationship I tend to:',a:[['Open up gradually as trust builds.','S'],['Want closeness fast and worry about how much they want it back.','Ax'],['Stay reserved and keep important parts of myself private.','Av'],['Move between intense closeness and pulling away.','D']]},
+  {q:'When a partner asks for more emotional connection:',a:[['I find it easy to meet them there.','S'],['I worry I am not enough no matter what I give.','Ax'],['I feel pressured and want to step back.','Av'],['I want to and I do not, at the same time.','D']]},
+  {q:'When conflict arises:',a:[['I can stay engaged and try to repair it.','S'],['I get anxious and want to fix things immediately.','Ax'],['I shut down or change the subject.','Av'],['I oscillate between shutting down and reacting strongly.','D']]},
+  {q:'Asking for help feels:',a:[['Reasonable, when I need it.','S'],['Necessary, but I worry about being a burden.','Ax'],['Uncomfortable; I prefer to handle things myself.','Av'],['Risky; I am not sure how it will be received.','D']]},
+  {q:'When a partner is upset:',a:[['I try to listen and stay present.','S'],['I take it personally and try hard to make it right.','Ax'],['I find myself emotionally stepping away.','Av'],['I want to comfort them and protect myself at once.','D']]},
+  {q:'My past relationships have mostly felt:',a:[['Safe and balanced, on the whole.','S'],['Intense, with a lot of worry about losing the person.','Ax'],['Independent, with closeness on my own terms.','Av'],['Unpredictable and emotionally costly.','D']]},
+  {q:'Texting silence from someone close usually makes me:',a:[['Assume they are busy and get on with my day.','S'],['Replay the last conversation looking for what went wrong.','Ax'],['Barely notice unless something specific is pending.','Av'],['Feel anxious and tempted to test how they respond.','D']]},
+  {q:'When someone praises me sincerely:',a:[['I can accept it.','S'],['I doubt it but want to believe it.','Ax'],['I deflect or change the subject.','Av'],['It feels uncomfortable, even unsafe.','D']]},
+  {q:'Long-term commitment feels:',a:[['Like something I can work at and enjoy.','S'],['Wonderful and terrifying.','Ax'],['Hard to imagine without losing myself.','Av'],['Both deeply wanted and quietly feared.','D']]},
+  {q:'When I think about being truly seen:',a:[['I want it and trust it can happen.','S'],['I want it but worry it will not last.','Ax'],['I prefer to stay partly unseen.','Av'],['It feels desirable and dangerous.','D']]},
+  {q:'In hard moments my inner voice tends to say:',a:[['This is uncomfortable but I will be okay.','S'],['Do not let them leave.','Ax'],['Handle it alone.','Av'],['I cannot trust this either way.','D']]}
+];
+function buildAttachment(body){
+  body.innerHTML = ATT.map((q,i)=>`
+    <div class="q">
+      <div class="q-text"><b>${i+1}.</b> ${q.q}</div>
+      ${q.a.map(([t,c],j)=>`<label class="choice"><input type="radio" name="at-${i}" value="${c}"> ${t}</label>`).join('')}
+    </div>`).join('') + `
+    <div class="t-actions">
+      <button class="t-submit" onclick="scoreAttachment(this)">See results</button>
+      <button class="t-reset" onclick="this.closest('.lab-body').querySelectorAll('input').forEach(i=>i.checked=false);const r=this.closest('.t-actions').nextElementSibling;if(r)r.remove()">Reset</button>
+      <span class="t-err" id="at-err"></span>
+    </div>`;
+}
+function scoreAttachment(btn){
+  const body = btn.closest('.lab-body');
+  const counts={S:0,Ax:0,Av:0,D:0};let answered=0;
+  ATT.forEach((q,i)=>{const sel=body.querySelector(`input[name="at-${i}"]:checked`);if(sel){counts[sel.value]++;answered++}});
+  if(answered<ATT.length){body.querySelector('#at-err').textContent='Please answer all 12 questions.';return}
+  const winner = Object.keys(counts).reduce((a,b)=>counts[a]>=counts[b]?a:b);
+  const desc = {
+    S:{n:'Secure',d:'You tend to trust connection without losing yourself in it. Conflict feels uncomfortable but workable. About 55-60% of adults score here.',s:'Continue what is working. Notice if life stress pulls you toward an insecure pattern temporarily; that is normal.'},
+    Ax:{n:'Anxious (Preoccupied)',d:'You value closeness highly and read for signs of disconnection. The cost is recurring worry that you are about to be left or are not enough.',s:'Practice tolerating ambiguity without immediately seeking reassurance. Naming the feeling out loud reliably softens it.'},
+    Av:{n:'Avoidant (Dismissing)',d:'You prize independence and find sustained closeness draining. The cost is missing real intimacy in the name of self-protection.',s:'Try small, deliberate acts of vulnerability with someone who has earned your trust. Notice the urge to retreat without acting on it immediately.'},
+    D:{n:'Disorganized (Fearful-Avoidant)',d:'You want closeness and fear it at the same time, often the legacy of inconsistent early caregiving. The mix can feel exhausting.',s:'This style benefits more than the others from working with a therapist. Slow, predictable connection over time is the most reliable repair.'}
+  }[winner];
+  const html = `<div class="t-result"><h4>${desc.n}</h4>
+    <div class="score">Pattern counts - Secure: ${counts.S} · Anxious: ${counts.Ax} · Avoidant: ${counts.Av} · Disorganized: ${counts.D}</div>
+    <p>${desc.d}</p>
+    <p><b>Suggestion: </b>${desc.s}</p>
+    <span class="share" onclick="shareLink('at',${JSON.stringify(counts)});this.textContent='Link copied to clipboard'">Copy share link</span>
+  </div>`;
+  const old = body.querySelector('.t-result');if(old)old.remove();
+  body.querySelector('.t-actions').insertAdjacentHTML('afterend',html);
+}
+
+// ─── TEST 3: CRT-7 ───
+const CRT = [
+  {q:'A bat and a ball cost $1.10 in total. The bat costs $1 more than the ball. How much does the ball cost (in cents)?',correct:5,intuitive:10},
+  {q:'If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets (in minutes)?',correct:5,intuitive:100},
+  {q:'In a lake there is a patch of lily pads. Every day the patch doubles. If it takes 48 days to cover the lake, how long to cover half the lake (in days)?',correct:47,intuitive:24},
+  {q:'If you are running a race and you pass the person in second place, what place are you in?',correct:2,intuitive:1},
+  {q:'A farmer had 15 sheep. All but 8 died. How many are left?',correct:8,intuitive:7},
+  {q:'Emily\'s father has three daughters. The first two are named April and May. What is the third one\'s name (type her name)?',correct:'emily',intuitive:'june',text:true},
+  {q:'How many cubic feet of dirt are in a hole 3 ft by 3 ft by 3 ft?',correct:0,intuitive:27}
+];
+function buildCRT(body){
+  body.innerHTML = CRT.map((q,i)=>`
+    <div class="q">
+      <div class="q-text"><b>${i+1}.</b> ${q.q}</div>
+      <input type="${q.text?'text':'number'}" name="crt-${i}" style="width:140px;padding:10px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;color:#fff;font-size:14px" placeholder="${q.text?'name':'number'}">
+    </div>`).join('') + `
+    <div class="t-actions">
+      <button class="t-submit" onclick="scoreCRT(this)">See results</button>
+      <button class="t-reset" onclick="this.closest('.lab-body').querySelectorAll('input').forEach(i=>i.value='');const r=this.closest('.t-actions').nextElementSibling;if(r)r.remove()">Reset</button>
+      <span class="t-err" id="crt-err"></span>
+    </div>`;
+}
+function scoreCRT(btn){
+  const body = btn.closest('.lab-body');
+  let reflect=0, intuitive=0, other=0, answered=0;
+  const rows=[];
+  CRT.forEach((q,i)=>{
+    const raw = body.querySelector(`input[name="crt-${i}"]`).value.trim().toLowerCase();
+    if(!raw){rows.push([i+1,'(skipped)','—']);return}
+    answered++;
+    const v = q.text?raw:parseFloat(raw);
+    const c = q.text?q.correct:q.correct;
+    const it = q.text?q.intuitive:q.intuitive;
+    let tag;
+    if(v==c){reflect++;tag='reflective'}
+    else if(v==it){intuitive++;tag='intuitive'}
+    else{other++;tag='other'}
+    rows.push([i+1, raw, tag]);
+  });
+  if(answered===0){body.querySelector('#crt-err').textContent='Please answer at least one question.';return}
+  const interp = reflect>=5?'High reflective tendency. You are inclined to second-guess fast answers when something feels off.':reflect>=3?'A mixed pattern. You catch some intuitions; others slip through.':'Mostly intuitive responses. The fast answer often wins. This is the most common pattern in the original studies.';
+  const html = `<div class="t-result"><h4>Reflective score: ${reflect} / 7</h4>
+    <div class="score">Intuitive answers: ${intuitive} · Other: ${other}</div>
+    <p>${interp}</p>
+    <table>${rows.map(r=>`<tr><td>Question ${r[0]} - ${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</table>
+    <span class="share" onclick="shareLink('crt',{r:${reflect},i:${intuitive}});this.textContent='Link copied to clipboard'">Copy share link</span>
+  </div>`;
+  const old = body.querySelector('.t-result');if(old)old.remove();
+  body.querySelector('.t-actions').insertAdjacentHTML('afterend',html);
+}
+
+// ─── TEST 4: REACTION TIME ───
+let RT = {trials:[],timer:null,start:0,state:'idle',box:null,trialN:0};
+function buildReaction(body){
+  body.innerHTML = `
+    <div class="rt-box" id="rt-box" tabindex="0" role="button" aria-label="Reaction target">Press the box, or hit space, to start. Then press as fast as you can when it turns green.</div>
+    <div class="rt-trials" id="rt-trials">0 / 5 trials</div>
+    <div class="t-actions">
+      <label for="rt-age" style="font-size:12.5px;color:rgba(255,255,255,.55)">Your age band:</label>
+      <select id="rt-age" style="padding:8px 10px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:6px;color:#fff;font-size:13px">
+        <option value="18">18-29</option><option value="30">30-39</option><option value="40">40-49</option><option value="50">50-59</option><option value="60">60+</option>
+      </select>
+      <button class="t-reset" onclick="rtReset()">Reset</button>
+    </div>`;
+  RT.box = body.querySelector('#rt-box');
+  RT.body = body;
+  RT.trials = [];RT.trialN = 0;RT.state='idle';
+  const handler = (e)=>{if(e.type==='keydown' && e.code!=='Space')return;e.preventDefault();rtTick()};
+  RT.box.onclick = rtTick;
+  RT.keyH = handler;
+  document.addEventListener('keydown',handler);
+}
+function rtReset(){
+  RT.trials=[];RT.trialN=0;RT.state='idle';
+  RT.box.className='rt-box';RT.box.textContent='Press the box, or hit space, to start. Then press as fast as you can when it turns green.';
+  document.getElementById('rt-trials').textContent='0 / 5 trials';
+  const r = RT.body.querySelector('.t-result');if(r)r.remove();
+  clearTimeout(RT.timer);
+}
+function rtTick(){
+  if(RT.state==='idle'||RT.state==='done-trial'){
+    if(RT.trialN>=5){rtFinish();return}
+    RT.state='waiting';
+    RT.box.className='rt-box ready';RT.box.textContent='Wait for green...';
+    const delay = 1200 + Math.random()*2400;
+    RT.timer = setTimeout(()=>{RT.state='go';RT.start=performance.now();RT.box.className='rt-box go';RT.box.textContent='NOW';},delay);
+  } else if(RT.state==='waiting'){
+    clearTimeout(RT.timer);RT.state='idle';
+    RT.box.className='rt-box early';RT.box.textContent='Too early. Click to try again.';
+  } else if(RT.state==='go'){
+    const rt = Math.round(performance.now()-RT.start);
+    RT.trials.push(rt);RT.trialN++;
+    document.getElementById('rt-trials').textContent=RT.trialN+' / 5 trials - last: '+rt+'ms';
+    RT.state='done-trial';
+    RT.box.className='rt-box';
+    if(RT.trialN>=5){RT.box.textContent='All trials done. Click for results.';}
+    else{RT.box.textContent=rt+' ms. Click for next trial.';}
+  }
+}
+function rtFinish(){
+  document.removeEventListener('keydown',RT.keyH);
+  const sorted = [...RT.trials].sort((a,b)=>a-b);sorted.pop(); // drop slowest
+  const avg = Math.round(sorted.reduce((a,b)=>a+b,0)/sorted.length);
+  const age = RT.body.querySelector('#rt-age').value;
+  const norms = {'18':{m:270,sd:40},'30':{m:285,sd:40},'40':{m:300,sd:45},'50':{m:320,sd:50},'60':{m:355,sd:60}};
+  const n = norms[age];
+  const z = (avg - n.m)/n.sd;
+  const pct = Math.max(1,Math.min(99,Math.round(100*(1 - 0.5*(1+erf(z/Math.sqrt(2)))))));
+  const interp = avg<n.m-n.sd?'Faster than typical for your age band.':avg<=n.m+n.sd?'Within the typical range for your age band.':'Slower than typical. Fatigue, screen size, and input lag all matter; one session is not definitive.';
+  const html = `<div class="t-result"><h4>Average reaction time: ${avg} ms</h4>
+    <div class="score">Trials (slowest dropped): ${sorted.join(', ')} ms · Age band norm: ${n.m}±${n.sd} ms</div>
+    <p>You are approximately at the <b>${pct}th percentile</b> for your age band (lower percentile = faster). ${interp}</p>
+    <p style="font-size:12px;color:rgba(255,255,255,.45)">Caveats: phone reaction time runs 30-50 ms slower than dedicated lab equipment because of touch latency. Compare against yourself over time, not against a friend on a different device.</p>
+    <span class="share" onclick="shareLink('rt',{a:${avg},p:${pct}});this.textContent='Link copied to clipboard'">Copy share link</span>
+  </div>`;
+  const old = RT.body.querySelector('.t-result');if(old)old.remove();
+  RT.body.querySelector('.t-actions').insertAdjacentHTML('afterend',html);
+}
+function erf(x){const s=Math.sign(x);x=Math.abs(x);const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;const t=1/(1+p*x);const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);return s*y}
+
+// ─── TEST 5: DIGIT SPAN ───
+let DS = {len:3, misses:0, best:0, phase:'idle', target:'', body:null};
+function buildDigitSpan(body){
+  body.innerHTML = `
+    <div class="ds-display" id="ds-disp">Press start. A number will appear for a moment, then you type it back.</div>
+    <input class="ds-input" id="ds-input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="(your answer)" disabled>
+    <div class="ds-status" id="ds-status">Current length: 3 · Misses: 0</div>
+    <div class="t-actions" style="justify-content:center">
+      <button class="t-submit" id="ds-go" onclick="dsStart()">Start</button>
+      <button class="t-reset" onclick="dsReset()">Reset</button>
+    </div>`;
+  DS.body = body;
+  DS.len=3;DS.misses=0;DS.best=0;DS.phase='idle';
+  body.querySelector('#ds-input').addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();dsCheck()}});
+}
+function dsReset(){
+  DS.len=3;DS.misses=0;DS.best=0;DS.phase='idle';
+  DS.body.querySelector('#ds-disp').className='ds-display';
+  DS.body.querySelector('#ds-disp').textContent='Press start. A number will appear for a moment, then you type it back.';
+  DS.body.querySelector('#ds-input').value='';DS.body.querySelector('#ds-input').disabled=true;
+  DS.body.querySelector('#ds-status').textContent='Current length: 3 · Misses: 0';
+  DS.body.querySelector('#ds-go').textContent='Start';DS.body.querySelector('#ds-go').onclick=dsStart;
+  const r=DS.body.querySelector('.t-result');if(r)r.remove();
+}
+function dsStart(){
+  DS.target = '';
+  for(let i=0;i<DS.len;i++) DS.target += Math.floor(Math.random()*10);
+  const disp = DS.body.querySelector('#ds-disp');
+  disp.className='ds-display';disp.textContent=DS.target;
+  DS.body.querySelector('#ds-input').value='';DS.body.querySelector('#ds-input').disabled=true;
+  DS.body.querySelector('#ds-go').textContent='Showing...';
+  const showTime = 800 + DS.len*250;
+  setTimeout(()=>{
+    disp.className='ds-display recall';disp.textContent='Type the digits you just saw, in order, then press Enter.';
+    const inp = DS.body.querySelector('#ds-input');inp.disabled=false;inp.focus();
+    DS.body.querySelector('#ds-go').textContent='Submit';DS.body.querySelector('#ds-go').onclick=dsCheck;
+  }, showTime);
+}
+function dsCheck(){
+  const inp = DS.body.querySelector('#ds-input');
+  const v = inp.value.trim();
+  if(v===DS.target){
+    DS.best = DS.len;DS.len++;DS.misses=0;
+    DS.body.querySelector('#ds-status').innerHTML='Correct. New length: '+DS.len+' · Misses: 0 · Best so far: '+DS.best;
+    DS.body.querySelector('#ds-go').textContent='Next';DS.body.querySelector('#ds-go').onclick=dsStart;
+    inp.disabled=true;
+  } else {
+    DS.misses++;
+    if(DS.misses>=2){dsFinish();return}
+    DS.body.querySelector('#ds-status').innerHTML='Miss '+DS.misses+'/2. Correct was <b style="color:#ff5a4e">'+DS.target+'</b>. Try the same length again.';
+    DS.body.querySelector('#ds-go').textContent='Retry';DS.body.querySelector('#ds-go').onclick=dsStart;
+    inp.disabled=true;
+  }
+}
+function dsFinish(){
+  const span = DS.best;
+  const interp = span>=9?'Exceptional. Spans of 9+ are uncommon and often involve practiced chunking.':span>=7?'Above average. The classic "7 ± 2" estimate sits here.':span>=5?'Within the typical adult range (5-7).':span>=4?'On the lower end of typical. Fatigue, stress, and divided attention all reduce span temporarily.':'Lower than typical for a non-distracted session. Worth a second attempt when rested.';
+  const html = `<div class="t-result"><h4>Working memory span: ${span}</h4>
+    <div class="score">Typical adult span sits in the 5-7 range.</div>
+    <p>${interp}</p>
+    <p style="font-size:12px;color:rgba(255,255,255,.45)">Caveats: this is a forward digit span only. Working memory has multiple components (verbal, visuospatial, executive) and a single test does not capture all of them. Span is also notably affected by sleep, caffeine, and time of day.</p>
+    <span class="share" onclick="shareLink('ds',{s:${span}});this.textContent='Link copied to clipboard'">Copy share link</span>
+  </div>`;
+  const old = DS.body.querySelector('.t-result');if(old)old.remove();
+  DS.body.querySelector('.t-actions').insertAdjacentHTML('afterend',html);
+  DS.body.querySelector('#ds-go').textContent='Finished';DS.body.querySelector('#ds-go').onclick=()=>{};
+}
+
+// ───── TOOLS ─────
+function genHabit(){
+  const a = document.getElementById('hs-anchor').value.trim();
+  const n = document.getElementById('hs-new').value.trim();
+  const out = document.getElementById('hs-out');
+  if(!a || !n){out.className='tool-out show';out.innerHTML='Please fill in both fields.';return}
+  out.className='tool-out show';
+  out.innerHTML = `
+    <p><strong>Your implementation intention:</strong></p>
+    <p style="font-size:15px;font-style:italic;margin:8px 0 12px">"After I ${a}, I will ${n}."</p>
+    <p><strong>How to make it stick:</strong></p>
+    <p>1. Keep the new habit small for the first two weeks. If it takes longer than two minutes, shrink it.<br>
+    2. Place the new habit physically near the anchor (the cue should be impossible to miss).<br>
+    3. Track for 30 days; the median time to automaticity in the Lally et al. (2010) data was 66 days, not 21.<br>
+    4. If you miss a day, restart the next day without extra effort. Two missed days in a row is the real risk.</p>`;
+}
+function genReframe(){
+  const t = document.getElementById('cd-thought').value.trim();
+  const picks = Array.from(document.querySelectorAll('#cd-out')).length;
+  const checks = Array.from(document.querySelectorAll('.tool-card .check input:checked')).map(c=>c.value);
+  const out = document.getElementById('cd-out');
+  if(!t){out.className='tool-out show';out.innerHTML='Please type a thought first.';return}
+  const labels = {'all-or-nothing':'all-or-nothing thinking','catastrophizing':'catastrophizing','mind-reading':'mind reading','personalization':'personalization','should':'should statements','labelling':'labelling'};
+  const prompts = {
+    'all-or-nothing':'Look for the middle ground. What is a more accurate description that lives between the two extremes?',
+    'catastrophizing':'Separate the worst case from the likely case. What is the most realistic outcome, given the actual evidence?',
+    'mind-reading':'List the evidence for and against your assumption about what they are thinking. Is there a simpler explanation?',
+    'personalization':'What other causes could be at play that have nothing to do with you?',
+    'should':'Replace "should" with "I would prefer to" or "it would be useful if". Notice how that changes the pressure.',
+    'labelling':'Describe the specific behavior instead of the person. What did they do, and in what specific context?'
+  };
+  let body = `<p><strong>The thought:</strong></p><p style="font-style:italic;margin:6px 0 14px">"${t.replace(/</g,'&lt;')}"</p>`;
+  if(checks.length){
+    body += `<p><strong>Patterns you noticed:</strong> ${checks.map(c=>labels[c]).join(', ')}.</p>`;
+    body += '<p><strong>Reframe prompts:</strong></p><ul style="margin:8px 0 0 18px">';
+    checks.forEach(c=>{body += '<li style="margin-bottom:6px"><b>'+labels[c]+':</b> '+prompts[c]+'</li>'});
+    body += '</ul>';
+  } else {
+    body += `<p>Try checking a distortion or two above. A useful general prompt: "If a friend I respect described this thought to me, what would I gently point out?"</p>`;
+  }
+  body += `<p style="margin-top:14px;font-size:12px;color:var(--muted)">Cognitive reframing is a skill, not a one-shot fix. Doing this regularly in writing is closer to how it works in CBT.</p>`;
+  out.className='tool-out show';
+  out.innerHTML = body;
+}
+function genSleep(){
+  const study = document.getElementById('so-study').value;
+  const bed = document.getElementById('so-bed').value;
+  const wake = document.getElementById('so-wake').value;
+  const out = document.getElementById('so-out');
+  if(!study||!bed||!wake){out.className='tool-out show';out.innerHTML='Please set all three times.';return}
+  const fmt = (h,m)=>{const hr=((h%24)+24)%24;return String(hr).padStart(2,'0')+':'+String(Math.round(m)).padStart(2,'0')};
+  const toMin = s=>{const [h,m]=s.split(':').map(Number);return h*60+m};
+  const studyM = toMin(study), bedM = toMin(bed), wakeM = toMin(wake);
+  // Review 1: 30-60 min after study, before bed
+  const r1 = studyM + 45;
+  // Review 2: morning, within an hour of wake
+  const r2 = (wakeM + 30) % (24*60);
+  // Long-interval review: ~24 hours later
+  const r3 = (studyM + 24*60) % (24*60);
+  const mins2t = m=>{m=((m%(24*60))+24*60)%(24*60);return fmt(Math.floor(m/60), m%60)};
+  out.className='tool-out show';
+  out.innerHTML = `
+    <p><strong>Your review schedule</strong> (study session ended at ${study}, sleep from ${bed} to ${wake})</p>
+    <p style="margin:10px 0"><b>Review 1 - ${mins2t(r1)}</b> (about 45 minutes after study, before bed)<br>
+    <span style="color:var(--text2);font-size:13px">Quick recall pass. No notes. Where you blank, peek and continue.</span></p>
+    <p style="margin:10px 0"><b>Review 2 - ${mins2t(r2)}</b> (within an hour of waking)<br>
+    <span style="color:var(--text2);font-size:13px">This captures the sleep-dependent consolidation boost. Self-test, do not re-read.</span></p>
+    <p style="margin:10px 0"><b>Review 3 - ${mins2t(r3)} tomorrow</b> (about 24 hours after study)<br>
+    <span style="color:var(--text2);font-size:13px">Then space subsequent reviews at expanding intervals: 3 days, 7 days, 16 days.</span></p>
+    <p style="margin-top:14px;font-size:12px;color:var(--muted)">Based on the spacing effect (Cepeda et al. 2008) and sleep-dependent consolidation work (Walker, Stickgold). The "review before sleep, retest after sleep" sandwich consistently outperforms cramming of equal total time.</p>`;
+}
+</script>
+</body>
+</html>
