@@ -427,7 +427,7 @@ textarea{resize:vertical;line-height:1.6}
 <div id="keysBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9998;background:#f59e0b;color:#000;padding:8px 20px;font-size:12px;font-weight:700;align-items:center;gap:12px">
   <span>⚠</span>
   <span id="keysBannerText"></span>
-  <button onclick="showPanel('tokens')" style="margin-left:auto;background:#000;color:#f59e0b;border:none;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer">Open Token Vault</button>
+  <button onclick="showPanel('settings')" style="margin-left:auto;background:#000;color:#f59e0b;border:none;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer">Open Settings</button>
   <button onclick="document.getElementById('keysBanner').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:16px;color:#000;padding:0 4px">×</button>
 </div>
 
@@ -519,9 +519,10 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-comments" onclick="showPanel('comments')"
         data-tip="Generate AI comments for any article (single site or broadcast across all). Per-site auto-comment schedules.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Comments</button>
-      <button class="nav-btn" id="nav-backlinks" onclick="showPanel('backlinks')"
-        data-tip="Track all backlinks posted to Reddit, LinkedIn, Quora, and other platforms across the entire network. Per-site backlinks also appear inside Site Settings.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> Backlinks</button>
+      <button class="nav-btn" id="nav-manualpost" onclick="showPanel('manualpost');if(typeof mpInit==='function')mpInit()"
+        data-tip="Hand-write and publish an article. Pick any sites, set author and category, schedule for later, or auto-expire after a date.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span> Manual Post</button>
+      <!-- Backlinks nav moved to the secondary section near History & Undo (less used). -->
       <button class="nav-btn" id="nav-sponsors" onclick="showPanel('sponsors');sponsorsInit()"
         data-tip="Manage sponsor backlinks. Pre-seeded with Dalmend Candles. Add, enable/disable, scope, and re-run injection across your network.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span> Sponsors</button>
@@ -588,15 +589,16 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-settings" onclick="showPanel('settings')"
         data-tip="Global settings: API keys, bot repo, global posting frequency, bulk site toggles, Telegram bot.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Settings</button>
-      <button class="nav-btn" id="nav-tokens" onclick="showPanel('tokens')"
-        data-tip="Store your API keys. Keys are saved in your browser only.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Token Vault</button>
+      <!-- Token Vault nav removed: duplicate of Settings → API Keys card. -->
       <button class="nav-btn" id="nav-backup" onclick="showPanel('backup');backupLoadStatus()"
         data-tip="Full backup to GitHub Releases  -  system files, all site articles, and comments.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Backup</button>
       <button class="nav-btn" id="nav-history" onclick="showPanel('history')"
         data-tip="Every confirmed command is logged here with a full before/after record. Restore any previous snapshot.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg></span> History &amp; Undo</button>
+      <button class="nav-btn" id="nav-backlinks" onclick="showPanel('backlinks')"
+        data-tip="Track all backlinks posted to Reddit, LinkedIn, Quora, and other platforms. Per-site backlinks also appear inside Site Settings.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> Backlinks</button>
       <button class="nav-btn" id="nav-server" onclick="showPanel('server')"
         data-tip="The local Python server running at localhost:8765. Required for AI[S], config saves, and Push buttons to work.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="4" rx="1"/><rect x="2" y="10" width="20" height="4" rx="1"/><rect x="2" y="17" width="20" height="4" rx="1"/><line x1="6" y1="5" x2="6.01" y2="5"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="6" y1="19" x2="6.01" y2="19"/></svg></span> Local Server <span id="srvNavBadge" class="nav-badge" style="display:none;background:var(--amber);color:#000">!</span></button>
@@ -801,9 +803,11 @@ textarea{resize:vertical;line-height:1.6}
   <div class="card">
     <!-- Mode toggle -->
     <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-      <button id="cust-mode-design" class="btn btn-accent" style="font-size:12px;padding:6px 16px" onclick="setCustMode('design')">🎨 Design Change</button>
-      <button id="cust-mode-post"   class="btn"            style="font-size:12px;padding:6px 16px" onclick="setCustMode('post')">📝 Write a Post</button>
-      <button id="cust-mode-tmpl"   class="btn"            style="font-size:12px;padding:6px 16px" onclick="setCustMode('template')">🖼 Apply Template</button>
+      <button id="cust-mode-design" class="btn btn-accent" style="font-size:12px;padding:6px 16px" onclick="setCustMode('design')">🎨 Edit Page Design</button>
+      <button id="cust-mode-post"   class="btn"            style="font-size:12px;padding:6px 16px" onclick="setCustMode('post')">📝 Generate New Article</button>
+      <button id="cust-mode-tmpl"   class="btn"            style="font-size:12px;padding:6px 16px" onclick="setCustMode('template')">🖼 Copy Layout Across Sites</button>
+      <button id="cust-mode-replace" class="btn"           style="font-size:12px;padding:6px 16px" onclick="setCustMode('replace')">🔁 Find &amp; Replace</button>
+      <button id="cust-mode-linkify" class="btn"           style="font-size:12px;padding:6px 16px" onclick="setCustMode('linkify')">🔗 Hyperlink Keywords</button>
     </div>
 
     <div class="section-head" id="cust-section-head">🎨 Pick a Site + Describe the Change</div>
@@ -821,10 +825,16 @@ textarea{resize:vertical;line-height:1.6}
       <div id="cust-scope-all-label" style="display:none;font-size:13px;color:var(--accent);padding:6px 0">All <span id="cust-all-count">0</span> sites selected</div>
     </div>
 
-    <!-- Page selector (design mode only) -->
+    <!-- Page selector (design mode only). Buttons render dynamically by
+         renderCustPageButtons() from the selected site's live repo so every
+         existing page (privacy, terms, recaps, tests, tools, resources, etc.)
+         appears, not just Home + About. -->
     <div id="cust-page-wrap" style="margin-bottom:12px">
-      <div class="form-label">Page to Create / Edit</div>
-      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+      <div class="form-label" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Page to Create / Edit</span>
+        <button type="button" onclick="renderCustPageButtons(true)" title="Re-scan the site repo for pages" style="font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;padding:2px 6px">↻ rescan</button>
+      </div>
+      <div id="cust-pages-row" style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
         <button id="cust-page-index" class="btn btn-accent" style="font-size:11px;padding:4px 12px" onclick="setCustPage('index.html')">Homepage</button>
         <button id="cust-page-about" class="btn"            style="font-size:11px;padding:4px 12px" onclick="setCustPage('about.html')">About</button>
         <button id="cust-page-custom" class="btn"           style="font-size:11px;padding:4px 12px" onclick="setCustPage('custom')">+ New Page</button>
@@ -1408,6 +1418,7 @@ textarea{resize:vertical;line-height:1.6}
 
     <div style="display:flex;gap:10px;justify-content:flex-end;margin:6px 0 20px">
       <button class="btn btn-accent" onclick="ssSaveAll()" style="font-weight:700">Save All Settings</button>
+      <button class="btn" onclick="ssRebuildArticles((cfg.sites.find(s=>s.id===window._ssSiteId)||{}).id||document.getElementById('ss-site-select')?.value)" title="Re-emit every article on this site with the current author / title / bio / categories" style="margin-left:8px">↻ Rebuild articles</button>
     </div>
   </div>
 </div>
@@ -2241,17 +2252,33 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
-  <!-- articles per day -->
+  <!-- bulk-apply cadence -->
   <div class="card" style="margin-bottom:12px">
     <div class="section-head">📅 Publishing Frequency</div>
     <div class="settings-row" style="align-items:center">
       <div class="form-group">
-        <div class="form-label">Global Default  -  Articles Per Day <span style="color:var(--text3)">(per site, unless overridden below)</span></div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input type="number" id="setGlobalArticlesPerDay" min="1" max="10" value="1" style="width:80px"
-            oninput="lss('globalArticlesPerDay',this.value||'1');renderSiteToggles()">
-          <span style="font-size:12px;color:var(--text3)">Default: 1 article/day per active site</span>
+        <div class="form-label">Apply the same cadence to every site</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">New</span>
+          <input type="number" id="bulkNewCount" min="0" max="200" value="1" style="width:70px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;color:var(--text);text-align:center;font-size:13px">
+          <select id="bulkNewUnit" style="padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:12px">
+            <option value="day" selected>per day</option>
+            <option value="week">per week</option>
+            <option value="month">per month</option>
+            <option value="year">per year</option>
+          </select>
+          <span style="margin:0 4px;color:var(--text3)">·</span>
+          <span style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">Historical</span>
+          <input type="number" id="bulkHistCount" min="0" max="200" value="0" style="width:70px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;color:var(--text);text-align:center;font-size:13px">
+          <select id="bulkHistUnit" style="padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-size:12px">
+            <option value="day">per day</option>
+            <option value="week" selected>per week</option>
+            <option value="month">per month</option>
+            <option value="year">per year</option>
+          </select>
+          <button class="btn btn-accent" style="margin-left:6px;padding:6px 14px;font-size:12px" onclick="applyCadenceToAllSites()">Apply to all sites</button>
         </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px">Overwrites the per-row cadence for every non-Nexus site. Active/paused state stays as is. Each site can still be tuned individually below afterwards.</div>
       </div>
     </div>
     <div class="info-box" style="margin-top:8px">
@@ -2574,7 +2601,25 @@ textarea{resize:vertical;line-height:1.6}
 <!-- ════════ COMMENTS ════════ -->
 <div class="panel" id="panel-comments">
   <div class="pg-title">Comments Management</div>
-  <div class="pg-sub">Generate AI-seeded comments for any article or add them manually. Comments load client-side from comments.json in each article folder.</div>
+  <div class="pg-sub">Generate AI-seeded comments for any article, or manage every existing comment per article: edit name, text, date, likes, delete, add. All changes write straight to GitHub.</div>
+
+  <!-- ── Manage existing comments (per-article editor) ── -->
+  <div class="card" style="margin-bottom:16px;border-color:rgba(56,189,248,.35)">
+    <div class="section-head" style="color:var(--blue, #38bdf8);display:flex;align-items:center;justify-content:space-between">
+      <span>✎ Manage existing comments</span>
+      <button class="btn btn-sm" onclick="mcScan()" id="mc-scan-btn">Scan all sites</button>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Pick a site to see how many comments each article has, then click an article to edit/delete/add individual comments. Saves write to <code>&lt;slug&gt;/comments.json</code> on the site's GitHub repo.</div>
+    <div id="mc-shell" style="display:grid;grid-template-columns:260px 1fr;gap:14px;min-height:280px">
+      <div id="mc-sites-col" style="border:1px solid var(--border2);border-radius:8px;padding:8px;background:var(--bg2);max-height:520px;overflow-y:auto">
+        <div style="font-size:11px;color:var(--text3);padding:6px 4px">Click "Scan all sites" above to load comment counts.</div>
+      </div>
+      <div id="mc-detail-col" style="border:1px solid var(--border2);border-radius:8px;padding:12px;background:var(--bg2);max-height:520px;overflow-y:auto">
+        <div style="font-size:13px;color:var(--text3);text-align:center;padding:60px 12px">Select a site on the left to see its articles + comments.</div>
+      </div>
+    </div>
+    <div id="mc-total" style="font-size:11px;color:var(--text3);margin-top:8px"></div>
+  </div>
 
   <!-- ── Global Broadcast ── -->
   <div class="card" style="margin-bottom:16px;border-color:#3ecf8e30">
@@ -2589,9 +2634,9 @@ textarea{resize:vertical;line-height:1.6}
           <option value="range">Date range</option>
         </select>
       </div>
-      <div class="form-group" id="glob-n-wrap" style="flex:0 0 100px">
-        <div class="form-label">Articles (N)</div>
-        <input type="number" id="glob-n" value="1" min="1" max="10" style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;color:var(--text);font-size:13px;width:100%">
+      <div class="form-group" id="glob-n-wrap" style="flex:0 0 130px">
+        <div class="form-label">How many <span style="color:var(--text3);font-weight:400">(per site)</span></div>
+        <input type="number" id="glob-n" value="1" min="1" max="10" title="Number of articles per site that will receive the AI-generated comments (used with 'Most recent' or 'Random' modes; ignored for Today / Date range)." style="background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;color:var(--text);font-size:13px;width:100%">
       </div>
       <div id="glob-range-wrap" style="display:none;flex:1;display:none">
         <div class="settings-row" style="gap:8px">
@@ -2798,6 +2843,243 @@ textarea{resize:vertical;line-height:1.6}
 </div>
 
 <!-- ════════ TERMINAL PANEL ════════ -->
+<!-- ═══════════════════════════════════════════════════════════
+     MANUAL POST PANEL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-manualpost">
+  <div class="pg-title">Manual Post</div>
+  <div class="pg-sub">Hand-write an article and publish it now, schedule it for later, or auto-expire it on a date. Works on one site, selected sites, or your whole network.</div>
+
+  <style>
+    .mp-grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
+    @media (max-width:900px){.mp-grid{grid-template-columns:1fr}}
+    .mp-card{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-bottom:14px}
+    .mp-card h4{margin:0 0 10px 0;font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+    .mp-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .mp-row > *{flex:1;min-width:160px}
+    .mp-field{display:block;width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;box-sizing:border-box}
+    .mp-field:focus{outline:none;border-color:var(--accent)}
+    .mp-label{display:block;font-size:11px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+    .mp-scope-btns{display:flex;gap:6px;margin-bottom:10px}
+    .mp-scope-btns button{flex:1;padding:6px 12px;font-size:11px;background:var(--bg3);color:var(--text2);border:1px solid var(--border2);border-radius:6px;cursor:pointer}
+    .mp-scope-btns button.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+    .mp-sites-pick{max-height:160px;overflow:auto;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px;display:none}
+    .mp-sites-pick label{display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 0;color:var(--text2);cursor:pointer}
+    .mp-author-row{display:flex;flex-direction:column;gap:6px}
+    .mp-author-row label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);cursor:pointer;padding:6px 8px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px}
+    .mp-author-row label.active{border-color:var(--accent)}
+    .mp-author-row select,.mp-author-row input[type=text]{flex:1;background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:5px;padding:5px 8px;font-size:12px}
+    .mp-tabs{display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid var(--border2)}
+    .mp-tabs button{padding:6px 14px;font-size:12px;background:none;color:var(--text3);border:none;border-bottom:2px solid transparent;cursor:pointer;font-weight:600}
+    .mp-tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
+    .mp-tab-pane{display:none}
+    .mp-tab-pane.active{display:block}
+    .mp-editor{width:100%;min-height:280px;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:10px;font-family:'SF Mono','Courier New',monospace;font-size:13px;line-height:1.6;box-sizing:border-box;resize:vertical}
+    .mp-thumb{width:120px;height:80px;object-fit:cover;border-radius:6px;border:1px solid var(--border2);background:var(--bg3)}
+    .mp-counter{font-size:10px;color:var(--text3);text-align:right;margin-top:2px}
+    .mp-action-row{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--border2);flex-wrap:wrap}
+    .mp-btn{padding:8px 18px;font-size:13px;font-weight:700;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text)}
+    .mp-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+    .mp-btn.green{background:var(--green);color:#000;border-color:var(--green)}
+    .mp-btn:hover{filter:brightness(1.1)}
+    .mp-queue-card{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start}
+    .mp-queue-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+    .mp-queue-meta{font-size:11px;color:var(--text3);line-height:1.6}
+    .mp-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.04em}
+    .mp-badge.scheduled{background:rgba(120,160,255,.15);color:#7aa6ff}
+    .mp-badge.published{background:rgba(62,207,142,.18);color:#3ecf8e}
+    .mp-badge.expired{background:rgba(160,160,160,.18);color:#aaa}
+    .mp-badge.cancelled{background:rgba(255,120,120,.15);color:#ff9aa2}
+    .mp-badge.failed{background:rgba(255,90,90,.2);color:#ff7a7a}
+    .mp-queue-actions{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+    .mp-draft-item{padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;font-size:12px;cursor:pointer;margin-bottom:6px}
+    .mp-draft-item:hover{border-color:var(--accent)}
+    .mp-empty{font-size:12px;color:var(--text3);padding:12px;text-align:center;background:var(--bg3);border:1px dashed var(--border2);border-radius:6px}
+    .mp-preview-box{background:#fff;color:#111;border-radius:6px;padding:18px;min-height:260px;font-family:Georgia,serif;line-height:1.65}
+    .mp-preview-box h1{font-size:22px;margin:0 0 10px}
+    .mp-preview-box h2{font-size:16px;margin:18px 0 8px;color:#333}
+    .mp-preview-box p{margin:0 0 10px;font-size:14px}
+  </style>
+
+  <!-- QUEUE / LIVE CARD -->
+  <div class="mp-card" id="mp-queue-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <h4 style="margin:0">Scheduled, Published &amp; Expiring
+        <span id="mp-queue-count" style="font-size:10px;background:rgba(var(--accent-rgb),.15);color:var(--accent);padding:2px 7px;border-radius:10px;margin-left:6px">0</span>
+      </h4>
+      <button class="mp-btn" onclick="mpRefreshQueue()" style="padding:4px 12px;font-size:11px">Refresh</button>
+    </div>
+    <div id="mp-queue-list" style="display:flex;flex-direction:column;gap:8px">
+      <div class="mp-empty" id="mp-queue-empty">Nothing in the queue yet. Compose a post below.</div>
+    </div>
+  </div>
+
+  <div class="mp-grid">
+    <!-- LEFT: composer -->
+    <div>
+      <!-- Scope + sites -->
+      <div class="mp-card">
+        <h4>Scope</h4>
+        <div class="mp-scope-btns">
+          <button id="mp-scope-one"    class="active" onclick="mpSetScope('one')">One site</button>
+          <button id="mp-scope-select" onclick="mpSetScope('select')">Select sites</button>
+          <button id="mp-scope-all"    onclick="mpSetScope('all')">All sites</button>
+        </div>
+        <select id="mp-site-one" class="mp-field" onchange="mpRebuildCategories()"></select>
+        <div id="mp-site-multi" class="mp-sites-pick"></div>
+        <div id="mp-scope-all-note" style="display:none;font-size:12px;color:var(--text3);margin-top:6px">Publishing to every site in network-config.json.</div>
+      </div>
+
+      <!-- Title / slug / meta -->
+      <div class="mp-card">
+        <h4>Headline</h4>
+        <div class="mp-row">
+          <div style="flex:2">
+            <label class="mp-label">Title</label>
+            <input id="mp-title" class="mp-field" type="text" placeholder="Article title" oninput="mpAutoSlug()" onblur="mpAutoSlug(true)">
+          </div>
+          <div>
+            <label class="mp-label">Slug</label>
+            <div style="display:flex;gap:4px">
+              <input id="mp-slug" class="mp-field" type="text" placeholder="auto-from-title" oninput="mpSlugTouched=true">
+              <button class="mp-btn" onclick="mpAutoSlug(true)" title="Regenerate slug from title" style="padding:6px 10px">↻</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="mp-label">Meta description</label>
+          <textarea id="mp-meta" class="mp-field" rows="2" maxlength="200" placeholder="1-2 sentences. Shows in search results and social previews." oninput="mpCount()"></textarea>
+          <div class="mp-counter"><span id="mp-meta-count">0</span> / 200</div>
+        </div>
+      </div>
+
+      <!-- Image + category -->
+      <div class="mp-card">
+        <h4>Cover &amp; Category</h4>
+        <div class="mp-row">
+          <div style="flex:2">
+            <label class="mp-label">Cover image URL</label>
+            <input id="mp-image" class="mp-field" type="text" placeholder="https://images.unsplash.com/..." oninput="mpUpdateThumb()">
+          </div>
+          <div style="flex:0 0 130px">
+            <label class="mp-label">Preview</label>
+            <img id="mp-thumb" class="mp-thumb" alt="cover preview" src="">
+          </div>
+        </div>
+        <div class="mp-row">
+          <div>
+            <label class="mp-label">Category</label>
+            <select id="mp-category" class="mp-field" onchange="mpCatChange()"></select>
+            <input id="mp-category-other" class="mp-field" type="text" placeholder="Type custom category" style="display:none;margin-top:6px">
+          </div>
+          <div>
+            <label class="mp-label">Tags (comma separated)</label>
+            <input id="mp-tags" class="mp-field" type="text" placeholder="techno, berlin, nightlife">
+          </div>
+        </div>
+      </div>
+
+      <!-- Author -->
+      <div class="mp-card">
+        <h4>Author</h4>
+        <div class="mp-author-row">
+          <label><input type="radio" name="mp-author" value="site_default" checked onchange="mpAuthorChange()"> Use the site's default author</label>
+          <label><input type="radio" name="mp-author" value="pick" onchange="mpAuthorChange()"> Pick from the site's author pool
+            <select id="mp-author-pool" disabled></select>
+          </label>
+          <label><input type="radio" name="mp-author" value="random" onchange="mpAuthorChange()"> Random per site at publish time</label>
+          <label><input type="radio" name="mp-author" value="custom" onchange="mpAuthorChange()"> Custom byline
+            <input id="mp-author-custom" type="text" placeholder="Name to publish under" disabled>
+          </label>
+        </div>
+      </div>
+
+      <!-- Schedule + expiry -->
+      <div class="mp-card">
+        <h4>Schedule &amp; Expiry</h4>
+        <div class="mp-row">
+          <div>
+            <label class="mp-label">Publish at</label>
+            <input id="mp-publish-at" class="mp-field" type="datetime-local">
+          </div>
+          <div>
+            <label class="mp-label">Expires at</label>
+            <input id="mp-expires-at" class="mp-field" type="datetime-local">
+            <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);margin-top:6px">
+              <input id="mp-lifetime" type="checkbox" onchange="mpLifetimeToggle()"> Lifetime (no expiry)
+            </label>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)">
+            <input id="mp-featured" type="checkbox"> Featured on homepage
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)">
+            <input id="mp-newsletter" type="checkbox"> Send newsletter on publish (if Brevo list_id set)
+          </label>
+        </div>
+      </div>
+
+      <!-- Body editor -->
+      <div class="mp-card">
+        <h4>Body</h4>
+        <div class="mp-tabs">
+          <button class="active" data-mp-tab="sections" onclick="mpSwitchTab('sections')">Sections</button>
+          <button data-mp-tab="markdown" onclick="mpSwitchTab('markdown')">Markdown</button>
+          <button data-mp-tab="html" onclick="mpSwitchTab('html')">Raw HTML</button>
+          <button data-mp-tab="preview" onclick="mpSwitchTab('preview')">Preview</button>
+        </div>
+
+        <div id="mp-tab-sections" class="mp-tab-pane active">
+          <label class="mp-label">Intro (opening paragraph)</label>
+          <textarea id="mp-intro" class="mp-editor" rows="4" placeholder="The opening paragraph that hooks the reader."></textarea>
+          <label class="mp-label" style="margin-top:10px">Body (split sections with lines starting with '## Heading')</label>
+          <textarea id="mp-body" class="mp-editor" rows="14" placeholder="## First section heading&#10;&#10;Section text. Use ## on its own line to start a new section.&#10;&#10;## Second section heading&#10;&#10;More text..."></textarea>
+          <label class="mp-label" style="margin-top:10px">Conclusion</label>
+          <textarea id="mp-conclusion" class="mp-editor" rows="4" placeholder="Closing thought."></textarea>
+        </div>
+
+        <div id="mp-tab-markdown" class="mp-tab-pane">
+          <label class="mp-label">Markdown (paragraphs, **bold**, *italic*, [link](url), ## headings, * lists, &gt; quotes)</label>
+          <textarea id="mp-markdown" class="mp-editor" rows="22" placeholder="# Optional H1&#10;&#10;Paragraph with **bold** and *italic* and a [link](https://example.com).&#10;&#10;## Section heading&#10;&#10;* bullet&#10;* another bullet&#10;&#10;&gt; A quote."></textarea>
+        </div>
+
+        <div id="mp-tab-html" class="mp-tab-pane">
+          <label class="mp-label">Raw HTML (gets wrapped inside the article body)</label>
+          <textarea id="mp-html" class="mp-editor" rows="22" placeholder="&lt;p&gt;Paragraph&lt;/p&gt;&#10;&lt;h2&gt;Section&lt;/h2&gt;&#10;&lt;p&gt;...&lt;/p&gt;"></textarea>
+        </div>
+
+        <div id="mp-tab-preview" class="mp-tab-pane">
+          <div id="mp-preview" class="mp-preview-box">Type something and switch back to Preview.</div>
+        </div>
+
+        <div class="mp-action-row">
+          <button class="mp-btn" onclick="mpSaveDraft()">Save as draft</button>
+          <button class="mp-btn primary" onclick="mpSavePublish('schedule')">Schedule</button>
+          <button class="mp-btn green" onclick="mpSavePublish('publish')">Publish now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: drafts sidebar -->
+    <div>
+      <div class="mp-card">
+        <h4>Drafts</h4>
+        <div id="mp-drafts-list">
+          <div class="mp-empty">No saved drafts yet.</div>
+        </div>
+        <button class="mp-btn" style="margin-top:8px;width:100%" onclick="mpNewDraft()">+ New blank draft</button>
+      </div>
+      <div class="mp-card">
+        <h4>How it works</h4>
+        <div style="font-size:12px;color:var(--text3);line-height:1.7">
+          Publish now pushes <code>&lt;slug&gt;/index.html</code> to every chosen site repo and updates <code>articles.json</code>. Future publish-at queues the post; the server sweeps every 60 seconds. Expiry removes the file and de-lists it from <code>articles.json</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="panel" id="panel-terminal">
   <!-- overlay header - only visible in popup/full mode -->
   <div id="termOverlayHdr" style="display:none;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border2);background:var(--bg2);flex-shrink:0">
@@ -3013,6 +3295,34 @@ textarea{resize:vertical;line-height:1.6}
   <div class="pg-title">Logo Bar</div>
   <div class="pg-sub">Drop-in marquee snippet for the Kavalsia Network. Live preview, one-click copy, and rebuild from the current SITES list.</div>
 
+  <!-- Sites in the bar (per-site include toggles) -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span>Sites in the bar
+        <span id="logobar-incl-badge" style="font-size:11px;color:var(--text3);font-weight:400;margin-left:6px">loading...</span>
+      </span>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-sm" type="button" onclick="logoBarToggleAll(true)">Select all</button>
+        <button class="btn btn-sm" type="button" onclick="logoBarToggleAll(false)">Deselect all</button>
+      </div>
+    </div>
+    <div id="logobar-sites-wrap" style="margin-top:10px;border:1px solid var(--border2);border-radius:8px;background:var(--bg2);max-height:340px;overflow:auto;position:relative">
+      <div id="logobar-sites-head" style="position:sticky;top:0;z-index:1;background:var(--bg2);border-bottom:1px solid var(--border2);padding:6px 12px;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:10px">
+        <span style="width:18px"></span>
+        <span style="width:14px"></span>
+        <span style="flex:1">Site</span>
+        <span style="width:80px;text-align:right">ID</span>
+        <span style="width:18px;text-align:center">drag</span>
+      </div>
+      <div id="logobar-sites-list" style="padding:4px 0">
+        <div style="padding:14px 12px;font-size:12px;color:var(--text3)">Loading site roster...</div>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:var(--text3)">
+      Toggle off any site to hide it from the bar. Saved instantly; the snippet auto-rebuilds.
+    </div>
+  </div>
+
   <div class="card" style="margin-bottom:14px">
     <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
       <span>Live Preview</span>
@@ -3057,6 +3367,107 @@ textarea{resize:vertical;line-height:1.6}
       meta.textContent = tiles + ' tiles in DOM (' + (tiles/2) + ' unique x2)';
     }
   }
+  // Site roster + exclude-toggle state.
+  let _sites    = [];           // [{id,name,primary}]
+  let _excluded = new Set();    // set of site ids
+  let _saving   = false;
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function renderSitesList(){
+    const root = document.getElementById('logobar-sites-list');
+    const badge = document.getElementById('logobar-incl-badge');
+    if(!root) return;
+    if(!_sites.length){
+      root.innerHTML = '<div style="padding:14px 12px;font-size:12px;color:var(--text3)">No sites returned by server.</div>';
+      if(badge) badge.textContent = '0 of 0 included';
+      return;
+    }
+    const included = _sites.filter(s => !_excluded.has(s.id)).length;
+    if(badge) badge.textContent = included + ' of ' + _sites.length + ' included';
+    const rows = _sites.map(s => {
+      const checked = !_excluded.has(s.id);
+      const color = s.primary || '#9ca3af';
+      return (
+        '<label class="lb-site-row" data-id="'+escapeHtml(s.id)+'" '+
+        'style="display:flex;align-items:center;gap:10px;padding:7px 12px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px">'+
+          '<input type="checkbox" '+(checked?'checked':'')+' '+
+          'onchange="logoBarToggleSite(\''+escapeHtml(s.id)+'\', this.checked)" '+
+          'style="width:16px;height:16px;cursor:pointer;flex:0 0 16px;accent-color:'+color+'">'+
+          '<span style="width:14px;height:14px;border-radius:50%;background:'+color+';display:inline-block;flex:0 0 14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.15)"></span>'+
+          '<span style="flex:1;color:var(--text1);font-weight:500">'+escapeHtml(s.name)+'</span>'+
+          '<span style="width:80px;text-align:right;font-family:\'Courier New\',Courier,monospace;font-size:10.5px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escapeHtml(s.id)+'</span>'+
+          '<span title="Drag handle (visual only)" style="width:18px;text-align:center;color:var(--text3);cursor:grab;user-select:none;font-size:14px;line-height:1">&#8801;</span>'+
+        '</label>'
+      );
+    }).join('');
+    root.innerHTML = rows;
+  }
+
+  async function saveExcludesAndRebuild(){
+    if(_saving) return;
+    _saving = true;
+    try{
+      const payload = { excluded: Array.from(_excluded) };
+      const r1 = await fetch('/api/logo-bar/excludes', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if(!r1.ok) throw new Error('save failed');
+      const r2 = await fetch('/api/logo-bar/rebuild', {method:'POST'});
+      const j2 = await r2.json();
+      if(j2 && j2.ok && j2.html){
+        setPreview(j2.html);
+        setCode(j2.html);
+        if(typeof toast==='function') toast('Saved', 'ok');
+      }else{
+        if(typeof toast==='function') toast('Rebuild failed', 'error');
+      }
+    }catch(e){
+      if(typeof toast==='function') toast('Save failed: '+e, 'error');
+    }finally{
+      _saving = false;
+    }
+  }
+
+  function logoBarToggleSite(id, checked){
+    if(checked) _excluded.delete(id);
+    else        _excluded.add(id);
+    renderSitesList();
+    saveExcludesAndRebuild();
+  }
+
+  function logoBarToggleAll(includeAll){
+    if(includeAll){
+      _excluded = new Set();
+    }else{
+      _excluded = new Set(_sites.map(s => s.id));
+    }
+    renderSitesList();
+    saveExcludesAndRebuild();
+  }
+
+  async function loadSitesRoster(){
+    try{
+      const r = await fetch('/api/logo-bar/sites');
+      const j = await r.json();
+      if(j && j.ok && Array.isArray(j.sites)){
+        _sites = j.sites;
+        _excluded = new Set(Array.isArray(j.excluded) ? j.excluded : []);
+        renderSitesList();
+      }else{
+        const root = document.getElementById('logobar-sites-list');
+        if(root) root.innerHTML = '<div style="padding:14px 12px;font-size:12px;color:var(--text3)">Could not load site roster.</div>';
+      }
+    }catch(e){
+      const root = document.getElementById('logobar-sites-list');
+      if(root) root.innerHTML = '<div style="padding:14px 12px;font-size:12px;color:var(--text3)">Server not reachable.</div>';
+    }
+  }
+
   async function logoBarInit(){
     if(_logobarLoaded) return;
     try{
@@ -3073,6 +3484,7 @@ textarea{resize:vertical;line-height:1.6}
     }catch(e){
       setCode('# Server not reachable: ' + e);
     }
+    loadSitesRoster();
   }
   async function logoBarRebuild(){
     try{
@@ -3100,9 +3512,11 @@ textarea{resize:vertical;line-height:1.6}
       if(typeof toast==='function') toast('Saved', 'ok');
     }
   }
-  window.logoBarInit    = logoBarInit;
-  window.logoBarRebuild = logoBarRebuild;
-  window.logoBarCopy    = logoBarCopy;
+  window.logoBarInit      = logoBarInit;
+  window.logoBarRebuild   = logoBarRebuild;
+  window.logoBarCopy      = logoBarCopy;
+  window.logoBarToggleSite = logoBarToggleSite;
+  window.logoBarToggleAll  = logoBarToggleAll;
 })();
 </script>
 
@@ -3131,6 +3545,10 @@ let logFilter = 'all';
 
 // ── Boot ───────────────────────────────────────────────────────────────────
 (async () => {
+  // Pull saved secrets from the server-side vault FIRST so loadSettings sees
+  // them. This is what makes opening the dashboard in a fresh browser hydrate
+  // every API key + token without re-entering anything.
+  await hydrateSecretsFromServer();
   loadSettings();
   await detectServer();
   await syncConfig();
@@ -5210,6 +5628,53 @@ async function ssLoadCategories() {
   return CATS_BY_SITE;
 }
 
+// Per-site article rebuild. Re-emits every article on the chosen site with the
+// current author / title / bio / category from network-config.json. Streams
+// progress lines back from /api/site-rebuild-articles so the user sees it move.
+async function ssRebuildArticles(siteId) {
+  if (!siteId) return;
+  const token = ls('ghToken') || '';
+  const statusEl = document.getElementById('ss-save-status');
+  if (statusEl) { statusEl.style.color = 'var(--text2)'; statusEl.textContent = 'Rebuilding articles...'; }
+  try {
+    const r = await fetch('/api/site-rebuild-articles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site_id: siteId, token })
+    });
+    if (!r.ok) {
+      let msg = 'HTTP ' + r.status;
+      try { const j = await r.json(); msg = j.error || msg; } catch (_) {}
+      toast('Rebuild error: ' + msg, 'error');
+      if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Rebuild failed: ' + msg; }
+      return;
+    }
+    // Stream progress text
+    const reader = r.body.getReader(); const dec = new TextDecoder();
+    let buf = '', total = 0, ok = 0, fail = 0;
+    while (true) {
+      const { value, done } = await reader.read(); if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const lines = buf.split('\n'); buf = lines.pop() || '';
+      for (const line of lines) {
+        if (!line) continue;
+        if (/\bok\s/.test(line)) ok++;
+        else if (/\b(fail|x )\b/i.test(line)) fail++;
+        total++;
+        if (statusEl) statusEl.textContent = `Rebuilding: ${ok} ok, ${fail} failed (${total} processed)`;
+      }
+    }
+    if (statusEl) {
+      statusEl.style.color = 'var(--green,#4caf50)';
+      statusEl.textContent = `Rebuilt ${ok} articles${fail ? ` (${fail} failed)` : ''}`;
+    }
+    toast(`Rebuilt ${ok} articles`, 'ok');
+  } catch (e) {
+    if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Rebuild error: ' + (e.message || 'network'); }
+    toast('Rebuild error: ' + (e.message || 'network'), 'error');
+  }
+}
+
 async function ssSaveAll() {
   const site = _aaCurrentSite;
   const statusEl = document.getElementById('ss-save-status');
@@ -5337,12 +5802,30 @@ async function ssSaveAll() {
       toast(_toastErrMsg('Error', data, r.status), 'error');
       return;
     }
-    // Update in-memory cfg
+    // Detect author / title / bio changes BEFORE we overwrite the in-memory site.
+    // Already-published article HTML files are static - they keep the old author
+    // until we re-emit them. Fire the per-site rebuild so the network catches up.
+    const oldAuthor = site.default_author || site.author || '';
+    const oldTitle  = site.author_title  || '';
+    const oldBio    = site.author_bio    || '';
+    const newAuthor = (fields.default_author || fields.author || oldAuthor || '').trim();
+    const newTitle  = (fields.author_title   || oldTitle).trim();
+    const newBio    = (fields.author_bio     || oldBio).trim();
+    const authorChanged = (newAuthor !== oldAuthor) || (newTitle !== oldTitle) || (newBio !== oldBio);
+
     Object.assign(site, fields);
     statusEl.style.color = 'var(--green,#4caf50)';
     statusEl.textContent = 'Saved network-config.json';
     toast('Saved', 'ok');
     setTimeout(() => { if (statusEl.textContent.startsWith('Saved')) statusEl.textContent = ''; }, 3500);
+
+    if (authorChanged) {
+      const proceed = confirm(
+        `Author updated. Re-emit all already-published articles on "${site.name || site.id}" so the byline / SEO meta / JSON-LD show "${newAuthor}"?\n\n` +
+        `This re-wraps every article in this site's repo. Usually takes 10-30 seconds depending on article count.`
+      );
+      if (proceed) ssRebuildArticles(site.id);
+    }
   } catch(e) {
     statusEl.style.color = 'var(--red,#f44)';
     statusEl.textContent = 'Network error: ' + e.message;
@@ -5985,28 +6468,133 @@ function renderSiteToggles() {
     // this list only controls active/paused so there is one source of truth.
     // Show the current cadence read-only so the row still communicates "what is
     // this site doing", but editing happens in Site Settings.
-    const unit  = s.posts_unit  || 'day';
-    const count = Number.isFinite(+s.posts_count) ? +s.posts_count : (+s.posts_per_day_new || 1);
+    const unit      = s.posts_unit       || 'day';
+    const count     = Number.isFinite(+s.posts_count)      ? +s.posts_count      : (+s.posts_per_day_new || 1);
     const histCount = Number.isFinite(+s.historical_count) ? +s.historical_count : (+s.historical_per_week || 0);
-    const histUnit  = s.historical_unit || 'week';
-    const histLabel = histCount > 0 ? `· ${histCount}/${histUnit} historical` : '';
-    const cadenceLabel = isNexus ? 'HUB' : `${count}/${unit} new ${histLabel}`;
-    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--bg3);transition:background .15s">
+    const histUnit  = s.historical_unit  || 'week';
+    const opts = (sel) => ['day','week','month','year'].map(u => `<option value="${u}" ${u===sel?'selected':''}>per ${u}</option>`).join('');
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--bg3);transition:background .15s;flex-wrap:wrap">
       <label style="position:relative;display:inline-block;width:36px;height:20px;flex-shrink:0;cursor:pointer">
         <input type="checkbox" id="tog-${s.id}" ${active?'checked':''} ${isNexus?'disabled':''} style="opacity:0;width:0;height:0"
           onchange="toggleSiteActive('${s.id}',this.checked)">
         <span style="position:absolute;inset:0;border-radius:20px;background:${active?'var(--green)':'var(--text3)'};transition:.2s;cursor:${isNexus?'not-allowed':'pointer'}" id="togtrack-${s.id}"></span>
         <span style="position:absolute;left:${active?'18':'2'}px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s" id="togthumb-${s.id}"></span>
       </label>
-      <div style="flex:1;min-width:0">
+      <div style="flex:1;min-width:180px">
         <span style="font-size:13px;font-weight:600;color:${active?'var(--text)':'var(--text3)'}">${s.domain||s.id}</span>
         <span style="font-size:11px;color:var(--text3);margin-left:6px">${s.category||''}</span>
         ${isNexus ? '<span style="font-size:10px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,.1);padding:1px 6px;border-radius:4px;margin-left:4px">HUB</span>' : ''}
       </div>
-      <div style="font-size:11px;color:var(--text3);flex-shrink:0;font-family:ui-monospace,Menlo,monospace">${cadenceLabel}</div>
+      ${isNexus ? '<div style="font-size:11px;color:var(--text3)">HUB - no posts</div>' : (() => {
+        const newOn  = s.new_posts_enabled !== false; // default true
+        const histOn = s.historical_mode === true;     // historical opt-in
+        const pill = (on) => on ? 'background:rgba(62,207,142,.15);color:var(--green);border-color:rgba(62,207,142,.4)'
+                                : 'background:rgba(239,68,68,.10);color:var(--red);border-color:rgba(239,68,68,.35)';
+        const dim  = on => on ? '' : 'opacity:.45;pointer-events:none;filter:grayscale(.3)';
+        return `
+      <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+        <button type="button" onclick="toggleSitePipeline('${s.id}','new')" title="Click to turn new posts ${newOn?'OFF':'ON'}" style="font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;${pill(newOn)};cursor:pointer">New ${newOn?'ON':'OFF'}</button>
+        <div style="display:flex;align-items:center;gap:4px;${dim(newOn)}">
+          <input type="number" min="0" max="200" value="${count}" id="ncount-${s.id}" onchange="updateSiteCadence('${s.id}')" style="width:54px;padding:4px 6px;font-size:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:5px;color:var(--text);text-align:center">
+          <select id="nunit-${s.id}" onchange="updateSiteCadence('${s.id}')" style="padding:4px 6px;font-size:11px;background:var(--bg2);border:1px solid var(--border2);border-radius:5px;color:var(--text)">${opts(unit)}</select>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+        <button type="button" onclick="toggleSitePipeline('${s.id}','hist')" title="Click to turn historical posts ${histOn?'OFF':'ON'}" style="font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;${pill(histOn)};cursor:pointer">Hist ${histOn?'ON':'OFF'}</button>
+        <div style="display:flex;align-items:center;gap:4px;${dim(histOn)}">
+          <input type="number" min="0" max="200" value="${histCount}" id="hcount-${s.id}" onchange="updateSiteCadence('${s.id}')" style="width:54px;padding:4px 6px;font-size:12px;background:var(--bg2);border:1px solid var(--border2);border-radius:5px;color:var(--text);text-align:center">
+          <select id="hunit-${s.id}" onchange="updateSiteCadence('${s.id}')" style="padding:4px 6px;font-size:11px;background:var(--bg2);border:1px solid var(--border2);border-radius:5px;color:var(--text)">${opts(histUnit)}</select>
+        </div>
+      </div>`;
+      })()}
       <div style="font-size:10px;font-weight:700;color:${isNexus?'#f59e0b':active?'var(--green)':'var(--red)'};min-width:56px;text-align:right">${isNexus?'HUB':active?'ACTIVE':'PAUSED'}</div>
     </div>`;
   }).join('');
+}
+
+// Inline cadence editor. Mirrors the save logic inside Site Settings so the
+// fields the bot actually reads (posts_per_day_new + historical_per_week) stay
+// derived from count + unit. Persists immediately to cfg and to the server.
+function updateSiteCadence(id) {
+  if (!cfg) return;
+  const s = cfg.sites.find(x => x.id === id); if (!s) return;
+  const nCount = parseInt(document.getElementById('ncount-' + id)?.value, 10) || 0;
+  const nUnit  = document.getElementById('nunit-' + id)?.value || 'day';
+  const hCount = parseInt(document.getElementById('hcount-' + id)?.value, 10) || 0;
+  const hUnit  = document.getElementById('hunit-' + id)?.value || 'week';
+  const conv = (count, unit) => {
+    const n = Math.max(0, count|0);
+    if (unit === 'day')   return { daily: n,                          weekly: n * 7 };
+    if (unit === 'month') return { daily: Math.ceil(n / 30),          weekly: Math.round(n / 4.33) };
+    if (unit === 'year')  return { daily: Math.ceil(n / 365),         weekly: Math.round(n / 52) };
+    return                        { daily: Math.ceil(n / 7),          weekly: n };
+  };
+  const nDW = conv(nCount, nUnit);
+  const hDW = conv(hCount, hUnit);
+  s.posts_count        = nCount;
+  s.posts_unit         = nUnit;
+  s.historical_count   = hCount;
+  s.historical_unit    = hUnit;
+  s.posts_per_day_new  = Math.max(1, Math.min(10, nDW.daily || 1));
+  s.posts_per_week     = Math.max(0, Math.min(50, nUnit === 'day' ? 0 : nDW.weekly));
+  s.historical_per_week = Math.max(0, Math.min(70, hDW.weekly));
+  saveConfigToServer();
+  toast('Saved', 'ok');
+}
+
+// Per-site pipeline toggle. kind='new' flips new_posts_enabled (default true),
+// kind='hist' flips historical_mode (default false / opt-in). The bot reads
+// both flags before queuing a generation run, so flipping OFF disables that
+// pipeline cleanly without affecting the other.
+function toggleSitePipeline(id, kind) {
+  if (!cfg) return;
+  const s = cfg.sites.find(x => x.id === id); if (!s) return;
+  if (kind === 'new') {
+    const cur = s.new_posts_enabled !== false;
+    s.new_posts_enabled = !cur;
+  } else if (kind === 'hist') {
+    s.historical_mode = s.historical_mode !== true;
+  } else { return; }
+  saveConfigToServer();
+  renderSiteToggles();
+  toast('Saved', 'ok');
+}
+
+// Bulk cadence: read the count+unit pair from the Publishing Frequency card
+// and overwrite every non-Nexus site. Mirrors the conversion in updateSiteCadence
+// so the values the bot reads (posts_per_day_new + historical_per_week) stay
+// in sync with the UI's count + unit.
+function applyCadenceToAllSites() {
+  if (!cfg || !Array.isArray(cfg.sites)) return;
+  const nCount = parseInt(document.getElementById('bulkNewCount')?.value,  10) || 0;
+  const nUnit  = document.getElementById('bulkNewUnit')?.value  || 'day';
+  const hCount = parseInt(document.getElementById('bulkHistCount')?.value, 10) || 0;
+  const hUnit  = document.getElementById('bulkHistUnit')?.value || 'week';
+  if (nCount < 0 || hCount < 0) { toast('Counts must be 0 or greater', 'error'); return; }
+  const conv = (count, unit) => {
+    const n = Math.max(0, count|0);
+    if (unit === 'day')   return { daily: n,                  weekly: n * 7 };
+    if (unit === 'month') return { daily: Math.ceil(n / 30),  weekly: Math.round(n / 4.33) };
+    if (unit === 'year')  return { daily: Math.ceil(n / 365), weekly: Math.round(n / 52) };
+    return                        { daily: Math.ceil(n / 7),  weekly: n };
+  };
+  const nDW = conv(nCount, nUnit);
+  const hDW = conv(hCount, hUnit);
+  let touched = 0;
+  cfg.sites.forEach(s => {
+    if (s.is_mother_site || s.layout === 'nexus' || s.id === 'nexus') return;
+    s.posts_count         = nCount;
+    s.posts_unit          = nUnit;
+    s.historical_count    = hCount;
+    s.historical_unit     = hUnit;
+    s.posts_per_day_new   = Math.max(1, Math.min(10, nDW.daily || 1));
+    s.posts_per_week      = Math.max(0, Math.min(50, nUnit === 'day' ? 0 : nDW.weekly));
+    s.historical_per_week = Math.max(0, Math.min(70, hDW.weekly));
+    touched++;
+  });
+  saveConfigToServer();
+  renderSiteToggles();
+  toast(`Saved cadence on ${touched} sites`, 'ok');
 }
 
 function toggleSiteActive(id, checked) {
@@ -6971,7 +7559,9 @@ ${siteRows.map(r => `    <a href="${trackUrl}&utm_content=${encodeURIComponent(r
   document.getElementById('promo-output').style.display = 'block';
   document.getElementById('promo-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // Save to live promos list
+  // Save to live promos list. We persist the FULL generated kit (badge HTML +
+  // anim HTML + brief) so the live card can render a real preview and the user
+  // can re-copy snippets without re-generating from scratch.
   const savedPromos = JSON.parse(localStorage.getItem('savedPromos') || '[]');
   savedPromos.unshift({
     id: Date.now(),
@@ -6980,6 +7570,9 @@ ${siteRows.map(r => `    <a href="${trackUrl}&utm_content=${encodeURIComponent(r
     siteIds: sites.map(s => s.id),
     siteNames: sites.map(s => s.name || s.id.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')),
     utmSrc, utmCamp,
+    badgeHtml, animHtml,
+    brief: (document.getElementById('promo-brief')?.value || '').trim(),
+    published: false,   // explicit: a generated kit is NOT pushed to sites automatically
     createdAt: new Date().toISOString()
   });
   localStorage.setItem('savedPromos', JSON.stringify(savedPromos));
@@ -7004,33 +7597,84 @@ function promoRenderLive() {
   }
   const today = new Date().toISOString().slice(0, 10);
   list.innerHTML = saved.map(p => {
-    const isActive = !p.endDate || p.endDate >= today;
-    const statusColor = isActive ? 'var(--green, #10b981)' : '#ef4444';
-    const statusLabel = isActive ? 'Live' : 'Expired';
+    const isExpired   = p.endDate && p.endDate < today;
+    const isPublished = p.published === true;
+    // Three-state status: PUBLISHED (green) / READY TO PUBLISH (amber) / EXPIRED (red)
+    const status = isExpired
+      ? { c:'#ef4444', bg:'rgba(239,68,68,.10)',  label:'Expired' }
+      : isPublished
+        ? { c:'#10b981', bg:'rgba(16,185,129,.12)', label:'Published' }
+        : { c:'#f59e0b', bg:'rgba(245,158,11,.12)', label:'Ready - not pushed yet' };
     const sitePills = p.siteNames.slice(0, 6).map(n =>
       `<span style="font-size:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:2px 7px;border-radius:4px;white-space:nowrap">${n}</span>`
-    ).join('') + (p.siteNames.length > 6 ? `<span style="font-size:10px;color:var(--text3)">+${p.siteNames.length - 6} more</span>` : '');
-    return `<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px">
+    ).join('') + (p.siteNames.length > 6 ? `<span style="font-size:10px;color:var(--text3);padding:2px 4px">+${p.siteNames.length - 6} more</span>` : '');
+    const previewId = `promo-prev-${p.id}`;
+    const badge = p.badgeHtml || '<div style="font-size:11px;color:var(--text3);font-style:italic">(no badge captured for this older promo — regenerate to preview)</div>';
+    // Where it lives + how to view it. Static-only sites need an EXPLICIT push;
+    // surface the truth so the user is not searching for a phantom live URL.
+    const firstSite = p.siteIds && p.siteIds[0];
+    const liveLink  = firstSite ? `https://siavashsed.github.io/${firstSite}/` : '';
+    return `<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px 16px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">
         <div style="min-width:0;flex:1">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            <span style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</span>
-            <span style="font-size:10px;font-weight:700;color:${statusColor};background:${isActive ? 'rgba(16,185,129,.1)' : 'rgba(239,68,68,.1)'};padding:2px 7px;border-radius:10px;flex-shrink:0">${statusLabel}</span>
-            <span style="font-size:10px;color:var(--text3);flex-shrink:0">${p.type}</span>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+            <span style="font-size:14px;font-weight:700;color:var(--text)">${p.name}</span>
+            <span style="font-size:10px;font-weight:700;color:${status.c};background:${status.bg};padding:3px 9px;border-radius:10px;letter-spacing:.3px;text-transform:uppercase">${status.label}</span>
+            <span style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">${p.type || 'badge'}</span>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${sitePills}</div>
-          <div style="font-size:11px;color:var(--text3)">
-            Published: <strong style="color:var(--text2)">${p.pubDate || 'ASAP'}</strong>
-            &nbsp;|&nbsp;
-            ${p.lifetime ? 'Lifetime' : `Expires: <strong style="color:var(--text2)">${p.endDate}</strong>`}
-            &nbsp;|&nbsp;
-            ${p.siteIds.length} site${p.siteIds.length !== 1 ? 's' : ''}
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${sitePills}</div>
+          <div style="font-size:11px;color:var(--text3);line-height:1.6">
+            Publish window: <strong style="color:var(--text2)">${p.pubDate || 'ASAP'}</strong> -
+            ${p.lifetime ? '<strong style="color:var(--text2)">Lifetime</strong>' : `<strong style="color:var(--text2)">${p.endDate}</strong>`}
+            &nbsp;·&nbsp; ${p.siteIds.length} site${p.siteIds.length !== 1 ? 's' : ''}
+            ${p.url ? `&nbsp;·&nbsp; Tracking URL: <a href="${p.url}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">${p.url.replace(/^https?:\/\//,'').slice(0,40)}${p.url.length > 47 ? '…' : ''}</a>` : ''}
           </div>
         </div>
-        <button onclick="promoRemove(${p.id})" title="Remove" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;flex-shrink:0;padding:0 2px;line-height:1" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text3)'">&times;</button>
+        <button onclick="promoRemove(${p.id})" title="Remove" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;flex-shrink:0;padding:0 4px;line-height:1" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text3)'">&times;</button>
       </div>
+
+      <!-- Live preview: render the actual generated badge HTML inside a sandbox-y div -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px;overflow:hidden">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+          <span style="width:6px;height:6px;border-radius:50%;background:${status.c}"></span> Preview
+        </div>
+        <div id="${previewId}" style="display:flex;justify-content:center;padding:6px 0">${badge}</div>
+      </div>
+
+      <!-- Action row: where to find it / copy / mark-as-published -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        ${liveLink ? `<a href="${liveLink}" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);text-decoration:none;padding:5px 10px;border:1px solid var(--accent);border-radius:5px">↗ View first site</a>` : ''}
+        <button onclick="promoCopyHtml(${p.id},'badge')" style="font-size:11px;padding:5px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);cursor:pointer">Copy badge HTML</button>
+        <button onclick="promoCopyHtml(${p.id},'anim')" style="font-size:11px;padding:5px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;color:var(--text);cursor:pointer">Copy ticker HTML</button>
+        ${isPublished
+          ? `<button onclick="promoMarkPublished(${p.id},false)" style="font-size:11px;padding:5px 10px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.4);border-radius:5px;color:#f59e0b;cursor:pointer">Mark not published</button>`
+          : `<button onclick="promoMarkPublished(${p.id},true)" style="font-size:11px;padding:5px 10px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.4);border-radius:5px;color:#10b981;cursor:pointer">✓ Mark published</button>`}
+      </div>
+      ${!isPublished ? `
+      <div style="margin-top:10px;padding:8px 10px;background:rgba(245,158,11,.07);border-left:2px solid #f59e0b;border-radius:4px;font-size:11px;color:var(--text2);line-height:1.55">
+        <b style="color:#f59e0b">Heads up:</b> generating a kit saves it here but does NOT push it to the sites. Paste the badge / ticker HTML into the chosen site's homepage template (or wire it into the article footer via the Editor / Hub), commit, sync. Then click "Mark published" so this card flips to green.
+      </div>` : ''}
     </div>`;
   }).join('');
+}
+
+function promoCopyHtml(id, kind) {
+  const saved = JSON.parse(localStorage.getItem('savedPromos') || '[]');
+  const p = saved.find(x => x.id === id); if (!p) return;
+  const html = (kind === 'anim' ? p.animHtml : p.badgeHtml) || '';
+  if (!html) { toast('No HTML captured for this older promo - regenerate it.', 'warn'); return; }
+  navigator.clipboard.writeText(html).then(() => toast('Saved', 'ok'))
+    .catch(() => toast('Copy failed - select manually in the textarea below.', 'error'));
+}
+
+function promoMarkPublished(id, val) {
+  const saved = JSON.parse(localStorage.getItem('savedPromos') || '[]');
+  const i = saved.findIndex(x => x.id === id); if (i < 0) return;
+  saved[i].published = !!val;
+  saved[i].publishedAt = val ? new Date().toISOString() : null;
+  localStorage.setItem('savedPromos', JSON.stringify(saved));
+  promoRenderLive();
+  toast('Saved', 'ok');
 }
 
 function promoRemove(id) {
@@ -7598,7 +8242,57 @@ document.getElementById('publishModal').addEventListener('click', e => {
 
 // ── Utilities ──────────────────────────────────────────────────────────────
 function ls(k)      { return localStorage.getItem(k) || ''; }
-function lss(k, v)  { localStorage.setItem(k, v); }
+function lss(k, v)  { localStorage.setItem(k, v); _mirrorSecretToServer(k, v); }
+
+// ── Server-backed secrets vault ──────────────────────────────────────────────
+// Mirrors a curated list of API key + token localStorage entries to a file at
+// ~/.kavalsia/secrets.json so opening the dashboard from any browser auto-loads
+// them. Whitelist matches server.py SECRET_KEYS_ALLOWED.
+const _SECRET_KEYS_MIRRORED = new Set([
+  'anthropicKey','claudeModel','ghToken','pexelsKey','brevoKey',
+  'hubApiUrl','botRepo','branch','workflow',
+  'telegramToken','telegramChatId',
+  'cfToken','cfDomToken',
+  'metaPixelId','metaCapiToken','metaTestEvent',
+  'wpUrl','wpUser','wpAppPass',
+  'wooKey','wooSecret',
+  'shopifyDomain','shopifyToken',
+  'ghlWebhook','ghlApiKey'
+]);
+// Debounce: batch multiple key writes that happen close together (e.g. when
+// the user pastes a token and the propagateKey() chain fires several lss).
+let _secretBatch = {};
+let _secretTid   = null;
+function _mirrorSecretToServer(k, v) {
+  if (!_SECRET_KEYS_MIRRORED.has(k)) return;
+  _secretBatch[k] = v == null ? '' : String(v);
+  if (_secretTid) clearTimeout(_secretTid);
+  _secretTid = setTimeout(() => {
+    const payload = _secretBatch; _secretBatch = {}; _secretTid = null;
+    fetch('/api/secrets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => { /* offline; localStorage still has it */ });
+  }, 400);
+}
+// On boot, pull any saved secrets from the server and seed localStorage. This
+// runs BEFORE loadSettings() so the inputs hydrate from the merged store.
+async function hydrateSecretsFromServer() {
+  try {
+    const r = await fetch('/api/secrets', { cache: 'no-store' });
+    if (!r.ok) return;
+    const d = await r.json();
+    if (!d || typeof d !== 'object') return;
+    Object.entries(d).forEach(([k, v]) => {
+      if (!_SECRET_KEYS_MIRRORED.has(k)) return;
+      // Server wins: any value the server has is authoritative on a fresh browser.
+      // If the browser already has a different value (user edited offline),
+      // the next lss() call mirrors the change back to the server.
+      if (v) localStorage.setItem(k, String(v));
+    });
+  } catch (_) { /* ignore */ }
+}
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // Build a clickable post/page link. Returns plain (escaped) HTML when url is missing.
@@ -7886,6 +8580,84 @@ function showCustApplied() {
   } else {
     list.innerHTML = `<b style="color:var(--accent)">${ids.length}</b> sites selected. Design changes will generate and push a page file to each selected site.`;
   }
+  // Re-render the page selector so extra pages (recaps/tests/tools/etc.) show up
+  // for whatever site is currently selected.
+  renderCustPageButtons();
+}
+
+// Cache discovered pages per repo so we do not re-hit GitHub every time the
+// dropdown opens. Bypass with force=true (rescan button).
+window._custPagesCache = window._custPagesCache || {};
+
+// Standard pages that exist on every site (push-sites.py generates these).
+// If the GitHub fetch fails (no token, offline, rate-limit) we fall back to these.
+const CUST_STANDARD_PAGES = [
+  'index.html','about.html','privacy.html','terms.html','sms.html','meta-policy.html','404.html'
+];
+
+function _custPageTitle(filename) {
+  if (filename === 'index.html') return 'Homepage';
+  const base = filename.replace(/\.html$/i, '');
+  // Title-case the slug ("recaps" -> "Recaps", "meta-policy" -> "Meta Policy")
+  return base.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+async function renderCustPageButtons(force) {
+  const row = document.getElementById('cust-pages-row');
+  if (!row) return;
+  const ids = (typeof getSelectedSiteIds === 'function') ? getSelectedSiteIds() : [];
+  const sid = ids[0];
+  const site = (cfg && (cfg.sites||[]).find(s => s.id === sid)) || null;
+  // Multi-site or no-site: just show the static defaults, no per-repo discovery.
+  if (!site || custScope !== 'one') {
+    _renderCustPagesList(CUST_STANDARD_PAGES);
+    return;
+  }
+  const repo = site.repo;
+  let pages = (!force && window._custPagesCache[repo]) ? window._custPagesCache[repo] : null;
+  if (!pages) {
+    pages = await _fetchSitePages(repo).catch(() => null);
+    if (pages && pages.length) window._custPagesCache[repo] = pages;
+  }
+  _renderCustPagesList(pages && pages.length ? pages : CUST_STANDARD_PAGES);
+}
+
+async function _fetchSitePages(repo) {
+  // Use the existing /api/github proxy. The proxy expects the GitHub token in
+  // the X-GH-Token header; without it GitHub returns 401 / rate-limits to 60/h
+  // and the dropdown silently falls back to the 3 static defaults.
+  const tok = ls('ghToken') || '';
+  try {
+    const r = await fetch(`/api/github/repos/${repo}/contents/`, {
+      cache: 'no-store',
+      headers: tok ? { 'X-GH-Token': tok } : {}
+    });
+    if (!r.ok) return null;
+    const items = await r.json();
+    if (!Array.isArray(items)) return null;
+    // Only root-level .html files. Sort: index first, about second, then alpha.
+    const html = items.filter(it => it.type === 'file' && /\.html$/i.test(it.name)).map(it => it.name);
+    return html.sort((a, b) => {
+      const order = (n) => n === 'index.html' ? 0 : n === 'about.html' ? 1 : 2;
+      const da = order(a), db = order(b);
+      return da !== db ? da - db : a.localeCompare(b);
+    });
+  } catch (_) { return null; }
+}
+
+function _renderCustPagesList(pages) {
+  const row = document.getElementById('cust-pages-row');
+  if (!row) return;
+  const current = (typeof custPage !== 'undefined' && custPage) ? custPage : 'index.html';
+  const buttons = pages.map(p => {
+    const active = (p === current) ? ' btn-accent' : '';
+    const label  = _custPageTitle(p);
+    const idsuffix = p.replace(/\.html$/i, '').replace(/[^a-z0-9-]/gi, '-') || 'index';
+    return `<button id="cust-page-${idsuffix}" class="btn${active}" style="font-size:11px;padding:4px 12px" onclick="setCustPage('${p}')" title="${p}">${label}</button>`;
+  }).join('');
+  row.innerHTML = buttons + `
+    <button id="cust-page-custom" class="btn${current === 'custom' ? ' btn-accent' : ''}" style="font-size:11px;padding:4px 12px" onclick="setCustPage('custom')">+ New Page</button>
+  `;
 }
 
 async function generateCustomization() {
@@ -9792,7 +10564,683 @@ window.showPanel = function(name) {
   _origShowPanel(name);
   if (name==='terminal' && !termCurrent) termInit();
   if (name==='sponsors') sponsorsInit();
+  if (name==='manualpost' && typeof mpInit === 'function') mpInit();
 };
+
+// ═══════════════════════════════════════════════════════════
+// MANUAL POST PANEL (mp-*)
+// ═══════════════════════════════════════════════════════════
+(function(){
+  'use strict';
+  let scope = 'one';
+  let sites = [];
+  let categoriesByStem = null;
+  let mpInited = false;
+  let activeTab = 'sections';
+  window.mpSlugTouched = false;
+  let pollTimer = null;
+
+  function $(id){ return document.getElementById(id); }
+
+  function loadSites(){
+    try { sites = (window.SITES || []).slice(); } catch(e){ sites = []; }
+    if (!sites.length){
+      // Fall back to fetching /api/config
+      return fetch('/api/config').then(r=>r.json()).then(cfg=>{
+        sites = (cfg && cfg.sites) ? cfg.sites : [];
+      }).catch(()=>{ sites = []; });
+    }
+    return Promise.resolve();
+  }
+
+  function loadCategoriesJSON(){
+    if (categoriesByStem) return Promise.resolve(categoriesByStem);
+    return fetch('/categories.json').then(r=>r.json()).then(d=>{
+      categoriesByStem = d || {};
+      return categoriesByStem;
+    }).catch(()=>{ categoriesByStem = {}; return categoriesByStem; });
+  }
+
+  function selectedSiteIds(){
+    if (scope === 'all') return sites.map(s=>s.id);
+    if (scope === 'select'){
+      return Array.from(document.querySelectorAll('#mp-site-multi input[type=checkbox]:checked')).map(c=>c.value);
+    }
+    const v = $('mp-site-one').value;
+    return v ? [v] : [];
+  }
+
+  function siteById(id){ return sites.find(s=>s.id===id); }
+
+  window.mpSetScope = function(s){
+    scope = s;
+    ['one','select','all'].forEach(k=>{
+      const b = $('mp-scope-'+k);
+      if (b) b.classList.toggle('active', k===s);
+    });
+    $('mp-site-one').style.display    = (s==='one')    ? 'block' : 'none';
+    $('mp-site-multi').style.display  = (s==='select') ? 'block' : 'none';
+    $('mp-scope-all-note').style.display = (s==='all') ? 'block' : 'none';
+    mpRebuildCategories();
+    mpRebuildAuthorPool();
+  };
+
+  function renderSiteSelectors(){
+    const one = $('mp-site-one');
+    const multi = $('mp-site-multi');
+    one.innerHTML = sites.map(s=>`<option value="${s.id}">${s.name||s.id}</option>`).join('');
+    multi.innerHTML = sites.map(s=>`<label><input type="checkbox" value="${s.id}" onchange="mpRebuildCategories();mpRebuildAuthorPool()"> ${s.name||s.id}</label>`).join('');
+  }
+
+  window.mpRebuildCategories = function(){
+    loadCategoriesJSON().then(()=>{
+      const ids = selectedSiteIds();
+      const union = new Set();
+      ids.forEach(id=>{
+        const site = siteById(id);
+        const stem = site && (site.id || '');
+        const entry = categoriesByStem[stem] || categoriesByStem[stem+'-home'];
+        if (entry && Array.isArray(entry.categories)){
+          entry.categories.forEach(c=>union.add(c));
+        }
+        if (site && site.category) union.add(site.category);
+      });
+      const sel = $('mp-category');
+      const cats = Array.from(union).sort();
+      const cur = sel.value;
+      sel.innerHTML = (cats.length ? cats : ['News','Opinion','Analysis','Guide']).map(c=>`<option value="${c}">${c}</option>`).join('') + '<option value="__other__">+ Other (custom)</option>';
+      if (cur && Array.from(sel.options).some(o=>o.value===cur)) sel.value = cur;
+    });
+  };
+
+  window.mpRebuildAuthorPool = function(){
+    const ids = selectedSiteIds();
+    const sel = $('mp-author-pool');
+    const pool = new Set();
+    ids.forEach(id=>{
+      const s = siteById(id);
+      if (s && Array.isArray(s.author_names)) s.author_names.forEach(n=>pool.add(n));
+      if (s && (s.default_author || s.author)) pool.add(s.default_author || s.author);
+    });
+    const arr = Array.from(pool);
+    sel.innerHTML = arr.length ? arr.map(n=>`<option value="${n}">${n}</option>`).join('') : '<option value="">(no author_names in selected sites)</option>';
+  };
+
+  window.mpAuthorChange = function(){
+    const mode = (document.querySelector('input[name="mp-author"]:checked')||{}).value;
+    $('mp-author-pool').disabled   = (mode !== 'pick');
+    $('mp-author-custom').disabled = (mode !== 'custom');
+    document.querySelectorAll('.mp-author-row label').forEach((lab,i)=>{
+      const inp = lab.querySelector('input[type=radio]');
+      lab.classList.toggle('active', inp && inp.checked);
+    });
+  };
+
+  window.mpCatChange = function(){
+    const sel = $('mp-category');
+    $('mp-category-other').style.display = (sel.value === '__other__') ? 'block' : 'none';
+  };
+
+  window.mpAutoSlug = function(force){
+    const title = $('mp-title').value || '';
+    if (window.mpSlugTouched && !force) return;
+    if (force) window.mpSlugTouched = false;
+    const slug = title.toLowerCase().trim()
+      .replace(/[^a-z0-9\s-]/g,'')
+      .replace(/\s+/g,'-')
+      .replace(/-+/g,'-')
+      .replace(/^-|-$/g,'');
+    $('mp-slug').value = slug;
+  };
+
+  window.mpCount = function(){
+    const v = $('mp-meta').value || '';
+    $('mp-meta-count').textContent = v.length;
+  };
+
+  window.mpUpdateThumb = function(){
+    const v = ($('mp-image').value||'').trim();
+    const t = $('mp-thumb');
+    if (/^https?:\/\//.test(v)){ t.src = v; } else { t.removeAttribute('src'); }
+  };
+
+  window.mpLifetimeToggle = function(){
+    $('mp-expires-at').disabled = $('mp-lifetime').checked;
+  };
+
+  window.mpSwitchTab = function(name){
+    activeTab = name;
+    document.querySelectorAll('.mp-tabs button').forEach(b=>{
+      b.classList.toggle('active', b.getAttribute('data-mp-tab')===name);
+    });
+    document.querySelectorAll('.mp-tab-pane').forEach(p=>p.classList.remove('active'));
+    $('mp-tab-'+name).classList.add('active');
+    if (name === 'preview') renderPreview();
+  };
+
+  function mdToHtml(md){
+    md = (md||'').replace(/\r/g,'');
+    const lines = md.split('\n');
+    let out = [], inList = false, inQuote = false;
+    function flushList(){ if(inList){ out.push('</ul>'); inList=false; } }
+    function flushQuote(){ if(inQuote){ out.push('</blockquote>'); inQuote=false; } }
+    let para = [];
+    function flushPara(){
+      if (!para.length) return;
+      let p = para.join(' ');
+      p = p.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+           .replace(/\*(.+?)\*/g,'<em>$1</em>')
+           .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2">$1</a>');
+      out.push('<p>'+p+'</p>');
+      para = [];
+    }
+    for (let raw of lines){
+      const line = raw.trim();
+      if (!line){ flushPara(); flushList(); flushQuote(); continue; }
+      if (line.startsWith('## ')){ flushPara(); flushList(); flushQuote(); out.push('<h2>'+line.slice(3)+'</h2>'); continue; }
+      if (line.startsWith('# ')){ flushPara(); flushList(); flushQuote(); out.push('<h1>'+line.slice(2)+'</h1>'); continue; }
+      if (line.startsWith('* ')){ flushPara(); flushQuote(); if(!inList){ out.push('<ul>'); inList=true; } out.push('<li>'+line.slice(2)+'</li>'); continue; }
+      if (line.startsWith('> ')){ flushPara(); flushList(); if(!inQuote){ out.push('<blockquote>'); inQuote=true; } out.push('<p>'+line.slice(2)+'</p>'); continue; }
+      para.push(line);
+    }
+    flushPara(); flushList(); flushQuote();
+    let html = out.join('\n');
+    html = html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+               .replace(/\*(.+?)\*/g,'<em>$1</em>')
+               .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2">$1</a>');
+    return html;
+  }
+
+  function buildSectionsFromTab(){
+    if (activeTab === 'markdown'){
+      const html = mdToHtml($('mp-markdown').value);
+      return { intro:'', conclusion:'', body:'', sections:[{heading:'', content:html}], previewHtml: html };
+    }
+    if (activeTab === 'html'){
+      const h = $('mp-html').value || '';
+      return { intro:'', conclusion:'', body:'', sections:[{heading:'', content:h}], previewHtml: h };
+    }
+    const intro = $('mp-intro').value || '';
+    const body  = $('mp-body').value || '';
+    const conc  = $('mp-conclusion').value || '';
+    // Split body by ## headings
+    const sections = [];
+    const parts = body.split(/^##\s+/m);
+    if (parts.length === 1){
+      if (body.trim()) sections.push({heading:'', content:`<p>${body.trim().replace(/\n\n+/g,'</p><p>')}</p>`});
+    } else {
+      if (parts[0].trim()){
+        sections.push({heading:'', content:`<p>${parts[0].trim().replace(/\n\n+/g,'</p><p>')}</p>`});
+      }
+      for (let i=1;i<parts.length;i++){
+        const chunk = parts[i];
+        const nl = chunk.indexOf('\n');
+        const heading = (nl>=0 ? chunk.slice(0,nl) : chunk).trim();
+        const rest    = (nl>=0 ? chunk.slice(nl+1) : '').trim();
+        sections.push({heading, content: rest ? `<p>${rest.replace(/\n\n+/g,'</p><p>')}</p>` : ''});
+      }
+    }
+    const previewHtml = [
+      intro ? `<p>${intro.replace(/\n\n+/g,'</p><p>')}</p>` : '',
+      sections.map(s=>(s.heading?`<h2>${s.heading}</h2>`:'')+s.content).join(''),
+      conc ? `<p>${conc.replace(/\n\n+/g,'</p><p>')}</p>` : ''
+    ].join('');
+    return { intro, conclusion:conc, body, sections, previewHtml };
+  }
+
+  function renderPreview(){
+    const built = buildSectionsFromTab();
+    const title = $('mp-title').value || '(untitled)';
+    const meta  = $('mp-meta').value || '';
+    $('mp-preview').innerHTML = `<h1>${title}</h1>${meta?`<p style="color:#666;font-style:italic">${meta}</p>`:''}<hr style="margin:14px 0;border:0;border-top:1px solid #eee">${built.previewHtml}`;
+  }
+
+  function collectPayload(){
+    const built = buildSectionsFromTab();
+    const catSel = $('mp-category').value;
+    const category = (catSel === '__other__') ? ($('mp-category-other').value||'').trim() : catSel;
+    const mode = (document.querySelector('input[name="mp-author"]:checked')||{}).value || 'site_default';
+    const publishAt = $('mp-publish-at').value;
+    const lifetime  = $('mp-lifetime').checked;
+    const expiresAt = $('mp-expires-at').value;
+    function localToISO(v){
+      if (!v) return '';
+      const d = new Date(v);
+      return d.toISOString();
+    }
+    return {
+      title: ($('mp-title').value||'').trim(),
+      slug:  ($('mp-slug').value||'').trim(),
+      meta_description: ($('mp-meta').value||'').trim(),
+      image: ($('mp-image').value||'').trim(),
+      category,
+      intro: built.intro,
+      conclusion: built.conclusion,
+      body: built.body,
+      sections: built.sections,
+      author_mode: mode,
+      author_pool: $('mp-author-pool').value || '',
+      custom_author: ($('mp-author-custom').value||'').trim(),
+      site_ids: selectedSiteIds(),
+      publish_at: localToISO(publishAt),
+      expires_at: lifetime ? '' : localToISO(expiresAt),
+      lifetime,
+      tags: ($('mp-tags').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+      featured: $('mp-featured').checked,
+      send_newsletter: $('mp-newsletter').checked,
+    };
+  }
+
+  function validate(p){
+    if (!p.title) return 'Title is required.';
+    if (!p.slug)  return 'Slug is required.';
+    if (!p.meta_description) return 'Meta description is required.';
+    if (!p.site_ids.length) return 'Pick at least one site.';
+    return null;
+  }
+
+  window.mpSavePublish = function(intent){
+    const payload = collectPayload();
+    // If user clicked Schedule but publish_at is empty or in past, use now+5min sensible default? No, treat as publish.
+    if (intent === 'publish' && !payload.publish_at){
+      payload.publish_at = new Date().toISOString();
+    }
+    const err = validate(payload);
+    if (err){ alert(err); return; }
+    fetch('/api/manual-post', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload),
+    }).then(async r=>{
+      const j = await r.json().catch(()=>({}));
+      if (!r.ok){
+        alert('Manual post failed: ' + (j.error||r.status));
+        return;
+      }
+      if (typeof toast === 'function') toast('Saved');
+      const pub = (j.published||[]).length;
+      const sch = (j.scheduled||[]).length;
+      const errs = (j.errors||[]).length;
+      if (errs) alert(`Published to ${pub}, scheduled ${sch}, failed ${errs}. Check queue.`);
+      mpRefreshQueue();
+    }).catch(e=>{
+      alert('Network error: ' + e.message);
+    });
+  };
+
+  window.mpRefreshQueue = function(){
+    fetch('/api/manual-post/queue').then(r=>r.json()).then(j=>{
+      const items = (j.items||[]).slice().reverse();
+      const list = $('mp-queue-list');
+      $('mp-queue-count').textContent = items.length;
+      if (!items.length){
+        list.innerHTML = '<div class="mp-empty" id="mp-queue-empty">Nothing in the queue yet. Compose a post below.</div>';
+        return;
+      }
+      list.innerHTML = items.map(renderQueueCard).join('');
+    }).catch(()=>{});
+  };
+
+  function fmtDate(iso){
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleString(); } catch(e){ return iso; }
+  }
+
+  function countdown(iso){
+    if (!iso) return '';
+    const ms = new Date(iso) - new Date();
+    if (ms <= 0) return 'now';
+    const m = Math.floor(ms/60000);
+    if (m < 60) return `in ${m}m`;
+    const h = Math.floor(m/60);
+    if (h < 48) return `in ${h}h ${m%60}m`;
+    return `in ${Math.floor(h/24)}d`;
+  }
+
+  function renderQueueCard(it){
+    const siteNames = (it.site_ids||[]).map(id=>{
+      const s = siteById(id);
+      return s ? (s.name||id) : id;
+    }).join(', ');
+    const status = it.status || 'queued';
+    const first = (it.site_ids||[])[0];
+    const firstSite = siteById(first);
+    const slug = it.slug || '';
+    const viewUrl = firstSite && firstSite.domain ? `https://${firstSite.domain.replace(/\/$/,'')}/${slug}/` : '';
+    const exp = it.lifetime ? 'lifetime' : (it.expires_at ? `${fmtDate(it.expires_at)} (${countdown(it.expires_at)})` : 'no expiry');
+    const cancelBtn = (status==='scheduled') ? `<button class="mp-btn" onclick="mpCancel('${it.id}')" style="font-size:11px;padding:4px 10px">Cancel</button>` : '';
+    const viewBtn = viewUrl ? `<a class="mp-btn" href="${viewUrl}" target="_blank" style="font-size:11px;padding:4px 10px;text-decoration:none">View</a>` : '';
+    return `
+      <div class="mp-queue-card">
+        <div>
+          <div class="mp-queue-title">${escapeHtml(it.title||'(untitled)')} <span class="mp-badge ${status}">${status}</span></div>
+          <div class="mp-queue-meta">
+            <div><strong>Sites:</strong> ${escapeHtml(siteNames)}</div>
+            <div><strong>Publish:</strong> ${fmtDate(it.publish_at)} ${status==='scheduled'?`(${countdown(it.publish_at)})`:''}</div>
+            <div><strong>Expires:</strong> ${escapeHtml(exp)}</div>
+            ${slug?`<div><strong>Slug:</strong> ${escapeHtml(slug)}</div>`:''}
+          </div>
+        </div>
+        <div class="mp-queue-actions">${viewBtn}${cancelBtn}</div>
+      </div>`;
+  }
+
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  window.mpCancel = function(id){
+    if (!confirm('Cancel this scheduled post?')) return;
+    fetch('/api/manual-post/cancel', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id})})
+      .then(()=>{ if(typeof toast==='function') toast('Saved'); mpRefreshQueue(); });
+  };
+
+  // Drafts (localStorage)
+  function loadDrafts(){
+    try { return JSON.parse(localStorage.getItem('manualPosts.drafts')||'[]'); } catch(e){ return []; }
+  }
+  function saveDrafts(arr){ localStorage.setItem('manualPosts.drafts', JSON.stringify(arr)); }
+
+  window.mpSaveDraft = function(){
+    const drafts = loadDrafts();
+    const payload = collectPayload();
+    payload._draftId = 'd-' + Date.now();
+    payload._savedAt = new Date().toISOString();
+    drafts.push(payload);
+    saveDrafts(drafts);
+    if (typeof toast === 'function') toast('Saved');
+    renderDrafts();
+  };
+
+  function renderDrafts(){
+    const drafts = loadDrafts();
+    const el = $('mp-drafts-list');
+    if (!drafts.length){ el.innerHTML = '<div class="mp-empty">No saved drafts yet.</div>'; return; }
+    el.innerHTML = drafts.slice().reverse().map(d=>`
+      <div class="mp-draft-item" onclick="mpLoadDraft('${d._draftId}')">
+        <div style="font-weight:700;color:var(--text)">${escapeHtml(d.title||'(untitled)')}</div>
+        <div style="font-size:10px;color:var(--text3)">${fmtDate(d._savedAt)}</div>
+        <button onclick="event.stopPropagation();mpDeleteDraft('${d._draftId}')" style="float:right;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer">delete</button>
+      </div>`).join('');
+  }
+
+  window.mpLoadDraft = function(id){
+    const drafts = loadDrafts();
+    const d = drafts.find(x=>x._draftId===id);
+    if (!d) return;
+    $('mp-title').value = d.title||'';
+    $('mp-slug').value = d.slug||'';
+    window.mpSlugTouched = !!d.slug;
+    $('mp-meta').value = d.meta_description||''; mpCount();
+    $('mp-image').value = d.image||''; mpUpdateThumb();
+    $('mp-tags').value = (d.tags||[]).join(', ');
+    $('mp-intro').value = d.intro||'';
+    $('mp-body').value = d.body||'';
+    $('mp-conclusion').value = d.conclusion||'';
+    $('mp-featured').checked = !!d.featured;
+    $('mp-newsletter').checked = !!d.send_newsletter;
+    $('mp-lifetime').checked = !!d.lifetime; mpLifetimeToggle();
+    if (d.publish_at) $('mp-publish-at').value = toLocalInput(d.publish_at);
+    if (d.expires_at) $('mp-expires-at').value = toLocalInput(d.expires_at);
+    if (d.custom_author) $('mp-author-custom').value = d.custom_author;
+    const radio = document.querySelector(`input[name="mp-author"][value="${d.author_mode||'site_default'}"]`);
+    if (radio){ radio.checked = true; mpAuthorChange(); }
+    if (typeof toast === 'function') toast('Saved');
+  };
+
+  window.mpDeleteDraft = function(id){
+    let drafts = loadDrafts().filter(x=>x._draftId!==id);
+    saveDrafts(drafts);
+    renderDrafts();
+  };
+
+  window.mpNewDraft = function(){
+    if (!confirm('Clear the composer for a fresh draft?')) return;
+    $('mp-title').value = ''; $('mp-slug').value=''; window.mpSlugTouched=false;
+    $('mp-meta').value=''; mpCount();
+    $('mp-image').value=''; mpUpdateThumb();
+    $('mp-tags').value='';
+    $('mp-intro').value=''; $('mp-body').value=''; $('mp-conclusion').value='';
+    $('mp-markdown').value=''; $('mp-html').value='';
+    $('mp-featured').checked=false; $('mp-newsletter').checked=false;
+    $('mp-lifetime').checked=false; mpLifetimeToggle();
+  };
+
+  function toLocalInput(iso){
+    try {
+      const d = new Date(iso);
+      const pad = n => String(n).padStart(2,'0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    } catch(e){ return ''; }
+  }
+
+  window.mpInit = function(){
+    if (mpInited){ mpRefreshQueue(); renderDrafts(); return; }
+    mpInited = true;
+    loadSites().then(()=>{
+      renderSiteSelectors();
+      mpRebuildCategories();
+      mpRebuildAuthorPool();
+      mpAuthorChange();
+      // Default publish_at = now
+      $('mp-publish-at').value = toLocalInput(new Date().toISOString());
+      mpRefreshQueue();
+      renderDrafts();
+      if (!pollTimer) pollTimer = setInterval(mpRefreshQueue, 30000);
+    });
+  };
+})();
+
+// ── Manage Comments: per-article editor ─────────────────────────────────────
+// Lists every site with comment count, lets the user open a site → see its
+// articles → expand any article to edit/delete/add individual reader comments
+// and author replies. All writes go through /api/github (PUT to <repo>/<slug>/
+// comments.json with sha refresh on 409). Cached results are stored on
+// window._mcCache so re-opening the panel does not re-scan unless asked.
+(function(){
+  const CACHE = window._mcCache = window._mcCache || {};
+  const headers = () => { const tok = ls('ghToken') || ''; return tok ? { 'X-GH-Token': tok } : {}; };
+
+  async function fetchJson(path) {
+    const r = await fetch('/api/github/' + path, { cache: 'no-store', headers: headers() });
+    if (r.status === 404) return { _404: true };
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }
+  function decodeContent(d) {
+    if (!d || !d.content) return '';
+    return atob(d.content.replace(/\n/g,''));
+  }
+  function countComments(j) {
+    if (!j || typeof j !== 'object') return 0;
+    return (Array.isArray(j.comments) ? j.comments.length : 0) + (Array.isArray(j.author_replies) ? j.author_replies.length : 0);
+  }
+
+  window.mcScan = async function() {
+    if (!cfg) return;
+    if (!ls('ghToken')) { toast('Add a GitHub token in Settings -> API Keys first.', 'error'); return; }
+    const sites = (cfg.sites || []).filter(s => !s.is_mother_site && s.id !== 'nexus' && s.repo);
+    const col = document.getElementById('mc-sites-col');
+    col.innerHTML = `<div style="font-size:11px;color:var(--text3);padding:6px">Scanning ${sites.length} sites... (this counts every article's comments.json)</div>`;
+    const btn = document.getElementById('mc-scan-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Scanning...'; }
+    let networkTotal = 0;
+    // 4-at-a-time parallelism so we do not get rate-limited
+    const queue = [...sites]; const results = {};
+    async function worker() {
+      while (queue.length) {
+        const s = queue.shift();
+        try {
+          const idx = await fetchJson(`repos/${s.repo}/contents/articles.json`);
+          if (idx._404 || !idx.content) { results[s.id] = { total: 0, articles: [] }; continue; }
+          const articles = JSON.parse(decodeContent(idx));
+          const top = articles.slice(0, 30);
+          const counts = await Promise.all(top.map(async a => {
+            const slug = a.slug; if (!slug) return { slug:'', count:0 };
+            try {
+              const cj = await fetchJson(`repos/${s.repo}/contents/${slug}/comments.json`);
+              if (cj._404) return { slug, title:a.title, date:a.date_iso, image:a.image, count:0 };
+              return { slug, title:a.title, date:a.date_iso, image:a.image, count: countComments(JSON.parse(decodeContent(cj))) };
+            } catch(_) { return { slug, title:a.title, date:a.date_iso, image:a.image, count:0 }; }
+          }));
+          const total = counts.reduce((n,x) => n + x.count, 0);
+          results[s.id] = { total, articles: counts, repo: s.repo, name: s.name||s.id };
+          networkTotal += total;
+        } catch(_) { results[s.id] = { total: 0, articles: [] }; }
+      }
+    }
+    await Promise.all([worker(), worker(), worker(), worker()]);
+    CACHE.scan = results;
+    if (btn) { btn.disabled = false; btn.textContent = 'Rescan'; }
+    document.getElementById('mc-total').textContent = `Total comments across the network: ${networkTotal} (across ${sites.length} sites)`;
+
+    col.innerHTML = sites.sort((a,b) => (results[b.id]?.total||0)-(results[a.id]?.total||0)).map(s => {
+      const r = results[s.id] || { total: 0 };
+      const has = r.total > 0;
+      return `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;cursor:pointer;background:transparent;transition:background .12s"
+        onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'"
+        onclick="mcOpenSite('${s.id}','${s.repo}')">
+        <span style="width:8px;height:8px;border-radius:50%;background:${has?'var(--green,#10b981)':'var(--text3)'};flex-shrink:0"></span>
+        <span style="flex:1;font-size:12px;color:${has?'var(--text)':'var(--text3)'};font-weight:${has?600:400}">${s.name||s.id}</span>
+        <span style="font-size:11px;color:${has?'var(--accent)':'var(--text3)'};font-weight:700;background:${has?'rgba(168,85,247,.10)':'transparent'};padding:1px 7px;border-radius:8px;min-width:24px;text-align:center">${r.total}</span>
+      </div>`;
+    }).join('');
+  };
+
+  window.mcOpenSite = function(siteId, repo) {
+    const r = (CACHE.scan||{})[siteId]; if (!r) return;
+    const col = document.getElementById('mc-detail-col');
+    const withComments = r.articles.filter(a => a.count > 0);
+    const withoutComments = r.articles.filter(a => a.count === 0);
+    col.innerHTML = `
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">${r.name} <span style="color:var(--text3);font-weight:400;font-size:11px">- ${r.total} comments across ${r.articles.length} recent articles</span></div>
+      <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">Articles with comments (${withComments.length})</div>
+      ${withComments.length ? withComments.map(a => mcArticleRow(repo, a, true)).join('') : '<div style="font-size:11px;color:var(--text3);padding:6px 0">None yet</div>'}
+      <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:14px 0 6px">No comments yet (${withoutComments.length})</div>
+      ${withoutComments.slice(0,10).map(a => mcArticleRow(repo, a, false)).join('')}
+      ${withoutComments.length > 10 ? `<div style="font-size:10px;color:var(--text3);padding:6px 0">+ ${withoutComments.length - 10} more</div>` : ''}
+    `;
+  };
+
+  function mcArticleRow(repo, a, hasComments) {
+    return `<div style="border:1px solid var(--border2);border-radius:6px;margin-bottom:6px;background:var(--bg)">
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;cursor:pointer" onclick="mcToggle('${repo}','${a.slug}',this)">
+        ${a.image ? `<img src="${a.image}" style="width:32px;height:32px;object-fit:cover;border-radius:4px;flex-shrink:0" onerror="this.style.display='none'">` : ''}
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.title||a.slug}</div>
+          <div style="font-size:10px;color:var(--text3)">${a.date||''}</div>
+        </div>
+        <span style="font-size:11px;color:${hasComments?'var(--accent)':'var(--text3)'};font-weight:700;background:${hasComments?'rgba(168,85,247,.10)':'transparent'};padding:1px 7px;border-radius:8px">${a.count}</span>
+        <span style="font-size:14px;color:var(--text3)" class="mc-chev">▸</span>
+      </div>
+      <div class="mc-edit" style="display:none;border-top:1px solid var(--border2);padding:10px"></div>
+    </div>`;
+  }
+
+  window.mcToggle = async function(repo, slug, headEl) {
+    const wrap = headEl.parentElement; const editEl = wrap.querySelector('.mc-edit'); const chev = headEl.querySelector('.mc-chev');
+    if (editEl.style.display === 'block') { editEl.style.display = 'none'; chev.textContent = '▸'; return; }
+    editEl.style.display = 'block'; chev.textContent = '▾';
+    editEl.innerHTML = '<div style="font-size:11px;color:var(--text3)">Loading...</div>';
+    try {
+      const cj = await fetchJson(`repos/${repo}/contents/${slug}/comments.json`);
+      const data = cj._404 ? { comments: [], author_replies: [], _new: true } : JSON.parse(decodeContent(cj));
+      const sha = cj._404 ? '' : cj.sha;
+      mcRenderEditor(editEl, repo, slug, data, sha);
+    } catch(e) { editEl.innerHTML = '<div style="font-size:11px;color:var(--red)">Error: ' + e.message + '</div>'; }
+  };
+
+  function mcRenderEditor(el, repo, slug, data, sha) {
+    el.dataset.sha = sha || '';
+    el.dataset.slug = slug; el.dataset.repo = repo;
+    const today = new Date().toISOString().slice(0,10);
+    const card = (kind, c, i) => `<div style="border:1px solid var(--border2);border-radius:6px;padding:8px;margin-bottom:6px;background:var(--bg2)" data-kind="${kind}" data-i="${i}">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <span style="font-size:9px;font-weight:800;background:${kind==='author'?'rgba(245,158,11,.18)':'rgba(56,189,248,.18)'};color:${kind==='author'?'#f59e0b':'#38bdf8'};padding:2px 6px;border-radius:3px;letter-spacing:.6px">${kind.toUpperCase()}</span>
+        <input type="text" value="${(c.name||c.reply_to||'').replace(/"/g,'&quot;')}" placeholder="${kind==='author'?'reply_to (reader name)':'name'}" class="mc-f-name" style="flex:1;font-size:12px;padding:4px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
+        <input type="date" value="${(c.date||today).slice(0,10)}" class="mc-f-date" style="font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
+        ${kind==='reader' ? `<input type="number" min="0" max="9999" value="${c.likes||0}" class="mc-f-likes" style="width:62px;font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);text-align:center" title="likes">` : ''}
+        <button onclick="this.closest('[data-kind]').remove()" title="Delete" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 6px" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text3)'">×</button>
+      </div>
+      <textarea rows="2" class="mc-f-text" placeholder="comment text" style="width:100%;font-size:12px;padding:6px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);resize:vertical;line-height:1.5">${(c.text||'').replace(/</g,'&lt;')}</textarea>
+    </div>`;
+    el.innerHTML = `
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" onclick="mcAdd(this,'reader')">+ Add reader comment</button>
+        <button class="btn btn-sm" onclick="mcAdd(this,'author')">+ Add author reply</button>
+        <button class="btn btn-sm btn-accent" style="margin-left:auto" onclick="mcSaveEditor(this)">Save all</button>
+      </div>
+      <div id="mc-list-${slug}">
+        ${(data.comments||[]).map((c,i) => card('reader', c, i)).join('')}
+        ${(data.author_replies||[]).map((c,i) => card('author', c, i)).join('')}
+      </div>
+    `;
+  }
+
+  window.mcAdd = function(btn, kind) {
+    const editor = btn.closest('.mc-edit');
+    const list   = editor.querySelector('[id^="mc-list-"]');
+    const today  = new Date().toISOString().slice(0,10);
+    const wrap = document.createElement('div');
+    const html = `<div style="border:1px solid var(--accent);border-radius:6px;padding:8px;margin-bottom:6px;background:var(--bg2)" data-kind="${kind}" data-i="new">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+        <span style="font-size:9px;font-weight:800;background:${kind==='author'?'rgba(245,158,11,.18)':'rgba(56,189,248,.18)'};color:${kind==='author'?'#f59e0b':'#38bdf8'};padding:2px 6px;border-radius:3px;letter-spacing:.6px">${kind.toUpperCase()}</span>
+        <input type="text" placeholder="${kind==='author'?'reply_to (reader name)':'name'}" class="mc-f-name" style="flex:1;font-size:12px;padding:4px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
+        <input type="date" value="${today}" class="mc-f-date" style="font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
+        ${kind==='reader' ? `<input type="number" min="0" max="9999" value="0" class="mc-f-likes" style="width:62px;font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);text-align:center">` : ''}
+        <button onclick="this.closest('[data-kind]').remove()" title="Delete" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 6px">×</button>
+      </div>
+      <textarea rows="2" class="mc-f-text" placeholder="comment text" style="width:100%;font-size:12px;padding:6px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);resize:vertical"></textarea>
+    </div>`;
+    wrap.innerHTML = html;
+    list.appendChild(wrap.firstElementChild);
+  };
+
+  window.mcSaveEditor = async function(btn) {
+    const editor = btn.closest('.mc-edit');
+    const repo   = editor.dataset.repo;
+    const slug   = editor.dataset.slug;
+    const sha    = editor.dataset.sha;
+    const cards  = editor.querySelectorAll('[data-kind]');
+    const data = { comments: [], author_replies: [] };
+    cards.forEach(c => {
+      const kind  = c.dataset.kind;
+      const name  = c.querySelector('.mc-f-name')?.value.trim() || '';
+      const text  = c.querySelector('.mc-f-text')?.value.trim() || '';
+      const date  = c.querySelector('.mc-f-date')?.value || '';
+      if (!name || !text) return;
+      if (kind === 'reader') {
+        const likes = parseInt(c.querySelector('.mc-f-likes')?.value, 10) || 0;
+        data.comments.push({ name, text, date, likes });
+      } else {
+        data.author_replies.push({ reply_to: name, text, date });
+      }
+    });
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      const body = { message: 'edit: manage comments via dashboard', content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))) };
+      if (sha) body.sha = sha;
+      let r = await fetch(`/api/github/repos/${repo}/contents/${slug}/comments.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type':'application/json', ...headers() },
+        body: JSON.stringify(body),
+      });
+      if (r.status === 409) {
+        // refetch sha + retry once
+        const fresh = await fetchJson(`repos/${repo}/contents/${slug}/comments.json`);
+        body.sha = fresh.sha;
+        r = await fetch(`/api/github/repos/${repo}/contents/${slug}/comments.json`, {
+          method: 'PUT', headers: { 'Content-Type':'application/json', ...headers() }, body: JSON.stringify(body),
+        });
+      }
+      if (!r.ok) { const e = await r.text(); throw new Error('HTTP ' + r.status + ' ' + e.slice(0,80)); }
+      const out = await r.json(); editor.dataset.sha = out.content?.sha || '';
+      toast('Saved', 'ok');
+      // update the count badge for this article in the open detail view
+      const row = editor.closest('div');
+      const badge = row.parentElement.querySelector('span[style*="background:rgba(168,85,247"], span[style*="background:transparent"]');
+      if (badge) { const n = data.comments.length + data.author_replies.length; badge.textContent = n; }
+    } catch(e) { toast('Save failed: ' + e.message, 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Save all'; }
+  };
+})();
 </script>
 
 <!-- ════════ TERMINAL STYLES ════════ -->
