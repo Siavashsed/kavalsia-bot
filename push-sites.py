@@ -5536,15 +5536,15 @@ def save_local(only=None, sites_filter=None):
         idx, abt = generate(s)
         d = OUT / s["id"]
         d.mkdir(exist_ok=True)
-        (d / "index.html").write_text(idx, encoding="utf-8")
-        (d / "about.html").write_text(abt, encoding="utf-8")
-        (d / "404.html").write_text(gen_404(s), encoding="utf-8")
-        (d / "privacy.html").write_text(gen_privacy(s), encoding="utf-8")
-        (d / "terms.html").write_text(gen_terms(s), encoding="utf-8")
-        (d / "sms.html").write_text(gen_sms(s), encoding="utf-8")
-        (d / "meta-policy.html").write_text(gen_meta_policy(s), encoding="utf-8")
+        (d / "index.html").write_text(_meta_inject(idx, s), encoding="utf-8")
+        (d / "about.html").write_text(_meta_inject(abt, s), encoding="utf-8")
+        (d / "404.html").write_text(_meta_inject(gen_404(s), s), encoding="utf-8")
+        (d / "privacy.html").write_text(_meta_inject(gen_privacy(s), s), encoding="utf-8")
+        (d / "terms.html").write_text(_meta_inject(gen_terms(s), s), encoding="utf-8")
+        (d / "sms.html").write_text(_meta_inject(gen_sms(s), s), encoding="utf-8")
+        (d / "meta-policy.html").write_text(_meta_inject(gen_meta_policy(s), s), encoding="utf-8")
         for fn, html in extra_pages(s):
-            (d / fn).write_text(html, encoding="utf-8")
+            (d / fn).write_text(_meta_inject(html, s), encoding="utf-8")
         (d / ".nojekyll").write_text("", encoding="utf-8")
         print(f"  ok {s['id']}")
     print(f"\nSaved to {OUT}/")
@@ -5572,6 +5572,120 @@ def gh_put(token, repo, path, content, message="Update site template"):
         payload["sha"] = existing.json()["sha"]
     r = requests.put(url, headers=hdrs, json=payload, timeout=20)
     return r.status_code in (200, 201)
+
+
+# ── Meta Pixel + CAPI header_scripts merger (parallel to GHL) ────────────────
+# Lazily loads network-config.json once. Resolves settings.meta merged with
+# per-site sites[i].meta and returns the Pixel snippet to prepend into <head>
+# at publish time. Kept fully independent from the GHL injector.
+_META_CFG_CACHE = {"loaded": False, "global": {}, "sites_by_id": {}}
+
+def _meta_load_network_cfg():
+    if _META_CFG_CACHE["loaded"]:
+        return _META_CFG_CACHE
+    try:
+        cfg = json.loads((BASE / "network-config.json").read_text(encoding="utf-8"))
+        _META_CFG_CACHE["global"] = (cfg.get("settings") or {}).get("meta") or {}
+        _META_CFG_CACHE["sites_by_id"] = {
+            (s.get("id") or ""): s for s in (cfg.get("sites") or [])
+        }
+    except Exception:
+        _META_CFG_CACHE["global"] = {}
+        _META_CFG_CACHE["sites_by_id"] = {}
+    _META_CFG_CACHE["loaded"] = True
+    return _META_CFG_CACHE
+
+def _meta_resolve_for_site(site_obj_inline):
+    """Merge global meta with per-site meta. site_obj_inline is the SITES dict
+    used by push-sites; the per-site `meta` lives in network-config.json under
+    sites[i].meta keyed by id, so we look it up there."""
+    cache = _meta_load_network_cfg()
+    g = cache["global"] or {}
+    nc_site = cache["sites_by_id"].get((site_obj_inline or {}).get("id"), {}) or {}
+    out = {
+        "enabled":            bool(g.get("enabled", False)),
+        "pixel_id":           str(g.get("pixel_id", "") or ""),
+        "capi_token":         str(g.get("capi_token", "") or ""),
+        "capi_dataset_id":    str(g.get("capi_dataset_id", "") or ""),
+        "test_event_code":    str(g.get("test_event_code", "") or ""),
+        "fire_pageview":      bool(g.get("fire_pageview", True)),
+        "custom_audience_id": str(g.get("custom_audience_id", "") or ""),
+    }
+    s = nc_site.get("meta") or {}
+    if not isinstance(s, dict):
+        s = {}
+    if "enabled" in s:        out["enabled"]       = bool(s.get("enabled"))
+    if "fire_pageview" in s:  out["fire_pageview"] = bool(s.get("fire_pageview"))
+    for k in ("pixel_id", "capi_token", "capi_dataset_id", "test_event_code", "custom_audience_id"):
+        v = s.get(k)
+        if isinstance(v, str) and v.strip():
+            out[k] = v.strip()
+    # Also surface site name for the custom event label
+    out["_site_name"] = (site_obj_inline.get("name") or site_obj_inline.get("id") or "Site")
+    out["_site_id"]   = site_obj_inline.get("id") or ""
+    return out
+
+def _meta_pixel_snippet(site_obj_inline):
+    r = _meta_resolve_for_site(site_obj_inline)
+    if not r["enabled"] or not r["pixel_id"]:
+        return ""
+    site_name  = r["_site_name"]
+    site_id    = r["_site_id"]
+    pixel_id   = r["pixel_id"]
+    visit_evt  = f"{site_name} Visit"
+    signup_evt = f"{site_name} NewsletterSignup"
+    fire_pv    = "true" if r["fire_pageview"] else "false"
+    mirror_capi = "true" if (r["capi_token"] and r["capi_dataset_id"]) else "false"
+    return (
+        "<!-- Meta Pixel (Kavalsia network) -->\n"
+        "<script>\n"
+        "(function(){if(window.__KAVALSIA_META_LOADED)return;window.__KAVALSIA_META_LOADED=true;"
+        "!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?"
+        "n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;"
+        "n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;"
+        "t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,"
+        "document,'script','https://connect.facebook.net/en_US/fbevents.js');"
+        f"fbq('init', {json.dumps(pixel_id)});"
+        f"var FIRE_PV={fire_pv},SITE_ID={json.dumps(site_id)},VISIT_EVT={json.dumps(visit_evt)},"
+        f"SIGNUP_EVT={json.dumps(signup_evt)},MIRROR_CAPI={mirror_capi};"
+        "if(FIRE_PV){try{fbq('track','PageView');}catch(e){}}"
+        "try{fbq('trackCustom',VISIT_EVT,{site_id:SITE_ID,page_path:location.pathname,"
+        "page_title:document.title,referrer:document.referrer||''});}catch(e){}"
+        "function sha256Hex(str){if(!window.crypto||!crypto.subtle)return Promise.resolve('');"
+        "var buf=new TextEncoder().encode(String(str||'').trim().toLowerCase());"
+        "return crypto.subtle.digest('SHA-256',buf).then(function(h){"
+        "return Array.prototype.map.call(new Uint8Array(h),function(b){"
+        "return ('00'+b.toString(16)).slice(-2);}).join('');});}"
+        "function mirrorCAPI(evtName,payload){if(!MIRROR_CAPI)return;try{"
+        "var hub=(window.KAVALSIA_HUB_URL||'').replace(/\\/$/,'');if(!hub)return;"
+        "fetch(hub+'/api/meta-capi',{method:'POST',headers:{'Content-Type':'application/json'},"
+        "body:JSON.stringify({site_id:SITE_ID,event_name:evtName,payload:payload})})"
+        ".catch(function(){});}catch(e){}}"
+        "mirrorCAPI(VISIT_EVT,{page_path:location.pathname});"
+        "document.addEventListener('submit',function(ev){try{var f=ev.target;"
+        "if(!f||!f.tagName||f.tagName.toLowerCase()!=='form')return;"
+        "var emailEl=f.querySelector('input[type=email], input[name*=email i]');"
+        "if(!emailEl||!emailEl.value)return;var email=emailEl.value;"
+        "sha256Hex(email).then(function(h){try{fbq('trackCustom',SIGNUP_EVT,{email_hashed:h});}catch(e){}"
+        "mirrorCAPI(SIGNUP_EVT,{email_hashed:h});});}catch(e){}},true);"
+        "})();\n"
+        "</script>\n"
+        f"<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" "
+        f"src=\"https://www.facebook.com/tr?id={pixel_id}&ev=PageView&noscript=1\"/></noscript>\n"
+        "<!-- End Meta Pixel -->\n"
+    )
+
+def _meta_inject(html, site_obj_inline):
+    """Prepend the Meta Pixel snippet into <head> of the given html. No-op
+    when Meta is disabled or no pixel is configured for the site."""
+    if not html or not isinstance(html, str):
+        return html
+    snip = _meta_pixel_snippet(site_obj_inline)
+    if not snip:
+        return html
+    if "</head>" in html:
+        return html.replace("</head>", snip + "</head>", 1)
+    return snip + html
 
 
 def push_nexus(token):
@@ -5617,15 +5731,15 @@ def push_github(token, only=None, sites_filter=None):
         repo = s["repo"]
         print(f"  Pushing {repo}...", end=" ", flush=True)
         ok = True
-        ok &= gh_put(token, repo, "index.html",       idx,              "Update site index")
-        ok &= gh_put(token, repo, "about.html",        abt,              "Update about page")
-        ok &= gh_put(token, repo, "404.html",          gen_404(s),       "Update 404 page")
-        ok &= gh_put(token, repo, "privacy.html",      gen_privacy(s),   "Add privacy policy")
-        ok &= gh_put(token, repo, "terms.html",        gen_terms(s),     "Add terms and conditions")
-        ok &= gh_put(token, repo, "sms.html",          gen_sms(s),       "Add SMS compliance policy")
-        ok &= gh_put(token, repo, "meta-policy.html",  gen_meta_policy(s),"Add Meta data policy")
+        ok &= gh_put(token, repo, "index.html",       _meta_inject(idx, s),                 "Update site index")
+        ok &= gh_put(token, repo, "about.html",        _meta_inject(abt, s),                "Update about page")
+        ok &= gh_put(token, repo, "404.html",          _meta_inject(gen_404(s), s),         "Update 404 page")
+        ok &= gh_put(token, repo, "privacy.html",      _meta_inject(gen_privacy(s), s),     "Add privacy policy")
+        ok &= gh_put(token, repo, "terms.html",        _meta_inject(gen_terms(s), s),       "Add terms and conditions")
+        ok &= gh_put(token, repo, "sms.html",          _meta_inject(gen_sms(s), s),         "Add SMS compliance policy")
+        ok &= gh_put(token, repo, "meta-policy.html",  _meta_inject(gen_meta_policy(s), s), "Add Meta data policy")
         for fn, html in extra_pages(s):
-            ok &= gh_put(token, repo, fn, html, f"Add {fn}")
+            ok &= gh_put(token, repo, fn, _meta_inject(html, s), f"Add {fn}")
         ok &= gh_put(token, repo, ".nojekyll",         "",               "Disable Jekyll")
         gh_delete(token, repo, "CNAME", "Remove custom domain CNAME")
         print("ok" if ok else "FAIL (check token/repo)")
