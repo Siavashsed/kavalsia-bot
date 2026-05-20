@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KAVALSIA NETWORK - Home</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c09;--bg2:#0d1410;--bg3:#121b14;--bg4:#172119;
+  --text:#ffffff;--text2:#b8d4c0;--text3:#4d7059;
+  --accent:#3ecf8e;--accent2:#2eb87d;--glow:#3ecf8e18;
+  --green:#3ecf8e;--red:#ef4444;--amber:#f59e0b;--blue:#38bdf8;
+  --border:#142018;--border2:#1e3024;
+}
+html,body{min-height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+body{background:radial-gradient(ellipse at 50% -10%,#0d2318 0%,#080c09 60%);padding:0 0 80px}
+a{text-decoration:none}
+
+/* ── Top bar ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 36px;border-bottom:1px solid var(--border);
+  background:rgba(8,12,9,.85);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:100;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-name{font-size:18px;font-weight:800;letter-spacing:-0.3px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand-sub{font-size:10px;color:var(--text3);-webkit-text-fill-color:var(--text3);
+  text-transform:uppercase;letter-spacing:2px}
+
+/* ── Server status pill ── */
+.srv-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:100px;
+  border:1px solid var(--border2);background:var(--bg2);
+  font-size:12px;color:var(--text2);cursor:default;
+}
+.srv-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:all .3s}
+
+/* ── Hero ── */
+.hero{padding:56px 36px 40px;text-align:center;max-width:680px;margin:0 auto}
+.hero-title{font-size:38px;font-weight:800;letter-spacing:-1px;line-height:1.1;
+  background:linear-gradient(135deg,#fff 30%,var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.hero-sub{font-size:15px;color:var(--text2);line-height:1.7;margin-bottom:32px}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border-radius:9px;
+  font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s;text-decoration:none}
+.btn-p{background:var(--accent);color:#fff}
+.btn-p:hover{background:var(--accent2);box-shadow:0 0 24px var(--glow)}
+.btn-g{background:var(--bg3);color:var(--text2);border:1px solid var(--border2)}
+.btn-g:hover{color:var(--text);border-color:var(--border)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border2)}
+
+/* ── Section ── */
+.section{max-width:960px;margin:0 auto;padding:0 36px 40px}
+.sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;
+  color:var(--text3);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Tool grid ── */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.tool-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:20px;display:flex;flex-direction:column;gap:10px;
+  transition:border-color .2s,box-shadow .2s;cursor:pointer;
+  text-decoration:none;color:inherit;
+}
+.tool-card:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--glow)}
+.tc-head{display:flex;align-items:center;gap:12px}
+.tc-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tc-name{font-size:15px;font-weight:700;color:var(--text)}
+.tc-tag{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.tc-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.tc-url{font-size:11px;color:var(--text3);font-family:monospace;margin-top:auto}
+.tool-card:hover .tc-url{color:var(--accent)}
+
+/* ── Quick start ── */
+.qs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.qs-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;gap:12px}
+.qs-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.qs-text{font-size:13px;color:var(--text2);line-height:1.6}
+.qs-text b{color:var(--text)}
+code{background:var(--bg3);border:1px solid var(--border);border-radius:4px;
+  padding:1px 6px;font-size:11px;font-family:'Menlo','Courier New',monospace;color:var(--accent2)}
+
+/* ── File reference table ── */
+.file-table{width:100%;border-collapse:collapse;font-size:13px}
+.file-table th{text-align:left;padding:10px 14px;color:var(--text2);font-weight:600;
+  border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.file-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.file-table tr:last-child td{border-bottom:none}
+.file-table tr:hover td{background:var(--bg3)}
+.file-name{font-family:monospace;color:var(--accent2);font-size:12px}
+.file-tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;margin-top:2px}
+.tag-ui{background:#3ecf8e18;color:var(--green);border:1px solid #3ecf8e33}
+.tag-server{background:#38bdf818;color:var(--blue);border:1px solid #38bdf833}
+.tag-bot{background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b33}
+.tag-config{background:#7c6fec18;color:#a78bfa;border:1px solid #7c6fec33}
+
+/* ── Status section ── */
+.status-row{display:flex;align-items:center;gap:12px;padding:12px 16px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:9px;margin-bottom:8px}
+.status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.status-label{font-size:13px;font-weight:600}
+.status-sub{font-size:12px;color:var(--text3);margin-left:auto}
+
+@media(max-width:600px){
+  .topbar{padding:12px 16px}
+  .hero{padding:36px 16px 28px}
+  .hero-title{font-size:26px}
+  .section{padding:0 16px 32px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Top Bar ── -->
+<div class="topbar">
+  <div class="brand">
+    <div>
+      <div class="brand-name">KAVALSIA NETWORK</div>
+      <div class="brand-sub">Kavalsia · 22 Sites</div>
+    </div>
+  </div>
+  <div class="srv-pill" id="srv-pill">
+    <div class="srv-dot" id="srv-dot"></div>
+    <span id="srv-label">Checking…</span>
+  </div>
+</div>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-title">Your AI Content Network</div>
+  <div class="hero-sub">22 niche sites, one bot, fully automated. Articles publish daily at 8am UTC via GitHub Actions - whether your computer is on or not.</div>
+  <div class="hero-btns">
+    <a href="/hub" class="btn btn-p">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Open Hub
+    </a>
+    <a href="/dashboard" class="btn btn-g">Dashboard</a>
+    <a href="/megadash" class="btn btn-g">Mega View</a>
+    <a href="https://github.com/Siavashsed/kavalsia-bot/actions" target="_blank" class="btn btn-ghost">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Live Actions ↗
+    </a>
+  </div>
+</div>
+
+<!-- ── Tools ── -->
+<div class="section">
+  <div class="sec-title">All Tools</div>
+  <div class="tool-grid">
+
+    <a href="/hub" class="tool-card">
+      <div class="tc-head">
+        <div class="tc-icon" style="background:#3ecf8e18">
+          <svg width="20" height="20" fill="none" stroke="#3ecf8e" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div><div class="tc-name">Hub</div><div class="tc-tag">Main Control</div></div>
+      </div>
+      <div class="tc-desc">AI[S] Terminal, activity feed, site config, backlinks, API keys, GitHub secrets. The nerve center of the network.</div>
+      <div class="tc-url">localhost:8765/hub</div>
+    </a>
+
+    <a href="/dashboard" class="tool-card">
+      <div class="tc-head">
+        <div class="tc-icon" style="background:#38bdf818">
+          <svg width="20" height="20" fill="none" stroke="#38bdf8" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z"/></svg>
+        </div>
+        <div><div class="tc-name">Dashboard</div><div class="tc-tag">22 Sites</div></div>
+      </div>
+      <div class="tc-desc">All 22 sites with live status, visit links, site editor, manual posting, backlink matrix, and newsletter setup.</div>
+      <div class="tc-url">localhost:8765/dashboard</div>
+    </a>
+
+    <a href="/megadash" class="tool-card">
+      <div class="tc-head">
+        <div class="tc-icon" style="background:#f59e0b18">
+          <svg width="20" height="20" fill="none" stroke="#f59e0b" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div><div class="tc-name">Mega Dashboard</div><div class="tc-tag">Network View</div></div>
+      </div>
+      <div class="tc-desc">Visual overview of all 22 sites with sparkline charts, traffic trends, article counts, and AI-generated summaries.</div>
+      <div class="tc-url">localhost:8765/megadash</div>
+    </a>
+
+    <a href="/editor" class="tool-card">
+      <div class="tc-head">
+        <div class="tc-icon" style="background:#a78bfa18">
+          <svg width="20" height="20" fill="none" stroke="#a78bfa" stroke-width="1.8" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <div><div class="tc-name">Editor</div><div class="tc-tag">Article Editor</div></div>
+      </div>
+      <div class="tc-desc">Write and edit articles manually with a rich editor. Push directly to any site's GitHub repo.</div>
+      <div class="tc-url">localhost:8765/editor</div>
+    </a>
+
+    <a href="/guide" class="tool-card">
+      <div class="tc-head">
+        <div class="tc-icon" style="background:#3ecf8e18">
+          <svg width="20" height="20" fill="none" stroke="#3ecf8e" stroke-width="1.8" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div><div class="tc-name">Guide</div><div class="tc-tag">Documentation</div></div>
+      </div>
+      <div class="tc-desc">Full setup guide, workflow explanations, troubleshooting, and system documentation.</div>
+      <div class="tc-url">localhost:8765/guide</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── Quick Start ── -->
+<div class="section">
+  <div class="sec-title">Quick Start - Get the Bot Running</div>
+  <div class="qs-grid">
+    <div class="qs-card">
+      <div class="qs-num">1</div>
+      <div class="qs-text"><b>Add GitHub Secrets</b><br>Go to <code>github.com/Siavashsed/kavalsia-bot</code> → Settings → Secrets → add <code>ANTHROPIC_API_KEY</code> and <code>GH_PAT</code></div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-num">2</div>
+      <div class="qs-text"><b>Trigger a test run</b><br>Go to Actions tab → "Daily Content Publisher" → Run workflow → wait ~5 min</div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-num">3</div>
+      <div class="qs-text"><b>Check a site</b><br>Visit <code>siavashsed.github.io/cryptopulse</code> - if an article appeared, the system works</div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-num">4</div>
+      <div class="qs-text"><b>Bot runs daily</b><br>Every day at 8am UTC, GitHub Actions publishes one article per site automatically. Zero maintenance.</div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-num">5</div>
+      <div class="qs-text"><b>Custom domains (later)</b><br>Buy .com domains, add CNAME to GitHub Pages, update <code>domain</code> field in network-config.json</div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-num">6</div>
+      <div class="qs-text"><b>Online access (later)</b><br>Deploy server.py to Railway.app - then access hub + dashboard from any device, anywhere</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── File Reference ── -->
+<div class="section">
+  <div class="sec-title">All Files - What Each One Does</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+    <table class="file-table">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>What it does</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="file-name">hub.html</span></td>
+          <td style="color:var(--text2)">Main UI - AI[S] Terminal, activity feed, site config, backlinks, API keys. Requires server.</td>
+          <td><span class="file-tag tag-ui">UI</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">dashboard.html</span></td>
+          <td style="color:var(--text2)">22-site control panel - status, visit links, manual post, backlink matrix. Works as file:// too.</td>
+          <td><span class="file-tag tag-ui">UI</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">megadash.html</span></td>
+          <td style="color:var(--text2)">Visual network overview with sparklines, traffic charts, site summaries.</td>
+          <td><span class="file-tag tag-ui">UI</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">editor.html</span></td>
+          <td style="color:var(--text2)">Rich article editor - write manually, push to GitHub repo.</td>
+          <td><span class="file-tag tag-ui">UI</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">start.html</span></td>
+          <td style="color:var(--text2)">This page - home screen with all tools and documentation.</td>
+          <td><span class="file-tag tag-ui">UI</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">server.py</span></td>
+          <td style="color:var(--text2)">Local web server (port 8765). Serves all HTML files, proxies Claude AI + GitHub APIs.</td>
+          <td><span class="file-tag tag-server">Server</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">bot.py</span></td>
+          <td style="color:var(--text2)">The content publisher. Runs on GitHub Actions daily - generates articles via Claude, pushes to each site repo.</td>
+          <td><span class="file-tag tag-bot">Bot</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">telegram_bot.py</span></td>
+          <td style="color:var(--text2)">Telegram bot - /ask questions, /report on network, /publish articles via chat.</td>
+          <td><span class="file-tag tag-bot">Bot</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">network-config.json</span></td>
+          <td style="color:var(--text2)">Master config - all 22 sites, personas, topics, settings. Edited via Hub or directly.</td>
+          <td><span class="file-tag tag-config">Config</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">.env</span></td>
+          <td style="color:var(--text2)">Local API keys (ANTHROPIC, PEXELS, GITHUB_TOKEN). Never committed to GitHub.</td>
+          <td><span class="file-tag tag-config">Config</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">Start Server.command</span></td>
+          <td style="color:var(--text2)">Double-click on Mac to start server.py and open browser automatically.</td>
+          <td><span class="file-tag tag-server">Server</span></td>
+        </tr>
+        <tr>
+          <td><span class="file-name">.github/workflows/</span></td>
+          <td style="color:var(--text2)"><code>daily-post.yml</code> - runs bot.py at 8am UTC. <code>weekly-ideas.yml</code> - sends Telegram ideas Monday 9am UTC.</td>
+          <td><span class="file-tag tag-bot">Bot</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── API Keys Reference ── -->
+<div class="section">
+  <div class="sec-title">API Keys - Where to Get Them</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+    <table class="file-table">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Where to get it</th>
+          <th>Cost</th>
+          <th>Required?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ANTHROPIC_API_KEY</code></td>
+          <td style="color:var(--text2)">console.anthropic.com → API Keys</td>
+          <td style="color:var(--amber)">~$15/mo</td>
+          <td style="color:var(--red);font-weight:700">Yes</td>
+        </tr>
+        <tr>
+          <td><code>GH_PAT</code></td>
+          <td style="color:var(--text2)">github.com → Settings → Developer settings → Personal access tokens → repo + workflow scope</td>
+          <td style="color:var(--green)">Free</td>
+          <td style="color:var(--red);font-weight:700">Yes</td>
+        </tr>
+        <tr>
+          <td><code>PEXELS_API_KEY</code></td>
+          <td style="color:var(--text2)">pexels.com/api - instant approval</td>
+          <td style="color:var(--green)">Free</td>
+          <td style="color:var(--text2)">Recommended</td>
+        </tr>
+        <tr>
+          <td><code>BREVO_API_KEY</code></td>
+          <td style="color:var(--text2)">brevo.com → Settings → API Keys</td>
+          <td style="color:var(--green)">Free (9k/mo)</td>
+          <td style="color:var(--text2)">Optional</td>
+        </tr>
+        <tr>
+          <td><code>TELEGRAM_BOT_TOKEN</code></td>
+          <td style="color:var(--text2)">@BotFather on Telegram → /newbot</td>
+          <td style="color:var(--green)">Free</td>
+          <td style="color:var(--text2)">Optional</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:10px;font-size:12px;color:var(--text3);padding:0 4px">
+    Add secrets to GitHub: <code>github.com/Siavashsed/kavalsia-bot</code> → Settings → Secrets and variables → Actions
+  </div>
+</div>
+
+<script>
+function checkServer() {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), 2000);
+  fetch('http://localhost:8765/api/config', {signal: ac.signal})
+    .then(() => {
+      clearTimeout(t);
+      document.getElementById('srv-dot').style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)';
+      document.getElementById('srv-label').textContent = 'Server running';
+      document.getElementById('srv-label').style.color = 'var(--green)';
+    })
+    .catch(() => {
+      clearTimeout(t);
+      document.getElementById('srv-dot').style.cssText = 'width:8px;height:8px;border-radius:50%;background:var(--text3)';
+      document.getElementById('srv-label').textContent = 'Server offline - double-click Start Server.command';
+      document.getElementById('srv-label').style.color = 'var(--text2)';
+    });
+}
+checkServer();
+setInterval(checkServer, 8000);
+</script>
+</body>
+</html>
