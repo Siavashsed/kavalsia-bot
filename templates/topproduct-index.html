@@ -168,6 +168,10 @@ img{display:block;max-width:100%}
 .art-card-img{width:100%;height:184px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a2720,#0e0e0d);position:relative;overflow:hidden}
 .art-card-img::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:24px 24px}
 .art-card-img svg{opacity:.4;position:relative;z-index:1}
+.art-card-img img.art-real-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;transition:transform .5s ease}
+.art-card:hover .art-card-img img.art-real-img{transform:scale(1.06)}
+.art-card-img.has-img::before{display:none}
+.art-card-img.has-img svg{display:none}
 .art-card-body{padding:24px;display:flex;flex-direction:column;flex:1}
 .art-card-cat{display:inline-block;font-size:10.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:12px;padding:4px 10px;background:rgba(220,38,38,.08);border-radius:999px;align-self:flex-start}
 .art-card-title{font-family:var(--display);font-size:19px;font-weight:600;line-height:1.22;margin-bottom:10px;letter-spacing:-.5px}
@@ -730,8 +734,10 @@ async function loadArticles(){
     var author=a.author?esc(a.author):'';
     var date=a.date?esc(a.date):'';
     var metaLine=author?('<b>'+author+'</b>'+(date?'<span>'+date+'</span>':'')):(date?'<b>'+date+'</b>':'<b>TopProduct Review</b>');
+    var hasImg=!!a.image;
+    var imgHtml=hasImg?'<img class="art-real-img" src="'+esc(a.image)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'; this.parentElement.classList.remove(\'has-img\');">':'';
     return '<a class="art-card" href="./'+esc(a.slug)+'/">'+
-      '<div class="art-card-img"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>'+
+      '<div class="art-card-img'+(hasImg?' has-img':'')+'">'+imgHtml+'<svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></div>'+
       '<div class="art-card-body">'+
       (a.category?'<div class="art-card-cat">'+esc(a.category)+'</div>':'')+
       '<h3 class="art-card-title">'+esc(a.title)+'</h3>'+
