@@ -3867,6 +3867,232 @@ def gen_about(s):
     )
 
 
+# ── All Articles index ───────────────────────────────────────────────────────
+def _articles_categories(stem):
+    """Return the category list for a site stem from categories.json. Falls back
+    to an empty list when the site has no entry. Safe to call repeatedly."""
+    try:
+        path = BASE / "categories.json"
+        if not path.exists():
+            return []
+        data = json.loads(path.read_text(encoding="utf-8"))
+        entry = data.get(stem) or {}
+        cats = entry.get("categories") or []
+        return [str(c) for c in cats if c]
+    except Exception:
+        return []
+
+
+def _articles_body(s):
+    """Build the body HTML (no chrome) for the All Articles page.
+    Layout: compact hero row, news-style Latest feature block (5 newest),
+    then the searchable categorized list + pager. Single fetch of articles.json
+    shared across the feature block and the list."""
+    ink     = _ink_for(s)
+    on_ink  = s.get('bg') or '#0b0b0b'
+    cats    = _articles_categories(s['id'])
+    chips   = '\n        '.join(
+        f'<button class="aa-chip" type="button" data-cat="{c}">{c}</button>'
+        for c in cats
+    )
+    fallback_img = ("https://images.unsplash.com/photo-1499750310107-5fef28a66643"
+                    "?w=600&q=80")
+
+    css = f""".aa{{max-width:1040px;margin:0 auto;padding:18px 24px 96px;font-family:inherit}}
+.aa-hero{{display:grid;grid-template-columns:1fr minmax(220px,420px) auto;gap:16px;align-items:center;min-height:56px;max-height:80px;padding:10px 0 14px;border-bottom:1px solid {s['brd']}}}
+.aa-kicker{{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:{s['primary']};white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.aa-search{{width:100%;background:{s['bg2']};border:1px solid {s['brd']};border-radius:8px;padding:9px 12px;font-size:13px;color:{ink};font-family:inherit;outline:none}}
+.aa-search:focus{{border-color:{s['primary']}}}
+.aa-count{{display:inline-block;background:{s['primary']};color:{on_ink};font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap}}
+.aa-latest{{margin:22px 0 28px}}
+.aa-latest-head{{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid {s['primary']}}}
+.aa-latest-label{{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:{s['primary']}}}
+.aa-latest-rule{{flex:1;height:1px;background:{s['brd']}}}
+.aa-latest-grid{{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:start}}
+.aa-lead{{display:grid;grid-template-columns:1fr;gap:14px;background:{s['bg2']};border:1px solid {s['brd']};border-left:3px solid {s['primary']};border-radius:10px;padding:14px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}}
+.aa-lead:hover{{transform:translateY(-1px)}}
+.aa-lead-img{{width:100%;height:240px;object-fit:cover;border-radius:7px;background:{s['surface']};display:block}}
+.aa-lead-cat{{font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:{s['primary']};margin:2px 0 6px}}
+.aa-lead-h{{font-family:{s['font_head']};font-size:clamp(20px,2.4vw,28px);font-weight:800;line-height:1.2;color:inherit;margin:0 0 8px}}
+.aa-lead-stand{{font-size:14px;line-height:1.55;color:{s['muted']};margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
+.aa-lead-meta{{font-size:11px;color:{s['muted']};letter-spacing:.4px}}
+.aa-sec-col{{display:flex;flex-direction:column;gap:10px}}
+.aa-sec{{display:grid;grid-template-columns:74px 1fr;gap:12px;padding:10px;background:{s['bg2']};border:1px solid {s['brd']};border-radius:8px;text-decoration:none;color:inherit;transition:border-color .15s}}
+.aa-sec:hover{{border-color:{s['primary']}}}
+.aa-sec-img{{width:74px;height:64px;object-fit:cover;border-radius:5px;background:{s['surface']}}}
+.aa-sec-body{{min-width:0;display:flex;flex-direction:column;justify-content:center}}
+.aa-sec-h{{font-family:{s['font_head']};font-size:13px;font-weight:700;line-height:1.3;color:inherit;margin:0 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
+.aa-sec-date{{font-size:10px;color:{s['muted']};letter-spacing:.4px}}
+.aa-controls{{display:flex;flex-direction:column;gap:10px;margin:6px 0 18px}}
+.aa-chips{{display:flex;flex-wrap:wrap;gap:8px}}
+.aa-chip{{background:{s['bg2']};border:1px solid {s['brd']};color:{s['muted']};font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:7px 14px;border-radius:999px;cursor:pointer;font-family:inherit;transition:all .15s}}
+.aa-chip:hover{{color:{ink};border-color:{s['primary']}}}
+.aa-chip.active{{background:{s['primary']};color:{on_ink};border-color:{s['primary']}}}
+.aa-meta{{font-size:12px;color:{s['muted']};margin:4px 0 14px;letter-spacing:.3px}}
+.aa-list{{display:flex;flex-direction:column;gap:14px}}
+.aa-card{{display:grid;grid-template-columns:160px 1fr;gap:18px;background:{s['bg2']};border:1px solid {s['brd']};border-radius:10px;padding:14px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}}
+.aa-card:hover{{border-color:{s['primary']};transform:translateY(-1px)}}
+.aa-thumb{{width:100%;height:110px;border-radius:7px;object-fit:cover;background:{s['surface']};display:block}}
+.aa-body{{display:flex;flex-direction:column;justify-content:center;min-width:0}}
+.aa-cat{{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:{s['primary']};margin-bottom:6px}}
+.aa-h{{font-family:{s['font_head']};font-size:17px;font-weight:700;color:inherit;margin:0 0 6px;line-height:1.3}}
+.aa-desc{{font-size:13px;line-height:1.55;color:{s['muted']};margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
+.aa-date{{font-size:11px;color:{s['muted']};letter-spacing:.4px}}
+.aa-empty{{text-align:center;padding:60px 20px;color:{s['muted']};font-size:14px;background:{s['bg2']};border:1px dashed {s['brd']};border-radius:10px}}
+.aa-pager{{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:32px}}
+.aa-pager button{{background:{s['bg2']};border:1px solid {s['brd']};color:{ink};font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:8px 16px;border-radius:999px;cursor:pointer;font-family:inherit}}
+.aa-pager button:disabled{{opacity:.4;cursor:not-allowed}}
+.aa-pager .aa-page-num{{font-size:12px;color:{s['muted']};font-weight:700}}
+@media(max-width:760px){{.aa-latest-grid{{grid-template-columns:1fr;gap:14px}}.aa-lead-img{{height:200px}}.aa-sec{{grid-template-columns:1fr 60px;gap:10px;padding:8px}}.aa-sec-img{{order:2;width:60px;height:60px}}.aa-sec-body{{order:1}}}}
+@media(max-width:640px){{.aa-hero{{grid-template-columns:1fr;max-height:140px;gap:8px;padding:8px 0 10px}}.aa-kicker{{font-size:10px;letter-spacing:1.6px}}.aa-count{{justify-self:start}}}}
+@media(max-width:560px){{.aa-card{{grid-template-columns:96px 1fr;gap:12px;padding:10px}}.aa-thumb{{height:88px}}.aa-h{{font-size:15px}}}}"""
+
+    body = f"""<main class="aa">
+  <div class="aa-hero">
+    <div class="aa-kicker">ALL ARTICLES - {s['name']}</div>
+    <input id="aa-search" class="aa-search" type="search" placeholder="Search by title..." aria-label="Search articles">
+    <span class="aa-count" id="aa-count">0 published</span>
+  </div>
+  <section class="aa-latest" id="aa-latest" style="display:none">
+    <div class="aa-latest-head">
+      <span class="aa-latest-label">Latest</span>
+      <span class="aa-latest-rule"></span>
+    </div>
+    <div class="aa-latest-grid">
+      <a class="aa-lead" id="aa-lead" href="#"></a>
+      <div class="aa-sec-col" id="aa-sec-col"></div>
+    </div>
+  </section>
+  <div class="aa-controls">
+    <div class="aa-chips" id="aa-chips">
+      <button class="aa-chip active" type="button" data-cat="__all__">All</button>
+        {chips}
+    </div>
+  </div>
+  <div class="aa-meta" id="aa-meta">Loading articles...</div>
+  <div class="aa-list" id="all-list"></div>
+  <div class="aa-pager" id="aa-pager" style="display:none">
+    <button id="aa-prev" type="button">Prev</button>
+    <span class="aa-page-num" id="aa-page-num">Page 1</span>
+    <button id="aa-next" type="button">Next</button>
+  </div>
+</main>
+<script>
+(function(){{
+  if(!document.getElementById('all-list'))return;
+  var PER_PAGE=24;
+  var FALLBACK_IMG='{fallback_img}';
+  var SITE_CAT={json.dumps(s['category'])};
+  var listEl=document.getElementById('all-list');
+  var metaEl=document.getElementById('aa-meta');
+  var countEl=document.getElementById('aa-count');
+  var pagerEl=document.getElementById('aa-pager');
+  var prevBtn=document.getElementById('aa-prev');
+  var nextBtn=document.getElementById('aa-next');
+  var pageNumEl=document.getElementById('aa-page-num');
+  var searchEl=document.getElementById('aa-search');
+  var chipsEl=document.getElementById('aa-chips');
+  var latestEl=document.getElementById('aa-latest');
+  var leadEl=document.getElementById('aa-lead');
+  var secCol=document.getElementById('aa-sec-col');
+  var all=[],activeCat='__all__',query='',page=1;
+  function escapeHtml(t){{return String(t==null?'':t).replace(/[&<>"']/g,function(c){{return({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}})[c];}});}}
+  function slugHref(p){{return './'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}}
+  function filtered(){{
+    var q=query.trim().toLowerCase();
+    return all.filter(function(p){{
+      if(activeCat!=='__all__'&&(p.category||SITE_CAT)!==activeCat)return false;
+      if(q&&String(p.title||'').toLowerCase().indexOf(q)===-1)return false;
+      return true;
+    }});
+  }}
+  function renderLatest(){{
+    if(!all.length){{latestEl.style.display='none';return;}}
+    var feat=all.slice(0,5);
+    var lead=feat[0];
+    leadEl.setAttribute('href',slugHref(lead));
+    leadEl.innerHTML='<img class="aa-lead-img" loading="lazy" alt="" src="'+escapeHtml(lead.image||FALLBACK_IMG)+'" onerror="this.onerror=null;this.src=\\''+FALLBACK_IMG+'\\'">'+
+      '<div><div class="aa-lead-cat">'+escapeHtml(lead.category||SITE_CAT)+'</div>'+
+      '<h2 class="aa-lead-h">'+escapeHtml(lead.title||'Untitled')+'</h2>'+
+      '<p class="aa-lead-stand">'+escapeHtml(lead.meta_description||'')+'</p>'+
+      '<div class="aa-lead-meta">'+escapeHtml(lead.date_iso||'')+(lead.author?' - '+escapeHtml(lead.author):'')+'</div></div>';
+    secCol.innerHTML=feat.slice(1).map(function(p){{
+      return '<a class="aa-sec" href="'+slugHref(p)+'">'+
+        '<img class="aa-sec-img" loading="lazy" alt="" src="'+escapeHtml(p.image||FALLBACK_IMG)+'" onerror="this.onerror=null;this.src=\\''+FALLBACK_IMG+'\\'">'+
+        '<div class="aa-sec-body"><h3 class="aa-sec-h">'+escapeHtml(p.title||'Untitled')+'</h3>'+
+        '<span class="aa-sec-date">'+escapeHtml(p.date_iso||'')+'</span></div></a>';
+    }}).join('');
+    latestEl.style.display='block';
+  }}
+  function render(){{
+    var arr=filtered();
+    var total=arr.length;
+    var pages=Math.max(1,Math.ceil(total/PER_PAGE));
+    if(page>pages)page=pages;
+    var start=(page-1)*PER_PAGE;
+    var slice=arr.slice(start,start+PER_PAGE);
+    if(!total){{
+      listEl.innerHTML='<div class="aa-empty">No articles match your filters.</div>';
+      pagerEl.style.display='none';
+    }} else {{
+      listEl.innerHTML=slice.map(function(p){{
+        var img=p.image||FALLBACK_IMG;
+        var cat=escapeHtml(p.category||SITE_CAT);
+        var title=escapeHtml(p.title||'Untitled');
+        var desc=escapeHtml(p.meta_description||'');
+        var date=escapeHtml(p.date_iso||'');
+        return '<a class="aa-card" href="'+slugHref(p)+'">'+
+          '<img class="aa-thumb" loading="lazy" alt="" src="'+escapeHtml(img)+'" onerror="this.onerror=null;this.src=\\''+FALLBACK_IMG+'\\'">'+
+          '<div class="aa-body"><span class="aa-cat">'+cat+'</span>'+
+          '<h3 class="aa-h">'+title+'</h3>'+
+          '<p class="aa-desc">'+desc+'</p>'+
+          '<span class="aa-date">'+date+'</span></div></a>';
+      }}).join('');
+      pagerEl.style.display=pages>1?'flex':'none';
+      pageNumEl.textContent='Page '+page+' of '+pages;
+      prevBtn.disabled=page<=1;
+      nextBtn.disabled=page>=pages;
+    }}
+    metaEl.textContent='Showing '+slice.length+' of '+all.length;
+  }}
+  function setCat(c){{activeCat=c;page=1;Array.prototype.forEach.call(chipsEl.querySelectorAll('.aa-chip'),function(b){{b.classList.toggle('active',b.getAttribute('data-cat')===c);}});render();}}
+  chipsEl.addEventListener('click',function(e){{var b=e.target.closest('.aa-chip');if(!b)return;setCat(b.getAttribute('data-cat'));}});
+  var deb;
+  searchEl.addEventListener('input',function(){{clearTimeout(deb);deb=setTimeout(function(){{query=searchEl.value;page=1;render();}},200);}});
+  prevBtn.addEventListener('click',function(){{if(page>1){{page--;render();window.scrollTo({{top:0,behavior:'smooth'}});}}}});
+  nextBtn.addEventListener('click',function(){{page++;render();window.scrollTo({{top:0,behavior:'smooth'}});}});
+  fetch('./articles.json',{{cache:'no-store'}}).then(function(r){{if(!r.ok)throw 0;return r.json();}}).then(function(data){{
+    all=Array.isArray(data)?data.slice():[];
+    all.sort(function(a,b){{return String(b.date_iso||'').localeCompare(String(a.date_iso||''));}});
+    countEl.textContent=all.length+' published';
+    if(!all.length){{
+      listEl.innerHTML='<div class="aa-empty">No articles published yet.</div>';
+      metaEl.textContent='Showing 0 of 0';
+      return;
+    }}
+    renderLatest();
+    render();
+  }}).catch(function(){{
+    countEl.textContent='0 published';
+    listEl.innerHTML='<div class="aa-empty">No articles published yet.</div>';
+    metaEl.textContent='Showing 0 of 0';
+  }});
+}})();
+</script>"""
+    return body, css
+
+
+def gen_articles_index(s):
+    """All-Articles index page wrapped in the homepage shell. Categorized chips,
+    debounced search, paginated list rendered client-side from articles.json."""
+    body, css = _articles_body(s)
+    desc = f"All articles from {s['name']}. {s['footer_desc']}"
+    return layout_shell.wrap_page(
+        s['id'], title=f"All Articles - {s['name']}",
+        description=desc, body_html=body, extra_css=css, depth=0,
+    )
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # SPORTIQ PRO   -  ESPN/The Athletic dark sports editorial
 # ─────────────────────────────────────────────────────────────────────────────
@@ -5681,6 +5907,7 @@ def save_local(only=None, sites_filter=None):
         (d / "terms.html").write_text(_meta_inject(gen_terms(s), s), encoding="utf-8")
         (d / "sms.html").write_text(_meta_inject(gen_sms(s), s), encoding="utf-8")
         (d / "meta-policy.html").write_text(_meta_inject(gen_meta_policy(s), s), encoding="utf-8")
+        (d / "articles.html").write_text(_meta_inject(gen_articles_index(s), s), encoding="utf-8")
         for fn, html in extra_pages(s):
             (d / fn).write_text(_meta_inject(html, s), encoding="utf-8")
         (d / ".nojekyll").write_text("", encoding="utf-8")
@@ -5930,6 +6157,7 @@ def push_github(token, only=None, sites_filter=None):
         ok &= gh_put(token, repo, "terms.html",        _meta_inject(gen_terms(s), s),       "Add terms and conditions")
         ok &= gh_put(token, repo, "sms.html",          _meta_inject(gen_sms(s), s),         "Add SMS compliance policy")
         ok &= gh_put(token, repo, "meta-policy.html",  _meta_inject(gen_meta_policy(s), s), "Add Meta data policy")
+        ok &= gh_put(token, repo, "articles.html",     _meta_inject(gen_articles_index(s), s), "Add all-articles index")
         for fn, html in extra_pages(s):
             ok &= gh_put(token, repo, fn, _meta_inject(html, s), f"Add {fn}")
         ok &= gh_put(token, repo, ".nojekyll",         "",               "Disable Jekyll")
