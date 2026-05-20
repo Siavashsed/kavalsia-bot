@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caliber Notes - Mechanical Watches, Decoded</title>
+<meta name="description" content="Caliber Notes is a technical notebook on mechanical watches, movements, and independent watchmakers. Quiet, measured, engineering-first writing by Henrik Voss. No sponsored placements, no PR rewrites - just the spec sheet.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#111418;
+  --surface:#181c22;
+  --card:#20252c;
+  --steel:#262c34;
+  --line:#2c333c;
+  --hairline:#373f49;
+  --brass:#cdb87a;
+  --brass-deep:#a89456;
+  --brass-soft:rgba(205,184,122,.14);
+  --text:#e8ecf2;
+  --text2:#b9c1cc;
+  --text3:#8b95a3;
+  --text4:#5f6772;
+  --serif:'EB Garamond', Georgia, serif;
+  --sans:'Inter', system-ui, -apple-system, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-variant-numeric:tabular-nums lining-nums}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;font-size:15px;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse at top right, rgba(205,184,122,.04), transparent 60%),
+    radial-gradient(ellipse at bottom left, rgba(205,184,122,.02), transparent 50%);
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+.mono{font-family:var(--mono);letter-spacing:.04em}
+.serif{font-family:var(--serif)}
+
+/* ============ HEADER: two-row utility bar + wordmark ============ */
+.util{position:fixed;top:0;left:0;right:0;background:#0c0f12;border-bottom:1px solid var(--line);z-index:100;height:34px;display:flex;align-items:center}
+.util-inner{max-width:1240px;margin:0 auto;padding:0 28px;width:100%;display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--text3)}
+.util-links{display:flex;gap:22px}
+.util-link{transition:color .25s;position:relative;padding:2px 0}
+.util-link:hover{color:var(--brass)}
+.util-link.dot::before{content:"";width:3px;height:3px;background:var(--brass);border-radius:50%;display:inline-block;vertical-align:middle;margin-right:8px}
+.util-meta{display:flex;gap:18px;align-items:center}
+.util-meta b{color:var(--text);font-weight:500}
+
+.mark-bar{position:fixed;top:34px;left:0;right:0;background:rgba(17,20,24,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:99;height:64px;display:flex;align-items:center}
+.mark-inner{max-width:1240px;margin:0 auto;padding:0 28px;width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.mark-issue{font-family:var(--mono);font-size:10.5px;color:var(--text4);letter-spacing:.18em;text-transform:uppercase}
+.wordmark{font-family:var(--serif);font-size:30px;font-weight:500;color:var(--text);letter-spacing:.01em;text-align:center;display:flex;align-items:center;gap:14px;justify-content:center}
+.wordmark .crown{width:22px;height:22px;stroke:var(--brass);fill:none;stroke-width:1.2}
+.wordmark em{font-style:italic;color:var(--brass);font-weight:400}
+.mark-cta{text-align:right;display:flex;justify-content:flex-end;gap:14px;align-items:center}
+.mark-search{font-family:var(--mono);font-size:10.5px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;border:1px solid var(--line);border-radius:1px;transition:all .25s}
+.mark-search:hover{border-color:var(--brass);color:var(--brass)}
+
+main{padding-top:98px}
+
+@media(max-width:760px){
+  .util-meta{display:none}
+  .mark-inner{grid-template-columns:1fr}
+  .mark-issue,.mark-cta{display:none}
+  .wordmark{font-size:24px}
+  .util-links{gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .util-inner{font-size:9.5px}
+}
+
+/* ============ HERO ============ */
+.hero{position:relative;padding:54px 0 80px;border-bottom:1px solid var(--line);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background-image:
+  linear-gradient(to right, rgba(205,184,122,.04) 1px, transparent 1px),
+  linear-gradient(to bottom, rgba(205,184,122,.04) 1px, transparent 1px);
+  background-size:48px 48px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:center;position:relative}
+.hero-left{position:relative}
+.kicker{font-family:var(--mono);font-size:11px;color:var(--brass);letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.kicker::before,.kicker::after{content:"";flex:0 0 28px;height:1px;background:var(--brass);opacity:.6}
+.kicker::after{flex:1 1 auto;max-width:120px}
+.hero-h1{font-family:var(--serif);font-size:clamp(40px,5.4vw,68px);font-weight:500;line-height:1.04;letter-spacing:-.012em;color:var(--text);margin-bottom:32px}
+.hero-h1 em{font-style:italic;color:var(--brass);font-weight:400}
+.hero-h1 span.under{position:relative;display:inline-block}
+.hero-h1 span.under::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:1px;background:var(--brass);opacity:.7}
+.hero-stand{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:36px}
+.hero-stand p{font-size:14.5px;color:var(--text2);line-height:1.65}
+.hero-stand p::first-letter{font-family:var(--serif);font-size:34px;float:left;line-height:.9;margin:4px 8px 0 0;color:var(--brass);font-weight:500}
+.hero-meta{display:flex;gap:32px;padding-top:24px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase}
+.hero-meta b{color:var(--text);font-weight:500;display:block;font-size:14px;letter-spacing:0;text-transform:none;font-family:var(--serif);margin-top:4px}
+
+/* HERO RIGHT: SVG exploded diagram */
+.diagram{position:relative;aspect-ratio:1/1;background:linear-gradient(135deg,#1a1f26 0%,#15191f 100%);border:1px solid var(--line);padding:24px}
+.diagram::before{content:"";position:absolute;inset:8px;border:1px dashed var(--hairline);pointer-events:none}
+.diagram-tag{position:absolute;top:18px;left:18px;font-family:var(--mono);font-size:9.5px;color:var(--text4);letter-spacing:.18em;text-transform:uppercase;background:#0c0f12;padding:4px 8px;border:1px solid var(--line)}
+.diagram-tag.r{left:auto;right:18px;color:var(--brass);border-color:var(--brass-deep)}
+.diagram svg{width:100%;height:100%;display:block}
+.spin{transform-origin:center;animation:spin 28s linear infinite}
+.spin-rev{transform-origin:center;animation:spin 42s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion: reduce){.spin,.spin-rev{animation:none}}
+
+@media(max-width:920px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .hero-stand{grid-template-columns:1fr;gap:18px}
+  .hero-meta{flex-wrap:wrap;gap:20px}
+  .diagram{max-width:420px;margin:0 auto}
+}
+
+/* ============ MOVEMENTS THIS QUARTER ============ */
+.section{padding:88px 0;border-bottom:1px solid var(--line)}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;gap:28px;flex-wrap:wrap}
+.sec-label{font-family:var(--mono);font-size:10.5px;color:var(--brass);letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-label::before{content:"";width:18px;height:1px;background:var(--brass)}
+.sec-title{font-family:var(--serif);font-size:clamp(30px,3.6vw,44px);font-weight:500;line-height:1.1;color:var(--text);letter-spacing:-.005em;max-width:680px}
+.sec-title em{font-style:italic;color:var(--brass);font-weight:400}
+.sec-sub{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;text-align:right;line-height:1.8}
+.sec-sub b{color:var(--text);font-weight:500}
+
+.mov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.mov{position:relative;background:var(--card);border:1px solid var(--hairline);padding:26px 22px 22px;transition:all .35s cubic-bezier(.2,.7,.2,1);overflow:hidden}
+.mov::before,.mov::after{content:"";position:absolute;background:var(--brass);transition:all .4s ease}
+.mov::before{top:0;left:0;width:0;height:1px}
+.mov::after{bottom:0;right:0;width:0;height:1px}
+.mov:hover::before,.mov:hover::after{width:100%}
+.mov:hover{border-color:var(--brass-deep);transform:translateY(-2px)}
+.mov-cal{font-family:var(--serif);font-size:22px;color:var(--text);font-weight:500;letter-spacing:.005em;margin-bottom:4px}
+.mov-mk{font-family:var(--mono);font-size:10.5px;color:var(--text4);letter-spacing:.16em;text-transform:uppercase;margin-bottom:20px}
+.mov-specs{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:18px}
+.spec{display:flex;flex-direction:column;gap:2px}
+.spec-k{font-family:var(--mono);font-size:9.5px;color:var(--text4);letter-spacing:.14em;text-transform:uppercase}
+.spec-v{font-family:var(--mono);font-size:13px;color:var(--brass);font-weight:500}
+.mov-note{font-size:13.5px;color:var(--text2);line-height:1.6;margin-bottom:18px;font-family:var(--serif);font-style:italic}
+.mov-link{font-family:var(--mono);font-size:11px;color:var(--text);letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;transition:color .25s}
+.mov-link:hover{color:var(--brass)}
+.mov-link span{transition:transform .3s}
+.mov-link:hover span{transform:translateX(4px);color:var(--brass)}
+
+@media(max-width:1100px){.mov-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.mov-grid{grid-template-columns:1fr}}
+
+/* ============ ON THE BENCH ============ */
+.bench{background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%)}
+.log{border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+.log-row{display:grid;grid-template-columns:90px 130px 1fr auto;gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px dashed var(--line);transition:background .25s, padding .25s}
+.log-row:last-child{border-bottom:none}
+.log-row:hover{background:rgba(205,184,122,.03);padding-left:14px}
+.log-ts{font-family:var(--mono);font-size:12px;color:var(--brass);letter-spacing:.06em;font-weight:500}
+.log-sn{font-family:var(--mono);font-size:11px;color:var(--text4);letter-spacing:.12em;text-transform:uppercase}
+.log-title{font-family:var(--serif);font-size:17px;color:var(--text);line-height:1.4}
+.log-title em{color:var(--brass);font-style:italic}
+.log-tag{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--line);white-space:nowrap}
+
+@media(max-width:760px){
+  .log-row{grid-template-columns:1fr;gap:6px;padding:18px 0}
+  .log-tag{justify-self:start}
+}
+
+/* ============ INDEPENDENTS ============ */
+.ind-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.ind{background:var(--card);border:1px solid var(--hairline);padding:22px 16px;text-align:center;transition:all .35s;position:relative;overflow:hidden}
+.ind:hover{border-color:var(--brass-deep);background:var(--steel);transform:translateY(-3px)}
+.ind:hover .ind-crown{stroke:var(--brass);transform:translateY(-2px)}
+.ind-crown{width:18px;height:18px;stroke:var(--brass-deep);fill:none;stroke-width:1.4;margin:0 auto 10px;display:block;transition:all .35s}
+.ind-portrait{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#2a3038,#1a1f26);border:1px solid var(--hairline);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;color:var(--brass);font-style:italic;font-weight:500}
+.ind-name{font-family:var(--serif);font-size:15px;color:var(--text);font-weight:500;line-height:1.25;margin-bottom:4px}
+.ind-loc{font-family:var(--mono);font-size:9.5px;color:var(--text4);letter-spacing:.14em;text-transform:uppercase}
+
+@media(max-width:900px){.ind-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.ind-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ============ COMPLICATIONS COMPARED ============ */
+.tbl-wrap{border:1px solid var(--hairline);background:var(--card);overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+.tbl thead th{background:#0c0f12;color:var(--brass);font-weight:500;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;padding:16px 18px;text-align:left;border-bottom:1px solid var(--brass-deep)}
+.tbl tbody td{padding:16px 18px;border-bottom:1px solid var(--line);color:var(--text2);vertical-align:middle}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover{background:rgba(205,184,122,.03)}
+.tbl tbody td:first-child{color:var(--text);font-family:var(--serif);font-size:15.5px;font-weight:500;font-style:italic}
+.tbl .yes{color:var(--brass);font-weight:500}
+.tbl .no{color:var(--text4)}
+
+.tbl-stack{display:none}
+.t-card{background:var(--card);border:1px solid var(--hairline);padding:18px;margin-bottom:14px}
+.t-card-h{font-family:var(--serif);font-size:18px;color:var(--text);font-style:italic;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.t-card-row{display:flex;justify-content:space-between;padding:6px 0;font-family:var(--mono);font-size:12px}
+.t-card-k{color:var(--text4);text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+.t-card-v{color:var(--brass)}
+@media(max-width:760px){.tbl-wrap{display:none}.tbl-stack{display:block}}
+
+/* ============ ARTICLE FEED ============ */
+.feed{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.brief{background:var(--card);border:1px solid var(--hairline);overflow:hidden;display:flex;flex-direction:column;transition:all .4s cubic-bezier(.2,.7,.2,1);position:relative}
+.brief:hover{transform:translateY(-4px);border-color:var(--brass-deep)}
+.brief-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0c0f12}
+.brief-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1);filter:saturate(.85) contrast(1.05)}
+.brief:hover .brief-img img{transform:scale(1.06)}
+.brief-num{position:absolute;top:14px;left:14px;font-family:var(--serif);font-size:34px;color:var(--brass);font-style:italic;font-weight:500;text-shadow:0 2px 8px rgba(0,0,0,.6);line-height:1;z-index:2}
+.brief-num small{font-family:var(--mono);font-size:9.5px;font-style:normal;color:var(--brass);letter-spacing:.18em;display:block;margin-bottom:2px;text-shadow:none}
+.brief-body{padding:22px 22px 24px;flex:1;display:flex;flex-direction:column;gap:14px}
+.brief-meta{font-family:var(--mono);font-size:10px;color:var(--text4);letter-spacing:.16em;text-transform:uppercase;display:flex;gap:10px}
+.brief-meta b{color:var(--brass);font-weight:500}
+.brief-h{font-family:var(--serif);font-size:21px;color:var(--text);line-height:1.3;font-weight:500;letter-spacing:-.003em;flex:1}
+.brief-read{font-family:var(--mono);font-size:10.5px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;padding-top:14px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.brief-read span{color:var(--brass)}
+
+.feed-empty{padding:80px 32px;text-align:center;border:1px dashed var(--hairline);background:var(--card)}
+.feed-empty-h{font-family:var(--serif);font-size:24px;color:var(--text);font-style:italic;margin-bottom:8px}
+.feed-empty-p{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.14em;text-transform:uppercase}
+
+@media(max-width:1000px){.feed-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.feed-grid{grid-template-columns:1fr}}
+
+/* ============ AUTHOR / CREDENTIALS ============ */
+.author{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:start;padding:48px;background:var(--card);border:1px solid var(--hairline);position:relative}
+.author::before{content:"";position:absolute;top:14px;left:14px;right:14px;bottom:14px;border:1px solid var(--hairline);pointer-events:none}
+.author-portrait{position:relative;z-index:2;aspect-ratio:3/4;background:linear-gradient(160deg,#252b34,#15191f);border:1px solid var(--brass-deep);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:80px;color:var(--brass);font-style:italic;font-weight:500}
+.author-portrait::after{content:"H.V.";position:absolute;bottom:14px;left:14px;font-family:var(--mono);font-size:10px;color:var(--text4);letter-spacing:.18em;font-style:normal}
+.author-body{position:relative;z-index:2}
+.author-name{font-family:var(--serif);font-size:36px;font-weight:500;color:var(--text);margin-bottom:6px}
+.author-name em{font-style:italic;color:var(--brass)}
+.author-role{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.18em;text-transform:uppercase;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.author-bio{font-family:var(--serif);font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:24px}
+.author-bio em{color:var(--brass);font-style:italic}
+.creds{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 28px;font-family:var(--mono);font-size:12px}
+.cred{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
+.cred-k{color:var(--text4);text-transform:uppercase;letter-spacing:.12em;font-size:10px}
+.cred-v{color:var(--text);font-weight:500}
+
+@media(max-width:780px){
+  .author{grid-template-columns:1fr;padding:28px;gap:28px}
+  .author-portrait{max-width:200px;margin:0 auto}
+  .author-name{font-size:28px;text-align:center}
+  .author-role{text-align:center}
+  .creds{grid-template-columns:1fr}
+}
+
+/* ============ FAQ / SERVICE INTERVAL ============ */
+.faq-wrap{max-width:840px;margin:0 auto}
+.faq{border-top:1px solid var(--hairline)}
+.faq-item{border-bottom:1px solid var(--hairline)}
+.faq-q{padding:24px 0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;transition:color .25s;list-style:none}
+.faq-q::-webkit-details-marker{display:none}
+.faq-q:hover{color:var(--brass)}
+.faq-q-l{display:flex;gap:18px;align-items:baseline;flex:1}
+.faq-num{font-family:var(--mono);font-size:11px;color:var(--brass);letter-spacing:.16em;flex:0 0 auto}
+.faq-h{font-family:var(--serif);font-size:19px;color:var(--text);font-weight:500;line-height:1.35}
+.faq-tog{width:22px;height:22px;border:1px solid var(--hairline);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:14px;color:var(--brass);transition:all .3s;flex:0 0 auto}
+.faq-item[open] .faq-tog{transform:rotate(45deg);border-color:var(--brass)}
+.faq-a{padding:0 0 26px 56px;font-family:var(--serif);font-size:16px;color:var(--text2);line-height:1.75}
+.faq-a em{color:var(--brass);font-style:italic}
+.faq-a code{font-family:var(--mono);font-size:13px;color:var(--brass);background:rgba(205,184,122,.06);padding:1px 6px;border:1px solid var(--brass-soft)}
+
+@media(max-width:600px){.faq-a{padding-left:0}}
+
+/* ============ NEWSLETTER / SERVICE BRIEF ============ */
+.sub{background:linear-gradient(160deg,#1a1f26 0%,#13171c 100%);border:1px solid var(--hairline);padding:64px 48px;text-align:center;position:relative;overflow:hidden}
+.sub::before{content:"";position:absolute;inset:14px;border:1px solid var(--brass-deep);opacity:.4;pointer-events:none}
+.sub-stamp{position:absolute;top:24px;right:24px;font-family:var(--mono);font-size:9.5px;color:var(--brass-deep);letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--brass-deep);padding:4px 8px;opacity:.7}
+.sub-k{font-family:var(--mono);font-size:11px;color:var(--brass);letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}
+.sub-h{font-family:var(--serif);font-size:clamp(30px,3.6vw,42px);font-weight:500;color:var(--text);line-height:1.15;margin-bottom:16px;letter-spacing:-.005em}
+.sub-h em{font-style:italic;color:var(--brass)}
+.sub-p{font-family:var(--serif);font-size:16px;color:var(--text2);max-width:560px;margin:0 auto 32px;line-height:1.65}
+.sub-form{display:flex;max-width:480px;margin:0 auto;border:1px solid var(--hairline);background:#0c0f12;position:relative;z-index:2}
+.sub-input{flex:1;background:transparent;border:none;outline:none;padding:16px 18px;color:var(--text);font-family:var(--mono);font-size:13px;letter-spacing:.04em}
+.sub-input::placeholder{color:var(--text4);text-transform:uppercase;font-size:11px;letter-spacing:.16em}
+.sub-btn{background:var(--brass);color:#0c0f12;border:none;padding:0 26px;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background .25s}
+.sub-btn:hover{background:#dec88e}
+.sub-fine{font-family:var(--mono);font-size:10px;color:var(--text4);letter-spacing:.14em;text-transform:uppercase;margin-top:18px}
+
+@media(max-width:600px){.sub{padding:44px 24px}.sub-form{flex-direction:column}.sub-btn{padding:14px}}
+
+/* ============ FOOTER: serial plate ============ */
+.foot{background:#0a0d10;border-top:1px solid var(--brass-deep);padding:72px 0 36px;position:relative}
+.foot::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--brass),transparent)}
+.foot-plate{border:1px solid var(--hairline);padding:36px;position:relative;background:#0c1014}
+.foot-stamp{position:absolute;top:-12px;left:36px;background:#0a0d10;padding:0 14px;font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:.22em;text-transform:uppercase}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot-mark{font-family:var(--serif);font-size:24px;color:var(--text);font-weight:500;margin-bottom:14px}
+.foot-mark em{color:var(--brass);font-style:italic}
+.foot-tag{font-family:var(--serif);font-size:14px;color:var(--text3);line-height:1.6;font-style:italic;margin-bottom:18px;max-width:280px}
+.foot-serial{font-family:var(--mono);font-size:10px;color:var(--text4);letter-spacing:.14em;text-transform:uppercase;line-height:1.9}
+.foot-serial b{color:var(--brass);font-weight:500}
+.foot-col h4{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.foot-col ul{list-style:none}
+.foot-col li{margin-bottom:10px}
+.foot-col a{font-family:var(--serif);font-size:14.5px;color:var(--text2);transition:color .25s}
+.foot-col a:hover{color:var(--brass)}
+.foot-bot{margin-top:32px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-family:var(--mono);font-size:10px;color:var(--text4);letter-spacing:.14em;text-transform:uppercase}
+.foot-bot b{color:var(--brass);font-weight:500}
+
+@media(max-width:780px){.foot-grid{grid-template-columns:1fr 1fr;gap:32px}}
+@media(max-width:480px){.foot-grid{grid-template-columns:1fr}.foot-plate{padding:28px 20px}.foot-bot{flex-direction:column;align-items:flex-start}}
+
+/* ============ SCROLL REVEAL ============ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#cdb87a-->
+<!--SHELL:HEADER-->
+
+<!-- UTILITY BAR -->
+<div class="util">
+  <div class="util-inner">
+    <div class="util-links">
+      <a class="util-link dot" href="#movements">Specs</a>
+      <a class="util-link" href="#movements">Movements</a>
+      <a class="util-link" href="#independents">Indies</a>
+      <a class="util-link" href="#compare">Buying</a>
+      <a class="util-link" href="#author">About</a>
+    </div>
+    <div class="util-meta">
+      <span>Issue <b>014</b></span>
+      <span>Geneva <b>+02:00</b></span>
+      <span><b id="util-cnt">--</b> Briefs</span>
+    </div>
+  </div>
+</div>
+
+<!-- WORDMARK BAR -->
+<div class="mark-bar">
+  <div class="mark-inner">
+    <div class="mark-issue">Reference 014 - Vol II</div>
+    <a class="wordmark" href="./">
+      <svg class="crown" viewBox="0 0 24 24"><path d="M3 8l3 6h12l3-6-4 2-3-5-2 5-2-5-3 5z"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      Caliber <em>Notes</em>
+    </a>
+    <div class="mark-cta">
+      <a class="mark-search" href="#subscribe">Service Brief</a>
+    </div>
+  </div>
+</div>
+<!--/SHELL:HEADER-->
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <div class="kicker">Ref 014 - May 20 2026</div>
+        <h1 class="hero-h1">A <em>quieter</em> notebook on the things <span class="under">that tick.</span></h1>
+        <div class="hero-stand">
+          <p>Most watch writing today is a press release with a byline. Caliber Notes is what is left when you strip the campaign copy out: the caliber, the geometry, the finishing, the failure modes, and what the thing actually costs to own.</p>
+          <p>Written from a small bench in Copenhagen by a watchmaker who has serviced enough movements to know which marketing claims hold up under a loupe and which dissolve the moment you lift the case-back.</p>
+        </div>
+        <div class="hero-meta">
+          <div><span>Editor</span><b>Henrik Voss</b></div>
+          <div><span>Established</span><b>2021</b></div>
+          <div><span>Briefs published</span><b id="hero-cnt">214</b></div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="diagram">
+          <span class="diagram-tag">Plate Ø 32mm</span>
+          <span class="diagram-tag r">26 jewels</span>
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="brassG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cdb87a" stop-opacity=".18"/><stop offset="100%" stop-color="#cdb87a" stop-opacity="0"/></radialGradient>
+              <pattern id="hatch" patternUnits="userSpaceOnUse" width="4" height="4" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#cdb87a" stroke-width=".4" opacity=".35"/></pattern>
+            </defs>
+
+            <!-- Main plate -->
+            <circle cx="200" cy="200" r="170" fill="url(#brassG)" stroke="#cdb87a" stroke-width=".6" opacity=".7"/>
+            <circle cx="200" cy="200" r="160" fill="none" stroke="#373f49" stroke-width=".5" stroke-dasharray="2 3"/>
+
+            <!-- Outer ring measurement -->
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#cdb87a" stroke-width=".4" opacity=".5"/>
+            <g font-family="JetBrains Mono, monospace" font-size="8" fill="#8b95a3" letter-spacing="1">
+              <text x="200" y="14" text-anchor="middle">12</text>
+              <text x="392" y="204" text-anchor="middle">3</text>
+              <text x="200" y="398" text-anchor="middle">6</text>
+              <text x="8" y="204" text-anchor="middle">9</text>
+            </g>
+
+            <!-- Hour markers -->
+            <g stroke="#cdb87a" stroke-width="1" opacity=".7">
+              <line x1="200" y1="25" x2="200" y2="40"/>
+              <line x1="375" y1="200" x2="360" y2="200"/>
+              <line x1="200" y1="375" x2="200" y2="360"/>
+              <line x1="25" y1="200" x2="40" y2="200"/>
+            </g>
+
+            <!-- Bridge silhouette -->
+            <path d="M 90 200 Q 90 130 160 120 L 240 120 Q 310 130 310 200" fill="#1a1f26" stroke="#cdb87a" stroke-width=".7" opacity=".85"/>
+            <path d="M 90 200 Q 90 130 160 120 L 240 120 Q 310 130 310 200" fill="url(#hatch)"/>
+
+            <!-- Lower bridge -->
+            <path d="M 130 260 L 270 260 L 280 300 L 120 300 Z" fill="#1a1f26" stroke="#cdb87a" stroke-width=".6" opacity=".75"/>
+
+            <!-- Gear train -->
+            <g class="spin" style="transform-origin:140px 200px">
+              <circle cx="140" cy="200" r="28" fill="none" stroke="#cdb87a" stroke-width=".8"/>
+              <g stroke="#cdb87a" stroke-width=".7">
+                <line x1="140" y1="172" x2="140" y2="166"/>
+                <line x1="140" y1="234" x2="140" y2="228"/>
+                <line x1="112" y1="200" x2="106" y2="200"/>
+                <line x1="174" y1="200" x2="168" y2="200"/>
+                <line x1="120" y1="180" x2="116" y2="176"/>
+                <line x1="160" y1="220" x2="164" y2="224"/>
+                <line x1="120" y1="220" x2="116" y2="224"/>
+                <line x1="160" y1="180" x2="164" y2="176"/>
+              </g>
+              <circle cx="140" cy="200" r="4" fill="#cdb87a"/>
+            </g>
+
+            <!-- Second gear -->
+            <g class="spin-rev" style="transform-origin:240px 170px">
+              <circle cx="240" cy="170" r="20" fill="none" stroke="#cdb87a" stroke-width=".7"/>
+              <g stroke="#cdb87a" stroke-width=".6">
+                <line x1="240" y1="150" x2="240" y2="146"/>
+                <line x1="240" y1="190" x2="240" y2="194"/>
+                <line x1="220" y1="170" x2="216" y2="170"/>
+                <line x1="260" y1="170" x2="264" y2="170"/>
+              </g>
+              <circle cx="240" cy="170" r="3" fill="#cdb87a" opacity=".7"/>
+            </g>
+
+            <!-- Balance wheel -->
+            <g class="spin" style="transform-origin:280px 240px">
+              <circle cx="280" cy="240" r="34" fill="none" stroke="#cdb87a" stroke-width=".9"/>
+              <circle cx="280" cy="240" r="26" fill="none" stroke="#cdb87a" stroke-width=".4" opacity=".5"/>
+              <line x1="246" y1="240" x2="314" y2="240" stroke="#cdb87a" stroke-width=".7"/>
+              <line x1="280" y1="206" x2="280" y2="274" stroke="#cdb87a" stroke-width=".7"/>
+              <circle cx="280" cy="240" r="3" fill="#cdb87a"/>
+            </g>
+
+            <!-- Jewel dots -->
+            <g fill="#cdb87a">
+              <circle cx="160" cy="140" r="3" opacity=".9"/>
+              <circle cx="240" cy="140" r="3" opacity=".9"/>
+              <circle cx="180" cy="290" r="3" opacity=".9"/>
+              <circle cx="220" cy="290" r="3" opacity=".9"/>
+              <circle cx="120" cy="200" r="2" opacity=".7"/>
+            </g>
+
+            <!-- Dimension callouts -->
+            <g stroke="#cdb87a" stroke-width=".4" opacity=".7" fill="none">
+              <line x1="280" y1="240" x2="360" y2="320"/>
+              <line x1="140" y1="200" x2="60" y2="120"/>
+              <line x1="200" y1="120" x2="200" y2="60"/>
+            </g>
+            <g font-family="JetBrains Mono, monospace" font-size="7.5" fill="#cdb87a" letter-spacing=".5">
+              <text x="362" y="332">BAL. 28800 vph</text>
+              <text x="22" y="116">MAINPLATE</text>
+              <text x="178" y="56">BRIDGE 04</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MOVEMENTS THIS QUARTER ============ -->
+<section class="section" id="movements">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="sec-label">Index 02 - Q2 2026</div>
+        <h2 class="sec-title">Movements <em>this quarter.</em></h2>
+      </div>
+      <div class="sec-sub">Four calibers on the bench<br><b>Tested over 42 days</b></div>
+    </div>
+
+    <div class="mov-grid">
+      <article class="mov reveal">
+        <div class="mov-cal">Cal. 3861</div>
+        <div class="mov-mk">Omega - Co-Axial</div>
+        <div class="mov-specs">
+          <div class="spec"><span class="spec-k">Beat</span><span class="spec-v">25200 vph</span></div>
+          <div class="spec"><span class="spec-k">Jewels</span><span class="spec-v">26</span></div>
+          <div class="spec"><span class="spec-k">Reserve</span><span class="spec-v">50 h</span></div>
+          <div class="spec"><span class="spec-k">Cert.</span><span class="spec-v">METAS</span></div>
+        </div>
+        <p class="mov-note">A workhorse with surprisingly fine Geneva striping under the loupe. The free-sprung balance behaves.</p>
+        <a class="mov-link" href="#feed">Read brief <span>&rarr;</span></a>
+      </article>
+
+      <article class="mov reveal">
+        <div class="mov-cal">P.3000</div>
+        <div class="mov-mk">Panerai - Manual</div>
+        <div class="mov-specs">
+          <div class="spec"><span class="spec-k">Beat</span><span class="spec-v">21600 vph</span></div>
+          <div class="spec"><span class="spec-k">Jewels</span><span class="spec-v">21</span></div>
+          <div class="spec"><span class="spec-k">Reserve</span><span class="spec-v">72 h</span></div>
+          <div class="spec"><span class="spec-k">Diameter</span><span class="spec-v">16.5 lig.</span></div>
+        </div>
+        <p class="mov-note">Twin barrels, generous bridges, honest finishing. Not chasing the Lange crowd and better for it.</p>
+        <a class="mov-link" href="#feed">Read brief <span>&rarr;</span></a>
+      </article>
+
+      <article class="mov reveal">
+        <div class="mov-cal">L.121.1</div>
+        <div class="mov-mk">A. Lange &amp; Sohne</div>
+        <div class="mov-specs">
+          <div class="spec"><span class="spec-k">Beat</span><span class="spec-v">21600 vph</span></div>
+          <div class="spec"><span class="spec-k">Jewels</span><span class="spec-v">30</span></div>
+          <div class="spec"><span class="spec-k">Reserve</span><span class="spec-v">72 h</span></div>
+          <div class="spec"><span class="spec-k">Bridges</span><span class="spec-v">Untreated 3/4</span></div>
+        </div>
+        <p class="mov-note">The reference for hand-finishing in 2026. Every black-polished bevel earns its keep.</p>
+        <a class="mov-link" href="#feed">Read brief <span>&rarr;</span></a>
+      </article>
+
+      <article class="mov reveal">
+        <div class="mov-cal">Cal. 7140</div>
+        <div class="mov-mk">Voutilainen - In-House</div>
+        <div class="mov-specs">
+          <div class="spec"><span class="spec-k">Beat</span><span class="spec-v">18000 vph</span></div>
+          <div class="spec"><span class="spec-k">Jewels</span><span class="spec-v">26</span></div>
+          <div class="spec"><span class="spec-k">Reserve</span><span class="spec-v">65 h</span></div>
+          <div class="spec"><span class="spec-k">Escapement</span><span class="spec-v">Direct impulse</span></div>
+        </div>
+        <p class="mov-note">The argument for paying 6 figures for a watch, made in metal. Quietly devastating finishing.</p>
+        <a class="mov-link" href="#feed">Read brief <span>&rarr;</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ON THE BENCH ============ -->
+<section class="section bench" id="bench">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="sec-label">Workshop Log - Live</div>
+        <h2 class="sec-title">On the <em>bench.</em></h2>
+      </div>
+      <div class="sec-sub">Cph. workshop<br><b>Last 30 days</b></div>
+    </div>
+
+    <div class="log reveal">
+      <div class="log-row">
+        <span class="log-ts">23.04</span>
+        <span class="log-sn">Serial 0142</span>
+        <span class="log-title"><em>Naoya Hida &amp; Co. NH Type 1B</em> - notes on the German silver case-back finish and why it should never be polished.</span>
+        <span class="log-tag">Indies</span>
+      </div>
+      <div class="log-row">
+        <span class="log-ts">20.04</span>
+        <span class="log-sn">Serial 0141</span>
+        <span class="log-title"><em>Lange Datograph Up/Down</em> - column wheel chrono pulled apart, every chamfer accounted for.</span>
+        <span class="log-tag">Chrono</span>
+      </div>
+      <div class="log-row">
+        <span class="log-ts">14.04</span>
+        <span class="log-sn">Serial 0140</span>
+        <span class="log-title"><em>Grand Seiko 9SA5</em> - dual impulse escapement after 18 months on the wrist. Amplitude held at 312.</span>
+        <span class="log-tag">Long-Term</span>
+      </div>
+      <div class="log-row">
+        <span class="log-ts">09.04</span>
+        <span class="log-sn">Serial 0139</span>
+        <span class="log-title"><em>F.P. Journe Chronometre Souverain</em> - on the rose gold bridges and why brass would have been honest.</span>
+        <span class="log-tag">Critique</span>
+      </div>
+      <div class="log-row">
+        <span class="log-ts">03.04</span>
+        <span class="log-sn">Serial 0138</span>
+        <span class="log-title"><em>Rolex 3235</em> - service interval reality vs. marketing claims, with timing-machine traces.</span>
+        <span class="log-tag">Service</span>
+      </div>
+      <div class="log-row">
+        <span class="log-ts">28.03</span>
+        <span class="log-sn">Serial 0137</span>
+        <span class="log-title"><em>Kari Voutilainen Vingt-8</em> - the only watch I have refused to insure for less than its purchase price.</span>
+        <span class="log-tag">Indies</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INDEPENDENTS ============ -->
+<section class="section" id="independents">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="sec-label">Names to Know</div>
+        <h2 class="sec-title">Independents <em>watch.</em></h2>
+      </div>
+      <div class="sec-sub">Bench-verified makers<br><b>Updated quarterly</b></div>
+    </div>
+
+    <div class="ind-grid">
+      <a class="ind reveal" href="#feed">
+        <svg class="ind-crown" viewBox="0 0 24 24"><path d="M3 8l3 6h12l3-6-4 2-3-5-2 5-2-5-3 5z"/><line x1="5" y1="18" x2="19" y2="18"/></svg>
+        <div class="ind-portrait">KV</div>
+        <div class="ind-name">Kari Voutilainen</div>
+        <div class="ind-loc">Motiers - CH</div>
+      </a>
+      <a class="ind reveal" href="#feed">
+        <svg class="ind-crown" viewBox="0 0 24 24"><path d="M3 8l3 6h12l3-6-4 2-3-5-2 5-2-5-3 5z"/><line x1="5" y1="18" x2="19" y2="18"/></svg>
+        <div class="ind-portrait">FJ</div>
+        <div class="ind-name">F.P. Journe</div>
+        <div class="ind-loc">Geneve - CH</div>
+      </a>
+      <a class="ind reveal" href="#feed">
+        <svg class="ind-crown" viewBox="0 0 24 24"><path d="M3 8l3 6h12l3-6-4 2-3-5-2 5-2-5-3 5z"/><line x1="5" y1="18" x2="19" y2="18"/></svg>
+        <div class="ind-portrait">NH</div>
+        <div class="ind-name">Naoya Hida</div>
+        <div class="ind-loc">Tokyo - JP</div>
+      </a>
+      <a class="ind reveal" href="#feed">
+        <svg class="ind-crown" viewBox="0 0 24 24"><path d="M3 8l3 6h12l3-6-4 2-3-5-2 5-2-5-3 5z"/><line x1="5" y1="18" x2="19" y2="18"/></svg>
+        <div class="ind-portrait">PD</div>
+        <div class="ind-name">Philippe Dufour</div>
+        <div class="ind-loc">Le Solliat - CH</div>
+      </a>
+      <a class="ind reveal" href="#feed">
+        <svg class="ind-crown" viewBox="0 0 24 24"><path d="M3 8l3 6h12l3-6-4 2-3-5-2 5-2-5-3 5z"/><line x1="5" y1="18" x2="19" y2="18"/></svg>
+        <div class="ind-portrait">RS</div>
+        <div class="ind-name">Romain Gauthier</div>
+        <div class="ind-loc">Le Sentier - CH</div>
+      </a>
+      <a class="ind reveal" href="#feed">
+        <svg class="ind-crown" viewBox="0 0 24 24"><path d="M3 8l3 6h12l3-6-4 2-3-5-2 5-2-5-3 5z"/><line x1="5" y1="18" x2="19" y2="18"/></svg>
+        <div class="ind-portrait">RA</div>
+        <div class="ind-name">Rexhep Rexhepi</div>
+        <div class="ind-loc">Geneve - CH</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPLICATIONS COMPARED ============ -->
+<section class="section" id="compare">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="sec-label">Reference Table 04</div>
+        <h2 class="sec-title">Complications <em>compared.</em></h2>
+      </div>
+      <div class="sec-sub">Eight calibers - same row<br><b>Like for like</b></div>
+    </div>
+
+    <div class="tbl-wrap reveal">
+      <table class="tbl">
+        <thead>
+          <tr><th>Caliber</th><th>Beat (vph)</th><th>Reserve</th><th>Date</th><th>Chrono</th><th>Year</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Lange L951.6</td><td>18000</td><td>60 h</td><td class="yes">Yes</td><td class="yes">Flyback</td><td>2018</td></tr>
+          <tr><td>Patek 29-535 PS</td><td>28800</td><td>65 h</td><td class="no">No</td><td class="yes">Column</td><td>2013</td></tr>
+          <tr><td>Rolex 4131</td><td>28800</td><td>72 h</td><td class="no">No</td><td class="yes">Column</td><td>2023</td></tr>
+          <tr><td>Omega 3861</td><td>25200</td><td>50 h</td><td class="no">No</td><td class="yes">Cam</td><td>2019</td></tr>
+          <tr><td>Zenith El Primero 3600</td><td>36000</td><td>60 h</td><td class="yes">Yes</td><td class="yes">Column</td><td>2021</td></tr>
+          <tr><td>Voutilainen 7140</td><td>18000</td><td>65 h</td><td class="yes">Yes</td><td class="no">No</td><td>2020</td></tr>
+          <tr><td>Journe Chronometre</td><td>21600</td><td>56 h</td><td class="no">No</td><td class="no">No</td><td>2005</td></tr>
+          <tr><td>Grand Seiko 9SA5</td><td>36000</td><td>80 h</td><td class="yes">Yes</td><td class="no">No</td><td>2020</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile stacked -->
+    <div class="tbl-stack reveal">
+      <div class="t-card"><div class="t-card-h">Lange L951.6</div>
+        <div class="t-card-row"><span class="t-card-k">Beat</span><span class="t-card-v">18000 vph</span></div>
+        <div class="t-card-row"><span class="t-card-k">Reserve</span><span class="t-card-v">60 h</span></div>
+        <div class="t-card-row"><span class="t-card-k">Chrono</span><span class="t-card-v">Flyback</span></div>
+      </div>
+      <div class="t-card"><div class="t-card-h">Patek 29-535 PS</div>
+        <div class="t-card-row"><span class="t-card-k">Beat</span><span class="t-card-v">28800 vph</span></div>
+        <div class="t-card-row"><span class="t-card-k">Reserve</span><span class="t-card-v">65 h</span></div>
+        <div class="t-card-row"><span class="t-card-k">Chrono</span><span class="t-card-v">Column</span></div>
+      </div>
+      <div class="t-card"><div class="t-card-h">Rolex 4131</div>
+        <div class="t-card-row"><span class="t-card-k">Beat</span><span class="t-card-v">28800 vph</span></div>
+        <div class="t-card-row"><span class="t-card-k">Reserve</span><span class="t-card-v">72 h</span></div>
+        <div class="t-card-row"><span class="t-card-k">Chrono</span><span class="t-card-v">Column</span></div>
+      </div>
+      <div class="t-card"><div class="t-card-h">Voutilainen 7140</div>
+        <div class="t-card-row"><span class="t-card-k">Beat</span><span class="t-card-v">18000 vph</span></div>
+        <div class="t-card-row"><span class="t-card-k">Reserve</span><span class="t-card-v">65 h</span></div>
+        <div class="t-card-row"><span class="t-card-k">Chrono</span><span class="t-card-v">No</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ARTICLE FEED ============ -->
+<section class="section feed" id="feed">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="sec-label">The Brief Archive</div>
+        <h2 class="sec-title">Numbered <em>briefs.</em></h2>
+      </div>
+      <div class="sec-sub"><b id="feed-cnt">--</b> Published<br>Indexed by date</div>
+    </div>
+
+    <div class="feed-grid" id="brief-grid"></div>
+  </div>
+</section>
+
+<!-- ============ AUTHOR ============ -->
+<section class="section" id="author">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="sec-label">Credentials Plate</div>
+        <h2 class="sec-title">Who keeps <em>this notebook.</em></h2>
+      </div>
+    </div>
+
+    <div class="author reveal">
+      <div class="author-portrait">HV</div>
+      <div class="author-body">
+        <div class="author-name">Henrik <em>Voss</em></div>
+        <div class="author-role">Independent Watchmaker - Critic - Editor</div>
+        <p class="author-bio">Henrik trained at <em>WOSTEP</em> in Neuchatel, spent eleven years at a Geneva atelier servicing high complications, and now runs a small one-man bench in Copenhagen. He writes Caliber Notes because the watch press, in his view, has confused access for analysis. He does not take review units he cannot send back. He does not accept ad money. He services the watches he writes about whenever the owner will let him.</p>
+        <div class="creds">
+          <div class="cred"><span class="cred-k">Training</span><span class="cred-v">WOSTEP 2010</span></div>
+          <div class="cred"><span class="cred-k">Atelier years</span><span class="cred-v">11</span></div>
+          <div class="cred"><span class="cred-k">Movements serviced</span><span class="cred-v">1400+</span></div>
+          <div class="cred"><span class="cred-k">Bench location</span><span class="cred-v">Copenhagen DK</span></div>
+          <div class="cred"><span class="cred-k">Memberships</span><span class="cred-v">AHCI corresponding</span></div>
+          <div class="cred"><span class="cred-k">Disclosures</span><span class="cred-v">Zero sponsorships</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ / SERVICE INTERVAL ============ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="sec-label">Service Interval - FAQ</div>
+        <h2 class="sec-title">The questions <em>that come up.</em></h2>
+      </div>
+    </div>
+
+    <div class="faq-wrap reveal">
+      <div class="faq">
+        <details class="faq-item" open>
+          <summary class="faq-q"><div class="faq-q-l"><span class="faq-num">01</span><span class="faq-h">How often should a modern mechanical watch be serviced?</span></div><span class="faq-tog">+</span></summary>
+          <div class="faq-a">The honest answer the brands will not give you: <em>when the timing drifts, not when the calendar says so.</em> A modern caliber with synthetic lubricants and a free-sprung balance can run <code>7-10 years</code> between full services if it is worn regularly and not exposed to magnetism. The 4-year interval most brands quote is a revenue model, not an engineering recommendation.</div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><div class="faq-q-l"><span class="faq-num">02</span><span class="faq-h">In-house movement vs ETA/Sellita - does it actually matter?</span></div><span class="faq-tog">+</span></summary>
+          <div class="faq-a">For reliability, no. A well-finished <code>Sellita SW300</code> will outlast many in-house calibers. For collectability and finishing potential, yes - in-house calibers leave room for hand work that mass-produced ebauches do not. <em>Pay for the finishing, not for the marketing label.</em></div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><div class="faq-q-l"><span class="faq-num">03</span><span class="faq-h">Why does Caliber Notes not run sponsored brand placements?</span></div><span class="faq-tog">+</span></summary>
+          <div class="faq-a">Because <em>brand access compromises the loupe.</em> The moment a maker provides loaner watches, factory tours, and dinner in Geneva, the writing softens. We pay for our own loupes, our own travel, and our own movements. It costs more. It reads truer.</div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><div class="faq-q-l"><span class="faq-num">04</span><span class="faq-h">What is a fair price ceiling for a daily wear mechanical?</span></div><span class="faq-tog">+</span></summary>
+          <div class="faq-a">Anything above <code>$8,000</code> is paying for finishing, name, and resale - not function. A 1995 Grand Seiko 9F or a modern Tudor with an MT5612 will keep time within COSC tolerance for decades. The watches we cover above that ceiling are covered for <em>what they are</em>, not because they tell time better.</div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><div class="faq-q-l"><span class="faq-num">05</span><span class="faq-h">Which timing-machine readings actually matter?</span></div><span class="faq-tog">+</span></summary>
+          <div class="faq-a">Amplitude first, then beat error, then rate. A movement at <code>+5 s/day</code> with <code>275&deg; amplitude</code> is healthier than one running on time at <code>220&deg;</code>. Anything under <code>250&deg;</code> dial-up after a full wind means the train needs attention, regardless of what the seconds hand is doing.</div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q"><div class="faq-q-l"><span class="faq-num">06</span><span class="faq-h">Are silicon hairsprings a good thing?</span></div><span class="faq-tog">+</span></summary>
+          <div class="faq-a">Mechanically, yes - antimagnetic, temperature-stable, geometrically precise. Philosophically, it depends what you want from a mechanical watch. <em>If you want a precision instrument, silicon wins.</em> If you want a piece of three-hundred-year-old craft on your wrist, the answer is more complicated.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWSLETTER ============ -->
+<section class="section" id="subscribe" style="border-bottom:none">
+  <div class="wrap">
+    <div class="sub reveal">
+      <span class="sub-stamp">No. 014 / VOL II</span>
+      <div class="sub-k">Issued monthly - Copenhagen bench</div>
+      <h2 class="sub-h">Subscribe to <em>The Service Brief.</em></h2>
+      <p class="sub-p">One careful email a month. The brief covers what came across the bench, what to buy and what to avoid, and the occasional long note on finishing. No affiliate links. No partner promotions.</p>
+      <form class="sub-form" onsubmit="event.preventDefault();this.querySelector('.sub-btn').textContent='Filed'">
+        <input class="sub-input" type="email" placeholder="your.email@domain" required>
+        <button class="sub-btn" type="submit">Subscribe</button>
+      </form>
+      <div class="sub-fine">Ref 014 - 6,400 readers - Unsubscribe in one click</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!--SHELL:FOOTER-->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-plate">
+      <span class="foot-stamp">Serial Plate - CN-014</span>
+      <div class="foot-grid">
+        <div class="foot-col">
+          <div class="foot-mark">Caliber <em>Notes</em></div>
+          <p class="foot-tag">A technical notebook on mechanical watches, movements, and the people who build them by hand.</p>
+          <div class="foot-serial">
+            Editor <b>Henrik Voss</b><br>
+            Bench <b>Copenhagen DK</b><br>
+            Est. <b>MMXXI</b>
+          </div>
+        </div>
+        <div class="foot-col">
+          <h4>Sections</h4>
+          <ul>
+            <li><a href="#movements">Movements</a></li>
+            <li><a href="#bench">On the Bench</a></li>
+            <li><a href="#independents">Independents</a></li>
+            <li><a href="#compare">Complications</a></li>
+            <li><a href="#feed">Brief Archive</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Notebook</h4>
+          <ul>
+            <li><a href="./">Home</a></li>
+            <li><a href="about.html">About Henrik</a></li>
+            <li><a href="#faq">Service Interval</a></li>
+            <li><a href="#subscribe">The Service Brief</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="privacy.html">Privacy</a></li>
+            <li><a href="terms.html">Terms</a></li>
+            <li><a href="#author">Disclosures</a></li>
+            <li><a href="#subscribe">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bot">
+        <span>&copy; <span id="yr">2026</span> Caliber Notes - All rights reserved</span>
+        <span>No sponsored placements - No affiliate links - <b>Independent</b></span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!--/SHELL:FOOTER-->
+
+<script>
+// Year
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// Scroll reveal with staggered 200ms delay
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en, i){
+      if(en.isIntersecting){
+        var idx = Array.prototype.indexOf.call(en.target.parentNode.children, en.target);
+        setTimeout(function(){en.target.classList.add('in')}, Math.min(idx,4)*200);
+        io.unobserve(en.target);
+      }
+    });
+  },{threshold:.12, rootMargin:'0px 0px -40px 0px'});
+  els.forEach(function(e){io.observe(e)});
+})();
+
+// Article loader - real only, guarded, with empty state
+(function(){
+  if(!document.getElementById('brief-grid'))return;
+  var grid = document.getElementById('brief-grid');
+  var fallback = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&q=85';
+  fetch('./articles.json').then(function(r){return r.ok?r.json():[]}).then(function(arts){
+    if(!Array.isArray(arts) || arts.length===0){
+      grid.innerHTML = '<div class="feed-empty" style="grid-column:1/-1">'+
+        '<div class="feed-empty-h">The archive is being indexed</div>'+
+        '<div class="feed-empty-p">New briefs published on the 1st &amp; 15th</div></div>';
+      var c = document.getElementById('feed-cnt'); if(c) c.textContent='0';
+      var u = document.getElementById('util-cnt'); if(u) u.textContent='0';
+      return;
+    }
+    var html = arts.map(function(a, i){
+      var num = String(i+1).padStart(3,'0');
+      var img = (a.image||fallback).replace(/"/g,'&quot;');
+      var title = (a.title||'Untitled brief').replace(/[<>]/g,'');
+      var cat = (a.category||'Brief').replace(/[<>]/g,'');
+      var date = (a.date||'').replace(/[<>]/g,'');
+      var url = (a.url||'#').replace(/"/g,'&quot;');
+      return '<a class="brief" href="'+url+'">'+
+        '<div class="brief-img">'+
+          '<div class="brief-num"><small>BRIEF</small>'+num+'</div>'+
+          '<img src="'+img+'" alt="'+title+'" loading="lazy" onerror="this.onerror=null;this.src=\''+fallback+'\'">'+
+        '</div>'+
+        '<div class="brief-body">'+
+          '<div class="brief-meta"><b>'+cat+'</b><span>&middot; '+date+'</span></div>'+
+          '<h3 class="brief-h">'+title+'</h3>'+
+          '<div class="brief-read"><span>Read the brief &rarr;</span><span>'+num+'</span></div>'+
+        '</div>'+
+      '</a>';
+    }).join('');
+    grid.innerHTML = html;
+    var c = document.getElementById('feed-cnt'); if(c) c.textContent=arts.length;
+    var u = document.getElementById('util-cnt'); if(u) u.textContent=arts.length;
+    var h = document.getElementById('hero-cnt'); if(h) h.textContent=arts.length;
+  }).catch(function(){
+    grid.innerHTML = '<div class="feed-empty" style="grid-column:1/-1">'+
+      '<div class="feed-empty-h">The archive is being indexed</div>'+
+      '<div class="feed-empty-p">New briefs published on the 1st &amp; 15th</div></div>';
+  });
+})();
+</script>
+</body>
+</html>
