@@ -179,6 +179,8 @@ textarea{resize:vertical;line-height:1.6}
 .pm-post-row:last-child{border-bottom:none}
 .pm-post-info{flex:1;min-width:0}
 .pm-post-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.post-link{color:inherit;text-decoration:none;cursor:pointer}
+.post-link:hover{color:var(--accent);text-decoration:underline}
 .pm-post-meta{font-size:11px;color:var(--text3)}
 .pm-post-btns{display:flex;gap:6px;flex-shrink:0}
 .pm-queue-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border2)}
@@ -3607,11 +3609,13 @@ function pmRefreshSiteSelect() {
     opt.value = site.repo || site.id || site.domain;
     opt.textContent = site.name || site.domain || site.id;
     opt.dataset.repo = site.repo || '';
+    opt.dataset.domain = site.domain || '';
     sel.appendChild(opt);
   });
 }
 
 let _pmCurrentRepo = '';
+let _pmCurrentDomain = '';
 let _pmPosts = [];
 let _pmEditSlug = '';
 let _pmEditSha = '';
@@ -3622,6 +3626,11 @@ async function pmLoadPosts() {
   const repo = opt && opt.dataset.repo ? opt.dataset.repo : sel.value;
   if (!repo) return;
   _pmCurrentRepo = repo;
+  _pmCurrentDomain = (opt && opt.dataset.domain) ? opt.dataset.domain : '';
+  if (!_pmCurrentDomain) {
+    const sm = (cfg && cfg.sites) ? cfg.sites.find(s => s.repo === repo) : null;
+    if (sm) _pmCurrentDomain = sm.domain || '';
+  }
   const token = ls('ghToken');
   const listEl = document.getElementById('pm-post-list');
   const countEl = document.getElementById('pm-post-count');
@@ -3647,17 +3656,22 @@ function pmRenderPosts() {
   const countEl = document.getElementById('pm-post-count');
   if (!_pmPosts.length) { listEl.innerHTML = '<div class="empty"><b>No published posts yet</b>The bot has not run on this site.</div>'; return; }
   countEl.textContent = `${_pmPosts.length} posts`;
-  listEl.innerHTML = _pmPosts.map((p, i) => `
+  listEl.innerHTML = _pmPosts.map((p, i) => {
+    const titleText = p.title || p.slug || 'Untitled';
+    const url = postUrl(_pmCurrentDomain, p.slug || p.url || '');
+    const titleHtml = postLink(url, escHtml(titleText));
+    return `
     <div class="pm-post-row">
       <div class="pm-post-info">
-        <div class="pm-post-title">${p.title || p.slug || 'Untitled'}</div>
+        <div class="pm-post-title">${titleHtml}</div>
         <div class="pm-post-meta">${p.date || ''} &nbsp;/&nbsp; ${p.slug || ''}</div>
       </div>
       <div class="pm-post-btns">
         <button class="btn btn-sm" onclick="pmOpenEdit(${i})">Edit</button>
         <button class="btn btn-sm btn-red" onclick="pmDeletePost(${i})">Delete</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 async function pmLoadQueue() {
@@ -3893,14 +3907,17 @@ function aaRender() {
     ..._aaArticles.map(a => a.author).filter(Boolean),
   ]));
   const dlOpts = pool.map(n => `<option value="${aaEscape(n)}">`).join('');
+  const domain = (_aaCurrentSite && _aaCurrentSite.domain) ? _aaCurrentSite.domain : '';
   const rows = _aaArticles.map((a, i) => {
     const slug   = a.slug || a.url || '';
     const author = a.author || '';
     const title  = a.title || slug || 'Untitled';
+    const url    = postUrl(domain, slug);
+    const titleHtml = postLink(url, aaEscape(title));
     return `
       <div class="pm-post-row" style="align-items:center">
         <div class="pm-post-info" style="min-width:0">
-          <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${aaEscape(title)}</div>
+          <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${titleHtml}</div>
           <div class="pm-post-meta">${aaEscape(slug)}</div>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -3998,11 +4015,14 @@ function psRender() {
     const hpw    = Number.isFinite(+s.historical_per_week) ? +s.historical_per_week : 0;
     const name   = s.name || s.id;
     const domain = s.domain || '';
+    const homeUrl = postUrl(domain, '');
+    const nameHtml = postLink(homeUrl, psEscape(name));
+    const domainHtml = postLink(homeUrl, psEscape(domain));
     return `
       <div class="pm-post-row" style="align-items:center" data-sid="${psEscape(s.id)}">
         <div class="pm-post-info" style="min-width:0">
-          <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${psEscape(name)}</div>
-          <div class="pm-post-meta">${psEscape(domain)} - <code style="opacity:.7">${psEscape(s.id)}</code></div>
+          <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${nameHtml}</div>
+          <div class="pm-post-meta">${domainHtml} - <code style="opacity:.7">${psEscape(s.id)}</code></div>
         </div>
         <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
           <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);cursor:pointer;user-select:none">
@@ -4184,6 +4204,14 @@ function pubRender() {
       const items = groups[k];
       const rows = items.map(p => {
         const checked = _pubChecked[p.id] ? 'checked' : '';
+        let linkUrl = '';
+        if (p.kind === 'homepage') {
+          const siteMatch = (cfg && cfg.sites) ? cfg.sites.find(s => s.repo === p.target_repo) : null;
+          if (siteMatch && siteMatch.domain) linkUrl = postUrl(siteMatch.domain, '');
+        } else if (p.target_repo && p.remote_path) {
+          linkUrl = 'https://github.com/' + p.target_repo + '/blob/main/' + p.remote_path;
+        }
+        const labelHtml = postLink(linkUrl, pubEsc(p.label));
         return `
           <div class="pm-post-row" style="align-items:center" data-pubid="${pubEsc(p.id)}">
             <label style="display:flex;align-items:center;padding-top:2px;cursor:pointer">
@@ -4191,7 +4219,7 @@ function pubRender() {
                 style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
             </label>
             <div class="pm-post-info" style="min-width:0;flex:1">
-              <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pubEsc(p.label)}</div>
+              <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${labelHtml}</div>
               <div class="pm-post-meta">${pubEsc(p.summary || '')}${p.local_sha ? ' &middot; <code style="opacity:.6">' + pubEsc(p.local_sha.slice(0,7)) + '</code>' : ''}${p.remote_sha ? ' &rarr; <code style="opacity:.6">' + pubEsc(p.remote_sha.slice(0,7)) + '</code>' : ' &rarr; <span style="color:#f59e0b">new</span>'}</div>
             </div>
             <div id="pub-status-${pubEsc(p.id)}" style="font-size:11px;color:var(--text3);min-width:160px;text-align:right;white-space:normal;line-height:1.5">Pending</div>
@@ -4343,10 +4371,12 @@ async function loadGhRuns() {
       const ts = dt.toLocaleDateString('en-CA') + ' ' + dt.toLocaleTimeString('en-CA', {hour:'2-digit',minute:'2-digit'});
       const durMs = run.updated_at ? new Date(run.updated_at) - new Date(run.created_at) : 0;
       const dur = durMs > 0 ? Math.round(durMs/1000) + 's' : '-';
+      const runName = escHtml(run.display_title || run.name || '');
+      const runNameHtml = run.html_url ? `<a class="post-link" href="${escHtml(run.html_url)}" target="_blank" rel="noopener">${runName}</a>` : runName;
       return `<div class="run-row">
         <span class="run-status ${run.conclusion || run.status}"></span>
         <div class="run-info">
-          <div class="run-name">${escHtml(run.display_title || run.name || '')}</div>
+          <div class="run-name">${runNameHtml}</div>
           <div class="run-meta">${ts} · ${run.conclusion || run.status} · ${escHtml(run.actor?.login || '')}</div>
         </div>
         <span class="run-dur">${dur}</span>
@@ -5812,6 +5842,28 @@ document.getElementById('publishModal').addEventListener('click', e => {
 function ls(k)      { return localStorage.getItem(k) || ''; }
 function lss(k, v)  { localStorage.setItem(k, v); }
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Build a clickable post/page link. Returns plain (escaped) HTML when url is missing.
+function postLink(url, innerHtml, opts) {
+  opts = opts || {};
+  if (!url) return innerHtml;
+  const cls = opts.className ? (' ' + opts.className) : '';
+  return `<a class="post-link${cls}" href="${escHtml(url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${innerHtml}</a>`;
+}
+// Normalize a slug into a clean URL path for a domain. Returns '' when inputs missing.
+function postUrl(domain, slug) {
+  if (!domain) return '';
+  const d = String(domain).trim().replace(/\/+$/, '');
+  if (!d) return '';
+  if (slug == null) return 'https://' + d + '/';
+  let s = String(slug).trim();
+  if (!s) return 'https://' + d + '/';
+  // If slug is already absolute, return as-is.
+  if (/^https?:\/\//i.test(s)) return s;
+  s = s.replace(/^\/+/, '').replace(/\/+$/, '');
+  if (!s) return 'https://' + d + '/';
+  return 'https://' + d + '/' + s + '/';
+}
 
 // Enter to send command
 document.getElementById('termInput')?.addEventListener('keydown', e => {
