@@ -286,6 +286,13 @@ textarea{resize:vertical;line-height:1.6}
 .toast-warn{background:linear-gradient(135deg,rgba(245,158,11,.20),rgba(245,158,11,.10));border-color:rgba(245,158,11,.55);color:#fff5e3}
 .toast-warn .toast-icon{background:var(--amber);color:#1a1209}
 .toast-info{background:linear-gradient(135deg,rgba(56,189,248,.18),rgba(56,189,248,.10));border-color:rgba(56,189,248,.50);color:#e6f6ff}
+/* Top-bar "Saved" banner (blue) - dedicated channel so every save action lands
+   in the same place at the top of the page, regardless of where it was triggered.
+   Replaces the bottom-right stack for messages that start with "Saved". */
+#_saved_bar{position:fixed;top:18px;left:50%;transform:translate(-50%,-130%);z-index:100000;display:flex;align-items:center;gap:10px;padding:10px 18px 10px 14px;border-radius:999px;font-size:13px;font-weight:700;color:#eaf4ff;background:linear-gradient(135deg,#1d4ed8,#2563eb);border:1px solid rgba(147,197,253,.55);box-shadow:0 14px 36px rgba(37,99,235,.45),0 4px 10px rgba(0,0,0,.30);opacity:0;transition:transform .32s cubic-bezier(.2,.8,.25,1),opacity .28s ease;letter-spacing:.2px;pointer-events:none;backdrop-filter:blur(6px)}
+#_saved_bar.show{transform:translate(-50%,0);opacity:1}
+#_saved_bar .sb-icon{width:20px;height:20px;border-radius:50%;background:#fff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
+@media (prefers-reduced-motion: reduce){#_saved_bar{transition:opacity .15s ease;transform:translate(-50%,0)}}
 .toast-info .toast-icon{background:var(--blue);color:#06182a}
 @media (max-width:560px){.toast-stack{left:12px;right:12px;bottom:12px;max-width:none}.toast{min-width:0;width:100%}}
 </style>
@@ -570,6 +577,9 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-meta-guide" onclick="showPanel('meta-guide')"
         data-tip="Meta Pixel + Conversions API setup, custom audiences, lookalikes, retargeting recipes and per-site event names.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Meta Guide</button>
+      <button class="nav-btn" id="nav-logobar" onclick="showPanel('logobar');if(typeof logoBarInit==='function')logoBarInit()"
+        data-tip="Live preview and copy-paste snippet of the Kavalsia Network logo bar. Rebuild it from the current SITES list with one click.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="8" rx="2"/><circle cx="7" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="17" cy="12" r="1.4" fill="currentColor"/></svg></span> Logo Bar</button>
     </div>
 
     <!-- ── SYSTEM ── -->
@@ -1093,17 +1103,31 @@ textarea{resize:vertical;line-height:1.6}
       <div id="ss-dom-msg" style="font-size:12px;color:var(--text3);margin-top:8px;min-height:14px"></div>
     </div>
 
-    <!-- ── Posting Schedule ── -->
+    <!-- ── Posting Schedule (single source of truth — Settings panel no longer duplicates this) ── -->
     <div class="card" style="margin-bottom:14px">
       <div class="section-head">Posting Schedule</div>
       <div class="settings-row" style="align-items:center">
         <div class="form-group">
-          <div class="form-label">New posts per day <span style="color:var(--text3)">(1-5)</span></div>
-          <input type="number" id="ss-ppdn" min="1" max="5" value="1">
+          <div class="form-label">New posts <span style="color:var(--text3)">(count + cadence)</span></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="number" id="ss-new-count" min="0" max="50" value="1" style="width:90px">
+            <select id="ss-new-unit" style="padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:13px">
+              <option value="day">per day</option>
+              <option value="week">per week</option>
+              <option value="month">per month</option>
+            </select>
+          </div>
         </div>
         <div class="form-group">
-          <div class="form-label">Posts per week cap <span style="color:var(--text3)">(0 = no cap)</span></div>
-          <input type="number" id="ss-ppw" min="0" max="50" value="0">
+          <div class="form-label">Historical posts <span style="color:var(--text3)">(count + cadence)</span></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="number" id="ss-hist-count" min="0" max="100" value="0" style="width:90px">
+            <select id="ss-hist-unit" style="padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:13px">
+              <option value="day">per day</option>
+              <option value="week" selected>per week</option>
+              <option value="month">per month</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="settings-row" style="align-items:center">
@@ -1113,12 +1137,6 @@ textarea{resize:vertical;line-height:1.6}
             Historical mode <span style="color:var(--text3);font-size:11px">(backfill notable events from prior years, dated to when they happened)</span>
           </label>
         </div>
-        <div class="form-group">
-          <div class="form-label">Historical per week <span style="color:var(--text3)">(0-14)</span></div>
-          <input type="number" id="ss-hpw" min="0" max="14" value="0">
-        </div>
-      </div>
-      <div class="settings-row" style="align-items:center">
         <div class="form-group">
           <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
             <input type="checkbox" id="ss-warming" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
@@ -2990,6 +3008,104 @@ textarea{resize:vertical;line-height:1.6}
   </div>
 </div>
 
+<!-- ════════ LOGO BAR ════════ -->
+<div class="panel" id="panel-logobar">
+  <div class="pg-title">Logo Bar</div>
+  <div class="pg-sub">Drop-in marquee snippet for the Kavalsia Network. Live preview, one-click copy, and rebuild from the current SITES list.</div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Live Preview</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm" onclick="logoBarCopy()">Copy code</button>
+        <button class="btn btn-sm btn-green" onclick="logoBarRebuild()">Rebuild from current network</button>
+      </div>
+    </div>
+    <div style="margin-top:10px;background:#010a18;border:1px solid var(--border2);border-radius:10px;overflow:hidden">
+      <iframe id="logobar-preview" title="Logo bar preview" style="display:block;width:100%;height:160px;border:0;background:#010a18"></iframe>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:var(--text3)">
+      Auto-updates whenever a new site is added to <code>push-sites.py</code> SITES + dashboard config.
+      File path: <code id="logobar-path">snippets/logo-bar.html</code>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-label" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Snippet code (read only)</span>
+      <span id="logobar-meta" style="font-size:11px;color:var(--text3);font-weight:400">-</span>
+    </div>
+    <textarea id="logobar-code" readonly spellcheck="false" style="width:100%;height:280px;background:var(--bg2);color:var(--text2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-family:'Courier New',Courier,monospace;font-size:11px;line-height:1.45;resize:vertical;white-space:pre"></textarea>
+  </div>
+</div>
+
+<script>
+(function(){
+  let _logobarLoaded = false;
+  function setPreview(html){
+    const iframe = document.getElementById('logobar-preview');
+    if(!iframe) return;
+    const wrapped = '<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;background:#010a18;height:100%}body{display:flex;align-items:center}</style></head><body>'+html+'</body></html>';
+    iframe.srcdoc = wrapped;
+  }
+  function setCode(html){
+    const ta = document.getElementById('logobar-code');
+    if(ta) ta.value = html;
+    const meta = document.getElementById('logobar-meta');
+    if(meta){
+      const tiles = (html.match(/<a class="kn-logobar-tile"/g) || []).length;
+      meta.textContent = tiles + ' tiles in DOM (' + (tiles/2) + ' unique x2)';
+    }
+  }
+  async function logoBarInit(){
+    if(_logobarLoaded) return;
+    try{
+      const r = await fetch('/api/logo-bar');
+      const j = await r.json();
+      if(j && j.html){
+        setPreview(j.html);
+        setCode(j.html);
+        if(j.path){ const p=document.getElementById('logobar-path'); if(p) p.textContent=j.path; }
+        _logobarLoaded = true;
+      }else{
+        setCode('# Could not load snippet. Try clicking Rebuild.');
+      }
+    }catch(e){
+      setCode('# Server not reachable: ' + e);
+    }
+  }
+  async function logoBarRebuild(){
+    try{
+      const r = await fetch('/api/logo-bar/rebuild', {method:'POST'});
+      const j = await r.json();
+      if(j && j.ok && j.html){
+        setPreview(j.html);
+        setCode(j.html);
+        if(typeof toast==='function') toast('Logo bar rebuilt', 'ok');
+      }else{
+        if(typeof toast==='function') toast('Rebuild failed', 'error');
+      }
+    }catch(e){
+      if(typeof toast==='function') toast('Rebuild failed: '+e, 'error');
+    }
+  }
+  async function logoBarCopy(){
+    const ta = document.getElementById('logobar-code');
+    if(!ta || !ta.value){ if(typeof toast==='function') toast('Nothing to copy', 'warn'); return; }
+    try{
+      await navigator.clipboard.writeText(ta.value);
+      if(typeof toast==='function') toast('Saved', 'ok');
+    }catch(e){
+      ta.select(); document.execCommand('copy');
+      if(typeof toast==='function') toast('Saved', 'ok');
+    }
+  }
+  window.logoBarInit    = logoBarInit;
+  window.logoBarRebuild = logoBarRebuild;
+  window.logoBarCopy    = logoBarCopy;
+})();
+</script>
+
 <!-- Editor iframe panel removed. Per-site config (writing rules, topics, scripts) lives in Site Settings. -->
 
 
@@ -3828,23 +3944,41 @@ async function checkSiteSingle(domain, id, silent = false) {
   const meta  = document.getElementById(`smeta-${id}`);
   if (dot1) dot1.className = 'site-dot checking';
   if (dot2) dot2.className = 'site-dot checking';
+
+  // One probe with a generous timeout. fetch(no-cors) resolves on ANY HTTP
+  // response (even opaque 4xx/5xx) and only rejects on network failure or
+  // timeout, so this is a real availability check.
+  const probe = (timeoutMs) => new Promise((resolve, reject) => {
+    const ac = new AbortController();
+    const tid = setTimeout(() => ac.abort(), timeoutMs);
+    fetch(`https://${domain}/?_=${Date.now()}`, { mode: 'no-cors', signal: ac.signal, cache: 'no-store' })
+      .then(() => { clearTimeout(tid); resolve(); })
+      .catch(err => { clearTimeout(tid); reject(err); });
+  });
+
   const t0 = Date.now();
-  try {
-    const _ac2 = new AbortController(); setTimeout(()=>_ac2.abort(),8000);
-    await fetch(`https://${domain}`, { mode: 'no-cors', signal: _ac2.signal });
-    const ms = Date.now() - t0;
-    if (dot1) dot1.className = 'site-dot live';
-    if (dot2) dot2.className = 'site-dot live';
-    if (meta) meta.textContent = `Agent confirmed live · ${ms}ms`;
-    if (!silent) addLog('ok', 'status', `${domain} - live (${ms}ms)`);
-    return true;
-  } catch(e) {
-    if (dot1) dot1.className = 'site-dot down';
-    if (dot2) dot2.className = 'site-dot down';
-    if (meta) meta.textContent = `Agent got no response  -  site may be down`;
-    if (!silent) addLog('err', 'status', `${domain} - no response`);
-    return false;
+  // First try short (most sites respond in <1s); fall back to a longer probe
+  // before declaring down. GitHub Pages edge sometimes cold-starts >5s on a
+  // first request after a deploy, which was producing false negatives.
+  for (const timeout of [8000, 15000]) {
+    try {
+      await probe(timeout);
+      const ms = Date.now() - t0;
+      if (dot1) dot1.className = 'site-dot live';
+      if (dot2) dot2.className = 'site-dot live';
+      if (meta) meta.textContent = `Agent confirmed live · ${ms}ms`;
+      if (!silent) addLog('ok', 'status', `${domain} - live (${ms}ms)`);
+      return true;
+    } catch (_) {
+      // brief backoff before retrying
+      await new Promise(r => setTimeout(r, 400));
+    }
   }
+  if (dot1) dot1.className = 'site-dot down';
+  if (dot2) dot2.className = 'site-dot down';
+  if (meta) meta.textContent = `Agent got no response  -  site may be down`;
+  if (!silent) addLog('err', 'status', `${domain} - no response after retry`);
+  return false;
 }
 
 // ── Config persistence ─────────────────────────────────────────────────────
@@ -3969,8 +4103,37 @@ function clearHistory() {
 // toast('Saved') | toast('Error: foo', 'error') | toast('Heads up', 'warn')
 // kind: 'ok' | 'error' | 'warn' | 'info'. Stacks bottom-right, hover-pause,
 // click to dismiss, X close button. Reuses --accent for ok.
+// Top-center blue "Saved" banner. Every save action across the dashboard ends
+// up here so the user gets one consistent, unmissable confirmation regardless
+// of which panel triggered the save. Routed automatically by toast() below.
+function savedBanner(message, duration) {
+  const text = String(message || 'Saved');
+  let el = document.getElementById('_saved_bar');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = '_saved_bar';
+    el.innerHTML = '<span class="sb-icon" aria-hidden="true">✓</span><span class="sb-msg"></span>';
+    document.body.appendChild(el);
+  }
+  el.querySelector('.sb-msg').textContent = text;
+  // re-trigger the slide-in animation even if the banner is already visible
+  el.classList.remove('show');
+  // force reflow so the next class add re-runs the transition
+  void el.offsetWidth;
+  requestAnimationFrame(() => el.classList.add('show'));
+  if (el._tid) clearTimeout(el._tid);
+  el._tid = setTimeout(() => el.classList.remove('show'), Math.max(1200, duration || 2400));
+  return el;
+}
+
 function toast(message, kind, duration) {
   kind = kind || 'ok';
+  // Any "Saved..." message goes to the top-center blue banner instead of the
+  // bottom-right stack, so all save confirmations land in the same place.
+  const msgStr = String(message == null ? '' : message);
+  if (kind === 'ok' && /^Saved\b/i.test(msgStr.trim())) {
+    return savedBanner(msgStr, duration);
+  }
   if (typeof duration !== 'number') duration = (kind === 'error' ? 5000 : 3000);
   let stack = document.getElementById('_toast_stack');
   if (!stack) {
@@ -4679,13 +4842,17 @@ function ssLoadSite() {
   ssSetVal('ss-custom-prompt', site.custom_prompt || '');
   ssSetVal('ss-custom-css', site.custom_css || '');
 
-  // Posting Schedule
+  // Posting Schedule — single source of truth. Stored as posts_per_day_new
+  // (daily-equivalent for the bot) + historical_per_week (weekly-equivalent),
+  // plus optional posts_unit/posts_count + historical_unit/historical_count so
+  // the UI can round-trip the user's preferred unit. If the unit fields are
+  // missing, derive sensible defaults from the daily/weekly values.
   const ppdn = Number.isFinite(+site.posts_per_day_new) ? +site.posts_per_day_new : 1;
-  const ppw  = Number.isFinite(+site.posts_per_week) ? +site.posts_per_week : 0;
   const hpw  = Number.isFinite(+site.historical_per_week) ? +site.historical_per_week : 0;
-  ssSetVal('ss-ppdn', ppdn);
-  ssSetVal('ss-ppw', ppw);
-  ssSetVal('ss-hpw', hpw);
+  ssSetVal('ss-new-count',  Number.isFinite(+site.posts_count)      ? +site.posts_count      : ppdn);
+  ssSetVal('ss-new-unit',   site.posts_unit || 'day');
+  ssSetVal('ss-hist-count', Number.isFinite(+site.historical_count) ? +site.historical_count : hpw);
+  ssSetVal('ss-hist-unit',  site.historical_unit || 'week');
   ssSetChk('ss-hist-mode', site.historical_mode === true);
   ssSetChk('ss-warming', !!(site.warming && site.warming.enabled));
 
@@ -5052,22 +5219,34 @@ async function ssSaveAll() {
     return;
   }
 
-  // Validate
-  const ppdn = parseInt(ssVal('ss-ppdn'), 10);
-  if (!Number.isFinite(ppdn) || ppdn < 1 || ppdn > 5) {
-    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'New posts per day must be 1-5.';
-    toast('Error: New posts per day must be 1-5.', 'error'); return;
+  // Validate + convert count+unit -> daily/weekly fields the bot consumes.
+  // unit=day  -> daily=count,   weekly=count*7
+  // unit=week -> daily=ceil(count/7), weekly=count
+  // unit=month-> daily=ceil(count/30), weekly=round(count/4.33)
+  function cadenceToDailyWeekly(count, unit) {
+    const n = Math.max(0, count|0);
+    if (unit === 'day')   return { daily: n,                          weekly: n * 7 };
+    if (unit === 'month') return { daily: Math.ceil(n / 30),          weekly: Math.round(n / 4.33) };
+    return                        { daily: Math.ceil(n / 7),          weekly: n }; // week (default)
   }
-  const ppw = parseInt(ssVal('ss-ppw'), 10);
-  if (!Number.isFinite(ppw) || ppw < 0 || ppw > 50) {
-    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Posts per week cap must be 0-50.';
-    toast('Error: Posts per week cap must be 0-50.', 'error'); return;
+  const newCount  = parseInt(ssVal('ss-new-count'), 10);
+  const newUnit   = ssVal('ss-new-unit') || 'day';
+  const histCount = parseInt(ssVal('ss-hist-count'), 10);
+  const histUnit  = ssVal('ss-hist-unit') || 'week';
+  if (!Number.isFinite(newCount)  || newCount  < 0 || newCount  > 200) {
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'New posts count must be 0-200.';
+    toast('Error: New posts count must be 0-200.', 'error'); return;
   }
-  const hpw = parseInt(ssVal('ss-hpw'), 10);
-  if (!Number.isFinite(hpw) || hpw < 0 || hpw > 14) {
-    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Historical per week must be 0-14.';
-    toast('Error: Historical per week must be 0-14.', 'error'); return;
+  if (!Number.isFinite(histCount) || histCount < 0 || histCount > 200) {
+    statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Historical count must be 0-200.';
+    toast('Error: Historical count must be 0-200.', 'error'); return;
   }
+  const newDW  = cadenceToDailyWeekly(newCount,  newUnit);
+  const histDW = cadenceToDailyWeekly(histCount, histUnit);
+  // Clamp to the bot's accepted ranges (server validators).
+  const ppdn = Math.max(1, Math.min(10, newDW.daily || 1));
+  const ppw  = Math.max(0, Math.min(50, newUnit === 'day' ? 0 : newDW.weekly));
+  const hpw  = Math.max(0, Math.min(70, histDW.weekly));
 
   const authorNames = ssVal('ss-author-names')
     .split(',').map(s => s.trim()).filter(Boolean);
@@ -5090,6 +5269,11 @@ async function ssSaveAll() {
     posts_per_week:      ppw,
     historical_mode:     histMode,
     historical_per_week: hpw,
+    // UI-only round-trip so the unit dropdown reopens with the user's choice
+    posts_count:         newCount,
+    posts_unit:          newUnit,
+    historical_count:    histCount,
+    historical_unit:     histUnit,
     topics:              topics,
     categories:          categories,
     default_category:    ssVal('ss-default-category').trim(),
@@ -5795,27 +5979,18 @@ function renderSiteToggles() {
   const apd = document.getElementById('setGlobalArticlesPerDay');
   if (apd) apd.value = globalPerDay;
   list.innerHTML = (cfg.sites || []).map(s => {
-    const active = s.active !== false;
+    const active  = s.active !== false;
     const isNexus = s.is_mother_site || s.layout === 'nexus' || s.id === 'nexus';
-    // Determine current frequency value for dropdown
-    let freqVal;
-    if (isNexus) {
-      freqVal = 'none';
-    } else if (s.posts_per_week && parseInt(s.posts_per_week) < 7) {
-      freqVal = 'w' + parseInt(s.posts_per_week);
-    } else {
-      freqVal = 'd' + (s.posts_per_run || s.articles_per_day || globalPerDay);
-    }
-    const freqOpts = isNexus
-      ? `<option value="none">No articles</option>`
-      : `<option value="d1" ${freqVal==='d1'?'selected':''}>1 / day</option>
-         <option value="d2" ${freqVal==='d2'?'selected':''}>2 / day</option>
-         <option value="d3" ${freqVal==='d3'?'selected':''}>3 / day</option>
-         <option value="w5" ${freqVal==='w5'?'selected':''}>5 / week</option>
-         <option value="w4" ${freqVal==='w4'?'selected':''}>4 / week</option>
-         <option value="w3" ${freqVal==='w3'?'selected':''}>3 / week</option>
-         <option value="w2" ${freqVal==='w2'?'selected':''}>2 / week</option>
-         <option value="w1" ${freqVal==='w1'?'selected':''}>1 / week</option>`;
+    // Frequency lives in the per-site Posting Schedule (Site Settings panel) -
+    // this list only controls active/paused so there is one source of truth.
+    // Show the current cadence read-only so the row still communicates "what is
+    // this site doing", but editing happens in Site Settings.
+    const unit  = s.posts_unit  || 'day';
+    const count = Number.isFinite(+s.posts_count) ? +s.posts_count : (+s.posts_per_day_new || 1);
+    const histCount = Number.isFinite(+s.historical_count) ? +s.historical_count : (+s.historical_per_week || 0);
+    const histUnit  = s.historical_unit || 'week';
+    const histLabel = histCount > 0 ? `· ${histCount}/${histUnit} historical` : '';
+    const cadenceLabel = isNexus ? 'HUB' : `${count}/${unit} new ${histLabel}`;
     return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--bg3);transition:background .15s">
       <label style="position:relative;display:inline-block;width:36px;height:20px;flex-shrink:0;cursor:pointer">
         <input type="checkbox" id="tog-${s.id}" ${active?'checked':''} ${isNexus?'disabled':''} style="opacity:0;width:0;height:0"
@@ -5828,12 +6003,7 @@ function renderSiteToggles() {
         <span style="font-size:11px;color:var(--text3);margin-left:6px">${s.category||''}</span>
         ${isNexus ? '<span style="font-size:10px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,.1);padding:1px 6px;border-radius:4px;margin-left:4px">HUB</span>' : ''}
       </div>
-      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-        <span style="font-size:11px;color:var(--text3)">freq:</span>
-        <select id="freq-${s.id}" ${isNexus?'disabled':''} style="padding:3px 6px;font-size:12px;background:var(--bg4);border:1px solid var(--border2);border-radius:5px;color:var(--text)">
-          ${freqOpts}
-        </select>
-      </div>
+      <div style="font-size:11px;color:var(--text3);flex-shrink:0;font-family:ui-monospace,Menlo,monospace">${cadenceLabel}</div>
       <div style="font-size:10px;font-weight:700;color:${isNexus?'#f59e0b':active?'var(--green)':'var(--red)'};min-width:56px;text-align:right">${isNexus?'HUB':active?'ACTIVE':'PAUSED'}</div>
     </div>`;
   }).join('');
@@ -5865,27 +6035,12 @@ function markSiteApdDirty() { /* just marks intent  -  actual save on button cli
 
 function saveSiteToggles() {
   if (!cfg) return;
+  // Frequency is owned by the per-site Posting Schedule in Site Settings.
+  // This list only persists the active/paused toggle.
   cfg.sites.forEach(s => {
     const isNexus = s.is_mother_site || s.layout === 'nexus' || s.id === 'nexus';
     const cb = document.getElementById('tog-' + s.id);
-    const freq = document.getElementById('freq-' + s.id);
     if (cb && !isNexus) s.active = cb.checked;
-    if (freq && !isNexus) {
-      const v = freq.value;
-      if (v.startsWith('d')) {
-        // posts per day
-        const n = parseInt(v.slice(1)) || 1;
-        s.posts_per_run = n;
-        s.articles_per_day = n;
-        delete s.posts_per_week;
-      } else if (v.startsWith('w')) {
-        // posts per week
-        const n = parseInt(v.slice(1)) || 2;
-        s.posts_per_week = n;
-        s.posts_per_run = 1;
-        s.articles_per_day = 1;
-      }
-    }
   });
   // save global
   const gApd = document.getElementById('setGlobalArticlesPerDay');
