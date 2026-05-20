@@ -168,6 +168,23 @@ def delete_snapshot(snap_id):
     SNAPSHOTS_PATH.write_text(json.dumps(snaps, indent=2))
     return jsonify({"ok": True})
 
+# ── Logo bar (snippet) ───────────────────────────────────────────────────────
+LOGO_BAR_PATH = BASE_DIR / "snippets" / "logo-bar.html"
+
+@app.route("/api/logo-bar", methods=["GET"])
+def logo_bar_get():
+    try:
+        html = LOGO_BAR_PATH.read_text(encoding="utf-8")
+        return jsonify({"ok": True, "html": html, "path": "snippets/logo-bar.html"})
+    except FileNotFoundError:
+        return jsonify({"ok": False, "html": "", "path": "snippets/logo-bar.html"}), 404
+
+@app.route("/api/logo-bar/rebuild", methods=["POST"])
+def logo_bar_rebuild():
+    import logo_bar_builder
+    html = logo_bar_builder.write_logo_bar()
+    return jsonify({"ok": True, "html": html, "path": "snippets/logo-bar.html"})
+
 # ── Security headers ─────────────────────────────────────────────────────────
 @app.after_request
 def security_headers(response):
@@ -1179,9 +1196,11 @@ ALLOWED_SITE_FIELDS = {
     # Identity & Persona
     "name", "default_author", "author_names", "persona", "tone",
     "custom_prompt", "custom_css",
-    # Posting Schedule
+    # Posting Schedule (canonical fields the bot reads)
     "posts_per_day_new", "posts_per_week", "historical_mode",
     "historical_per_week", "warming",
+    # UI round-trip fields so the unit dropdown reopens with the user's choice
+    "posts_count", "posts_unit", "historical_count", "historical_unit",
     # Content Pipeline
     "topics", "categories", "default_category", "signup_url",
     "header_scripts", "footer_scripts",
@@ -1194,9 +1213,13 @@ ALLOWED_SITE_FIELDS = {
 }
 
 SITE_FIELD_VALIDATORS = {
-    "posts_per_day_new":   lambda v: isinstance(v, int) and 1 <= v <= 5,
+    "posts_per_day_new":   lambda v: isinstance(v, int) and 1 <= v <= 10,
     "posts_per_week":      lambda v: isinstance(v, int) and 0 <= v <= 50,
-    "historical_per_week": lambda v: isinstance(v, int) and 0 <= v <= 14,
+    "historical_per_week": lambda v: isinstance(v, int) and 0 <= v <= 70,
+    "posts_count":         lambda v: isinstance(v, int) and 0 <= v <= 200,
+    "posts_unit":          lambda v: v in ("day", "week", "month"),
+    "historical_count":    lambda v: isinstance(v, int) and 0 <= v <= 200,
+    "historical_unit":     lambda v: v in ("day", "week", "month"),
     "historical_mode":     lambda v: isinstance(v, bool),
     "author_names":        lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
     "topics":              lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
