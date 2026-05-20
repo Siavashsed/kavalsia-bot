@@ -344,6 +344,20 @@ SITES = [
     "primary":"#dc2626","primary2":"#b91c1c","text":"#1a1a17","muted":"#706b60","brd":"#e0dbd2",
     "font_head":"system-ui,sans-serif","font_body":"system-ui,sans-serif","font_mono":"monospace",
   },
+  {
+    "repo":"Siavashsed/mindframe","id":"mindframe","tpl":"editorial",
+    "name":"MindFrame","tagline":"Psychology + Neurobiology, made useful.",
+    "category":"Psychology & Neurobiology",
+    "author":"Dr. Maya Holloway","author_title":"Cognitive Neuroscientist + Editor",
+    "bio1":"I spent eight years running working-memory and attention experiments at a behavioral neuroscience lab before going independent. The papers were dense - the takeaways were not.",
+    "bio2":"MindFrame translates serious psychology and brain research into things you can actually do. Evidence first, no clickbait, no neuro-pop nonsense.",
+    "hero_sub":"Self-tests, tools, and evidence-led writing on memory, sleep, attention, emotion, habits, and cognition.",
+    "nl_head":"The MindFrame Brief","nl_sub":"One short, evidence-led essay each week. No filler, no fear-mongering.",
+    "footer_desc":"Evidence-led psychology and neurobiology for curious adults.",
+    "bg":"#0b1224","bg2":"#0f1830","surface":"#fbf8f1",
+    "primary":"#ff5a4e","primary2":"#e0463b","text":"#f5f1e8","muted":"#9aa3b8","brd":"#1a2440",
+    "font_head":"'Newsreader',Georgia,serif","font_body":"'Inter',system-ui,sans-serif","font_mono":"'JetBrains Mono',monospace",
+  },
 ]
 
 # ── Per-site story content (4-5 paragraphs per author) ─────────────────────────
@@ -5712,7 +5726,8 @@ def push_nexus(token):
     if about_src.exists():
         ok &= gh_put(token, repo, "about.html", about_src.read_text(), "Update Nexus about")
     ok &= gh_put(token, repo, ".nojekyll", "", "Disable Jekyll")
-    gh_delete(token, repo, "CNAME", "Remove custom domain CNAME")
+    # NOTE: do NOT auto-delete CNAME - if the user has a custom domain, that file
+    # is what binds it. The previous gh_delete here was wiping live custom domains.
     print("ok" if ok else "FAIL (check token/repo)")
 
 
@@ -5741,7 +5756,8 @@ def push_github(token, only=None, sites_filter=None):
         for fn, html in extra_pages(s):
             ok &= gh_put(token, repo, fn, _meta_inject(html, s), f"Add {fn}")
         ok &= gh_put(token, repo, ".nojekyll",         "",               "Disable Jekyll")
-        gh_delete(token, repo, "CNAME", "Remove custom domain CNAME")
+        # CNAME is intentionally NOT deleted - it carries the custom-domain binding
+        # for GitHub Pages. Wiping it here previously broke live domains on every sync.
         print("ok" if ok else "FAIL (check token/repo)")
         time.sleep(0.8)
     print("\nDone.")
