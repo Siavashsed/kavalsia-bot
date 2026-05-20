@@ -1259,6 +1259,222 @@ def update_site_settings():
         "rejected": rejected,
     })
 
+# ── Custom Domain Status / Apply / Enforce HTTPS ─────────────────────────────
+# Three small endpoints that power the "Custom Domain" card in panel-site.
+#   GET  /api/domain-status         -> DNS + GitHub Pages cname + HTTPS state
+#   POST /api/domain-apply          -> writes network-config.json, CNAME, Pages
+#   POST /api/domain-enforce-https  -> PUT Pages config { https_enforced: true }
+
+def _ds_token():
+    """Resolve GitHub token from body/header/env."""
+    body = request.get_json(force=True, silent=True) or {}
+    return (body.get("token") or "").strip() \
+        or request.headers.get("X-GH-Token", "").strip() \
+        or os.environ.get("GITHUB_TOKEN", "").strip()
+
+def _ds_site_for(site_id):
+    """Load network-config.json and return (cfg, site) or raise ValueError."""
+    cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    site = next((s for s in cfg.get("sites", []) if s.get("id") == site_id), None)
+    if not site:
+        raise ValueError(f"Unknown site_id '{site_id}'")
+    return cfg, site
+
+def _ds_is_placeholder(domain):
+    """siavashsed.github.io/<id> means 'no custom domain yet'."""
+    if not domain:
+        return True
+    d = domain.lower().strip()
+    return d.startswith("siavashsed.github.io")
+
+@app.route("/api/domain-status", methods=["GET"])
+def domain_status():
+    import socket
+    site_id = (request.args.get("site_id") or "").strip()
+    if not site_id:
+        return jsonify({"error": "site_id is required"}), 400
+    token = (request.args.get("token") or "").strip() \
+        or request.headers.get("X-GH-Token", "").strip() \
+        or os.environ.get("GITHUB_TOKEN", "").strip()
+
+    try:
+        _cfg, site = _ds_site_for(site_id)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+
+    domain = (site.get("domain") or "").strip()
+    repo   = (site.get("repo") or "").strip()
+    out = {
+        "domain":         domain,
+        "is_placeholder": _ds_is_placeholder(domain),
+        "dns_ok":         "pending",
+        "gh_cname":       None,
+        "cname_match":    None,
+        "https_state":    None,
+        "https_enforced": None,
+        "http_status":    None,
+    }
+    if _ds_is_placeholder(domain) or not domain:
+        return jsonify(out)
+
+    # DNS resolution
+    try:
+        socket.gethostbyname(domain)
+        out["dns_ok"] = "yes"
+    except Exception:
+        out["dns_ok"] = "no"
+
+    # GitHub Pages cname / https state (requires token + repo)
+    if token and repo and "YOUR_" not in repo:
+        try:
+            r = requests.get(
+                f"https://api.github.com/repos/{repo}/pages",
+                headers=_gh_headers(token), timeout=12,
+            )
+            if r.status_code == 200:
+                jd = r.json() or {}
+                out["gh_cname"]       = jd.get("cname")
+                out["cname_match"]    = ((jd.get("cname") or "").lower() == domain.lower())
+                out["https_enforced"] = bool(jd.get("https_enforced"))
+                cert = jd.get("https_certificate") or {}
+                out["https_state"]    = cert.get("state") or "none"
+            elif r.status_code == 404:
+                out["gh_cname"]    = None
+                out["cname_match"] = False
+                out["https_state"] = "none"
+            else:
+                out["gh_error"] = f"Pages API {r.status_code}: {r.text[:160]}"
+        except requests.exceptions.RequestException as e:
+            out["gh_error"] = f"Pages API network error: {e}"
+
+    # Live HTTPS probe
+    try:
+        pr = requests.get(f"https://{domain}/", timeout=8, allow_redirects=True)
+        out["http_status"] = pr.status_code
+    except requests.exceptions.RequestException as e:
+        out["http_status"] = 0
+        out["http_error"]  = str(e)[:160]
+
+    return jsonify(out)
+
+@app.route("/api/domain-apply", methods=["POST"])
+def domain_apply():
+    import base64
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    domain  = (body.get("domain") or "").strip().lower().lstrip("/").rstrip("/")
+    token   = (body.get("token") or "").strip() \
+        or request.headers.get("X-GH-Token", "").strip() \
+        or os.environ.get("GITHUB_TOKEN", "").strip()
+
+    if not site_id or not domain:
+        return jsonify({"error": "site_id and domain are required"}), 400
+    if "/" in domain or " " in domain or "." not in domain:
+        return jsonify({"error": "domain looks invalid (expected e.g. example.com)"}), 400
+    if not token:
+        return jsonify({"error": "GitHub token required (body.token, X-GH-Token header, or GITHUB_TOKEN env)"}), 400
+
+    try:
+        cfg, site = _ds_site_for(site_id)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+
+    repo = (site.get("repo") or "").strip()
+    if not repo or "YOUR_" in repo:
+        return jsonify({"error": f"Site '{site_id}' has no valid repo configured"}), 400
+
+    result = {"ok": True, "steps": {}}
+
+    # 1. Update network-config.json
+    try:
+        site["domain"] = domain
+        tmp_path = CONFIG_PATH.with_suffix(".json.tmp")
+        tmp_path.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+        os.replace(str(tmp_path), str(CONFIG_PATH))
+        result["steps"]["config"] = {"ok": True, "domain": domain}
+    except Exception as e:
+        return jsonify({"error": f"Could not write network-config.json: {e}"}), 500
+
+    headers = _gh_headers(token)
+
+    # 2. PUT CNAME file in the site repo
+    cname_url = f"https://api.github.com/repos/{repo}/contents/CNAME"
+    try:
+        gr = requests.get(cname_url, headers=headers, timeout=12)
+        sha = gr.json().get("sha") if gr.status_code == 200 else None
+        payload = {
+            "message": f"chore: set custom domain to {domain}",
+            "content": base64.b64encode((domain + "\n").encode("utf-8")).decode(),
+        }
+        if sha:
+            payload["sha"] = sha
+        pr = requests.put(cname_url, headers=headers, json=payload, timeout=15)
+        result["steps"]["cname_file"] = {
+            "ok": pr.status_code in (200, 201),
+            "status": pr.status_code,
+            "msg": pr.text[:200] if pr.status_code not in (200, 201) else "written",
+        }
+    except requests.exceptions.RequestException as e:
+        result["steps"]["cname_file"] = {"ok": False, "error": str(e)}
+
+    # 3. PUT GitHub Pages cname
+    pages_url = f"https://api.github.com/repos/{repo}/pages"
+    try:
+        pr = requests.put(pages_url, headers=headers, json={"cname": domain}, timeout=15)
+        # GitHub returns 204 No Content on success.
+        result["steps"]["pages_cname"] = {
+            "ok": pr.status_code in (200, 201, 204),
+            "status": pr.status_code,
+            "msg": pr.text[:200] if pr.status_code not in (200, 201, 204) else "updated",
+        }
+    except requests.exceptions.RequestException as e:
+        result["steps"]["pages_cname"] = {"ok": False, "error": str(e)}
+
+    result["ok"] = all(s.get("ok") for s in result["steps"].values())
+    return jsonify(result)
+
+@app.route("/api/domain-enforce-https", methods=["POST"])
+def domain_enforce_https():
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    token   = (body.get("token") or "").strip() \
+        or request.headers.get("X-GH-Token", "").strip() \
+        or os.environ.get("GITHUB_TOKEN", "").strip()
+
+    if not site_id:
+        return jsonify({"error": "site_id is required"}), 400
+    if not token:
+        return jsonify({"error": "GitHub token required"}), 400
+
+    try:
+        _cfg, site = _ds_site_for(site_id)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+
+    repo = (site.get("repo") or "").strip()
+    if not repo or "YOUR_" in repo:
+        return jsonify({"error": f"Site '{site_id}' has no valid repo configured"}), 400
+
+    pages_url = f"https://api.github.com/repos/{repo}/pages"
+    try:
+        pr = requests.put(pages_url, headers=_gh_headers(token),
+                          json={"https_enforced": True}, timeout=15)
+        ok = pr.status_code in (200, 201, 204)
+        return jsonify({
+            "ok":     ok,
+            "status": pr.status_code,
+            "msg":    pr.text[:200] if not ok else "https_enforced set to true",
+        }), (200 if ok else pr.status_code)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"ok": False, "error": str(e)}), 502
+
+
 # ── Publish / Sync Center ─────────────────────────────────────────────────────
 # Scans the local working copy and compares files against their remote
 # counterparts on GitHub (per-file blob SHA). Anything that differs is reported
