@@ -41,13 +41,16 @@ button,input{font-family:var(--sans)}
 ::selection{background:rgba(201,165,92,.3);color:var(--text)}
 
 /* ── NAV ── */
-.nav{background:rgba(12,11,10,.78);backdrop-filter:blur(14px);position:sticky;top:0;z-index:200;transition:border-color .3s,box-shadow .3s,background .3s;border-bottom:1px solid transparent}
-.nav.scrolled{border-bottom:1px solid var(--border);box-shadow:var(--shadow);background:rgba(12,11,10,.94)}
+/* Solid near-black backgrounds (no translucency) so the gold logo never blends with bleed-through gold gradients from sections below. */
+.nav{background:#0a0908;position:sticky;top:0;z-index:200;transition:border-color .3s,box-shadow .3s,background .3s,backdrop-filter .3s;border-bottom:1px solid transparent}
+.nav.scrolled{border-bottom:1px solid var(--border);box-shadow:var(--shadow);background:#070605}
 .nav-inner{max-width:1240px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:74px}
 .nav-mark{display:flex;align-items:center;gap:13px;margin-right:auto;flex-shrink:0}
-.nav-dh{width:38px;height:38px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:600;color:#171411;letter-spacing:.5px;flex-shrink:0}
+/* Logo mark: gold disc with a thin dark inner ring + faint outer halo so it pops on any near-black bg. */
+.nav-dh{width:38px;height:38px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:600;color:#171411;letter-spacing:.5px;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(12,11,10,.55),0 0 0 1px rgba(227,201,135,.18)}
 .nav-name{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--text);letter-spacing:.4px}
-.nav-name span{color:var(--accent)}
+/* Wordmark accent uses the lighter cream gold for stronger separation against deep black */
+.nav-name span{color:var(--accent2)}
 .nav-links{display:flex;height:100%;align-items:center}
 .nav-links a{font-size:12px;font-weight:400;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);padding:0 19px;height:100%;display:flex;align-items:center;position:relative;transition:color .2s}
 .nav-links a::after{content:'';position:absolute;bottom:24px;left:19px;right:19px;height:1px;background:var(--accent);transform:scaleX(0);transition:transform .3s}
@@ -98,16 +101,19 @@ button,input{font-family:var(--sans)}
 .hero-room-caption{position:absolute;bottom:18px;left:18px;font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);background:rgba(12,11,10,.7);padding:7px 13px;border-radius:2px;backdrop-filter:blur(4px);border:1px solid var(--border2)}
 
 /* ── MARQUEE / CREDIBILITY STRIP ── */
-.cred{background:var(--bg2);border-bottom:1px solid var(--border);overflow:hidden}
-.cred-inner{max-width:1240px;margin:0 auto;padding:24px 32px;display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}
+.cred{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;position:relative}
+.cred::before,.cred::after{content:'';position:absolute;left:50%;transform:translateX(-50%);width:120px;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.5}
+.cred::before{top:-1px}.cred::after{bottom:-1px}
+.cred-inner{max-width:1240px;margin:0 auto;padding:32px 32px;display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}
 .cred-label{font-size:10px;font-weight:500;letter-spacing:2.4px;text-transform:uppercase;color:var(--muted)}
 .cred-item{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--text-dim);font-style:italic;letter-spacing:.3px;white-space:nowrap}
 .cred-dot{width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0}
 
 /* ── SECTION WRAPPERS ── */
 .section-wrap{max-width:1240px;margin:0 auto;padding:0 32px}
-.section-kicker{font-size:11px;font-weight:500;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:11px;margin-bottom:18px}
-.section-kicker::before{content:'';width:24px;height:1px;background:var(--accent)}
+.section-kicker{font-size:11px;font-weight:500;letter-spacing:2.8px;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.section-kicker::before{content:'';width:32px;height:1px;background:var(--accent)}
+.section-kicker::after{content:'\25C8';font-size:9px;color:var(--accent);opacity:.7;letter-spacing:0}
 .section-title{font-family:var(--serif);font-size:clamp(32px,4.4vw,50px);font-weight:300;color:var(--text);line-height:1.14;margin-bottom:12px;letter-spacing:-.4px}
 .section-title em{font-style:italic;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .section-sub{font-size:15px;color:var(--text-dim);font-weight:300;max-width:540px;line-height:1.8}
@@ -116,7 +122,7 @@ button,input{font-family:var(--sans)}
 .section-view-all:hover{color:var(--accent2);border-color:var(--accent)}
 
 /* ── STORY ── */
-.story-section{padding:104px 0;position:relative}
+.story-section{padding:128px 0 120px;position:relative}
 .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
 .story-visual{position:relative}
 .story-panel{aspect-ratio:4/5;border-radius:5px;border:1px solid var(--border2);background:linear-gradient(160deg,#1c1915 0%,#13110e 60%,#0e0c0a 100%);position:relative;overflow:hidden;box-shadow:var(--shadow-lg)}
@@ -136,9 +142,9 @@ button,input{font-family:var(--sans)}
 .story-sign-role{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 
 /* ── SERVICE / PILLAR CARDS ── */
-.pillars-section{padding:104px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.pillars-section{padding:128px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:5px;overflow:hidden}
-.pillar-card{background:var(--bg2);padding:42px 36px;transition:background .3s;position:relative}
+.pillar-card{background:var(--bg2);padding:54px 40px 48px;transition:background .3s;position:relative}
 .pillar-card:hover{background:var(--surface)}
 .pillar-card::after{content:'';position:absolute;left:0;top:0;width:100%;height:2px;background:var(--gold-grad);transform:scaleX(0);transform-origin:left;transition:transform .35s}
 .pillar-card:hover::after{transform:scaleX(1)}
@@ -160,7 +166,9 @@ button,input{font-family:var(--sans)}
 /* ── TOPICS GRID ── */
 .topics-section{padding:104px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:34px 30px;transition:transform .3s,border-color .3s,background .3s;position:relative;overflow:hidden}
+.topic-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:38px 32px 34px;transition:transform .3s,border-color .3s,background .3s;position:relative;overflow:hidden}
+.topic-card::after{content:'';position:absolute;top:0;left:0;width:40px;height:1px;background:var(--accent);opacity:.6;transition:width .35s,opacity .25s}
+.topic-card:hover::after{width:100%;opacity:.85}
 .topic-card:hover{transform:translateY(-5px);border-color:var(--border2);background:var(--surface2)}
 .topic-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(201,165,92,.12),transparent 70%);opacity:0;transition:opacity .3s}
 .topic-card:hover::before{opacity:1}
@@ -292,6 +300,44 @@ button,input{font-family:var(--sans)}
 .footer-lower-links{display:flex;gap:22px}
 .footer-lower-links a{font-size:11px;color:var(--muted);font-weight:300;letter-spacing:.3px;transition:color .2s}
 .footer-lower-links a:hover{color:var(--accent2)}
+
+/* ── ORNAMENTAL DIVIDERS (decor-magazine polish) ── */
+.ornament{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 auto;max-width:520px;padding:0 24px}
+.ornament-rule{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,165,92,.55),transparent)}
+.ornament-mark{font-family:var(--serif);font-size:18px;color:var(--accent);line-height:1;letter-spacing:6px;white-space:nowrap;font-style:italic;font-weight:400}
+.ornament-mark.lozenge{font-size:13px;letter-spacing:0}
+.section-divider{padding:38px 0;background:var(--bg)}
+.section-divider.on-dark{background:var(--bg2)}
+
+/* Editorial section sub-label (e.g., "Volume I · Drawing Rooms") */
+.editorial-label{font-family:var(--serif);font-size:13px;font-style:italic;color:var(--primary2);letter-spacing:1px;margin-top:14px;font-weight:400;opacity:.85}
+
+/* Hairline gold rule underline for section titles when wanted */
+.section-title.with-rule::after{content:'';display:block;width:64px;height:1px;background:var(--accent);margin-top:22px;opacity:.7}
+
+/* ── EDITORIAL FEATURE BAND (image-led moment) ── */
+.feature-band{padding:120px 0;background:var(--bg);position:relative;overflow:hidden}
+.feature-band::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2) 20%,var(--border2) 80%,transparent)}
+.feature-band::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2) 20%,var(--border2) 80%,transparent)}
+.feature-inner{max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.15fr 1fr;gap:80px;align-items:center}
+.feature-visual{position:relative;aspect-ratio:5/4;border-radius:5px;overflow:hidden;border:1px solid var(--border2);background:linear-gradient(155deg,#221d15 0%,#15120f 55%,#0d0b09 100%);box-shadow:var(--shadow-lg)}
+.feature-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 25% 30%,rgba(201,165,92,.22) 0%,transparent 55%),radial-gradient(ellipse at 80% 80%,rgba(201,165,92,.08) 0%,transparent 60%)}
+.feature-visual-arch{position:absolute;top:18%;left:20%;width:60%;height:60%;border:1px solid rgba(201,165,92,.32);border-radius:140px 140px 3px 3px;background:linear-gradient(180deg,rgba(201,165,92,.10),transparent 70%)}
+.feature-visual-floor{position:absolute;bottom:0;left:0;right:0;height:22%;background:linear-gradient(180deg,transparent,rgba(201,165,92,.10))}
+.feature-visual-cap{position:absolute;left:24px;bottom:22px;font-size:10px;letter-spacing:2.4px;text-transform:uppercase;color:var(--accent2);background:rgba(12,11,10,.7);padding:7px 13px;border-radius:2px;border:1px solid var(--border2);backdrop-filter:blur(4px)}
+.feature-visual-corner{position:absolute;width:22px;height:22px;border:1px solid rgba(201,165,92,.45)}
+.feature-visual-corner.tl{top:14px;left:14px;border-right:none;border-bottom:none}
+.feature-visual-corner.tr{top:14px;right:14px;border-left:none;border-bottom:none}
+.feature-visual-corner.bl{bottom:14px;left:14px;border-right:none;border-top:none}
+.feature-visual-corner.br{bottom:14px;right:14px;border-left:none;border-top:none}
+.feature-num{font-family:var(--serif);font-style:italic;font-size:14px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:18px}
+.feature-title{font-family:var(--serif);font-size:clamp(34px,4vw,52px);font-weight:300;color:var(--text);line-height:1.12;letter-spacing:-.5px;margin-bottom:24px}
+.feature-title em{font-style:italic;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.feature-lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.55;color:var(--primary2);font-weight:400;margin-bottom:22px;padding-left:18px;border-left:1px solid var(--accent)}
+.feature-copy{font-size:15px;color:var(--text-dim);line-height:1.9;font-weight:300;margin-bottom:30px}
+.feature-meta{display:flex;align-items:center;gap:14px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.feature-meta-dot{width:4px;height:4px;background:var(--accent);border-radius:50%}
+@media(max-width:900px){.feature-inner{grid-template-columns:1fr;gap:52px}.feature-band{padding:80px 0}}
 
 /* ── SCROLL REVEAL ── */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
@@ -449,14 +495,24 @@ button,input{font-family:var(--sans)}
   </div>
 </section>
 
+<!-- ORNAMENTAL DIVIDER -->
+<div class="section-divider reveal">
+  <div class="ornament" aria-hidden="true">
+    <span class="ornament-rule"></span>
+    <span class="ornament-mark">&#10070;&nbsp;&nbsp;&#10042;&nbsp;&nbsp;&#10070;</span>
+    <span class="ornament-rule"></span>
+  </div>
+</div>
+
 <!-- SERVICES / PILLARS -->
 <section class="pillars-section" id="services">
   <div class="section-wrap">
     <div class="section-head-row reveal">
       <div>
         <div class="section-kicker">What the Studio Does</div>
-        <h2 class="section-title">The Art of the <em>Grand Interior</em></h2>
-        <p class="section-sub">Six disciplines that shape every Dalmend Home residence - from first sketch to the final placed object.</p>
+        <h2 class="section-title with-rule">The Art of the <em>Grand Interior</em></h2>
+        <p class="section-sub">Six disciplines that shape every Dalmend Home residence, from first sketch to the final placed object.</p>
+        <div class="editorial-label">Volume I &nbsp;&middot;&nbsp; The Disciplines of the House</div>
       </div>
     </div>
     <div class="pillars-grid reveal">
@@ -557,14 +613,43 @@ button,input{font-family:var(--sans)}
   </div>
 </section>
 
+<!-- EDITORIAL FEATURE BAND (image-led moment) -->
+<section class="feature-band reveal" id="feature">
+  <div class="feature-inner">
+    <div class="feature-visual" aria-hidden="true">
+      <div class="feature-visual-arch"></div>
+      <div class="feature-visual-floor"></div>
+      <span class="feature-visual-corner tl"></span>
+      <span class="feature-visual-corner tr"></span>
+      <span class="feature-visual-corner bl"></span>
+      <span class="feature-visual-corner br"></span>
+      <span class="feature-visual-cap">Maison Lavelle &nbsp;&middot;&nbsp; The Long Gallery</span>
+    </div>
+    <div>
+      <div class="feature-num">House Study No. 07</div>
+      <h2 class="feature-title">A Gallery That <em>Holds the Light</em></h2>
+      <p class="feature-lede">"We wanted a room that would never tire. So we built it from honed limestone, oak with the grain still visible, and one long line of brass."</p>
+      <p class="feature-copy">Set within a nineteenth-century mansion on the southern coast, the long gallery had to do two things at once: receive guests with quiet ceremony and hold the family's growing collection of works on paper. The brief asked for restraint. The architecture asked for a single, generous gesture. We answered with both.</p>
+      <div class="feature-meta">
+        <span>Estate Series</span>
+        <span class="feature-meta-dot"></span>
+        <span>Heritage Restoration</span>
+        <span class="feature-meta-dot"></span>
+        <span>Olivia Grant</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- TOPICS -->
 <section class="topics-section" id="topics">
   <div class="section-wrap">
     <div class="section-head-row reveal">
       <div>
         <div class="section-kicker">What We Cover</div>
-        <h2 class="section-title">The Vocabulary of a <em>Fine Home</em></h2>
+        <h2 class="section-title with-rule">The Vocabulary of a <em>Fine Home</em></h2>
         <p class="section-sub">Our journal explores the elements that turn a large house into a remarkable one.</p>
+        <div class="editorial-label">Volume II &nbsp;&middot;&nbsp; A Reader's Glossary</div>
       </div>
     </div>
     <div class="topics-grid reveal">
@@ -743,6 +828,15 @@ button,input{font-family:var(--sans)}
     </div>
   </div>
 </section>
+
+<!-- ORNAMENTAL DIVIDER -->
+<div class="section-divider reveal">
+  <div class="ornament" aria-hidden="true">
+    <span class="ornament-rule"></span>
+    <span class="ornament-mark">&#10070;&nbsp;&nbsp;&#10042;&nbsp;&nbsp;&#10070;</span>
+    <span class="ornament-rule"></span>
+  </div>
+</div>
 
 <!-- NEWSLETTER -->
 <section class="nl-section" id="newsletter">
