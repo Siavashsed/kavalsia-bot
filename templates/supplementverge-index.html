@@ -155,7 +155,9 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:28px 0}
 .art-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .2s;cursor:pointer;display:flex;flex-direction:column}
 .art-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.4)}
-.art-img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--card2)}
+.art-img-wrap{width:100%;aspect-ratio:16/9;background:var(--card2);overflow:hidden;position:relative}
+.art-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.art-card:hover .art-img{transform:scale(1.05)}
 .art-body{padding:16px;flex:1;display:flex;flex-direction:column}
 .art-cat{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
 .art-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.42;flex:1;margin-bottom:10px}
@@ -583,8 +585,9 @@ function render(){
   grid.innerHTML=batch.map(a=>{
     const g=a.grade||getGradeFromCat(a.category);
     const gc=g==='A'?'ga':g==='B'||g==='B+'?'gb':'gc';
+    const imgBlock=a.image?`<div class="art-img-wrap"><img class="art-img" src="${a.image}" alt="${a.title}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`:'';
     return`<a href="./${a.slug}/" class="art-card">
-      <img class="art-img" src="${a.image||''}" alt="${a.title}" loading="lazy" onerror="this.style.display='none'">
+      ${imgBlock}
       <div class="art-body">
         <div class="art-cat">${a.category||'Research'}</div>
         <div class="art-title">${a.title}</div>
