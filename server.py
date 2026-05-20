@@ -1319,12 +1319,25 @@ def domain_status():
     if _ds_is_placeholder(domain) or not domain:
         return jsonify(out)
 
-    # DNS resolution
+    # DNS resolution via Google DNS-over-HTTPS so the answer reflects real-world
+    # state, not the user's local resolver cache (which can lag for hours).
+    resolved_ip = ""
     try:
-        socket.gethostbyname(domain)
-        out["dns_ok"] = "yes"
+        dr = requests.get(f"https://dns.google/resolve?name={domain}&type=A",
+                          timeout=8).json()
+        ans = [a for a in (dr.get("Answer") or []) if a.get("type") == 1]
+        if ans:
+            resolved_ip = ans[0].get("data", "")
+            out["dns_ok"] = "yes"
+        else:
+            out["dns_ok"] = "no"
     except Exception:
-        out["dns_ok"] = "no"
+        # Fall back to local DNS if DoH fails entirely.
+        try:
+            resolved_ip = socket.gethostbyname(domain)
+            out["dns_ok"] = "yes"
+        except Exception:
+            out["dns_ok"] = "no"
 
     # GitHub Pages cname / https state (requires token + repo)
     if token and repo and "YOUR_" not in repo:
@@ -1349,9 +1362,14 @@ def domain_status():
         except requests.exceptions.RequestException as e:
             out["gh_error"] = f"Pages API network error: {e}"
 
-    # Live HTTPS probe
+    # Live HTTPS probe - also bypass the local resolver by using the IP we got from
+    # public DNS, with a Host header so TLS / vhost routing still works.
     try:
-        pr = requests.get(f"https://{domain}/", timeout=8, allow_redirects=True)
+        if resolved_ip:
+            pr = requests.get(f"https://{resolved_ip}/", timeout=8, allow_redirects=False,
+                              headers={"Host": domain}, verify=False)
+        else:
+            pr = requests.get(f"https://{domain}/", timeout=8, allow_redirects=True)
         out["http_status"] = pr.status_code
     except requests.exceptions.RequestException as e:
         out["http_status"] = 0
