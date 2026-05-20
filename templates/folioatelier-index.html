@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folio Atelier - A Curated Lens on Art, Ateliers, and Modern Collectives</title>
+<meta name="description" content="Folio Atelier is a slow, editorial index of artists, ateliers, and small collectives. Studio visits, archive notes, and quiet criticism by Imogen Salinger.">
+<meta name="author" content="Imogen Salinger">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== Folio Atelier - Editorial Catalogue Theme ===== */
+:root{
+  --paper:#f6f1ea;
+  --bone:#ece5da;
+  --bone-2:#e2d9cb;
+  --ink:#1a1612;
+  --ink-soft:#2a241f;
+  --muted:#6b5f54;
+  --rule:#cbbfae;
+  --walnut:#7b4a32;
+  --walnut-deep:#5e3924;
+  --ochre:#a87a3c;
+  --serif:'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --sans:'Inter', system-ui, -apple-system, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --rule-w:1px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--walnut);color:var(--paper)}
+
+/* utility ── */
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+.eyebrow{font-family:var(--mono);font-size:10.5px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--walnut)}
+.eyebrow.ink{color:var(--ink)}
+.eyebrow.muted{color:var(--muted)}
+.serif{font-family:var(--serif)}
+.rule{height:var(--rule-w);background:var(--rule);width:100%}
+.rule-sepia{height:var(--rule-w);background:var(--walnut);width:48px}
+.rule-thin{border-top:var(--rule-w) solid var(--rule)}
+
+/* ===== Masthead (thin, not sticky-blur) ===== */
+.masthead{border-bottom:var(--rule-w) solid var(--ink);background:var(--paper);position:sticky;top:0;z-index:50}
+.masthead-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:32px;padding:14px 40px;max-width:1240px;margin:0 auto}
+.mh-mark{display:flex;align-items:baseline;gap:10px}
+.mh-mark .ampersand{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--walnut);line-height:1}
+.mh-mark .word{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:.02em;color:var(--ink)}
+.mh-nav{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
+.mh-nav a{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);position:relative;padding:4px 0;transition:color .3s ease}
+.mh-nav a:hover{color:var(--walnut)}
+.mh-nav a:hover::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--walnut)}
+.mh-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.mh-meta span+span{margin-left:14px;padding-left:14px;border-left:1px solid var(--rule)}
+
+/* ===== Hero / Cover ===== */
+.cover{padding:64px 0 80px;border-bottom:var(--rule-w) solid var(--rule);position:relative}
+.cover-grid{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:start}
+.cover-left{padding-top:8px}
+.issue-tag{display:inline-flex;align-items:center;gap:10px;padding:6px 10px;border:1px solid var(--ink);font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink)}
+.issue-tag .dot{width:6px;height:6px;background:var(--walnut);border-radius:50%}
+.cover-headline{font-family:var(--serif);font-weight:300;font-size:clamp(46px,6.4vw,92px);line-height:1.02;letter-spacing:-.01em;margin:28px 0 24px;color:var(--ink)}
+.cover-headline .it{font-style:italic;color:var(--walnut-deep)}
+.cover-headline .br{display:block}
+.cover-stand{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.5;color:var(--ink-soft);max-width:38ch;margin-bottom:32px}
+.cover-meta{display:flex;gap:32px;padding-top:20px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.cover-meta b{color:var(--ink);font-weight:500}
+
+.cover-right{position:relative}
+.cover-frame{position:relative;border:1px solid var(--rule);padding:14px;background:var(--bone)}
+.cover-frame .frame-inner{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--bone-2)}
+.cover-frame img{width:100%;height:100%;object-fit:cover;filter:saturate(.92) contrast(.98)}
+.cover-caption{position:absolute;right:-1px;bottom:-1px;background:var(--paper);border:1px solid var(--ink);padding:14px 18px;max-width:220px}
+.cover-caption .cap-eye{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--walnut);margin-bottom:6px}
+.cover-caption .cap-body{font-family:var(--serif);font-style:italic;font-size:14.5px;line-height:1.4;color:var(--ink)}
+.cover-folio{position:absolute;left:-1px;top:-1px;background:var(--paper);border:1px solid var(--ink);padding:8px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase}
+
+/* ===== Section heads ===== */
+.sec{padding:88px 0;border-bottom:var(--rule-w) solid var(--rule)}
+.sec-head{display:grid;grid-template-columns:auto 1fr auto;align-items:end;gap:32px;margin-bottom:48px}
+.sec-head .h-num{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--walnut)}
+.sec-head .h-title{font-family:var(--serif);font-weight:400;font-size:clamp(34px,4.2vw,52px);line-height:1.05;letter-spacing:-.01em;color:var(--ink)}
+.sec-head .h-title .it{font-style:italic;color:var(--walnut-deep)}
+.sec-head .h-meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-align:right;padding-bottom:6px}
+
+/* ===== In This Issue (asymmetric 1 + 2x2) ===== */
+.issue-grid{display:grid;grid-template-columns:7fr 5fr;gap:40px}
+.issue-feature{border-top:1px solid var(--ink);padding-top:22px}
+.issue-feature .ft-img{aspect-ratio:5/4;overflow:hidden;background:var(--bone-2);margin-bottom:22px;position:relative}
+.issue-feature .ft-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.issue-feature:hover .ft-img img{transform:scale(1.035)}
+.issue-feature .ft-eye{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.issue-feature .ft-title{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.2vw,40px);line-height:1.1;color:var(--ink);margin-bottom:14px;letter-spacing:-.005em}
+.issue-feature .ft-title .it{font-style:italic;color:var(--walnut-deep)}
+.issue-feature .ft-dek{font-family:var(--serif);font-size:18px;line-height:1.5;color:var(--ink-soft);max-width:46ch}
+.issue-feature .ft-by{margin-top:18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+
+.issue-side{display:grid;grid-template-rows:1fr 1fr;gap:32px}
+.issue-card{display:grid;grid-template-columns:1fr 1.4fr;gap:20px;border-top:1px solid var(--rule);padding-top:18px;cursor:pointer}
+.issue-card .sc-img{aspect-ratio:1/1;overflow:hidden;background:var(--bone-2)}
+.issue-card .sc-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.issue-card:hover .sc-img img{transform:scale(1.04)}
+.issue-card .sc-eye{margin-bottom:8px}
+.issue-card .sc-title{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.2;color:var(--ink);margin-bottom:10px}
+.issue-card .sc-meta{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== Studio Visits (horizontal cards w/ rotated polaroid tag) ===== */
+.visits{display:flex;flex-direction:column;gap:48px}
+.visit{display:grid;grid-template-columns:5fr 7fr;gap:48px;align-items:center;position:relative;padding:20px 0;border-top:1px solid var(--rule)}
+.visit:nth-child(even){grid-template-columns:7fr 5fr;direction:rtl}
+.visit:nth-child(even) > *{direction:ltr}
+.visit-img{aspect-ratio:5/4;overflow:hidden;background:var(--bone-2);position:relative}
+.visit-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.visit:hover .visit-img img{transform:scale(1.03)}
+.polaroid{position:absolute;top:-14px;right:-14px;background:var(--paper);border:1px solid var(--ink);padding:10px 14px 12px;transform:rotate(4deg);box-shadow:0 8px 22px -14px rgba(26,22,18,.4);max-width:170px;z-index:2}
+.polaroid .p-eye{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--walnut);margin-bottom:4px}
+.polaroid .p-body{font-family:var(--serif);font-style:italic;font-size:13px;line-height:1.35;color:var(--ink)}
+.visit:nth-child(even) .polaroid{right:auto;left:-14px;transform:rotate(-3.5deg)}
+.visit-body .v-eye{margin-bottom:14px}
+.visit-body .v-title{font-family:var(--serif);font-weight:400;font-size:clamp(26px,2.8vw,36px);line-height:1.12;color:var(--ink);margin-bottom:16px;letter-spacing:-.005em}
+.visit-body .v-title .it{font-style:italic;color:var(--walnut-deep)}
+.visit-body .v-text{font-family:var(--serif);font-size:18px;line-height:1.55;color:var(--ink-soft);margin-bottom:18px;max-width:52ch}
+.visit-body .v-foot{display:flex;gap:24px;padding-top:14px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.visit-body .v-foot b{color:var(--ink);font-weight:500}
+
+/* ===== Archive (6-cell catalogue grid) ===== */
+.archive-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.arch-cell{background:var(--paper);padding:28px 24px 32px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;transition:background .35s ease}
+.arch-cell:hover{background:var(--bone)}
+.arch-num{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--walnut)}
+.arch-mid .a-eye{margin-bottom:10px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.arch-mid .a-title{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.18;color:var(--ink);letter-spacing:-.005em}
+.arch-mid .a-title .it{font-style:italic;color:var(--walnut-deep)}
+.arch-foot{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== Acquisition Notes (2-col editorial) ===== */
+.acq{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+.acq-col{border-top:1px solid var(--ink);padding-top:22px}
+.acq-col .ac-eye{margin-bottom:14px}
+.acq-col .ac-title{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.15;color:var(--ink);margin-bottom:16px;letter-spacing:-.005em}
+.acq-col .ac-title .it{font-style:italic;color:var(--walnut-deep)}
+.acq-col .ac-body{font-family:var(--serif);font-size:17.5px;line-height:1.6;color:var(--ink-soft);columns:1;margin-bottom:18px}
+.acq-col .ac-body p+p{margin-top:14px;text-indent:1.6em}
+.acq-col .ac-by{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);padding-top:14px;border-top:1px solid var(--rule)}
+
+/* ===== Article feed (Index list) ===== */
+.feed{display:flex;flex-direction:column;gap:0}
+.feed .empty-state{padding:40px 0;text-align:center;font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.feed-row{display:grid;grid-template-columns:90px 1.4fr 2fr auto;gap:32px;align-items:center;padding:22px 0;border-top:1px solid var(--rule);transition:background .3s ease}
+.feed-row:last-child{border-bottom:1px solid var(--rule)}
+.feed-row:hover{background:var(--bone)}
+.feed-num{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--walnut)}
+.feed-thumb{width:120px;height:80px;overflow:hidden;background:var(--bone-2);flex-shrink:0}
+.feed-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.feed-row:hover .feed-thumb img{transform:scale(1.06)}
+.feed-mid .fm-eye{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--walnut);margin-bottom:6px}
+.feed-mid .fm-title{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.2;color:var(--ink);letter-spacing:-.005em}
+.feed-mid .fm-title .it{font-style:italic;color:var(--walnut-deep)}
+.feed-dek{font-family:var(--serif);font-size:15.5px;line-height:1.5;color:var(--muted)}
+.feed-meta{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-align:right;white-space:nowrap}
+
+/* ===== Author / Contributors ===== */
+.author{display:grid;grid-template-columns:auto 1fr auto;gap:40px;align-items:center;padding:36px;background:var(--bone);border:1px solid var(--rule)}
+.author-portrait{width:130px;height:130px;border-radius:50%;overflow:hidden;background:var(--bone-2);border:1px solid var(--rule)}
+.author-portrait img{width:100%;height:100%;object-fit:cover}
+.author-body .a-eye{margin-bottom:8px}
+.author-body .a-name{font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1;color:var(--ink);margin-bottom:10px}
+.author-body .a-name .it{font-style:italic;color:var(--walnut-deep)}
+.author-body .a-bio{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--ink-soft);max-width:60ch}
+.author-sig{font-family:var(--serif);font-style:italic;font-size:28px;color:var(--walnut-deep);transform:rotate(-4deg);padding-right:10px}
+
+/* ===== Editor's Letter (FAQ) ===== */
+.letter{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:start}
+.letter-aside{position:sticky;top:80px}
+.letter-aside .l-eye{margin-bottom:14px}
+.letter-aside .l-title{font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.08;color:var(--ink);margin-bottom:18px;letter-spacing:-.005em}
+.letter-aside .l-title .it{font-style:italic;color:var(--walnut-deep)}
+.letter-aside .l-intro{font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--ink-soft)}
+.qa-list{display:flex;flex-direction:column}
+.qa{border-top:1px solid var(--rule);padding:22px 0;cursor:pointer}
+.qa:last-child{border-bottom:1px solid var(--rule)}
+.qa-q{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:start}
+.qa-q .q-mark{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--walnut);line-height:1;padding-top:2px}
+.qa-q .q-text{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.28;color:var(--ink);letter-spacing:-.005em}
+.qa-q .q-plus{font-family:var(--mono);font-size:18px;color:var(--walnut);transition:transform .35s ease;line-height:1;padding-top:6px}
+.qa.open .q-plus{transform:rotate(45deg)}
+.qa-a{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.7,.2,1)}
+.qa-a-inner{padding:16px 0 4px 40px;font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--ink-soft)}
+
+/* ===== Newsletter ===== */
+.sub{max-width:760px;margin:0 auto;padding:48px;border:1px solid var(--rule);background:var(--bone);position:relative}
+.sub::before{content:"";position:absolute;left:48px;right:48px;top:18px;height:1px;background:var(--walnut)}
+.sub .s-eye{margin-bottom:14px;text-align:center}
+.sub .s-title{font-family:var(--serif);font-weight:400;font-size:36px;line-height:1.12;color:var(--ink);text-align:center;margin-bottom:14px;letter-spacing:-.005em}
+.sub .s-title .it{font-style:italic;color:var(--walnut-deep)}
+.sub .s-dek{font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--muted);text-align:center;max-width:48ch;margin:0 auto 28px}
+.sub form{display:grid;grid-template-columns:1fr auto;gap:0;max-width:480px;margin:0 auto;border:1px solid var(--ink);background:var(--paper)}
+.sub input{border:0;background:transparent;padding:14px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink);outline:none}
+.sub input::placeholder{color:var(--muted);letter-spacing:.18em;text-transform:uppercase;font-size:10.5px}
+.sub button{border:0;border-left:1px solid var(--ink);background:var(--ink);color:var(--paper);padding:14px 22px;font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;cursor:pointer;transition:background .25s ease}
+.sub button:hover{background:var(--walnut-deep)}
+.sub .s-fine{margin-top:16px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== Colophon (footer) ===== */
+.colophon{background:var(--ink);color:var(--bone);padding:80px 0 36px;border-top:6px double var(--walnut)}
+.colophon-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px}
+.cph-brand .cph-mark{display:flex;align-items:baseline;gap:10px;margin-bottom:18px}
+.cph-brand .cph-mark .ampersand{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--ochre)}
+.cph-brand .cph-mark .word{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.02em}
+.cph-brand p{font-family:var(--serif);font-size:15.5px;line-height:1.55;color:#bdb09c;max-width:36ch}
+.cph-col h4{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ochre);margin-bottom:18px;font-weight:400}
+.cph-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.cph-col a{font-family:var(--serif);font-size:16px;color:var(--bone);transition:color .25s ease}
+.cph-col a:hover{color:var(--ochre)}
+.cph-fine{display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid #3a322a;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:#7a6e5e;flex-wrap:wrap;gap:18px}
+.cph-fine b{color:var(--bone);font-weight:500}
+
+/* ===== Reveal motion ===== */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== Responsive ===== */
+@media (max-width: 980px){
+  .wrap{padding:0 24px}
+  .masthead-bar{grid-template-columns:1fr auto;padding:12px 24px}
+  .mh-nav{display:none}
+  .cover{padding:40px 0 56px}
+  .cover-grid{grid-template-columns:1fr;gap:40px}
+  .cover-headline{font-size:clamp(40px,9vw,64px)}
+  .sec{padding:64px 0}
+  .sec-head{grid-template-columns:1fr;gap:12px}
+  .sec-head .h-meta{text-align:left}
+  .issue-grid{grid-template-columns:1fr;gap:40px}
+  .issue-side{grid-template-rows:auto;gap:28px}
+  .visit, .visit:nth-child(even){grid-template-columns:1fr;direction:ltr;gap:24px}
+  .visit:nth-child(even) > *{direction:ltr}
+  .polaroid, .visit:nth-child(even) .polaroid{top:-10px;right:-10px;left:auto;transform:rotate(3deg);max-width:150px}
+  .archive-grid{grid-template-columns:repeat(2,1fr)}
+  .acq{grid-template-columns:1fr;gap:40px}
+  .feed-row{grid-template-columns:1fr;gap:14px;padding:24px 0}
+  .feed-num{display:none}
+  .feed-thumb{width:100%;height:200px}
+  .feed-meta{text-align:left}
+  .author{grid-template-columns:1fr;text-align:center;padding:28px;gap:20px}
+  .author-portrait{margin:0 auto}
+  .author-sig{text-align:center;padding:0}
+  .letter{grid-template-columns:1fr;gap:32px}
+  .letter-aside{position:static}
+  .sub{padding:32px 24px}
+  .colophon-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .cph-brand{grid-column:1 / -1}
+  .cph-fine{flex-direction:column;text-align:center;gap:10px}
+}
+@media (max-width: 480px){
+  .wrap{padding:0 18px}
+  .masthead-bar{padding:10px 18px;gap:14px}
+  .mh-meta span+span{margin-left:8px;padding-left:8px}
+  .cover-headline{font-size:42px}
+  .cover-stand{font-size:17px}
+  .cover-meta{flex-direction:column;gap:10px}
+  .issue-feature .ft-title{font-size:26px}
+  .archive-grid{grid-template-columns:1fr}
+  .qa-a-inner{padding-left:20px}
+  .sub .s-title{font-size:28px}
+  .colophon-grid{grid-template-columns:1fr;gap:28px}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#7b4a32-->
+<!--SHELL:HEADER-->
+<header class="masthead" role="banner">
+  <div class="masthead-bar">
+    <a href="./" class="mh-mark" aria-label="Folio Atelier home">
+      <span class="ampersand">&</span>
+      <span class="word">Folio Atelier</span>
+    </a>
+    <nav class="mh-nav" aria-label="Primary">
+      <a href="./#issue">In This Issue</a>
+      <a href="./#visits">Studio Visits</a>
+      <a href="./#archive">Archive</a>
+      <a href="./#notes">Acquisition Notes</a>
+      <a href="./#index">Index</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="mh-meta" aria-label="Issue metadata">
+      <span>No. 014</span>
+      <span>Spring 2026</span>
+    </div>
+  </div>
+</header>
+<!--/SHELL:HEADER-->
+
+<!-- ===== Cover / Hero ===== -->
+<section class="cover">
+  <div class="wrap">
+    <div class="cover-grid">
+      <div class="cover-left reveal">
+        <span class="issue-tag"><span class="dot"></span>Issue No. 014 / Spring 2026</span>
+        <h1 class="cover-headline">
+          <span class="br">A quiet index</span>
+          <span class="br it">of ateliers,</span>
+          <span class="br">artists, and the rooms</span>
+          <span class="br it">they keep.</span>
+        </h1>
+        <p class="cover-stand">Folio Atelier is a slow editorial reading room for small studios, private collectives, and the working artists whose practice resists the feed. Published twice a season, written by hand, set in lead.</p>
+        <div class="cover-meta">
+          <span><b>Edited by</b> Imogen Salinger</span>
+          <span><b>Pages</b> 148</span>
+          <span><b>Letterpress</b> Yes</span>
+        </div>
+      </div>
+      <div class="cover-right reveal">
+        <div class="cover-frame">
+          <div class="cover-folio">Plate 01 / Cover</div>
+          <div class="frame-inner">
+            <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=1600&q=85" alt="Interior of a quiet contemporary art gallery with hung canvases" onerror="this.style.display='none'">
+          </div>
+          <div class="cover-caption">
+            <div class="cap-eye">Caption / Field Note</div>
+            <div class="cap-body">"The room arranges itself before the work arrives. Light first, then walls, then us."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== In This Issue ===== -->
+<section class="sec" id="issue">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="h-num">Section 01</span>
+      <h2 class="h-title">In This <span class="it">Issue</span></h2>
+      <span class="h-meta">5 Selections / Spring '26</span>
+    </div>
+
+    <div class="issue-grid">
+      <article class="issue-feature reveal">
+        <div class="ft-img">
+          <img src="https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=1600&q=85" alt="Painter at work in a quiet daylit studio" onerror="this.style.display='none'">
+        </div>
+        <div class="ft-eye">
+          <span class="eyebrow">Feature / Profile</span>
+          <span class="eyebrow muted">14 min read</span>
+        </div>
+        <h3 class="ft-title">The Long <span class="it">Apprenticeship</span> of Marta Heilbron</h3>
+        <p class="ft-dek">In a converted ribbon factory outside Ghent, a painter we have followed for nine years finally agrees to be photographed. She speaks, slowly, about patience as a medium.</p>
+        <div class="ft-by">Words by Imogen Salinger / Photographs by Idris Whyte</div>
+      </article>
+
+      <div class="issue-side">
+        <article class="issue-card reveal">
+          <div class="sc-img">
+            <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1600&q=85" alt="Sculptor's tools on a wooden bench" onerror="this.style.display='none'">
+          </div>
+          <div>
+            <div class="sc-eye eyebrow">Field Report</div>
+            <h4 class="sc-title">A collective of seven, in a barn outside Arles.</h4>
+            <div class="sc-meta">Dispatch / 6 min</div>
+          </div>
+        </article>
+        <article class="issue-card reveal">
+          <div class="sc-img">
+            <img src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1600&q=85" alt="Stacked canvases against a sunlit white wall" onerror="this.style.display='none'">
+          </div>
+          <div>
+            <div class="sc-eye eyebrow">Criticism</div>
+            <h4 class="sc-title">On the recent quietness of figurative painting.</h4>
+            <div class="sc-meta">Essay / 11 min</div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Studio Visits ===== -->
+<section class="sec" id="visits">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="h-num">Section 02</span>
+      <h2 class="h-title">Studio <span class="it">Visits</span></h2>
+      <span class="h-meta">Three rooms / This season</span>
+    </div>
+
+    <div class="visits">
+      <article class="visit reveal">
+        <div class="visit-img">
+          <img src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?w=1600&q=85" alt="Studio interior with large north-facing windows" onerror="this.style.display='none'">
+          <div class="polaroid"><div class="p-eye">Roll 04 / 12</div><div class="p-body">"The north window is the only collaborator I trust."</div></div>
+        </div>
+        <div class="visit-body">
+          <div class="v-eye eyebrow">Visit No. 014.01 / Lisbon</div>
+          <h3 class="v-title">Rooftop, north light, and a single <span class="it">unfinished</span> wall.</h3>
+          <p class="v-text">A morning with the painter Joaquim Bento at his Graça studio. He works from one wall, never two. The rest of the room is reserved for thinking, or for not thinking, depending on the week.</p>
+          <div class="v-foot"><span><b>Photographer</b> Sira Vance</span><span><b>Words</b> I. Salinger</span></div>
+        </div>
+      </article>
+
+      <article class="visit reveal">
+        <div class="visit-img">
+          <img src="https://images.unsplash.com/photo-1525909002-1b05e0c869d8?w=1600&q=85" alt="Ceramics studio with wheel and shelves of vessels" onerror="this.style.display='none'">
+          <div class="polaroid"><div class="p-eye">Roll 07 / 09</div><div class="p-body">"Clay forgets nothing. That is the entire pleasure."</div></div>
+        </div>
+        <div class="visit-body">
+          <div class="v-eye eyebrow">Visit No. 014.02 / Marfa</div>
+          <h3 class="v-title">A ceramicist who refuses to fire <span class="it">before sundown.</span></h3>
+          <p class="v-text">Della Komen has worked the same wheel for twenty-six years. She speaks about heat, patience, and why she will not take commissions from anyone she has not met in person at least twice.</p>
+          <div class="v-foot"><span><b>Photographer</b> Theo Linwood</span><span><b>Words</b> I. Salinger</span></div>
+        </div>
+      </article>
+
+      <article class="visit reveal">
+        <div class="visit-img">
+          <img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1600&q=85" alt="Printmaker's studio with hung proofs drying on lines" onerror="this.style.display='none'">
+          <div class="polaroid"><div class="p-eye">Roll 02 / 18</div><div class="p-body">"A press is a slow argument with the page."</div></div>
+        </div>
+        <div class="visit-body">
+          <div class="v-eye eyebrow">Visit No. 014.03 / Edinburgh</div>
+          <h3 class="v-title">The intaglio room above a <span class="it">closed bookshop.</span></h3>
+          <p class="v-text">Five printmakers share a third-floor studio reached by a stair that nobody has repaired since 1974. They produce, between them, perhaps eighty plates a year, and they sell almost none of them.</p>
+          <div class="v-foot"><span><b>Photographer</b> Mara Ostrowska</span><span><b>Words</b> I. Salinger</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== From the Archive ===== -->
+<section class="sec" id="archive">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="h-num">Section 03</span>
+      <h2 class="h-title">From the <span class="it">Archive</span></h2>
+      <span class="h-meta">Catalogue / Six plates</span>
+    </div>
+
+    <div class="archive-grid reveal">
+      <div class="arch-cell">
+        <span class="arch-num">00.01</span>
+        <div class="arch-mid"><div class="a-eye">1998 / Naples</div><h4 class="a-title">A summer with the <span class="it">Mazzucato</span> sisters.</h4></div>
+        <div class="arch-foot"><span>Profile</span><span>14 pp.</span></div>
+      </div>
+      <div class="arch-cell">
+        <span class="arch-num">00.02</span>
+        <div class="arch-mid"><div class="a-eye">2003 / Kyoto</div><h4 class="a-title">On the discipline of the unfilled page.</h4></div>
+        <div class="arch-foot"><span>Essay</span><span>9 pp.</span></div>
+      </div>
+      <div class="arch-cell">
+        <span class="arch-num">00.03</span>
+        <div class="arch-mid"><div class="a-eye">2009 / Brooklyn</div><h4 class="a-title">A collective forms, dissolves, <span class="it">reforms.</span></h4></div>
+        <div class="arch-foot"><span>Field Report</span><span>22 pp.</span></div>
+      </div>
+      <div class="arch-cell">
+        <span class="arch-num">00.04</span>
+        <div class="arch-mid"><div class="a-eye">2014 / Mexico City</div><h4 class="a-title">Three weavers, one loom, twenty years.</h4></div>
+        <div class="arch-foot"><span>Visit</span><span>18 pp.</span></div>
+      </div>
+      <div class="arch-cell">
+        <span class="arch-num">00.05</span>
+        <div class="arch-mid"><div class="a-eye">2018 / Marseille</div><h4 class="a-title">On the quiet politics of <span class="it">framing.</span></h4></div>
+        <div class="arch-foot"><span>Criticism</span><span>11 pp.</span></div>
+      </div>
+      <div class="arch-cell">
+        <span class="arch-num">00.06</span>
+        <div class="arch-mid"><div class="a-eye">2022 / Reykjavik</div><h4 class="a-title">A studio dug into the side of a hill.</h4></div>
+        <div class="arch-foot"><span>Visit</span><span>16 pp.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Acquisition Notes ===== -->
+<section class="sec" id="notes">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="h-num">Section 04</span>
+      <h2 class="h-title">Acquisition <span class="it">Notes</span></h2>
+      <span class="h-meta">Two short essays</span>
+    </div>
+
+    <div class="acq">
+      <article class="acq-col reveal">
+        <div class="ac-eye eyebrow">Note 014.A / On Buying Slowly</div>
+        <h3 class="ac-title">The case for living with <span class="it">one work</span> for a full year before adding another.</h3>
+        <div class="ac-body">
+          <p>A small collection grows in the way a garden grows, which is to say, in spite of intention. The first acquisition is always the easiest. It is the second that decides everything.</p>
+          <p>I have been recommending the same exercise to private collectors for nearly a decade now. Buy one piece. Live with it for twelve months. Move it three times. Then, and only then, consider what it asks for as a companion.</p>
+        </div>
+        <div class="ac-by">Imogen Salinger / 6 min</div>
+      </article>
+
+      <article class="acq-col reveal">
+        <div class="ac-eye eyebrow">Note 014.B / On Provenance</div>
+        <h3 class="ac-title">Why the second owner of a painting matters more than the first.</h3>
+        <div class="ac-body">
+          <p>The first owner of a work is usually a friend, a patron, or the artist's mother. They tell us very little. The second owner is the one who chose, and choice is the only honest record we keep.</p>
+          <p>I keep a small notebook of second-owner stories. They are, almost without exception, more interesting than the studio anecdotes that surround a work's making.</p>
+        </div>
+        <div class="ac-by">Imogen Salinger / 5 min</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Index (Article Feed) ===== -->
+<section class="sec" id="index">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="h-num">Section 05</span>
+      <h2 class="h-title">The <span class="it">Index</span></h2>
+      <span class="h-meta">All entries / This volume</span>
+    </div>
+
+    <div class="feed" id="folio-index">
+      <div class="empty-state">The index is being typeset. New entries arrive each fortnight.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Author / Contributors ===== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="h-num">Section 06</span>
+      <h2 class="h-title">Editor &amp; <span class="it">Contributors</span></h2>
+      <span class="h-meta">Masthead / Spring 2026</span>
+    </div>
+
+    <div class="author reveal">
+      <div class="author-portrait">
+        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&q=85" alt="Portrait of editor Imogen Salinger" onerror="this.style.display='none'">
+      </div>
+      <div class="author-body">
+        <div class="a-eye eyebrow">Editor / Founder</div>
+        <h3 class="a-name">Imogen <span class="it">Salinger</span></h3>
+        <p class="a-bio">Imogen is an independent art editor based between Lisbon and Brooklyn. She founded Folio Atelier in 2019 after a decade of writing studio visits for catalogues she felt nobody was reading. She edits slowly, on purpose, and is not on social media.</p>
+      </div>
+      <div class="author-sig">Imogen S.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Editor's Letter (FAQ) ===== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="letter">
+      <aside class="letter-aside reveal">
+        <div class="l-eye eyebrow">From the Editor</div>
+        <h2 class="l-title">A short letter, in <span class="it">answer</span> to the usual questions.</h2>
+        <p class="l-intro">These are the five questions readers send most often. I have tried to answer them in the spirit they were asked: briefly, without affectation, and with the door left open.</p>
+      </aside>
+
+      <div class="qa-list reveal">
+        <div class="qa">
+          <div class="qa-q"><span class="q-mark">Q.</span><span class="q-text">How often does Folio Atelier publish?</span><span class="q-plus">+</span></div>
+          <div class="qa-a"><div class="qa-a-inner">Two issues a season, four seasons a year. Between issues, the Index receives one or two new entries each fortnight. We do not publish on holidays, weekends, or when the writer feels rushed.</div></div>
+        </div>
+        <div class="qa">
+          <div class="qa-q"><span class="q-mark">Q.</span><span class="q-text">Is the printed catalogue available to readers?</span><span class="q-plus">+</span></div>
+          <div class="qa-a"><div class="qa-a-inner">Yes. Each issue is set in lead by a small letterpress in Antwerp and bound by hand in an edition of 600. Subscribers receive the printed catalogue by post; the online edition is free, in keeping with our reading-room philosophy.</div></div>
+        </div>
+        <div class="qa">
+          <div class="qa-q"><span class="q-mark">Q.</span><span class="q-text">How do you choose which ateliers to visit?</span><span class="q-plus">+</span></div>
+          <div class="qa-a"><div class="qa-a-inner">Slowly, and almost always on recommendation from other artists we have already visited. We do not accept pitches from galleries or representatives. We do read every letter sent by a working artist.</div></div>
+        </div>
+        <div class="qa">
+          <div class="qa-q"><span class="q-mark">Q.</span><span class="q-text">Do you sell or broker work featured in the index?</span><span class="q-plus">+</span></div>
+          <div class="qa-a"><div class="qa-a-inner">No. Folio Atelier is editorial, not transactional. When readers ask after a particular work, we forward the message to the artist, with their permission, and step out of the conversation.</div></div>
+        </div>
+        <div class="qa">
+          <div class="qa-q"><span class="q-mark">Q.</span><span class="q-text">May I write or photograph for the publication?</span><span class="q-plus">+</span></div>
+          <div class="qa-a"><div class="qa-a-inner">We commission a small roster each season. If your practice is in long-form criticism, studio reportage, or quiet documentary photography, please write to the editor with two recent pieces and a paragraph about a room you have not been able to forget.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Newsletter ===== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sub reveal">
+      <div class="s-eye eyebrow">Subscribe / Free of charge</div>
+      <h2 class="s-title">A short letter, every <span class="it">other</span> Sunday.</h2>
+      <p class="s-dek">One studio visit, one archive note, one quiet recommendation. Sent by hand, never with tracking, easy to leave behind.</p>
+      <form onsubmit="event.preventDefault();this.querySelector('button').textContent='Received';">
+        <input type="email" placeholder="Your reading-room address" required aria-label="Email address">
+        <button type="submit">Send Word</button>
+      </form>
+      <div class="s-fine">No advertising / No third parties / Postmarked from Lisbon</div>
+    </div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer class="colophon" role="contentinfo">
+  <div class="wrap">
+    <div class="colophon-grid">
+      <div class="cph-brand">
+        <a href="./" class="cph-mark">
+          <span class="ampersand">&</span>
+          <span class="word">Folio Atelier</span>
+        </a>
+        <p>A slow editorial index of artists, ateliers, and small collectives. Edited from Lisbon and Brooklyn. Printed in Antwerp. Read, ideally, on paper.</p>
+      </div>
+      <div class="cph-col">
+        <h4>Sections</h4>
+        <ul>
+          <li><a href="./#issue">In This Issue</a></li>
+          <li><a href="./#visits">Studio Visits</a></li>
+          <li><a href="./#archive">Archive</a></li>
+          <li><a href="./#notes">Acquisition Notes</a></li>
+          <li><a href="./#index">The Index</a></li>
+        </ul>
+      </div>
+      <div class="cph-col">
+        <h4>Publication</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="./#index">Current Issue</a></li>
+          <li><a href="./">Subscribe</a></li>
+          <li><a href="about.html">Masthead</a></li>
+        </ul>
+      </div>
+      <div class="cph-col">
+        <h4>Editorial</h4>
+        <ul>
+          <li><a href="./">Pitch a Visit</a></li>
+          <li><a href="./">Letters</a></li>
+          <li><a href="./">Reading Room</a></li>
+          <li><a href="./">Errata</a></li>
+        </ul>
+      </div>
+      <div class="cph-col">
+        <h4>Notices</h4>
+        <ul>
+          <li><a href="./">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="cph-fine">
+      <span>Colophon / Set in Cormorant Garamond &amp; IBM Plex Mono. Issue No. 014, Spring 2026.</span>
+      <span><b>Folio Atelier</b> / Edited by Imogen Salinger / All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+<!--/SHELL:FOOTER-->
+
+<script>
+// ── Reveal on scroll ──
+(function(){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  },{threshold:.12, rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+
+// ── Editor's Letter accordion ──
+document.querySelectorAll('.qa').forEach(function(item){
+  var q = item.querySelector('.qa-q');
+  var a = item.querySelector('.qa-a');
+  q.addEventListener('click', function(){
+    var open = item.classList.contains('open');
+    document.querySelectorAll('.qa').forEach(function(i){
+      i.classList.remove('open');
+      i.querySelector('.qa-a').style.maxHeight = null;
+    });
+    if(!open){
+      item.classList.add('open');
+      a.style.maxHeight = a.scrollHeight + 'px';
+    }
+  });
+});
+
+// ── Article feed loader: real data only ──
+function loadFolioIndex(){
+  if(!document.getElementById('folio-index')) return;
+  var grid = document.getElementById('folio-index');
+  var emptyState = grid.innerHTML;
+  fetch('./articles.json')
+    .then(function(r){ if(!r.ok) throw new Error('no articles'); return r.json(); })
+    .then(function(arts){
+      if(!Array.isArray(arts) || arts.length === 0) throw new Error('empty');
+      var valid = arts.filter(function(a){ return a && a.slug && a.title; });
+      if(!valid.length) throw new Error('empty');
+      grid.innerHTML = valid.slice(0, 10).map(function(a, i){
+        var cat = (a.category || 'Dispatch').toString();
+        var excerpt = (a.meta_description || a.excerpt || '').toString().slice(0, 140);
+        var date = a.date ? new Date(a.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'Folio Atelier';
+        var num = 'No. ' + String(i + 1).padStart(2, '0');
+        var safeTitle = String(a.title).replace(/"/g,'&quot;');
+        var imgTag = a.image
+          ? '<div class="feed-thumb"><img src="' + a.image + '" alt="' + safeTitle + '" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.style.background=\'var(--bone-2)\'"></div>'
+          : '<div class="feed-thumb"></div>';
+        return '<a href="./' + encodeURIComponent(a.slug) + '/" class="feed-row">' +
+          '<span class="feed-num">' + num + '</span>' +
+          imgTag +
+          '<div class="feed-mid">' +
+            '<div class="fm-eye">' + cat + '</div>' +
+            '<div class="fm-title">' + a.title + '</div>' +
+          '</div>' +
+          '<span class="feed-meta">' + date + '</span>' +
+        '</a>';
+      }).join('');
+    })
+    .catch(function(){ grid.innerHTML = emptyState; });
+}
+loadFolioIndex();
+</script>
+</body>
+</html>
