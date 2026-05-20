@@ -17,6 +17,8 @@ REPO = "Siavashsed/kavalsia-bot"
 # Engine modules + the auto-sync workflow.
 FILES = [
     "bot.py", "layout_shell.py", "push-sites.py", "rebuild-articles.py", "sync.py",
+    "network-config.json", "categories.json",
+    "inject_sponsors.py", "inject_dalmend_backlinks.py",
     ".github/workflows/sync-sites.yml",
 ]
 # Plus every homepage template and every about-page body fragment.
