@@ -124,7 +124,8 @@
       "articles_per_day": 1,
       "is_mother_site": true,
       "nav_style": "dark",
-      "brevo_list_id": 4
+      "brevo_list_id": 4,
+      "author_bio": "Content Network Hub. Written by Editorial Team, Content Network Hub."
     },
     {
       "id": "cryptopulse",
@@ -197,7 +198,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "This site is where I publish the analysis that takes longer than 280 characters to explain: on-chain signals, bot logic, and the setups I'm actually watching.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "passive-wealth",
@@ -270,7 +278,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Passive Wealth Guide is written for people who want the realistic version: how long it actually takes, what the taxes look like, and which strategies are worth the complexity.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "trading-tech",
@@ -343,7 +358,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "TradingTech Review is where I cut through vendor marketing. If a tool doesn't hold up under real trading conditions, I'll say so.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "ai-marketing",
@@ -416,7 +438,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "AI Marketing Pro is the resource I wished existed when I started integrating AI into my campaigns. No hype about 'replacing marketers' - just what works, measured by actual results.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "ecommerce-edge",
@@ -488,13 +517,13 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 10,
+      "historical_per_week": 14,
       "posts_per_day_new": 1,
       "name": "ecommerce-edge",
       "default_author": "",
       "custom_prompt": "",
       "custom_css": "",
-      "posts_per_week": 0,
+      "posts_per_week": 3,
       "categories": [],
       "default_category": "",
       "ghl": {
@@ -528,7 +557,13 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author_bio": "Ecommerce Edge is where I share the tactics, data, and frameworks that actually move conversion rates. No vanity metrics, no generic advice.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "new_posts_enabled": false
     },
     {
       "id": "mochapoo-pets",
@@ -603,7 +638,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "This site exists because most doodle breed content is written by breeders with a financial stake. I write it as a vet: what the health research shows, what nutrition actually matters, and what advice to ignore.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "supplement-verge",
@@ -676,7 +718,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Supplement Verge cuts through the marketing. Every ingredient gets graded by the quality of human evidence behind it - not by how impressive the label looks.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "sight-reading",
@@ -746,10 +795,16 @@
       ],
       "use_random_author": true,
       "posts_per_run": 1,
-      "historical_mode": false,
-      "historical_per_week": 0,
+      "historical_mode": true,
+      "historical_per_week": 14,
       "posts_per_day_new": 1,
-      "posts_per_week": 1
+      "posts_per_week": 3,
+      "author_bio": "Most students practice sight-reading wrong - they reinforce bad habits instead of building fluency. Sight Reading Academy is my attempt to fix that with structured, evidence-informed methodology.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "new_posts_enabled": false
     },
     {
       "id": "newborn-iq",
@@ -822,7 +877,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Newborn IQ is built around what current pediatric evidence actually supports - not what worked for someone's grandmother, and not the anxiety-producing content that fills most parenting sites.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "dalmend-home",
@@ -894,13 +956,13 @@
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
-      "historical_per_week": 5,
+      "historical_per_week": 14,
       "posts_per_day_new": 1,
       "name": "dalmend-home",
       "default_author": "",
       "custom_prompt": "",
       "custom_css": "",
-      "posts_per_week": 0,
+      "posts_per_week": 3,
       "categories": [
         "Statement Rooms",
         "Materials and Light",
@@ -909,7 +971,13 @@
         "Art and Collecting",
         "Bespoke Joinery"
       ],
-      "default_category": ""
+      "default_category": "",
+      "author_bio": "Dalmend Home is where design meets ROI. If a renovation or styling decision doesn't improve livability or resale value, I'll tell you to skip it.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "new_posts_enabled": false
     },
     {
       "id": "onlinebiz-pro",
@@ -982,7 +1050,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Online Biz Pro is for founders who want straight talk on what actually works: acquisition, pricing, hiring, exits. Skip the guru content - this is operating experience.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "sportiq-pro",
@@ -1055,7 +1130,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "SportIQ Pro is my attempt to close that gap. Every programming decision, every recovery protocol, every piece of nutrition advice gets run against the actual evidence. No bro science.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "makeup-craft",
@@ -1128,7 +1210,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Makeup Craft is technique-first. I'm not here to sell you a specific product - I'm here to help you understand application, so whatever products you use, you use them correctly.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "dating-edge",
@@ -1201,7 +1290,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "The Dating Edge is built around attachment theory, communication research, and the psychology of attraction - not pickup tactics or generic 'love yourself first' platitudes.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "fitpulse-pro",
@@ -1274,7 +1370,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "FitPulse Pro is for people who want honest answers: what the research says, what my experience confirms, and what the fitness industry is quietly wrong about.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "mashestate-home",
@@ -1347,7 +1450,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Mash Estate is where I publish the analysis I give private clients: market reads, deal structures, and the legal landmines most investors step on.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "kanona-events",
@@ -1421,7 +1531,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Kanona Projects is for curious minds who believe a gathering can be more than a social obligation. The people who show up wanting to feel something different - and leave carrying a memory they did not expect.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "mashestate-construction",
@@ -1494,7 +1611,14 @@
       "posts_per_run": 2,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Mash Construction is the resource I give to clients before they start a project. Better-informed owners make better decisions - and my job gets easier when they do.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "insight-insure",
@@ -1567,7 +1691,14 @@
       "posts_per_run": 2,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Insight Insure exists because insurance is one of the most important financial products most people understand the least. I'm trying to fix that, one article at a time.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "carverge",
@@ -1640,7 +1771,14 @@
       "posts_per_run": 2,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "CarVerge exists because most EV coverage is either hype or FUD. I try to give you the engineering reality - battery chemistry, real-world range data, and cost of ownership math.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "travelverge",
@@ -1713,7 +1851,14 @@
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "Travel Verge is the resource I wish had existed: specific, honest, and written by someone who went there on their own money. No sponsored stays, no destination board partnerships.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "topproduct",
@@ -1793,7 +1938,14 @@
       "posts_per_run": 2,
       "historical_mode": true,
       "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "posts_per_day_new": 1,
+      "author_bio": "TopProduct exists because I got tired of buying things based on reviews written by people who had never touched them. Every pick here has been through real use - not a press preview, not a sponsored send.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "mindframe",
@@ -1823,13 +1975,20 @@
       ],
       "posts_per_day_new": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "warming": {
         "enabled": false
       },
       "header_scripts": "",
       "footer_scripts": "",
-      "custom_css": ""
+      "custom_css": "",
+      "author_bio": "MindFrame translates serious psychology and brain research into things you can actually do. Evidence first, no clickbait, no neuro-pop nonsense.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "folioatelier",
@@ -1845,13 +2004,20 @@
       "author": "Imogen Salinger",
       "posts_per_day_new": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "warming": {
         "enabled": false
       },
       "header_scripts": "",
       "footer_scripts": "",
-      "custom_css": ""
+      "custom_css": "",
+      "author_bio": "Folio Atelier is a quiet, curated index for collectors, curators, and the genuinely curious.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "modeformstudio",
@@ -1867,13 +2033,20 @@
       "author": "Lila Vandermeer",
       "posts_per_day_new": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "warming": {
         "enabled": false
       },
       "header_scripts": "",
       "footer_scripts": "",
-      "custom_css": ""
+      "custom_css": "",
+      "author_bio": "Modeform Studio is for designers, models, casting directors, and the agencies that hire them - written by someone in the room.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "calibernotes",
@@ -1889,13 +2062,20 @@
       "author": "Henrik Voss",
       "posts_per_day_new": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "warming": {
         "enabled": false
       },
       "header_scripts": "",
       "footer_scripts": "",
-      "custom_css": ""
+      "custom_css": "",
+      "author_bio": "Caliber Notes is a technical, no-marketing read on mechanical watches - independents, vintage, complications, and the rare honest movement.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "crestcharter",
@@ -1911,13 +2091,20 @@
       "author": "Adrien Marchetti",
       "posts_per_day_new": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "warming": {
         "enabled": false
       },
       "header_scripts": "",
       "footer_scripts": "",
-      "custom_css": ""
+      "custom_css": "",
+      "author_bio": "Crest Charter is a vetted, no-affiliate guide to private aviation, superyacht charter, and ultra-luxury villa rentals - written by an operator.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     },
     {
       "id": "strobeatlas",
@@ -1949,13 +2136,20 @@
       ],
       "posts_per_day_new": 1,
       "historical_mode": true,
-      "historical_per_week": 4,
+      "historical_per_week": 14,
       "warming": {
         "enabled": false
       },
       "header_scripts": "",
       "footer_scripts": "",
-      "custom_css": ""
+      "custom_css": "",
+      "author_bio": "Strobe Atlas is a global index of nightlife - field reports, set times, lineups, and the small details that separate a good night from one you will still talk about in five years.",
+      "posts_count": 3,
+      "posts_unit": "week",
+      "historical_count": 14,
+      "historical_unit": "week",
+      "posts_per_week": 3,
+      "new_posts_enabled": false
     }
   ]
 }
