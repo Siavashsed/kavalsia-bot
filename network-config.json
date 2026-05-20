@@ -616,8 +616,7 @@
         "post_every_n": 7
       },
       "warming": {
-        "enabled": true,
-        "started": "2024-07-10"
+        "enabled": false
       },
       "social_media": {
         "enabled": false,
@@ -654,9 +653,10 @@
       ],
       "use_random_author": true,
       "posts_per_run": 1,
-      "historical_mode": true,
-      "historical_per_week": 14,
-      "posts_per_day_new": 1
+      "historical_mode": false,
+      "historical_per_week": 0,
+      "posts_per_day_new": 1,
+      "posts_per_week": 1
     },
     {
       "id": "newborn-iq",
