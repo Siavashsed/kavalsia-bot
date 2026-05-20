@@ -759,6 +759,55 @@ def is_roundup_due(site, articles):
         return True
 
 
+# ── Historical-mode posts (backdated articles about past niche events) ────────
+HISTORICAL_YEAR_RANGE = (2019, 2024)
+
+
+def _random_date_in_year(year):
+    """Pick a realistic random date within a given year (avoids future dates)."""
+    import random as _r
+    end = datetime.now() if year == datetime.now().year else datetime(year, 12, 31)
+    start = datetime(year, 1, 1)
+    delta_days = max(0, (end - start).days)
+    return start + timedelta(days=_r.randint(0, delta_days))
+
+
+def historical_topic_year(site):
+    """Pick a year inside the historical range and craft a topic asking for a notable
+    niche-relevant event/product/news story from that year, written as of the time."""
+    import random as _r
+    year = _r.randint(HISTORICAL_YEAR_RANGE[0], HISTORICAL_YEAR_RANGE[1])
+    cat  = site.get("category", "")
+    topic = (f"A {year} retrospective article about a notable {cat} event, product launch, "
+             f"news story, regulation, or tool that mattered in {year} - "
+             f"written as if reporting on it at the time it happened in {year}, "
+             f"with the context, the reaction, and what it meant for the field")
+    return year, topic
+
+
+def is_historical_due(site, articles):
+    """True if this site should publish a historical article on this run, based on the
+    historical_mode toggle and the per-week budget vs. how many historical articles
+    have actually been posted in the last 7 days (by posted_iso, not date_iso)."""
+    if not site.get("historical_mode"):
+        return False
+    per_week = int(site.get("historical_per_week", 0) or 0)
+    if per_week <= 0:
+        return False
+    cutoff = datetime.now() - timedelta(days=7)
+    recent = 0
+    for a in articles:
+        if not a.get("historical"):
+            continue
+        try:
+            posted = datetime.strptime(a.get("posted_iso") or a.get("date_iso", ""), "%Y-%m-%d")
+        except (ValueError, TypeError):
+            continue
+        if posted >= cutoff:
+            recent += 1
+    return recent < per_week
+
+
 def roundup_topic(site):
     """Topic line for the weekly roundup - phrased as a listicle so the article
     generator naturally produces a ranked 'top products' roundup."""
@@ -3762,7 +3811,19 @@ def run(topic_overrides=None, site_filter=None):
             print("  SKIPPED - Nexus is a hub site and does not generate articles")
             continue
 
-        posts_per_run = max(1, int(site.get("posts_per_run", 1)))
+        # Daily plan: N current posts + (optionally) 1 historical if the site has the
+        # historical_mode toggle on and is under its historical_per_week budget.
+        # HISTORICAL_BULK env (e.g. set via workflow_dispatch input) overrides the daily
+        # plan and posts N historicals per site instead - used for one-shot backfills.
+        bulk_hist = int(os.environ.get("HISTORICAL_BULK", "0") or 0)
+        if bulk_hist > 0:
+            new_count = 0
+            hist_due  = True
+            posts_per_run = bulk_hist
+        else:
+            new_count = max(1, int(site.get("posts_per_day_new", site.get("posts_per_run", 1)) or 1))
+            hist_due  = is_historical_due(site, articles)
+            posts_per_run = new_count + (1 if hist_due else 0)
 
         # Randomize publish time - scatter sites across a window to break cadence fingerprint
         delay_max = int(site.get("publish_delay_max_seconds", 0))
@@ -3797,11 +3858,17 @@ def run(topic_overrides=None, site_filter=None):
             for post_num in range(posts_per_run):
                 print(f"  Post {post_num+1}/{posts_per_run}")
                 try:
-                    is_client_post = not overrides.get(site["id"]) and is_client_post_due(len(articles), effective_client)
-                    is_roundup = (not is_client_post and not overrides.get(site["id"])
+                    is_historical = hist_due and (bulk_hist > 0 or post_num == new_count)
+                    is_client_post = (not is_historical and not overrides.get(site["id"])
+                                      and is_client_post_due(len(articles), effective_client))
+                    is_roundup = (not is_historical and not is_client_post
+                                  and not overrides.get(site["id"])
                                   and post_num == 0 and is_roundup_due(site, articles))
 
-                    if is_client_post:
+                    if is_historical:
+                        hist_year, topic = historical_topic_year(site)
+                        print(f"  HISTORICAL POST ({hist_year}): {topic}")
+                    elif is_client_post:
                         topic = generate_client_topic(site, effective_client, client)
                         print(f"  CLIENT POST: {topic}")
                     elif is_roundup:
@@ -3817,7 +3884,9 @@ def run(topic_overrides=None, site_filter=None):
                     internal_link_candidates = get_internal_link_candidates(articles, topic)
 
                     date_mode = site.get("date_mode", "today")
-                    if date_mode == "distributed":
+                    if is_historical:
+                        pub_date = _random_date_in_year(hist_year)
+                    elif date_mode == "distributed":
                         span_years = int(site.get("date_span_years", 3))
                         days_back  = random.randint(0, span_years * 365)
                         pub_date   = datetime.now() - timedelta(days=days_back)
@@ -3888,9 +3957,12 @@ def run(topic_overrides=None, site_filter=None):
                         "author":           article["author"],
                         "image":            article["image"],
                         "outbound_links":   article.get("outbound_links", []),
+                        "posted_iso":       datetime.now().strftime("%Y-%m-%d"),
                     }
                     if article.get("category"):
                         _idx_entry["category"] = article["category"]
+                    if is_historical:
+                        _idx_entry["historical"] = True
                     articles.append(_idx_entry)
 
                     # Each site's freshly-published daily article stays exclusive to it -
