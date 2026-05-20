@@ -1058,16 +1058,31 @@ def update_article_author():
                 return jsonify({"error": f"Failed to push article HTML ({pr.status_code}): {pr.text[:300]}"}), pr.status_code
             updated_html = True
 
-    # 4. Patch articles.json and push
+    # 4. Patch articles.json and push (retry once on 409 stale-SHA with a fresh SHA).
     art["author"] = new_aut
-    idx_payload = {
-        "message": f"Update author for {slug}: {old_aut} -> {new_aut}",
-        "content": base64.b64encode(json.dumps(articles, indent=2).encode("utf-8")).decode(),
-        "sha":     idx_sha,
-    }
+    content_b64 = base64.b64encode(json.dumps(articles, indent=2).encode("utf-8")).decode()
+    def _put_idx(sha):
+        return requests.put(
+            f"https://api.github.com/repos/{repo}/contents/articles.json",
+            headers=headers,
+            json={"message": f"Update author for {slug}: {old_aut} -> {new_aut}",
+                  "content": content_b64, "sha": sha},
+            timeout=20)
     try:
-        ir = requests.put(f"https://api.github.com/repos/{repo}/contents/articles.json",
-                          headers=headers, json=idx_payload, timeout=20)
+        ir = _put_idx(idx_sha)
+        if ir.status_code == 409:
+            # Re-fetch current SHA + re-merge our author change into the latest articles.json.
+            rr = requests.get(f"https://api.github.com/repos/{repo}/contents/articles.json",
+                              headers=headers, timeout=15)
+            if rr.status_code == 200:
+                fresh = rr.json()
+                fresh_articles = json.loads(base64.b64decode(fresh["content"]).decode("utf-8"))
+                for fa in fresh_articles:
+                    if (fa.get("slug","").strip("/") == slug):
+                        fa["author"] = new_aut
+                        break
+                content_b64 = base64.b64encode(json.dumps(fresh_articles, indent=2).encode("utf-8")).decode()
+                ir = _put_idx(fresh["sha"])
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Network error pushing articles.json: {e}",
                         "updated_html": updated_html}), 502
@@ -1151,6 +1166,246 @@ def update_site_schedule():
             "posts_per_day_new":   ppdn,
             "historical_per_week": hpw,
         },
+    })
+
+# ── Publish / Sync Center ─────────────────────────────────────────────────────
+# Scans the local working copy and compares files against their remote
+# counterparts on GitHub (per-file blob SHA). Anything that differs is reported
+# as "pending" so the dashboard can push it from one place.
+
+def _gh_blob_sha(data_bytes):
+    """Compute the SHA that GitHub assigns to a blob: sha1("blob <len>\\0<data>")."""
+    header = f"blob {len(data_bytes)}\0".encode("utf-8")
+    return hashlib.sha1(header + data_bytes).hexdigest()
+
+def _gh_headers(token):
+    return {
+        "Authorization": f"token {token}",
+        "Accept":        "application/vnd.github.v3+json",
+    }
+
+def _gh_get_remote_sha(repo, path, token, timeout=12):
+    """Return (sha, error_str). sha is None if remote file does not exist."""
+    try:
+        r = requests.get(
+            f"https://api.github.com/repos/{repo}/contents/{path}",
+            headers=_gh_headers(token), timeout=timeout,
+        )
+    except requests.exceptions.RequestException as e:
+        return None, f"network error: {e}"
+    if r.status_code == 404:
+        return None, None
+    if r.status_code in (401, 403):
+        return None, f"auth {r.status_code}: {r.text[:160]}"
+    if r.status_code != 200:
+        return None, f"http {r.status_code}: {r.text[:160]}"
+    try:
+        return r.json().get("sha"), None
+    except Exception as e:
+        return None, f"bad json: {e}"
+
+def _gh_put_file(repo, path, data_bytes, message, remote_sha, token, timeout=25):
+    """PUT a single file to GitHub. Returns (ok, status, message)."""
+    import base64
+    payload = {
+        "message": message,
+        "content": base64.b64encode(data_bytes).decode(),
+    }
+    if remote_sha:
+        payload["sha"] = remote_sha
+    try:
+        r = requests.put(
+            f"https://api.github.com/repos/{repo}/contents/{path}",
+            headers=_gh_headers(token), json=payload, timeout=timeout,
+        )
+    except requests.exceptions.RequestException as e:
+        return False, 0, f"network error: {e}"
+    if r.status_code in (200, 201):
+        return True, r.status_code, "OK"
+    # Try to surface GitHub error body
+    try:
+        body = r.json()
+        body_msg = body.get("message") or r.text[:240]
+    except Exception:
+        body_msg = r.text[:240]
+    return False, r.status_code, body_msg
+
+# Files (relative to BASE_DIR) that live in the bot repo at the same path.
+# Order matters only for display.
+_ENGINE_FILES = [
+    "bot.py", "layout_shell.py", "push-sites.py", "rebuild-articles.py",
+    "sync.py", "sync_articles.py", "categories.json", "network-config.json",
+    "deploy-bot.py",
+]
+_DASHBOARD_FILES = ["dashboard.html", "server.py"]
+
+def _scan_pending(token):
+    """Walk all change kinds and return list of pending change descriptors."""
+    pending = []
+    errors  = []
+
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return [], [f"Could not read network-config.json: {e}"]
+
+    sites    = cfg.get("sites", []) or []
+    bot_repo = (cfg.get("settings", {}) or {}).get("bot_repo", "").strip()
+    if not bot_repo or "YOUR_" in bot_repo:
+        bot_repo = ""
+
+    def _add_check(local_path: Path, repo: str, remote_path: str, kind: str, label: str, summary: str = ""):
+        if not local_path.exists():
+            return
+        if not repo:
+            errors.append(f"{kind}: no repo configured for {local_path.name}")
+            return
+        try:
+            data = local_path.read_bytes()
+        except Exception as e:
+            errors.append(f"{kind}: could not read {local_path}: {e}")
+            return
+        local_sha = _gh_blob_sha(data)
+        remote_sha, err = _gh_get_remote_sha(repo, remote_path, token)
+        if err:
+            errors.append(f"{kind} {label}: {err}")
+            return
+        if remote_sha == local_sha:
+            return
+        change_id = f"{kind}::{repo}::{remote_path}"
+        pending.append({
+            "id":          change_id,
+            "kind":        kind,
+            "path":        str(local_path.relative_to(BASE_DIR)),
+            "remote_path": remote_path,
+            "target_repo": repo,
+            "label":       label,
+            "summary":     summary or ("new file" if remote_sha is None else "modified"),
+            "local_sha":   local_sha,
+            "remote_sha":  remote_sha,
+        })
+
+    # 1. Homepages: templates/<stem>-index.html  ->  Siavashsed/<stem>/index.html
+    tpl_dir = BASE_DIR / "templates"
+    if tpl_dir.exists():
+        # Build a map of site id -> repo
+        for site in sites:
+            sid  = (site.get("id") or "").strip()
+            repo = (site.get("repo") or "").strip()
+            if not sid or not repo or "YOUR_" in repo:
+                continue
+            tpl = tpl_dir / f"{sid}-index.html"
+            if tpl.exists():
+                _add_check(tpl, repo, "index.html", "homepage",
+                           f"templates/{tpl.name} -> {repo}/index.html",
+                           "homepage template")
+
+    # 2. About bodies: about-bodies/<stem>.html -> bot_repo/about-bodies/<stem>.html
+    ab_dir = BASE_DIR / "about-bodies"
+    if ab_dir.exists() and bot_repo:
+        for f in sorted(ab_dir.glob("*.html")):
+            rel = f"about-bodies/{f.name}"
+            _add_check(f, bot_repo, rel, "about_body",
+                       f"{rel} -> {bot_repo}/{rel}", "about page body")
+
+    # 3. Engine files
+    if bot_repo:
+        for name in _ENGINE_FILES:
+            f = BASE_DIR / name
+            _add_check(f, bot_repo, name, "engine",
+                       f"{name} -> {bot_repo}/{name}", "engine source")
+
+        # 4. Workflows
+        wf_dir = BASE_DIR / ".github" / "workflows"
+        if wf_dir.exists():
+            for f in sorted(wf_dir.glob("*.yml")):
+                rel = f".github/workflows/{f.name}"
+                _add_check(f, bot_repo, rel, "workflow",
+                           f"{rel} -> {bot_repo}/{rel}", "GitHub Actions workflow")
+
+        # 5. Dashboard
+        for name in _DASHBOARD_FILES:
+            f = BASE_DIR / name
+            _add_check(f, bot_repo, name, "dashboard",
+                       f"{name} -> {bot_repo}/{name}", "dashboard / server")
+
+    return pending, errors
+
+@app.route("/api/pending", methods=["GET"])
+def list_pending():
+    token = (request.headers.get("X-GH-Token", "").strip()
+             or os.environ.get("GITHUB_TOKEN", "").strip())
+    if not token:
+        return jsonify({"error": "GitHub token required (X-GH-Token header or GITHUB_TOKEN env)"}), 400
+    try:
+        pending, errors = _scan_pending(token)
+    except Exception as e:
+        return jsonify({"error": f"Scan failed: {e}"}), 500
+    return jsonify({"ok": True, "pending": pending, "errors": errors,
+                    "count": len(pending)})
+
+@app.route("/api/publish", methods=["POST"])
+def publish_pending():
+    body  = request.get_json(force=True, silent=True) or {}
+    ids   = body.get("ids") or []
+    token = (body.get("token") or "").strip() \
+            or request.headers.get("X-GH-Token", "").strip() \
+            or os.environ.get("GITHUB_TOKEN", "").strip()
+    if not isinstance(ids, list) or not ids:
+        return jsonify({"error": "ids (non-empty list) is required"}), 400
+    if not token:
+        return jsonify({"error": "GitHub token required (body.token, X-GH-Token header, or GITHUB_TOKEN env)"}), 400
+
+    # Rescan so we have current remote SHAs (avoids stale-sha conflicts).
+    try:
+        pending, _errors = _scan_pending(token)
+    except Exception as e:
+        return jsonify({"error": f"Scan failed: {e}"}), 500
+    by_id = {p["id"]: p for p in pending}
+
+    results = []
+    for idx, change_id in enumerate(ids):
+        item = by_id.get(change_id)
+        if not item:
+            results.append({"id": change_id, "ok": False, "status": 0,
+                            "message": "not pending (already in sync or unknown id)"})
+            continue
+        local_path = BASE_DIR / item["path"]
+        if not local_path.exists():
+            results.append({"id": change_id, "ok": False, "status": 0,
+                            "message": f"local file missing: {item['path']}"})
+            continue
+        try:
+            data = local_path.read_bytes()
+        except Exception as e:
+            results.append({"id": change_id, "ok": False, "status": 0,
+                            "message": f"read error: {e}"})
+            continue
+        msg = f"Publish {item['kind']}: {item['remote_path']}"
+        ok, status, body_msg = _gh_put_file(
+            item["target_repo"], item["remote_path"], data, msg,
+            item.get("remote_sha"), token,
+        )
+        results.append({
+            "id":          change_id,
+            "ok":          ok,
+            "status":      status,
+            "message":     body_msg,
+            "kind":        item["kind"],
+            "target_repo": item["target_repo"],
+            "remote_path": item["remote_path"],
+        })
+        # Pace GitHub PUTs to avoid secondary rate limits.
+        if idx < len(ids) - 1:
+            time.sleep(0.4)
+
+    ok_count   = sum(1 for r in results if r["ok"])
+    fail_count = len(results) - ok_count
+    return jsonify({
+        "ok":         fail_count == 0,
+        "results":    results,
+        "ok_count":   ok_count,
+        "fail_count": fail_count,
     })
 
 # ── Main ──────────────────────────────────────────────────────────────────────
