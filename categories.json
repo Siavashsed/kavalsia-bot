@@ -1996,5 +1996,322 @@
       ]
     },
     "default": "Cognition"
+  },
+  "folioatelier": {
+    "categories": [
+      "Artists",
+      "Galleries",
+      "Collectives",
+      "Exhibitions",
+      "Prints & Editions",
+      "Studio Practice",
+      "Collecting"
+    ],
+    "keywords": {
+      "Artists": [
+        "artist",
+        "painter",
+        "sculptor",
+        "printmaker",
+        "portrait",
+        "figure"
+      ],
+      "Galleries": [
+        "gallery",
+        "show",
+        "solo",
+        "group exhibit",
+        "curated",
+        "space"
+      ],
+      "Collectives": [
+        "collective",
+        "co-op",
+        "artist-run",
+        "collaboration",
+        "studio share"
+      ],
+      "Exhibitions": [
+        "exhibition",
+        "biennale",
+        "triennial",
+        "art fair",
+        "opening",
+        "vernissage",
+        "retrospective"
+      ],
+      "Prints & Editions": [
+        "print",
+        "edition",
+        "lithograph",
+        "etching",
+        "screenprint",
+        "riso"
+      ],
+      "Studio Practice": [
+        "studio",
+        "practice",
+        "process",
+        "medium",
+        "technique",
+        "craft"
+      ],
+      "Collecting": [
+        "collector",
+        "collecting",
+        "provenance",
+        "acquisition",
+        "price guide",
+        "first edition"
+      ]
+    },
+    "default": "Artists"
+  },
+  "modeformstudio": {
+    "categories": [
+      "Designers",
+      "Collections",
+      "Casting",
+      "Models",
+      "Editorial",
+      "Sustainability",
+      "Industry"
+    ],
+    "keywords": {
+      "Designers": [
+        "designer",
+        "atelier",
+        "couturier",
+        "brand",
+        "label",
+        "founder"
+      ],
+      "Collections": [
+        "collection",
+        "runway",
+        "show",
+        "season",
+        "ss",
+        "fw",
+        "resort",
+        "presentation"
+      ],
+      "Casting": [
+        "cast",
+        "casting",
+        "agency",
+        "agent",
+        "open call",
+        "polaroid"
+      ],
+      "Models": [
+        "model",
+        "modeling",
+        "portfolio",
+        "test shoot",
+        "editorial model",
+        "runway model"
+      ],
+      "Editorial": [
+        "editorial",
+        "shoot",
+        "photographer",
+        "stylist",
+        "art direction",
+        "cover"
+      ],
+      "Sustainability": [
+        "sustainable",
+        "ethical",
+        "recycled",
+        "deadstock",
+        "small batch",
+        "traceable"
+      ],
+      "Industry": [
+        "industry",
+        "business",
+        "wholesale",
+        "retail",
+        "direct to consumer",
+        "pricing"
+      ]
+    },
+    "default": "Designers"
+  },
+  "calibernotes": {
+    "categories": [
+      "Movements",
+      "Reviews",
+      "Vintage",
+      "Independent Makers",
+      "Complications",
+      "Buying Guides",
+      "Industry"
+    ],
+    "keywords": {
+      "Movements": [
+        "movement",
+        "caliber",
+        "calibre",
+        "escapement",
+        "balance",
+        "hairspring",
+        "automatic",
+        "manual wind"
+      ],
+      "Reviews": [
+        "review",
+        "hands on",
+        "first impressions",
+        "wrist time",
+        "comparison"
+      ],
+      "Vintage": [
+        "vintage",
+        "heritage",
+        "re-edition",
+        "reference",
+        "tropical dial",
+        "patina"
+      ],
+      "Independent Makers": [
+        "independent",
+        "small maker",
+        "indie",
+        "one off",
+        "bespoke watchmaker"
+      ],
+      "Complications": [
+        "chronograph",
+        "perpetual calendar",
+        "tourbillon",
+        "minute repeater",
+        "gmt",
+        "moonphase"
+      ],
+      "Buying Guides": [
+        "buying",
+        "guide",
+        "price",
+        "grey market",
+        "pre-owned",
+        "auction",
+        "collecting"
+      ],
+      "Industry": [
+        "industry",
+        "manufacture",
+        "swiss",
+        "brand",
+        "strategy",
+        "launch",
+        "release"
+      ]
+    },
+    "default": "Reviews"
+  },
+  "crestcharter": {
+    "categories": [
+      "Private Jets",
+      "Yachts",
+      "Luxury Villas",
+      "Destinations",
+      "Booking & Pricing",
+      "Concierge",
+      "Insider"
+    ],
+    "keywords": {
+      "Private Jets": [
+        "private jet",
+        "jet charter",
+        "citation",
+        "gulfstream",
+        "global express",
+        "empty leg",
+        "fbo"
+      ],
+      "Yachts": [
+        "yacht",
+        "superyacht",
+        "sailing",
+        "catamaran",
+        "charter week",
+        "crewed"
+      ],
+      "Luxury Villas": [
+        "villa",
+        "estate",
+        "rental",
+        "private chef",
+        "staffed",
+        "luxury home rental"
+      ],
+      "Destinations": [
+        "destination",
+        "st barths",
+        "st tropez",
+        "aspen",
+        "amalfi",
+        "mykonos",
+        "ibiza",
+        "maldives",
+        "dubai"
+      ],
+      "Booking & Pricing": [
+        "booking",
+        "price",
+        "rate",
+        "quote",
+        "daily rate",
+        "seasonality"
+      ],
+      "Concierge": [
+        "concierge",
+        "planner",
+        "itinerary",
+        "transfer",
+        "helicopter",
+        "security"
+      ],
+      "Insider": [
+        "insider",
+        "tip",
+        "review",
+        "etiquette",
+        "what to know",
+        "hidden cost"
+      ]
+    },
+    "default": "Private Jets"
+  },
+  "strobeatlas": {
+    "categories": {
+      "Techno & Raves": [
+        "techno", "rave", "warehouse", "berghain", "tresor", "boiler room", "industrial", "hard techno", "minimal"
+      ],
+      "Halloween": [
+        "halloween", "costume", "masquerade", "horror", "october 31", "vortex", "fright"
+      ],
+      "University Nights": [
+        "university", "college", "student", "may ball", "fresher", "campus", "uni", "after-formal"
+      ],
+      "Lineups & DJs": [
+        "lineup", "dj", "set", "b2b", "headliner", "resident", "booking", "tour"
+      ],
+      "Set Times": [
+        "set time", "schedule", "timetable", "peak", "warmup", "closing", "afters"
+      ],
+      "Festivals": [
+        "festival", "open air", "main stage", "sonar", "dekmantel", "time warp", "movement"
+      ],
+      "Scenes & Cities": [
+        "berlin", "london", "mexico city", "tbilisi", "melbourne", "new york", "tokyo", "scene", "city"
+      ],
+      "Tools & Tips": [
+        "tool", "guide", "how to", "outfit", "earplugs", "hydration", "harm reduction", "bpm", "tap"
+      ]
+    },
+    "default": "Techno & Raves"
   }
 }
