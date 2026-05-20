@@ -1185,6 +1185,12 @@ ALLOWED_SITE_FIELDS = {
     # Content Pipeline
     "topics", "categories", "default_category", "signup_url",
     "header_scripts", "footer_scripts",
+    # GHL (GoHighLevel) integration per-site overrides
+    "ghl",
+    # Meta Pixel + CAPI per-site overrides (added by Meta agent if missing)
+    "meta",
+    # WordPress / WooCommerce / Shopify per-site integration overrides
+    "wordpress", "woocommerce", "shopify",
 }
 
 SITE_FIELD_VALIDATORS = {
@@ -1196,6 +1202,11 @@ SITE_FIELD_VALIDATORS = {
     "topics":              lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
     "categories":          lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
     "warming":             lambda v: isinstance(v, dict),
+    "ghl":                 lambda v: isinstance(v, dict),
+    "meta":                lambda v: isinstance(v, dict),
+    "wordpress":           lambda v: isinstance(v, dict),
+    "woocommerce":         lambda v: isinstance(v, dict),
+    "shopify":             lambda v: isinstance(v, dict),
 }
 
 @app.route("/api/site-settings", methods=["POST"])
@@ -1258,6 +1269,87 @@ def update_site_settings():
         "updated":  sorted(clean.keys()),
         "rejected": rejected,
     })
+
+# ── GHL (GoHighLevel) Webhook Test ───────────────────────────────────────────
+# POST /api/ghl-test
+# Body: { site_id?: str, webhook_url?: str }
+# Resolves the effective webhook URL + tags from network-config.json:
+#   site-level GHL block overrides settings.ghl global.
+#   webhook_url in body overrides everything (manual test).
+# POSTs a sample payload + returns status + a body excerpt.
+def _ghl_resolve_for_test(cfg, site_id=None, override_url=None):
+    settings = (cfg.get("settings") or {})
+    g = (settings.get("ghl") or {})
+    site = None
+    sg = {}
+    if site_id:
+        site = next((s for s in (cfg.get("sites") or []) if s.get("id") == site_id), None)
+        if site:
+            sg = site.get("ghl") or {}
+    enabled = sg.get("enabled") if "enabled" in sg else g.get("enabled", False)
+    url = (override_url or "").strip() or (sg.get("webhook_url") or "").strip() or (g.get("webhook_url") or "").strip()
+    tags = []
+    if site_id:
+        tags.append(site_id)
+    for t in (sg.get("tags") or []):
+        if isinstance(t, str) and t.strip():
+            tags.append(t.strip())
+    for t in (g.get("default_tags") or []):
+        if isinstance(t, str) and t.strip():
+            tags.append(t.strip())
+    seen = set(); deduped = []
+    for t in tags:
+        if t not in seen:
+            seen.add(t); deduped.append(t)
+    return {
+        "enabled":     bool(enabled) or bool(override_url),
+        "webhook_url": url,
+        "tags":        deduped,
+        "site_id":     site_id or "",
+        "site_name":   ((site.get("name") if site else "") or (site.get("id") if site else "")) or "",
+    }
+
+@app.route("/api/ghl-test", methods=["POST"])
+def ghl_test_webhook():
+    body = request.get_json(force=True, silent=True) or {}
+    site_id      = (body.get("site_id") or "").strip() or None
+    override_url = (body.get("webhook_url") or "").strip() or None
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Could not read network-config.json: {e}"}), 500
+
+    eff = _ghl_resolve_for_test(cfg, site_id=site_id, override_url=override_url)
+    if not eff["enabled"]:
+        return jsonify({"ok": False, "error": "GHL is disabled. Enable it globally or per-site, or pass webhook_url to test directly."}), 400
+    if not eff["webhook_url"]:
+        return jsonify({"ok": False, "error": "No webhook URL resolved. Set settings.ghl.webhook_url, sites[i].ghl.webhook_url, or pass webhook_url in the body."}), 400
+
+    sample = {
+        "email":        "test+ghl@kavalsia.com",
+        "site_id":      eff["site_id"] or "test-site",
+        "site_name":    eff["site_name"] or "Test Site",
+        "page_url":     "https://example.com/test",
+        "page_title":   "Kavalsia GHL Test",
+        "referrer":     "",
+        "tags":         eff["tags"] or ["kavalsia-network", "newsletter", "ghl-test"],
+        "utm":          {"utm_source": "kavalsia-test", "utm_medium": "ghl-test"},
+        "submitted_at": datetime.utcnow().isoformat() + "Z",
+        "_test":        True,
+    }
+    try:
+        r = requests.post(eff["webhook_url"], json=sample, timeout=12)
+        excerpt = (r.text or "")[:600]
+        return jsonify({
+            "ok":          r.ok,
+            "status_code": r.status_code,
+            "resolved":    {"webhook_url": eff["webhook_url"], "tags": eff["tags"], "site_id": eff["site_id"]},
+            "payload":     sample,
+            "response":    excerpt,
+        })
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"POST failed: {e}", "resolved": eff, "payload": sample}), 502
+
 
 # ── Custom Domain Status / Apply / Enforce HTTPS ─────────────────────────────
 # Three small endpoints that power the "Custom Domain" card in panel-site.
@@ -1732,6 +1824,560 @@ def publish_pending():
         "ok_count":   ok_count,
         "fail_count": fail_count,
     })
+
+# ── WordPress / WooCommerce / Shopify integrations ────────────────────────────
+# Server-to-server integration endpoints. Each test endpoint returns a uniform
+# shape (ok / status / message / excerpt) so the dashboard can show raw HTTP
+# status + a short response excerpt for debugging. Configs resolve per-site
+# override first, then fall back to global settings.<key>.
+
+import base64 as _intg_b64
+
+def _intg_load_cfg():
+    try:
+        return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+def _intg_resolve(cfg, site_id, key):
+    """Return effective config dict for (site_id, key). Per-site override beats global."""
+    settings = (cfg.get("settings") or {})
+    glob = settings.get(key) or {}
+    merged = dict(glob) if isinstance(glob, dict) else {}
+    if site_id:
+        site = next((s for s in cfg.get("sites", []) if s.get("id") == site_id), None)
+        if site and isinstance(site.get(key), dict):
+            for k, v in site[key].items():
+                if v not in (None, ""):
+                    merged[k] = v
+    return merged
+
+def _intg_excerpt(text, n=240):
+    try:
+        s = text if isinstance(text, str) else str(text)
+    except Exception:
+        s = ""
+    return s.strip().replace("\r", " ").replace("\n", " ")[:n]
+
+def _intg_norm_url(u):
+    u = (u or "").strip().rstrip("/")
+    if u and not u.lower().startswith(("http://", "https://")):
+        u = "https://" + u
+    return u
+
+@app.route("/api/wp-test", methods=["POST"])
+def wp_test():
+    body = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    cfg = _intg_load_cfg()
+    wp = _intg_resolve(cfg, site_id, "wordpress")
+    url  = _intg_norm_url(wp.get("url"))
+    user = (wp.get("username") or "").strip()
+    appp = (wp.get("app_password") or "").strip()
+    if not url or not user or not appp:
+        return jsonify({"ok": False, "status": 0,
+                        "message": "WordPress not configured (need url, username, app_password)",
+                        "excerpt": ""})
+    auth = _intg_b64.b64encode(f"{user}:{appp}".encode("utf-8")).decode("ascii")
+    try:
+        r = requests.get(f"{url}/wp-json/wp/v2/posts",
+                         params={"per_page": 1},
+                         headers={"Authorization": f"Basic {auth}",
+                                  "Accept": "application/json"},
+                         timeout=12)
+        return jsonify({
+            "ok":      200 <= r.status_code < 300,
+            "status":  r.status_code,
+            "message": "WordPress reachable" if r.ok else f"HTTP {r.status_code}",
+            "excerpt": _intg_excerpt(r.text),
+        })
+    except requests.exceptions.RequestException as e:
+        return jsonify({"ok": False, "status": 0,
+                        "message": f"Network error: {e}", "excerpt": ""})
+
+@app.route("/api/wp-push", methods=["POST"])
+def wp_push():
+    body = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    cfg = _intg_load_cfg()
+    wp = _intg_resolve(cfg, site_id, "wordpress")
+    url  = _intg_norm_url(wp.get("url"))
+    user = (wp.get("username") or "").strip()
+    appp = (wp.get("app_password") or "").strip()
+    if not url or not user or not appp:
+        return jsonify({"ok": False, "status": 0,
+                        "message": "WordPress not configured", "excerpt": ""})
+    title   = (body.get("title") or "").strip()
+    content = body.get("content") or ""
+    if not title or not content:
+        return jsonify({"ok": False, "status": 0,
+                        "message": "title and content are required",
+                        "excerpt": ""}), 400
+    payload = {
+        "title":   title,
+        "content": content,
+        "status":  (body.get("status") or "draft"),
+    }
+    if body.get("slug"):       payload["slug"]       = body["slug"]
+    if body.get("categories"): payload["categories"] = body["categories"]
+    if body.get("tags"):       payload["tags"]       = body["tags"]
+    auth = _intg_b64.b64encode(f"{user}:{appp}".encode("utf-8")).decode("ascii")
+    try:
+        r = requests.post(f"{url}/wp-json/wp/v2/posts", json=payload,
+                          headers={"Authorization": f"Basic {auth}",
+                                   "Accept": "application/json"},
+                          timeout=20)
+        post_url = ""
+        try:
+            jd = r.json()
+            post_url = (jd or {}).get("link") or ""
+        except Exception:
+            pass
+        return jsonify({
+            "ok":       200 <= r.status_code < 300,
+            "status":   r.status_code,
+            "message":  "Post created" if r.ok else f"HTTP {r.status_code}",
+            "post_url": post_url,
+            "excerpt":  _intg_excerpt(r.text),
+        })
+    except requests.exceptions.RequestException as e:
+        return jsonify({"ok": False, "status": 0,
+                        "message": f"Network error: {e}", "excerpt": ""})
+
+@app.route("/api/woo-test", methods=["POST"])
+def woo_test():
+    body = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    cfg = _intg_load_cfg()
+    wc = _intg_resolve(cfg, site_id, "woocommerce")
+    url = _intg_norm_url(wc.get("url"))
+    ck = (wc.get("consumer_key") or "").strip()
+    cs = (wc.get("consumer_secret") or "").strip()
+    if not url or not ck or not cs:
+        return jsonify({"ok": False, "status": 0,
+                        "message": "WooCommerce not configured (need url, consumer_key, consumer_secret)",
+                        "excerpt": "", "product_count": 0})
+    auth = _intg_b64.b64encode(f"{ck}:{cs}".encode("utf-8")).decode("ascii")
+    try:
+        r = requests.get(f"{url}/wp-json/wc/v3/products",
+                         params={"per_page": 1},
+                         headers={"Authorization": f"Basic {auth}",
+                                  "Accept": "application/json"},
+                         timeout=12)
+        product_count = 0
+        try:
+            jd = r.json()
+            if isinstance(jd, list):
+                product_count = len(jd)
+        except Exception:
+            pass
+        total = r.headers.get("X-WP-Total") or r.headers.get("x-wp-total")
+        try:
+            if total is not None:
+                product_count = int(total)
+        except Exception:
+            pass
+        return jsonify({
+            "ok":            200 <= r.status_code < 300,
+            "status":        r.status_code,
+            "message":       "WooCommerce reachable" if r.ok else f"HTTP {r.status_code}",
+            "product_count": product_count,
+            "excerpt":       _intg_excerpt(r.text),
+        })
+    except requests.exceptions.RequestException as e:
+        return jsonify({"ok": False, "status": 0,
+                        "message": f"Network error: {e}",
+                        "excerpt": "", "product_count": 0})
+
+@app.route("/api/shopify-test", methods=["POST"])
+def shopify_test():
+    body = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    cfg = _intg_load_cfg()
+    sh = _intg_resolve(cfg, site_id, "shopify")
+    domain = (sh.get("store_domain") or "").strip().lower()
+    if domain.startswith("http://"):  domain = domain[7:]
+    if domain.startswith("https://"): domain = domain[8:]
+    domain = domain.rstrip("/")
+    token = (sh.get("admin_token") or "").strip()
+    if not domain or not token:
+        return jsonify({"ok": False, "status": 0,
+                        "message": "Shopify not configured (need store_domain + admin_token)",
+                        "excerpt": "", "shop_name": "", "plan": ""})
+    try:
+        r = requests.get(f"https://{domain}/admin/api/2024-04/shop.json",
+                         headers={"X-Shopify-Access-Token": token,
+                                  "Accept": "application/json"},
+                         timeout=12)
+        shop_name = ""
+        plan = ""
+        try:
+            jd = r.json() or {}
+            shop = jd.get("shop") or {}
+            shop_name = shop.get("name") or ""
+            plan = shop.get("plan_name") or shop.get("plan_display_name") or ""
+        except Exception:
+            pass
+        return jsonify({
+            "ok":        200 <= r.status_code < 300,
+            "status":    r.status_code,
+            "message":   "Shopify reachable" if r.ok else f"HTTP {r.status_code}",
+            "shop_name": shop_name,
+            "plan":      plan,
+            "excerpt":   _intg_excerpt(r.text),
+        })
+    except requests.exceptions.RequestException as e:
+        return jsonify({"ok": False, "status": 0,
+                        "message": f"Network error: {e}",
+                        "excerpt": "", "shop_name": "", "plan": ""})
+
+# ── Meta Pixel + Conversions API helpers ─────────────────────────────────────
+# Resolves effective Meta config (per-site overrides global), generates the
+# client-side Pixel snippet that is injected into header_scripts at publish
+# time, sends test events to Facebook Conversions API, and stubs Custom
+# Audience sync. Kept fully independent from the GHL endpoints.
+
+def _meta_load_cfg():
+    try:
+        return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        raise ValueError(f"Could not read network-config.json: {e}")
+
+def _meta_site_for(cfg, site_id):
+    if not site_id:
+        return None
+    return next((s for s in cfg.get("sites", []) if s.get("id") == site_id), None)
+
+def _meta_resolve(cfg, site=None):
+    """Merge global settings.meta with per-site site.meta. Per-site
+    non-empty values override the global ones."""
+    g = (cfg.get("settings") or {}).get("meta") or {}
+    out = {
+        "enabled":            bool(g.get("enabled", False)),
+        "pixel_id":           str(g.get("pixel_id", "") or ""),
+        "capi_token":         str(g.get("capi_token", "") or ""),
+        "capi_dataset_id":    str(g.get("capi_dataset_id", "") or ""),
+        "test_event_code":    str(g.get("test_event_code", "") or ""),
+        "fire_pageview":      bool(g.get("fire_pageview", True)),
+        "custom_audience_id": str(g.get("custom_audience_id", "") or ""),
+    }
+    s = (site or {}).get("meta") or {}
+    if not isinstance(s, dict):
+        s = {}
+    if "enabled" in s:        out["enabled"]            = bool(s.get("enabled"))
+    if "fire_pageview" in s:  out["fire_pageview"]      = bool(s.get("fire_pageview"))
+    for k in ("pixel_id", "capi_token", "capi_dataset_id", "test_event_code", "custom_audience_id"):
+        v = s.get(k)
+        if isinstance(v, str) and v.strip():
+            out[k] = v.strip()
+    return out
+
+def _meta_site_name(site):
+    if not site:
+        return "Site"
+    return (site.get("name") or site.get("id") or "Site").strip() or "Site"
+
+def _meta_visit_event(site):
+    return f"{_meta_site_name(site)} Visit"
+
+def _meta_signup_event(site):
+    return f"{_meta_site_name(site)} NewsletterSignup"
+
+def build_meta_pixel_snippet(resolved, site=None):
+    """Returns the <script> block to inject into the <head> via header_scripts.
+    Loads the Pixel base library, fires PageView (when enabled), fires a
+    custom '<Site Name> Visit' event, and wires a delegated submit listener
+    that hashes the email (SHA-256, client-side) and fires a custom
+    '<Site Name> NewsletterSignup' event. Safe to inject even when CAPI is
+    not configured (the server-side mirror is skipped in that case)."""
+    if not resolved or not resolved.get("enabled"):
+        return ""
+    pixel_id = (resolved.get("pixel_id") or "").strip()
+    if not pixel_id:
+        return ""
+    site_name = _meta_site_name(site)
+    site_id   = (site or {}).get("id", "")
+    visit_evt = _meta_visit_event(site)
+    signup_evt = _meta_signup_event(site)
+    fire_pv   = "true" if resolved.get("fire_pageview", True) else "false"
+    mirror_capi = "true" if (resolved.get("capi_token") and resolved.get("capi_dataset_id")) else "false"
+    return (
+        "<!-- Meta Pixel (Kavalsia network) -->\n"
+        "<script>\n"
+        "(function(){\n"
+        "  if (window.__KAVALSIA_META_LOADED) return; window.__KAVALSIA_META_LOADED = true;\n"
+        "  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?\n"
+        "  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;\n"
+        "  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;\n"
+        "  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,\n"
+        "  document,'script','https://connect.facebook.net/en_US/fbevents.js');\n"
+        f"  fbq('init', {json.dumps(pixel_id)});\n"
+        f"  var FIRE_PV = {fire_pv};\n"
+        f"  var SITE_ID = {json.dumps(site_id)};\n"
+        f"  var SITE_NAME = {json.dumps(site_name)};\n"
+        f"  var VISIT_EVT = {json.dumps(visit_evt)};\n"
+        f"  var SIGNUP_EVT = {json.dumps(signup_evt)};\n"
+        f"  var MIRROR_CAPI = {mirror_capi};\n"
+        "  if (FIRE_PV) { try { fbq('track', 'PageView'); } catch(e) {} }\n"
+        "  try {\n"
+        "    fbq('trackCustom', VISIT_EVT, {\n"
+        "      site_id: SITE_ID,\n"
+        "      page_path: location.pathname,\n"
+        "      page_title: document.title,\n"
+        "      referrer: document.referrer || ''\n"
+        "    });\n"
+        "  } catch(e) {}\n"
+        "  function sha256Hex(str) {\n"
+        "    if (!window.crypto || !crypto.subtle) return Promise.resolve('');\n"
+        "    var buf = new TextEncoder().encode(String(str || '').trim().toLowerCase());\n"
+        "    return crypto.subtle.digest('SHA-256', buf).then(function(h){\n"
+        "      return Array.prototype.map.call(new Uint8Array(h), function(b){\n"
+        "        return ('00' + b.toString(16)).slice(-2);\n"
+        "      }).join('');\n"
+        "    });\n"
+        "  }\n"
+        "  function mirrorCAPI(evtName, payload) {\n"
+        "    if (!MIRROR_CAPI) return;\n"
+        "    try {\n"
+        "      var hub = (window.KAVALSIA_HUB_URL || '').replace(/\\/$/, '');\n"
+        "      if (!hub) return;\n"
+        "      fetch(hub + '/api/meta-capi', {\n"
+        "        method: 'POST',\n"
+        "        headers: { 'Content-Type': 'application/json' },\n"
+        "        body: JSON.stringify({ site_id: SITE_ID, event_name: evtName, payload: payload })\n"
+        "      }).catch(function(){});\n"
+        "    } catch(e) {}\n"
+        "  }\n"
+        "  mirrorCAPI(VISIT_EVT, { page_path: location.pathname });\n"
+        "  document.addEventListener('submit', function(ev) {\n"
+        "    try {\n"
+        "      var f = ev.target;\n"
+        "      if (!f || !f.tagName || f.tagName.toLowerCase() !== 'form') return;\n"
+        "      var emailEl = f.querySelector('input[type=email], input[name*=email i]');\n"
+        "      if (!emailEl || !emailEl.value) return;\n"
+        "      var email = emailEl.value;\n"
+        "      sha256Hex(email).then(function(h){\n"
+        "        try { fbq('trackCustom', SIGNUP_EVT, { email_hashed: h }); } catch(e) {}\n"
+        "        mirrorCAPI(SIGNUP_EVT, { email_hashed: h });\n"
+        "      });\n"
+        "    } catch(e) {}\n"
+        "  }, true);\n"
+        "})();\n"
+        "</script>\n"
+        f"<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" "
+        f"src=\"https://www.facebook.com/tr?id={pixel_id}&ev=PageView&noscript=1\"/></noscript>\n"
+        "<!-- End Meta Pixel -->\n"
+    )
+
+def _meta_sha256(s):
+    return hashlib.sha256(str(s or "").strip().lower().encode("utf-8")).hexdigest()
+
+@app.route("/api/meta-test-pixel", methods=["POST"])
+def meta_test_pixel():
+    """Return the resolved Meta config + the generated client snippet so the
+    user can preview exactly what will be injected into <head>."""
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    try:
+        cfg = _meta_load_cfg()
+    except ValueError as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    site = _meta_site_for(cfg, site_id) if site_id else None
+    if site_id and not site:
+        return jsonify({"ok": False, "error": f"Unknown site_id '{site_id}'"}), 404
+    resolved = _meta_resolve(cfg, site)
+    snippet  = build_meta_pixel_snippet(resolved, site)
+    return jsonify({
+        "ok":        True,
+        "site_id":   site_id,
+        "resolved":  {
+            "enabled":            resolved["enabled"],
+            "pixel_id":           resolved["pixel_id"],
+            "fire_pageview":      resolved["fire_pageview"],
+            "has_capi_token":     bool(resolved["capi_token"]),
+            "capi_dataset_id":    resolved["capi_dataset_id"],
+            "test_event_code":    resolved["test_event_code"],
+            "custom_audience_id": resolved["custom_audience_id"],
+            "visit_event":        _meta_visit_event(site),
+            "signup_event":       _meta_signup_event(site),
+        },
+        "snippet":     snippet,
+        "snippet_len": len(snippet),
+    })
+
+@app.route("/api/meta-capi", methods=["POST"])
+def meta_capi_relay():
+    """Server-side mirror endpoint. The injected client script POSTs here so
+    we can forward the event to Facebook Conversions API with hashed user
+    data. Body: { site_id, event_name, payload }."""
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    evt     = (body.get("event_name") or "").strip()
+    payload = body.get("payload") or {}
+    try:
+        cfg = _meta_load_cfg()
+    except ValueError as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    site = _meta_site_for(cfg, site_id)
+    resolved = _meta_resolve(cfg, site)
+    if not resolved["enabled"]:
+        return jsonify({"ok": False, "error": "Meta integration disabled"}), 400
+    if not resolved["capi_token"] or not resolved["capi_dataset_id"]:
+        return jsonify({"ok": False, "error": "CAPI not configured"}), 400
+    if not evt:
+        evt = _meta_visit_event(site)
+    user_data = {}
+    email_h = (payload or {}).get("email_hashed")
+    if email_h:
+        user_data["em"] = [email_h]
+    cli_ip = request.headers.get("X-Forwarded-For", "").split(",")[0].strip() or request.remote_addr or ""
+    if cli_ip:
+        user_data["client_ip_address"] = cli_ip
+    ua = request.headers.get("User-Agent", "")
+    if ua:
+        user_data["client_user_agent"] = ua
+    fb_event = {
+        "event_name":       evt,
+        "event_time":       int(time.time()),
+        "action_source":    "website",
+        "event_source_url": request.headers.get("Referer", ""),
+        "user_data":        user_data,
+        "custom_data":      {k: v for k, v in (payload or {}).items() if k != "email_hashed"},
+    }
+    fb_body = {"data": [fb_event]}
+    if resolved["test_event_code"]:
+        fb_body["test_event_code"] = resolved["test_event_code"]
+    url = f"https://graph.facebook.com/v18.0/{resolved['capi_dataset_id']}/events?access_token={resolved['capi_token']}"
+    try:
+        r = requests.post(url, json=fb_body, timeout=8)
+        return jsonify({"ok": r.status_code == 200, "status": r.status_code, "body": (r.text or "")[:400]})
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Network error: {e}"}), 502
+
+@app.route("/api/meta-test-capi", methods=["POST"])
+def meta_test_capi():
+    """Send a sample event to Facebook CAPI so the user can verify their
+    token + dataset id + test_event_code wiring."""
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    evt     = (body.get("event_name") or "").strip()
+    try:
+        cfg = _meta_load_cfg()
+    except ValueError as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    site = _meta_site_for(cfg, site_id) if site_id else None
+    if site_id and not site:
+        return jsonify({"ok": False, "error": f"Unknown site_id '{site_id}'"}), 404
+    resolved = _meta_resolve(cfg, site)
+    if not resolved["capi_token"]:
+        return jsonify({"ok": False, "error": "CAPI access token not configured"}), 400
+    if not resolved["capi_dataset_id"]:
+        return jsonify({"ok": False, "error": "CAPI dataset id (pixel id) not configured"}), 400
+    if not evt:
+        evt = _meta_visit_event(site)
+    sample_email = "test@kavalsia.local"
+    fb_event = {
+        "event_name":       evt,
+        "event_time":       int(time.time()),
+        "action_source":    "website",
+        "event_source_url": (site or {}).get("domain") and f"https://{site['domain']}/" or "https://localhost/",
+        "user_data": {
+            "em": [_meta_sha256(sample_email)],
+            "client_user_agent": "Kavalsia-CAPI-Test/1.0",
+        },
+        "custom_data": {
+            "source":  "kavalsia-dashboard-test",
+            "site_id": site_id or "",
+        },
+    }
+    fb_body = {"data": [fb_event]}
+    if resolved["test_event_code"]:
+        fb_body["test_event_code"] = resolved["test_event_code"]
+    url = f"https://graph.facebook.com/v18.0/{resolved['capi_dataset_id']}/events?access_token={resolved['capi_token']}"
+    try:
+        r = requests.post(url, json=fb_body, timeout=10)
+        return jsonify({
+            "ok":      r.status_code == 200,
+            "status":  r.status_code,
+            "url":     f"https://graph.facebook.com/v18.0/{resolved['capi_dataset_id']}/events",
+            "body":    (r.text or "")[:600],
+            "event":   evt,
+            "test_event_code": resolved["test_event_code"] or "",
+        })
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Network error reaching Facebook: {e}"}), 502
+
+@app.route("/api/meta-audience-sync", methods=["POST"])
+def meta_audience_sync():
+    """Push the site's newsletter list to a Meta Custom Audience. If no
+    local contact list is available, returns a clear stub message instead
+    of failing hard. Looks for contacts/<site_id>.json or contacts/all.json
+    shaped as a list of emails or [{email: ...}] rows."""
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    try:
+        cfg = _meta_load_cfg()
+    except ValueError as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    site = _meta_site_for(cfg, site_id) if site_id else None
+    if site_id and not site:
+        return jsonify({"ok": False, "error": f"Unknown site_id '{site_id}'"}), 404
+    resolved = _meta_resolve(cfg, site)
+    if not resolved["capi_token"]:
+        return jsonify({"ok": False, "error": "CAPI access token required for Custom Audience sync"}), 400
+    audience_id = resolved["custom_audience_id"]
+    if not audience_id:
+        return jsonify({"ok": False, "error": "custom_audience_id not configured"}), 400
+
+    emails = []
+    sources_tried = []
+    cand_paths = []
+    if site_id:
+        cand_paths.append(BASE_DIR / "contacts" / f"{site_id}.json")
+    cand_paths.append(BASE_DIR / "contacts" / "all.json")
+    for p in cand_paths:
+        sources_tried.append(str(p.name))
+        if p.exists():
+            try:
+                data = json.loads(p.read_text(encoding="utf-8"))
+                if isinstance(data, list):
+                    for row in data:
+                        if isinstance(row, str):
+                            emails.append(row)
+                        elif isinstance(row, dict) and row.get("email"):
+                            emails.append(row["email"])
+                    break
+            except Exception:
+                pass
+    if not emails:
+        return jsonify({
+            "ok":      False,
+            "stub":    True,
+            "message": ("No local contact list found. Drop a JSON file at "
+                        "contacts/<site_id>.json (list of emails or "
+                        "[{email: ...}] rows) and re-run."),
+            "sources_tried": sources_tried,
+        })
+
+    hashed = [_meta_sha256(e) for e in emails if e]
+    payload = {
+        "payload": {
+            "schema": ["EMAIL_SHA256"],
+            "data":   [[h] for h in hashed],
+        }
+    }
+    url = f"https://graph.facebook.com/v18.0/{audience_id}/users?access_token={resolved['capi_token']}"
+    try:
+        r = requests.post(url, json=payload, timeout=15)
+        return jsonify({
+            "ok":          r.status_code == 200,
+            "status":      r.status_code,
+            "synced":      len(hashed),
+            "audience_id": audience_id,
+            "body":        (r.text or "")[:600],
+        })
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Network error reaching Facebook: {e}"}), 502
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def open_browser():
