@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Strobe Atlas - Raves, Halloween, Warehouses, and University Nights, Done Properly</title>
+<meta name="description" content="Strobe Atlas is the global index of nightlife. Field reports, recaps, and night tools from raves, halloween parties, warehouse takeovers, rooftops, and university nights in Berlin, London, Mexico City, NYC, Tbilisi and beyond.">
+<meta property="og:title" content="Strobe Atlas">
+<meta property="og:description" content="The global index of nightlife, raves, halloween, and university nights.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#050507">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+:root{
+  --jet:#050507;
+  --raven:#0d0d12;
+  --card:#13131a;
+  --magenta:#ff2bd6;
+  --acid:#c6ff3a;
+  --uv:#7c4dff;
+  --paper:#f4f4f6;
+  --white:#ffffff;
+  --dim:#8a8a96;
+  --hair:#23232c;
+  --display:'Anton',Impact,sans-serif;
+  --sans:'Space Grotesk','Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --maxw:1320px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+body{
+  background:var(--jet);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.55;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,select{font-family:inherit}
+
+/* light leak bg */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(800px 500px at 8% -10%, rgba(255,43,214,.18), transparent 60%),
+    radial-gradient(700px 500px at 100% 0%, rgba(124,77,255,.16), transparent 60%),
+    radial-gradient(900px 600px at 60% 110%, rgba(198,255,58,.06), transparent 60%);
+}
+
+/* === marquee top strip === */
+.marquee{
+  position:relative;z-index:60;
+  background:var(--magenta);
+  color:var(--jet);
+  overflow:hidden;
+  border-bottom:1px solid #00000040;
+}
+.marquee-track{
+  display:flex;gap:48px;
+  white-space:nowrap;
+  padding:9px 0;
+  animation:scroll 38s linear infinite;
+  font-family:var(--mono);
+  font-size:11.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+}
+.marquee-track span{display:inline-flex;align-items:center;gap:10px}
+.marquee-track .dot{width:6px;height:6px;background:var(--jet);border-radius:50%}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* === nav === */
+.nav{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 36px;
+  background:rgba(5,5,7,.82);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--hair);
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--display);font-size:22px;
+  letter-spacing:.02em;text-transform:uppercase;color:var(--white);
+}
+.brand .mark{
+  width:26px;height:26px;border-radius:50%;
+  background:conic-gradient(from 0deg, var(--magenta), var(--acid), var(--uv), var(--magenta));
+  filter:saturate(1.2);
+  box-shadow:0 0 18px rgba(255,43,214,.55);
+}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-link{
+  font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--paper);
+  transition:color .25s;
+}
+.nav-link:hover{color:var(--magenta)}
+.live{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--magenta);
+}
+.live .pulse{
+  width:8px;height:8px;border-radius:50%;background:var(--magenta);
+  box-shadow:0 0 0 0 rgba(255,43,214,.7);
+  animation:pulse 1.4s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,43,214,.7)}
+  70%{box-shadow:0 0 0 12px rgba(255,43,214,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,43,214,0)}
+}
+.nav-cta{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--jet);
+  background:var(--acid);padding:9px 16px;border-radius:2px;
+  transition:transform .2s;
+}
+.nav-cta:hover{transform:translateY(-1px)}
+@media(max-width:860px){
+  .nav{padding:12px 18px}
+  .nav-links .nav-link{display:none}
+  .nav-links{gap:14px}
+}
+
+/* === hero === */
+.hero{
+  position:relative;z-index:1;
+  padding:90px 36px 80px;
+  max-width:var(--maxw);margin:0 auto;
+}
+.hero-grid{
+  position:absolute;inset:0;z-index:-1;opacity:.18;
+  background-image:
+    linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(800px 600px at 60% 40%, #000, transparent 80%);
+}
+.kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--acid);
+  margin-bottom:24px;
+}
+.kicker::before{content:'';width:30px;height:1px;background:var(--acid)}
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(54px,9vw,148px);
+  line-height:.9;letter-spacing:.005em;
+  text-transform:uppercase;color:var(--white);
+  margin-bottom:18px;
+}
+.hero h1 .rot{
+  display:inline-block;color:var(--magenta);
+  min-width:5.5ch;
+  transition:filter .35s, opacity .35s;
+}
+.hero h1 .rot.flash{filter:blur(8px);opacity:.2}
+.hero .stand{
+  max-width:720px;
+  font-size:18px;line-height:1.55;color:var(--paper);
+  margin:18px 0 30px;
+}
+.hero .stand b{color:var(--white);font-weight:600}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px}
+.btn{
+  font-family:var(--mono);font-size:12px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:14px 22px;border-radius:2px;
+  transition:transform .2s, background .25s;
+}
+.btn-primary{background:var(--magenta);color:var(--jet)}
+.btn-primary:hover{background:var(--acid);transform:translateY(-2px)}
+.btn-ghost{border:1px solid var(--hair);color:var(--paper)}
+.btn-ghost:hover{border-color:var(--magenta);color:var(--magenta)}
+
+#particles{
+  position:absolute;top:60px;right:0;width:38vw;height:520px;
+  z-index:-1;opacity:.6;pointer-events:none;
+}
+@media(max-width:900px){#particles{display:none}}
+
+/* === stat bar === */
+.stats{
+  max-width:var(--maxw);margin:20px auto 60px;
+  padding:0 36px;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
+}
+.stat{
+  background:var(--raven);
+  border:1px solid var(--hair);
+  padding:22px 18px;
+}
+.stat .n{
+  font-family:var(--display);
+  font-size:48px;line-height:1;color:var(--white);
+}
+.stat .l{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);
+  margin-top:10px;
+  padding-top:10px;
+  border-top:2px solid var(--acid);
+  display:inline-block;
+}
+@media(max-width:900px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat .n{font-size:36px}
+}
+
+/* === section heads === */
+.section{padding:80px 36px;max-width:var(--maxw);margin:0 auto;position:relative;z-index:1}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:42px;flex-wrap:wrap;gap:20px}
+.section-head h2{
+  font-family:var(--display);font-size:clamp(40px,5.4vw,76px);
+  line-height:.95;letter-spacing:.01em;text-transform:uppercase;color:var(--white);
+}
+.section-head .meta{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);
+}
+.section-head .meta b{color:var(--magenta)}
+
+/* === recap hero cards === */
+.recaps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.recap{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--hair);
+  overflow:hidden;
+  transition:transform .35s var(--ease);
+}
+.recap::before{
+  content:'';position:absolute;inset:-1px;z-index:0;
+  background:linear-gradient(120deg, var(--magenta), var(--uv), var(--acid), var(--magenta));
+  background-size:300% 300%;
+  opacity:0;transition:opacity .35s;
+  filter:blur(6px);
+}
+.recap:hover::before{opacity:.55;animation:hue 4s linear infinite}
+@keyframes hue{0%{filter:hue-rotate(0deg) blur(6px)}100%{filter:hue-rotate(360deg) blur(6px)}}
+.recap-inner{position:relative;z-index:1;background:var(--card)}
+.recap .cover{position:relative;height:300px;overflow:hidden}
+.recap .cover img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.recap:hover .cover img{transform:scale(1.06)}
+.recap .num{
+  position:absolute;top:18px;left:18px;z-index:2;
+  font-family:var(--display);font-size:64px;color:var(--magenta);
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  text-shadow:0 0 14px rgba(255,43,214,.5);
+}
+.recap-body{padding:24px}
+.recap-body h3{
+  font-family:var(--display);font-size:32px;text-transform:uppercase;
+  letter-spacing:.01em;color:var(--white);margin-bottom:10px;
+}
+.recap-meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:14px;
+}
+.recap-meta b{color:var(--acid)}
+.recap p.std{font-size:14px;color:var(--paper);margin-bottom:18px;line-height:1.55}
+.recap-link{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--magenta);
+}
+.recap-link:hover{color:var(--acid)}
+@media(max-width:980px){.recaps{grid-template-columns:1fr;gap:18px}}
+
+/* === tools === */
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.tool{
+  background:var(--raven);
+  border:1px solid var(--hair);
+  padding:24px;
+  transition:border-color .25s;
+}
+.tool.open{border-color:var(--magenta)}
+.tool-head{
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;gap:14px;
+}
+.tool-head h3{
+  font-family:var(--display);font-size:24px;text-transform:uppercase;
+  color:var(--white);letter-spacing:.01em;
+}
+.tool-head .tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--acid);
+}
+.tool-head .chev{
+  width:30px;height:30px;border-radius:50%;border:1px solid var(--hair);
+  display:flex;align-items:center;justify-content:center;color:var(--magenta);
+  transition:transform .3s, border-color .25s;
+  font-family:var(--mono);font-size:14px;font-weight:700;
+}
+.tool.open .chev{transform:rotate(45deg);border-color:var(--magenta)}
+.tool-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .5s var(--ease);
+}
+.tool.open .tool-body{max-height:1200px}
+.tool-inner{padding-top:22px;margin-top:22px;border-top:1px solid var(--hair)}
+
+/* bpm tool */
+.bpm-display{
+  font-family:var(--display);font-size:96px;line-height:1;
+  color:var(--magenta);text-align:center;margin:14px 0 4px;
+  text-shadow:0 0 16px rgba(255,43,214,.4);
+}
+.bpm-display.flash{animation:strobe .12s}
+@keyframes strobe{0%,100%{color:var(--magenta)}50%{color:var(--white)}}
+.bpm-class{
+  text-align:center;font-family:var(--mono);font-size:11px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--acid);
+  margin-bottom:18px;
+}
+.bpm-wave{
+  display:flex;align-items:flex-end;gap:3px;height:50px;
+  justify-content:center;margin:18px 0;
+}
+.bpm-wave span{width:6px;background:var(--magenta);transition:height .15s}
+.bpm-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.tap-btn{
+  background:var(--magenta);color:var(--jet);
+  padding:18px 36px;font-family:var(--mono);font-size:12px;
+  font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+}
+.tap-btn:hover{background:var(--acid)}
+.reset-btn{
+  background:transparent;border:1px solid var(--hair);color:var(--paper);
+  padding:18px 22px;font-family:var(--mono);font-size:12px;
+  font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+}
+
+/* timeline tool */
+.tl-inputs{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.tl-inputs label{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);display:block;margin-bottom:6px;
+}
+.tl-inputs input{
+  background:var(--jet);border:1px solid var(--hair);color:var(--white);
+  padding:10px 12px;font-family:var(--mono);font-size:13px;
+}
+.tl-bar{
+  position:relative;height:70px;background:var(--jet);
+  border:1px solid var(--hair);margin-top:14px;
+}
+.tl-peak{
+  position:absolute;top:0;bottom:0;
+  background:linear-gradient(90deg, rgba(255,43,214,.15), rgba(255,43,214,.35), rgba(255,43,214,.15));
+  border-left:1px solid var(--magenta);border-right:1px solid var(--magenta);
+}
+.tl-mark{
+  position:absolute;top:0;bottom:0;width:1px;background:var(--hair);
+}
+.tl-label{
+  position:absolute;top:8px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+  color:var(--paper);text-transform:uppercase;padding-left:6px;
+  white-space:nowrap;
+}
+.tl-time{
+  position:absolute;bottom:8px;
+  font-family:var(--mono);font-size:10px;color:var(--dim);padding-left:6px;
+}
+
+/* outfit tool */
+.fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.fit-grid label{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);display:block;margin-bottom:6px;
+}
+.fit-grid select{
+  background:var(--jet);border:1px solid var(--hair);color:var(--white);
+  padding:10px 12px;font-family:var(--mono);font-size:13px;width:100%;
+}
+.fit-out{
+  background:var(--jet);border:1px solid var(--hair);padding:20px;
+  font-family:var(--mono);font-size:13px;line-height:2;color:var(--white);
+  margin-bottom:14px;
+}
+.fit-out span{color:var(--acid)}
+
+/* split tool */
+.split-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.split-grid label{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);display:block;margin-bottom:6px;
+}
+.split-grid input{
+  background:var(--jet);border:1px solid var(--hair);color:var(--white);
+  padding:10px 12px;font-family:var(--mono);font-size:13px;width:100%;
+}
+.split-out{
+  display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;
+  border-top:1px solid var(--hair);padding-top:18px;
+}
+.split-card{flex:1;min-width:140px;background:var(--jet);padding:14px;border:1px solid var(--hair)}
+.split-card .v{font-family:var(--display);font-size:36px;color:var(--magenta);line-height:1}
+.split-card .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:8px}
+.split-toggle{
+  display:flex;align-items:center;gap:10px;margin-top:14px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+
+@media(max-width:780px){
+  .tools{grid-template-columns:1fr}
+  .split-grid{grid-template-columns:1fr 1fr}
+  .fit-grid{grid-template-columns:1fr}
+}
+
+/* === scenes === */
+.scenes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.scene{
+  position:relative;aspect-ratio:1;overflow:hidden;
+  background:var(--card);
+}
+.scene img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease);filter:saturate(1.1)}
+.scene:hover img{transform:scale(1.08)}
+.scene::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, transparent 40%, rgba(5,5,7,.95) 100%),
+             linear-gradient(140deg, rgba(255,43,214,.18), transparent 60%);
+}
+.scene-info{
+  position:absolute;left:18px;right:18px;bottom:16px;z-index:2;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;
+}
+.scene-info h4{
+  font-family:var(--display);font-size:28px;text-transform:uppercase;
+  color:var(--white);letter-spacing:.01em;line-height:1;
+}
+.scene-info .s{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--acid);margin-top:8px;display:block;
+}
+.scene-info .arrow{color:var(--magenta);font-family:var(--mono);font-size:18px}
+@media(max-width:900px){.scenes{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.scenes{grid-template-columns:1fr}}
+
+/* === archive === */
+#archive-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--hair)}
+.arc-row{
+  display:grid;grid-template-columns:170px 1fr 130px;gap:24px;
+  padding:22px 6px;border-bottom:1px solid var(--hair);
+  position:relative;transition:padding-left .3s;
+}
+.arc-row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--magenta);
+  transform:scaleY(0);transform-origin:bottom;transition:transform .3s var(--ease);
+}
+.arc-row:hover::before{transform:scaleY(1);transform-origin:top}
+.arc-row:hover{padding-left:18px}
+.arc-meta{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);line-height:1.7;
+}
+.arc-meta b{color:var(--magenta);display:block;margin-top:2px}
+.arc-body h4{
+  font-family:var(--sans);font-size:22px;font-weight:600;color:var(--white);
+  line-height:1.25;margin-bottom:8px;
+}
+.arc-body p{font-size:14px;color:var(--dim);line-height:1.55;max-width:640px}
+.arc-thumb{
+  width:130px;height:90px;overflow:hidden;background:var(--card);
+}
+.arc-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.arc-row:hover .arc-thumb img{transform:scale(1.1)}
+.arc-empty{
+  padding:60px 0;text-align:center;
+  font-family:var(--mono);font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);
+}
+@media(max-width:780px){
+  .arc-row{grid-template-columns:1fr;gap:12px}
+  .arc-thumb{width:100%;height:160px}
+}
+
+/* === crew === */
+.crew{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.crew-card{
+  background:var(--raven);border:1px solid var(--hair);
+  padding:28px;text-align:center;transition:border-color .25s;
+}
+.crew-card:hover{border-color:var(--magenta)}
+.crew-portrait{
+  width:120px;height:120px;border-radius:50%;overflow:hidden;
+  margin:0 auto 18px;
+  box-shadow:0 0 0 2px var(--magenta), 0 0 28px rgba(255,43,214,.45);
+}
+.crew-portrait img{width:100%;height:100%;object-fit:cover}
+.crew-card h4{
+  font-family:var(--display);font-size:24px;text-transform:uppercase;
+  color:var(--white);margin-bottom:6px;letter-spacing:.01em;
+}
+.crew-card .role{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:14px;
+}
+.crew-card p{font-size:13.5px;color:var(--paper);line-height:1.55;margin-bottom:14px}
+.crew-tag{
+  display:inline-block;font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--magenta);
+  border:1px solid var(--hair);padding:6px 10px;
+}
+@media(max-width:880px){.crew{grid-template-columns:1fr;gap:16px}}
+
+/* === deck FAQ === */
+.deck{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.deck-item{
+  border-top:1px solid var(--hair);
+  padding:18px 4px;
+}
+.deck-item summary{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  cursor:pointer;list-style:none;
+}
+.deck-item summary::-webkit-details-marker{display:none}
+.deck-q{
+  font-family:var(--display);font-size:20px;text-transform:uppercase;
+  color:var(--white);letter-spacing:.01em;line-height:1.2;
+}
+.deck-num{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  color:var(--magenta);margin-right:10px;
+}
+.deck-plus{
+  font-family:var(--mono);font-size:20px;font-weight:700;
+  color:var(--magenta);transition:transform .3s, color .25s;
+  flex-shrink:0;
+}
+.deck-item[open] .deck-plus{transform:rotate(45deg);color:var(--acid)}
+.deck-a{
+  font-size:14px;color:var(--paper);line-height:1.65;padding-top:14px;
+}
+@media(max-width:780px){.deck{grid-template-columns:1fr}}
+
+/* === newsletter === */
+.news{
+  position:relative;background:var(--raven);padding:48px;
+  max-width:900px;margin:0 auto;
+}
+.news::before{
+  content:'';position:absolute;inset:-2px;z-index:0;
+  background:linear-gradient(120deg, var(--magenta), var(--uv), var(--acid), var(--magenta));
+  background-size:300% 300%;
+  animation:hue 5s linear infinite;
+  opacity:.7;
+}
+.news-inner{position:relative;z-index:1;background:var(--raven);padding:36px;text-align:center}
+.news h3{
+  font-family:var(--display);font-size:48px;text-transform:uppercase;
+  color:var(--white);letter-spacing:.01em;margin-bottom:10px;
+}
+.news p{color:var(--dim);font-size:14px;margin-bottom:24px;max-width:520px;margin-left:auto;margin-right:auto}
+.news-form{display:flex;gap:0;max-width:520px;margin:0 auto;flex-wrap:wrap}
+.news-form input{
+  flex:1;min-width:200px;
+  background:var(--jet);border:1px solid var(--hair);color:var(--white);
+  padding:16px 18px;font-family:var(--mono);font-size:13px;
+}
+.news-form button{
+  background:var(--magenta);color:var(--jet);
+  padding:16px 26px;font-family:var(--mono);font-size:12px;
+  font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+}
+.news-form button:hover{background:var(--acid)}
+
+/* === footer === */
+.footer{
+  position:relative;z-index:5;
+  background:var(--raven);
+  border-top:4px solid var(--magenta);
+  padding:60px 36px 0;margin-top:80px;
+}
+.footer-grid{
+  max-width:var(--maxw);margin:0 auto;
+  display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:36px;
+  padding-bottom:48px;
+}
+.footer-col h5{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--magenta);margin-bottom:18px;
+}
+.footer-col a, .footer-col p{
+  display:block;font-size:13px;color:var(--paper);
+  margin-bottom:10px;line-height:1.55;
+}
+.footer-col a:hover{color:var(--magenta)}
+.footer-brand{
+  font-family:var(--display);font-size:28px;text-transform:uppercase;
+  color:var(--white);margin-bottom:14px;letter-spacing:.01em;
+}
+.footer-grid > .footer-col + .footer-col{
+  border-left:1px solid var(--hair);padding-left:32px;
+}
+.foot-marquee{
+  background:var(--jet);overflow:hidden;border-top:1px solid var(--hair);
+  padding:14px 0;
+}
+.foot-marquee-track{
+  display:flex;gap:36px;white-space:nowrap;
+  animation:scroll 42s linear infinite;
+  font-family:var(--display);font-size:22px;text-transform:uppercase;
+  color:var(--dim);letter-spacing:.04em;
+}
+.foot-marquee-track .ac{color:var(--magenta)}
+@media(max-width:980px){
+  .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+  .footer-grid > .footer-col + .footer-col{border-left:0;padding-left:0}
+}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease), transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  .marquee-track, .foot-marquee-track{animation:none}
+  .hero h1 .rot.flash{filter:none;opacity:1}
+  .recap::before, .news::before{animation:none}
+  .reveal{opacity:1;transform:none}
+  .live .pulse{animation:none}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#ff2bd6-->
+<!--SHELL:HEADER-->
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>NEXT UP</span><span class="dot"></span>
+    <span>BERLIN / SUBLIMATION 05 / 18 MAY</span><span class="dot"></span>
+    <span>LONDON / VELVET QUAD AFTERS / 22 MAY</span><span class="dot"></span>
+    <span>MEXICO CITY / ROOFTOP RITUAL / 31 MAY</span><span class="dot"></span>
+    <span>NYC / BASEMENT INDEX 12 / 7 JUNE</span><span class="dot"></span>
+    <span>TBILISI / KHIDI ALL NIGHTERS / 14 JUNE</span><span class="dot"></span>
+    <span>MELBOURNE / WAREHOUSE 19 / 21 JUNE</span><span class="dot"></span>
+    <span>NEXT UP</span><span class="dot"></span>
+    <span>BERLIN / SUBLIMATION 05 / 18 MAY</span><span class="dot"></span>
+    <span>LONDON / VELVET QUAD AFTERS / 22 MAY</span><span class="dot"></span>
+    <span>MEXICO CITY / ROOFTOP RITUAL / 31 MAY</span><span class="dot"></span>
+    <span>NYC / BASEMENT INDEX 12 / 7 JUNE</span><span class="dot"></span>
+    <span>TBILISI / KHIDI ALL NIGHTERS / 14 JUNE</span><span class="dot"></span>
+    <span>MELBOURNE / WAREHOUSE 19 / 21 JUNE</span><span class="dot"></span>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="./" class="brand"><span class="mark"></span>Strobe Atlas</a>
+  <div class="nav-links">
+    <span class="live"><span class="pulse"></span>LIVE</span>
+    <a href="./recaps.html" class="nav-link">Recaps</a>
+    <a href="./#scenes" class="nav-link">Scenes</a>
+    <a href="./#tools" class="nav-link">Tools</a>
+    <a href="./about.html" class="nav-link">About</a>
+    <a href="./#newsletter" class="nav-cta">Join</a>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="kicker">FIELD REPORTS / 247 NIGHTS / 38 CITIES</div>
+  <h1>Dance like the<br>city is watching.<br><span class="rot" id="rot">RAVE</span></h1>
+  <p class="stand"><b>Strobe Atlas</b> is the global index of nightlife. We show up. We stay until the lights come on. We write it down. Raves, halloween, warehouses, rooftops, university nights - documented properly, indexed obsessively, and shared with the people who actually go.</p>
+  <div class="hero-ctas">
+    <a href="./recaps.html" class="btn btn-primary">See the last three nights</a>
+    <a href="#tools" class="btn btn-ghost">Open the night tools</a>
+  </div>
+</section>
+
+<!-- STAT BAR -->
+<div class="stats reveal">
+  <div class="stat"><div class="n" data-c="247">0</div><div class="l">Nights logged</div></div>
+  <div class="stat"><div class="n" data-c="38">0</div><div class="l">Cities</div></div>
+  <div class="stat"><div class="n" data-c="122">0</div><div class="l">DJ sets</div></div>
+  <div class="stat"><div class="n" data-c="412" data-suffix="k">0</div><div class="l">Attendees tracked</div></div>
+  <div class="stat"><div class="n" data-c="9">0</div><div class="l">Continents</div></div>
+</div>
+
+<!-- THE LAST THREE NIGHTS -->
+<section class="section" id="recaps">
+  <div class="section-head">
+    <h2>The last<br>three nights.</h2>
+    <div class="meta"><b>03 / 03</b> field reports filed<br>Spring 2026 cycle</div>
+  </div>
+  <div class="recaps">
+
+    <article class="recap reveal">
+      <div class="recap-inner">
+        <div class="cover">
+          <span class="num">01</span>
+          <img src="https://images.unsplash.com/photo-1571266028243-d220bc562f7b?w=1600&q=85" alt="Sublimation 04 warehouse">
+        </div>
+        <div class="recap-body">
+          <h3>Sublimation 04</h3>
+          <div class="recap-meta">Berghain side room / Berlin DE<br><b>12 APR 2026 / CAP 2200 / 9PM - NOON</b></div>
+          <p class="std">Twelve hours, four rooms, zero phones. Marcel Dettmann opened a vault that nobody saw closing. Then the rumour walked in: a b2b with Hector Oaks at 3am.</p>
+          <a href="./recaps.html#sublimation04" class="recap-link">Read recap -></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="recap reveal">
+      <div class="recap-inner">
+        <div class="cover">
+          <span class="num">02</span>
+          <img src="https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=1600&q=85" alt="Helloween Vortex Mexico City">
+        </div>
+        <div class="recap-body">
+          <h3>Helloween Vortex</h3>
+          <div class="recap-meta">Sala Bizarro + rooftop / Mexico City MX<br><b>31 OCT 2025 / CAP 1800 / 10PM - 6AM</b></div>
+          <p class="std">The masquerade where the city stopped sleeping. Rebekah hammered the basement while Indira Paganotto burned the roof. Costumes melted into one species by 3am.</p>
+          <a href="./recaps.html#helloweenvortex" class="recap-link">Read recap -></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="recap reveal">
+      <div class="recap-inner">
+        <div class="cover">
+          <span class="num">03</span>
+          <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&q=85" alt="Velvet Quad Cambridge ball">
+        </div>
+        <div class="recap-body">
+          <h3>Velvet Quad</h3>
+          <div class="recap-meta">Cambridge May Ball + The Cause London / UK<br><b>14-15 MAR 2026 / CAP 1400</b></div>
+          <p class="std">Black tie at 9, mesh and sweat by 3. A coach picked us up at the porter's lodge. Joy Anonymous opened London. Sammy Virji finished us. Saffron Stone stayed past sunrise.</p>
+          <a href="./recaps.html#velvetquad" class="recap-link">Read recap -></a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- NIGHT TOOLS -->
+<section class="section" id="tools">
+  <div class="section-head">
+    <h2>Night tools.</h2>
+    <div class="meta">Four utilities for the night itself<br><b>Built in browser / No accounts</b></div>
+  </div>
+  <div class="tools">
+
+    <!-- BPM TAPPER -->
+    <div class="tool" data-tool="bpm">
+      <div class="tool-head">
+        <div>
+          <h3>BPM Tapper</h3>
+          <div class="tag">Tap the floor / find the tempo</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div class="bpm-display" id="bpmDisp">- -</div>
+        <div class="bpm-class" id="bpmClass">Tap any key or the button</div>
+        <div class="bpm-wave" id="bpmWave"></div>
+        <div class="bpm-actions">
+          <button class="tap-btn" id="tapBtn">TAP</button>
+          <button class="reset-btn" id="bpmReset">RESET</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="tool" data-tool="tl">
+      <div class="tool-head">
+        <div>
+          <h3>Night Timeline Planner</h3>
+          <div class="tag">Doors to peak to closing</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div class="tl-inputs">
+          <div><label>Doors</label><input type="time" id="tlStart" value="22:00"></div>
+          <div><label>Lights up</label><input type="time" id="tlEnd" value="06:00"></div>
+          <div><label>Peak start</label><input type="time" id="tlPeakA" value="01:30"></div>
+          <div><label>Peak end</label><input type="time" id="tlPeakB" value="04:00"></div>
+        </div>
+        <div class="tl-bar" id="tlBar"></div>
+      </div></div>
+    </div>
+
+    <!-- OUTFIT -->
+    <div class="tool" data-tool="fit">
+      <div class="tool-head">
+        <div>
+          <h3>Outfit Randomizer</h3>
+          <div class="tag">Pick a vibe / get a fit</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div class="fit-grid">
+          <div>
+            <label>Vibe</label>
+            <select id="fitVibe">
+              <option value="rave">Rave</option>
+              <option value="halloween">Halloween</option>
+              <option value="formal">Formal warehouse</option>
+              <option value="rooftop">Rooftop</option>
+              <option value="university">University</option>
+            </select>
+          </div>
+          <div>
+            <label>Mood</label>
+            <select id="fitMood">
+              <option>Loud</option><option>Stealth</option><option>Sweaty</option><option>Composed</option>
+            </select>
+          </div>
+        </div>
+        <div class="fit-out" id="fitOut">Press reroll to generate a fit.</div>
+        <button class="tap-btn" id="fitBtn">REROLL</button>
+      </div></div>
+    </div>
+
+    <!-- SPLIT -->
+    <div class="tool" data-tool="split">
+      <div class="tool-head">
+        <div>
+          <h3>Group Split Calc</h3>
+          <div class="tag">After party cost splitter</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div class="split-grid">
+          <div><label>People</label><input type="number" id="spPeople" value="6" min="1"></div>
+          <div><label>Cover</label><input type="number" id="spCover" value="120" min="0"></div>
+          <div><label>Bar</label><input type="number" id="spBar" value="240" min="0"></div>
+          <div><label>Cab</label><input type="number" id="spCab" value="65" min="0"></div>
+          <div><label>Late food</label><input type="number" id="spFood" value="80" min="0"></div>
+          <div><label>Tip</label><input type="number" id="spTip" value="20" min="0"></div>
+        </div>
+        <label class="split-toggle"><input type="checkbox" id="spRound"> Round per head up to next 5</label>
+        <div class="split-out">
+          <div class="split-card"><div class="v" id="spTotal">0</div><div class="k">Total</div></div>
+          <div class="split-card"><div class="v" id="spHead">0</div><div class="k">Per head</div></div>
+          <div class="split-card"><div class="v" id="spRem">0</div><div class="k">Rounding pot</div></div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCENES -->
+<section class="section" id="scenes">
+  <div class="section-head">
+    <h2>Scenes.</h2>
+    <div class="meta">Cities we cover monthly<br><b>06 / 38 active scenes</b></div>
+  </div>
+  <div class="scenes">
+    <a class="scene" href="./recaps.html#sublimation04">
+      <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=85" alt="Berlin">
+      <div class="scene-info"><div><h4>Berlin</h4><span class="s">47 nights / 18 venues</span></div><span class="arrow">-></span></div>
+    </a>
+    <a class="scene" href="./recaps.html#velvetquad">
+      <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&q=85" alt="London">
+      <div class="scene-info"><div><h4>London</h4><span class="s">38 nights / 22 venues</span></div><span class="arrow">-></span></div>
+    </a>
+    <a class="scene" href="./recaps.html#helloweenvortex">
+      <img src="https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=1200&q=85" alt="Mexico City">
+      <div class="scene-info"><div><h4>Mexico City</h4><span class="s">29 nights / 14 venues</span></div><span class="arrow">-></span></div>
+    </a>
+    <a class="scene" href="./recaps.html">
+      <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1200&q=85" alt="New York">
+      <div class="scene-info"><div><h4>New York</h4><span class="s">41 nights / 19 venues</span></div><span class="arrow">-></span></div>
+    </a>
+    <a class="scene" href="./recaps.html">
+      <img src="https://images.unsplash.com/photo-1554072675-66db59dba46f?w=1200&q=85" alt="Tbilisi">
+      <div class="scene-info"><div><h4>Tbilisi</h4><span class="s">17 nights / 6 venues</span></div><span class="arrow">-></span></div>
+    </a>
+    <a class="scene" href="./recaps.html">
+      <img src="https://images.unsplash.com/photo-1545044846-351ba102b6d5?w=1200&q=85" alt="Melbourne">
+      <div class="scene-info"><div><h4>Melbourne</h4><span class="s">22 nights / 11 venues</span></div><span class="arrow">-></span></div>
+    </a>
+  </div>
+</section>
+
+<!-- PARTY ARCHIVE -->
+<section class="section" id="archive">
+  <div class="section-head">
+    <h2>Party archive.</h2>
+    <div class="meta">All field reports / chronological<br><b>Filed by Riv Solano + crew</b></div>
+  </div>
+  <div id="archive-list"></div>
+</section>
+
+<!-- FIELD CREW -->
+<section class="section" id="crew">
+  <div class="section-head">
+    <h2>Field crew.</h2>
+    <div class="meta">The people who actually show up<br><b>03 contributors active</b></div>
+  </div>
+  <div class="crew">
+    <div class="crew-card">
+      <div class="crew-portrait"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&q=85" alt="Riv Solano"></div>
+      <h4>Riv Solano</h4>
+      <div class="role">Party Correspondent / Lead</div>
+      <p>Berlin based, raised between Madrid and Mexico City. Eight years in the booth before flipping the notebook to the dancefloor. Files most of the long reads.</p>
+      <span class="crew-tag">Last: Sublimation 04 / Berlin</span>
+    </div>
+    <div class="crew-card">
+      <div class="crew-portrait"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=85" alt="Yuki Marlowe"></div>
+      <h4>Yuki Marlowe</h4>
+      <div class="role">Scenes Editor / Asia Pacific</div>
+      <p>Tokyo to Melbourne to Seoul. Used to throw illegal warehouses in Shibuya. Now writes for us with the same energy and twice the precision.</p>
+      <span class="crew-tag">Last: Warehouse 19 / Melbourne</span>
+    </div>
+    <div class="crew-card">
+      <div class="crew-portrait"><img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&q=85" alt="Adeola Brent"></div>
+      <h4>Adeola Brent</h4>
+      <div class="role">University Nights / UK + US</div>
+      <p>Cambridge alum, NYU MFA. Covers the strange in-between of student formals that turn into 5am warehouse missions. Holds the receipts.</p>
+      <span class="crew-tag">Last: Velvet Quad / Cambridge</span>
+    </div>
+  </div>
+</section>
+
+<!-- DECK FAQ -->
+<section class="section" id="deck">
+  <div class="section-head">
+    <h2>The deck.</h2>
+    <div class="meta">Six things we get asked at the door<br><b>FAQ / press / readers</b></div>
+  </div>
+  <div class="deck">
+    <details class="deck-item"><summary><span class="deck-q"><span class="deck-num">01</span>Are these paid features?</span><span class="deck-plus">+</span></summary><div class="deck-a">No. We pay our own door and our own drinks. If we ever cover something where money changed hands, we will say so at the top in mono caps. Promise.</div></details>
+    <details class="deck-item"><summary><span class="deck-q"><span class="deck-num">02</span>Can I pitch a night?</span><span class="deck-plus">+</span></summary><div class="deck-a">Yes. Drop the line up, the date, the cap, the city and one sentence on why it matters. Pitches go to the newsletter reply address. We read all of them, we cover what we can.</div></details>
+    <details class="deck-item"><summary><span class="deck-q"><span class="deck-num">03</span>Do you publish photos of the crowd?</span><span class="deck-plus">+</span></summary><div class="deck-a">Rarely, and never without consent. Most of our gallery shots are crowd silhouettes, light, room geometry, or the dancers who actively asked to be shot. The dancefloor stays the dancefloor.</div></details>
+    <details class="deck-item"><summary><span class="deck-q"><span class="deck-num">04</span>How do you choose cities?</span><span class="deck-plus">+</span></summary><div class="deck-a">We follow the rooms that take risks. A new venue, a strange line up, a residency that refuses to be safe. Big festivals already have enough cameras pointed at them.</div></details>
+    <details class="deck-item"><summary><span class="deck-q"><span class="deck-num">05</span>What is in the newsletter?</span><span class="deck-plus">+</span></summary><div class="deck-a">A weekly guest list. Five to seven nights we think are worth your time, with the door price, the closing time, and a one line read on the vibe. Sent every Thursday at 4pm UTC.</div></details>
+    <details class="deck-item"><summary><span class="deck-q"><span class="deck-num">06</span>Who runs Strobe Atlas?</span><span class="deck-plus">+</span></summary><div class="deck-a">Independent. Founded by Riv Solano in 2024. Self funded by reader subscriptions and a small ring of cultural sponsors who have agreed never to influence the writing.</div></details>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="section" id="newsletter">
+  <div class="news">
+    <div class="news-inner">
+      <h3>Get the guest list.</h3>
+      <p>Every Thursday, 4pm UTC. The five to seven nights we would actually go to that week, in your city or the next one over. No sponsored picks. No filler.</p>
+      <form class="news-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='ON THE LIST'">
+        <input type="email" placeholder="you@latenight.com" required>
+        <button type="submit">JOIN</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <div class="footer-brand">Strobe Atlas</div>
+      <p>The global index of nightlife, raves, halloween, and university nights. We show up. We write it down. We index it properly.</p>
+      <p style="color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.14em">EST. 2024 / BERLIN + LONDON</p>
+    </div>
+    <div class="footer-col">
+      <h5>Explore</h5>
+      <a href="./">Home</a>
+      <a href="./recaps.html">Recaps</a>
+      <a href="./#scenes">Scenes</a>
+      <a href="./#tools">Tools</a>
+    </div>
+    <div class="footer-col">
+      <h5>The Atlas</h5>
+      <a href="./about.html">About</a>
+      <a href="./#crew">Field crew</a>
+      <a href="./#deck">The deck</a>
+      <a href="./#newsletter">Guest list</a>
+    </div>
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <a href="./privacy.html">Privacy</a>
+      <a href="./terms.html">Terms</a>
+      <a href="./about.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h5>Follow</h5>
+      <a href="./">Instagram</a>
+      <a href="./">TikTok</a>
+      <a href="./">Telegram</a>
+      <a href="./">RSS</a>
+    </div>
+  </div>
+  <div class="foot-marquee" aria-hidden="true">
+    <div class="foot-marquee-track">
+      <span>STROBE ATLAS</span><span class="ac">/</span>
+      <span>NIGHTS ARE A LANGUAGE</span><span class="ac">/</span>
+      <span>2026 -</span><span class="ac">/</span>
+      <span>STROBE ATLAS</span><span class="ac">/</span>
+      <span>NIGHTS ARE A LANGUAGE</span><span class="ac">/</span>
+      <span>2026 -</span><span class="ac">/</span>
+      <span>STROBE ATLAS</span><span class="ac">/</span>
+      <span>NIGHTS ARE A LANGUAGE</span><span class="ac">/</span>
+      <span>2026 -</span><span class="ac">/</span>
+    </div>
+  </div>
+</footer>
+<!--/SHELL:FOOTER-->
+
+<script>
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* word rotator */
+  const rot = document.getElementById('rot');
+  const words = ['RAVE','WAREHOUSE','HALLOWEEN','FORMAL','ROOFTOP','AFTERS'];
+  let ri = 0;
+  if(rot && !reduceMotion){
+    setInterval(()=>{
+      rot.classList.add('flash');
+      setTimeout(()=>{
+        ri = (ri+1) % words.length;
+        rot.textContent = words[ri];
+        rot.classList.remove('flash');
+      },300);
+    }, 2400);
+  }
+
+  /* reveal + counters */
+  const io = new IntersectionObserver((ents)=>{
+    ents.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        if(e.target.classList.contains('stats')){
+          e.target.querySelectorAll('.n').forEach(n=>{
+            const target = +n.dataset.c;
+            const suffix = n.dataset.suffix || '';
+            let cur = 0;
+            const step = Math.max(1, Math.floor(target/40));
+            const t = setInterval(()=>{
+              cur += step;
+              if(cur >= target){ cur = target; clearInterval(t); }
+              n.textContent = cur + suffix;
+            }, 28);
+          });
+        }
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal, .stats').forEach(el=>io.observe(el));
+
+  /* tools expand */
+  document.querySelectorAll('.tool .tool-head').forEach(h=>{
+    h.addEventListener('click', ()=>{
+      const t = h.closest('.tool');
+      t.classList.toggle('open');
+      try{ localStorage.setItem('sa-tool-'+t.dataset.tool, t.classList.contains('open')?'1':'0'); }catch(e){}
+    });
+  });
+  document.querySelectorAll('.tool').forEach(t=>{
+    try{ if(localStorage.getItem('sa-tool-'+t.dataset.tool)==='1') t.classList.add('open'); }catch(e){}
+  });
+
+  /* === BPM TAPPER === */
+  const bpmDisp = document.getElementById('bpmDisp');
+  const bpmClass = document.getElementById('bpmClass');
+  const bpmWave = document.getElementById('bpmWave');
+  const tapBtn = document.getElementById('tapBtn');
+  const bpmReset = document.getElementById('bpmReset');
+  let taps = [];
+  for(let i=0;i<16;i++){ const s=document.createElement('span'); s.style.height='4px'; bpmWave.appendChild(s); }
+  function classify(b){
+    if(b<120) return 'Sub house (under 120)';
+    if(b<=128) return 'House (120 - 128)';
+    if(b<=140) return 'Techno (128 - 140)';
+    if(b<=160) return 'Hard techno (140 - 160)';
+    if(b<=180) return 'DnB (165 - 180)';
+    return 'Hardcore (180 plus)';
+  }
+  function tap(){
+    const now = performance.now();
+    taps.push(now);
+    if(taps.length > 16) taps.shift();
+    bpmDisp.classList.add('flash');
+    setTimeout(()=>bpmDisp.classList.remove('flash'),120);
+    if(taps.length > 1){
+      const intervals = [];
+      for(let i=1;i<taps.length;i++) intervals.push(taps[i]-taps[i-1]);
+      const avg = intervals.reduce((a,b)=>a+b,0)/intervals.length;
+      const bpm = Math.round(60000/avg);
+      bpmDisp.textContent = bpm;
+      bpmClass.textContent = classify(bpm);
+      const bars = bpmWave.querySelectorAll('span');
+      intervals.slice(-16).forEach((iv,i)=>{
+        bars[bars.length-1-i].style.height = Math.min(50, Math.max(4, 60000/iv/4)) + 'px';
+      });
+      try{ localStorage.setItem('sa-bpm', bpm); }catch(e){}
+    }
+  }
+  if(tapBtn){
+    tapBtn.addEventListener('click', tap);
+    document.addEventListener('keydown',(e)=>{
+      if(e.code==='Space' && document.querySelector('[data-tool="bpm"]').classList.contains('open')){
+        e.preventDefault(); tap();
+      }
+    });
+    bpmReset.addEventListener('click', ()=>{
+      taps = []; bpmDisp.textContent='- -'; bpmClass.textContent='Tap any key or the button';
+      bpmWave.querySelectorAll('span').forEach(s=>s.style.height='4px');
+    });
+    try{ const saved = localStorage.getItem('sa-bpm'); if(saved){ bpmDisp.textContent=saved; bpmClass.textContent=classify(+saved); } }catch(e){}
+  }
+
+  /* === TIMELINE === */
+  function toMin(t){ const [h,m] = t.split(':').map(Number); return h*60+m; }
+  function fromMin(m){ m = ((m%1440)+1440)%1440; return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+  function renderTL(){
+    const bar = document.getElementById('tlBar');
+    if(!bar) return;
+    const s = toMin(document.getElementById('tlStart').value);
+    let e = toMin(document.getElementById('tlEnd').value);
+    let pa = toMin(document.getElementById('tlPeakA').value);
+    let pb = toMin(document.getElementById('tlPeakB').value);
+    if(e <= s) e += 1440;
+    if(pa < s) pa += 1440;
+    if(pb < s) pb += 1440;
+    const span = e - s;
+    bar.innerHTML = '';
+    // peak band
+    const peak = document.createElement('div');
+    peak.className = 'tl-peak';
+    peak.style.left = ((pa-s)/span*100)+'%';
+    peak.style.width = ((pb-pa)/span*100)+'%';
+    bar.appendChild(peak);
+    // 90 min markers
+    const labels = ['Warmup','Build','Peak 1','Peak 2','Closing','Afters'];
+    let i = 0;
+    for(let m = 0; m <= span; m += 90){
+      const mark = document.createElement('div');
+      mark.className = 'tl-mark';
+      mark.style.left = (m/span*100)+'%';
+      bar.appendChild(mark);
+      if(labels[i]){
+        const lab = document.createElement('div');
+        lab.className = 'tl-label';
+        lab.style.left = (m/span*100)+'%';
+        lab.textContent = labels[i];
+        bar.appendChild(lab);
+        const tim = document.createElement('div');
+        tim.className = 'tl-time';
+        tim.style.left = (m/span*100)+'%';
+        tim.textContent = fromMin(s+m);
+        bar.appendChild(tim);
+        i++;
+      }
+    }
+    try{
+      localStorage.setItem('sa-tl', JSON.stringify({
+        s:document.getElementById('tlStart').value,
+        e:document.getElementById('tlEnd').value,
+        pa:document.getElementById('tlPeakA').value,
+        pb:document.getElementById('tlPeakB').value
+      }));
+    }catch(e){}
+  }
+  ['tlStart','tlEnd','tlPeakA','tlPeakB'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', renderTL);
+  });
+  try{
+    const saved = JSON.parse(localStorage.getItem('sa-tl')||'null');
+    if(saved){
+      document.getElementById('tlStart').value=saved.s;
+      document.getElementById('tlEnd').value=saved.e;
+      document.getElementById('tlPeakA').value=saved.pa;
+      document.getElementById('tlPeakB').value=saved.pb;
+    }
+  }catch(e){}
+  renderTL();
+
+  /* === OUTFIT === */
+  const fitPools = {
+    rave:{
+      top:['Cropped mesh tee','Black tank','Reflective vest','Sheer long sleeve','Cyber harness','Dyed band tee','Latex crop','Oversized white tee','Black mesh top','Tactical bra'],
+      bot:['Cargo pants','Wide leg techwear','Pleated mini','Latex shorts','Combat pants','Black jorts','Distressed jeans','Vinyl leggings','Utility skirt','Mesh leggings'],
+      acc:['Wraparound shades','Bumbag cross body','Silver chain','Earplugs case','Knee straps','Bandana','Cyber goggles','Reflective armband','Mini backpack','Hair clips'],
+      foot:['Chunky black boots','Salomons','Platform sneakers','Doc Martens','Trail runners','Combat boots','Y2K trainers','Tabi boots','Wedge platforms','Black runners']
+    },
+    halloween:{
+      top:['Vampire cape','Tattered shirt','Latex catsuit top','Glitter bralette','Cyber witch corset','Skeleton mesh','Devil horns harness','Mummy wrap','Ghost veil','Vinyl crop'],
+      bot:['Tulle skirt','Leather pants','Bloodied trousers','Ripped fishnets','Mini latex skirt','Cargo skirt','Black silk pants','Bone print leggings','Wide tulle','Pleather shorts'],
+      acc:['Painted mask','LED eye lashes','Fake fangs','Pearl choker','Skeleton gloves','Halo wire','Chunky cross','Devil horns','Glitter face gems','Lace gloves'],
+      foot:['Platform boots','Heeled combats','Stripper boots','Lace up flats','Tabi heels','Patent platforms','Glitter sneakers','Cowboy boots','Knee high vinyl','Mary janes']
+    },
+    formal:{
+      top:['Cropped tux jacket','Silk shirt','Backless gown top','Sheer blazer','Beaded bodysuit','Open back vest','Silk camisole','Velvet blazer','Sequin halter','Ivory shirt'],
+      bot:['Long satin skirt','Tailored trousers','Slit gown','Black tie pants','Pleated tux trousers','Silk midi','Bias cut skirt','Tuxedo shorts','Velvet pants','Wrap skirt'],
+      acc:['Pearl earrings','Silver cuff','Slim tie','Velvet bowtie','Beaded clutch','Statement ring','Silk scarf','Crystal hair pin','Brooch','Long gloves'],
+      foot:['Patent oxfords','Block heel sandals','Loafers','Stiletto pumps','Pointed boots','Velvet flats','Mary jane heels','Suede loafers','Strappy heels','Slingbacks']
+    },
+    rooftop:{
+      top:['Linen shirt','Slip top','Knit tank','Crochet crop','Soft tee','Backless halter','Bandeau','Silk camisole','Boxy polo','Ribbed tank'],
+      bot:['Flowy trousers','Slip skirt','Linen shorts','Wide jeans','Maxi skirt','Pleated trousers','Bias skirt','Tailored shorts','Drop crotch','Soft cargos'],
+      acc:['Bucket hat','Sun shades','Layered chains','Silk scarf','Light beads','Anklet','Mini bag','Hoop earrings','Wrist stack','Headband'],
+      foot:['Mesh trainers','Sandals','Tabis','Mary janes','Suede loafers','Slides','Espadrilles','Low boots','Ballet flats','Adilettes']
+    },
+    university:{
+      top:['Oxford shirt','Cricket sweater','Slim blazer','College tee','Knit polo','White button up','Striped shirt','Cardigan','Tuxedo shirt','Argyle vest'],
+      bot:['Pleated trousers','Tartan skirt','Chinos','Black dress pants','Wide jeans','Pleated mini','Tailored shorts','Cord pants','Tweed skirt','Slim slacks'],
+      acc:['Striped tie','Silk scarf','Watch','Pocket square','Slim belt','Hair ribbon','Tortoise glasses','Leather satchel','Brooch','Lapel pin'],
+      foot:['Loafers','Oxfords','Doc Martens','Mary janes','Penny loafers','Ballet flats','Wingtips','Suede chelseas','Court shoes','White trainers']
+    }
+  };
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function reroll(){
+    const v = document.getElementById('fitVibe').value;
+    const m = document.getElementById('fitMood').value;
+    const p = fitPools[v];
+    const out = document.getElementById('fitOut');
+    out.innerHTML = 'Mood / <span>'+m+'</span><br>Top / <span>'+pick(p.top)+'</span><br>Bottom / <span>'+pick(p.bot)+'</span><br>Accessory / <span>'+pick(p.acc)+'</span><br>Footwear / <span>'+pick(p.foot)+'</span>';
+    try{ localStorage.setItem('sa-fit', out.innerHTML); }catch(e){}
+  }
+  const fitBtn = document.getElementById('fitBtn');
+  if(fitBtn){
+    fitBtn.addEventListener('click', reroll);
+    try{ const saved = localStorage.getItem('sa-fit'); if(saved) document.getElementById('fitOut').innerHTML = saved; }catch(e){}
+  }
+
+  /* === SPLIT === */
+  function splitCalc(){
+    const p = Math.max(1, +document.getElementById('spPeople').value || 1);
+    const total = (+document.getElementById('spCover').value||0)+(+document.getElementById('spBar').value||0)+(+document.getElementById('spCab').value||0)+(+document.getElementById('spFood').value||0)+(+document.getElementById('spTip').value||0);
+    let head = total/p;
+    let rem = 0;
+    if(document.getElementById('spRound').checked){
+      const rounded = Math.ceil(head/5)*5;
+      rem = (rounded - head)*p;
+      head = rounded;
+    }
+    document.getElementById('spTotal').textContent = '$'+Math.round(total);
+    document.getElementById('spHead').textContent = '$'+head.toFixed(0);
+    document.getElementById('spRem').textContent = '$'+rem.toFixed(0);
+    try{
+      localStorage.setItem('sa-sp', JSON.stringify({
+        p:document.getElementById('spPeople').value,
+        c:document.getElementById('spCover').value,
+        b:document.getElementById('spBar').value,
+        ca:document.getElementById('spCab').value,
+        f:document.getElementById('spFood').value,
+        t:document.getElementById('spTip').value,
+        r:document.getElementById('spRound').checked
+      }));
+    }catch(e){}
+  }
+  ['spPeople','spCover','spBar','spCab','spFood','spTip','spRound'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', splitCalc);
+  });
+  try{
+    const saved = JSON.parse(localStorage.getItem('sa-sp')||'null');
+    if(saved){
+      document.getElementById('spPeople').value=saved.p;
+      document.getElementById('spCover').value=saved.c;
+      document.getElementById('spBar').value=saved.b;
+      document.getElementById('spCab').value=saved.ca;
+      document.getElementById('spFood').value=saved.f;
+      document.getElementById('spTip').value=saved.t;
+      document.getElementById('spRound').checked=saved.r;
+    }
+  }catch(e){}
+  splitCalc();
+
+  /* === ARCHIVE === */
+  (async function(){
+    if(!document.getElementById('archive-list')) return;
+    const list = document.getElementById('archive-list');
+    try{
+      const res = await fetch('./articles.json',{cache:'no-store'});
+      if(!res.ok) throw 0;
+      const data = await res.json();
+      const items = (Array.isArray(data) ? data : (data.articles||[])).filter(a=>a && a.title);
+      if(!items.length){
+        list.innerHTML = '<div class="arc-empty">Field reports loading / nothing filed yet</div>';
+        return;
+      }
+      list.innerHTML = items.map(a=>{
+        const date = a.date || a.timestamp || '';
+        const venue = a.venue || a.city || a.category || 'Field';
+        const img = a.image || '';
+        const note = (a.excerpt || a.description || '').slice(0,180);
+        const fb = "this.onerror=null;this.src='https://images.unsplash.com/photo-1571266028243-d220bc562f7b?w=600&q=80'";
+        return '<div class="arc-row"><div class="arc-meta">'+date+'<b>'+venue+'</b></div><div class="arc-body"><h4>'+a.title+'</h4><p>'+note+'</p></div><div class="arc-thumb">'+(img?'<img src="'+img+'" alt="" onerror="'+fb+'">':'')+'</div></div>';
+      }).join('');
+    }catch(err){
+      list.innerHTML = '<div class="arc-empty">Field reports loading / nothing filed yet</div>';
+    }
+  })();
+
+  /* === PARTICLES (canvas, no CDN required) === */
+  const canvas = document.getElementById('particles');
+  if(canvas && !reduceMotion && window.innerWidth > 900){
+    const ctx = canvas.getContext('2d');
+    function size(){ canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+    size(); window.addEventListener('resize', size);
+    const parts = [];
+    for(let i=0;i<60;i++){
+      parts.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*2.5+.5,
+        vx: (Math.random()-.5)*.3,
+        vy: (Math.random()-.5)*.3,
+        c: ['#ff2bd6','#c6ff3a','#7c4dff'][Math.floor(Math.random()*3)]
+      });
+    }
+    function tick(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      parts.forEach(p=>{
+        p.x += p.vx; p.y += p.vy;
+        if(p.x<0||p.x>canvas.width) p.vx*=-1;
+        if(p.y<0||p.y>canvas.height) p.vy*=-1;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle = p.c;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = p.c;
+        ctx.fill();
+      });
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+})();
+</script>
+</body>
+</html>
