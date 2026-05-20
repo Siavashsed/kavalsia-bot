@@ -583,7 +583,7 @@ async function loadArticles(){
     return `
       <a href="./${a.slug}/" class="art-card">
         <div class="art-card-img">
-          <img src="${img}" alt="${a.title}" loading="lazy" onerror="this.src='${fallbackImg}'">
+          <img src="${img}" alt="${a.title}" loading="lazy" onerror="if(this.dataset.fb){this.style.display='none';}else{this.dataset.fb=1;this.src='${fallbackImg}';}">
           <span class="art-region">${region}</span>
         </div>
         <div class="art-card-body">
