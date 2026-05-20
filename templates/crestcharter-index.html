@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crest Charter - Private Jets, Villas, and Yachts</title>
+<meta name="description" content="Crest Charter is a private travel desk arranging vetted jet charters, superyacht voyages, and staffed villa stays for discerning principals. Personal, quiet, and accountable - never an aggregator.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=EB+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ocean:#06121a;
+  --harbor:#0c1c27;
+  --reef:#102536;
+  --gold:#c9a55c;
+  --brass:#a4823f;
+  --bone:#eef4f9;
+  --foam:#7d97ac;
+  --rule:#15303f;
+  --serif:'EB Garamond',Georgia,serif;
+  --italic:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--ocean);color:var(--bone);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{color:var(--bone);font-weight:500}
+
+/* TOP UTILITY BAR */
+.site-nav{background:var(--ocean);border-bottom:1px solid var(--rule)}
+.nav-in{max-width:1320px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:54px;gap:32px}
+.nav-logo{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--bone);letter-spacing:.22em;text-transform:uppercase}
+.nav-logo em{color:var(--gold);font-style:normal;font-weight:500}
+.nav-links{display:flex;gap:0;flex:1;justify-content:flex-end;flex-wrap:nowrap}
+.nav-links a{font-family:var(--mono);font-size:11px;font-weight:400;padding:0 14px;height:54px;display:flex;align-items:center;color:var(--foam);letter-spacing:.16em;text-transform:uppercase;transition:color .25s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{margin-left:18px;font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--brass);padding:8px 16px;transition:background .3s,color .3s}
+.nav-cta:hover{background:var(--gold);color:var(--ocean)}
+
+/* HERO */
+.hero{position:relative;min-height:92vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,18,26,.35) 0%,rgba(6,18,26,.55) 55%,rgba(6,18,26,.92) 100%)}
+#tideCanvas{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.55;mix-blend-mode:screen}
+.hero-content{position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:140px 32px 70px;width:100%}
+.hero-kicker{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:32px;display:flex;align-items:center;gap:14px}
+.hero-kicker::before{content:"";width:32px;height:1px;background:var(--gold)}
+.hero-h1{font-family:var(--italic);font-style:italic;font-weight:400;font-size:clamp(44px,6vw,84px);line-height:1.04;letter-spacing:-.01em;color:var(--bone);margin-bottom:28px;max-width:920px}
+.hero-desc{font-family:var(--serif);font-size:18px;color:#cdd9e2;max-width:560px;margin-bottom:42px;line-height:1.75;font-weight:400}
+.hero-cta{display:inline-flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--gold);padding:6px 0;transition:gap .35s,color .35s}
+.hero-cta:hover{gap:22px;color:var(--bone)}
+.coords-bar{position:relative;z-index:2;border-top:1px solid var(--rule);background:rgba(6,18,26,.6);backdrop-filter:blur(6px)}
+.coords-in{max-width:1320px;margin:0 auto;padding:22px 32px;display:flex;gap:48px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.coord{display:flex;flex-direction:column;gap:4px}
+.coord-name{font-family:var(--serif);font-size:14px;color:var(--bone);font-weight:500;letter-spacing:.04em}
+.coord-num{font-family:var(--mono);font-size:11px;color:var(--foam);letter-spacing:.08em}
+
+/* SECTIONS */
+.section{padding:120px 0}
+.container{max-width:1320px;margin:0 auto;padding:0 32px}
+.sec-hd{margin-bottom:64px;display:grid;grid-template-columns:1fr 1.6fr;gap:48px;align-items:end}
+.sec-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.sec-eyebrow::before{content:"";width:24px;height:1px;background:var(--gold)}
+.sec-title{font-family:var(--italic);font-style:italic;font-weight:400;font-size:clamp(34px,4.4vw,58px);line-height:1.1;letter-spacing:-.01em;color:var(--bone)}
+.sec-lede{font-family:var(--serif);font-size:17px;color:#b9c8d2;line-height:1.8;max-width:520px}
+
+/* PILLARS */
+.pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.pillar{background:var(--harbor);padding:0;transition:background .4s}
+.pillar:hover{background:var(--reef)}
+.pillar-img{aspect-ratio:4/5;overflow:hidden;position:relative}
+.pillar-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)}
+.pillar:hover .pillar-img img{transform:scale(1.06)}
+.pillar-body{padding:36px 32px 38px;position:relative}
+.pillar-num{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:18px}
+.pillar h3{font-family:var(--italic);font-style:italic;font-weight:400;font-size:32px;color:var(--bone);margin-bottom:12px;line-height:1.15;display:inline-block;position:relative}
+.pillar h3::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--gold);transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.pillar:hover h3::after{width:100%}
+.pillar p{font-family:var(--serif);font-size:15.5px;color:#b9c8d2;line-height:1.8;margin:18px 0 22px}
+.pillar-link{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);transition:letter-spacing .35s}
+.pillar:hover .pillar-link{letter-spacing:.28em}
+
+/* NOW BOOKING */
+.booking{background:var(--harbor);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.booking-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr;grid-template-rows:auto;gap:24px}
+.book-card{position:relative;overflow:hidden;aspect-ratio:3/4;border:1px solid var(--rule)}
+.book-card:nth-child(2),.book-card:nth-child(3){aspect-ratio:3/4;align-self:center;margin-top:48px}
+.book-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)}
+.book-card:hover img{transform:scale(1.07)}
+.book-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(6,18,26,.94) 0%,rgba(6,18,26,.15) 55%,rgba(6,18,26,.4) 100%)}
+.book-body{position:absolute;left:0;right:0;bottom:0;padding:26px 24px;z-index:1}
+.book-tag{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:inline-block;border:1px solid var(--brass);padding:5px 9px;background:rgba(6,18,26,.55)}
+.book-title{font-family:var(--italic);font-style:italic;font-size:26px;color:var(--bone);line-height:1.1;margin-bottom:8px}
+.book-line{font-family:var(--serif);font-size:14px;color:#b9c8d2;line-height:1.6}
+
+/* ATLAS */
+.atlas-wrap{background:var(--reef);border:1px solid var(--rule);padding:56px 48px 64px;position:relative;overflow:hidden}
+.atlas-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.atlas-map{position:relative;aspect-ratio:5/4;background:radial-gradient(ellipse at 30% 40%,#143246 0%,#0a1d2b 70%);border:1px solid var(--rule)}
+.atlas-map svg{width:100%;height:100%;display:block}
+.atlas-pins{display:flex;flex-direction:column;gap:0}
+.atlas-pin{padding:22px 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:34px 1fr auto;gap:20px;align-items:center}
+.atlas-pin:last-child{border-bottom:none}
+.atlas-pin .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(201,165,92,.18);justify-self:center}
+.atlas-pin .pin-name{font-family:var(--italic);font-style:italic;font-size:22px;color:var(--bone)}
+.atlas-pin .pin-note{font-family:var(--serif);font-size:13.5px;color:var(--foam);margin-top:2px}
+.atlas-pin .pin-coord{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.06em;text-align:right}
+
+/* OPERATOR NOTES */
+.op-list{display:flex;flex-direction:column;gap:24px}
+.op-card{display:grid;grid-template-columns:1.1fr 1.4fr;background:var(--harbor);border:1px solid var(--rule);overflow:hidden}
+.op-img{aspect-ratio:4/3;overflow:hidden;position:relative}
+.op-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)}
+.op-card:hover .op-img img{transform:scale(1.05)}
+.op-body{padding:48px 44px;display:flex;flex-direction:column;justify-content:center}
+.op-num{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.22em;margin-bottom:18px}
+.op-card h3{font-family:var(--italic);font-style:italic;font-weight:400;font-size:30px;color:var(--bone);line-height:1.15;margin-bottom:18px}
+.op-card p{font-family:var(--serif);font-size:16px;color:#b9c8d2;line-height:1.85}
+.op-sig{margin-top:20px;font-family:var(--mono);font-size:11px;color:var(--foam);letter-spacing:.14em;text-transform:uppercase}
+
+/* FIELD REPORTS */
+.fr-wrap{background:var(--harbor);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.art-card{background:var(--reef);border:1px solid var(--rule);overflow:hidden;transition:border-color .35s,transform .5s cubic-bezier(.2,.7,.2,1)}
+.art-card:hover{border-color:var(--brass);transform:translateY(-4px)}
+.art-card-img{aspect-ratio:4/3;overflow:hidden;position:relative;background:var(--harbor)}
+.art-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.5s cubic-bezier(.2,.7,.2,1)}
+.art-card:hover .art-card-img img{transform:scale(1.07)}
+.art-region{position:absolute;top:16px;left:16px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;background:rgba(6,18,26,.78);color:var(--gold);padding:6px 10px;border:1px solid var(--brass);backdrop-filter:blur(4px)}
+.art-card-body{padding:28px 26px 30px}
+.art-num{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:14px}
+.art-title{font-family:var(--italic);font-style:italic;font-weight:400;font-size:24px;color:var(--bone);line-height:1.2;margin-bottom:12px;transition:color .25s}
+.art-card:hover .art-title{color:var(--gold)}
+.art-excerpt{font-family:var(--serif);font-size:15px;color:#b9c8d2;line-height:1.75;margin-bottom:16px}
+.art-meta{font-family:var(--mono);font-size:11px;color:var(--foam);letter-spacing:.1em;text-transform:uppercase}
+.empty-state{grid-column:1/-1;text-align:center;padding:96px 32px;background:var(--reef);border:1px dashed var(--rule)}
+.empty-state h3{font-family:var(--italic);font-style:italic;font-size:28px;color:var(--bone);margin-bottom:12px}
+.empty-state p{font-family:var(--serif);font-size:15.5px;color:var(--foam);max-width:480px;margin:0 auto}
+
+/* ABOUT THE DESK */
+.about{background:var(--reef);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.about-in{display:grid;grid-template-columns:300px 1fr;gap:80px;align-items:center}
+.about-photo{position:relative;border:1px solid var(--brass);padding:14px}
+.about-photo::after{content:"";position:absolute;inset:0;border:1px solid var(--rule);pointer-events:none}
+.about-photo img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.about-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.about h2{font-family:var(--italic);font-style:italic;font-weight:400;font-size:clamp(30px,3.8vw,46px);line-height:1.15;color:var(--bone);margin-bottom:22px}
+.about p{font-family:var(--serif);font-size:16.5px;color:#b9c8d2;line-height:1.9;margin-bottom:16px}
+.about-sig{margin-top:30px;display:flex;align-items:center;gap:18px;padding-top:24px;border-top:1px solid var(--rule)}
+.about-sig-name{font-family:var(--italic);font-style:italic;font-size:22px;color:var(--gold)}
+.about-sig-role{font-family:var(--mono);font-size:11px;color:var(--foam);letter-spacing:.16em;text-transform:uppercase}
+
+/* FAQ */
+.faq-list{max-width:880px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--rule)}
+.faq-item:first-child{border-top:1px solid var(--rule)}
+.faq-q{width:100%;background:none;border:none;text-align:left;cursor:pointer;padding:28px 0;display:flex;justify-content:space-between;align-items:center;gap:24px;font-family:var(--italic);font-style:italic;font-size:22px;font-weight:400;color:var(--bone)}
+.faq-q .ico{flex-shrink:0;width:28px;height:28px;border:1px solid var(--brass);display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:var(--mono);font-size:14px;transition:transform .5s cubic-bezier(.2,.7,.2,1),background .3s}
+.faq-item.open .faq-q .ico{transform:rotate(45deg);background:var(--gold);color:var(--ocean)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.2,.7,.2,1)}
+.faq-a-inner{padding:0 0 28px;font-family:var(--serif);font-size:16px;color:#b9c8d2;line-height:1.9;max-width:720px}
+
+/* NEWSLETTER */
+.newsletter{background:var(--harbor);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:120px 0;position:relative}
+.nl-in{max-width:680px;margin:0 auto;padding:0 32px;text-align:center;position:relative}
+.nl-rule{width:60px;height:1px;background:var(--gold);margin:0 auto 32px}
+.nl-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.nl-title{font-family:var(--italic);font-style:italic;font-weight:400;font-size:clamp(34px,4.4vw,54px);color:var(--bone);line-height:1.1;margin-bottom:18px}
+.nl-sub{font-family:var(--serif);font-size:17px;color:#b9c8d2;margin-bottom:38px;line-height:1.8}
+.nl-form{display:flex;gap:0;border:1px solid var(--brass);background:rgba(6,18,26,.5)}
+.nl-input{flex:1;background:transparent;border:none;color:var(--bone);font-size:14px;font-family:var(--sans);padding:18px 20px;outline:none}
+.nl-input::placeholder{color:var(--foam);font-family:var(--mono);font-size:12px;letter-spacing:.1em}
+.nl-btn{background:var(--gold);color:var(--ocean);font-family:var(--mono);font-size:11px;font-weight:500;padding:0 28px;border:none;cursor:pointer;letter-spacing:.18em;text-transform:uppercase;transition:background .3s}
+.nl-btn:hover{background:var(--bone)}
+.nl-fine{font-family:var(--mono);font-size:11px;color:var(--foam);margin-top:18px;letter-spacing:.08em}
+
+/* CONTACT CTA */
+.contact-cta{padding:96px 0;text-align:center;background:var(--ocean)}
+.contact-cta h2{font-family:var(--italic);font-style:italic;font-weight:400;font-size:clamp(30px,4vw,46px);color:var(--bone);margin-bottom:18px;line-height:1.15}
+.contact-cta p{font-family:var(--serif);font-size:17px;color:#b9c8d2;max-width:560px;margin:0 auto 32px;line-height:1.8}
+.contact-cta .hero-cta{margin:0 auto}
+
+/* FOOTER */
+footer{background:var(--harbor);border-top:1px solid var(--rule);padding:80px 0 32px}
+.footer-in{max-width:1320px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:64px;margin-bottom:56px}
+.footer-logo{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--bone);margin-bottom:18px;letter-spacing:.2em;text-transform:uppercase}
+.footer-logo em{color:var(--gold);font-style:normal;font-weight:500}
+.footer-desc{font-family:var(--serif);font-size:15px;color:var(--foam);line-height:1.85;max-width:340px}
+.footer-coord{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.1em;margin-top:18px}
+.footer-head{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.footer-links{display:flex;flex-direction:column;gap:13px}
+.footer-links a{font-family:var(--serif);font-size:15px;color:var(--bone);transition:color .25s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{max-width:1320px;margin:0 auto;padding:32px 32px 0;border-top:1px solid var(--rule);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.footer-copy{font-family:var(--mono);font-size:11px;color:var(--foam);letter-spacing:.1em}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 1.2s cubic-bezier(.2,.7,.2,1),transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:1080px){
+  .pillar-grid{grid-template-columns:1fr}
+  .booking-grid{grid-template-columns:1fr 1fr}
+  .book-card:nth-child(2),.book-card:nth-child(3){margin-top:0}
+  .atlas-grid{grid-template-columns:1fr;gap:40px}
+  .op-card{grid-template-columns:1fr}
+  .art-grid{grid-template-columns:1fr 1fr}
+  .about-in{grid-template-columns:1fr;gap:48px;text-align:center}
+  .about-photo{max-width:280px;margin:0 auto}
+  .about-sig{justify-content:center}
+  .sec-hd{grid-template-columns:1fr;gap:24px}
+  .footer-in{grid-template-columns:1fr 1fr;gap:48px}
+}
+@media(max-width:680px){
+  .nav-links a{padding:0 10px;font-size:10px}
+  .nav-cta{display:none}
+  .section{padding:80px 0}
+  .container{padding:0 22px}
+  .hero-content{padding:100px 22px 50px}
+  .coords-in{padding:18px 22px;gap:18px}
+  .coord{flex:1 1 45%}
+  .booking-grid,.art-grid{grid-template-columns:1fr}
+  .op-body{padding:32px 26px}
+  .atlas-map{display:none}
+  .atlas-wrap{padding:36px 26px}
+  .footer-in{grid-template-columns:1fr;gap:40px}
+  .nl-form{flex-direction:column}
+  .nl-btn{padding:16px 24px}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#c9a55c-->
+<!--SHELL:HEADER-->
+
+<nav class="site-nav">
+  <div class="nav-in">
+    <a href="./" class="nav-logo">Crest <em>Charter</em></a>
+    <div class="nav-links">
+      <a href="./#jets">Jets</a>
+      <a href="./#yachts">Yachts</a>
+      <a href="./#villas">Villas</a>
+      <a href="./#destinations">Destinations</a>
+      <a href="./#concierge">Concierge</a>
+    </div>
+    <a href="./#inquiries" class="nav-cta">Begin a Request</a>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1583416750470-965b2707b355?w=1800&q=85" alt="Private jet at golden hour on a quiet runway">
+  </div>
+  <canvas id="tideCanvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-kicker">Private Travel Desk &middot; Est. MMXIX</div>
+    <h1 class="hero-h1">A private travel desk, not an aggregator.</h1>
+    <p class="hero-desc">Crest Charter arranges vetted private jets, superyacht voyages, and staffed villa stays for a small list of principals. One desk. One director. Quiet, accountable, and entirely off the open market.</p>
+    <a href="#inquiries" class="hero-cta">Begin a request <span aria-hidden="true">&rarr;</span></a>
+  </div>
+  <div class="coords-bar">
+    <div class="coords-in">
+      <div class="coord"><span class="coord-name">St. Barths</span><span class="coord-num">17.9000&deg;N 62.8333&deg;W</span></div>
+      <div class="coord"><span class="coord-name">Porto Cervo</span><span class="coord-num">41.1361&deg;N 9.5375&deg;E</span></div>
+      <div class="coord"><span class="coord-name">Courchevel 1850</span><span class="coord-num">45.4150&deg;N 6.6347&deg;E</span></div>
+      <div class="coord"><span class="coord-name">Male Atoll</span><span class="coord-num">4.1755&deg;N 73.5093&deg;E</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="jets">
+  <div class="container">
+    <div class="sec-hd reveal">
+      <div>
+        <div class="sec-eyebrow">Three Pillars</div>
+        <h2 class="sec-title">Air. Sea. Stay.</h2>
+      </div>
+      <p class="sec-lede">Every Crest itinerary is composed across three vetted disciplines. We do not resell brochures. We hold direct relationships with operators, captains, and estate managers in twenty-two countries.</p>
+    </div>
+    <div class="pillar-grid">
+      <article class="pillar reveal">
+        <div class="pillar-img"><img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=1800&q=85" alt="Private jet cabin interior" loading="lazy"></div>
+        <div class="pillar-body">
+          <div class="pillar-num">I. Private Jets</div>
+          <h3>Private Jets</h3>
+          <p>Light, mid, super-mid, and heavy aircraft sourced from a private operator network. Empty legs surfaced quietly. No subscription, no membership.</p>
+          <a href="#inquiries" class="pillar-link">View fleet &rarr;</a>
+        </div>
+      </article>
+      <article class="pillar reveal" id="yachts">
+        <div class="pillar-img"><img src="https://images.unsplash.com/photo-1469796466635-455ede028aca?w=1800&q=85" alt="Superyacht moored in a private bay at sunset" loading="lazy"></div>
+        <div class="pillar-body">
+          <div class="pillar-num">II. Superyachts</div>
+          <h3>Superyachts</h3>
+          <p>Crewed yachts from 28 metres to 90 metres, in the Mediterranean, Caribbean, and Indian Ocean. Charter weeks held on captains we have actually sailed with.</p>
+          <a href="#inquiries" class="pillar-link">View fleet &rarr;</a>
+        </div>
+      </article>
+      <article class="pillar reveal" id="villas">
+        <div class="pillar-img"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=85" alt="Cliffside villa with private infinity pool" loading="lazy"></div>
+        <div class="pillar-body">
+          <div class="pillar-num">III. Staffed Villas</div>
+          <h3>Staffed Villas</h3>
+          <p>Fully staffed estates with private chef, butler, and security. Inspected in person each season. Many never appear on a public site.</p>
+          <a href="#inquiries" class="pillar-link">View fleet &rarr;</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section booking" id="destinations">
+  <div class="container">
+    <div class="sec-hd reveal">
+      <div>
+        <div class="sec-eyebrow">Now Booking</div>
+        <h2 class="sec-title">Open windows for 2026.</h2>
+      </div>
+      <p class="sec-lede">A short list of seasons we are currently composing for principals. Each window is held quietly and confirmed direct with the operator. No public inventory, no overbooking.</p>
+    </div>
+    <div class="booking-grid">
+      <article class="book-card reveal">
+        <img src="https://images.unsplash.com/photo-1469796466635-455ede028aca?w=1800&q=85" alt="Mediterranean coast at sunset" loading="lazy">
+        <div class="book-body">
+          <span class="book-tag">Window &middot; Jun-Sep 2026</span>
+          <h3 class="book-title">Mediterranean Summer</h3>
+          <p class="book-line">Riviera to Aeolian. 50m to 70m crewed yachts, Cap Ferrat villa weeks.</p>
+        </div>
+      </article>
+      <article class="book-card reveal">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1800&q=85" alt="Caribbean turquoise water aerial" loading="lazy">
+        <div class="book-body">
+          <span class="book-tag">Window &middot; Dec-Mar 2026</span>
+          <h3 class="book-title">Caribbean Winter</h3>
+          <p class="book-line">St. Barths, Mustique, BVI. Estate weeks and Gulfstream positioning.</p>
+        </div>
+      </article>
+      <article class="book-card reveal">
+        <img src="https://images.unsplash.com/photo-1551524559-8af4e6624178?w=1800&q=85" alt="Snow covered alpine chalet at dawn" loading="lazy">
+        <div class="book-body">
+          <span class="book-tag">Window &middot; Jan-Mar 2026</span>
+          <h3 class="book-title">Alpine Season</h3>
+          <p class="book-line">Courchevel, Verbier, Zermatt. Full-service chalets with private piste access.</p>
+        </div>
+      </article>
+      <article class="book-card reveal">
+        <img src="https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1800&q=85" alt="Indian Ocean overwater pavilion" loading="lazy">
+        <div class="book-body">
+          <span class="book-tag">Window &middot; Oct-Apr 2026</span>
+          <h3 class="book-title">Indian Ocean</h3>
+          <p class="book-line">Maldives atolls and Seychelles inner islands. Private island buyouts.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="sec-hd reveal">
+      <div>
+        <div class="sec-eyebrow">From The Atlas</div>
+        <h2 class="sec-title">Where we are quietly working.</h2>
+      </div>
+      <p class="sec-lede">A handful of coordinates we are operating from this season. Each pin is a live relationship with a captain, pilot, or estate manager we trust by name.</p>
+    </div>
+    <div class="atlas-wrap reveal">
+      <div class="atlas-grid">
+        <div class="atlas-map" aria-hidden="true">
+          <svg viewBox="0 0 500 400" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#15303f" stroke-width="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="500" height="400" fill="url(#grid)"/>
+            <path d="M70,140 Q120,110 170,135 T260,150 Q310,165 360,140 T440,155" fill="none" stroke="#15303f" stroke-width="1"/>
+            <path d="M60,220 Q130,200 200,225 T340,240 Q400,250 460,225" fill="none" stroke="#15303f" stroke-width="1"/>
+            <path d="M80,300 Q160,280 240,305 T420,320" fill="none" stroke="#15303f" stroke-width="1"/>
+            <g font-family="IBM Plex Mono" font-size="9" fill="#7d97ac">
+              <text x="20" y="20">40&deg;N</text>
+              <text x="20" y="200">20&deg;N</text>
+              <text x="20" y="380">0&deg;</text>
+            </g>
+            <g>
+              <circle cx="170" cy="135" r="5" fill="#c9a55c"/><circle cx="170" cy="135" r="11" fill="none" stroke="#c9a55c" stroke-opacity=".35"/>
+              <text x="184" y="139" font-family="EB Garamond" font-size="13" fill="#eef4f9">Porto Cervo</text>
+              <circle cx="95" cy="170" r="5" fill="#c9a55c"/><circle cx="95" cy="170" r="11" fill="none" stroke="#c9a55c" stroke-opacity=".35"/>
+              <text x="109" y="174" font-family="EB Garamond" font-size="13" fill="#eef4f9">St. Barths</text>
+              <circle cx="260" cy="150" r="5" fill="#c9a55c"/><circle cx="260" cy="150" r="11" fill="none" stroke="#c9a55c" stroke-opacity=".35"/>
+              <text x="274" y="154" font-family="EB Garamond" font-size="13" fill="#eef4f9">Courchevel</text>
+              <circle cx="360" cy="240" r="5" fill="#c9a55c"/><circle cx="360" cy="240" r="11" fill="none" stroke="#c9a55c" stroke-opacity=".35"/>
+              <text x="374" y="244" font-family="EB Garamond" font-size="13" fill="#eef4f9">Male</text>
+              <circle cx="200" cy="310" r="5" fill="#c9a55c"/><circle cx="200" cy="310" r="11" fill="none" stroke="#c9a55c" stroke-opacity=".35"/>
+              <text x="214" y="314" font-family="EB Garamond" font-size="13" fill="#eef4f9">Mustique</text>
+            </g>
+          </svg>
+        </div>
+        <div class="atlas-pins">
+          <div class="atlas-pin"><span class="dot"></span><div><div class="pin-name">Porto Cervo</div><div class="pin-note">Costa Smeralda &middot; July-August yacht weeks</div></div><div class="pin-coord">41.1361&deg;N<br>9.5375&deg;E</div></div>
+          <div class="atlas-pin"><span class="dot"></span><div><div class="pin-name">St. Barths</div><div class="pin-note">Toiny &middot; Christmas estate weeks</div></div><div class="pin-coord">17.9000&deg;N<br>62.8333&deg;W</div></div>
+          <div class="atlas-pin"><span class="dot"></span><div><div class="pin-name">Courchevel 1850</div><div class="pin-note">Le Belvedere &middot; Feb-Mar chalets</div></div><div class="pin-coord">45.4150&deg;N<br>6.6347&deg;E</div></div>
+          <div class="atlas-pin"><span class="dot"></span><div><div class="pin-name">North Male Atoll</div><div class="pin-note">Private overwater pavilions</div></div><div class="pin-coord">4.1755&deg;N<br>73.5093&deg;E</div></div>
+          <div class="atlas-pin"><span class="dot"></span><div><div class="pin-name">Mustique</div><div class="pin-note">Britannia Bay &middot; full estate buyouts</div></div><div class="pin-coord">12.8833&deg;N<br>61.1833&deg;W</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--ocean)">
+  <div class="container">
+    <div class="sec-hd reveal">
+      <div>
+        <div class="sec-eyebrow">Operator Notes</div>
+        <h2 class="sec-title">Field notes from the desk.</h2>
+      </div>
+      <p class="sec-lede">Short, honest dispatches written after each charter. We share what the operator brochure does not. No affiliate links, no kickbacks.</p>
+    </div>
+    <div class="op-list">
+      <article class="op-card reveal">
+        <div class="op-img"><img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=1800&q=85" alt="Gulfstream G650 cabin" loading="lazy"></div>
+        <div class="op-body">
+          <div class="op-num">N. 001 &middot; Aviation</div>
+          <h3>Notes from a Gulfstream G650</h3>
+          <p>A ten hour Teterboro to Nice positioning, three principals, one chef on board. The G650 still flies quieter than anything in its class, and the galley handles a proper tasting menu without compromise.</p>
+          <div class="op-sig">Recorded April 2026 &middot; Atlantic crossing</div>
+        </div>
+      </article>
+      <article class="op-card reveal">
+        <div class="op-img"><img src="https://images.unsplash.com/photo-1469796466635-455ede028aca?w=1800&q=85" alt="Sixty metre Benetti superyacht" loading="lazy"></div>
+        <div class="op-body">
+          <div class="op-num">N. 002 &middot; Maritime</div>
+          <h3>Notes from a 60m Benetti</h3>
+          <p>Two weeks Porto Cervo to Capri to Amalfi with twelve guests. The captain held a tender available within ninety seconds at every anchorage. The interior designer had quietly specified a humidor in the sky lounge. These details are why we book this boat.</p>
+          <div class="op-sig">Recorded August 2025 &middot; Tyrrhenian Sea</div>
+        </div>
+      </article>
+      <article class="op-card reveal">
+        <div class="op-img"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1800&q=85" alt="Mykonos cliff villa" loading="lazy"></div>
+        <div class="op-body">
+          <div class="op-num">N. 003 &middot; Residence</div>
+          <h3>Notes from a Mykonos cliff villa</h3>
+          <p>Eight bedrooms, full staff of fourteen, including a sommelier on retainer for the week. The villa manager arranged a private tender to Delos at sunrise without being asked. This is the standard our desk holds.</p>
+          <div class="op-sig">Recorded July 2025 &middot; Aegean Sea</div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section fr-wrap" id="articles">
+  <div class="container">
+    <div class="sec-hd reveal">
+      <div>
+        <div class="sec-eyebrow">Field Reports</div>
+        <h2 class="sec-title">Dispatches from the desk.</h2>
+      </div>
+      <p class="sec-lede">Editorial notes, captain interviews, and pre-season briefings written by the Crest team. Read by a small audience of principals and family offices.</p>
+    </div>
+    <div class="art-grid" id="articleGrid"></div>
+  </div>
+</section>
+
+<section class="section about" id="concierge">
+  <div class="container">
+    <div class="about-in">
+      <div class="about-photo reveal">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=85" alt="Portrait of Adrien Marchetti, Private Travel Director">
+      </div>
+      <div class="reveal">
+        <div class="about-eyebrow">About The Desk</div>
+        <h2>One director. One desk. A small list of principals.</h2>
+        <p>I am Adrien Marchetti. For fourteen years I composed itineraries for the private aviation arm of a Geneva family office. Crest Charter is the desk I always wanted to run: small, accountable, direct with operators, and never on the public market.</p>
+        <p>Every inquiry that arrives here is read by me, not a sales team. Every itinerary leaves with my signature. If we do not have the right asset for your dates, I will say so before you waste a deposit.</p>
+        <div class="about-sig">
+          <div>
+            <div class="about-sig-name">Adrien Marchetti</div>
+            <div class="about-sig-role">Private Travel Director</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="sec-hd reveal" style="grid-template-columns:1fr;text-align:center;justify-items:center">
+      <div>
+        <div class="sec-eyebrow" style="justify-content:center">Before You Inquire</div>
+        <h2 class="sec-title">Questions our principals tend to ask first.</h2>
+      </div>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item"><button class="faq-q">How does Crest Charter differ from a booking platform?<span class="ico">+</span></button><div class="faq-a"><div class="faq-a-inner">We are a private desk, not an inventory aggregator. Every aircraft, yacht, and residence we propose has been inspected by a member of the team. We hold direct contracts with operators, never resell through a third party, and decline assets we cannot personally vouch for.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Is there a membership fee or annual retainer?<span class="ico">+</span></button><div class="faq-a"><div class="faq-a-inner">No. We work on a per-itinerary basis with a transparent planning fee, disclosed before any deposit is requested. Principals who book with us regularly are invited to a private circle with first refusal on held inventory.</div></div></div>
+      <div class="faq-item"><button class="faq-q">How quickly can the desk respond to a request?<span class="ico">+</span></button><div class="faq-a"><div class="faq-a-inner">Initial response within four hours during European business hours, twelve hours outside them. Live aircraft positioning and yacht availability is returned within twenty-four hours of a confirmed brief.</div></div></div>
+      <div class="faq-item"><button class="faq-q">Do you handle discretion and security arrangements?<span class="ico">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. NDAs are standard on both sides of any inquiry. Close protection, private terminal access, and discreet ground transport are arranged through vetted partners in every destination we operate in.</div></div></div>
+      <div class="faq-item"><button class="faq-q">What if my plans change at short notice?<span class="ico">+</span></button><div class="faq-a"><div class="faq-a-inner">All confirmed bookings carry the operator&rsquo;s standard cancellation terms, which we negotiate on your behalf. For frequent principals we hold flexible re-positioning windows that absorb most last-minute changes without penalty.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter" id="newsletter">
+  <div class="nl-in">
+    <div class="nl-rule"></div>
+    <div class="nl-eyebrow">The Crest Brief</div>
+    <h2 class="nl-title">A quiet dispatch. Twelve times a year.</h2>
+    <p class="nl-sub">One season window, one held asset, and one operator note. Read by a private audience of principals, family offices, and chiefs of staff. No public archive.</p>
+    <form class="nl-form" onsubmit="return false">
+      <input class="nl-input" type="email" placeholder="your.office@domain.com" aria-label="Email address">
+      <button class="nl-btn" type="submit">Request access</button>
+    </form>
+    <p class="nl-fine">By invitation. We confirm each address before subscribing.</p>
+  </div>
+</section>
+
+<section class="contact-cta" id="inquiries">
+  <div class="container">
+    <h2>Begin a private request.</h2>
+    <p>Tell us the dates, the destination, and the principals. We will respond within four hours during European business hours, twelve hours outside them.</p>
+    <a href="mailto:desk@crestcharter.com" class="hero-cta">Write the desk &rarr;</a>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer>
+  <div class="footer-in">
+    <div>
+      <div class="footer-logo">Crest <em>Charter</em></div>
+      <p class="footer-desc">A private travel desk arranging vetted jets, yachts, and staffed villas for a small list of principals. Quiet, accountable, and never on the open market.</p>
+      <div class="footer-coord">46.2044&deg;N 6.1432&deg;E &middot; Geneva Desk</div>
+    </div>
+    <div>
+      <div class="footer-head">The Desk</div>
+      <div class="footer-links">
+        <a href="./#jets">Private Jets</a>
+        <a href="./#yachts">Superyachts</a>
+        <a href="./#villas">Staffed Villas</a>
+        <a href="./#destinations">Destinations</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-head">The Office</div>
+      <div class="footer-links">
+        <a href="./">Home</a>
+        <a href="about.html">About</a>
+        <a href="./#articles">Field Reports</a>
+        <a href="./#inquiries">Inquiries</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-head">Legal</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="./#newsletter">The Crest Brief</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2026 Crest Charter. All rights reserved.</div>
+    <div class="footer-copy">Composed quietly in Geneva.</div>
+  </div>
+</footer>
+
+<script>
+/* ARTICLE GRID - real articles only from articles.json */
+async function loadArticles(){
+  if(!document.getElementById('articleGrid'))return;
+  const grid=document.getElementById('articleGrid');
+  const fallbackImg='https://images.unsplash.com/photo-1469796466635-455ede028aca?w=1200&q=80';
+  let articles=[];
+  try{
+    const res=await fetch('./articles.json');
+    if(res.ok){
+      const data=await res.json();
+      if(Array.isArray(data))articles=data;
+      else if(data&&Array.isArray(data.articles))articles=data.articles;
+    }
+  }catch(e){articles=[];}
+  articles=articles.filter(a=>a&&a.slug&&a.title);
+  if(!articles.length){
+    grid.innerHTML=`
+      <div class="empty-state">
+        <h3>The next field report is being composed.</h3>
+        <p>Our writers are with operators on location. Request access to The Crest Brief above to receive the next dispatch the moment it is filed.</p>
+      </div>`;
+    return;
+  }
+  grid.innerHTML=articles.slice(0,9).map((a,i)=>{
+    const img=a.image||a.cover||fallbackImg;
+    const region=a.region||a.category||'Field';
+    const excerpt=a.excerpt||a.description||'';
+    const mins=a.mins||a.readingTime||a.read_time;
+    const meta=mins?`${mins} min read`:'';
+    const num='FR.'+String(i+1).padStart(3,'0');
+    return `
+      <a href="./${a.slug}/" class="art-card">
+        <div class="art-card-img">
+          <img src="${img}" alt="${a.title}" loading="lazy" onerror="if(this.dataset.fb){this.style.display='none';}else{this.dataset.fb=1;this.src='${fallbackImg}';}">
+          <span class="art-region">${region}</span>
+        </div>
+        <div class="art-card-body">
+          <div class="art-num">${num}</div>
+          <h3 class="art-title">${a.title}</h3>
+          ${excerpt?`<p class="art-excerpt">${excerpt}</p>`:''}
+          ${meta?`<div class="art-meta">${meta}</div>`:''}
+        </div>
+      </a>`;
+  }).join('');
+}
+loadArticles();
+
+/* SCROLL REVEAL */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* FAQ ACCORDION */
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.parentElement;
+    const ans=item.querySelector('.faq-a');
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o=>{
+      o.classList.remove('open');
+      o.querySelector('.faq-a').style.maxHeight=null;
+    });
+    if(!isOpen){
+      item.classList.add('open');
+      ans.style.maxHeight=ans.scrollHeight+'px';
+    }
+  });
+});
+
+/* TIDE PARTICLES - Three.js, mobile-disabled, reduced-motion-respected */
+(function(){
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile=window.innerWidth<900||/Mobi|Android/i.test(navigator.userAgent);
+  if(reduced||isMobile)return;
+  const canvas=document.getElementById('tideCanvas');
+  if(!canvas)return;
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js';
+  s.onload=function(){
+    const THREE=window.THREE;if(!THREE)return;
+    const rect=canvas.parentElement.getBoundingClientRect();
+    const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.setSize(rect.width,rect.height,false);
+    const scene=new THREE.Scene();
+    const cam=new THREE.PerspectiveCamera(60,rect.width/rect.height,.1,1000);
+    cam.position.z=80;
+    const COUNT=420;
+    const geom=new THREE.BufferGeometry();
+    const pos=new Float32Array(COUNT*3);
+    const speeds=new Float32Array(COUNT);
+    for(let i=0;i<COUNT;i++){
+      pos[i*3]=(Math.random()-.5)*180;
+      pos[i*3+1]=(Math.random()-.5)*120;
+      pos[i*3+2]=(Math.random()-.5)*60;
+      speeds[i]=.02+Math.random()*.06;
+    }
+    geom.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    const mat=new THREE.PointsMaterial({color:0xc9a55c,size:.7,transparent:true,opacity:.55,depthWrite:false,blending:THREE.AdditiveBlending});
+    const pts=new THREE.Points(geom,mat);
+    scene.add(pts);
+    let raf;
+    function loop(){
+      const arr=geom.attributes.position.array;
+      for(let i=0;i<COUNT;i++){
+        arr[i*3]+=speeds[i]*.3;
+        arr[i*3+1]+=Math.sin((Date.now()*.0003)+i)*.02;
+        if(arr[i*3]>95)arr[i*3]=-95;
+      }
+      geom.attributes.position.needsUpdate=true;
+      pts.rotation.z+=.0003;
+      renderer.render(scene,cam);
+      raf=requestAnimationFrame(loop);
+    }
+    loop();
+    window.addEventListener('resize',()=>{
+      const r=canvas.parentElement.getBoundingClientRect();
+      renderer.setSize(r.width,r.height,false);
+      cam.aspect=r.width/r.height;
+      cam.updateProjectionMatrix();
+    });
+  };
+  document.head.appendChild(s);
+})();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
