@@ -201,7 +201,8 @@ section{padding:92px 44px}
 .arts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .art-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(124,74,40,.05);transition:all .3s;display:flex;flex-direction:column}
 .art-card:hover{box-shadow:0 16px 36px rgba(124,74,40,.13);transform:translateY(-4px)}
-.art-card-img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--surface)}
+.art-card-img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--surface);transition:transform .5s ease;display:block}
+.art-card:hover .art-card-img{transform:scale(1.04)}
 .art-card-body{padding:22px;flex:1;display:flex;flex-direction:column}
 .art-card-cat{font-size:9.5px;font-weight:800;color:var(--mocha);text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
 .art-card-title{font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.36;margin-bottom:10px;flex:1;letter-spacing:-.2px}
