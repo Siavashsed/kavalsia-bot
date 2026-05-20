@@ -31,7 +31,6 @@ PAGES = {
     "megadash":  "megadash.html",
     "mega":      "megadash.html",
     "editor":    "editor.html",
-    "launcher":  "launcher.html",
     "guide":     "guide.html",
     "landing":   "landing.html",
 }
