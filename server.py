@@ -1168,6 +1168,98 @@ def update_site_schedule():
         },
     })
 
+# ── Site Settings (consolidated per-site update) ──────────────────────────────
+# POST /api/site-settings
+# Body: { "site_id": "<id>", "fields": { <key>: <value>, ... } }
+# Merges the provided fields into the matching site object inside
+# network-config.json. Only known per-site keys are allowed. Uses the same
+# atomic write pattern as /api/site-schedule.
+#
+# Response: { ok: True, site_id, updated: [<keys>] }
+ALLOWED_SITE_FIELDS = {
+    # Identity & Persona
+    "name", "default_author", "author_names", "persona", "tone",
+    "custom_prompt", "custom_css",
+    # Posting Schedule
+    "posts_per_day_new", "posts_per_week", "historical_mode",
+    "historical_per_week", "warming",
+    # Content Pipeline
+    "topics", "categories", "default_category", "signup_url",
+    "header_scripts", "footer_scripts",
+}
+
+SITE_FIELD_VALIDATORS = {
+    "posts_per_day_new":   lambda v: isinstance(v, int) and 1 <= v <= 5,
+    "posts_per_week":      lambda v: isinstance(v, int) and 0 <= v <= 50,
+    "historical_per_week": lambda v: isinstance(v, int) and 0 <= v <= 14,
+    "historical_mode":     lambda v: isinstance(v, bool),
+    "author_names":        lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
+    "topics":              lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
+    "categories":          lambda v: isinstance(v, list) and all(isinstance(x, str) for x in v),
+    "warming":             lambda v: isinstance(v, dict),
+}
+
+@app.route("/api/site-settings", methods=["POST"])
+def update_site_settings():
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    fields  = body.get("fields") or {}
+    if not site_id:
+        return jsonify({"error": "site_id is required"}), 400
+    if not isinstance(fields, dict) or not fields:
+        return jsonify({"error": "fields must be a non-empty object"}), 400
+
+    # Filter to allowed fields and validate
+    clean = {}
+    rejected = []
+    for k, v in fields.items():
+        if k not in ALLOWED_SITE_FIELDS:
+            rejected.append(k)
+            continue
+        validator = SITE_FIELD_VALIDATORS.get(k)
+        if validator and not validator(v):
+            return jsonify({"error": f"Invalid value for field '{k}'"}), 400
+        clean[k] = v
+
+    if not clean:
+        return jsonify({"error": "No valid fields provided", "rejected": rejected}), 400
+
+    # Load config
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+
+    sites = cfg.get("sites", [])
+    site = next((s for s in sites if s.get("id") == site_id), None)
+    if not site:
+        return jsonify({"error": f"Unknown site_id '{site_id}'"}), 404
+
+    # Merge cleaned fields into the site (warming gets shallow-merged so
+    # other warming sub-keys remain intact).
+    for k, v in clean.items():
+        if k == "warming" and isinstance(site.get("warming"), dict) and isinstance(v, dict):
+            merged = dict(site["warming"])
+            merged.update(v)
+            site["warming"] = merged
+        else:
+            site[k] = v
+
+    # Atomic write
+    try:
+        tmp_path = CONFIG_PATH.with_suffix(".json.tmp")
+        tmp_path.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+        os.replace(str(tmp_path), str(CONFIG_PATH))
+    except Exception as e:
+        return jsonify({"error": f"Could not write network-config.json: {e}"}), 500
+
+    return jsonify({
+        "ok":       True,
+        "site_id":  site_id,
+        "updated":  sorted(clean.keys()),
+        "rejected": rejected,
+    })
+
 # ── Publish / Sync Center ─────────────────────────────────────────────────────
 # Scans the local working copy and compares files against their remote
 # counterparts on GitHub (per-file blob SHA). Anything that differs is reported
