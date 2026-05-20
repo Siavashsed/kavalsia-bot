@@ -74,6 +74,9 @@ textarea{resize:vertical;line-height:1.6}
 .nav-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--red);color:#fff;padding:1px 6px;border-radius:100px}
 .promo-dur-btn{font-size:11px;padding:5px 12px;border:1px solid var(--border2);background:var(--bg2);color:var(--text3);border-radius:5px;cursor:pointer;transition:all .15s}
 .promo-dur-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.promo-dur-pill{transition:border-color .15s,background .15s,box-shadow .15s}
+.promo-dur-pill:hover{border-color:var(--accent)}
+.promo-dur-pill:has(input:checked){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--bg2));box-shadow:0 0 0 1px var(--accent) inset}
 .promo-qtab{font-size:11px;padding:5px 12px;border:1px solid var(--border2);background:var(--bg2);color:var(--text3);border-radius:5px;cursor:pointer;transition:all .15s}
 .promo-qtab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .promo-q-item{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;font-size:12px;color:var(--text2);line-height:1.5}
@@ -415,22 +418,8 @@ textarea{resize:vertical;line-height:1.6}
   <button class="server-badge" id="serverBadge" onclick="showPanel('server')" title="Open server panel" style="cursor:pointer;background:none;padding:2px 8px;border-radius:100px">⬤ Connecting...</button>
   <div class="tb-sep"></div>
   <button class="btn btn-sm" onclick="syncConfig()" title="Reload network-config.json from local disk (no GitHub)">↻ Sync</button>
-  <button class="btn btn-sm btn-blue" onclick="publishConfig()" title="① Push config changes to GitHub (after AI[S] edits)">① Push Config</button>
-  <div style="position:relative;display:inline-block" id="tb-push-wrap">
-    <button class="btn btn-sm btn-amber" onclick="togglePushPicker()" title="② Rebuild site templates and push to GitHub" id="tb-push-btn">② Push Sites ▾</button>
-    <div id="tb-push-picker" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:500;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:10px;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,.5)">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px">Push scope</div>
-      <div style="display:flex;gap:4px;margin-bottom:8px">
-        <button id="tbps-all"    class="btn btn-amber" style="font-size:10px;padding:3px 8px;flex:1" onclick="setPushScope('all');    updateTbPicker()">All</button>
-        <button id="tbps-select" class="btn"           style="font-size:10px;padding:3px 8px;flex:1" onclick="setPushScope('select'); updateTbPicker()">Select</button>
-        <button id="tbps-one"    class="btn"           style="font-size:10px;padding:3px 8px;flex:1" onclick="setPushScope('one');    updateTbPicker()">One</button>
-      </div>
-      <select id="tbps-site-one" style="display:none;width:100%;margin-bottom:8px;font-size:11px;background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:5px;padding:4px"></select>
-      <div id="tbps-checklist" style="display:none;max-height:160px;overflow-y:auto;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:6px;margin-bottom:8px"></div>
-      <button class="btn btn-amber" style="width:100%;font-size:12px;margin-top:2px" onclick="togglePushPicker();pushSiteTemplates()">⬆ Push Now</button>
-    </div>
-  </div>
-  <button class="btn btn-sm btn-green" onclick="triggerRun()" title="③ Trigger GitHub Actions bot  -  generate new articles now">③ Run Bot</button>
+  <button class="btn btn-sm btn-green" onclick="showPanel('publish');if(typeof pubInit==='function')pubInit();" title="Open the unified Publish panel: push config, sites, and all local changes to GitHub from one place" style="font-weight:700">⬆ Publish</button>
+  <button class="btn btn-sm btn-green" onclick="triggerRun()" title="Trigger GitHub Actions bot  -  generate new articles now">▶ Run Bot</button>
   <div class="tb-sep"></div>
   <nav style="display:flex;gap:3px;flex-shrink:0">
     <span style="padding:5px 11px;border-radius:6px;font-size:11px;font-weight:700;background:#3ecf8e18;color:#3ecf8e;border:1px solid #3ecf8e35">Hub</span>
@@ -499,6 +488,9 @@ textarea{resize:vertical;line-height:1.6}
     <!-- ── CONTENT ── -->
     <div class="nav-section">
       <span class="nav-label">Content</span>
+      <button class="nav-btn" id="nav-publish" onclick="showPanel('publish')"
+        data-tip="One-click Publish: pushes every local change (homepages, about bodies, engine files, workflows, dashboard) to the right GitHub repo. See exactly what is out of sync and push it from one place.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></span> Publish</button>
       <button class="nav-btn" id="nav-report" onclick="showPanel('report');loadDailyReport()"
         data-tip="All articles published across all 22 sites in the last 24h, 3 days, or 7 days  -  with direct links to each article.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Daily Report</button>
@@ -1096,6 +1088,31 @@ textarea{resize:vertical;line-height:1.6}
       <span id="ps-count" style="font-size:11px;color:var(--text3)"></span>
     </div>
     <div id="ps-list"><div class="empty"><b>Loading…</b>Reading network-config.json.</div></div>
+  </div>
+</div>
+
+<!-- ════════ PUBLISH / SYNC CENTER ════════ -->
+<div class="panel" id="panel-publish">
+  <div class="pg-title">Publish</div>
+  <div class="pg-sub">Every local change that is not yet on GitHub, in one place. Includes homepage templates, about-page bodies, engine files (bot, sync, push, layout, config), GitHub Actions workflows, and the dashboard itself. Each row pushes to its correct target repo.</div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-green" id="pub-publish-btn" onclick="pubPublishSelected()" style="font-weight:700">Publish selected</button>
+      <button class="btn btn-sm btn-blue" onclick="pubRefresh()" id="pub-refresh-btn">Refresh</button>
+      <button class="btn btn-sm" onclick="pubToggleAll()" id="pub-toggle-btn" style="background:var(--bg3);color:var(--text2);border:1px solid var(--border)">Clear all</button>
+      <span id="pub-counter" style="font-size:11px;color:var(--text3);margin-left:auto"></span>
+    </div>
+    <div id="pub-status" style="font-size:12px;color:var(--text3);margin-top:10px"></div>
+    <div id="pub-errors" style="font-size:12px;color:#f59e0b;margin-top:6px;display:none"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Pending changes</span>
+      <span id="pub-count" style="font-size:11px;color:var(--text3)"></span>
+    </div>
+    <div id="pub-list"><div class="empty"><b>Not loaded yet</b>Click Refresh to scan local files against GitHub.</div></div>
   </div>
 </div>
 
@@ -1728,12 +1745,12 @@ textarea{resize:vertical;line-height:1.6}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           Step 3 - Schedule
         </div>
-        <div style="display:flex;gap:6px;margin-bottom:14px">
-          <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap;padding:6px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;flex:1;justify-content:center">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+          <label class="promo-dur-pill" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;white-space:nowrap;padding:7px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:999px;flex:1 1 180px;min-width:0;justify-content:center">
             <input type="radio" name="promo-duration" value="lifetime" onchange="promoDurationChange(this)" style="accent-color:var(--accent);flex-shrink:0" checked>
             <span style="color:var(--accent);font-weight:600">Lifetime</span><span style="color:var(--text3)">- forever</span>
           </label>
-          <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap;padding:6px 12px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;flex:1;justify-content:center">
+          <label class="promo-dur-pill" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;white-space:nowrap;padding:7px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:999px;flex:1 1 180px;min-width:0;justify-content:center">
             <input type="radio" name="promo-duration" value="temporary" onchange="promoDurationChange(this)" style="accent-color:var(--accent);flex-shrink:0">
             <span style="color:var(--text2)">Temporary</span><span style="color:var(--text3)">- expires</span>
           </label>
@@ -4068,6 +4085,242 @@ async function psSave(i) {
   }
 }
 
+// ── Publish / Sync Center ─────────────────────────────────────────────────
+let _pubPending = [];      // [{id, kind, path, target_repo, label, summary, ...}]
+let _pubChecked = {};      // id -> bool
+let _pubBusy    = false;
+let _pubLoaded  = false;
+
+const PUB_KIND_LABELS = {
+  homepage:   'Homepages',
+  about_body: 'About Bodies',
+  engine:     'Engine',
+  workflow:   'Workflows',
+  dashboard:  'Dashboard',
+};
+const PUB_KIND_ORDER = ['homepage','about_body','engine','workflow','dashboard'];
+
+function pubEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+  ));
+}
+
+function pubInit() {
+  // Auto-load on first visit. Manual refresh thereafter.
+  if (!_pubLoaded) { _pubLoaded = true; pubRefresh(); }
+}
+
+async function pubRefresh() {
+  if (_pubBusy) return;
+  const token = ls('ghToken');
+  const listEl   = document.getElementById('pub-list');
+  const statusEl = document.getElementById('pub-status');
+  const countEl  = document.getElementById('pub-count');
+  const errsEl   = document.getElementById('pub-errors');
+  if (!token) {
+    listEl.innerHTML = '<div class="empty"><b>No GitHub token</b>Set your GitHub token in Settings, then click Refresh.</div>';
+    statusEl.textContent = '';
+    countEl.textContent  = '';
+    errsEl.style.display = 'none';
+    return;
+  }
+  statusEl.textContent = 'Scanning local files vs GitHub...';
+  listEl.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:10px 0">Scanning...</div>';
+  errsEl.style.display = 'none';
+  errsEl.innerHTML = '';
+  countEl.textContent = '';
+  try {
+    const ac = new AbortController(); const t = setTimeout(() => ac.abort(), 120000);
+    const r = await fetch('/api/pending', {
+      method: 'GET',
+      headers: { 'X-GH-Token': token },
+      signal: ac.signal,
+    });
+    clearTimeout(t);
+    let data = null;
+    try { data = await r.json(); } catch(_) {}
+    if (!r.ok) {
+      const msg = (data && data.error) || ('HTTP ' + r.status);
+      listEl.innerHTML = `<div class="empty"><b>Scan failed</b>${pubEsc(msg)}</div>`;
+      statusEl.textContent = '';
+      return;
+    }
+    _pubPending = Array.isArray(data.pending) ? data.pending : [];
+    // Default: every pending item is checked.
+    _pubChecked = {};
+    _pubPending.forEach(p => { _pubChecked[p.id] = true; });
+
+    statusEl.textContent = `Found ${_pubPending.length} pending change${_pubPending.length === 1 ? '' : 's'}.`;
+    countEl.textContent  = _pubPending.length ? (_pubPending.length + ' files') : '';
+
+    if (Array.isArray(data.errors) && data.errors.length) {
+      errsEl.style.display = 'block';
+      errsEl.innerHTML = '<b>Scan warnings:</b><br>' + data.errors.map(pubEsc).join('<br>');
+    }
+    pubRender();
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty"><b>Scan error</b>${pubEsc(e.message || e)}</div>`;
+    statusEl.textContent = '';
+  }
+}
+
+function pubRender() {
+  const listEl = document.getElementById('pub-list');
+  if (!_pubPending.length) {
+    listEl.innerHTML = '<div class="empty"><b>Everything is in sync</b>No local files differ from their remote on GitHub.</div>';
+    pubUpdateToggleLabel();
+    pubUpdateCounter();
+    return;
+  }
+  // Group by kind
+  const groups = {};
+  _pubPending.forEach(p => {
+    (groups[p.kind] = groups[p.kind] || []).push(p);
+  });
+  const sections = PUB_KIND_ORDER
+    .filter(k => groups[k] && groups[k].length)
+    .map(k => {
+      const items = groups[k];
+      const rows = items.map(p => {
+        const checked = _pubChecked[p.id] ? 'checked' : '';
+        return `
+          <div class="pm-post-row" style="align-items:center" data-pubid="${pubEsc(p.id)}">
+            <label style="display:flex;align-items:center;padding-top:2px;cursor:pointer">
+              <input type="checkbox" ${checked} onchange="pubToggleOne('${pubEsc(p.id)}', this.checked)"
+                style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+            </label>
+            <div class="pm-post-info" style="min-width:0;flex:1">
+              <div class="pm-post-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pubEsc(p.label)}</div>
+              <div class="pm-post-meta">${pubEsc(p.summary || '')}${p.local_sha ? ' &middot; <code style="opacity:.6">' + pubEsc(p.local_sha.slice(0,7)) + '</code>' : ''}${p.remote_sha ? ' &rarr; <code style="opacity:.6">' + pubEsc(p.remote_sha.slice(0,7)) + '</code>' : ' &rarr; <span style="color:#f59e0b">new</span>'}</div>
+            </div>
+            <div id="pub-status-${pubEsc(p.id)}" style="font-size:11px;color:var(--text3);min-width:160px;text-align:right;white-space:normal;line-height:1.5">Pending</div>
+          </div>`;
+      }).join('');
+      return `
+        <div style="margin-top:14px">
+          <div class="section-head" style="margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+            <span>${pubEsc(PUB_KIND_LABELS[k] || k)}</span>
+            <span style="font-size:10px;color:var(--text3)">${items.length}</span>
+          </div>
+          ${rows}
+        </div>`;
+    }).join('');
+  listEl.innerHTML = sections;
+  pubUpdateToggleLabel();
+  pubUpdateCounter();
+}
+
+function pubToggleOne(id, on) {
+  _pubChecked[id] = !!on;
+  pubUpdateToggleLabel();
+  pubUpdateCounter();
+}
+
+function pubToggleAll() {
+  const allOn = _pubPending.every(p => _pubChecked[p.id]);
+  const next = !allOn;
+  _pubPending.forEach(p => { _pubChecked[p.id] = next; });
+  document.querySelectorAll('#pub-list input[type=checkbox]').forEach(cb => { cb.checked = next; });
+  pubUpdateToggleLabel();
+  pubUpdateCounter();
+}
+
+function pubUpdateToggleLabel() {
+  const btn = document.getElementById('pub-toggle-btn');
+  if (!btn) return;
+  if (!_pubPending.length) { btn.textContent = 'Select all'; return; }
+  const allOn = _pubPending.every(p => _pubChecked[p.id]);
+  btn.textContent = allOn ? 'Clear all' : 'Select all';
+}
+
+function pubUpdateCounter() {
+  const c = document.getElementById('pub-counter');
+  if (!c) return;
+  const sel = _pubPending.filter(p => _pubChecked[p.id]).length;
+  c.textContent = _pubPending.length
+    ? `${sel} selected of ${_pubPending.length}`
+    : '';
+}
+
+async function pubPublishSelected() {
+  if (_pubBusy) return;
+  const token = ls('ghToken');
+  if (!token) {
+    if (!confirm('No GitHub token in Settings. Open Settings now?')) return;
+    showPanel('settings'); return;
+  }
+  const selected = _pubPending.filter(p => _pubChecked[p.id]);
+  if (!selected.length) { alert('Nothing selected.'); return; }
+
+  _pubBusy = true;
+  const btn = document.getElementById('pub-publish-btn');
+  const refreshBtn = document.getElementById('pub-refresh-btn');
+  const origLabel = btn.textContent;
+  btn.disabled = true; refreshBtn.disabled = true;
+  btn.textContent = `Pushing 0 / ${selected.length} ...`;
+
+  // Mark all as in-flight up front.
+  selected.forEach(p => {
+    const el = document.getElementById('pub-status-' + p.id);
+    if (el) { el.style.color = 'var(--text2)'; el.textContent = 'Queued...'; }
+  });
+
+  try {
+    const r = await fetch('/api/publish', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'X-GH-Token': token },
+      body: JSON.stringify({ ids: selected.map(p => p.id), token: token }),
+    });
+    let data = null;
+    try { data = await r.json(); } catch(_) {}
+    if (!r.ok) {
+      // Server-level failure: surface on every selected row.
+      const msg = (data && data.error) || ('HTTP ' + r.status + ' ' + (r.statusText || ''));
+      selected.forEach(p => {
+        const el = document.getElementById('pub-status-' + p.id);
+        if (el) {
+          el.style.color = '#f87171';
+          el.innerHTML = `<b>POST /api/publish - FAIL ${r.status}:</b><br>${pubEsc(msg).slice(0, 240)}`;
+        }
+      });
+      btn.textContent = origLabel;
+      return;
+    }
+    const results = (data && data.results) || [];
+    let okN = 0;
+    results.forEach((res, i) => {
+      const el = document.getElementById('pub-status-' + res.id);
+      btn.textContent = `Pushing ${i + 1} / ${selected.length} ...`;
+      if (!el) return;
+      if (res.ok) {
+        okN++;
+        el.style.color = '#4ade80';
+        el.textContent = `OK ${res.status}`;
+      } else {
+        el.style.color = '#f87171';
+        const status = res.status || 0;
+        el.innerHTML = `<b>FAIL ${status}:</b><br>${pubEsc(res.message || '').slice(0, 240)}`;
+      }
+    });
+    btn.textContent = `Done: ${okN} / ${selected.length} ok`;
+    // After a moment, refresh the list so already-pushed items disappear.
+    setTimeout(() => { pubRefresh(); btn.textContent = origLabel; }, 1800);
+  } catch(e) {
+    selected.forEach(p => {
+      const el = document.getElementById('pub-status-' + p.id);
+      if (el) {
+        el.style.color = '#f87171';
+        el.innerHTML = `<b>Network error:</b><br>${pubEsc(String(e))}`;
+      }
+    });
+    btn.textContent = origLabel;
+  } finally {
+    _pubBusy = false;
+    btn.disabled = false; refreshBtn.disabled = false;
+  }
+}
+
 // ── GitHub Runs ────────────────────────────────────────────────────────────
 async function loadGhRuns() {
   const token = ls('ghToken');
@@ -5519,6 +5772,7 @@ function showPanel(id) {
   if (id === 'posts') pmRefreshSiteSelect();
   if (id === 'authors') aaInit();
   if (id === 'schedule') psRender();
+  if (id === 'publish') pubInit();
   if (id === 'tokens') tvLoad();
   if (id === 'settings') renderSiteToggles();
 }
