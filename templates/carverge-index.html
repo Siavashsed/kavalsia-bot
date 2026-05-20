@@ -202,6 +202,10 @@ section{padding:96px 32px}
 .art-thumb{height:168px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:14px}
 .art-thumb-grid{position:absolute;inset:0;opacity:.4;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:26px 26px}
 .art-thumb svg.bigicon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.22;color:#fff}
+.art-thumb img.art-thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;transition:transform .45s ease}
+.art-card:hover .art-thumb img.art-thumb-img{transform:scale(1.04)}
+.art-thumb.has-img .art-thumb-grid,.art-thumb.has-img svg.bigicon{display:none}
+.art-thumb.has-img .art-cat{position:relative;z-index:2}
 .art-cat{position:relative;font-family:var(--mono);font-size:10px;font-weight:500;color:#05080d;background:linear-gradient(120deg,var(--blue),var(--cyan));padding:5px 9px;border-radius:6px;text-transform:uppercase;letter-spacing:.5px}
 .art-body{padding:20px;flex:1;display:flex;flex-direction:column}
 .art-title{font-family:var(--display);font-size:17px;font-weight:600;color:var(--text);line-height:1.32;margin-bottom:10px;flex:1}
@@ -745,8 +749,11 @@ function loadArticles() {
         const excerpt = (a.meta_description || a.excerpt || '').toString().slice(0, 120);
         const date = a.date ? new Date(a.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
         const ico = ICONS[i % ICONS.length];
+        const imgTag = a.image ? '<img class="art-thumb-img" src="' + a.image + '" alt="' + String(a.title).replace(/"/g,'&quot;') + '" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.classList.remove(\'has-img\')">' : '';
+        const thumbCls = a.image ? 'art-thumb has-img' : 'art-thumb';
         return '<a href="./' + encodeURIComponent(a.slug) + '/" class="art-card">' +
-          '<div class="art-thumb" style="background:linear-gradient(150deg,var(--surface2),var(--surface))">' +
+          '<div class="' + thumbCls + '" style="background:linear-gradient(150deg,var(--surface2),var(--surface))">' +
+            imgTag +
             '<div class="art-thumb-grid"></div>' +
             '<svg class="bigicon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' + ico + '</svg>' +
             '<span class="art-cat">' + cat + '</span>' +
