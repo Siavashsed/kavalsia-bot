@@ -23,7 +23,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import layout_shell
-from bot import _seo_meta, _comments_section_js, THEMES, SITE_THEMES
+from bot import (_seo_meta, _comments_section_js, THEMES, SITE_THEMES,
+                 assign_category, _count_words, _site_name)
 
 
 def _theme_for(site):
@@ -216,9 +217,31 @@ def patch_site(stem, site, token, log):
         title = article.get("title", slug)
         desc  = article.get("meta_description", "")
         canonical = f"https://{domain}/{slug}/" if domain else ""
-        seo = _seo_meta(f"{title}", desc, canonical,
-                        article.get("image", ""), article.get("author", ""),
-                        article.get("date_iso", ""))
+
+        # Assign a category from categories.json keywords if the article doesn't have one.
+        category = article.get("category") or assign_category(title + " " + desc + " " + body, stem)
+        if category and not article.get("category"):
+            article["category"] = category  # persist back into articles.json later
+
+        seo = _seo_meta(
+            title, desc, canonical, article.get("image", ""),
+            article.get("author", ""), article.get("date_iso", ""),
+            modified_iso=datetime.now().strftime("%Y-%m-%d"),
+            category=category,
+            site_name=_site_name(site),
+            site_url=f"https://{domain}/" if domain else "",
+            word_count=_count_words(body),
+            keywords=category,
+        )
+
+        # Semantic <time> on the byline date for Google date detection.
+        disp_date = article.get("date", "")
+        if disp_date and article.get("date_iso"):
+            body = body.replace(disp_date, f'<time datetime="{article["date_iso"]}">{disp_date}</time>', 1)
+
+        # Wrap content in <article> for stronger schema signal.
+        body = f'<article itemscope itemtype="https://schema.org/Article">{body}</article>'
+
         try:
             rebuilt = layout_shell.wrap_page(
                 stem, title=title, description=desc, body_html=body,
@@ -242,6 +265,30 @@ def patch_site(stem, site, token, log):
             log(f"  [{i+1}] x {slug}  -  {resp.status_code} {resp.text[:100]}")
             fail += 1
         time.sleep(0.8)
+
+    # Push articles.json back if we assigned any new categories (so the homepage
+    # cards and category filters pick them up).
+    idx_r = _get(f"{api}/articles.json", token)
+    if idx_r:
+        try:
+            idx_data = idx_r.json()
+            idx_sha = idx_data.get("sha")
+            current = json.loads(_decode(idx_data["content"])) if idx_data.get("content") else []
+            # Merge: take the in-memory `articles` list (which now has category set)
+            by_slug = {a.get("slug"): a for a in articles}
+            updated = False
+            for entry in current:
+                s = entry.get("slug")
+                if s in by_slug and by_slug[s].get("category") and not entry.get("category"):
+                    entry["category"] = by_slug[s]["category"]
+                    updated = True
+            if updated:
+                body_json = json.dumps(current, indent=2)
+                _put_file(repo, "articles.json", body_json, token, sha=idx_sha,
+                          msg="Backfill: article categories")
+                log("  + articles.json: categories backfilled")
+        except Exception as e:
+            log(f"  ! articles.json category push failed: {e}")
 
     return ok, fail
 
