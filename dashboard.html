@@ -528,6 +528,15 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-megadash" onclick="showPanel('megadash')"
         data-tip="Full-screen network dashboard. All sites at once with traffic and AI summaries.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span> MegaDash</button>
+      <button class="nav-btn" id="nav-integrations" onclick="showPanel('integrations');if(typeof integrationsRender==='function')integrationsRender()"
+        data-tip="One hub listing every third-party connection: GitHub, Anthropic, Pexels, Brevo, Cloudflare, GHL, Meta, WordPress, WooCommerce, Shopify, and more. Click any row to configure.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="18" x2="15" y2="18"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/></svg></span> Integrations</button>
+      <button class="nav-btn" id="nav-ghl-guide" onclick="showPanel('ghl-guide')"
+        data-tip="GoHighLevel workflow recipes, payload reference, and setup steps for your inbound webhooks.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> GHL Guide</button>
+      <button class="nav-btn" id="nav-meta-guide" onclick="showPanel('meta-guide')"
+        data-tip="Meta Pixel + Conversions API setup, custom audiences, lookalikes, retargeting recipes and per-site event names.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Meta Guide</button>
     </div>
 
     <!-- ── SYSTEM ── -->
@@ -1117,6 +1126,173 @@ textarea{resize:vertical;line-height:1.6}
       </div>
     </div>
 
+    <!-- ── GHL Integration (per-site) ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">GHL Integration <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">site-level override. Leave blank to use the global defaults from Settings.</span></div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+          <input type="checkbox" id="ss-ghl-enabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+          Enable GHL capture for this site <span style="color:var(--text3);font-size:11px">(off = inherit global)</span>
+        </label>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Webhook URL <span style="color:var(--text3)">(empty = use global)</span></div>
+        <input type="text" id="ss-ghl-webhook" placeholder="https://services.leadconnectorhq.com/hooks/...">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Extra tags <span style="color:var(--text3)">(comma list. site_id is added automatically. global default_tags are also merged.)</span></div>
+        <input type="text" id="ss-ghl-tags" placeholder="crypto, advanced-readers">
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-sm btn-blue" onclick="ssGhlTest()">Send test webhook</button>
+        <span id="ss-ghl-test-status" style="font-size:12px;color:var(--text3)"></span>
+      </div>
+      <pre id="ss-ghl-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
+    </div>
+
+    <!-- ── Meta Pixel + CAPI (per-site) ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">Meta Pixel + CAPI <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">site-level override. Leave blank to inherit Meta Defaults from Settings.</span></div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+          <input type="checkbox" id="ss-meta-enabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+          Enable Meta Pixel for this site <span style="color:var(--text3);font-size:11px">(off = inherit global)</span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Pixel ID <span style="color:var(--text3)">(required for client tracking)</span></div>
+          <input type="text" id="ss-meta-pixel-id" placeholder="123456789012345">
+        </div>
+        <div class="form-group">
+          <div class="form-label">CAPI Dataset / Pixel ID <span style="color:var(--text3)">(for server events)</span></div>
+          <input type="text" id="ss-meta-dataset-id" placeholder="usually same as Pixel ID">
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">CAPI Access Token <span style="color:var(--text3)">(server side)</span></div>
+          <input type="password" id="ss-meta-capi-token" placeholder="EAAJZB...">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Test Event Code <span style="color:var(--text3)">(optional, for QA)</span></div>
+          <input type="text" id="ss-meta-test-code" placeholder="TEST12345">
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Custom Audience ID <span style="color:var(--text3)">(for newsletter sync)</span></div>
+          <input type="text" id="ss-meta-audience-id" placeholder="120330000000000000">
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none;padding-top:24px">
+            <input type="checkbox" id="ss-meta-fire-pv" checked style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+            Auto-fire PageView event
+          </label>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+        <button class="btn btn-sm" onclick="ssMetaTestPixel()">Test pixel snippet</button>
+        <button class="btn btn-sm btn-blue" onclick="ssMetaTestCapi()">Send test CAPI event</button>
+        <button class="btn btn-sm" onclick="ssMetaAudienceSync()">Sync to custom audience</button>
+        <span id="ss-meta-status" style="font-size:12px;color:var(--text3)"></span>
+      </div>
+      <pre id="ss-meta-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:280px;overflow:auto;white-space:pre-wrap"></pre>
+      <div style="margin-top:10px;font-size:11px;color:var(--text3);line-height:1.6">
+        Auto event names for this site: <code id="ss-meta-evt-visit" style="background:var(--bg3);padding:1px 6px;border-radius:3px">Site Visit</code> and <code id="ss-meta-evt-signup" style="background:var(--bg3);padding:1px 6px;border-radius:3px">Site NewsletterSignup</code>. See <b>Meta Guide</b> in Tools for audience and retargeting setup.
+      </div>
+    </div>
+
+    <!-- ── WordPress Integration (per-site) ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">WordPress <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">site-level override. Leave fields blank to inherit global defaults from Settings.</span></div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+          <input type="checkbox" id="ss-wp-enabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+          Enable WordPress for this site <span style="color:var(--text3);font-size:11px">(off = inherit global)</span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Site URL <span style="color:var(--text3)">(WordPress base URL)</span></div>
+          <input type="text" id="ss-wp-url" placeholder="https://example.com">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Username</div>
+          <input type="text" id="ss-wp-user" placeholder="admin">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Application Password <span style="color:var(--text3)">(create at /wp-admin Users Profile Application Passwords)</span></div>
+        <input type="password" id="ss-wp-pass" placeholder="xxxx xxxx xxxx xxxx xxxx xxxx">
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-sm btn-blue" onclick="ssWpTest()">Test connection</button>
+        <span id="ss-wp-test-status" style="font-size:12px;color:var(--text3)"></span>
+      </div>
+      <pre id="ss-wp-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
+    </div>
+
+    <!-- ── WooCommerce Integration (per-site) ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">WooCommerce <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">site-level override. Leave blank to inherit global defaults.</span></div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+          <input type="checkbox" id="ss-woo-enabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+          Enable WooCommerce for this site
+        </label>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Store URL</div>
+        <input type="text" id="ss-woo-url" placeholder="https://shop.example.com">
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Consumer Key</div>
+          <input type="text" id="ss-woo-ck" placeholder="ck_...">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Consumer Secret</div>
+          <input type="password" id="ss-woo-cs" placeholder="cs_...">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-sm btn-blue" onclick="ssWooTest()">Test connection</button>
+        <span id="ss-woo-test-status" style="font-size:12px;color:var(--text3)"></span>
+      </div>
+      <pre id="ss-woo-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
+    </div>
+
+    <!-- ── Shopify Integration (per-site) ── -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">Shopify <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">site-level override. Leave blank to inherit global defaults.</span></div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+          <input type="checkbox" id="ss-shop-enabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+          Enable Shopify for this site
+        </label>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Store Domain <span style="color:var(--text3)">(e.g. mystore.myshopify.com)</span></div>
+        <input type="text" id="ss-shop-domain" placeholder="mystore.myshopify.com">
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Admin API Access Token</div>
+          <input type="password" id="ss-shop-admin" placeholder="shpat_...">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Storefront Token <span style="color:var(--text3)">(optional)</span></div>
+          <input type="password" id="ss-shop-storefront" placeholder="optional">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-sm btn-blue" onclick="ssShopifyTest()">Test connection</button>
+        <span id="ss-shop-test-status" style="font-size:12px;color:var(--text3)"></span>
+      </div>
+      <pre id="ss-shop-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
+    </div>
+
     <!-- ── Queued / Scheduled (absorbed from old Manage Posts panel) ── -->
     <div class="card" style="margin-bottom:14px" id="pm-queue-card">
       <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
@@ -1500,6 +1676,217 @@ textarea{resize:vertical;line-height:1.6}
   </div>
 </div>
 
+<!-- ════════ GHL GUIDE ════════ -->
+<div class="panel" id="panel-ghl-guide">
+  <div class="pg-title">GHL Workflows Guide</div>
+  <div class="pg-sub">Recipes for connecting your Kavalsia network newsletter signups to GoHighLevel. Set the webhook in Settings (global) or per-site, then build these workflows inside GHL.</div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">1. How the capture works</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.7">
+      At publish time, <code>bot.py</code> injects a small JS snippet into the <code>&lt;head&gt;</code> of every page on every active site. The snippet finds any form containing an email input, and on submit, POSTs a JSON payload to the resolved GHL webhook URL.
+      <br><br>
+      <b>Resolution order</b>: site-level <code>ghl.webhook_url</code> &gt; global <code>settings.ghl.webhook_url</code>. Same for the enabled flag. Tags are merged: <code>[site_id, ...site.ghl.tags, ...settings.ghl.default_tags]</code> (deduped).
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">2. JSON payload shape</div>
+    <pre style="margin:0;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:12px;color:var(--text2);overflow:auto">{
+  "email":        "reader@example.com",
+  "site_id":      "cryptopulse",
+  "site_name":    "CryptoPulse",
+  "page_url":     "https://cryptopulse.example.com/post/...",
+  "page_title":   "Algorithmic trading basics",
+  "referrer":     "https://google.com/",
+  "tags":         ["cryptopulse", "crypto", "newsletter", "kavalsia-network"],
+  "utm": {
+    "utm_source":   "twitter",
+    "utm_medium":   "social",
+    "utm_campaign": "launch-2026",
+    "utm_term":     "",
+    "utm_content":  "",
+    "gclid":        "",
+    "fbclid":       ""
+  },
+  "submitted_at": "2026-05-20T14:31:02.118Z"
+}</pre>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">3. Custom fields to map in GHL</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.8">
+      In GHL go to <b>Settings &rarr; Custom Fields &rarr; + Add</b> and create each of these (object: Contact, data type: Text unless noted):
+      <ul style="margin:8px 0 0 18px;padding:0">
+        <li><code>email</code> (standard field. map directly.)</li>
+        <li><code>site_id</code> (Text)</li>
+        <li><code>site_name</code> (Text)</li>
+        <li><code>page_url</code> (Text)</li>
+        <li><code>page_title</code> (Text)</li>
+        <li><code>referrer</code> (Text)</li>
+        <li><code>utm_source</code>, <code>utm_medium</code>, <code>utm_campaign</code>, <code>utm_term</code>, <code>utm_content</code>, <code>gclid</code>, <code>fbclid</code> (Text)</li>
+        <li><code>submitted_at</code> (Date)</li>
+        <li><code>tags</code> &rarr; mapped to GHL Tags directly via the Add Contact Tag action.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">4. Setting up the Inbound Webhook trigger</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.7">
+      In GHL: <b>Automation &rarr; Workflows &rarr; + New Workflow &rarr; Start from scratch</b>.
+      <ol style="margin:8px 0 0 18px;padding:0">
+        <li>Add Trigger &rarr; <b>Inbound Webhook</b>.</li>
+        <li>Copy the generated webhook URL. Paste it in Kavalsia hub Settings &rarr; GHL Defaults (or per-site GHL Integration card).</li>
+        <li>Click <b>Send test webhook</b> from the dashboard, then in GHL hit <b>Capture Sample Data</b>. Map each payload field to its custom field.</li>
+        <li>Add &rarr; <b>Create / Update Contact</b> using the mapped fields, with Tags = <code>{{inboundWebhookRequest.tags}}</code>.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">5. Eight recommended workflows</div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">A. New newsletter subscriber</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Inbound Webhook (capture sample data above).<br>
+        <b>Conditions</b>: none (catch-all).<br>
+        <b>Actions</b>: 1) Find / Create Contact by email. 2) Add Tags from <code>{{tags}}</code>. 3) If/Else by <code>site_id</code> &rarr; Send Email (per-site welcome template).
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">B. Multi-site reader (engaged audience)</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Contact Tag Added.<br>
+        <b>Conditions</b>: contact has 2 or more site tags (e.g. <code>cryptopulse</code> + <code>onlinebizpro</code>).<br>
+        <b>Actions</b>: 1) Add Tag <code>engaged-multi-site</code>. 2) Add to Premium Nurture campaign. 3) Notify owner via internal email.
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">C. UTM-based attribution + routing</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Inbound Webhook.<br>
+        <b>Conditions</b>: <code>utm_source</code> matches one of <code>facebook|google|tiktok</code>.<br>
+        <b>Actions</b>: 1) Add Tag <code>paid-acquisition</code>. 2) Add Tag <code>src:{{utm_source}}</code>. 3) Enroll in High-Touch Sales sequence. 4) Notify sales rep.
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">D. Site-specific email blasts</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Manual (Marketing &rarr; Email &rarr; New Campaign).<br>
+        <b>Conditions</b>: Smart List filter <code>Has Tag = cryptopulse</code> (one list per site).<br>
+        <b>Actions</b>: Send niche newsletter to that segment only.
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">E. SMS opt-in upsell (day 7)</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Contact Created.<br>
+        <b>Actions</b>: 1) Wait 7 days. 2) If/Else: opened any email &rarr; Send Email with SMS opt-in CTA. 3) On SMS opt-in &rarr; Add Tag <code>sms-subscribed</code>.
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">F. Re-engagement (30 day inactivity)</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Time elapsed since last email open &gt; 30 days.<br>
+        <b>Actions</b>: 1) Add Tag <code>cold</code>. 2) Send 3-email re-engagement sequence. 3) If still cold after 14 days &rarr; Mark as DND or move to suppression list.
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">G. High-intent conversion (offer page visit)</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Inbound Webhook from a future custom event posting <code>{event:"offer_view", email, site_id}</code>.<br>
+        <b>Conditions</b>: <code>page_url</code> contains <code>/offer</code> or <code>/sales</code>.<br>
+        <b>Actions</b>: 1) Add Tag <code>hot-lead</code>. 2) Create Task for sales user. 3) Send immediate booking link via email + SMS.
+      </div>
+    </div>
+
+    <div style="margin-top:10px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <b style="color:var(--accent)">H. Multi-niche cross-promo</b>
+      <div style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.7">
+        <b>Trigger</b>: Contact Tag Added.<br>
+        <b>Conditions</b>: contact has <code>cryptopulse</code> AND any ecommerce tag (e.g. <code>onlinebizpro</code>, <code>shopify-niche</code>).<br>
+        <b>Actions</b>: 1) Enroll in OnlineBizPro cross-promo nurture. 2) Tag <code>cross-promo-eligible</code>.
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">6. Verification checklist</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.8">
+      <ol style="margin:0 0 0 18px;padding:0">
+        <li>Enable globally in Settings &rarr; GHL Defaults, paste webhook URL, hit <b>Send test webhook</b>. Confirm 200 response.</li>
+        <li>In GHL workflow, click <b>Capture Sample Data</b>, run the test again, map fields.</li>
+        <li>Publish at least one site (Publish panel) so the snippet ships to the live homepage.</li>
+        <li>Submit the homepage signup form with a real email. Confirm the contact appears in GHL with the right tags.</li>
+        <li>Optional: add per-site overrides if you want different webhooks per niche.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ META GUIDE ════════ -->
+<div class="panel" id="panel-meta-guide">
+  <div class="pg-title">Meta Pixel + Conversions API Guide</div>
+  <div class="pg-sub">How the Pixel snippet, server-side events, and per-site custom audiences fit together in the Kavalsia network.</div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">What fires automatically on every page</div>
+    <ul style="font-size:13px;color:var(--text2);line-height:1.85;padding-left:18px;margin:6px 0 0">
+      <li><b>PageView</b> standard event (when Auto-fire PageView is on).</li>
+      <li><b>&lt;Site Name&gt; Visit</b> custom event with <code>site_id</code>, <code>page_path</code>, <code>page_title</code>, and <code>referrer</code>. Example: <code>CryptoPulse Visit</code>.</li>
+      <li><b>&lt;Site Name&gt; NewsletterSignup</b> custom event when any form with an email input is submitted. The email is SHA-256 hashed in the browser before it leaves the page.</li>
+      <li>Server-side mirror: when a CAPI token + dataset id are present, the same events are POSTed to <code>/api/meta-capi</code> on your Kavalsia hub, which forwards them to Facebook with hashed user data + IP + UA.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">Where to find your Pixel ID and CAPI token</div>
+    <ol style="font-size:13px;color:var(--text2);line-height:1.9;padding-left:18px;margin:6px 0 0">
+      <li>Open <b>business.facebook.com</b> &rarr; Events Manager.</li>
+      <li>Pick the data source (or create one: Web). The 15 to 16 digit ID at the top is your <b>Pixel ID</b>. It is also your <b>CAPI Dataset ID</b>.</li>
+      <li>In Events Manager, open the dataset &rarr; <b>Settings</b> tab &rarr; scroll to <b>Conversions API</b> &rarr; <b>Generate access token</b>. Paste it into Meta Defaults.</li>
+      <li>For QA: same Settings tab &rarr; <b>Test Events</b> &rarr; copy the <code>TEST...</code> code into Test Event Code. Events that include this code show up live in Test Events without polluting your real conversion data.</li>
+    </ol>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">Step by step: per-site custom audience + lookalike + retargeting</div>
+    <ol style="font-size:13px;color:var(--text2);line-height:1.9;padding-left:18px;margin:6px 0 0">
+      <li>Publish at least one site so the Pixel snippet ships to its live homepage. Visit the site once with a real browser so Meta sees the event.</li>
+      <li>In Events Manager &rarr; <b>Custom Conversions</b>, create a new conversion. Source = your dataset, Event = <code>&lt;Site Name&gt; Visit</code> (e.g. <code>CryptoPulse Visit</code>). No rule needed.</li>
+      <li>Ads Manager &rarr; <b>Audiences</b> &rarr; Create Audience &rarr; Custom Audience &rarr; Website. Source = your Pixel. Include = <b>People who triggered a specific event</b> &rarr; pick <code>&lt;Site Name&gt; Visit</code> &rarr; retention 30 to 180 days.</li>
+      <li>From that Custom Audience row click <b>Create Lookalike</b>. Country = your target market. Size = 1% for highest similarity, 3 to 5% for reach.</li>
+      <li>Create a retargeting campaign with objective <b>Sales</b> or <b>Leads</b>. Ad set audience = the per-site Custom Audience. Exclude existing customers.</li>
+      <li>Use the Pixel + CAPI together (deduplication): Meta will trust the server event when both exist, which protects attribution from iOS / ad blockers.</li>
+      <li>Verify everything with <b>Test Events</b> using the code you pasted into Test Event Code. Click the buttons in the per-site card or just visit the live site.</li>
+    </ol>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">Event names emitted per site</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:6px">Use these exact strings when creating Custom Conversions or audiences in Meta. They are derived from each site's <code>name</code> (or <code>id</code>).</div>
+    <pre id="meta-guide-events" style="margin:0;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:340px;overflow:auto;white-space:pre-wrap">Loading...</pre>
+    <div style="margin-top:8px"><button class="btn btn-sm" onclick="metaGuideRenderEvents()">Refresh list</button></div>
+  </div>
+
+  <div class="card">
+    <div class="section-head">Custom Audience sync</div>
+    <ol style="font-size:13px;color:var(--text2);line-height:1.9;padding-left:18px;margin:6px 0 0">
+      <li>Create a Custom Audience in Ads Manager &rarr; <b>Customer list</b>. Copy its 16 to 18 digit ID into the per-site or global card.</li>
+      <li>Drop a JSON file at <code>contacts/&lt;site_id&gt;.json</code> shaped as <code>["a@b.com", "c@d.com"]</code> or <code>[{"email":"a@b.com"}, ...]</code>.</li>
+      <li>Click <b>Sync to custom audience</b>. Emails are SHA-256 hashed in your server (never sent in clear), then POSTed to <code>graph.facebook.com/v18.0/&lt;audience_id&gt;/users</code>.</li>
+    </ol>
+  </div>
+</div>
+
 <!-- ════════ TOKEN VAULT ════════ -->
 <div class="panel" id="panel-tokens">
   <div class="pg-title">Token Vault</div>
@@ -1574,6 +1961,176 @@ textarea{resize:vertical;line-height:1.6}
       <b style="color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="margin-right:4px;vertical-align:-1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>GitHub Secrets</b> - the keys above are for local use. For the GitHub Actions workflow to use them, add them as repository secrets at:<br>
       <code>github.com/YOUR_REPO/settings/secrets/actions</code>
     </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">GHL Defaults <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">global GoHighLevel webhook + tags. Per-site overrides live in Site Settings.</span></div>
+    <div class="form-group">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+        <input type="checkbox" id="setGhlEnabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+        Enable GHL capture globally <span style="color:var(--text3);font-size:11px">(off = no capture unless a site overrides)</span>
+      </label>
+    </div>
+    <div class="settings-row">
+      <div class="form-group" style="flex:2">
+        <div class="form-label">Default Webhook URL <span style="color:var(--text3)">(GHL Inbound Webhook trigger URL)</span></div>
+        <input type="text" id="setGhlWebhook" placeholder="https://services.leadconnectorhq.com/hooks/...">
+      </div>
+      <div class="form-group" style="flex:1">
+        <div class="form-label">Default tags <span style="color:var(--text3)">(comma list)</span></div>
+        <input type="text" id="setGhlTags" placeholder="kavalsia-network, newsletter">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
+      <button class="btn btn-sm btn-blue" onclick="globalGhlTest()">Send test webhook</button>
+      <span id="set-ghl-test-status" style="font-size:12px;color:var(--text3)"></span>
+    </div>
+    <pre id="set-ghl-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
+    <div class="info-box" style="margin-top:8px">
+      The capture script is injected into every site's pages at publish time. It auto-attaches to any form with an email input, builds a JSON payload (email, site_id, tags, utm, etc.), and POSTs it to the resolved webhook URL. See <b>GHL Guide</b> in the Tools menu for workflow recipes.
+    </div>
+  </div>
+
+  <!-- ── Meta Defaults (global) ── -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">Meta Defaults <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">global Meta Pixel + Conversions API. Per-site overrides live in Site Settings.</span></div>
+    <div class="form-group">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+        <input type="checkbox" id="setMetaEnabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+        Enable Meta Pixel globally <span style="color:var(--text3);font-size:11px">(per-site cards inherit unless they enable their own)</span>
+      </label>
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Pixel ID</div>
+        <input type="text" id="setMetaPixelId" placeholder="123456789012345">
+      </div>
+      <div class="form-group">
+        <div class="form-label">CAPI Dataset / Pixel ID</div>
+        <input type="text" id="setMetaDatasetId" placeholder="usually same as Pixel ID">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">CAPI Access Token</div>
+        <input type="password" id="setMetaCapiToken" placeholder="EAAJZB...">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Test Event Code <span style="color:var(--text3)">(optional)</span></div>
+        <input type="text" id="setMetaTestCode" placeholder="TEST12345">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Default Custom Audience ID</div>
+        <input type="text" id="setMetaAudienceId" placeholder="120330000000000000">
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none;padding-top:24px">
+          <input type="checkbox" id="setMetaFirePv" checked style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+          Auto-fire PageView on every page load
+        </label>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px">
+      <button class="btn btn-sm" onclick="globalMetaTestPixel()">Preview pixel snippet</button>
+      <button class="btn btn-sm btn-blue" onclick="globalMetaTestCapi()">Send test CAPI event</button>
+      <span id="set-meta-status" style="font-size:12px;color:var(--text3)"></span>
+    </div>
+    <pre id="set-meta-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:280px;overflow:auto;white-space:pre-wrap"></pre>
+    <div class="info-box" style="margin-top:8px">
+      The Pixel snippet is injected into every active site's pages at publish time. Each site automatically fires PageView, a <code>&lt;Site Name&gt; Visit</code> custom event, and a <code>&lt;Site Name&gt; NewsletterSignup</code> event on form submit (email is SHA-256 hashed client-side). See <b>Meta Guide</b> in the Tools menu for audience and retargeting workflows.
+    </div>
+  </div>
+
+  <!-- ── WordPress Defaults (global) ── -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">WordPress Defaults <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">global WP REST credentials. Per-site overrides live in Site Settings.</span></div>
+    <div class="form-group">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+        <input type="checkbox" id="setWpEnabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+        Enable WordPress globally
+      </label>
+    </div>
+    <div class="settings-row">
+      <div class="form-group" style="flex:2">
+        <div class="form-label">Site URL</div>
+        <input type="text" id="setWpUrl" placeholder="https://example.com">
+      </div>
+      <div class="form-group" style="flex:1">
+        <div class="form-label">Username</div>
+        <input type="text" id="setWpUser" placeholder="admin">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Application Password</div>
+      <input type="password" id="setWpPass" placeholder="xxxx xxxx xxxx xxxx xxxx xxxx">
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
+      <button class="btn btn-sm btn-blue" onclick="globalWpTest()">Test connection</button>
+      <span id="set-wp-test-status" style="font-size:12px;color:var(--text3)"></span>
+    </div>
+    <pre id="set-wp-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
+  </div>
+
+  <!-- ── WooCommerce Defaults (global) ── -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">WooCommerce Defaults <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">global REST API keys. Per-site overrides in Site Settings.</span></div>
+    <div class="form-group">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+        <input type="checkbox" id="setWooEnabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+        Enable WooCommerce globally
+      </label>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Store URL</div>
+      <input type="text" id="setWooUrl" placeholder="https://shop.example.com">
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Consumer Key</div>
+        <input type="text" id="setWooCk" placeholder="ck_...">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Consumer Secret</div>
+        <input type="password" id="setWooCs" placeholder="cs_...">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
+      <button class="btn btn-sm btn-blue" onclick="globalWooTest()">Test connection</button>
+      <span id="set-woo-test-status" style="font-size:12px;color:var(--text3)"></span>
+    </div>
+    <pre id="set-woo-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
+  </div>
+
+  <!-- ── Shopify Defaults (global) ── -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">Shopify Defaults <span style="font-weight:400;color:var(--text3);font-size:11px;margin-left:6px">global Admin API token. Per-site overrides in Site Settings.</span></div>
+    <div class="form-group">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+        <input type="checkbox" id="setShopEnabled" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+        Enable Shopify globally
+      </label>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Store Domain <span style="color:var(--text3)">(e.g. mystore.myshopify.com)</span></div>
+      <input type="text" id="setShopDomain" placeholder="mystore.myshopify.com">
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Admin API Access Token</div>
+        <input type="password" id="setShopAdmin" placeholder="shpat_...">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Storefront Token <span style="color:var(--text3)">(optional)</span></div>
+        <input type="password" id="setShopStorefront" placeholder="optional">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px">
+      <button class="btn btn-sm btn-blue" onclick="globalShopifyTest()">Test connection</button>
+      <span id="set-shop-test-status" style="font-size:12px;color:var(--text3)"></span>
+    </div>
+    <pre id="set-shop-test-out" style="display:none;margin-top:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-size:11px;color:var(--text2);max-height:240px;overflow:auto;white-space:pre-wrap"></pre>
   </div>
 
   <div class="card" style="margin-bottom:12px">
@@ -2361,6 +2918,27 @@ textarea{resize:vertical;line-height:1.6}
     </a>
   </div>
   <iframe id="iframe-megadash" title="MegaDash"></iframe>
+</div>
+
+<!-- ════════ INTEGRATIONS HUB ════════ -->
+<div class="panel" id="panel-integrations">
+  <div class="pg-title">Integrations</div>
+  <div class="pg-sub">Every third-party connection in one place. Status is read from network-config.json. Click <b>Configure</b> on any row to jump straight to where it is set up.</div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Connected Platforms</span>
+      <button class="btn btn-sm" onclick="if(typeof integrationsRender==='function')integrationsRender()">Refresh</button>
+    </div>
+    <div id="integrations-list" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;font-size:13px;color:var(--text3)">Loading...</div>
+  </div>
+
+  <div class="info-box" style="margin-top:8px">
+    <b>How status is determined:</b><br>
+    Connected = key/token present in <code>settings.*</code> or in the GitHub Token Vault.<br>
+    Per-site only = no global value, but at least one site overrides the integration in <code>sites[i].*</code>.<br>
+    Not configured = empty across global and all sites.
+  </div>
 </div>
 
 <!-- Editor iframe panel removed. Per-site config (writing rules, topics, scripts) lives in Site Settings. -->
@@ -4006,6 +4584,66 @@ function ssLoadSite() {
   ssSetVal('ss-header-scripts', site.header_scripts || '');
   ssSetVal('ss-footer-scripts', site.footer_scripts || '');
 
+  // GHL Integration (per-site override)
+  const sg = site.ghl || {};
+  ssSetChk('ss-ghl-enabled', !!sg.enabled);
+  ssSetVal('ss-ghl-webhook', sg.webhook_url || '');
+  ssSetVal('ss-ghl-tags', Array.isArray(sg.tags) ? sg.tags.join(', ') : '');
+  const sgOut = document.getElementById('ss-ghl-test-out');
+  if (sgOut) { sgOut.style.display = 'none'; sgOut.textContent = ''; }
+  const sgStat = document.getElementById('ss-ghl-test-status');
+  if (sgStat) sgStat.textContent = '';
+
+  // Meta Pixel + CAPI (per-site override)
+  const sm = site.meta || {};
+  ssSetChk('ss-meta-enabled',   !!sm.enabled);
+  ssSetVal('ss-meta-pixel-id',  sm.pixel_id || '');
+  ssSetVal('ss-meta-dataset-id', sm.capi_dataset_id || '');
+  ssSetVal('ss-meta-capi-token', sm.capi_token || '');
+  ssSetVal('ss-meta-test-code',  sm.test_event_code || '');
+  ssSetVal('ss-meta-audience-id', sm.custom_audience_id || '');
+  ssSetChk('ss-meta-fire-pv', sm.fire_pageview !== false);
+  const _smName = (site.name || site.id || 'Site');
+  const _evtVisit  = document.getElementById('ss-meta-evt-visit');
+  const _evtSignup = document.getElementById('ss-meta-evt-signup');
+  if (_evtVisit)  _evtVisit.textContent  = _smName + ' Visit';
+  if (_evtSignup) _evtSignup.textContent = _smName + ' NewsletterSignup';
+  const smOut = document.getElementById('ss-meta-out');
+  if (smOut) { smOut.style.display = 'none'; smOut.textContent = ''; }
+  const smStat = document.getElementById('ss-meta-status');
+  if (smStat) smStat.textContent = '';
+
+  // WordPress / WooCommerce / Shopify (per-site overrides)
+  const swp = site.wordpress || {};
+  ssSetChk('ss-wp-enabled', !!swp.enabled);
+  ssSetVal('ss-wp-url',  swp.url || '');
+  ssSetVal('ss-wp-user', swp.username || '');
+  ssSetVal('ss-wp-pass', swp.app_password || '');
+  const wpOut = document.getElementById('ss-wp-test-out');
+  if (wpOut) { wpOut.style.display = 'none'; wpOut.textContent = ''; }
+  const wpStat = document.getElementById('ss-wp-test-status');
+  if (wpStat) wpStat.textContent = '';
+
+  const swc = site.woocommerce || {};
+  ssSetChk('ss-woo-enabled', !!swc.enabled);
+  ssSetVal('ss-woo-url', swc.url || '');
+  ssSetVal('ss-woo-ck',  swc.consumer_key || '');
+  ssSetVal('ss-woo-cs',  swc.consumer_secret || '');
+  const wcOut = document.getElementById('ss-woo-test-out');
+  if (wcOut) { wcOut.style.display = 'none'; wcOut.textContent = ''; }
+  const wcStat = document.getElementById('ss-woo-test-status');
+  if (wcStat) wcStat.textContent = '';
+
+  const ssh = site.shopify || {};
+  ssSetChk('ss-shop-enabled', !!ssh.enabled);
+  ssSetVal('ss-shop-domain',     ssh.store_domain || '');
+  ssSetVal('ss-shop-admin',      ssh.admin_token || '');
+  ssSetVal('ss-shop-storefront', ssh.storefront_token || '');
+  const shOut = document.getElementById('ss-shop-test-out');
+  if (shOut) { shOut.style.display = 'none'; shOut.textContent = ''; }
+  const shStat = document.getElementById('ss-shop-test-status');
+  if (shStat) shStat.textContent = '';
+
   // Categories - merge categories.json (if available) with current site
   // categories override. We surface the current per-site list (defaults
   // to the categories.json list if none).
@@ -4328,6 +4966,43 @@ async function ssSaveAll() {
     footer_scripts:      ssVal('ss-footer-scripts'),
     // Nested merge for warming.enabled
     warming: Object.assign({}, site.warming || {}, { enabled: warmingOn }),
+    // GHL per-site override (server validator just checks dict)
+    ghl: {
+      enabled:     !!document.getElementById('ss-ghl-enabled').checked,
+      webhook_url: ssVal('ss-ghl-webhook').trim(),
+      tags:        ssVal('ss-ghl-tags').split(',').map(s => s.trim()).filter(Boolean),
+    },
+    // Meta Pixel + CAPI per-site override (server validator just checks dict)
+    meta: {
+      enabled:            !!(document.getElementById('ss-meta-enabled') && document.getElementById('ss-meta-enabled').checked),
+      pixel_id:           ssVal('ss-meta-pixel-id').trim(),
+      capi_dataset_id:    ssVal('ss-meta-dataset-id').trim(),
+      capi_token:         ssVal('ss-meta-capi-token').trim(),
+      test_event_code:    ssVal('ss-meta-test-code').trim(),
+      custom_audience_id: ssVal('ss-meta-audience-id').trim(),
+      fire_pageview:      !!(document.getElementById('ss-meta-fire-pv') && document.getElementById('ss-meta-fire-pv').checked),
+    },
+    // WordPress per-site override
+    wordpress: {
+      enabled:      !!(document.getElementById('ss-wp-enabled') && document.getElementById('ss-wp-enabled').checked),
+      url:          ssVal('ss-wp-url').trim(),
+      username:     ssVal('ss-wp-user').trim(),
+      app_password: ssVal('ss-wp-pass').trim(),
+    },
+    // WooCommerce per-site override
+    woocommerce: {
+      enabled:         !!(document.getElementById('ss-woo-enabled') && document.getElementById('ss-woo-enabled').checked),
+      url:             ssVal('ss-woo-url').trim(),
+      consumer_key:    ssVal('ss-woo-ck').trim(),
+      consumer_secret: ssVal('ss-woo-cs').trim(),
+    },
+    // Shopify per-site override
+    shopify: {
+      enabled:          !!(document.getElementById('ss-shop-enabled') && document.getElementById('ss-shop-enabled').checked),
+      store_domain:     ssVal('ss-shop-domain').trim(),
+      admin_token:      ssVal('ss-shop-admin').trim(),
+      storefront_token: ssVal('ss-shop-storefront').trim(),
+    },
   };
 
   statusEl.style.color = 'var(--text2)';
@@ -4920,6 +5595,46 @@ function saveSettings() {
       if (tgToken)  cfg.settings.telegram.bot_token = tgToken;
       if (tgChatId) cfg.settings.telegram.allowed_chat_ids = [parseInt(tgChatId) || tgChatId];
     }
+    // Global GHL defaults
+    const ghlEn = document.getElementById('setGhlEnabled');
+    const ghlWh = document.getElementById('setGhlWebhook');
+    const ghlTg = document.getElementById('setGhlTags');
+    cfg.settings.ghl = cfg.settings.ghl || {};
+    if (ghlEn) cfg.settings.ghl.enabled       = !!ghlEn.checked;
+    if (ghlWh) cfg.settings.ghl.webhook_url   = (ghlWh.value || '').trim();
+    if (ghlTg) cfg.settings.ghl.default_tags  = (ghlTg.value || '').split(',').map(s => s.trim()).filter(Boolean);
+    // Global Meta Pixel + CAPI defaults
+    if (typeof _metaSyncGlobalToCfg === 'function') _metaSyncGlobalToCfg();
+    // Global WordPress defaults
+    cfg.settings.wordpress = cfg.settings.wordpress || {};
+    const wpEnEl = document.getElementById('setWpEnabled');
+    if (wpEnEl) cfg.settings.wordpress.enabled = !!wpEnEl.checked;
+    const wpUrl = document.getElementById('setWpUrl');
+    if (wpUrl) cfg.settings.wordpress.url = (wpUrl.value || '').trim();
+    const wpUser = document.getElementById('setWpUser');
+    if (wpUser) cfg.settings.wordpress.username = (wpUser.value || '').trim();
+    const wpPass = document.getElementById('setWpPass');
+    if (wpPass) cfg.settings.wordpress.app_password = (wpPass.value || '').trim();
+    // Global WooCommerce defaults
+    cfg.settings.woocommerce = cfg.settings.woocommerce || {};
+    const wooEnEl = document.getElementById('setWooEnabled');
+    if (wooEnEl) cfg.settings.woocommerce.enabled = !!wooEnEl.checked;
+    const wooUrl = document.getElementById('setWooUrl');
+    if (wooUrl) cfg.settings.woocommerce.url = (wooUrl.value || '').trim();
+    const wooCk = document.getElementById('setWooCk');
+    if (wooCk) cfg.settings.woocommerce.consumer_key = (wooCk.value || '').trim();
+    const wooCs = document.getElementById('setWooCs');
+    if (wooCs) cfg.settings.woocommerce.consumer_secret = (wooCs.value || '').trim();
+    // Global Shopify defaults
+    cfg.settings.shopify = cfg.settings.shopify || {};
+    const shEnEl = document.getElementById('setShopEnabled');
+    if (shEnEl) cfg.settings.shopify.enabled = !!shEnEl.checked;
+    const shDom = document.getElementById('setShopDomain');
+    if (shDom) cfg.settings.shopify.store_domain = (shDom.value || '').trim();
+    const shAdm = document.getElementById('setShopAdmin');
+    if (shAdm) cfg.settings.shopify.admin_token = (shAdm.value || '').trim();
+    const shSf  = document.getElementById('setShopStorefront');
+    if (shSf)  cfg.settings.shopify.storefront_token = (shSf.value || '').trim();
     saveConfigToServer();
   }
   addLog('ok', 'info', 'All settings saved');
@@ -5054,12 +5769,471 @@ function loadSettings() {
     const val = ls(key);
     if (el && val) el.value = val;
   });
+  // Global GHL defaults read directly from cfg (source of truth).
+  try {
+    const g = (cfg && cfg.settings && cfg.settings.ghl) || {};
+    const en = document.getElementById('setGhlEnabled');
+    const wh = document.getElementById('setGhlWebhook');
+    const tg = document.getElementById('setGhlTags');
+    if (en) en.checked = !!g.enabled;
+    if (wh) wh.value   = g.webhook_url || '';
+    if (tg) tg.value   = Array.isArray(g.default_tags) ? g.default_tags.join(', ') : '';
+  } catch(_) {}
+  // Global Meta Pixel + CAPI defaults
+  try { if (typeof _metaLoadGlobalToForm === 'function') _metaLoadGlobalToForm(); } catch(_) {}
+  // Global WordPress defaults
+  try {
+    const w = (cfg && cfg.settings && cfg.settings.wordpress) || {};
+    const en = document.getElementById('setWpEnabled');
+    const u  = document.getElementById('setWpUrl');
+    const us = document.getElementById('setWpUser');
+    const p  = document.getElementById('setWpPass');
+    if (en) en.checked = !!w.enabled;
+    if (u)  u.value    = w.url || '';
+    if (us) us.value   = w.username || '';
+    if (p)  p.value    = w.app_password || '';
+  } catch(_) {}
+  // Global WooCommerce defaults
+  try {
+    const w = (cfg && cfg.settings && cfg.settings.woocommerce) || {};
+    const en = document.getElementById('setWooEnabled');
+    const u  = document.getElementById('setWooUrl');
+    const ck = document.getElementById('setWooCk');
+    const cs = document.getElementById('setWooCs');
+    if (en) en.checked = !!w.enabled;
+    if (u)  u.value    = w.url || '';
+    if (ck) ck.value   = w.consumer_key || '';
+    if (cs) cs.value   = w.consumer_secret || '';
+  } catch(_) {}
+  // Global Shopify defaults
+  try {
+    const s = (cfg && cfg.settings && cfg.settings.shopify) || {};
+    const en = document.getElementById('setShopEnabled');
+    const d  = document.getElementById('setShopDomain');
+    const a  = document.getElementById('setShopAdmin');
+    const sf = document.getElementById('setShopStorefront');
+    if (en) en.checked = !!s.enabled;
+    if (d)  d.value    = s.store_domain || '';
+    if (a)  a.value    = s.admin_token || '';
+    if (sf) sf.value   = s.storefront_token || '';
+  } catch(_) {}
+}
+
+// ── GHL test webhooks (per-site + global) ────────────────────────────────
+async function _ghlPostTest(body, statusEl, outEl) {
+  if (statusEl) { statusEl.style.color = 'var(--text2)'; statusEl.textContent = 'Sending...'; }
+  if (outEl) { outEl.style.display = 'none'; outEl.textContent = ''; }
+  try {
+    const r = await fetch('/api/ghl-test', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {}),
+    });
+    let data = null;
+    try { data = await r.json(); } catch(_) {}
+    if (statusEl) {
+      if (r.ok && data && data.ok) {
+        statusEl.style.color = 'var(--green,#4caf50)';
+        statusEl.textContent = 'OK ' + (data.status_code || r.status);
+      } else {
+        statusEl.style.color = 'var(--red,#f44)';
+        statusEl.textContent = 'Fail: ' + ((data && data.error) || ('HTTP ' + r.status));
+      }
+    }
+    if (outEl && data) {
+      outEl.style.display = 'block';
+      outEl.textContent = JSON.stringify(data, null, 2);
+    }
+  } catch(e) {
+    if (statusEl) {
+      statusEl.style.color = 'var(--red,#f44)';
+      statusEl.textContent = 'Network error: ' + e.message;
+    }
+  }
+}
+
+async function ssGhlTest() {
+  const site = (typeof _aaCurrentSite !== 'undefined') ? _aaCurrentSite : null;
+  const statusEl = document.getElementById('ss-ghl-test-status');
+  const outEl    = document.getElementById('ss-ghl-test-out');
+  if (!site) {
+    if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Pick a site first.'; }
+    return;
+  }
+  const override = (document.getElementById('ss-ghl-webhook')?.value || '').trim();
+  await _ghlPostTest({ site_id: site.id, webhook_url: override || undefined }, statusEl, outEl);
+}
+
+async function globalGhlTest() {
+  const statusEl = document.getElementById('set-ghl-test-status');
+  const outEl    = document.getElementById('set-ghl-test-out');
+  const override = (document.getElementById('setGhlWebhook')?.value || '').trim();
+  // Persist to cfg first so server-side resolution sees latest URL (optional).
+  if (cfg) {
+    cfg.settings = cfg.settings || {};
+    cfg.settings.ghl = cfg.settings.ghl || {};
+    cfg.settings.ghl.enabled     = !!document.getElementById('setGhlEnabled')?.checked;
+    cfg.settings.ghl.webhook_url = override;
+    cfg.settings.ghl.default_tags = (document.getElementById('setGhlTags')?.value || '')
+      .split(',').map(s => s.trim()).filter(Boolean);
+    try { await saveConfigToServer(); } catch(_) {}
+  }
+  await _ghlPostTest({ webhook_url: override || undefined }, statusEl, outEl);
+}
+
+// ── Meta Pixel + CAPI test helpers ─────────────────────────────────────────
+function _metaShowOut(outEl, statusEl, ok, payload) {
+  if (statusEl) {
+    statusEl.style.color = ok ? 'var(--green,#3ecf8e)' : 'var(--red,#f44)';
+    statusEl.textContent = ok ? 'OK' : 'Failed';
+  }
+  if (outEl) {
+    outEl.style.display = 'block';
+    let text;
+    try { text = JSON.stringify(payload, null, 2); } catch(_) { text = String(payload); }
+    outEl.textContent = text;
+  }
+}
+
+async function _metaPost(path, body, statusEl, outEl) {
+  if (statusEl) { statusEl.style.color = 'var(--text2)'; statusEl.textContent = 'Working...'; }
+  try {
+    const r = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {}),
+    });
+    let data = null;
+    try { data = await r.json(); } catch(_) { data = { error: 'Non-JSON response', status: r.status }; }
+    _metaShowOut(outEl, statusEl, !!data.ok, data);
+    return data;
+  } catch (e) {
+    _metaShowOut(outEl, statusEl, false, { error: 'Network error: ' + e.message });
+    return null;
+  }
+}
+
+async function ssMetaTestPixel() {
+  const site = (typeof _aaCurrentSite !== 'undefined') ? _aaCurrentSite : null;
+  const statusEl = document.getElementById('ss-meta-status');
+  const outEl    = document.getElementById('ss-meta-out');
+  if (!site) {
+    if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Pick a site first.'; }
+    return;
+  }
+  // Save current per-site form so resolution uses live values.
+  try { if (typeof ssSaveAll === 'function') await ssSaveAll(); } catch(_) {}
+  await _metaPost('/api/meta-test-pixel', { site_id: site.id }, statusEl, outEl);
+}
+
+async function ssMetaTestCapi() {
+  const site = (typeof _aaCurrentSite !== 'undefined') ? _aaCurrentSite : null;
+  const statusEl = document.getElementById('ss-meta-status');
+  const outEl    = document.getElementById('ss-meta-out');
+  if (!site) {
+    if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Pick a site first.'; }
+    return;
+  }
+  try { if (typeof ssSaveAll === 'function') await ssSaveAll(); } catch(_) {}
+  await _metaPost('/api/meta-test-capi', { site_id: site.id }, statusEl, outEl);
+}
+
+async function ssMetaAudienceSync() {
+  const site = (typeof _aaCurrentSite !== 'undefined') ? _aaCurrentSite : null;
+  const statusEl = document.getElementById('ss-meta-status');
+  const outEl    = document.getElementById('ss-meta-out');
+  if (!site) {
+    if (statusEl) { statusEl.style.color = 'var(--red,#f44)'; statusEl.textContent = 'Pick a site first.'; }
+    return;
+  }
+  try { if (typeof ssSaveAll === 'function') await ssSaveAll(); } catch(_) {}
+  await _metaPost('/api/meta-audience-sync', { site_id: site.id }, statusEl, outEl);
+}
+
+function _metaSyncGlobalToCfg() {
+  if (!cfg) return;
+  cfg.settings = cfg.settings || {};
+  cfg.settings.meta = cfg.settings.meta || {};
+  const m = cfg.settings.meta;
+  m.enabled            = !!document.getElementById('setMetaEnabled')?.checked;
+  m.pixel_id           = (document.getElementById('setMetaPixelId')?.value || '').trim();
+  m.capi_dataset_id    = (document.getElementById('setMetaDatasetId')?.value || '').trim();
+  m.capi_token         = (document.getElementById('setMetaCapiToken')?.value || '').trim();
+  m.test_event_code    = (document.getElementById('setMetaTestCode')?.value || '').trim();
+  m.custom_audience_id = (document.getElementById('setMetaAudienceId')?.value || '').trim();
+  m.fire_pageview      = !!document.getElementById('setMetaFirePv')?.checked;
+}
+
+async function globalMetaTestPixel() {
+  const statusEl = document.getElementById('set-meta-status');
+  const outEl    = document.getElementById('set-meta-out');
+  _metaSyncGlobalToCfg();
+  try { await saveConfigToServer(); } catch(_) {}
+  await _metaPost('/api/meta-test-pixel', {}, statusEl, outEl);
+}
+
+async function globalMetaTestCapi() {
+  const statusEl = document.getElementById('set-meta-status');
+  const outEl    = document.getElementById('set-meta-out');
+  _metaSyncGlobalToCfg();
+  try { await saveConfigToServer(); } catch(_) {}
+  await _metaPost('/api/meta-test-capi', {}, statusEl, outEl);
+}
+
+function _metaLoadGlobalToForm() {
+  if (!cfg) return;
+  const m = (cfg.settings && cfg.settings.meta) || {};
+  const set = (id, val) => { const el = document.getElementById(id); if (el) { if (el.type === 'checkbox') el.checked = !!val; else el.value = val == null ? '' : val; } };
+  set('setMetaEnabled',     !!m.enabled);
+  set('setMetaPixelId',     m.pixel_id || '');
+  set('setMetaDatasetId',   m.capi_dataset_id || '');
+  set('setMetaCapiToken',   m.capi_token || '');
+  set('setMetaTestCode',    m.test_event_code || '');
+  set('setMetaAudienceId',  m.custom_audience_id || '');
+  set('setMetaFirePv',      m.fire_pageview !== false);
+}
+
+function metaGuideRenderEvents() {
+  const el = document.getElementById('meta-guide-events');
+  if (!el) return;
+  if (!cfg || !Array.isArray(cfg.sites) || !cfg.sites.length) {
+    el.textContent = '(load config first)';
+    return;
+  }
+  const rows = cfg.sites.map(s => {
+    const name = s.name || s.id || 'Site';
+    return `${(s.id || '').padEnd(20)}  ${name} Visit\n${''.padEnd(20)}  ${name} NewsletterSignup`;
+  });
+  el.textContent = rows.join('\n\n');
 }
 
 function saveHubApiUrl() {
   const v = (document.getElementById('setHubApiUrl')?.value || '').trim();
   lss('hubApiUrl', v);
   if (cfg) { cfg.settings = cfg.settings || {}; cfg.settings.hub_api_url = v; saveConfigToServer(); }
+}
+
+// ── WordPress / WooCommerce / Shopify test helpers ─────────────────────────
+async function _intgPost(endpoint, body, statusEl, outEl) {
+  if (statusEl) { statusEl.style.color = 'var(--text2)'; statusEl.textContent = 'Testing...'; }
+  if (outEl)    { outEl.style.display = 'none'; outEl.textContent = ''; }
+  try {
+    const r = await fetch(endpoint, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {}),
+    });
+    let data = null;
+    try { data = await r.json(); } catch(_) {}
+    if (statusEl) {
+      if (data && data.ok) {
+        statusEl.style.color = 'var(--green,#4caf50)';
+        statusEl.textContent = 'OK HTTP ' + (data.status || r.status) + (data.shop_name ? ' - ' + data.shop_name : '');
+      } else {
+        statusEl.style.color = 'var(--red,#f44)';
+        statusEl.textContent = 'Fail: HTTP ' + ((data && data.status) || r.status) + ' - ' + ((data && data.message) || 'unknown');
+      }
+    }
+    if (outEl && data) {
+      outEl.style.display = 'block';
+      outEl.textContent = JSON.stringify(data, null, 2);
+    }
+  } catch(e) {
+    if (statusEl) {
+      statusEl.style.color = 'var(--red,#f44)';
+      statusEl.textContent = 'Network error: ' + e.message;
+    }
+  }
+}
+
+async function _intgPersistGlobal(key, obj) {
+  if (!cfg) return;
+  cfg.settings = cfg.settings || {};
+  cfg.settings[key] = Object.assign({}, cfg.settings[key] || {}, obj);
+  try { await saveConfigToServer(); } catch(_) {}
+}
+
+async function ssWpTest() {
+  const site = (typeof _aaCurrentSite !== 'undefined') ? _aaCurrentSite : null;
+  const s = document.getElementById('ss-wp-test-status');
+  const o = document.getElementById('ss-wp-test-out');
+  if (!site) { if (s) { s.style.color='var(--red,#f44)'; s.textContent='Pick a site first.'; } return; }
+  await _intgPost('/api/wp-test', { site_id: site.id }, s, o);
+}
+async function globalWpTest() {
+  const s = document.getElementById('set-wp-test-status');
+  const o = document.getElementById('set-wp-test-out');
+  await _intgPersistGlobal('wordpress', {
+    enabled:      !!document.getElementById('setWpEnabled')?.checked,
+    url:          (document.getElementById('setWpUrl')?.value || '').trim(),
+    username:     (document.getElementById('setWpUser')?.value || '').trim(),
+    app_password: (document.getElementById('setWpPass')?.value || '').trim(),
+  });
+  await _intgPost('/api/wp-test', {}, s, o);
+}
+
+async function ssWooTest() {
+  const site = (typeof _aaCurrentSite !== 'undefined') ? _aaCurrentSite : null;
+  const s = document.getElementById('ss-woo-test-status');
+  const o = document.getElementById('ss-woo-test-out');
+  if (!site) { if (s) { s.style.color='var(--red,#f44)'; s.textContent='Pick a site first.'; } return; }
+  await _intgPost('/api/woo-test', { site_id: site.id }, s, o);
+}
+async function globalWooTest() {
+  const s = document.getElementById('set-woo-test-status');
+  const o = document.getElementById('set-woo-test-out');
+  await _intgPersistGlobal('woocommerce', {
+    enabled:         !!document.getElementById('setWooEnabled')?.checked,
+    url:             (document.getElementById('setWooUrl')?.value || '').trim(),
+    consumer_key:    (document.getElementById('setWooCk')?.value || '').trim(),
+    consumer_secret: (document.getElementById('setWooCs')?.value || '').trim(),
+  });
+  await _intgPost('/api/woo-test', {}, s, o);
+}
+
+async function ssShopifyTest() {
+  const site = (typeof _aaCurrentSite !== 'undefined') ? _aaCurrentSite : null;
+  const s = document.getElementById('ss-shop-test-status');
+  const o = document.getElementById('ss-shop-test-out');
+  if (!site) { if (s) { s.style.color='var(--red,#f44)'; s.textContent='Pick a site first.'; } return; }
+  await _intgPost('/api/shopify-test', { site_id: site.id }, s, o);
+}
+async function globalShopifyTest() {
+  const s = document.getElementById('set-shop-test-status');
+  const o = document.getElementById('set-shop-test-out');
+  await _intgPersistGlobal('shopify', {
+    enabled:          !!document.getElementById('setShopEnabled')?.checked,
+    store_domain:     (document.getElementById('setShopDomain')?.value || '').trim(),
+    admin_token:      (document.getElementById('setShopAdmin')?.value || '').trim(),
+    storefront_token: (document.getElementById('setShopStorefront')?.value || '').trim(),
+  });
+  await _intgPost('/api/shopify-test', {}, s, o);
+}
+
+// ── Integrations Hub render ────────────────────────────────────────────────
+function _intgEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+  ));
+}
+function _intgStatusBadge(state) {
+  const colors = {
+    'connected': { bg:'#0f3a22', fg:'#3ecf8e', txt:'Connected' },
+    'per-site':  { bg:'#3a2f0f', fg:'#f0b840', txt:'Per-site only' },
+    'none':      { bg:'#2a1010', fg:'#c04040', txt:'Not configured' },
+    'error':     { bg:'#2a1010', fg:'#ff6b6b', txt:'Error' },
+  };
+  const c = colors[state] || colors['none'];
+  return `<span style="display:inline-block;padding:3px 9px;border-radius:100px;background:${c.bg};color:${c.fg};font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase">${c.txt}</span>`;
+}
+function _intgAnySite(key, predicate) {
+  if (!cfg || !Array.isArray(cfg.sites)) return false;
+  return cfg.sites.some(s => {
+    const v = s && s[key];
+    return v && predicate(v);
+  });
+}
+function _intgRow(opts) {
+  return `
+    <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)">
+      <div style="width:36px;height:36px;background:var(--bg3);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0">${opts.icon || ''}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="color:var(--text);font-weight:600;font-size:14px">${_intgEsc(opts.name)}</span>
+          ${_intgStatusBadge(opts.state)}
+        </div>
+        <div style="color:var(--text3);font-size:12px;margin-top:3px">${_intgEsc(opts.desc || '')}</div>
+      </div>
+      <button class="btn btn-sm" onclick="${opts.configFn || ''}">Configure</button>
+    </div>`;
+}
+function integrationsRender() {
+  const list = document.getElementById('integrations-list');
+  if (!list) return;
+  if (!cfg) { list.innerHTML = '<div style="padding:14px">Loading config...</div>'; return; }
+  const s = cfg.settings || {};
+  const ic = {
+    plug:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2v6m6-6v6M5 8h14v3a7 7 0 0 1-14 0V8zm7 13v-3"/></svg>',
+    key:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="M10.85 12.15 19 4m-5 5 3 3"/></svg>',
+    cloud: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',
+    shop:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>',
+    book:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+    cart:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>',
+    target:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  };
+  const ghToken  = (typeof ls === 'function' ? ls('ghToken')      : '') || '';
+  const anthKey  = (typeof ls === 'function' ? ls('anthropicKey') : '') || '';
+  const pex      = (typeof ls === 'function' ? ls('pexelsKey')    : '') || '';
+  const brevoKey = (typeof ls === 'function' ? ls('brevoKey')     : '') || '';
+  const brevoSite= _intgAnySite('brevo_list_id', v => !!v);
+  const cf = s.cloudflare || {};
+  const gi = s.google_indexing || {};
+  const ghl = s.ghl || {};
+  const ghlSite = _intgAnySite('ghl', v => v.enabled || v.webhook_url);
+  const meta = s.meta || {};
+  const metaSite = _intgAnySite('meta', v => v.enabled || v.pixel_id);
+  const wp = s.wordpress || {};
+  const wpSite = _intgAnySite('wordpress', v => v.enabled || v.url);
+  const wc = s.woocommerce || {};
+  const wcSite = _intgAnySite('woocommerce', v => v.enabled || v.url);
+  const sh = s.shopify || {};
+  const shSite = _intgAnySite('shopify', v => v.enabled || v.store_domain);
+  const tg = s.telegram || {};
+
+  const focusIn = (id) =>
+    `showPanel('settings');setTimeout(()=>{const e=document.getElementById('${id}');if(e){e.focus();e.scrollIntoView({behavior:'smooth',block:'center'});}},120)`;
+
+  const rows = [
+    _intgRow({ name:'GitHub', icon:ic.key, state: ghToken?'connected':'none',
+      desc:'Token used to publish config, articles, and trigger workflows.',
+      configFn: focusIn('setGhToken') }),
+    _intgRow({ name:'Anthropic', icon:ic.key, state: anthKey?'connected':'none',
+      desc:'Claude API key for AI commands and article generation.',
+      configFn: focusIn('setAnthropicKey') }),
+    _intgRow({ name:'Pexels', icon:ic.cloud, state: pex?'connected':'none',
+      desc:'Hero images for articles.',
+      configFn: focusIn('setPexelsKey') }),
+    _intgRow({ name:'Brevo', icon:ic.cloud,
+      state: brevoKey?'connected':(brevoSite?'per-site':'none'),
+      desc:'Newsletter delivery. Each site can map to its own list id.',
+      configFn: focusIn('setBrevoKey') }),
+    _intgRow({ name:'Cloudflare', icon:ic.cloud, state: cf.api_token?'connected':'none',
+      desc:'DNS automation + analytics for custom domains.',
+      configFn: "showPanel('settings')" }),
+    _intgRow({ name:'Google Indexing', icon:ic.cloud, state: gi.enabled?'connected':'none',
+      desc:'Auto-submits new article URLs to Google.',
+      configFn: "showPanel('settings')" }),
+    _intgRow({ name:'GoHighLevel (GHL)', icon:ic.target,
+      state: ghl.webhook_url?'connected':(ghlSite?'per-site':'none'),
+      desc:'Lead capture webhook. Email signups POSTed to GHL workflow.',
+      configFn: "showPanel('settings')" }),
+    _intgRow({ name:'Meta Pixel + CAPI', icon:ic.target,
+      state: meta.pixel_id?'connected':(metaSite?'per-site':'none'),
+      desc:'Facebook/Instagram pixel + Conversions API for ad attribution.',
+      configFn: "showPanel('settings')" }),
+    _intgRow({ name:'WordPress', icon:ic.book,
+      state: (wp.url && wp.username && wp.app_password)?'connected':(wpSite?'per-site':'none'),
+      desc:'Push posts to a WordPress site via REST API.',
+      configFn: focusIn('setWpUrl') }),
+    _intgRow({ name:'WooCommerce', icon:ic.cart,
+      state: (wc.url && wc.consumer_key && wc.consumer_secret)?'connected':(wcSite?'per-site':'none'),
+      desc:'Read products and orders from a WooCommerce store.',
+      configFn: focusIn('setWooUrl') }),
+    _intgRow({ name:'Shopify', icon:ic.shop,
+      state: (sh.store_domain && sh.admin_token)?'connected':(shSite?'per-site':'none'),
+      desc:'Read shop, products, and orders via Shopify Admin API.',
+      configFn: focusIn('setShopDomain') }),
+    _intgRow({ name:'Replicate', icon:ic.cloud,
+      state: s.replicate_api_key_secret ? 'connected' : 'none',
+      desc:'AI image generation (GitHub Secret: REPLICATE_API_KEY).',
+      configFn: "showPanel('settings')" }),
+    _intgRow({ name:'Unsplash', icon:ic.cloud,
+      state: (Array.isArray(s.image_sources) && s.image_sources.indexOf('unsplash')>=0) ? 'connected' : 'none',
+      desc:'Alternate hero image source (GitHub Secret: UNSPLASH_API_KEY).',
+      configFn: "showPanel('settings')" }),
+    _intgRow({ name:'Telegram', icon:ic.plug, state: tg.bot_token?'connected':'none',
+      desc:'Push network reports and slash commands to your phone.',
+      configFn: focusIn('setTelegramToken') }),
+  ];
+  list.innerHTML = rows.join('');
 }
 
 // ── Compliance check ───────────────────────────────────────────────────────
@@ -6071,6 +7245,8 @@ function showPanel(id) {
   }
   if (id === 'publish') pubInit();
   if (id === 'tokens') tvLoad();
+  if (id === 'meta-guide' && typeof metaGuideRenderEvents === 'function') metaGuideRenderEvents();
+  if (id === 'integrations' && typeof integrationsRender === 'function') integrationsRender();
 }
 
 function copyField(elId, btn) {
