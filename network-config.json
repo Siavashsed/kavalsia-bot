@@ -1791,6 +1791,128 @@
       "header_scripts": "",
       "footer_scripts": "",
       "custom_css": ""
+    },
+    {
+      "id": "folioatelier",
+      "name": "Folio Atelier",
+      "repo": "Siavashsed/folioatelier",
+      "domain": "siavashsed.github.io/folioatelier",
+      "category": "Arts & Collectives",
+      "layout": "cards",
+      "article_layout": "standard",
+      "theme": "dark",
+      "nav_style": "default",
+      "topics": [],
+      "author": "Imogen Salinger",
+      "posts_per_day_new": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "warming": {
+        "enabled": false
+      },
+      "header_scripts": "",
+      "footer_scripts": "",
+      "custom_css": ""
+    },
+    {
+      "id": "modeformstudio",
+      "name": "Modeform Studio",
+      "repo": "Siavashsed/modeformstudio",
+      "domain": "siavashsed.github.io/modeformstudio",
+      "category": "Fashion Design & Modeling",
+      "layout": "cards",
+      "article_layout": "standard",
+      "theme": "dark",
+      "nav_style": "default",
+      "topics": [],
+      "author": "Lila Vandermeer",
+      "posts_per_day_new": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "warming": {
+        "enabled": false
+      },
+      "header_scripts": "",
+      "footer_scripts": "",
+      "custom_css": ""
+    },
+    {
+      "id": "calibernotes",
+      "name": "Caliber Notes",
+      "repo": "Siavashsed/calibernotes",
+      "domain": "siavashsed.github.io/calibernotes",
+      "category": "Watches & Horology",
+      "layout": "cards",
+      "article_layout": "standard",
+      "theme": "dark",
+      "nav_style": "default",
+      "topics": [],
+      "author": "Henrik Voss",
+      "posts_per_day_new": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "warming": {
+        "enabled": false
+      },
+      "header_scripts": "",
+      "footer_scripts": "",
+      "custom_css": ""
+    },
+    {
+      "id": "crestcharter",
+      "name": "Crest Charter",
+      "repo": "Siavashsed/crestcharter",
+      "domain": "siavashsed.github.io/crestcharter",
+      "category": "Luxury Rentals - Jets, Villas, Yachts",
+      "layout": "cards",
+      "article_layout": "standard",
+      "theme": "dark",
+      "nav_style": "default",
+      "topics": [],
+      "author": "Adrien Marchetti",
+      "posts_per_day_new": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "warming": {
+        "enabled": false
+      },
+      "header_scripts": "",
+      "footer_scripts": "",
+      "custom_css": ""
+    },
+    {
+      "id": "strobeatlas",
+      "name": "Strobe Atlas",
+      "repo": "Siavashsed/strobeatlas",
+      "domain": "siavashsed.github.io/strobeatlas",
+      "category": "Nightlife & Parties",
+      "layout": "cards",
+      "article_layout": "magazine",
+      "theme": "dark",
+      "nav_style": "default",
+      "topics": [
+        "techno raves",
+        "warehouse parties",
+        "halloween nights",
+        "university parties",
+        "festival recaps",
+        "dj sets",
+        "nightlife culture",
+        "set times",
+        "afterparties",
+        "club design"
+      ],
+      "author": "Riv Solano",
+      "author_names": ["Riv Solano", "Noor Halabi", "Theo Marchetti-Vance"],
+      "posts_per_day_new": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "warming": {
+        "enabled": false
+      },
+      "header_scripts": "",
+      "footer_scripts": "",
+      "custom_css": ""
     }
   ]
 }
