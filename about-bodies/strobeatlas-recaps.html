@@ -1,0 +1,414 @@
+<style>
+.rc-wrap{
+  --jet:#050507;
+  --raven:#0d0d12;
+  --card:#13131a;
+  --magenta:#ff2bd6;
+  --acid:#c6ff3a;
+  --uv:#7c4dff;
+  --paper:#f4f4f6;
+  --white:#ffffff;
+  --dim:#8a8a96;
+  --hair:#23232c;
+  --display:'Anton',Impact,sans-serif;
+  --sans:'Space Grotesk','Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  background:var(--jet);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-size:15px;line-height:1.65;
+}
+.rc-wrap *{box-sizing:border-box}
+.rc-wrap a{color:var(--magenta);text-decoration:none}
+.rc-wrap a:hover{color:var(--acid)}
+.rc-wrap img{max-width:100%;display:block}
+
+.rc-head{
+  max-width:1320px;margin:0 auto;
+  padding:80px 36px 60px;text-align:left;position:relative;
+}
+.rc-head::before{
+  content:'';position:absolute;left:36px;top:80px;width:60px;height:2px;background:var(--acid);
+}
+.rc-kicker{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--acid);
+  margin-bottom:20px;padding-top:14px;
+}
+.rc-head h1{
+  font-family:var(--display);font-size:clamp(54px,9vw,140px);
+  line-height:.9;letter-spacing:.005em;text-transform:uppercase;
+  color:var(--white);margin-bottom:18px;
+}
+.rc-sub{
+  max-width:720px;font-size:17px;color:var(--paper);
+}
+.rc-jump{
+  display:flex;flex-wrap:wrap;gap:12px;margin-top:32px;
+}
+.rc-jump a{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  border:1px solid var(--hair);color:var(--paper);
+  padding:12px 18px;transition:border-color .25s, color .25s;
+}
+.rc-jump a:hover{border-color:var(--magenta);color:var(--magenta)}
+
+.rc-section{
+  max-width:1320px;margin:0 auto;
+  padding:60px 36px 80px;
+  border-top:1px solid var(--hair);
+}
+.rc-strip{
+  display:flex;align-items:flex-start;gap:28px;margin-bottom:32px;
+}
+.rc-num{
+  font-family:var(--display);font-size:140px;line-height:.85;
+  color:var(--magenta);writing-mode:vertical-rl;transform:rotate(180deg);
+  text-shadow:0 0 18px rgba(255,43,214,.4);flex-shrink:0;
+}
+.rc-strip-body h2{
+  font-family:var(--display);font-size:clamp(40px,6vw,84px);
+  line-height:.95;letter-spacing:.01em;text-transform:uppercase;color:var(--white);
+  margin-bottom:10px;
+}
+.rc-strip-body .tag{
+  font-family:var(--mono);font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--acid);
+}
+
+.rc-cover{
+  width:100%;height:56vh;min-height:380px;overflow:hidden;
+  margin-bottom:36px;background:var(--card);
+}
+.rc-cover img{width:100%;height:100%;object-fit:cover;filter:saturate(1.1)}
+
+.rc-facts{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border:1px solid var(--hair);margin-bottom:40px;
+  background:var(--raven);
+}
+.rc-fact{
+  padding:18px 20px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);
+}
+.rc-fact:nth-child(4n){border-right:0}
+.rc-fact:nth-last-child(-n+4){border-bottom:0}
+.rc-fact .k{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:6px;
+}
+.rc-fact .v{
+  font-family:var(--sans);font-size:14px;font-weight:600;color:var(--white);line-height:1.35;
+}
+
+.rc-body{
+  display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:48px;
+}
+.rc-body p{
+  font-size:16px;line-height:1.75;color:var(--paper);margin-bottom:18px;
+}
+.rc-body p:first-child::first-letter{
+  font-family:var(--display);font-size:64px;float:left;
+  line-height:.85;padding:6px 12px 0 0;color:var(--magenta);
+}
+
+.rc-times{
+  background:var(--raven);border:1px solid var(--hair);
+  padding:28px;margin-bottom:48px;
+}
+.rc-times h4{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:18px;
+}
+.rc-time-row{
+  display:grid;grid-template-columns:120px 1fr 100px;gap:18px;
+  padding:12px 0;border-top:1px solid var(--hair);
+  font-family:var(--mono);font-size:13px;
+}
+.rc-time-row:first-of-type{border-top:0}
+.rc-time-row .t{color:var(--magenta);letter-spacing:.08em}
+.rc-time-row .dj{color:var(--white);font-weight:500;font-family:var(--sans);font-size:15px}
+.rc-time-row .room{color:var(--dim);letter-spacing:.12em;text-transform:uppercase;font-size:11px;text-align:right}
+
+.rc-quote{
+  font-family:var(--display);font-size:clamp(38px,6.4vw,84px);
+  line-height:1;letter-spacing:.005em;text-transform:uppercase;
+  color:var(--white);text-align:center;
+  padding:60px 0;margin:40px 0;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+}
+.rc-quote span{color:var(--magenta)}
+
+.rc-gallery{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px;
+}
+.rc-gallery div{
+  aspect-ratio:4/5;overflow:hidden;background:var(--card);
+}
+.rc-gallery img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.rc-gallery div:hover img{transform:scale(1.05)}
+
+.rc-overheard{
+  background:var(--raven);border-left:3px solid var(--magenta);
+  padding:30px 32px;margin-bottom:48px;
+}
+.rc-overheard h4{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:18px;
+}
+.rc-overheard p{
+  font-style:italic;color:var(--paper);font-size:16px;line-height:1.55;
+  margin-bottom:12px;padding-left:18px;border-left:1px solid var(--hair);
+}
+
+.rc-next{
+  max-width:1320px;margin:60px auto 100px;padding:0 36px;
+}
+.rc-next-card{
+  background:var(--raven);border:1px solid var(--magenta);
+  padding:48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.rc-next-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(600px 300px at 50% 0%, rgba(255,43,214,.18), transparent 70%);
+  pointer-events:none;
+}
+.rc-next-card .k{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:14px;position:relative;
+}
+.rc-next-card h3{
+  font-family:var(--display);font-size:clamp(40px,5vw,72px);
+  text-transform:uppercase;color:var(--white);letter-spacing:.01em;
+  margin-bottom:14px;position:relative;
+}
+.rc-next-card p{
+  font-size:16px;color:var(--paper);max-width:600px;margin:0 auto 24px;position:relative;
+}
+.rc-next-card .btn{
+  font-family:var(--mono);font-size:12px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  background:var(--magenta);color:var(--jet);
+  padding:14px 24px;display:inline-block;position:relative;
+  transition:background .25s;
+}
+.rc-next-card .btn:hover{background:var(--acid)}
+
+@media(max-width:900px){
+  .rc-strip{gap:18px}
+  .rc-num{font-size:96px}
+  .rc-facts{grid-template-columns:repeat(2,1fr)}
+  .rc-fact:nth-child(4n){border-right:1px solid var(--hair)}
+  .rc-fact:nth-child(2n){border-right:0}
+  .rc-fact:nth-last-child(-n+4){border-bottom:1px solid var(--hair)}
+  .rc-fact:nth-last-child(-n+2){border-bottom:0}
+  .rc-body{grid-template-columns:1fr}
+  .rc-gallery{grid-template-columns:1fr 1fr}
+  .rc-time-row{grid-template-columns:80px 1fr;gap:10px}
+  .rc-time-row .room{grid-column:1 / -1;text-align:left}
+}
+</style>
+
+<div class="rc-wrap">
+
+<section class="rc-head">
+  <div class="rc-kicker">FIELD REPORTS / 2026 SPRING CYCLE</div>
+  <h1>The nights,<br>in full.</h1>
+  <p class="rc-sub">Three reports, three rooms, one correspondent. Riv Solano went to the door, paid the cover, and stayed until the lights came on. Receipts, set times, overheard quotes, and the one line you would have texted in the cab home. No press tickets. No edits from the promoter.</p>
+  <div class="rc-jump">
+    <a href="#sublimation04">01 / Sublimation 04 / Berlin</a>
+    <a href="#helloweenvortex">02 / Helloween Vortex / Mexico City</a>
+    <a href="#velvetquad">03 / Velvet Quad / Cambridge + London</a>
+  </div>
+</section>
+
+<!-- ============== SUBLIMATION 04 ============== -->
+<section class="rc-section" id="sublimation04">
+  <div class="rc-strip">
+    <div class="rc-num">01</div>
+    <div class="rc-strip-body">
+      <h2>Sublimation 04</h2>
+      <div class="tag">Twelve hours / four rooms / zero phones</div>
+    </div>
+  </div>
+
+  <div class="rc-cover">
+    <img src="https://images.unsplash.com/photo-1571266028243-d220bc562f7b?w=2000&q=85" alt="Sublimation 04 warehouse Berlin">
+  </div>
+
+  <div class="rc-facts">
+    <div class="rc-fact"><div class="k">Venue</div><div class="v">Berghain / Säule side room takeover</div></div>
+    <div class="rc-fact"><div class="k">City</div><div class="v">Berlin DE / Friedrichshain</div></div>
+    <div class="rc-fact"><div class="k">Date</div><div class="v">12 April 2026 / Saturday</div></div>
+    <div class="rc-fact"><div class="k">Doors</div><div class="v">21:00 / lights up at noon</div></div>
+    <div class="rc-fact"><div class="k">Cap</div><div class="v">2,200 across four rooms</div></div>
+    <div class="rc-fact"><div class="k">Headliners</div><div class="v">Marcel Dettmann / b2b Hector Oaks (surprise)</div></div>
+    <div class="rc-fact"><div class="k">Damage</div><div class="v">28 EUR door / 4 EUR water</div></div>
+    <div class="rc-fact"><div class="k">Tag</div><div class="v">Twelve hours, four rooms, zero phones</div></div>
+  </div>
+
+  <div class="rc-body">
+    <p>I have been to a lot of Berghain nights. Sublimation 04 was the first one that felt like the room had a memory. We queued for an hour and twelve minutes in cold drizzle, my fingers stiff around a cigarette I never lit, and when we stepped past the bouncer the air changed temperature like the building was breathing. They give you a sticker for your phone camera. Nobody complains. Nobody even looks like they want to.</p>
+    <p>Marcel Dettmann opened the main floor at ten with a forty minute warm up that nobody warmed up to, in the best possible way. He skipped the small talk. He dropped a Sandwell District unreleased that I have only ever heard him play on the white labels, and the room split in two like a peeled fruit. By midnight there were two thousand people doing the same thing in different parts of the building and somehow all of us were correct.</p>
+    <p>The rumour started at half past two. Hector Oaks was in the building. He was not on any flyer. He was not on any closing slot. By three the whisper had become a chant in the smoking corner and at quarter past three the floor went black, the sub dropped out, and a voice in German said exactly one sentence I did not catch. Then Dettmann's silhouette stepped sideways and Oaks slid in, and they played a four hour b2b that I will tell my grandchildren about if I ever have grandchildren and if my hearing comes back.</p>
+    <p>The Säule side room ran a different programme entirely. Hard groove for three hours, then a Tresor reissue set with a guest selector whose name I never confirmed but whose haircut I would recognise from space. Upstairs was the slow room. Ambient until 4am. Then dub techno until 8. Then a sunrise set on a borrowed turntable that I will not name. The fourth room was a chillout that turned into a kitchen that turned into a debate club.</p>
+    <p>I left at ten past eleven on Sunday morning, my coat wrong way out, my hearing folded in half, a stamp on my wrist that I am still not washing off. The lights went up at noon. I was not there for that part. I was halfway through a doner on Warschauer Strasse, watching a couple in matching black trench coats kiss like the night had just started.</p>
+  </div>
+
+  <div class="rc-times">
+    <h4>Set Times / Main Floor</h4>
+    <div class="rc-time-row"><span class="t">21:00 - 22:00</span><span class="dj">Vril (warmup)</span><span class="room">Main</span></div>
+    <div class="rc-time-row"><span class="t">22:00 - 02:00</span><span class="dj">Marcel Dettmann</span><span class="room">Main</span></div>
+    <div class="rc-time-row"><span class="t">02:00 - 03:00</span><span class="dj">Stef Mendesidis</span><span class="room">Säule</span></div>
+    <div class="rc-time-row"><span class="t">03:15 - 07:15</span><span class="dj">Dettmann b2b Hector Oaks (surprise)</span><span class="room">Main</span></div>
+    <div class="rc-time-row"><span class="t">07:00 - 11:00</span><span class="dj">Anastasia Kristensen</span><span class="room">Säule</span></div>
+    <div class="rc-time-row"><span class="t">08:00 - 12:00</span><span class="dj">Donato Dozzy (sunrise)</span><span class="room">Upstairs</span></div>
+  </div>
+
+  <div class="rc-quote">"The room had a <span>memory</span> and it remembered all of us by name."</div>
+
+  <div class="rc-gallery">
+    <div><img src="https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=900&q=85" alt=""></div>
+    <div><img src="https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=900&q=85" alt=""></div>
+    <div><img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=900&q=85" alt=""></div>
+  </div>
+
+  <div class="rc-overheard">
+    <h4>Overheard</h4>
+    <p>"I have not checked my phone in nine hours. I do not even remember what it looks like."</p>
+    <p>"Tell him I am at Berghain. He will understand. He has to understand."</p>
+    <p>"This is the first time in my life I have been jealous of a kick drum."</p>
+  </div>
+</section>
+
+<!-- ============== HELLOWEEN VORTEX ============== -->
+<section class="rc-section" id="helloweenvortex">
+  <div class="rc-strip">
+    <div class="rc-num">02</div>
+    <div class="rc-strip-body">
+      <h2>Helloween Vortex</h2>
+      <div class="tag">The masquerade where the city stopped sleeping</div>
+    </div>
+  </div>
+
+  <div class="rc-cover">
+    <img src="https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=2000&q=85" alt="Helloween Vortex Mexico City">
+  </div>
+
+  <div class="rc-facts">
+    <div class="rc-fact"><div class="k">Venue</div><div class="v">Sala Bizarro + rooftop terrace</div></div>
+    <div class="rc-fact"><div class="k">City</div><div class="v">Mexico City MX / Roma Norte</div></div>
+    <div class="rc-fact"><div class="k">Date</div><div class="v">31 October 2025 / Friday</div></div>
+    <div class="rc-fact"><div class="k">Doors</div><div class="v">22:00 / closed at 06:00</div></div>
+    <div class="rc-fact"><div class="k">Cap</div><div class="v">1,800 across basement + roof</div></div>
+    <div class="rc-fact"><div class="k">Headliners</div><div class="v">Rebekah / Indira Paganotto / Mac Declos b2b Voia</div></div>
+    <div class="rc-fact"><div class="k">Damage</div><div class="v">650 MXN presale / 850 door</div></div>
+    <div class="rc-fact"><div class="k">Tag</div><div class="v">The masquerade where the city stopped sleeping</div></div>
+  </div>
+
+  <div class="rc-body">
+    <p>Mexico City does halloween the way Paris does August, which is to say it does not pretend the rest of the calendar exists. The flight from Berlin lands you straight into a costume parade on Reforma at eleven in the morning and from that point on you are inside the holiday whether or not you have a mask. I had a mask. I had three. By 3am I had none and a smear of someone else's gold paint across my left collarbone.</p>
+    <p>Sala Bizarro is a basement under a former cinema. The promoters had taken the rooftop next door and built a bridge of black fabric between the two buildings, so the venue effectively had two floors with twenty metres of sky between them. You went down for the hardest techno of the year. You went up for the moon and the cumbia and the smell of esquites. The trip up the stairs felt like changing time zones.</p>
+    <p>Rebekah opened the basement at midnight. I have seen her three times this year and this was the meanest set she has played. She started at 144 and built up to 152 by 2am and somewhere in the middle dropped a remix of her own track that I am almost sure does not exist outside of her USB. The room was costumes in motion. A skeleton kissed a vampire kissed a bride kissed a Pikachu kissed a guy in a full Día de los Muertos suit kissed me on the cheek for no reason at all.</p>
+    <p>Indira Paganotto closed the roof at 4. By that point the basement had emptied upwards and the rooftop was a single mass of breathing under a paper lantern moon. She played the kind of psytechno that makes you forget what country you are in. There was a fire dancer on the parapet. There was a guy in a banana costume crowd surfing. There was a woman in a wedding dress doing splits on the bar. Indira looked at us all and laughed into the microphone and said one word in Spanish I will not translate because it was sacred.</p>
+    <p>The roof closed at six. The sun came up sideways over the Insurgentes traffic. I walked home in someone else's hoodie. I do not know whose. I will return it next October.</p>
+  </div>
+
+  <div class="rc-times">
+    <h4>Set Times / Basement + Rooftop</h4>
+    <div class="rc-time-row"><span class="t">22:00 - 00:00</span><span class="dj">Local opener / Aire Acondicionado</span><span class="room">Basement</span></div>
+    <div class="rc-time-row"><span class="t">00:00 - 02:00</span><span class="dj">Rebekah</span><span class="room">Basement</span></div>
+    <div class="rc-time-row"><span class="t">02:00 - 04:00</span><span class="dj">Mac Declos b2b Voia</span><span class="room">Basement</span></div>
+    <div class="rc-time-row"><span class="t">22:30 - 01:00</span><span class="dj">Andrea Bertolini (cumbia + techno)</span><span class="room">Rooftop</span></div>
+    <div class="rc-time-row"><span class="t">01:00 - 04:00</span><span class="dj">Carlita</span><span class="room">Rooftop</span></div>
+    <div class="rc-time-row"><span class="t">04:00 - 06:00</span><span class="dj">Indira Paganotto</span><span class="room">Rooftop</span></div>
+  </div>
+
+  <div class="rc-quote">"The city <span>did not sleep</span>. The city went to the roof and waited for the sun."</div>
+
+  <div class="rc-gallery">
+    <div><img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&q=85" alt=""></div>
+    <div><img src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=900&q=85" alt=""></div>
+    <div><img src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?w=900&q=85" alt=""></div>
+  </div>
+
+  <div class="rc-overheard">
+    <h4>Overheard</h4>
+    <p>"My costume is just my friend's costume from last year. Nobody has noticed. Everybody compliments me."</p>
+    <p>"I came as a ghost. I have become a person. I am not sure that is an upgrade."</p>
+    <p>"There is a fire dancer up there and I am the only one looking at the moon."</p>
+  </div>
+</section>
+
+<!-- ============== VELVET QUAD ============== -->
+<section class="rc-section" id="velvetquad">
+  <div class="rc-strip">
+    <div class="rc-num">03</div>
+    <div class="rc-strip-body">
+      <h2>Velvet Quad</h2>
+      <div class="tag">Black tie at 9, mesh and sweat by 3</div>
+    </div>
+  </div>
+
+  <div class="rc-cover">
+    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=2000&q=85" alt="Velvet Quad Cambridge May Ball">
+  </div>
+
+  <div class="rc-facts">
+    <div class="rc-fact"><div class="k">Venue</div><div class="v">Cambridge May Ball / coach to The Cause London</div></div>
+    <div class="rc-fact"><div class="k">City</div><div class="v">Cambridge UK + London UK</div></div>
+    <div class="rc-fact"><div class="k">Date</div><div class="v">14 - 15 March 2026 / Friday into Saturday</div></div>
+    <div class="rc-fact"><div class="k">Doors</div><div class="v">21:00 ball / 02:00 afters at The Cause</div></div>
+    <div class="rc-fact"><div class="k">Cap</div><div class="v">1,400 (650 ball / 750 warehouse)</div></div>
+    <div class="rc-fact"><div class="k">Headliners</div><div class="v">Joy Anonymous / Sammy Virji / Saffron Stone</div></div>
+    <div class="rc-fact"><div class="k">Damage</div><div class="v">220 GBP ball + 25 coach bundle</div></div>
+    <div class="rc-fact"><div class="k">Tag</div><div class="v">Black tie at 9, mesh and sweat by 3</div></div>
+  </div>
+
+  <div class="rc-body">
+    <p>The premise of Velvet Quad is honestly absurd. You start the night in a college quadrangle in white tie. You eat oysters off a silver platter. You watch a string quartet under fairy lights with a champagne flute in your left hand and a heel in your right. At 1am a coach pulls up outside the porter's lodge. You get on the coach. You take off the jacket. You arrive at The Cause in Tottenham at 2:15am and the warehouse is already heaving and you are now at a different party in a different city wearing the bottom half of your evening wear and a t shirt you bought from a vending machine in the basement of the coach company. This is not a metaphor. This is the actual logistics.</p>
+    <p>The ball itself was perfect. Joy Anonymous took the main marquee at 11pm and turned 650 students in formalwear into a Joy Anonymous crowd, which is the same thing as any other Joy Anonymous crowd except the choreography is slightly more drunk and the heels keep slipping on the grass. They played the track. You know the one. We all sang every word and several people cried.</p>
+    <p>The coach was the best part. Forty five minutes down the M11 with the bus heaving like a side stage. Someone had a Bluetooth speaker. The driver had given up and turned off his radio in protest. A girl in a backless silver dress was teaching a guy in a kilt the words to a Skepta track. By the time we hit the North Circular we were a moving warehouse on wheels.</p>
+    <p>Sammy Virji opened The Cause at 2:30 and the warehouse did the thing that warehouses do when a London headliner walks in. He played for ninety minutes and somehow the crowd doubled in size halfway through. Then Saffron Stone closed until 8am with a set that started in UKG and ended in a place none of us had a word for. By six the sun was leaking through the skylights and people in evening dress were sitting on the concrete eating Greggs sausage rolls that the door staff had been smuggling in for tips.</p>
+    <p>I lost a cufflink. I lost a shoe. I gained three Instagram followers and a phone number written in lipstick on a coach receipt. I am writing this from the Megabus back to Stansted. There is still glitter on my collar.</p>
+  </div>
+
+  <div class="rc-times">
+    <h4>Set Times / Ball into Warehouse</h4>
+    <div class="rc-time-row"><span class="t">21:00 - 22:30</span><span class="dj">String Quartet + Headline Brass</span><span class="room">Quad</span></div>
+    <div class="rc-time-row"><span class="t">23:00 - 00:30</span><span class="dj">Joy Anonymous</span><span class="room">Main Marquee</span></div>
+    <div class="rc-time-row"><span class="t">00:30 - 01:30</span><span class="dj">Salute</span><span class="room">Silent Disco</span></div>
+    <div class="rc-time-row"><span class="t">01:45 - 02:15</span><span class="dj">Coach transfer to London</span><span class="room">M11</span></div>
+    <div class="rc-time-row"><span class="t">02:30 - 04:00</span><span class="dj">Sammy Virji</span><span class="room">The Cause</span></div>
+    <div class="rc-time-row"><span class="t">04:00 - 08:00</span><span class="dj">Saffron Stone (closing)</span><span class="room">The Cause</span></div>
+  </div>
+
+  <div class="rc-quote">"Black tie at nine. <span>Mesh and sweat</span> by three. Greggs by sunrise."</div>
+
+  <div class="rc-gallery">
+    <div><img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=900&q=85" alt=""></div>
+    <div><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=900&q=85" alt=""></div>
+    <div><img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=900&q=85" alt=""></div>
+  </div>
+
+  <div class="rc-overheard">
+    <h4>Overheard</h4>
+    <p>"My dissertation is due at noon. My dissertation is going to be very, very interesting."</p>
+    <p>"He proposed in the silent disco. She could not hear him. She said yes anyway."</p>
+    <p>"I have never been this overdressed and this overstimulated at the same time."</p>
+  </div>
+</section>
+
+<!-- WHAT'S NEXT -->
+<section class="rc-next">
+  <div class="rc-next-card">
+    <div class="k">UP NEXT IN THE FIELD</div>
+    <h3>Sublimation 05 / 18 May 2026</h3>
+    <p>Berlin again. Same crew, new room. A 24 hour open air at a decommissioned power station outside the ring road. Two stages, no phones, three headliners we cannot name yet. Riv flies out 16 May. The report files Monday morning. Subscribe to the guest list and you get the door code before it sells out.</p>
+    <a href="./#newsletter" class="btn">JOIN THE GUEST LIST</a>
+  </div>
+</section>
+
+</div>
