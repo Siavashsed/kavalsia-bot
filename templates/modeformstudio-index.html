@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modeform Studio - Where Fashion Design and Modeling Are Taken Seriously</title>
+<meta name="description" content="Modeform Studio is an independent editorial on fashion design and modeling intelligence - studios, casting, craft. Long-form essays, designer profiles and casting diaries by Lila Vandermeer.">
+<meta name="author" content="Lila Vandermeer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Tenor+Sans&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0e0d0c;
+  --noir:#161412;
+  --noir-2:#1c1916;
+  --gold:#e8c47a;
+  --plat:#c79f57;
+  --cream:#f4f0ea;
+  --bronze:#8a7253;
+  --rule:rgba(232,196,122,.22);
+  --rule-soft:rgba(244,240,234,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--cream);font-family:'Inter',sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1360px;margin:0 auto;padding:0 40px}
+.mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--bronze)}
+.gold{color:var(--gold)}
+.rule{height:1px;background:var(--rule);width:100%}
+
+/* ---------- MASTHEAD ---------- */
+.masthead{padding:26px 40px 14px;text-align:center;border-bottom:1px solid var(--rule-soft);background:var(--ink);position:relative}
+.masthead-bar{display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bronze);margin-bottom:18px}
+.masthead-bar .est{color:var(--gold)}
+.wordmark{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(48px,11vw,168px);line-height:.9;letter-spacing:0.06em;color:var(--cream);transform:scaleX(1.08);transform-origin:center;display:block}
+.wordmark em{font-style:italic;color:var(--gold);font-weight:400}
+.sub-mast{margin-top:14px;font-family:'Tenor Sans',serif;font-size:13px;letter-spacing:0.36em;text-transform:uppercase;color:var(--plat)}
+.mast-nav{margin-top:24px;display:flex;justify-content:center;gap:46px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.24em;text-transform:uppercase}
+.mast-nav a{color:var(--cream);opacity:.78;transition:opacity .3s,color .3s;position:relative;padding-bottom:6px}
+.mast-nav a:hover{opacity:1;color:var(--gold)}
+.mast-nav a::after{content:"";position:absolute;left:50%;bottom:0;width:0;height:1px;background:var(--gold);transition:all .4s cubic-bezier(.2,.7,.2,1)}
+.mast-nav a:hover::after{left:0;width:100%}
+.mast-hamb{display:none;position:absolute;right:24px;top:28px;width:40px;height:40px;background:transparent;border:1px solid var(--rule);color:var(--gold);cursor:pointer;align-items:center;justify-content:center}
+.mast-hamb span,.mast-hamb span::before,.mast-hamb span::after{display:block;width:18px;height:1px;background:var(--gold);position:relative}
+.mast-hamb span::before{content:"";position:absolute;top:-6px;left:0;width:18px;height:1px;background:var(--gold)}
+.mast-hamb span::after{content:"";position:absolute;top:6px;left:0;width:18px;height:1px;background:var(--gold)}
+
+.mobile-drawer{position:fixed;inset:0;background:rgba(14,13,12,.97);z-index:200;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:30px;opacity:0;pointer-events:none;transition:opacity .5s}
+.mobile-drawer.on{opacity:1;pointer-events:auto}
+.mobile-drawer a{font-family:'Playfair Display',serif;font-size:30px;color:var(--cream);letter-spacing:0.04em}
+.mobile-drawer a:hover{color:var(--gold)}
+.mobile-drawer .close{position:absolute;top:24px;right:24px;color:var(--gold);background:none;border:1px solid var(--rule);width:42px;height:42px;font-family:'Playfair Display',serif;font-size:22px;cursor:pointer}
+
+/* ---------- HERO COVER ---------- */
+.hero{position:relative;height:92vh;min-height:640px;overflow:hidden;background:var(--noir)}
+.hero-img{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=85') center/cover no-repeat;filter:grayscale(.18) contrast(1.06)}
+.hero-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,13,12,.45) 0%,rgba(14,13,12,.18) 35%,rgba(14,13,12,.78) 100%)}
+#spotlight{position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:.55}
+.hero-in{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:46px 56px}
+.hero-eyebrow{display:flex;align-items:center;gap:18px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold)}
+.hero-eyebrow .dot{width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block;animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.hero-headline{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(54px,9.5vw,148px);line-height:.92;letter-spacing:-0.01em;color:var(--cream);max-width:1100px;margin-top:auto}
+.hero-headline em{font-style:italic;color:var(--gold);font-weight:400}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-top:34px}
+.hero-stand{max-width:380px;font-family:'Tenor Sans',serif;font-size:15px;line-height:1.6;color:var(--cream);opacity:.88}
+.hero-enter{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--gold);transition:gap .4s}
+.hero-enter:hover{gap:24px}
+.hero-enter .arrow{display:inline-block;width:46px;height:1px;background:var(--gold);position:relative}
+.hero-enter .arrow::after{content:"";position:absolute;right:0;top:-3px;width:8px;height:8px;border-top:1px solid var(--gold);border-right:1px solid var(--gold);transform:rotate(45deg)}
+
+/* ---------- ISSUE STRIP (TOC) ---------- */
+.toc{padding:38px 40px;border-top:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft);background:var(--noir)}
+.toc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:22px;flex-wrap:wrap;gap:14px}
+.toc-head .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold)}
+.toc-head .title{font-family:'Playfair Display',serif;font-style:italic;font-size:22px;color:var(--cream);opacity:.7}
+.toc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.toc-tile{display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.toc-tile:hover{transform:translateY(-4px)}
+.toc-tile .tn{aspect-ratio:3/4;background-size:cover;background-position:center;filter:grayscale(.35);transition:filter .5s}
+.toc-tile:hover .tn{filter:grayscale(0)}
+.toc-tile .num{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.24em;color:var(--gold)}
+.toc-tile .ttl{font-family:'Tenor Sans',serif;font-size:13px;line-height:1.35;color:var(--cream)}
+
+/* ---------- SECTION HEADER ---------- */
+.sec{padding:110px 0;position:relative}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:50px;gap:30px;flex-wrap:wrap}
+.sec-h{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(38px,5vw,72px);line-height:1;letter-spacing:-0.005em;color:var(--cream)}
+.sec-h em{font-style:italic;color:var(--gold)}
+.sec-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block}
+.sec-deck{max-width:420px;font-family:'Tenor Sans',serif;font-size:15px;color:var(--cream);opacity:.7;line-height:1.7}
+
+/* ---------- DESIGNERS IN STUDIO ---------- */
+.designers .wrap{padding:0 40px}
+.des-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:60px;align-items:start}
+.des-img{aspect-ratio:4/5;background-size:cover;background-position:center;border:1px solid var(--rule);transition:transform .9s cubic-bezier(.2,.7,.2,1);overflow:hidden}
+.des-img-wrap{overflow:hidden;border:1px solid var(--rule)}
+.des-img-wrap .des-img{border:none;width:100%}
+.des-img-wrap:hover .des-img{transform:scale(1.05)}
+.des-cap{padding-top:8px}
+.des-cap .meta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.des-cap h3{font-family:'Playfair Display',serif;font-weight:400;font-size:42px;line-height:1.05;color:var(--cream);margin-bottom:22px;letter-spacing:-0.005em}
+.des-cap h3 em{font-style:italic;color:var(--gold)}
+.des-cap p{font-family:'Tenor Sans',serif;font-size:16px;line-height:1.75;color:var(--cream);opacity:.82;margin-bottom:16px}
+.des-cap .credit{margin-top:24px;padding-top:18px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bronze)}
+.des-cap .credit span:last-child{color:var(--gold)}
+
+/* ---------- CASTING DIARIES (HORIZONTAL SCROLL) ---------- */
+.casting{background:var(--noir);border-top:1px solid var(--rule-soft);border-bottom:1px solid var(--rule-soft)}
+.cast-track{display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 40px 30px;scrollbar-width:thin;scrollbar-color:var(--gold) transparent}
+.cast-track::-webkit-scrollbar{height:4px}
+.cast-track::-webkit-scrollbar-thumb{background:var(--gold)}
+.cast-card{flex:0 0 280px;scroll-snap-align:start;background:var(--noir-2);border:1px solid var(--gold);padding:18px 18px 22px;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.cast-card:hover{transform:translateY(-6px)}
+.cast-card .polaroid{aspect-ratio:3/4;background-size:cover;background-position:center;filter:grayscale(.55) contrast(1.1);margin-bottom:16px}
+.cast-card .name{font-family:'Playfair Display',serif;font-size:22px;color:var(--cream);margin-bottom:4px;letter-spacing:0.01em}
+.cast-card .agency{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.cast-card .shoot{font-family:'Tenor Sans',serif;font-size:12px;color:var(--cream);opacity:.7;padding-top:12px;border-top:1px solid var(--rule)}
+.cast-track-hint{padding:0 40px;display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--bronze);margin-bottom:18px}
+
+/* ---------- STUDIO FLOOR (asymmetric) ---------- */
+.floor-grid{display:grid;grid-template-columns:5fr 7fr;gap:60px;align-items:center}
+.floor-img{aspect-ratio:3/4;background-size:cover;background-position:center;border:1px solid var(--rule)}
+.floor-text h3{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(34px,4.5vw,58px);line-height:1.05;color:var(--cream);margin-bottom:24px;letter-spacing:-0.005em}
+.floor-text h3 em{font-style:italic;color:var(--gold)}
+.floor-text p{font-family:'Tenor Sans',serif;font-size:16px;line-height:1.8;color:var(--cream);opacity:.82;margin-bottom:18px;max-width:560px}
+.floor-text .pull{border-left:1px solid var(--gold);padding:8px 0 8px 22px;margin:28px 0;font-family:'Playfair Display',serif;font-style:italic;font-size:22px;line-height:1.4;color:var(--gold);max-width:520px}
+.floor-text .byline{margin-top:30px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--bronze)}
+
+/* ---------- LOOKBOOK (Article grid) ---------- */
+.lookbook{background:var(--noir);border-top:1px solid var(--rule-soft)}
+.look-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:42px}
+.look-card{display:block;text-decoration:none;color:var(--cream);transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.look-card:hover{transform:translateY(-6px)}
+.look-img-wrap{aspect-ratio:3/4;overflow:hidden;border:1px solid var(--gold);position:relative;margin-bottom:14px;background:var(--noir-2)}
+.look-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s cubic-bezier(.2,.7,.2,1);filter:grayscale(.15) contrast(1.04)}
+.look-card:hover .look-img-wrap img{transform:scale(1.08)}
+.look-cap{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:14px}
+.look-title{font-family:'Playfair Display',serif;font-weight:400;font-size:24px;line-height:1.18;letter-spacing:-0.005em;color:var(--cream);margin-bottom:12px}
+.look-excerpt{font-family:'Tenor Sans',serif;font-size:14px;line-height:1.6;color:var(--cream);opacity:.7;margin-bottom:14px}
+.look-meta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--bronze);display:flex;gap:10px;align-items:center}
+.look-meta .sep{width:14px;height:1px;background:var(--bronze)}
+.empty{text-align:center;padding:80px 20px;border:1px solid var(--rule);grid-column:1/-1}
+.empty .title{font-family:'Playfair Display',serif;font-style:italic;font-size:28px;color:var(--cream);margin-bottom:12px}
+.empty .desc{font-family:'Tenor Sans',serif;color:var(--bronze);font-size:14px}
+
+/* ---------- CONTRIBUTORS ---------- */
+.contrib-strip{display:flex;justify-content:center;gap:60px;flex-wrap:wrap;padding-top:30px}
+.contrib{text-align:center;max-width:140px}
+.contrib .av{width:88px;height:88px;border-radius:50%;background-size:cover;background-position:center;margin:0 auto 14px;border:1px solid var(--gold);padding:4px;box-shadow:0 0 0 1px var(--rule) inset}
+.contrib .av-in{width:100%;height:100%;border-radius:50%;background-size:cover;background-position:center;filter:grayscale(.4)}
+.contrib .nm{font-family:'Playfair Display',serif;font-size:15px;color:var(--cream);margin-bottom:4px}
+.contrib .role{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.24em;text-transform:uppercase;color:var(--gold)}
+
+/* ---------- FAQ THE PROCESS ---------- */
+.process{background:var(--noir)}
+.proc-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start}
+.proc-left h2{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(40px,5vw,68px);line-height:1;color:var(--cream);margin-bottom:24px;letter-spacing:-0.005em}
+.proc-left h2 em{font-style:italic;color:var(--gold)}
+.proc-left p{font-family:'Tenor Sans',serif;font-size:15px;line-height:1.75;color:var(--cream);opacity:.7;max-width:340px}
+.faq-item{border-top:1px solid var(--rule)}
+.faq-item:last-child{border-bottom:1px solid var(--rule)}
+.faq-q{display:flex;align-items:center;gap:24px;padding:26px 0;cursor:pointer;width:100%;background:none;border:none;color:var(--cream);text-align:left}
+.faq-q .qn{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.24em;color:var(--gold);min-width:42px}
+.faq-q .qt{flex:1;font-family:'Playfair Display',serif;font-size:21px;line-height:1.3;color:var(--cream)}
+.faq-q .qp{color:var(--gold);font-family:'Playfair Display',serif;font-size:24px;transition:transform .5s}
+.faq-item.open .qp{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.2,.7,.2,1)}
+.faq-a-in{padding:0 0 26px 66px;font-family:'Tenor Sans',serif;font-size:15px;line-height:1.75;color:var(--cream);opacity:.8;max-width:640px}
+
+/* ---------- NEWSLETTER ---------- */
+.news{padding:100px 0}
+.news-card{background:var(--noir-2);border:1px solid var(--gold);padding:70px 60px;text-align:center;position:relative;max-width:920px;margin:0 auto}
+.news-card::before,.news-card::after{content:"";position:absolute;width:20px;height:20px;border:1px solid var(--gold)}
+.news-card::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.news-card::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+.news-card .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.news-card h3{font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(32px,4vw,52px);line-height:1.05;color:var(--cream);margin-bottom:18px;letter-spacing:-0.005em}
+.news-card h3 em{font-style:italic;color:var(--gold)}
+.news-card p{font-family:'Tenor Sans',serif;font-size:15px;color:var(--cream);opacity:.75;max-width:520px;margin:0 auto 32px;line-height:1.7}
+.news-form{display:flex;gap:0;max-width:480px;margin:0 auto;border:1px solid var(--gold)}
+.news-form input{flex:1;background:transparent;border:none;padding:16px 20px;color:var(--cream);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;outline:none}
+.news-form input::placeholder{color:var(--bronze);text-transform:uppercase;letter-spacing:0.24em;font-size:10px}
+.news-form button{background:var(--gold);color:var(--ink);border:none;padding:0 26px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;cursor:pointer;transition:background .3s}
+.news-form button:hover{background:var(--plat)}
+.news-fine{margin-top:18px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bronze)}
+
+/* ---------- FOOTER (issue masthead) ---------- */
+footer{background:var(--noir);border-top:1px solid var(--rule);padding:80px 40px 40px;text-align:center}
+.foot-mast{font-family:'Playfair Display',serif;font-size:clamp(60px,10vw,140px);line-height:.9;letter-spacing:0.06em;color:var(--cream);margin-bottom:18px;transform:scaleX(1.06)}
+.foot-mast em{font-style:italic;color:var(--gold);font-weight:400}
+.foot-sub{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--bronze);margin-bottom:46px}
+.foot-cols{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:50px;text-align:left;padding-bottom:46px;border-bottom:1px solid var(--rule)}
+.foot-col h5{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.foot-col a{display:block;font-family:'Tenor Sans',serif;font-size:14px;color:var(--cream);opacity:.75;padding:6px 0;transition:color .3s,opacity .3s}
+.foot-col a:hover{color:var(--gold);opacity:1}
+.foot-bottom{padding-top:30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--bronze)}
+.foot-bottom .right{color:var(--gold)}
+
+/* ---------- REVEAL ---------- */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 1.1s cubic-bezier(.2,.7,.2,1),transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:980px){
+  .masthead{padding:22px 22px 12px}
+  .mast-nav{gap:24px}
+  .mast-hamb{display:flex}
+  .mast-nav{display:none}
+  .hero{height:auto;min-height:560px;padding:0}
+  .hero-in{padding:30px 24px}
+  .hero-bottom{flex-direction:column;align-items:flex-start;gap:24px}
+  .toc{padding:30px 22px}
+  .toc-grid{grid-template-columns:repeat(3,1fr);gap:14px}
+  .wrap{padding:0 22px}
+  .sec{padding:70px 0}
+  .des-grid{grid-template-columns:1fr;gap:36px}
+  .floor-grid{grid-template-columns:1fr;gap:36px}
+  .look-grid{grid-template-columns:1fr;gap:30px}
+  .proc-grid{grid-template-columns:1fr;gap:36px}
+  .news-card{padding:46px 24px}
+  .foot-cols{grid-template-columns:1fr;gap:30px;text-align:center}
+  .foot-bottom{justify-content:center;text-align:center}
+}
+@media (max-width:480px){
+  .wordmark{font-size:18vw}
+  .hero-headline{font-size:42px}
+  .news-form{flex-direction:column}
+  .news-form button{padding:14px}
+  .toc-grid{grid-template-columns:repeat(2,1fr)}
+  .cast-card{flex:0 0 240px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#e8c47a-->
+<!--SHELL:HEADER-->
+<header class="masthead">
+  <div class="masthead-bar">
+    <span>Vol. 03 / Issue 14</span>
+    <span class="est">Est. Studio MMXXIV</span>
+    <span>Spring 2026</span>
+  </div>
+  <a href="./" class="wordmark" aria-label="Modeform Studio">MODE<em>F</em>ORM</a>
+  <div class="sub-mast">Studio &middot; Casting &middot; Craft</div>
+  <nav class="mast-nav" aria-label="Primary">
+    <a href="./#issue">Issue</a>
+    <a href="./#casting">Casting</a>
+    <a href="./#designers">Designers</a>
+    <a href="./#studios">Studios</a>
+    <a href="./#process">Process</a>
+    <a href="about.html">About</a>
+  </nav>
+  <button class="mast-hamb" id="hamb" aria-label="Open menu" aria-expanded="false"><span></span></button>
+</header>
+<div class="mobile-drawer" id="drawer" aria-hidden="true">
+  <button class="close" id="drawerClose" aria-label="Close menu">x</button>
+  <a href="./#issue">Issue</a>
+  <a href="./#casting">Casting</a>
+  <a href="./#designers">Designers</a>
+  <a href="./#studios">Studios</a>
+  <a href="./#process">The Process</a>
+  <a href="./#newsletter">Subscribe</a>
+  <a href="about.html">About</a>
+</div>
+<!--/SHELL:HEADER-->
+
+<!-- HERO COVER -->
+<section class="hero" id="issue">
+  <div class="hero-img"></div>
+  <canvas id="spotlight" aria-hidden="true"></canvas>
+  <div class="hero-in">
+    <div class="hero-eyebrow"><span class="dot"></span><span>Vol. 03 &middot; Issue 14 &middot; Spring 2026</span></div>
+    <div>
+      <h1 class="hero-headline">A serious record of <em>cloth, light</em><br>and the people who shape them.</h1>
+      <div class="hero-bottom">
+        <p class="hero-stand">An independent editorial on fashion design and modeling intelligence. We publish slowly, from the studio floor, with the patience of a couture atelier and the curiosity of a casting room at 2 a.m.</p>
+        <a href="./#lookbook" class="hero-enter">Enter Issue 14 <span class="arrow"></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ISSUE STRIP (TOC) -->
+<section class="toc">
+  <div class="toc-head">
+    <span class="lab">In This Issue</span>
+    <span class="title"><em>Seven openings, a single thread.</em></span>
+  </div>
+  <div class="toc-grid">
+    <a href="./#designers" class="toc-tile">
+      <div class="tn" style="background-image:url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&q=85')"></div>
+      <div class="num">N&deg; 01</div>
+      <div class="ttl">The Patternmaker's Hour</div>
+    </a>
+    <a href="./#casting" class="toc-tile">
+      <div class="tn" style="background-image:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&q=85')"></div>
+      <div class="num">N&deg; 02</div>
+      <div class="ttl">A Casting in Antwerp</div>
+    </a>
+    <a href="./#studios" class="toc-tile">
+      <div class="tn" style="background-image:url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=900&q=85')"></div>
+      <div class="num">N&deg; 03</div>
+      <div class="ttl">Studio Floor Notes</div>
+    </a>
+    <a href="./#lookbook" class="toc-tile">
+      <div class="tn" style="background-image:url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900&q=85')"></div>
+      <div class="num">N&deg; 04</div>
+      <div class="ttl">Lookbook, Spring</div>
+    </a>
+    <a href="./#contributors" class="toc-tile">
+      <div class="tn" style="background-image:url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=900&q=85')"></div>
+      <div class="num">N&deg; 05</div>
+      <div class="ttl">On Contributors</div>
+    </a>
+    <a href="./#process" class="toc-tile">
+      <div class="tn" style="background-image:url('https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=900&q=85')"></div>
+      <div class="num">N&deg; 06</div>
+      <div class="ttl">The Process, Q01-Q07</div>
+    </a>
+  </div>
+</section>
+
+<!-- DESIGNERS IN STUDIO -->
+<section class="sec designers" id="designers">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-eyebrow">Chapter One</span>
+        <h2 class="sec-h">Designers <em>in studio</em>.</h2>
+      </div>
+      <p class="sec-deck">A standing invitation to enter the room where a collection is decided - the toiles, the half-finished thoughts, the music nobody admits to.</p>
+    </div>
+    <div class="des-grid reveal">
+      <div class="des-img-wrap">
+        <div class="des-img" style="background-image:url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1600&q=85')"></div>
+      </div>
+      <div class="des-cap">
+        <div class="meta">Atelier Visit / Paris 8e</div>
+        <h3>The patternmaker keeps her own <em>quiet hours</em>.</h3>
+        <p>On a wet Tuesday in February, we sit with Sigrid Bjornsen at a long oak table covered in muslin. She is, by her own account, three weeks late on a coat and entirely unbothered. The studio smells of bread from the bakery downstairs and the very specific dust of cotton calico.</p>
+        <p>What follows is the slowest interview we have ever published. We talk about a single shoulder seam for forty minutes. We argue, gently, about the politics of cutting on the bias. It is, in our view, the only honest way to write about clothes.</p>
+        <div class="credit">
+          <span>Photography / Helene Roux</span>
+          <span>Words / Lila Vandermeer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASTING DIARIES -->
+<section class="sec casting" id="casting" style="padding:90px 0">
+  <div class="wrap" style="padding:0">
+    <div class="sec-head" style="padding:0 40px">
+      <div>
+        <span class="sec-eyebrow">Chapter Two</span>
+        <h2 class="sec-h">Casting <em>diaries</em>.</h2>
+      </div>
+      <p class="sec-deck">Notes from the polaroid wall - the faces we keep returning to, in the order we met them, with the agencies that bothered to call back.</p>
+    </div>
+    <div class="cast-track-hint">
+      <span>Scroll &rarr;</span>
+      <span>Spring 2026 Casting Board</span>
+    </div>
+    <div class="cast-track reveal">
+      <div class="cast-card"><div class="polaroid" style="background-image:url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=900&q=85')"></div><div class="name">Esme Larsen</div><div class="agency">Viva / Copenhagen</div><div class="shoot">Last shoot: Studio Floor, March 04</div></div>
+      <div class="cast-card"><div class="polaroid" style="background-image:url('https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=900&q=85')"></div><div class="name">Idris Okafor</div><div class="agency">Premier / London</div><div class="shoot">Last shoot: The Coat Story, Feb 22</div></div>
+      <div class="cast-card"><div class="polaroid" style="background-image:url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&q=85')"></div><div class="name">Mira Sato</div><div class="agency">Image / Tokyo</div><div class="shoot">Last shoot: Atelier Hours, Feb 14</div></div>
+      <div class="cast-card"><div class="polaroid" style="background-image:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&q=85')"></div><div class="name">Lior Mizrahi</div><div class="agency">Supreme / Paris</div><div class="shoot">Last shoot: Lookbook 03, Jan 28</div></div>
+      <div class="cast-card"><div class="polaroid" style="background-image:url('https://images.unsplash.com/photo-1488161628813-04466f872be2?w=900&q=85')"></div><div class="name">Anya Volkova</div><div class="agency">Why Not / Milan</div><div class="shoot">Last shoot: Quiet Tailoring, Jan 19</div></div>
+      <div class="cast-card"><div class="polaroid" style="background-image:url('https://images.unsplash.com/photo-1496440737103-cd596325d314?w=900&q=85')"></div><div class="name">Tomasz Borg</div><div class="agency">Next / New York</div><div class="shoot">Last shoot: Black Wool, Jan 11</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDIO FLOOR -->
+<section class="sec" id="studios">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-eyebrow">Chapter Three</span>
+        <h2 class="sec-h">From the <em>studio floor</em>.</h2>
+      </div>
+    </div>
+    <div class="floor-grid reveal">
+      <div class="floor-img" style="background-image:url('https://images.unsplash.com/photo-1488161628813-04466f872be2?w=1600&q=85')"></div>
+      <div class="floor-text">
+        <h3>A working studio is a kind of <em>argument</em> in slow motion.</h3>
+        <p>We spent the better part of a season inside three working studios - one in Antwerp, one in a converted laundry in east London, one above a fishmonger in Naples. None of them looked like a magazine. All of them taught us something about the difference between fashion and clothing.</p>
+        <div class="pull">"You don't design a coat. You argue with one until it finally lets you sleep."</div>
+        <p>This is the first in a quarterly series. Future visits include a millinery in Lisbon, an ateliers de broderie outside Lyon, and a single, stubborn knitter in the Outer Hebrides.</p>
+        <div class="byline">Field reporting / Lila Vandermeer &middot; Spring 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOOKBOOK / ARTICLES -->
+<section class="sec lookbook" id="lookbook">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="sec-eyebrow">Chapter Four / The Lookbook</span>
+        <h2 class="sec-h">The <em>essays</em>.</h2>
+      </div>
+      <p class="sec-deck">Long-form reading from the issue - design histories, casting notes, technical close-reads. Each piece is researched in the studio, not the press kit.</p>
+    </div>
+    <div class="look-grid" id="lookGrid"></div>
+  </div>
+</section>
+
+<!-- CONTRIBUTORS -->
+<section class="sec" id="contributors" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" style="justify-content:center;text-align:center;flex-direction:column;align-items:center">
+      <div>
+        <span class="sec-eyebrow">Chapter Five</span>
+        <h2 class="sec-h">The <em>masthead</em>.</h2>
+      </div>
+      <p class="sec-deck" style="text-align:center">A small, deliberate group. We do not run interns through copy. Everything you read here was made by the names below.</p>
+    </div>
+    <div class="contrib-strip reveal">
+      <div class="contrib"><div class="av"><div class="av-in" style="background-image:url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&q=85')"></div></div><div class="nm">Lila Vandermeer</div><div class="role">Editor / Casting</div></div>
+      <div class="contrib"><div class="av"><div class="av-in" style="background-image:url('https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=400&q=85')"></div></div><div class="nm">Helene Roux</div><div class="role">Photography</div></div>
+      <div class="contrib"><div class="av"><div class="av-in" style="background-image:url('https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=85')"></div></div><div class="nm">Soren Aalto</div><div class="role">Design Critic</div></div>
+      <div class="contrib"><div class="av"><div class="av-in" style="background-image:url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&q=85')"></div></div><div class="nm">Mariko Endo</div><div class="role">Studio Reporter</div></div>
+      <div class="contrib"><div class="av"><div class="av-in" style="background-image:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&q=85')"></div></div><div class="nm">Pascal Voss</div><div class="role">Art Direction</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROCESS / FAQ -->
+<section class="sec process" id="process">
+  <div class="wrap">
+    <div class="proc-grid">
+      <div class="proc-left">
+        <span class="sec-eyebrow">Chapter Six</span>
+        <h2>The <em>Process</em>.</h2>
+        <p>Seven questions we are most often asked by designers, agencies and readers thinking about subscribing. Answered plainly, in the order they tend to arrive.</p>
+      </div>
+      <div class="proc-right">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span class="qn">Q01</span><span class="qt">What does Modeform Studio actually publish?</span><span class="qp">+</span></button>
+          <div class="faq-a"><div class="faq-a-in">A quarterly issue plus a weekly studio dispatch. Each issue holds five to seven long essays, a casting board, and one closely reported studio visit. We do not do trend pieces. We do not do shopping guides.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span class="qn">Q02</span><span class="qt">Who writes the work?</span><span class="qp">+</span></button>
+          <div class="faq-a"><div class="faq-a-in">Lila Vandermeer is the founding editor and casting director. A small masthead of five contributors covers photography, design criticism, studio reporting and art direction. We commission outside writers rarely and credit them clearly.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span class="qn">Q03</span><span class="qt">Are you funded by the houses you write about?</span><span class="qp">+</span></button>
+          <div class="faq-a"><div class="faq-a-in">No. The studio is reader-supported through subscriptions and a small annual print issue. We accept no PR trips, no gifted garments, and no sponsored coverage. Editorial decisions are made before we ask anyone for access.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span class="qn">Q04</span><span class="qt">How do you choose the models you cover?</span><span class="qp">+</span></button>
+          <div class="faq-a"><div class="faq-a-in">We work from our own polaroid board, built over years of open castings in Paris, London, Copenhagen, Tokyo and New York. Agencies are credited. Bookings are made by working casting directors, not by an algorithm.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span class="qn">Q05</span><span class="qt">Can a designer pitch a studio visit?</span><span class="qp">+</span></button>
+          <div class="faq-a"><div class="faq-a-in">Yes, and we read every note. We tend to choose ateliers that have been making work for at least three seasons, that own their patternmaking, and that are willing to let us sit quietly for a full day without staging anything.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span class="qn">Q06</span><span class="qt">Do you cover the business side of fashion?</span><span class="qp">+</span></button>
+          <div class="faq-a"><div class="faq-a-in">Only when it changes the clothes. We are interested in how a fabric is sourced, how a sample is paid for, how a small label survives a slow season. We are not interested in quarterly earnings calls.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span class="qn">Q07</span><span class="qt">Is there a print edition?</span><span class="qp">+</span></button>
+          <div class="faq-a"><div class="faq-a-in">One per year, hand-bound in a run of nine hundred. Issue 14 closes for print on June 30. Subscribers are notified first; remaining copies are sold through three independent bookshops in Antwerp, Tokyo and New York.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="news" id="newsletter">
+  <div class="wrap">
+    <div class="news-card reveal">
+      <div class="lab">The Studio Dispatch</div>
+      <h3>A short letter, each <em>Friday</em>.</h3>
+      <p>One studio note, one casting from the board, one quietly thought-through paragraph. Sent late, read slowly. Free, with the occasional invitation to subscribers only.</p>
+      <form class="news-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Filed';">
+        <input type="email" placeholder="Your email" required aria-label="Email">
+        <button type="submit">Subscribe</button>
+      </form>
+      <div class="news-fine">No tracking pixels &middot; Unsubscribe in one click</div>
+    </div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer>
+  <a href="./" class="foot-mast" aria-label="Modeform Studio">MODE<em>F</em>ORM</a>
+  <div class="foot-sub">Studio &middot; Casting &middot; Craft &middot; Est. MMXXIV</div>
+  <div class="foot-cols">
+    <div class="foot-col">
+      <h5>The Studio</h5>
+      <a href="./">Home</a>
+      <a href="about.html">About</a>
+      <a href="./#process">The Process</a>
+      <a href="./#contributors">Masthead</a>
+    </div>
+    <div class="foot-col">
+      <h5>The Issue</h5>
+      <a href="./#issue">Current Issue</a>
+      <a href="./#designers">Designers</a>
+      <a href="./#casting">Casting</a>
+      <a href="./#lookbook">Lookbook</a>
+    </div>
+    <div class="foot-col">
+      <h5>Legal</h5>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Use</a>
+      <a href="./#newsletter">Subscribe</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>&copy; 2026 Modeform Studio</span>
+    <span>Edited by Lila Vandermeer</span>
+    <span class="right">Vol. 03 / Issue 14</span>
+  </div>
+</footer>
+<!--/SHELL:FOOTER-->
+
+<script>
+/* ---------- MOBILE DRAWER ---------- */
+(function(){
+  var h=document.getElementById('hamb'),d=document.getElementById('drawer'),c=document.getElementById('drawerClose');
+  if(h&&d){h.addEventListener('click',function(){d.classList.add('on');d.setAttribute('aria-hidden','false');});}
+  if(c&&d){c.addEventListener('click',function(){d.classList.remove('on');d.setAttribute('aria-hidden','true');});}
+  document.querySelectorAll('#drawer a').forEach(function(a){a.addEventListener('click',function(){d.classList.remove('on');});});
+})();
+
+/* ---------- FAQ ---------- */
+document.querySelectorAll('.faq-q').forEach(function(q){
+  q.addEventListener('click',function(){
+    var item=q.parentElement,ans=q.nextElementSibling,open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(i){
+      i.classList.remove('open');
+      i.querySelector('.faq-q').setAttribute('aria-expanded','false');
+      i.querySelector('.faq-a').style.maxHeight=null;
+    });
+    if(!open){item.classList.add('open');q.setAttribute('aria-expanded','true');ans.style.maxHeight=ans.scrollHeight+'px';}
+  });
+});
+
+/* ---------- REVEAL ---------- */
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+/* ---------- ARTICLE LOOKBOOK ---------- */
+async function loadLookbook(){
+  if(!document.getElementById('lookGrid'))return;
+  var g=document.getElementById('lookGrid');
+  var arts=[];
+  try{var r=await fetch('./articles.json');if(r.ok){arts=await r.json();}}catch(e){arts=[];}
+  if(!Array.isArray(arts))arts=[];
+  arts=arts.filter(function(a){return a&&a.slug&&a.title;});
+  if(arts.length===0){
+    g.innerHTML='<div class="empty"><div class="title">The issue is at press.</div><div class="desc">Essays for Issue 14 will appear here as they close. Subscribe to the Studio Dispatch to be notified.</div></div>';
+    return;
+  }
+  var FB=['https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&q=85','https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1200&q=85','https://images.unsplash.com/photo-1488161628813-04466f872be2?w=1200&q=85','https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=85','https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1200&q=85','https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=1200&q=85'];
+  g.innerHTML=arts.map(function(a,i){
+    var img=a.image||FB[i%FB.length];
+    var num='N° '+String(i+1).padStart(2,'0');
+    var cat=(a.cat||a.category||'Essay').toString();
+    return '<a href="./'+a.slug+'/" class="look-card reveal in">'+
+      '<div class="look-img-wrap"><img src="'+img+'" alt="'+a.title.replace(/"/g,'&quot;')+'" loading="lazy" onerror="this.onerror=null;this.src=\''+FB[i%FB.length]+'\';"></div>'+
+      '<div class="look-cap"><span>'+num+'</span><span>'+cat+'</span></div>'+
+      '<h3 class="look-title">'+a.title+'</h3>'+
+      '<p class="look-excerpt">'+(a.excerpt||a.meta_description||'')+'</p>'+
+      '<div class="look-meta"><span>'+(a.mins||6)+' min read</span><span class="sep"></span><span>'+(a.author||'Lila Vandermeer')+'</span></div>'+
+    '</a>';
+  }).join('');
+}
+loadLookbook();
+
+/* ---------- THREE.JS SPOTLIGHT ---------- */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(window.innerWidth<900)return;
+  var s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js';
+  s.onload=function(){
+    var c=document.getElementById('spotlight');if(!c||!window.THREE)return;
+    var hero=c.parentElement;var w=hero.clientWidth,h=hero.clientHeight;
+    var renderer=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+    renderer.setSize(w,h);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    var scene=new THREE.Scene();
+    var cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+    var uniforms={u_time:{value:0},u_res:{value:new THREE.Vector2(w,h)}};
+    var mat=new THREE.ShaderMaterial({
+      transparent:true,uniforms:uniforms,
+      vertexShader:'void main(){gl_Position=vec4(position,1.0);}',
+      fragmentShader:'precision mediump float;uniform float u_time;uniform vec2 u_res;void main(){vec2 uv=gl_FragCoord.xy/u_res.xy;float t=u_time*0.12;vec2 c1=vec2(0.3+0.18*sin(t),0.55+0.12*cos(t*0.9));vec2 c2=vec2(0.72+0.14*cos(t*0.7),0.4+0.16*sin(t*1.1));float d1=distance(uv,c1);float d2=distance(uv,c2);float g1=smoothstep(0.42,0.0,d1);float g2=smoothstep(0.36,0.0,d2);vec3 gold=vec3(0.91,0.77,0.48);vec3 col=gold*(g1*0.55+g2*0.4);gl_FragColor=vec4(col,(g1*0.55+g2*0.4)*0.7);}'
+    });
+    var geo=new THREE.PlaneGeometry(2,2);
+    scene.add(new THREE.Mesh(geo,mat));
+    var start=performance.now();
+    function tick(){uniforms.u_time.value=(performance.now()-start)/1000;renderer.render(scene,cam);requestAnimationFrame(tick);}
+    tick();
+    window.addEventListener('resize',function(){w=hero.clientWidth;h=hero.clientHeight;renderer.setSize(w,h);uniforms.u_res.value.set(w,h);});
+  };
+  document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>
