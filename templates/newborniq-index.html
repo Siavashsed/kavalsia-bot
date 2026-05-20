@@ -446,7 +446,7 @@ const EMPTY_STATE='<div style="grid-column:1/-1;text-align:center;padding:48px 2
 function cardHTML(a,i){
   return `
     <a href="./${a.slug}/" class="card">
-      <div class="card-img"><img src="${a.image||IMGS[i%IMGS.length]}" alt="${a.title}" loading="lazy"></div>
+      <div class="card-img"><img src="${a.image||IMGS[i%IMGS.length]}" alt="${a.title}" loading="lazy" onerror="this.style.display='none'"></div>
       <div class="card-body">
         <span class="card-tag">${a.cat||a.category||'guide'}</span>
         <h3 class="card-title">${a.title}</h3>
