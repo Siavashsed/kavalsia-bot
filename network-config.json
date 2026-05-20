@@ -141,7 +141,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "passive-wealth",
@@ -212,7 +215,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "trading-tech",
@@ -283,7 +289,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "ai-marketing",
@@ -354,7 +363,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "ecommerce-edge",
@@ -425,7 +437,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "mochapoo-pets",
@@ -498,7 +513,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "supplement-verge",
@@ -569,7 +587,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "sight-reading",
@@ -640,7 +661,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "newborn-iq",
@@ -711,7 +735,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "dalmend-home",
@@ -782,7 +809,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "onlinebiz-pro",
@@ -853,7 +883,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "sportiq-pro",
@@ -924,7 +957,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "makeup-craft",
@@ -995,7 +1031,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "dating-edge",
@@ -1066,7 +1105,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "fitpulse-pro",
@@ -1137,7 +1179,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "mashestate-home",
@@ -1208,7 +1253,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "kanona-events",
@@ -1280,7 +1328,10 @@
       ],
       "articles_per_day": 1,
       "nav_style": "dark",
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "mashestate-construction",
@@ -1351,7 +1402,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 2
+      "posts_per_run": 2,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "insight-insure",
@@ -1422,7 +1476,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 2
+      "posts_per_run": 2,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "carverge",
@@ -1493,7 +1550,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 2
+      "posts_per_run": 2,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "travelverge",
@@ -1564,7 +1624,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 1
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     },
     {
       "id": "topproduct",
@@ -1642,7 +1705,10 @@
         "Siavash Sadighi"
       ],
       "use_random_author": true,
-      "posts_per_run": 2
+      "posts_per_run": 2,
+      "historical_mode": true,
+      "historical_per_week": 4,
+      "posts_per_day_new": 1
     }
   ]
 }
