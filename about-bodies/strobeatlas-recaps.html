@@ -196,6 +196,135 @@
 }
 .rc-next-card .btn:hover{background:var(--acid)}
 
+/* who played */
+.rc-who{
+  background:var(--raven);border:1px solid var(--hair);
+  padding:24px 26px;margin-bottom:40px;
+}
+.rc-who h4{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:18px;
+}
+.rc-djs{display:flex;flex-wrap:wrap;gap:18px}
+.rc-dj{display:flex;align-items:center;gap:12px;min-width:170px}
+.rc-dj-pic{
+  width:54px;height:54px;border-radius:50%;overflow:hidden;
+  box-shadow:0 0 0 2px var(--magenta);flex-shrink:0;
+}
+.rc-dj-pic img{width:100%;height:100%;object-fit:cover}
+.rc-dj-name{
+  font-family:var(--sans);font-size:14px;font-weight:600;color:var(--white);
+}
+.rc-dj-role{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+
+/* timeline of the night */
+.rc-night-tl{
+  margin:0 0 40px;padding:24px 26px;
+  background:var(--raven);border:1px solid var(--hair);
+}
+.rc-night-tl h4{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:20px;
+}
+.rc-ntl-row{
+  display:grid;grid-template-columns:80px 18px 1fr;gap:14px;align-items:flex-start;
+  padding:10px 0;position:relative;
+}
+.rc-ntl-row .ti{
+  font-family:var(--mono);font-size:12px;color:var(--magenta);letter-spacing:.08em;
+}
+.rc-ntl-row .dt{
+  position:relative;width:18px;height:18px;
+}
+.rc-ntl-row .dt::before{
+  content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:9px;height:9px;border-radius:50%;background:var(--magenta);
+  box-shadow:0 0 0 3px rgba(255,43,214,.2);
+}
+.rc-ntl-row .dt::after{
+  content:'';position:absolute;left:50%;top:18px;bottom:-10px;width:1px;background:var(--hair);
+}
+.rc-ntl-row:last-child .dt::after{display:none}
+.rc-ntl-row .lb{
+  font-family:var(--sans);font-size:14px;color:var(--paper);line-height:1.5;
+}
+.rc-ntl-row .lb b{color:var(--white)}
+
+/* floor map */
+.rc-floor{
+  margin:0 0 40px;padding:24px 26px;
+  background:var(--raven);border:1px solid var(--hair);
+}
+.rc-floor h4{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:14px;
+}
+.rc-floor-box{
+  position:relative;width:100%;height:300px;
+  background:var(--jet);border:1px solid var(--hair);
+  margin-bottom:14px;
+}
+.rc-room{
+  position:absolute;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper);
+  border:1px solid var(--hair);background:rgba(124,77,255,.08);
+  text-align:center;padding:8px;
+}
+.rc-room.main{background:rgba(255,43,214,.14);color:var(--magenta);border-color:var(--magenta)}
+.rc-room.side{background:rgba(198,255,58,.10);color:var(--acid);border-color:var(--acid)}
+.rc-room.smoke{background:rgba(124,77,255,.14);color:var(--paper);border-color:var(--uv)}
+.rc-room.garden{background:rgba(255,255,255,.04);color:var(--paper)}
+.rc-floor-legend{
+  display:flex;gap:18px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+}
+.rc-floor-legend span{display:inline-flex;align-items:center;gap:6px}
+.rc-floor-legend span::before{content:'';width:10px;height:10px;border:1px solid var(--hair)}
+.rc-floor-legend .lg-main::before{background:rgba(255,43,214,.14);border-color:var(--magenta)}
+.rc-floor-legend .lg-side::before{background:rgba(198,255,58,.10);border-color:var(--acid)}
+.rc-floor-legend .lg-smoke::before{background:rgba(124,77,255,.14);border-color:var(--uv)}
+.rc-floor-legend .lg-garden::before{background:rgba(255,255,255,.04)}
+
+/* gear strip */
+.rc-gear{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border:1px solid var(--hair);margin-bottom:40px;background:var(--raven);
+}
+.rc-gear div{
+  padding:14px 18px;border-right:1px solid var(--hair);
+  font-family:var(--mono);font-size:12px;color:var(--white);
+}
+.rc-gear div:last-child{border-right:0}
+.rc-gear .k{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  display:block;margin-bottom:4px;
+}
+
+/* read next */
+.rc-readnext{
+  margin:0 0 40px;
+}
+.rc-readnext h4{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:18px;
+}
+.rc-rn-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.rc-rn-card{
+  display:grid;grid-template-columns:120px 1fr;gap:14px;
+  background:var(--raven);border:1px solid var(--hair);overflow:hidden;
+  transition:border-color .2s, transform .25s;color:var(--paper);
+}
+.rc-rn-card:hover{border-color:var(--magenta);transform:translateY(-2px);color:var(--paper)}
+.rc-rn-card .th{width:120px;height:100px;overflow:hidden;background:var(--card)}
+.rc-rn-card .th img{width:100%;height:100%;object-fit:cover}
+.rc-rn-card .bd{padding:12px 14px 12px 0;display:flex;flex-direction:column;justify-content:center}
+.rc-rn-card .kk{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--magenta);margin-bottom:6px}
+.rc-rn-card h5{font-family:var(--display);font-size:20px;color:var(--white);text-transform:uppercase;letter-spacing:.005em;line-height:1}
+@media(max-width:780px){.rc-rn-grid{grid-template-columns:1fr}.rc-gear{grid-template-columns:1fr}.rc-gear div{border-right:0;border-bottom:1px solid var(--hair)}.rc-gear div:last-child{border-bottom:0}}
+
 @media(max-width:900px){
   .rc-strip{gap:18px}
   .rc-num{font-size:96px}
@@ -235,7 +364,7 @@
   </div>
 
   <div class="rc-cover">
-    <img src="https://images.unsplash.com/photo-1571266028243-d220bc562f7b?w=2000&q=85" alt="Sublimation 04 warehouse Berlin">
+    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=2000&q=85" alt="Sublimation 04 warehouse Berlin">
   </div>
 
   <div class="rc-facts">
@@ -280,6 +409,59 @@
     <p>"I have not checked my phone in nine hours. I do not even remember what it looks like."</p>
     <p>"Tell him I am at Berghain. He will understand. He has to understand."</p>
     <p>"This is the first time in my life I have been jealous of a kick drum."</p>
+  </div>
+
+  <div class="rc-who">
+    <h4>Who played</h4>
+    <div class="rc-djs">
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=200&q=85" loading="lazy" alt="Marcel Dettmann" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Marcel Dettmann</div><div class="rc-dj-role">Main / Open + b2b</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&q=85" loading="lazy" alt="Hector Oaks" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Hector Oaks</div><div class="rc-dj-role">Main / Surprise b2b</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=85" loading="lazy" alt="Anastasia Kristensen" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Anastasia Kristensen</div><div class="rc-dj-role">Säule / 07:00</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&q=85" loading="lazy" alt="Donato Dozzy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Donato Dozzy</div><div class="rc-dj-role">Upstairs / Sunrise</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&q=85" loading="lazy" alt="Stef Mendesidis" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Stef Mendesidis</div><div class="rc-dj-role">Säule / Hard groove</div></div></div>
+    </div>
+  </div>
+
+  <div class="rc-night-tl">
+    <h4>Timeline of the night</h4>
+    <div class="rc-ntl-row"><span class="ti">21:00</span><span class="dt"></span><span class="lb"><b>Doors open.</b> Queue moves in twelves. Phone stickers handed out at the second checkpoint.</span></div>
+    <div class="rc-ntl-row"><span class="ti">22:00</span><span class="dt"></span><span class="lb"><b>Dettmann opens main.</b> No mic, no announcement. Forty minutes of warmup nobody warmed up to.</span></div>
+    <div class="rc-ntl-row"><span class="ti">00:14</span><span class="dt"></span><span class="lb"><b>First room split.</b> Säule pulls the hard groove crowd. Upstairs fills with the ambient room.</span></div>
+    <div class="rc-ntl-row"><span class="ti">02:30</span><span class="dt"></span><span class="lb"><b>The rumour.</b> Oaks is in the building. Whispered in the smoking corner, denied at the bar.</span></div>
+    <div class="rc-ntl-row"><span class="ti">03:14</span><span class="dt"></span><span class="lb"><b>System-check pause.</b> Floor goes black. Sub drops out. Voice in German. Oaks slides in.</span></div>
+    <div class="rc-ntl-row"><span class="ti">05:48</span><span class="dt"></span><span class="lb"><b>Peak.</b> b2b hits the third hour. Room reorganises itself around the booth.</span></div>
+    <div class="rc-ntl-row"><span class="ti">08:00</span><span class="dt"></span><span class="lb"><b>Sunrise.</b> Dozzy starts the Upstairs set. Borrowed turntables. Nobody asks where from.</span></div>
+    <div class="rc-ntl-row"><span class="ti">11:10</span><span class="dt"></span><span class="lb"><b>I leave.</b> Lights up at noon. I am eating a doner on Warschauer.</span></div>
+  </div>
+
+  <div class="rc-floor">
+    <h4>Annotated floor map / Berghain takeover</h4>
+    <div class="rc-floor-box">
+      <div class="rc-room main" style="left:8%;top:14%;width:46%;height:50%;">MAIN<br>Halle</div>
+      <div class="rc-room side" style="left:60%;top:14%;width:32%;height:30%;">SÄULE<br>Side room</div>
+      <div class="rc-room garden" style="left:60%;top:50%;width:32%;height:34%;">UPSTAIRS<br>Ambient + sunrise</div>
+      <div class="rc-room smoke" style="left:8%;top:72%;width:46%;height:18%;">SMOKING CORNER + KITCHEN</div>
+    </div>
+    <div class="rc-floor-legend">
+      <span class="lg-main">Main floor</span>
+      <span class="lg-side">Side room</span>
+      <span class="lg-garden">Upstairs</span>
+      <span class="lg-smoke">Smoking + kitchen</span>
+    </div>
+  </div>
+
+  <div class="rc-gear">
+    <div><span class="k">System</span>Funktion-One Evo 7T / F1-218 subs</div>
+    <div><span class="k">Console</span>Pioneer DJM-V10 / 3x CDJ-3000</div>
+    <div><span class="k">Lighting</span>Custom strobe rig / no LED video</div>
+  </div>
+
+  <div class="rc-readnext">
+    <h4>Read next</h4>
+    <div class="rc-rn-grid">
+      <a class="rc-rn-card" href="#helloweenvortex"><div class="th"><img src="https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=400&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85'"></div><div class="bd"><div class="kk">02 / RECAP</div><h5>Helloween Vortex / Mexico City</h5></div></a>
+      <a class="rc-rn-card" href="#velvetquad"><div class="th"><img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85'"></div><div class="bd"><div class="kk">03 / RECAP</div><h5>Velvet Quad / Cambridge + London</h5></div></a>
+    </div>
   </div>
 </section>
 
@@ -340,6 +522,59 @@
     <p>"I came as a ghost. I have become a person. I am not sure that is an upgrade."</p>
     <p>"There is a fire dancer up there and I am the only one looking at the moon."</p>
   </div>
+
+  <div class="rc-who">
+    <h4>Who played</h4>
+    <div class="rc-djs">
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1577375729152-4c8b5fcda381?w=200&q=85" loading="lazy" alt="Rebekah" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Rebekah</div><div class="rc-dj-role">Basement / 00:00</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=200&q=85" loading="lazy" alt="Indira Paganotto" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Indira Paganotto</div><div class="rc-dj-role">Rooftop / 04:00</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1564585222527-c2777a5bc6cb?w=200&q=85" loading="lazy" alt="Mac Declos" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Mac Declos b2b Voia</div><div class="rc-dj-role">Basement / 02:00</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&q=85" loading="lazy" alt="Carlita" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Carlita</div><div class="rc-dj-role">Rooftop / 01:00</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=200&q=85" loading="lazy" alt="Andrea Bertolini" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Andrea Bertolini</div><div class="rc-dj-role">Rooftop / Cumbia + techno</div></div></div>
+    </div>
+  </div>
+
+  <div class="rc-night-tl">
+    <h4>Timeline of the night</h4>
+    <div class="rc-ntl-row"><span class="ti">22:00</span><span class="dt"></span><span class="lb"><b>Doors at Sala Bizarro.</b> Costume check at the entrance. Masks issued to those without one.</span></div>
+    <div class="rc-ntl-row"><span class="ti">22:40</span><span class="dt"></span><span class="lb"><b>Warmup b2b begins.</b> Aire Acondicionado opens the basement at 138.</span></div>
+    <div class="rc-ntl-row"><span class="ti">00:00</span><span class="dt"></span><span class="lb"><b>Rebekah enters.</b> Starts at 144. Builds to 152 by 02:00. Mean.</span></div>
+    <div class="rc-ntl-row"><span class="ti">01:30</span><span class="dt"></span><span class="lb"><b>Roof bridge opens.</b> Black-fabric corridor between buildings. Twenty metres of sky.</span></div>
+    <div class="rc-ntl-row"><span class="ti">02:14</span><span class="dt"></span><span class="lb"><b>Mac Declos b2b Voia.</b> The basement reorganises around the booth. Drop hits at 02:14.</span></div>
+    <div class="rc-ntl-row"><span class="ti">03:55</span><span class="dt"></span><span class="lb"><b>Mass migration upward.</b> The basement empties into the rooftop. The room is one organism now.</span></div>
+    <div class="rc-ntl-row"><span class="ti">04:00</span><span class="dt"></span><span class="lb"><b>Indira closes.</b> Psytechno under a paper-lantern moon. Fire dancer on the parapet.</span></div>
+    <div class="rc-ntl-row"><span class="ti">06:02</span><span class="dt"></span><span class="lb"><b>Sun.</b> Sideways over Insurgentes traffic. I walk home in someone else's hoodie.</span></div>
+  </div>
+
+  <div class="rc-floor">
+    <h4>Annotated floor map / Sala Bizarro + rooftop</h4>
+    <div class="rc-floor-box">
+      <div class="rc-room main" style="left:8%;top:54%;width:54%;height:36%;">BASEMENT MAIN<br>Sala Bizarro</div>
+      <div class="rc-room side" style="left:8%;top:14%;width:54%;height:30%;">ROOFTOP<br>Open air</div>
+      <div class="rc-room garden" style="left:68%;top:14%;width:24%;height:30%;">BAR + BRIDGE<br>Connector</div>
+      <div class="rc-room smoke" style="left:68%;top:54%;width:24%;height:36%;">SMOKING<br>Stairwell</div>
+    </div>
+    <div class="rc-floor-legend">
+      <span class="lg-main">Basement</span>
+      <span class="lg-side">Rooftop</span>
+      <span class="lg-garden">Bridge / bar</span>
+      <span class="lg-smoke">Smoking stairwell</span>
+    </div>
+  </div>
+
+  <div class="rc-gear">
+    <div><span class="k">System</span>Void Acoustics Air Motion / Incubus subs</div>
+    <div><span class="k">Console</span>Allen + Heath Xone:96 / 4x CDJ-3000</div>
+    <div><span class="k">Lighting</span>Paper lanterns + 4-bar Sunstrip rig</div>
+  </div>
+
+  <div class="rc-readnext">
+    <h4>Read next</h4>
+    <div class="rc-rn-grid">
+      <a class="rc-rn-card" href="#sublimation04"><div class="th"><img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85'"></div><div class="bd"><div class="kk">01 / RECAP</div><h5>Sublimation 04 / Berlin</h5></div></a>
+      <a class="rc-rn-card" href="#velvetquad"><div class="th"><img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85'"></div><div class="bd"><div class="kk">03 / RECAP</div><h5>Velvet Quad / Cambridge + London</h5></div></a>
+    </div>
+  </div>
 </section>
 
 <!-- ============== VELVET QUAD ============== -->
@@ -398,6 +633,58 @@
     <p>"My dissertation is due at noon. My dissertation is going to be very, very interesting."</p>
     <p>"He proposed in the silent disco. She could not hear him. She said yes anyway."</p>
     <p>"I have never been this overdressed and this overstimulated at the same time."</p>
+  </div>
+
+  <div class="rc-who">
+    <h4>Who played</h4>
+    <div class="rc-djs">
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=200&q=85" loading="lazy" alt="Joy Anonymous" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Joy Anonymous</div><div class="rc-dj-role">Main Marquee / 23:00</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=200&q=85" loading="lazy" alt="Sammy Virji" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Sammy Virji</div><div class="rc-dj-role">The Cause / 02:30</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=200&q=85" loading="lazy" alt="Saffron Stone" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Saffron Stone</div><div class="rc-dj-role">The Cause / 04:00 close</div></div></div>
+      <div class="rc-dj"><div class="rc-dj-pic"><img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=200&q=85" loading="lazy" alt="Salute" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=85'"></div><div><div class="rc-dj-name">Salute</div><div class="rc-dj-role">Silent Disco / 00:30</div></div></div>
+    </div>
+  </div>
+
+  <div class="rc-night-tl">
+    <h4>Timeline of the night</h4>
+    <div class="rc-ntl-row"><span class="ti">21:00</span><span class="dt"></span><span class="lb"><b>Black tie at the quad.</b> Oysters on silver, string quartet under fairy lights.</span></div>
+    <div class="rc-ntl-row"><span class="ti">23:00</span><span class="dt"></span><span class="lb"><b>Joy Anonymous.</b> Main marquee. 650 students in formalwear, choreography slightly drunk.</span></div>
+    <div class="rc-ntl-row"><span class="ti">00:30</span><span class="dt"></span><span class="lb"><b>Silent disco fills.</b> A guy proposes during a Skepta track. She cannot hear him. She says yes.</span></div>
+    <div class="rc-ntl-row"><span class="ti">01:45</span><span class="dt"></span><span class="lb"><b>Coach to London.</b> Forty-five minutes down the M11. Driver gives up. Speaker on the back seat.</span></div>
+    <div class="rc-ntl-row"><span class="ti">02:30</span><span class="dt"></span><span class="lb"><b>Sammy Virji opens.</b> The Cause heaves. Crowd doubles halfway through.</span></div>
+    <div class="rc-ntl-row"><span class="ti">04:00</span><span class="dt"></span><span class="lb"><b>Saffron Stone takes the close.</b> Starts in UKG, ends somewhere none of us have a word for.</span></div>
+    <div class="rc-ntl-row"><span class="ti">06:18</span><span class="dt"></span><span class="lb"><b>Sun through the skylights.</b> Greggs sausage rolls smuggled in by door staff for tips.</span></div>
+    <div class="rc-ntl-row"><span class="ti">08:00</span><span class="dt"></span><span class="lb"><b>Lights up.</b> Glitter on the collar. Megabus back to Stansted at 09:40.</span></div>
+  </div>
+
+  <div class="rc-floor">
+    <h4>Annotated floor map / Quad to warehouse</h4>
+    <div class="rc-floor-box">
+      <div class="rc-room main" style="left:6%;top:14%;width:42%;height:50%;">MAIN MARQUEE<br>Joy Anonymous</div>
+      <div class="rc-room side" style="left:52%;top:14%;width:40%;height:24%;">SILENT DISCO<br>Salute</div>
+      <div class="rc-room garden" style="left:52%;top:42%;width:40%;height:22%;">QUAD BAR<br>Champagne + oysters</div>
+      <div class="rc-room smoke" style="left:6%;top:70%;width:86%;height:20%;">COACH PICKUP / PORTER'S LODGE</div>
+    </div>
+    <div class="rc-floor-legend">
+      <span class="lg-main">Main marquee</span>
+      <span class="lg-side">Silent disco</span>
+      <span class="lg-garden">Quad bar</span>
+      <span class="lg-smoke">Coach + porter</span>
+    </div>
+  </div>
+
+  <div class="rc-gear">
+    <div><span class="k">System</span>d&amp;b audiotechnik V-Series + KSL subs</div>
+    <div><span class="k">Console</span>Pioneer DJM-A9 / 4x CDJ-3000</div>
+    <div><span class="k">Lighting</span>Fairy lights + intelligent rig at The Cause</div>
+  </div>
+
+  <div class="rc-readnext">
+    <h4>Read next</h4>
+    <div class="rc-rn-grid">
+      <a class="rc-rn-card" href="#sublimation04"><div class="th"><img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85'"></div><div class="bd"><div class="kk">01 / RECAP</div><h5>Sublimation 04 / Berlin</h5></div></a>
+      <a class="rc-rn-card" href="#helloweenvortex"><div class="th"><img src="https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=400&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=85'"></div><div class="bd"><div class="kk">02 / RECAP</div><h5>Helloween Vortex / Mexico City</h5></div></a>
+    </div>
   </div>
 </section>
 
