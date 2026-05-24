@@ -326,6 +326,40 @@ def patch_site(stem, site, token, log):
             continue
 
         body, css = extract_body_and_css(original)
+        if not body:
+            # Source HTML on GitHub is corrupted or truncated (e.g. partial file
+            # left by a failed earlier push that wrote only the <head>/CSS).
+            # We can't extract real content, but we have the article metadata in
+            # articles.json - synthesize a minimal article shell via article_press
+            # so the slug isn't lost. A future content rebuild can replace this
+            # with full AI-generated text.
+            try:
+                synth_article = {
+                    "title":            article.get("title", slug),
+                    "intro":            article.get("meta_description", "") or "",
+                    "intro2":           "",
+                    "sections":         [],
+                    "conclusion":       "",
+                    "image":            article.get("image", ""),
+                    "image_url":        article.get("image", ""),
+                    "image_alt":        article.get("title", slug),
+                    "photographer":     "Staff",
+                    "date":             article.get("date", ""),
+                    "date_iso":         article.get("date_iso", ""),
+                    "meta_description": article.get("meta_description", ""),
+                    "category":         article.get("category", ""),
+                    "author":           article.get("author", ""),
+                    "slug":             slug,
+                }
+                css, body = article_press(
+                    synth_article, site,
+                    article.get("image", ""), "Staff", t,
+                )
+                log(f"  [{i+1}] ! {slug}  -  source truncated; regenerated stub from metadata")
+            except Exception as _stub_err:
+                log(f"  [{i+1}] x {slug}  -  could not locate article body and stub regen failed: {_stub_err}")
+                fail += 1
+                continue
         if body:
             # ── Press rewrap: parse the legacy body, reconstruct as a structured
             # article dict, then re-render through article_press() so every site
