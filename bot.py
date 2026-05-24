@@ -553,12 +553,12 @@ SITE_THEMES = {
         "heading_font":"'Space Grotesk',system-ui,sans-serif",
     },
     "trading-tech": {
-        "bg":"#0d1117","bg2":"#161b22","bg3":"#1c2128",
-        "text":"#e6edf3","text2":"#b0bcc8",
-        "accent":"#58a6ff","accent2":"#1f6feb",
-        "meta":"#8b949e","border":"#21262d",
-        "font":"system-ui,sans-serif",
-        "heading_font":"system-ui,sans-serif",
+        "bg":"#000000","bg2":"#0a0a0a","bg3":"#141414",
+        "text":"#e6edf3","text2":"#9ca3af",
+        "accent":"#f97316","accent2":"#fb923c",
+        "meta":"#8b8b8b","border":"#1f1f1f",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Inter','system-ui',sans-serif",
     },
     "carverge": {
         "bg":"#040d1a","bg2":"#071428","bg3":"#0b1d36",
@@ -577,20 +577,20 @@ SITE_THEMES = {
         "heading_font":"'Space Grotesk',sans-serif",
     },
     "onlinebiz-pro": {
-        "bg":"#0a0a0a","bg2":"#141414","bg3":"#1c1c1c",
-        "text":"#f5f0e8","text2":"#c8b898",
-        "accent":"#f59e0b","accent2":"#d97706",
-        "meta":"#9c8c70","border":"#2a2520",
-        "font":"'Inter',sans-serif",
-        "heading_font":"'Inter',sans-serif",
+        "bg":"#070708","bg2":"#0e0e10","bg3":"#16161a",
+        "text":"#ededf2","text2":"#b8b8c2",
+        "accent":"#6c5ce7","accent2":"#8b7eef",
+        "meta":"#8b8b95","border":"rgba(255,255,255,.08)",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Space Grotesk','Inter',sans-serif",
     },
     "sportiq-pro": {
-        "bg":"#080b0f","bg2":"#0f1318","bg3":"#161b22",
-        "text":"#f5f5f5","text2":"#cccccc",
-        "accent":"#ef4444","accent2":"#dc2626",
-        "meta":"#888888","border":"#1a1d24",
-        "font":"'Barlow Condensed',sans-serif",
-        "heading_font":"'Barlow Condensed',sans-serif",
+        "bg":"#0a0d12","bg2":"#11151c","bg3":"#1a2029",
+        "text":"#eef0f3","text2":"#cfd4dc",
+        "accent":"#fa4a1e","accent2":"#ff6a3c",
+        "meta":"#9aa1ac","border":"#232b36",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Inter Tight','Inter',system-ui,sans-serif",
     },
     "dating-edge": {
         "bg":"#fdf8f5","bg2":"#f5ede8","bg3":"#ede5e0",
@@ -601,12 +601,12 @@ SITE_THEMES = {
         "heading_font":"'Playfair Display',serif",
     },
     "fitpulse-pro": {
-        "bg":"#0a0a0a","bg2":"#141414","bg3":"#1c1c1c",
-        "text":"#f5f5f5","text2":"#bbbbbb",
-        "accent":"#22c55e","accent2":"#16a34a",
-        "meta":"#888888","border":"#222222",
-        "font":"'DM Sans',sans-serif",
-        "heading_font":"'DM Sans',sans-serif",
+        "bg":"#0c0e14","bg2":"#13161e","bg3":"#1c2029",
+        "text":"#f0f1f4","text2":"#c8ccd4",
+        "accent":"#d6ff3f","accent2":"#b8e535",
+        "meta":"#8a8d96","border":"#23262e",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Sora','Inter',sans-serif",
     },
     "supplement-verge": {
         "bg":"#060a07","bg2":"#0c1009","bg3":"#121810",
@@ -625,20 +625,20 @@ SITE_THEMES = {
         "heading_font":"system-ui,sans-serif",
     },
     "insight-insure": {
-        "bg":"#f8fafc","bg2":"#f1f5f9","bg3":"#e8eef4",
-        "text":"#0f172a","text2":"#334155",
-        "accent":"#0891b2","accent2":"#0e7490",
-        "meta":"#64748b","border":"#cbd5e1",
-        "font":"system-ui,sans-serif",
-        "heading_font":"system-ui,sans-serif",
+        "bg":"#fafaf8","bg2":"#f3f3ef","bg3":"#ebebe5",
+        "text":"#0f1f3d","text2":"#3d4860",
+        "accent":"#0d7a6b","accent2":"#0a5e52",
+        "meta":"#6b7280","border":"#dcdcd2",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Playfair Display',Georgia,serif",
     },
     "mashestate-home": {
-        "bg":"#ffffff","bg2":"#f9fafb","bg3":"#f3f4f6",
-        "text":"#111827","text2":"#374151",
-        "accent":"#1b2a4a","accent2":"#2563eb",
-        "meta":"#6b7280","border":"#e5e7eb",
-        "font":"'Inter',sans-serif",
-        "heading_font":"'Inter',sans-serif",
+        "bg":"#0c1018","bg2":"#141a25","bg3":"#1d2535",
+        "text":"#ecedf0","text2":"#b8bcc6",
+        "accent":"#c8a96a","accent2":"#5b8cff",
+        "meta":"#8a8d96","border":"rgba(236,237,240,.08)",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Fraunces',Georgia,serif",
     },
     "newborn-iq": {
         "bg":"#fafbf8","bg2":"#f5f0e8","bg3":"#ede8dc",
@@ -657,12 +657,12 @@ SITE_THEMES = {
         "heading_font":"Lora,Georgia,serif",
     },
     "mochapoo-pets": {
-        "bg":"#fdf6e3","bg2":"#f8eedb","bg3":"#f0e4cc",
-        "text":"#1c1408","text2":"#4a3818",
-        "accent":"#b45309","accent2":"#92400e",
-        "meta":"#947040","border":"#e0cc9a",
-        "font":"Lora,Georgia,serif",
-        "heading_font":"Lora,Georgia,serif",
+        "bg":"#fffdf8","bg2":"#faf6ef","bg3":"#f3ede2",
+        "text":"#1f1611","text2":"#5b4738",
+        "accent":"#a9683b","accent2":"#8a5128",
+        "meta":"#8a7a6b","border":"#e8e0d2",
+        "font":"'Plus Jakarta Sans','Inter',system-ui,sans-serif",
+        "heading_font":"'Fraunces',Georgia,serif",
     },
     "sight-reading": {
         "bg":"#08080b","bg2":"#111116","bg3":"#1a1a22",
@@ -681,12 +681,12 @@ SITE_THEMES = {
         "heading_font":"'Cormorant Garamond',Georgia,serif",
     },
     "makeup-craft": {
-        "bg":"#ffffff","bg2":"#f8e5f0","bg3":"#f0d0e4",
-        "text":"#1a0d15","text2":"#4a303e",
-        "accent":"#d63384","accent2":"#be185d",
-        "meta":"#897a84","border":"#eddde8",
-        "font":"'Raleway',sans-serif",
-        "heading_font":"'Raleway',sans-serif",
+        "bg":"#fbf6f2","bg2":"#f5ede4","bg3":"#ede0d2",
+        "text":"#1d1410","text2":"#5a4035",
+        "accent":"#c98577","accent2":"#b46c5e",
+        "meta":"#8a7065","border":"#ebdfd2",
+        "font":"'Plus Jakarta Sans','Inter',system-ui,sans-serif",
+        "heading_font":"'Fraunces',Georgia,serif",
     },
     "travelverge": {
         "bg":"#0d1a1e","bg2":"#122028","bg3":"#1a2a34",
@@ -697,12 +697,12 @@ SITE_THEMES = {
         "heading_font":"'Merriweather',serif",
     },
     "mashestate-construction": {
-        "bg":"#0c0d0e","bg2":"#131416","bg3":"#1c1e20",
+        "bg":"#0d0f12","bg2":"#13161b","bg3":"#1c2028",
         "text":"#e8e6e0","text2":"#b8b6b0",
-        "accent":"#f97316","accent2":"#ea6c10",
-        "meta":"#8a8880","border":"#242628",
-        "font":"'Oswald',sans-serif",
-        "heading_font":"'Oswald',sans-serif",
+        "accent":"#f5a524","accent2":"#e89a18",
+        "meta":"#8a8880","border":"#242830",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Archivo','Inter',sans-serif",
     },
     "kanona-events": {
         "bg":"#07060a","bg2":"#0e0c12","bg3":"#16141c",
@@ -719,6 +719,54 @@ SITE_THEMES = {
         "meta":"#706b60","border":"#e0dbd2",
         "font":"'Inter',sans-serif",
         "heading_font":"'Playfair Display',serif",
+    },
+    "mindframe": {
+        "bg":"#fbf8f1","bg2":"#f3efe5","bg3":"#e8e1d2",
+        "text":"#1a1814","text2":"#4d4842",
+        "accent":"#ff5a4e","accent2":"#e74a3e",
+        "meta":"#7a6e62","border":"#e3dccd",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Newsreader',Georgia,serif",
+    },
+    "folioatelier": {
+        "bg":"#f6f1ea","bg2":"#ede6d8","bg3":"#e0d6c3",
+        "text":"#1a1410","text2":"#4a3d2e",
+        "accent":"#7b4a32","accent2":"#a07a4e",
+        "meta":"#7a6d5a","border":"#ddd3bf",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Cormorant Garamond',Georgia,serif",
+    },
+    "modeformstudio": {
+        "bg":"#0e0d0c","bg2":"#16151a","bg3":"#1f1d22",
+        "text":"#f0ece4","text2":"#c0b8a8",
+        "accent":"#e8c47a","accent2":"#c79f57",
+        "meta":"#8a8275","border":"rgba(240,236,228,.08)",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Playfair Display',Georgia,serif",
+    },
+    "calibernotes": {
+        "bg":"#111418","bg2":"#181c22","bg3":"#22272e",
+        "text":"#e8e3d3","text2":"#b8b09a",
+        "accent":"#cdb87a","accent2":"#dec88a",
+        "meta":"#8a8270","border":"rgba(232,227,211,.08)",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'EB Garamond',Georgia,serif",
+    },
+    "crestcharter": {
+        "bg":"#06121a","bg2":"#0c1c28","bg3":"#152937",
+        "text":"#e8e3d3","text2":"#b8b09a",
+        "accent":"#c9a55c","accent2":"#dabb70",
+        "meta":"#7a8590","border":"rgba(232,227,211,.08)",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'EB Garamond',Georgia,serif",
+    },
+    "strobeatlas": {
+        "bg":"#050507","bg2":"#0b0b10","bg3":"#16161e",
+        "text":"#f0eff5","text2":"#bcbac8",
+        "accent":"#ff2bd6","accent2":"#c6ff3a",
+        "meta":"#8a8898","border":"rgba(240,239,245,.08)",
+        "font":"'Space Grotesk','Inter',sans-serif",
+        "heading_font":"'Anton','Space Grotesk',sans-serif",
     },
 }
 
@@ -3948,12 +3996,14 @@ def _nav_pulse(site, t):
     mono  = site.get("theme_mono", "'JetBrains Mono',monospace")
     # Build nav links based on site
     if sid == "tradingtechreview":
+        mono  = "'JetBrains Mono',ui-monospace,monospace"
+        ui_font = "'Inter',system-ui,sans-serif"
         abbr  = "TTR"
         links = '<a href="../">all</a><a href="../">backtesting</a><a href="../">apis</a><a href="../">python</a>'
-        sub   = f'<a href="../#newsletter" style="font-family:{mono};font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:{bg};background:{acc};padding:6px 14px;border-radius:3px;text-decoration:none;margin-left:12px;white-space:nowrap;transition:opacity .18s">subscribe</a>'
+        sub   = f'<a href="../#newsletter" style="font-family:{ui_font};font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:{bg};background:{acc};padding:7px 14px;border-radius:4px;text-decoration:none;margin-left:12px;white-space:nowrap;transition:opacity .18s">subscribe</a>'
         logo  = (f'<a href="../" style="display:flex;align-items:center;gap:10px;margin-right:32px;flex-shrink:0;text-decoration:none">'
                  f'<span style="font-family:{mono};font-size:11px;font-weight:800;color:{bg};background:{acc};padding:3px 8px;border-radius:3px;letter-spacing:.5px">{abbr}</span>'
-                 f'<span style="font-family:{mono};font-size:13px;font-weight:600;color:{txt};letter-spacing:-.3px">TradingTech<span style="color:{acc}">.</span>Review</span>'
+                 f'<span style="font-family:{ui_font};font-size:14px;font-weight:700;color:{txt};letter-spacing:-.3px">TradingTech<span style="color:{acc}">.</span>Review</span>'
                  f'</a>')
     elif sid == "carverge":
         abbr  = "CV"
@@ -3968,15 +4018,16 @@ def _nav_pulse(site, t):
         links = '<a href="../">Home</a><a href="../about.html">About</a>'
         sub   = ""
         logo  = f'<a href="../" style="font-size:18px;font-weight:800;color:{txt};margin-right:32px;flex-shrink:0;text-decoration:none;letter-spacing:-.5px">{name}</a>'
+    link_font = "'Inter',system-ui,sans-serif" if sid == "tradingtechreview" else "'JetBrains Mono',monospace"
     return (
-        f'<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">\n'
+        f'<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">\n'
         f'<style>\n'
         f'.a-pn{{background:{bg};border-bottom:1px solid {brd};position:sticky;top:0;z-index:200;transition:background .25s,border-color .25s}}\n'
         f'.a-pn-in{{max-width:1280px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;gap:0}}\n'
         f'.a-pn-links{{display:flex;gap:0;height:56px;flex:1}}\n'
-        f'.a-pn-links a{{font-family:\'JetBrains Mono\',monospace;font-size:11px;font-weight:500;letter-spacing:.3px;color:{mut};padding:0 14px;height:100%;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .18s;margin-bottom:-1px;text-decoration:none}}\n'
+        f'.a-pn-links a{{font-family:{link_font};font-size:12px;font-weight:500;letter-spacing:.3px;color:{mut};padding:0 14px;height:100%;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .18s;margin-bottom:-1px;text-decoration:none}}\n'
         f'.a-pn-links a:hover{{color:{txt};border-bottom-color:{acc}}}\n'
-        f'.a-pn-back{{font-family:\'JetBrains Mono\',monospace;font-size:11px;color:{mut};text-decoration:none;display:flex;align-items:center;gap:5px;margin-left:auto;transition:color .18s;padding:0 4px}}\n'
+        f'.a-pn-back{{font-family:{link_font};font-size:12px;color:{mut};text-decoration:none;display:flex;align-items:center;gap:5px;margin-left:auto;transition:color .18s;padding:0 4px}}\n'
         f'.a-pn-back:hover{{color:{acc}}}\n'
         f'@media(max-width:900px){{.a-pn-links{{display:none}}}}\n</style>',
         f'<nav class="a-pn"><div class="a-pn-in">'
@@ -4127,26 +4178,26 @@ def _hex_to_rgb(hex_color):
 
 
 def _nav_sportiqpro(site):
-    """Barlow Condensed dark-red nav matching sportiqpro newspaper homepage."""
+    """Inter Tight minimal dark-orange nav matching sportiqpro scroll-driven WebGL homepage."""
     name = _site_name(site)
     return (
-        '<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
-        '.a-sq{background:#0f1318;border-bottom:2px solid #ef4444;position:sticky;top:0;z-index:100}\n'
-        '.a-sq-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:52px;gap:24px}\n'
-        '.a-sq-logo{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#fff;white-space:nowrap;text-decoration:none}\n'
-        '.a-sq-logo span{color:#ef4444}\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-sq{background:rgba(10,13,18,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(35,43,54,.6);position:sticky;top:0;z-index:100}\n'
+        '.a-sq-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:60px;gap:28px}\n'
+        '.a-sq-logo{font-family:"Inter Tight",system-ui,sans-serif;font-size:18px;font-weight:800;letter-spacing:-.02em;color:#fff;white-space:nowrap;text-decoration:none}\n'
+        '.a-sq-logo span{color:#fa4a1e}\n'
         '.a-sq-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
-        '.a-sq-links a{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 14px;height:52px;display:flex;align-items:center;color:#888;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;text-decoration:none}\n'
-        '.a-sq-links a:hover{color:#fff;border-color:#ef4444}\n'
-        '.a-sq-back{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#888;text-decoration:none;display:flex;align-items:center;gap:4px;margin-left:auto;white-space:nowrap}\n'
-        '.a-sq-back:hover{color:#ef4444}\n'
+        '.a-sq-links a{font-family:"Inter Tight",system-ui,sans-serif;font-size:13px;font-weight:600;letter-spacing:-.005em;text-transform:none;padding:0 14px;height:60px;display:flex;align-items:center;color:#9aa1ac;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;text-decoration:none}\n'
+        '.a-sq-links a:hover{color:#fff;border-bottom-color:#fa4a1e}\n'
+        '.a-sq-back{font-family:"Inter Tight",system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:-.005em;color:#fff;background:#fa4a1e;padding:8px 18px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-left:auto;white-space:nowrap;transition:background .15s,transform .15s}\n'
+        '.a-sq-back:hover{background:#ff6a3c;transform:translateY(-1px)}\n'
         '@media(max-width:640px){.a-sq-links{display:none}}\n</style>',
         f'<nav class="a-sq"><div class="a-sq-in">'
         f'<a href="../" class="a-sq-logo">Sportiq<span>Pro</span></a>'
         f'<div class="a-sq-links">'
         f'<a href="../">Training</a><a href="../">Recovery</a><a href="../">Nutrition</a><a href="../">Gear</a><a href="../">Mindset</a>'
         f'</div>'
-        f'<a href="../" class="a-sq-back"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</a>'
+        f'<a href="../" class="a-sq-back"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> All Articles</a>'
         f'</div></nav>'
     )
 
@@ -4176,18 +4227,18 @@ def _nav_datingedge(site):
 
 
 def _nav_fitpulsepro(site):
-    """DM Sans dark-green nav matching fitpulsepro journal homepage."""
+    """Sora/Inter dark lime nav matching fitpulsepro homepage."""
     return (
-        '<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">\n<style>\n'
-        '.a-fp{background:#0a0a0a;border-bottom:1px solid #222;position:sticky;top:0;z-index:100}\n'
-        '.a-fp-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:60px;gap:32px}\n'
-        '.a-fp-logo{font-family:"DM Sans",sans-serif;font-size:18px;font-weight:700;color:#f5f5f5;letter-spacing:-.02em;text-decoration:none}\n'
-        '.a-fp-logo span{color:#22c55e}\n'
-        '.a-fp-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
-        '.a-fp-links a{font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;padding:0 14px;height:60px;display:flex;align-items:center;color:#888;transition:color .15s;text-decoration:none}\n'
-        '.a-fp-links a:hover{color:#f5f5f5}\n'
-        '.a-fp-cta{font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;background:#22c55e;color:#000;padding:8px 18px;border-radius:4px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
-        '.a-fp-cta:hover{background:#16a34a}\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-fp{background:rgba(12,14,20,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #23262e;position:sticky;top:0;z-index:100}\n'
+        '.a-fp-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:62px;gap:32px}\n'
+        '.a-fp-logo{font-family:Sora,sans-serif;font-size:18px;font-weight:700;color:#f0f1f4;letter-spacing:-.02em;text-decoration:none}\n'
+        '.a-fp-logo span{color:#d6ff3f}\n'
+        '.a-fp-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden;height:62px}\n'
+        '.a-fp-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;padding:0 14px;height:62px;display:flex;align-items:center;color:#8a8d96;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;text-decoration:none}\n'
+        '.a-fp-links a:hover{color:#f0f1f4;border-bottom-color:#d6ff3f}\n'
+        '.a-fp-cta{font-family:Sora,sans-serif;font-size:13px;font-weight:700;background:#d6ff3f;color:#0c0e14;padding:9px 18px;border-radius:100px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-fp-cta:hover{background:#b8e535}\n'
         '@media(max-width:640px){.a-fp-links{display:none}}\n</style>',
         f'<nav class="a-fp"><div class="a-fp-in">'
         f'<a href="../" class="a-fp-logo">FitPulse<span>Pro</span></a>'
@@ -4200,25 +4251,25 @@ def _nav_fitpulsepro(site):
 
 
 def _nav_mashestatehome(site):
-    """Inter navy nav matching mashestate-home property portal homepage."""
+    """Fraunces / Inter dark gold-and-blue nav matching mashestate-home homepage."""
     return (
-        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
-        '.a-mh{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:100}\n'
-        '.a-mh-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:68px;gap:48px}\n'
-        '.a-mh-logo{font-family:Inter,sans-serif;font-size:20px;font-weight:700;color:#1b2a4a;letter-spacing:-.03em;text-decoration:none}\n'
-        '.a-mh-logo span{color:#2563eb}\n'
-        '.a-mh-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
-        '.a-mh-links a{font-family:Inter,sans-serif;font-size:14px;font-weight:500;padding:0 18px;height:68px;display:flex;align-items:center;color:#6b7280;transition:color .15s;text-decoration:none}\n'
-        '.a-mh-links a:hover{color:#1b2a4a}\n'
-        '.a-mh-back{font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#6b7280;text-decoration:none;display:flex;align-items:center;gap:4px;margin-left:auto;transition:color .15s}\n'
-        '.a-mh-back:hover{color:#1b2a4a}\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-mh{background:rgba(12,16,24,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(236,237,240,.07);position:sticky;top:0;z-index:100}\n'
+        '.a-mh-in{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;height:68px;gap:40px}\n'
+        '.a-mh-logo{font-family:Fraunces,Georgia,serif;font-style:italic;font-size:22px;font-weight:600;color:#ecedf0;letter-spacing:-.01em;text-decoration:none}\n'
+        '.a-mh-logo span{color:#c8a96a}\n'
+        '.a-mh-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden;height:68px}\n'
+        '.a-mh-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;padding:0 16px;height:68px;display:flex;align-items:center;color:#b8bcc6;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;text-decoration:none}\n'
+        '.a-mh-links a:hover{color:#fff;border-bottom-color:#c8a96a}\n'
+        '.a-mh-cta{font-family:Inter,sans-serif;font-size:13px;font-weight:600;background:linear-gradient(135deg,#c8a96a,#dabd80);color:#171411;padding:9px 20px;border-radius:100px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:opacity .15s;box-shadow:0 4px 16px rgba(200,169,106,.18)}\n'
+        '.a-mh-cta:hover{opacity:.9}\n'
         '@media(max-width:640px){.a-mh-links{display:none}}\n</style>',
         f'<nav class="a-mh"><div class="a-mh-in">'
         f'<a href="../" class="a-mh-logo">Mash<span>Estate</span></a>'
         f'<div class="a-mh-links">'
         f'<a href="../">Buying Guides</a><a href="../">Market Data</a><a href="../">Investment</a><a href="../">First-Time Buyers</a>'
         f'</div>'
-        f'<a href="../" class="a-mh-back"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</a>'
+        f'<a href="../" class="a-mh-cta">All Articles</a>'
         f'</div></nav>'
     )
 
@@ -4272,18 +4323,18 @@ def _nav_sightreading(site):
 
 
 def _nav_makeupcraft(site):
-    """Raleway uppercase pink nav matching makeupcraft beauty homepage."""
+    """Fraunces / Plus Jakarta Sans warm paper rose nav matching makeupcraft homepage."""
     return (
-        '<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
-        '.a-mc{background:#fff;border-bottom:1px solid #eddde8;position:sticky;top:0;z-index:100}\n'
-        '.a-mc-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:40px}\n'
-        '.a-mc-logo{font-family:Raleway,sans-serif;font-size:22px;font-weight:800;color:#1a0d15;letter-spacing:.02em;text-transform:uppercase;text-decoration:none}\n'
-        '.a-mc-logo span{color:#d63384}\n'
-        '.a-mc-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
-        '.a-mc-links a{font-family:Raleway,sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:0 16px;height:64px;display:flex;align-items:center;color:#897a84;transition:color .15s;text-decoration:none}\n'
-        '.a-mc-links a:hover{color:#d63384}\n'
-        '.a-mc-cta{font-family:Raleway,sans-serif;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:#d63384;color:#fff;padding:10px 20px;border-radius:100px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
-        '.a-mc-cta:hover{background:#be185d}\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-mc{background:rgba(251,246,242,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #ebdfd2;position:sticky;top:0;z-index:100}\n'
+        '.a-mc-in{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;height:66px;gap:36px}\n'
+        '.a-mc-logo{font-family:Fraunces,Georgia,serif;font-style:italic;font-size:22px;font-weight:600;color:#1d1410;letter-spacing:-.01em;text-decoration:none}\n'
+        '.a-mc-logo span{color:#c98577}\n'
+        '.a-mc-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden;height:66px}\n'
+        '.a-mc-links a{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:500;padding:0 14px;height:66px;display:flex;align-items:center;color:#5a4035;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;text-decoration:none}\n'
+        '.a-mc-links a:hover{color:#1d1410;border-bottom-color:#c98577}\n'
+        '.a-mc-cta{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:600;background:#c98577;color:#fff;padding:9px 20px;border-radius:100px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-mc-cta:hover{background:#b46c5e}\n'
         '@media(max-width:640px){.a-mc-links{display:none}}\n</style>',
         f'<nav class="a-mc"><div class="a-mc-in">'
         f'<a href="../" class="a-mc-logo">Makeup<span>Craft</span></a>'
@@ -4320,18 +4371,18 @@ def _nav_travelverge(site):
 
 
 def _nav_mashestateconst(site):
-    """Oswald dark-orange nav matching mashestate-construction industrial homepage."""
+    """Archivo / Inter dark amber nav matching mashestate-construction homepage."""
     return (
-        '<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
-        '.a-mb{background:#131416;border-bottom:2px solid #f97316;position:sticky;top:0;z-index:100}\n'
-        '.a-mb-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:60px;gap:32px}\n'
-        '.a-mb-logo{font-family:Oswald,sans-serif;font-size:20px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#e8e6e0;text-decoration:none}\n'
-        '.a-mb-logo span{color:#f97316}\n'
-        '.a-mb-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden}\n'
-        '.a-mb-links a{font-family:Oswald,sans-serif;font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:0 16px;height:60px;display:flex;align-items:center;color:#8a8880;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;text-decoration:none}\n'
-        '.a-mb-links a:hover{color:#e8e6e0;border-color:#f97316}\n'
-        '.a-mb-cta{font-family:Oswald,sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:#f97316;color:#fff;padding:9px 20px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
-        '.a-mb-cta:hover{background:#ea6c10}\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-mb{background:rgba(13,15,18,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(232,230,224,.06);position:sticky;top:0;z-index:100}\n'
+        '.a-mb-in{max-width:1280px;margin:0 auto;padding:0 28px;display:flex;align-items:center;height:62px;gap:32px}\n'
+        '.a-mb-logo{font-family:Archivo,sans-serif;font-size:18px;font-weight:800;letter-spacing:-.01em;color:#e8e6e0;text-decoration:none}\n'
+        '.a-mb-logo span{color:#f5a524}\n'
+        '.a-mb-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden;height:62px}\n'
+        '.a-mb-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;padding:0 14px;height:62px;display:flex;align-items:center;color:#b8b6b0;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;text-decoration:none}\n'
+        '.a-mb-links a:hover{color:#fff;border-bottom-color:#f5a524}\n'
+        '.a-mb-cta{font-family:Archivo,sans-serif;font-size:13px;font-weight:700;background:#f5a524;color:#0d0f12;padding:9px 20px;border-radius:6px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-mb-cta:hover{background:#e89a18}\n'
         '@media(max-width:640px){.a-mb-links{display:none}}\n</style>',
         f'<nav class="a-mb"><div class="a-mb-in">'
         f'<a href="../" class="a-mb-logo">MashEstate <span>Build</span></a>'
@@ -4369,20 +4420,20 @@ def _nav_aimarketingpro(site):
 
 
 def _nav_onlinebizpro(site):
-    """Inter amber nav with OBP mark matching onlinebiz-pro homepage."""
+    """Inter/Space Grotesk purple glass nav matching onlinebiz-pro homepage."""
     return (
-        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
-        '.a-ob{background:#0a0a0a;border-bottom:1px solid #2a2520;position:sticky;top:0;z-index:100}\n'
-        '.a-ob-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:62px;gap:0}\n'
+        '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-ob{background:rgba(7,7,8,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:100}\n'
+        '.a-ob-in{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;height:64px;gap:0}\n'
         '.a-ob-logo{display:flex;align-items:center;gap:10px;margin-right:auto;flex-shrink:0;text-decoration:none}\n'
-        '.a-ob-mark{font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;color:#0a0a0a;background:#f59e0b;padding:4px 8px;border-radius:4px}\n'
-        '.a-ob-name{font-family:Inter,sans-serif;font-size:15px;font-weight:700;color:#f5f0e8;letter-spacing:-.2px}\n'
-        '.a-ob-name span{color:#f59e0b}\n'
-        '.a-ob-links{display:flex;gap:4px;align-items:center}\n'
-        '.a-ob-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;color:#9c8c70;padding:6px 12px;border-radius:6px;transition:all .2s;text-decoration:none}\n'
-        '.a-ob-links a:hover{color:#f5f0e8;background:#1c1c1c}\n'
-        '.a-ob-cta{font-family:Inter,sans-serif;font-size:12px;font-weight:600;color:#0a0a0a;background:#f59e0b;padding:8px 18px;border-radius:6px;margin-left:10px;text-decoration:none;white-space:nowrap;transition:opacity .2s}\n'
-        '.a-ob-cta:hover{opacity:.85}\n'
+        '.a-ob-mark{font-family:"Space Grotesk",sans-serif;font-size:11px;font-weight:700;letter-spacing:.6px;color:#fff;background:linear-gradient(135deg,#6c5ce7,#8b7eef);padding:4px 9px;border-radius:5px}\n'
+        '.a-ob-name{font-family:"Space Grotesk",Inter,sans-serif;font-size:16px;font-weight:600;color:#fff;letter-spacing:-.2px}\n'
+        '.a-ob-name span{color:#6c5ce7}\n'
+        '.a-ob-links{display:flex;gap:2px;align-items:center;height:64px}\n'
+        '.a-ob-links a{font-family:Inter,sans-serif;font-size:13px;font-weight:500;color:rgba(237,237,242,.55);padding:0 14px;height:64px;display:flex;align-items:center;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;text-decoration:none}\n'
+        '.a-ob-links a:hover{color:#fff;border-bottom-color:#6c5ce7}\n'
+        '.a-ob-cta{font-family:"Space Grotesk",Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:.2px;color:#fff;background:linear-gradient(135deg,#6c5ce7,#8b7eef);padding:9px 18px;border-radius:100px;margin-left:14px;text-decoration:none;white-space:nowrap;transition:opacity .2s;box-shadow:0 4px 16px rgba(108,92,231,.25)}\n'
+        '.a-ob-cta:hover{opacity:.9}\n'
         '@media(max-width:640px){.a-ob-links{display:none}}\n</style>',
         f'<nav class="a-ob"><div class="a-ob-in">'
         f'<a href="../" class="a-ob-logo">'
@@ -4508,6 +4559,30 @@ def _nav_kanonaevents(site):
     )
 
 
+def _nav_mochapoo(site):
+    """Plus Jakarta Sans / Fraunces warm cream mocha nav matching mochapoo-pets homepage."""
+    return (
+        '<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
+        '.a-mp{background:rgba(255,253,248,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #e8e0d2;position:sticky;top:0;z-index:100}\n'
+        '.a-mp-in{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;height:66px;gap:36px}\n'
+        '.a-mp-logo{font-family:Fraunces,Georgia,serif;font-style:italic;font-size:22px;font-weight:600;color:#1f1611;letter-spacing:-.01em;text-decoration:none}\n'
+        '.a-mp-logo span{color:#a9683b}\n'
+        '.a-mp-links{display:flex;gap:0;flex:1;flex-wrap:nowrap;overflow:hidden;height:66px}\n'
+        '.a-mp-links a{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:500;padding:0 14px;height:66px;display:flex;align-items:center;color:#5b4738;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;text-decoration:none}\n'
+        '.a-mp-links a:hover{color:#1f1611;border-bottom-color:#a9683b}\n'
+        '.a-mp-cta{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:600;background:#a9683b;color:#fff;padding:9px 20px;border-radius:100px;margin-left:auto;text-decoration:none;white-space:nowrap;transition:background .15s}\n'
+        '.a-mp-cta:hover{background:#8a5128}\n'
+        '@media(max-width:640px){.a-mp-links{display:none}}\n</style>',
+        f'<nav class="a-mp"><div class="a-mp-in">'
+        f'<a href="../" class="a-mp-logo">Mocha<span>Poo</span></a>'
+        f'<div class="a-mp-links">'
+        f'<a href="../">Care</a><a href="../">Training</a><a href="../">Health</a><a href="../">Reviews</a>'
+        f'</div>'
+        f'<a href="../" class="a-mp-cta">All Articles</a>'
+        f'</div></nav>'
+    )
+
+
 def _get_article_nav(site, t):
     """Return (head_injection, body_nav_html) for the site's nav_style.
     head_injection goes before </head>; body_nav_html replaces <nav class="site-nav">...</nav>."""
@@ -4543,6 +4618,8 @@ def _get_article_nav(site, t):
         return _nav_aimarketingpro(site)
     if sid == "onlinebiz-pro":
         return _nav_onlinebizpro(site)
+    if sid == "mochapoo-pets":
+        return _nav_mochapoo(site)
     if sid == "dalmend-home":
         return _nav_dalmendhome(site)
     if style == "terminal":
@@ -5803,6 +5880,87 @@ def rebuild_homepages_only(github_token, log=print):
     return ok_count
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# REBUILD ARTICLES ONLY (re-wrap every article on every site)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def rebuild_articles_only(github_token, log=print, only=None):
+    """
+    Bulk-rebuild every article across every active site by shelling out to
+    rebuild-articles.py (the same script the dashboard's per-site "Rebuild
+    Articles" button invokes via /api/site-rebuild-articles). One subprocess
+    per site so a single failure cannot abort the whole run.
+
+    only: optional iterable of site stems (the repo basename). If provided,
+          only those sites are rebuilt; otherwise every active site except
+          'nexus' is processed.
+    """
+    import subprocess
+    from pathlib import Path
+    import time as _time
+
+    if not github_token:
+        raise SystemExit("rebuild_articles_only: github_token is required")
+
+    base_dir = Path(__file__).parent
+    script   = base_dir / "rebuild-articles.py"
+    if not script.exists():
+        raise SystemExit(f"rebuild_articles_only: {script} not found")
+
+    active_sites, _gp, _settings, _gc, _gn, _gh, _gf = load_network_config()
+    active_sites = [s for s in active_sites if s.get("active", True)]
+
+    only_set = {x.strip() for x in only} if only else None
+    targets = []
+    for site in active_sites:
+        sid  = (site.get("id")   or "").strip()
+        repo = (site.get("repo") or "").strip()
+        stem = repo.rsplit("/", 1)[-1] if repo else sid
+        if not stem or sid == "nexus":
+            continue
+        if only_set and stem not in only_set and sid not in only_set:
+            continue
+        targets.append((stem, sid, site))
+
+    if not targets:
+        log("rebuild_articles_only: no matching sites")
+        return 0
+
+    log(f"rebuild_articles_only: {len(targets)} site(s) -> {[t[0] for t in targets]}")
+    env = dict(os.environ, GITHUB_TOKEN=github_token)
+    ok_sites = fail_sites = 0
+    total_start = _time.time()
+
+    for stem, sid, site in targets:
+        log(f"\n{'='*62}\n{stem} ({site.get('domain','')})\n{'='*62}")
+        t0 = _time.time()
+        cmd = ["python3", str(script), github_token, "--only", sid or stem]
+        try:
+            proc = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                cwd=str(base_dir), text=True, bufsize=1, env=env,
+            )
+            for line in proc.stdout:
+                log(line.rstrip("\n"))
+            proc.wait()
+            dt = _time.time() - t0
+            if proc.returncode == 0:
+                ok_sites += 1
+                log(f"  -- {stem} done in {dt:.1f}s")
+            else:
+                fail_sites += 1
+                log(f"  !! {stem} exit={proc.returncode} after {dt:.1f}s")
+        except Exception as e:
+            fail_sites += 1
+            log(f"  !! {stem} crashed: {e}")
+            continue
+
+    total_dt = _time.time() - total_start
+    log(f"\n{'='*62}\nrebuild_articles_only: ok={ok_sites} fail={fail_sites} "
+        f"total={total_dt:.1f}s")
+    return ok_sites
+
+
 # MAIN
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -6135,7 +6293,10 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--rebuild-homepages", action="store_true")
+    parser.add_argument("--rebuild-articles", action="store_true")
     parser.add_argument("--gh-token", default="")
+    parser.add_argument("--only", default="",
+                        help="Comma-separated site stems (blank = all)")
     args, _ = parser.parse_known_args()
 
     if args.rebuild_homepages:
@@ -6143,5 +6304,11 @@ if __name__ == "__main__":
         if not token:
             raise SystemExit("--gh-token or GITHUB_TOKEN required")
         rebuild_homepages_only(github_token=token, log=print)
+    elif args.rebuild_articles:
+        token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
+        if not token:
+            raise SystemExit("--gh-token or GITHUB_TOKEN required")
+        only_list = [x.strip() for x in (args.only or "").split(",") if x.strip()] or None
+        rebuild_articles_only(github_token=token, log=print, only=only_list)
     else:
         run()
