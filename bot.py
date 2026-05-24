@@ -665,18 +665,18 @@ SITE_THEMES = {
         "heading_font":"Lora,Georgia,serif",
     },
     "sight-reading": {
-        "bg":"#0d0d0f","bg2":"#131317","bg3":"#1a1a20",
-        "text":"#e8e6df","text2":"#b8b6af",
-        "accent":"#c9a96e","accent2":"#b8965a",
-        "meta":"#7a7870","border":"#222228",
-        "font":"'Cormorant Garamond',serif",
-        "heading_font":"'Cormorant Garamond',serif",
+        "bg":"#08080b","bg2":"#111116","bg3":"#1a1a22",
+        "text":"#f1efe9","text2":"#c9c6bd",
+        "accent":"#f5b14d","accent2":"#e09a31",
+        "meta":"#857f72","border":"#26262f",
+        "font":"'Inter',system-ui,sans-serif",
+        "heading_font":"'Fraunces','Cormorant Garamond',Georgia,serif",
     },
     "dalmend-home": {
-        "bg":"#fefcf7","bg2":"#f0ece2","bg3":"#e8e4da",
-        "text":"#1c1814","text2":"#484038",
-        "accent":"#c8a47e","accent2":"#b8905a",
-        "meta":"#8c8070","border":"#ddd8cc",
+        "bg":"#0c0b0a","bg2":"#121110","bg3":"#1a1815",
+        "text":"#f3efe7","text2":"#cabfae",
+        "accent":"#c9a55c","accent2":"#e3c987",
+        "meta":"#8a8275","border":"rgba(243,239,231,.08)",
         "font":"'Cormorant Garamond',Georgia,serif",
         "heading_font":"'Cormorant Garamond',Georgia,serif",
     },
@@ -1149,57 +1149,57 @@ def _pexels_photo_id(url):
     return m.group(1) if m else url
 
 
-def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, sources=None, exclude_urls=None):
+def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, sources=None, exclude_urls=None, fallback_queries=None):
     """Fetch image from configured sources in order: pexels → unsplash → none.
     exclude_urls: set of already-used image URLs - will skip photos matching those IDs.
+    fallback_queries: list of broader queries to try if the primary is exhausted.
     """
     sources = sources or (["pexels", "unsplash"] if unsplash_key else ["pexels"])
     excluded_ids = {_pexels_photo_id(u) for u in (exclude_urls or set())} if exclude_urls else set()
 
+    # Build the query attempt list: primary first, then fallbacks. Each query
+    # gets up to 6 random pages of 20 photos = 120 candidates filtered against
+    # the dedup set before we move to the next fallback.
+    query_chain = [query] + [q for q in (fallback_queries or []) if q and q != query]
+
     for source in sources:
         if source == "pexels" and pexels_key:
-            try:
-                # Try up to 4 pages to find an unused photo
-                pages_tried = set()
-                for attempt in range(4):
-                    page = random.randint(1, 8)
-                    while page in pages_tried:
-                        page = random.randint(1, 8)
-                    pages_tried.add(page)
+            last_photos = []
+            for q in query_chain:
+                try:
+                    pages_tried = set()
+                    for attempt in range(6):
+                        page = random.randint(1, 15)
+                        while page in pages_tried and len(pages_tried) < 15:
+                            page = random.randint(1, 15)
+                        pages_tried.add(page)
 
-                    r = requests.get(
-                        "https://api.pexels.com/v1/search",
-                        headers={"Authorization": pexels_key},
-                        params={"query": query, "per_page": 20, "orientation": "landscape", "page": page},
-                        timeout=10
-                    )
-                    photos = r.json().get("photos", [])
-                    if not photos and page > 1:
                         r = requests.get(
                             "https://api.pexels.com/v1/search",
                             headers={"Authorization": pexels_key},
-                            params={"query": query, "per_page": 20, "orientation": "landscape", "page": 1},
-                            timeout=10
+                            params={"query": q, "per_page": 20, "orientation": "landscape", "page": page},
+                            timeout=10,
                         )
                         photos = r.json().get("photos", [])
+                        if photos:
+                            last_photos = photos
 
-                    # Filter out already-used photos
-                    fresh = [p for p in photos if _pexels_photo_id(p["src"]["large2x"]) not in excluded_ids]
-                    if fresh:
-                        photo = random.choice(fresh)
-                        return photo["src"]["large2x"], photo["photographer"]
-                    if photos and not excluded_ids:
-                        # No exclusion filter - just pick any
-                        photo = random.choice(photos)
-                        return photo["src"]["large2x"], photo["photographer"]
+                        # Filter out already-used photos
+                        fresh = [p for p in photos if _pexels_photo_id(p["src"]["large2x"]) not in excluded_ids]
+                        if fresh:
+                            photo = random.choice(fresh)
+                            return photo["src"]["large2x"], photo["photographer"]
+                        if photos and not excluded_ids:
+                            photo = random.choice(photos)
+                            return photo["src"]["large2x"], photo["photographer"]
+                except Exception as e:
+                    print(f"  Pexels fetch failed ('{q}'): {e}")
 
-                # All pages had duplicates - pick any from last fetch as last resort
-                if photos:
-                    photo = random.choice(photos)
-                    print(f"  Image dedup: no fresh photo found for '{query}', reusing best available")
-                    return photo["src"]["large2x"], photo["photographer"]
-            except Exception as e:
-                print(f"  Pexels fetch failed: {e}")
+            # All queries exhausted - last resort: pick any from last successful fetch.
+            if last_photos:
+                photo = random.choice(last_photos)
+                print(f"  Image dedup: every query exhausted for '{query}', reusing best available")
+                return photo["src"]["large2x"], photo["photographer"]
 
         elif source == "unsplash" and unsplash_key:
             try:
@@ -1439,6 +1439,71 @@ def _foot(domain, category, t, signup_url="", depth=0):
 </footer></body></html>"""
 
 
+# ── Siavash Sadighi byline gate ─────────────────────────────────────────────
+# Real-name author. Only allowed on a curated subset of marketing / AI /
+# trading / fintech sites, and only on the most important articles in those
+# sites. _is_siavash_eligible() encodes the importance signals.
+SIAVASH_NAME = "Siavash Sadighi"
+SIAVASH_ALLOWED_SITES = {
+    "ai-marketing", "onlinebiz-pro", "ecommerce-edge",
+    "trading-tech", "cryptopulse", "passive-wealth",
+}
+_SIAVASH_IMPORTANCE_KEYWORDS = (
+    "guide", "playbook", "deep dive", "complete", "framework",
+    "case study", "benchmark", "ai", "algorithm", "trading",
+    "model", "tested",
+)
+# Share of qualifying articles that should actually carry the Siavash byline
+# so it stays rare and meaningful even within the allowed sites.
+_SIAVASH_ASSIGNMENT_RATE = 0.30
+
+
+def _is_siavash_eligible(site, article):
+    """True only when site is in SIAVASH_ALLOWED_SITES AND article looks important."""
+    if not site or not article:
+        return False
+    if site.get("id") not in SIAVASH_ALLOWED_SITES:
+        return False
+    if article.get("featured") is True:
+        return True
+    slug  = (article.get("slug") or "").lower()
+    title = (article.get("title") or "").lower()
+    blob  = slug + " " + title
+    for kw in _SIAVASH_IMPORTANCE_KEYWORDS:
+        if kw in blob:
+            return True
+    # Long-form signal.
+    wc = article.get("word_count") or 0
+    try:
+        if int(wc) > 1400:
+            return True
+    except Exception:
+        pass
+    # Top-3 most recent for this site (passed in via article["_recent_rank"]
+    # when the caller has the site article list; otherwise skipped).
+    rr = article.get("_recent_rank")
+    try:
+        if rr is not None and int(rr) <= 3:
+            return True
+    except Exception:
+        pass
+    return False
+
+
+def _pick_non_siavash_author(site):
+    """Return an author from `site.author_names` that is not Siavash Sadighi.
+    Falls back to default_author / category-based name. Never returns Siavash."""
+    names = [n for n in (site.get("author_names") or []) if n and n != SIAVASH_NAME]
+    if names:
+        return random.choice(names) if site.get("use_random_author") else names[0]
+    da = (site.get("default_author") or "").strip()
+    if da and da != SIAVASH_NAME:
+        return da
+    # Fall back through the normal helper, then guard.
+    fb = get_author_name(site)
+    return fb if fb != SIAVASH_NAME else "Editorial Team"
+
+
 def _resolve_author(site, article=None):
     """Single source of truth for the author surface on every article.
 
@@ -1447,10 +1512,10 @@ def _resolve_author(site, article=None):
       2. site["default_author"] or site["author"],
       3. get_author_name(site) (legacy fallback into author_names / persona).
 
-    Title comes from site["author_title"] or the second comma-clause of the
-    site persona. Bio comes from site["author_bio"] (preferred), then a short
-    synthesis from persona / tagline / category. The returned dict is the only
-    place article builders should pull this data from."""
+    Additional Siavash gate: if the resolved name is Siavash Sadighi but the
+    article is not eligible for that byline (wrong site or not important),
+    swap him out for a different author. Conversely, on eligible sites with a
+    generic byline, ~30% of important articles may be promoted to Siavash."""
     article = article or {}
 
     name = (article.get("author") or "").strip()
@@ -1458,6 +1523,29 @@ def _resolve_author(site, article=None):
         name = (site.get("default_author") or site.get("author") or "").strip()
     if not name:
         name = get_author_name(site)
+
+    # ── Siavash gate ─────────────────────────────────────────────────────
+    eligible = _is_siavash_eligible(site, article)
+    if name == SIAVASH_NAME and not eligible:
+        name = _pick_non_siavash_author(site)
+        # Persist downgrade onto the article dict so rebuilder is idempotent.
+        if isinstance(article, dict):
+            article["author"] = name
+            article["_siavash_eligible"] = False
+    elif name != SIAVASH_NAME and eligible:
+        # Promote to Siavash on ~30% of qualifying articles, deterministically
+        # per slug so repeated rebuilds do not flip the byline on every run.
+        slug = (article.get("slug") or article.get("title") or "")
+        if slug:
+            import hashlib as _hl
+            h = int(_hl.md5(slug.encode("utf-8")).hexdigest(), 16)
+            if (h % 100) < int(_SIAVASH_ASSIGNMENT_RATE * 100):
+                name = SIAVASH_NAME
+                if isinstance(article, dict):
+                    article["author"] = name
+                    article["_siavash_eligible"] = True
+    if isinstance(article, dict) and "_siavash_eligible" not in article:
+        article["_siavash_eligible"] = bool(name == SIAVASH_NAME and eligible)
 
     title = (site.get("author_title") or "").strip()
     if not title:
@@ -1849,15 +1937,683 @@ _AVATAR_COLORS = [
     "#10b981","#f97316","#ec4899","#6366f1","#14b8a6",
 ]
 
+# ─── Commenter persona pool ─────────────────────────────────────────────────
+# Each persona has: name, age, life-context, mannerisms, mistake patterns,
+# vocabulary register. Used to make comments read like real adult humans
+# rather than generic AI-generated filler.
+COMMENTER_PROFILES = [
+    {"name": "kira_m", "age": 34, "context": "project manager in Munich",
+     "mannerisms": "terse, occasionally drops articles ('Project went over budget'), short paragraphs",
+     "mistakes": "sometimes omits 'the' or 'a' (German-English transfer)",
+     "register": "professional, dry"},
+    {"name": "Daniel R.", "age": 52, "context": "retired engineer in Ohio",
+     "mannerisms": "careful and detailed, occasionally rambles, careful with semicolons",
+     "mistakes": "uses 'I.' instead of 'I' once per comment (autocorrect quirk)",
+     "register": "formal, technical"},
+    {"name": "j_perez88", "age": 28, "context": "freelance designer in Buenos Aires",
+     "mannerisms": "casual lowercase, drops a wry side-note in parentheses",
+     "mistakes": "rare ESL slip like 'I been doing this for years' or 'more better'",
+     "register": "casual, informal"},
+    {"name": "Margaret K.", "age": 67, "context": "former primary school teacher",
+     "mannerisms": "uses 'one' instead of 'you' sometimes, very few contractions",
+     "mistakes": "none, occasionally overly proper",
+     "register": "formal but warm"},
+    {"name": "tomm", "age": 24, "context": "software dev in Austin",
+     "mannerisms": "types fast, often replies with a counter-question",
+     "mistakes": "occasionally repeats a letter ('definnitely', 'reallly')",
+     "register": "casual, fast"},
+    {"name": "Asha S.", "age": 39, "context": "hospital pharmacist in Toronto",
+     "mannerisms": "precise about numbers and dosages, hedges with 'in my experience' or 'anecdotally'",
+     "mistakes": "none, but never makes absolute claims",
+     "register": "precise, hedged"},
+    {"name": "freddie.", "age": 41, "context": "ex-broker, now consults",
+     "mannerisms": "dry, sarcastic, drops an industry insider remark",
+     "mistakes": "none, terse",
+     "register": "dry, knowing"},
+    {"name": "Linnea_O", "age": 31, "context": "marathon runner and accountant in Stockholm",
+     "mannerisms": "uses time and distance comparisons ('took me 6 weeks to dial this in')",
+     "mistakes": "occasionally Swedish-English word order",
+     "register": "measured, analytical"},
+    {"name": "Pat", "age": 58, "context": "contractor in rural Pennsylvania",
+     "mannerisms": "blunt, short sentences, sentence fragments",
+     "mistakes": "occasional misspelling of long words ('definately', 'tommorow', 'seperate')",
+     "register": "blunt, plain"},
+    {"name": "M. Okafor", "age": 45, "context": "professor of public health",
+     "mannerisms": "academic-style, mentions 'the literature on this', cites a year",
+     "mistakes": "none",
+     "register": "academic, measured"},
+    {"name": "Sven B.", "age": 49, "context": "logistics manager in Hamburg",
+     "mannerisms": "uses operational metaphors ('throughput', 'bottleneck')",
+     "mistakes": "occasional German-English transfer ('since two years' for 'for two years')",
+     "register": "operational, direct"},
+    {"name": "rosalia.t", "age": 26, "context": "barista and art student in Lisbon",
+     "mannerisms": "casual lowercase, sensory descriptions, occasional one-line replies",
+     "mistakes": "drops commas, sometimes 'i' instead of 'I'",
+     "register": "casual, expressive"},
+    {"name": "Walter H.", "age": 72, "context": "retired pastor in Tennessee",
+     "mannerisms": "warm anecdotes, references decades of experience",
+     "mistakes": "none, slightly old-fashioned phrasing ('reckon', 'a fair piece')",
+     "register": "warm, reflective"},
+    {"name": "Priya N.", "age": 36, "context": "data analyst in Bengaluru",
+     "mannerisms": "structured comments, sometimes numbered points (1. 2.)",
+     "mistakes": "occasional Indian-English idiom ('do the needful', 'kindly')",
+     "register": "structured, polite"},
+    {"name": "g_haas", "age": 29, "context": "PhD candidate in chemistry in Zurich",
+     "mannerisms": "qualifies statements with 'though' and 'however', technical specifics",
+     "mistakes": "none, but verbose",
+     "register": "academic, qualified"},
+    {"name": "Mireille D.", "age": 54, "context": "translator in Lyon",
+     "mannerisms": "careful word choice, occasionally uses a French word in italics",
+     "mistakes": "rare French-English transfer ('I have 54 years' once, then corrects)",
+     "register": "careful, literary"},
+    {"name": "BigMike77", "age": 47, "context": "truck driver in Alberta",
+     "mannerisms": "stories from the road, hours and miles references",
+     "mistakes": "drops apostrophes ('dont', 'cant'), occasional misspelling",
+     "register": "blue collar, direct"},
+    {"name": "Yuki T.", "age": 33, "context": "UX researcher in Osaka",
+     "mannerisms": "observational, frames things as questions of behaviour",
+     "mistakes": "occasional Japanese-English article slips",
+     "register": "observational, gentle"},
+    {"name": "Hank", "age": 61, "context": "diner cook in Wisconsin",
+     "mannerisms": "deeply practical, no abstract talk, 'thirty years on the line'",
+     "mistakes": "sentence fragments, occasional typo",
+     "register": "plain, no-nonsense"},
+    {"name": "Catalina R.", "age": 38, "context": "veterinarian in Bogota",
+     "mannerisms": "animal anecdotes, careful with dosing and timing",
+     "mistakes": "rare Spanish-English transfer",
+     "register": "warm, professional"},
+    {"name": "neeve.", "age": 23, "context": "comp sci undergrad in Dublin",
+     "mannerisms": "casual lowercase, drops 'lol' or 'tbh' very rarely, opinionated",
+     "mistakes": "Irish-English quirks, occasional 'youse'",
+     "register": "casual, sharp"},
+    {"name": "Boris L.", "age": 56, "context": "former Soviet-trained mathematician now in Boston",
+     "mannerisms": "precise, formal, occasional dry humor",
+     "mistakes": "drops articles ('Is good point. Calculation depends on...')",
+     "register": "formal, precise"},
+    {"name": "Devi P.", "age": 42, "context": "high school principal in Chennai",
+     "mannerisms": "patient explanations, uses 'kindly', references students",
+     "mistakes": "Indian-English idioms",
+     "register": "patient, formal"},
+    {"name": "rex_77", "age": 35, "context": "auto mechanic in Phoenix",
+     "mannerisms": "tool and engine analogies, blunt",
+     "mistakes": "occasional misspelling, drops commas",
+     "register": "blunt, practical"},
+    {"name": "Eleni K.", "age": 44, "context": "midwife in Athens",
+     "mannerisms": "warm, calm, specific numbers (years, births, hours)",
+     "mistakes": "rare Greek-English transfer",
+     "register": "calm, warm"},
+    {"name": "Theo W.", "age": 30, "context": "junior architect in Melbourne",
+     "mannerisms": "visual descriptions, references projects by location",
+     "mistakes": "occasional Australianisms ('reckon', 'heaps')",
+     "register": "casual professional"},
+    {"name": "Hannelore G.", "age": 68, "context": "retired librarian in Vienna",
+     "mannerisms": "references books and authors, formal sentence structure",
+     "mistakes": "none, occasionally old-fashioned",
+     "register": "literary, formal"},
+    {"name": "Marcus O.", "age": 50, "context": "high school football coach in Georgia",
+     "mannerisms": "team and practice metaphors, calls people 'folks'",
+     "mistakes": "occasional 'gonna', 'wanna'",
+     "register": "warm, coaching"},
+    {"name": "li.wen", "age": 27, "context": "biotech research assistant in Singapore",
+     "mannerisms": "cautious phrasing, mentions specific assays or instruments",
+     "mistakes": "occasional Singlish particle drop",
+     "register": "cautious, technical"},
+    {"name": "Bea", "age": 71, "context": "retired nurse in Cornwall",
+     "mannerisms": "calls everyone 'love' once, decades of ward stories",
+     "mistakes": "none, occasional 'me' for 'my' ('me daughter')",
+     "register": "warm, plainspoken"},
+    # Extended pool (90+ additions) - varied cultures, ages, professions.
+    {"name": "Adaeze O.", "age": 32, "context": "software architect of Igbo background in Lagos",
+     "mannerisms": "structured, sometimes lists trade-offs explicitly",
+     "mistakes": "occasional Nigerian-English idiom ('it is now that I understand')",
+     "register": "structured, warm"},
+    {"name": "chenglei", "age": 26, "context": "graphic designer in Shanghai",
+     "mannerisms": "casual lowercase, short sensory observations",
+     "mistakes": "drops articles, occasional Mandarin-English transfer",
+     "register": "casual, visual"},
+    {"name": "Kenji A.", "age": 47, "context": "industrial robotics engineer in Nagoya",
+     "mannerisms": "precise, mentions tolerances and cycle times",
+     "mistakes": "occasional Japanese particle leakage, conservative phrasing",
+     "register": "precise, reserved"},
+    {"name": "Fatima Al-Hassan", "age": 38, "context": "Lebanese civil engineer in Dubai",
+     "mannerisms": "site-stories, references heat and crew sizes",
+     "mistakes": "rare Arabic-English transfer",
+     "register": "warm, technical"},
+    {"name": "thanh.n", "age": 24, "context": "frontend dev in Ho Chi Minh City",
+     "mannerisms": "casual lowercase, one-line replies sometimes",
+     "mistakes": "Vietnamese-English article omissions",
+     "register": "casual, sharp"},
+    {"name": "Cevdet K.", "age": 55, "context": "math teacher in Istanbul",
+     "mannerisms": "uses gentle metaphors and short proofs",
+     "mistakes": "occasional Turkish-English word order",
+     "register": "patient, formal"},
+    {"name": "Pernilla L.", "age": 41, "context": "midwife in Goteborg",
+     "mannerisms": "calm, measured, mentions hours of shifts",
+     "mistakes": "occasional Swedish-English transfer",
+     "register": "calm, warm"},
+    {"name": "Aristos P.", "age": 63, "context": "retired ferry captain in Crete",
+     "mannerisms": "weather references, sea idioms, dry one-liners",
+     "mistakes": "Greek-English idiom slips",
+     "register": "salty, plain"},
+    {"name": "Reza H.", "age": 36, "context": "Persian-Canadian dentist in Vancouver",
+     "mannerisms": "polite hedging, occasional clinical specifics",
+     "mistakes": "rare Persian-English idiom ('on my eyes')",
+     "register": "polite, precise"},
+    {"name": "minji_k", "age": 22, "context": "Korean undergrad studying biology in Seoul",
+     "mannerisms": "casual lowercase, ends statements with a question",
+     "mistakes": "Korean-English article slips, occasional 'isnt it?'",
+     "register": "casual, curious"},
+    {"name": "Anand V.", "age": 49, "context": "telecom engineer in Pune",
+     "mannerisms": "structured, numbered points, references rollouts",
+     "mistakes": "Indian-English idioms ('do kindly note')",
+     "register": "polite, structured"},
+    {"name": "Maciej W.", "age": 44, "context": "warehouse logistics lead in Wroclaw",
+     "mannerisms": "blunt, operational, references pallets and shifts",
+     "mistakes": "Polish-English word order, drops articles",
+     "register": "blunt, direct"},
+    {"name": "Helga F.", "age": 73, "context": "retired botany professor in Heidelberg",
+     "mannerisms": "thorough, references specific plant genera, long sentences",
+     "mistakes": "none, occasional German loanword",
+     "register": "academic, warm"},
+    {"name": "Tito B.", "age": 33, "context": "Brazilian futsal coach in Sao Paulo",
+     "mannerisms": "energetic, training drill references",
+     "mistakes": "Portuguese-English transfer ('I have 33 years')",
+     "register": "energetic, coaching"},
+    {"name": "lyra_w", "age": 28, "context": "indie musician and bartender in Brooklyn",
+     "mannerisms": "casual lowercase, sensory and gig stories",
+     "mistakes": "drops commas, very few caps",
+     "register": "casual, expressive"},
+    {"name": "Helmut R.", "age": 66, "context": "retired Bavarian winemaker",
+     "mannerisms": "references vintages, soil, weather years",
+     "mistakes": "occasional German-English idiom",
+     "register": "warm, anecdotal"},
+    {"name": "Yusra J.", "age": 30, "context": "Jordanian-American ICU nurse in Detroit",
+     "mannerisms": "calm under pressure references, careful with claims",
+     "mistakes": "rare Arabic-English transfer",
+     "register": "calm, hedged"},
+    {"name": "Kazimierz B.", "age": 58, "context": "Polish train conductor in Krakow",
+     "mannerisms": "punctual references, schedule jokes",
+     "mistakes": "Polish-English word order",
+     "register": "dry, plain"},
+    {"name": "Aleksei T.", "age": 51, "context": "Russian-American cybersecurity consultant in Seattle",
+     "mannerisms": "terse, mentions threat models",
+     "mistakes": "drops articles ('Is correct point')",
+     "register": "terse, technical"},
+    {"name": "Lana C.", "age": 39, "context": "wedding photographer in Athens, Georgia",
+     "mannerisms": "warm, references light and weather",
+     "mistakes": "occasional southern idiom",
+     "register": "warm, visual"},
+    {"name": "Babatunde A.", "age": 46, "context": "civil engineer of Yoruba background in Abuja",
+     "mannerisms": "thorough, references infrastructure projects",
+     "mistakes": "Nigerian-English idioms",
+     "register": "thorough, warm"},
+    {"name": "claude_pj", "age": 27, "context": "French junior data engineer in Nantes",
+     "mannerisms": "casual lowercase, occasional French word in italics",
+     "mistakes": "French-English transfer ('I have 27 years', occasional false friend)",
+     "register": "casual, ironic"},
+    {"name": "Saoirse M.", "age": 34, "context": "Irish veterinarian in Galway",
+     "mannerisms": "warm, animal stories, gentle hedging",
+     "mistakes": "Irish-English idioms",
+     "register": "warm, professional"},
+    {"name": "Quentin H.", "age": 29, "context": "British-Vietnamese game designer in Manchester",
+     "mannerisms": "playful, mechanics references, dry irony",
+     "mistakes": "none, occasional Britishism ('keen on')",
+     "register": "playful, sharp"},
+    {"name": "Inara P.", "age": 35, "context": "Brazilian climate scientist in Sao Paulo",
+     "mannerisms": "cites datasets, hedges with confidence intervals",
+     "mistakes": "rare Portuguese-English transfer",
+     "register": "scientific, hedged"},
+    {"name": "Dimitri V.", "age": 60, "context": "Greek-Australian carpenter in Sydney",
+     "mannerisms": "tool and timber references, blunt",
+     "mistakes": "Greek-English idiom slips, occasional misspelling",
+     "register": "blunt, practical"},
+    {"name": "wenwen.x", "age": 23, "context": "Mandarin-speaking pre-med student in Toronto",
+     "mannerisms": "casual lowercase, hedges medical claims",
+     "mistakes": "drops articles, occasional Mandarin-English transfer",
+     "register": "casual, careful"},
+    {"name": "Sigurd O.", "age": 54, "context": "Norwegian shipyard project manager in Bergen",
+     "mannerisms": "schedule and tonnage references, dry humour",
+     "mistakes": "Norwegian-English transfer",
+     "register": "dry, operational"},
+    {"name": "Halima B.", "age": 42, "context": "Sudanese-Canadian midwife in Calgary",
+     "mannerisms": "warm anecdotes, specific labour-room numbers",
+     "mistakes": "rare Arabic-English transfer",
+     "register": "warm, calm"},
+    {"name": "Tomasz J.", "age": 37, "context": "Polish ophthalmologist in Warsaw",
+     "mannerisms": "clinical specifics, hedges with 'in the literature'",
+     "mistakes": "Polish-English word order",
+     "register": "clinical, hedged"},
+    {"name": "PJ", "age": 19, "context": "American college freshman, undeclared major",
+     "mannerisms": "casual lowercase, very short comments, occasional 'tbh'",
+     "mistakes": "drops apostrophes, runs sentences together",
+     "register": "casual, brief"},
+    {"name": "Nguyet T.", "age": 31, "context": "Vietnamese-American UX designer in San Jose",
+     "mannerisms": "observational, references user studies",
+     "mistakes": "Vietnamese-English article slips",
+     "register": "observational, gentle"},
+    {"name": "Goran K.", "age": 48, "context": "Serbian basketball coach in Belgrade",
+     "mannerisms": "drill references, blunt corrections",
+     "mistakes": "Serbian-English word order",
+     "register": "blunt, coaching"},
+    {"name": "Estefania R.", "age": 29, "context": "Mexican commodity trader in Mexico City",
+     "mannerisms": "numbers-focused, references basis points and spreads",
+     "mistakes": "rare Spanish-English transfer",
+     "register": "numbers, sharp"},
+    {"name": "Kofi M.", "age": 33, "context": "Ghanaian software engineer in Accra",
+     "mannerisms": "structured, mentions trade-offs",
+     "mistakes": "Ghanaian-English idioms",
+     "register": "structured, warm"},
+    {"name": "Adelina P.", "age": 45, "context": "Romanian translator in Bucharest",
+     "mannerisms": "careful word choice, asks clarifying questions",
+     "mistakes": "Romanian-English transfer (false friends)",
+     "register": "careful, literary"},
+    {"name": "Tariq S.", "age": 52, "context": "Pakistani-British accountant in Birmingham",
+     "mannerisms": "numbers-focused, structured, polite",
+     "mistakes": "Urdu-English idiom slips",
+     "register": "polite, structured"},
+    {"name": "Marisol C.", "age": 40, "context": "Filipina nurse in Riyadh",
+     "mannerisms": "warm anecdotes, hospital shift references",
+     "mistakes": "Tagalog-English idioms ('po' habit slips)",
+     "register": "warm, hedged"},
+    {"name": "Ondrej L.", "age": 36, "context": "Czech beer brewer in Plzen",
+     "mannerisms": "process references, malt and hops specifics",
+     "mistakes": "Czech-English word order",
+     "register": "warm, technical"},
+    {"name": "Beatrix S.", "age": 64, "context": "Hungarian retired math professor in Budapest",
+     "mannerisms": "academic, careful with quantifiers",
+     "mistakes": "Hungarian-English transfer (verb-final habits)",
+     "register": "academic, dry"},
+    {"name": "harper_lee", "age": 25, "context": "American social worker in Cleveland",
+     "mannerisms": "casual, personal anecdote teller, hedged claims",
+     "mistakes": "drops commas occasionally",
+     "register": "warm, anecdotal"},
+    {"name": "Ravi Iyer", "age": 53, "context": "Indian electrical engineer in Bengaluru",
+     "mannerisms": "structured, numbered points, polite hedging",
+     "mistakes": "Indian-English idioms",
+     "register": "structured, polite"},
+    {"name": "wei.lin", "age": 30, "context": "Taiwanese cloud engineer in Taipei",
+     "mannerisms": "lowercase, terse, references uptime",
+     "mistakes": "drops articles, Mandarin-English transfer",
+     "register": "terse, technical"},
+    {"name": "Olu Adesanya", "age": 41, "context": "Nigerian advertising creative in Lagos",
+     "mannerisms": "punchy, brand and campaign references",
+     "mistakes": "Nigerian-English idioms",
+     "register": "punchy, creative"},
+    {"name": "Veronique B.", "age": 50, "context": "French-Canadian high school principal in Montreal",
+     "mannerisms": "patient, references staff and students",
+     "mistakes": "French-English transfer",
+     "register": "patient, formal"},
+    {"name": "Maro A.", "age": 28, "context": "Iranian-American product manager in San Francisco",
+     "mannerisms": "structured, references metrics",
+     "mistakes": "rare Persian-English idiom",
+     "register": "structured, polished"},
+    {"name": "Ingrid S.", "age": 57, "context": "German tax accountant in Frankfurt",
+     "mannerisms": "precise, dry, mentions sections of code",
+     "mistakes": "occasional German-English transfer",
+     "register": "precise, dry"},
+    {"name": "Babo", "age": 65, "context": "Filipino retired mariner in Manila",
+     "mannerisms": "sea stories, warm tone",
+     "mistakes": "Tagalog-English transfer, occasional typo",
+     "register": "warm, plain"},
+    {"name": "Hyo-jin P.", "age": 38, "context": "Korean-American chef in Los Angeles",
+     "mannerisms": "ingredient and technique references",
+     "mistakes": "Korean-English article slips",
+     "register": "warm, specific"},
+    {"name": "Niraj K.", "age": 26, "context": "Nepali-British junior doctor in Leeds",
+     "mannerisms": "hedged clinical observations",
+     "mistakes": "occasional Nepali-English transfer",
+     "register": "hedged, warm"},
+    {"name": "Stavros L.", "age": 59, "context": "Greek olive farmer in Kalamata",
+     "mannerisms": "weather and harvest stories, blunt",
+     "mistakes": "Greek-English transfer",
+     "register": "blunt, warm"},
+    {"name": "lulu_b", "age": 21, "context": "British art student in Bristol",
+     "mannerisms": "casual lowercase, sensory observations",
+     "mistakes": "drops commas, very few caps",
+     "register": "casual, sensory"},
+    {"name": "Owain T.", "age": 47, "context": "Welsh structural engineer in Cardiff",
+     "mannerisms": "load and span references, dry humour",
+     "mistakes": "occasional Welsh-English idiom",
+     "register": "dry, technical"},
+    {"name": "Hiroko N.", "age": 56, "context": "Japanese textile designer in Kyoto",
+     "mannerisms": "sensory descriptions, references weave and dye",
+     "mistakes": "Japanese-English article slips",
+     "register": "sensory, formal"},
+    {"name": "Caio M.", "age": 32, "context": "Brazilian back-end developer in Belo Horizonte",
+     "mannerisms": "structured, references latencies",
+     "mistakes": "Portuguese-English transfer",
+     "register": "structured, casual"},
+    {"name": "Lior B.", "age": 39, "context": "Israeli mobile developer in Tel Aviv",
+     "mannerisms": "blunt, sharp counter-questions",
+     "mistakes": "Hebrew-English transfer",
+     "register": "blunt, sharp"},
+    {"name": "Constance F.", "age": 70, "context": "British-Caribbean retired civil servant in London",
+     "mannerisms": "warm anecdotes, formal phrasing",
+     "mistakes": "none, occasional old-fashioned phrasing",
+     "register": "formal, warm"},
+    {"name": "Bao L.", "age": 44, "context": "Vietnamese restaurateur in Houston",
+     "mannerisms": "ingredient and service stories",
+     "mistakes": "Vietnamese-English article slips",
+     "register": "warm, anecdotal"},
+    {"name": "Margot V.", "age": 36, "context": "Belgian patent lawyer in Brussels",
+     "mannerisms": "precise, references claims and prior art",
+     "mistakes": "rare French-English transfer",
+     "register": "precise, formal"},
+    {"name": "Yusuke H.", "age": 31, "context": "Japanese mechanical engineer in Detroit",
+     "mannerisms": "tolerance and torque references, polite",
+     "mistakes": "Japanese-English article slips",
+     "register": "polite, technical"},
+    {"name": "Aurora K.", "age": 27, "context": "Finnish backend engineer in Helsinki",
+     "mannerisms": "terse, dry, occasional sauna joke",
+     "mistakes": "drops articles, Finnish-English transfer",
+     "register": "terse, dry"},
+    {"name": "Bhavana R.", "age": 50, "context": "Indian classical dance teacher in Pune",
+     "mannerisms": "warm, references practice hours, hedged claims",
+     "mistakes": "Indian-English idioms",
+     "register": "warm, structured"},
+    {"name": "Ezekiel A.", "age": 67, "context": "Ghanaian-American pastor in Atlanta",
+     "mannerisms": "warm stories, old-fashioned phrasing",
+     "mistakes": "none, occasional Ghanaian-English idiom",
+     "register": "warm, reflective"},
+    {"name": "Charlene W.", "age": 53, "context": "African American radiology tech in Houston",
+     "mannerisms": "warm, specific shift numbers, dry one-liners",
+     "mistakes": "occasional Southern idiom",
+     "register": "warm, dry"},
+    {"name": "Tomek O.", "age": 22, "context": "Polish gaming streamer in Lodz",
+     "mannerisms": "casual lowercase, gaming meta references",
+     "mistakes": "Polish-English transfer, drops commas",
+     "register": "casual, sharp"},
+    {"name": "Lukas E.", "age": 42, "context": "Austrian alpine guide near Innsbruck",
+     "mannerisms": "weather and route references, dry warnings",
+     "mistakes": "occasional German-English idiom",
+     "register": "dry, careful"},
+    {"name": "Henri D.", "age": 38, "context": "Haitian-Canadian data scientist in Ottawa",
+     "mannerisms": "structured, hedged with sample sizes",
+     "mistakes": "French-Creole-English transfer rarely",
+     "register": "structured, hedged"},
+    {"name": "Sabine M.", "age": 61, "context": "Swiss-German watchmaker in Geneva",
+     "mannerisms": "movement and tolerance specifics, terse",
+     "mistakes": "occasional German-English transfer",
+     "register": "terse, expert"},
+    {"name": "Adaora N.", "age": 25, "context": "Nigerian fashion designer in Lagos (Igbo background)",
+     "mannerisms": "visual references, fabric and silhouette specifics",
+     "mistakes": "Nigerian-English idioms",
+     "register": "visual, warm"},
+    {"name": "Pawel B.", "age": 49, "context": "Polish carpenter in Chicago",
+     "mannerisms": "tool and grain references, blunt",
+     "mistakes": "Polish-English word order, drops articles",
+     "register": "blunt, practical"},
+    {"name": "Hema R.", "age": 56, "context": "Indian primary school principal in Hyderabad",
+     "mannerisms": "patient, references curricula",
+     "mistakes": "Indian-English idioms",
+     "register": "patient, formal"},
+    {"name": "leo.cabrera", "age": 33, "context": "Argentine football statistician in Cordoba",
+     "mannerisms": "xG and possession references, dry corrections",
+     "mistakes": "Spanish-English transfer",
+     "register": "numbers, dry"},
+    {"name": "Adetokunbo Y.", "age": 51, "context": "Yoruba-Nigerian insurance broker in Lagos",
+     "mannerisms": "underwriting references, polite hedging",
+     "mistakes": "Nigerian-English idioms",
+     "register": "polite, careful"},
+    {"name": "Bjorn A.", "age": 45, "context": "Swedish-American Lutheran pastor in Minneapolis",
+     "mannerisms": "warm sermons-y phrasing, anecdotes",
+     "mistakes": "none, occasional Scandinavian phrasing",
+     "register": "warm, reflective"},
+    {"name": "Sarit B.", "age": 29, "context": "Thai-American hospitality manager in Las Vegas",
+     "mannerisms": "service stories, hedged claims",
+     "mistakes": "Thai-English article slips",
+     "register": "warm, polite"},
+    {"name": "Itzel V.", "age": 34, "context": "Mexican-American behavioural therapist in Phoenix",
+     "mannerisms": "hedged, patient anecdotes",
+     "mistakes": "Spanish-English transfer rarely",
+     "register": "hedged, warm"},
+    {"name": "Zofia W.", "age": 68, "context": "Polish retired symphony violinist in Warsaw",
+     "mannerisms": "music references, old-fashioned phrasing",
+     "mistakes": "Polish-English transfer",
+     "register": "literary, warm"},
+    {"name": "milad_t", "age": 26, "context": "Iranian-Australian DevOps engineer in Melbourne",
+     "mannerisms": "lowercase, terse, references SLOs",
+     "mistakes": "Persian-English transfer rarely",
+     "register": "terse, technical"},
+    {"name": "Kai N.", "age": 30, "context": "German-American physiotherapist in Boulder",
+     "mannerisms": "structured, biomechanics references",
+     "mistakes": "occasional German-English idiom",
+     "register": "structured, warm"},
+    {"name": "Lethabo D.", "age": 37, "context": "South African behavioural economist in Cape Town",
+     "mannerisms": "structured, references field studies",
+     "mistakes": "rare South African English idiom",
+     "register": "structured, careful"},
+    {"name": "Yana G.", "age": 23, "context": "Ukrainian-American grad student in Boston",
+     "mannerisms": "lowercase, sharp counter-questions",
+     "mistakes": "drops articles, Slavic-English transfer",
+     "register": "sharp, casual"},
+    {"name": "Fritz H.", "age": 76, "context": "German retired locomotive engineer in Stuttgart",
+     "mannerisms": "schedule and signal stories, formal",
+     "mistakes": "occasional German-English transfer",
+     "register": "formal, anecdotal"},
+    {"name": "Tariq B.", "age": 43, "context": "Moroccan-American small bakery owner in New Jersey",
+     "mannerisms": "ingredient and crowd references",
+     "mistakes": "Arabic-French-English transfer",
+     "register": "warm, anecdotal"},
+    {"name": "May L.", "age": 35, "context": "Burmese-Singaporean elementary teacher in Singapore",
+     "mannerisms": "patient classroom references",
+     "mistakes": "Singlish particle drop occasionally",
+     "register": "patient, warm"},
+    {"name": "Olek S.", "age": 31, "context": "Polish parkour coach in Krakow",
+     "mannerisms": "movement and joint specifics, blunt",
+     "mistakes": "Polish-English transfer",
+     "register": "blunt, energetic"},
+    {"name": "Ricarda P.", "age": 39, "context": "German cognitive scientist in Berlin",
+     "mannerisms": "qualifies, mentions sample sizes, cites year",
+     "mistakes": "occasional German-English idiom",
+     "register": "academic, hedged"},
+    {"name": "Salim K.", "age": 60, "context": "Egyptian retired electrical engineer in Cairo",
+     "mannerisms": "formal, references grid faults of past decades",
+     "mistakes": "Arabic-English transfer",
+     "register": "formal, anecdotal"},
+    {"name": "claire.q", "age": 28, "context": "French-American copywriter in Brooklyn",
+     "mannerisms": "lowercase, ironic, copy hooks references",
+     "mistakes": "French-English transfer",
+     "register": "ironic, sharp"},
+    {"name": "Magdalena C.", "age": 46, "context": "Polish-American oncology researcher in Pittsburgh",
+     "mannerisms": "hedged with confidence intervals, cites studies",
+     "mistakes": "Polish-English transfer",
+     "register": "scientific, hedged"},
+    {"name": "Toomas K.", "age": 52, "context": "Estonian backend engineer in Tallinn",
+     "mannerisms": "terse, dry, references e-government tooling",
+     "mistakes": "drops articles, Estonian-English transfer",
+     "register": "terse, dry"},
+    {"name": "Aoife B.", "age": 33, "context": "Irish climate journalist in Cork",
+     "mannerisms": "questions-asker, references reports by year",
+     "mistakes": "Irish-English idioms",
+     "register": "curious, structured"},
+    {"name": "Theodoros M.", "age": 42, "context": "Greek civil engineer in Thessaloniki",
+     "mannerisms": "load-span specifics, dry humour",
+     "mistakes": "Greek-English idiom slips",
+     "register": "dry, technical"},
+    {"name": "Karina V.", "age": 36, "context": "Russian-American mid-stage VC analyst in NYC",
+     "mannerisms": "numbers-focused, polite but blunt",
+     "mistakes": "drops articles ('Is interesting take')",
+     "register": "numbers, blunt"},
+    {"name": "Hugo P.", "age": 58, "context": "Portuguese-American retired civil servant in Newark",
+     "mannerisms": "warm anecdotes, formal phrasing",
+     "mistakes": "Portuguese-English transfer",
+     "register": "warm, formal"},
+    {"name": "Wilmer Z.", "age": 24, "context": "Honduran-American line cook in Houston",
+     "mannerisms": "kitchen pace stories, blunt",
+     "mistakes": "Spanish-English transfer, drops commas",
+     "register": "blunt, plain"},
+    {"name": "Olivier R.", "age": 48, "context": "French sommelier in Bordeaux",
+     "mannerisms": "vintage and terroir references, careful word choice",
+     "mistakes": "French-English transfer (false friends)",
+     "register": "careful, literary"},
+    {"name": "Nadia F.", "age": 41, "context": "Algerian-French data privacy consultant in Paris",
+     "mannerisms": "structured, references regulations by article number",
+     "mistakes": "rare French-Arabic-English transfer",
+     "register": "structured, polite"},
+    {"name": "Sebastien O.", "age": 54, "context": "French-Canadian forestry manager in Quebec",
+     "mannerisms": "weather and species references, dry",
+     "mistakes": "French-English transfer",
+     "register": "dry, technical"},
+    {"name": "Vasiliki D.", "age": 62, "context": "Greek retired schoolteacher in Patras",
+     "mannerisms": "warm, references decades of classes, old phrasing",
+     "mistakes": "Greek-English idioms",
+     "register": "warm, formal"},
+    {"name": "Anh N.", "age": 27, "context": "Vietnamese-American product designer in Seattle",
+     "mannerisms": "observational, references heuristics",
+     "mistakes": "Vietnamese-English article slips",
+     "register": "observational, gentle"},
+    {"name": "Gunther F.", "age": 71, "context": "German retired chemical engineer in Leverkusen",
+     "mannerisms": "process and yield references, formal",
+     "mistakes": "occasional German-English transfer",
+     "register": "formal, technical"},
+    {"name": "Yon-su K.", "age": 45, "context": "Korean-American immunologist in Bethesda",
+     "mannerisms": "cites studies, hedges with CIs",
+     "mistakes": "Korean-English transfer rarely",
+     "register": "scientific, hedged"},
+    {"name": "Doruk T.", "age": 30, "context": "Turkish-American fintech engineer in Austin",
+     "mannerisms": "lowercase, references trade execution",
+     "mistakes": "Turkish-English transfer",
+     "register": "casual, technical"},
+    {"name": "Brigitta H.", "age": 64, "context": "German-American antiques dealer in Charleston",
+     "mannerisms": "warm provenance stories, formal phrasing",
+     "mistakes": "occasional German-English transfer",
+     "register": "warm, formal"},
+    {"name": "manny.r", "age": 26, "context": "Filipino-American front-of-house manager in San Diego",
+     "mannerisms": "service stories, lowercase, friendly",
+     "mistakes": "Tagalog-English transfer rarely",
+     "register": "casual, warm"},
+    {"name": "Solveig N.", "age": 37, "context": "Norwegian behavioural economist in Oslo",
+     "mannerisms": "structured, references RCTs",
+     "mistakes": "Norwegian-English transfer",
+     "register": "structured, careful"},
+    {"name": "Tej P.", "age": 22, "context": "Indian-American physics undergrad in Pittsburgh",
+     "mannerisms": "asks counter-questions, references textbooks",
+     "mistakes": "Indian-English idioms occasionally",
+     "register": "curious, structured"},
+    {"name": "Konstantin V.", "age": 55, "context": "Bulgarian-American chess teacher in Brooklyn",
+     "mannerisms": "opening and endgame references, dry corrections",
+     "mistakes": "drops articles, Slavic-English transfer",
+     "register": "dry, precise"},
+    {"name": "Esin Y.", "age": 35, "context": "Turkish UX researcher in Berlin",
+     "mannerisms": "observational, behavioural references",
+     "mistakes": "Turkish-English transfer",
+     "register": "observational, careful"},
+    {"name": "Padma S.", "age": 48, "context": "Indian-American oncologist in San Diego",
+     "mannerisms": "hedged clinical observations, references trials",
+     "mistakes": "Indian-English idioms",
+     "register": "clinical, hedged"},
+    {"name": "junio.p", "age": 25, "context": "Brazilian indie game artist in Recife",
+     "mannerisms": "lowercase, art and frame references",
+     "mistakes": "Portuguese-English transfer",
+     "register": "casual, visual"},
+    {"name": "Anya R.", "age": 32, "context": "Ukrainian-Canadian copy editor in Toronto",
+     "mannerisms": "asks clarifying questions, careful word choice",
+     "mistakes": "Ukrainian-English transfer rarely",
+     "register": "careful, literary"},
+    {"name": "Felipe O.", "age": 40, "context": "Chilean wine importer in San Francisco",
+     "mannerisms": "vintage and supply chain references",
+     "mistakes": "Spanish-English transfer",
+     "register": "warm, numbers"},
+    {"name": "Wojtek P.", "age": 53, "context": "Polish-American HVAC contractor in Milwaukee",
+     "mannerisms": "ductwork and load references, blunt",
+     "mistakes": "Polish-English word order, drops articles",
+     "register": "blunt, practical"},
+]
+
+# ── Rolling exclusion cache: last 60 persona names used network-wide ─────────
+# Prevents the same 5 profiles cycling on adjacent articles across sites.
+_RECENT_COMMENTER_NAMES = []
+_RECENT_COMMENTER_CACHE_SIZE = 60
+
+
+def _pick_commenter_profiles(n, exclude=None):
+    """Randomly sample `n` DISTINCT profiles from COMMENTER_PROFILES.
+
+    Avoids any name in `exclude` (per-article exclusion set) and any name still
+    in the module-level _RECENT_COMMENTER_NAMES rolling cache. Falls back
+    gracefully if the available pool is smaller than `n` (relaxes the rolling
+    cache first, then allows controlled repeats as a last resort)."""
+    exclude = set(exclude or set())
+    n = max(0, int(n))
+    if n == 0:
+        return []
+    rolling_block = set(_RECENT_COMMENTER_NAMES)
+    pool = [p for p in COMMENTER_PROFILES
+            if p["name"] not in exclude and p["name"] not in rolling_block]
+    if len(pool) < n:
+        pool = [p for p in COMMENTER_PROFILES if p["name"] not in exclude]
+    if len(pool) < n:
+        picks = [random.choice(COMMENTER_PROFILES) for _ in range(n)]
+    else:
+        picks = random.sample(pool, n)
+    for p in picks:
+        _RECENT_COMMENTER_NAMES.append(p["name"])
+    if len(_RECENT_COMMENTER_NAMES) > _RECENT_COMMENTER_CACHE_SIZE:
+        del _RECENT_COMMENTER_NAMES[:len(_RECENT_COMMENTER_NAMES) - _RECENT_COMMENTER_CACHE_SIZE]
+    return picks
+
+# Filler / promotional patterns that should never appear in a comment.
+_FILLER_PHRASES = [
+    "great article", "great post", "loved this", "thanks for sharing",
+    "this was insightful", "amazing read", "cant wait for more",
+    "can't wait for more", "i loved every word", "loved every word",
+    "great read", "wonderful article", "fantastic post", "awesome article",
+    "very insightful", "really insightful", "so insightful",
+    "informative read", "great content", "great work",
+]
+
+_PROMO_PATTERNS = [
+    r"https?://", r"www\.", r"check out my", r"you should try [A-Z]",
+    r"\bdm me\b", r"\bfollow me\b", r"\bbuy now\b", r"\bpurchase\b",
+    r"\bdiscount\b", r"\bpromo code\b", r"\bsign up at\b",
+    r"\bsubscribe to my\b", r"\bcoupon\b",
+]
+
+# Running tally of comments rejected during a process run (filler / promo / length).
+_FILLER_REJECT_COUNT = 0
+
+def _is_filler_or_promo(text: str) -> bool:
+    """Return True if `text` looks like generic filler or promotional language."""
+    if not text or not isinstance(text, str):
+        return True
+    t = text.strip()
+    n = len(t)
+    if n < 25 or n > 600:
+        return True
+    low = t.lower()
+    for p in _FILLER_PHRASES:
+        if p in low:
+            return True
+    for pat in _PROMO_PATTERNS:
+        if re.search(pat, low):
+            return True
+    return False
+
+
 def generate_comments(article, site, client, count=None):
-    """Generate realistic reader comments + author replies using Claude Haiku."""
+    """Generate realistic reader comments + author replies using Claude Haiku.
+
+    Default count: random 2-17 reader comments. Every question gets an author
+    reply. Total reply ratio is clamped to 20-70% of comments. Dates are clamped
+    to never precede the article's date_iso + 1 day, and never sit in the future.
+    """
     comment_cfg = site.get("comment_schedule", {})
+    # Per-post and per-site disable switches.
+    if not comment_cfg.get("enabled", True):
+        return []
+    if article.get("comments_disabled") is True:
+        return []
+    # Hard cap on date spread (1..max_age_days). Defined here so it's in scope
+    # for the prompt templates below. Comments land 1-2 days after publish.
+    max_age_days = max(1, min(2, int(comment_cfg.get("max_age_days", 2))))
     if count is None:
-        lo = max(4, int(comment_cfg.get("initial_count", 4)))
-        hi = max(lo, min(int(comment_cfg.get("max_count", 15)), 50))
+        lo = max(2, int(comment_cfg.get("initial_count", 2)))
+        hi = max(lo, min(int(comment_cfg.get("max_count", 17)), 17))
         count = random.randint(lo, hi)
 
-    count = max(count, 4)  # always at least 4 reader comments
+    # Hard floor 2, hard ceiling 17.
+    count = max(2, min(int(count), 17))
 
     title    = article["title"]
     intro    = re.sub(r"<[^>]+>", "", article.get("intro", ""))[:300]
@@ -1868,63 +2624,190 @@ def generate_comments(article, site, client, count=None):
     persona_parts = persona.split(",", 1)
     author_title  = persona_parts[1].strip() if len(persona_parts) > 1 else category
 
-    prompt = f"""Generate {count} realistic reader comments for this blog article, then 2 author replies to specific readers' questions.
+    # Reply ratio target: random within 20-70% of comments.
+    target_ratio  = random.uniform(0.20, 0.70)
+    target_replies = max(1, round(count * target_ratio))
+
+    # ── Persona selection (Python-side, before sending to Haiku) ──
+    # Pick `count` distinct personas from the expanded pool, honoring the
+    # network-wide rolling exclusion cache so the same 5 profiles do not
+    # cycle on adjacent articles.
+    selected_personas = _pick_commenter_profiles(count)
+    # Keep ordered list mapping idx → persona name for assignment later.
+    persona_block_lines = []
+    for i, p in enumerate(selected_personas, 1):
+        persona_block_lines.append(
+            f"{i}. NAME=\"{p['name']}\" | age {p['age']} | {p['context']} | "
+            f"voice: {p['mannerisms']} | mistakes: {p['mistakes']} | register: {p['register']}"
+        )
+    personas_block = "\n".join(persona_block_lines)
+
+    questions_needed = max(2, min(3, count // 3))
+    disagree_lo = max(1, round(count * 0.15))
+    disagree_hi = max(disagree_lo, round(count * 0.25))
+    typo_target = max(1, round(count / 5))
+
+    def _build_prompt(extra_instr: str = "") -> str:
+        return f"""Generate exactly {count} realistic reader comments for this blog article, plus author replies. Each comment must read as if a specific real adult human wrote it  -  NOT a marketing AI.
 
 Article: "{title}"
 Category: {category}
 Intro: {intro}
-Author: {author_name} ({author_title})
+Author: {author_name} ({author_title})  -  site persona: {persona}
 
-Reader comment rules:
-- Varied names (English, international, some with initials like "james_k", "Priya M.")
-- 1-4 sentences each. Mix: agree, share experience, ask specific follow-up question, mild skepticism
-- 2-3 must ask a direct question that the author would naturally reply to
-- NO generic "Great article!" - all must reference something specific in the content
-- Dates spread 1-21 days after publish
+USE EXACTLY THESE {count} PERSONAS, one per comment, in order. The "name" field of comment N must equal the NAME of persona N. Match that persona's voice, mannerisms, mistakes, sentence length, and register precisely.
 
-Author reply rules:
-- Author replies to exactly 2 of the questions asked by readers
-- Reply is warm, specific, helpful (2-3 sentences). Signs off as "{author_name}"
-- reply_to field must match the reader's name exactly
+PERSONAS:
+{personas_block}
 
-Return ONLY valid JSON - no markdown:
+HARD RULES  -  comments:
+- Each comment reads like the assigned persona wrote it. Pat is blunt and fragmented. Margaret K. is formal/warm with no contractions. j_perez88 is lowercase and casual. Daniel R. is careful and detailed. tomm types fast and asks counter-questions. Asha S. hedges and cites numbers. Etc.
+- 1-4 sentences, 25-600 characters each.
+- {questions_needed} comments MUST end with "?" and ask a SPECIFIC follow-up rooted in the article's content (not "What about X?" generic). The question style must match the asker's persona: Margaret asks formal questions, tomm asks counter-questions, Asha asks numbers-focused questions, etc.
+- Between {disagree_lo} and {disagree_hi} comments must mildly disagree or push back with reasoning. Not all-agreeing. Disagreement must be polite and substantive.
+- Approximately {typo_target} comments (1 in 5) should contain ONE small natural typo (a doubled letter, a missing apostrophe, "definately", "tommorow", etc.)  -  only for personas whose mistake profile allows it.
+- Include lived-in specifics: real-life context ("my dog Bella did the same thing"), durations ("six weeks in"), locations, named tools or projects.
+- NO emojis.
+- NEVER use promotional language: no URLs, no "check out my", no "you should try X", no "DM me", no "buy", no "discount", no tool recommendations.
+- NEVER use filler openers: NO "Great article", "Great post", "Loved this", "Thanks for sharing", "This was insightful", "Amazing read", "Cant wait for more", "I loved every word", "Great read", "Great work", "Very insightful".
+- Dates spread 1-2 days after publish.
+
+HARD RULES  -  author replies:
+- The author REPLIES TO EVERY comment ending in "?". No exceptions.
+- Plus extra replies on non-question comments so total replies is approximately {target_replies} (20-70% of {count}).
+- Author replies match the AUTHOR's persona, not the commenter's: warm, professional, expert tone for "{author_name} ({author_title})"  -  site persona "{persona}". Concise (2-3 sentences). Specific to that commenter's question. Sign off naturally as {author_name}.
+- NO "Great question!" or filler openers in replies.
+- reply_to field must match the reader's display name exactly.
+
+{extra_instr}
+Return ONLY valid JSON  -  no markdown:
 {{
   "comments": [
-    {{"name": "display name", "text": "comment", "days_after_publish": 1-21, "likes": 0-18}}
+    {{"name": "persona name", "text": "comment", "days_after_publish": 1-{max_age_days}, "likes": 0-3}}
   ],
   "author_replies": [
-    {{"reply_to": "reader name", "text": "author reply text", "days_after_reply": 1-3}}
+    {{"reply_to": "reader name", "text": "author reply text", "days_after_reply": 1-2}}
   ]
 }}"""
 
-    try:
+    def _call_haiku(prompt_text: str):
         resp = _retry(lambda: client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=2500,
-            messages=[{"role": "user", "content": prompt}]
+            max_tokens=3500,
+            messages=[{"role": "user", "content": prompt_text}]
         ))
         raw = resp.content[0].text.strip()
         raw = re.sub(r'^```json\s*', '', raw)
         raw = re.sub(r'\s*```$', '', raw)
         data = json.loads(raw)
-        comments_raw = data.get("comments", data) if isinstance(data, dict) else data
-        replies_raw  = data.get("author_replies", []) if isinstance(data, dict) else []
+        c_raw = data.get("comments", data) if isinstance(data, dict) else data
+        r_raw = data.get("author_replies", []) if isinstance(data, dict) else []
+        return list(c_raw or []), list(r_raw or [])
+
+    try:
+        comments_raw, replies_raw = _call_haiku(_build_prompt())
     except Exception as e:
         print(f"  Comment generation failed: {e}")
         return []
 
-    pub_date   = datetime.now()
+    # ── Filler / promo / length gate ──
+    global _FILLER_REJECT_COUNT
+    kept = []
+    rejected_personas = []
+    for i, c in enumerate(comments_raw):
+        txt = (c.get("text") or "").strip()
+        if _is_filler_or_promo(txt):
+            _FILLER_REJECT_COUNT += 1
+            # Track which persona slot needs a replacement (by index).
+            if i < len(selected_personas):
+                rejected_personas.append((i, selected_personas[i]))
+            continue
+        kept.append((i, c))
+
+    # If anything was rejected, one retry round for the missing slots only.
+    if rejected_personas:
+        try:
+            retry_lines = []
+            for slot_i, p in rejected_personas:
+                retry_lines.append(
+                    f"- NAME=\"{p['name']}\" | age {p['age']} | {p['context']} | "
+                    f"voice: {p['mannerisms']} | mistakes: {p['mistakes']} | register: {p['register']}"
+                )
+            retry_block = "\n".join(retry_lines)
+            retry_prompt = f"""Generate exactly {len(rejected_personas)} reader comments for this article. Use these personas, one per comment, name field exactly equal to persona NAME:
+
+{retry_block}
+
+Article: "{title}"
+Intro: {intro}
+
+STRICT: 25-600 chars each. NO filler phrases like "great article", "loved this", "thanks for sharing", "insightful", "amazing read". NO promotional language, no URLs, no tool recommendations. Match each persona's voice precisely. Reference something specific in the article.
+
+Return ONLY JSON:
+{{"comments": [{{"name": "persona name", "text": "comment", "days_after_publish": 1-{max_age_days}, "likes": 0-3}}]}}"""
+            retry_c, _ = _call_haiku(retry_prompt)
+            # Replace rejected slots in order with retry results that pass the gate.
+            retry_iter = iter(retry_c)
+            recovered = []
+            for slot_i, p in rejected_personas:
+                placed = False
+                for rc in retry_iter:
+                    txt = (rc.get("text") or "").strip()
+                    if not _is_filler_or_promo(txt):
+                        rc["name"] = p["name"]
+                        kept.append((slot_i, rc))
+                        placed = True
+                        break
+                    else:
+                        _FILLER_REJECT_COUNT += 1
+                if not placed:
+                    # Could not recover; drop this slot.
+                    pass
+        except Exception as e:
+            print(f"  Comment retry failed: {e}")
+
+    # Reorder kept comments by original slot index so persona N → slot N alignment holds.
+    kept.sort(key=lambda x: x[0])
+    comments_raw = [c for _, c in kept]
+    # Build persona name → profile lookup for assignment.
+    persona_by_name = {p["name"]: p for p in selected_personas}
+
+    # Date floor: max(article date + 1 day, today - small jitter). Never future.
+    now_dt = datetime.now()
+    try:
+        art_dt = datetime.strptime(article.get("date_iso", "") or now_dt.strftime("%Y-%m-%d"), "%Y-%m-%d")
+    except Exception:
+        art_dt = now_dt
+    # Pub_date used as anchor for "days_after_publish" math.
+    pub_date = art_dt
     author_initials = "".join(w[0].upper() for w in author_name.split()[:2]) or "AU"
     result = []
 
-    # Index reader comments by name for reply lookup
+    # Trim/pad comment list to land in [2,17] then exact count target.
+    comments_raw = list(comments_raw or [])[:17]
+    # If model returned fewer than 2, bail.
+    if len(comments_raw) < 2:
+        return []
+    comments_raw = comments_raw[:count]
+
+    # Index reader comments by name for reply lookup.
     name_to_idx = {}
-    for i, c in enumerate(comments_raw[:count]):
-        name     = c.get("name", "Reader")
+    for i, c in enumerate(comments_raw):
+        name     = c.get("name", f"Reader{i+1}")
         initials = "".join(w[0].upper() for w in re.findall(r'\w+', name)[:2]) or "?"
         color    = _AVATAR_COLORS[i % len(_AVATAR_COLORS)]
-        days     = int(c.get("days_after_publish", random.randint(1, 14)))
-        cdate    = pub_date + timedelta(days=days)
+        days     = int(c.get("days_after_publish", random.randint(1, max_age_days)))
+        days     = max(1, min(days, max_age_days))  # clamp 1..max_age_days
+        cdate    = pub_date + timedelta(days=days, hours=random.randint(1, 22))
+        # Never future.
+        if cdate > now_dt:
+            cdate = now_dt - timedelta(hours=random.randint(1, 18))
+        # Never before article publish + 1 day.
+        min_dt = art_dt + timedelta(days=1)
+        if cdate < min_dt:
+            cdate = min_dt + timedelta(hours=random.randint(1, 22))
+        # Hidden persona tag so regenerations and the editor can preserve voice.
+        _persona_name = persona_by_name.get(name, {}).get("name", name) if persona_by_name else name
         comment  = {
             "id":           f"c{i+1}{random.randint(100,999)}",
             "name":         name,
@@ -1933,53 +2816,134 @@ Return ONLY valid JSON - no markdown:
             "date_iso":     cdate.strftime("%Y-%m-%d"),
             "date_display": cdate.strftime("%b %d, %Y"),
             "text":         c.get("text", ""),
-            "likes":        int(c.get("likes", random.randint(0, 8))),
+            "likes":        0,  # assigned below by _apply_like_rule
             "replies":      [],
+            "_persona":     _persona_name,
         }
         name_to_idx[name] = len(result)
         result.append(comment)
 
-    # Attach author replies
-    for r in replies_raw[:2]:
-        reply_to = r.get("reply_to", "")
-        idx = name_to_idx.get(reply_to)
-        if idx is None:
-            # Fallback: attach to first comment with a question mark
-            for j, cm in enumerate(result):
-                if "?" in cm["text"]:
-                    idx = j
-                    break
-        if idx is None:
-            continue
+    # Build a quick lookup of reader names (case-insensitive) for reply validation.
+    name_lookup = {nm.lower(): idx for nm, idx in name_to_idx.items()}
+
+    def _attach_reply(idx, text, synthesized=False):
         parent_date = datetime.strptime(result[idx]["date_iso"], "%Y-%m-%d")
-        rdate = parent_date + timedelta(days=int(r.get("days_after_reply", 1)))
-        result[idx]["replies"].append({
+        rdate = parent_date + timedelta(days=random.randint(0, 2), hours=random.randint(1, 14))
+        # Never push reply beyond the max-age window after publish.
+        hard_cap = art_dt + timedelta(days=max_age_days)
+        if rdate > hard_cap:
+            rdate = hard_cap
+        if rdate > now_dt:
+            rdate = now_dt - timedelta(hours=random.randint(1, 8))
+        reply = {
             "name":         author_name,
             "initials":     author_initials,
             "color":        "#3ecf8e",
             "is_author":    True,
             "date_iso":     rdate.strftime("%Y-%m-%d"),
             "date_display": rdate.strftime("%b %d, %Y"),
-            "text":         r.get("text", ""),
-            "likes":        random.randint(3, 12),
-        })
+            "text":         text,
+            "likes":        1,
+        }
+        if synthesized:
+            reply["synthesized"] = True
+        result[idx]["replies"].append(reply)
+
+    # Attach valid author replies (drop any whose reply_to doesn't match a reader).
+    used_reply_idx = set()
+    for r in replies_raw:
+        reply_to = (r.get("reply_to") or "").strip()
+        text     = (r.get("text") or "").strip()
+        if not reply_to or not text:
+            continue
+        # Gate author replies for filler / promo / length too.
+        if _is_filler_or_promo(text):
+            _FILLER_REJECT_COUNT += 1
+            continue
+        idx = name_lookup.get(reply_to.lower())
+        if idx is None:
+            # No fuzzy match - drop this reply per spec.
+            continue
+        if idx in used_reply_idx:
+            continue  # at most one author reply per comment
+        used_reply_idx.add(idx)
+        _attach_reply(idx, text)
+
+    # Ensure every question gets an author reply. Synthesize if missing.
+    intro_snippet = re.sub(r"\s+", " ", intro).strip()
+    synth_pool = [
+        f"Good point - {intro_snippet[:140]}".strip(),
+        "Glad you brought that up. The short version: it depends on context, but the principles in the article hold up across most setups I've tested.",
+        "Worth adding here: the answer shifts a bit case to case, but the framework in the post is the one I keep coming back to.",
+    ]
+    for idx, cm in enumerate(result):
+        if cm["text"].rstrip().endswith("?") and idx not in used_reply_idx:
+            text = random.choice(synth_pool)
+            used_reply_idx.add(idx)
+            _attach_reply(idx, text, synthesized=True)
+
+    # Clamp reply ratio to 20-70%.
+    n = len(result)
+    if n > 0:
+        min_replies = max(1, round(n * 0.20))
+        max_replies = max(min_replies, round(n * 0.70))
+        # Drop extras (prefer dropping synthesized first), keep question-replies.
+        if len(used_reply_idx) > max_replies:
+            droppable = []
+            for idx in list(used_reply_idx):
+                cm = result[idx]
+                if cm["text"].rstrip().endswith("?"):
+                    continue  # must keep question replies
+                if cm["replies"] and cm["replies"][-1].get("synthesized"):
+                    droppable.insert(0, idx)  # drop synthesized first
+                else:
+                    droppable.append(idx)
+            extras = len(used_reply_idx) - max_replies
+            for idx in droppable[:extras]:
+                result[idx]["replies"] = [r for r in result[idx]["replies"] if not r.get("is_author")]
+                used_reply_idx.discard(idx)
+        # Add more if below floor.
+        if len(used_reply_idx) < min_replies:
+            need = min_replies - len(used_reply_idx)
+            candidates = [i for i in range(n) if i not in used_reply_idx]
+            random.shuffle(candidates)
+            for idx in candidates[:need]:
+                _attach_reply(idx, random.choice(synth_pool), synthesized=True)
+                used_reply_idx.add(idx)
+
+    # ── Apply like rule: 60-80% of reader comments get 0 likes, rest get 1-3.
+    # Author replies are always 1 like (set in _attach_reply).
+    n_total = len(result)
+    if n_total > 0:
+        zero_ratio   = random.uniform(0.60, 0.80)
+        zero_count   = round(n_total * zero_ratio)
+        zero_count   = max(0, min(zero_count, n_total))
+        liked_count  = n_total - zero_count
+        like_flags   = [False] * zero_count + [True] * liked_count
+        random.shuffle(like_flags)
+        for i, cm in enumerate(result):
+            cm["likes"] = random.randint(1, 3) if like_flags[i] else 0
 
     result.sort(key=lambda x: x["date_iso"])
     return result
 
 
-def push_comments(article, site, client, github_token, count=None):
-    """Generate and push comments.json for an article. Also seeds any existing articles that have none."""
+def push_comments(article, site, client, github_token, count=None, comments=None):
+    """Generate (or accept pre-generated) comments and push comments.json.
+    Returns the list of comments pushed so callers can also inline them into HTML."""
     slug = article.get("slug", "")
     if not slug:
-        return
+        return []
     comment_cfg = site.get("comment_schedule", {})
     if not comment_cfg.get("enabled", False):
-        return
+        return []
+    if article.get("comments_disabled") is True:
+        return []
 
-    comments = generate_comments(article, site, client, count)
+    if comments is None:
+        comments = generate_comments(article, site, client, count)
     if not comments:
-        return
+        return []
     path = f"{slug}/comments.json"
     ok = _retry(lambda: github_push(
         site["repo"], path, json.dumps(comments, indent=2),
@@ -1987,6 +2951,7 @@ def push_comments(article, site, client, github_token, count=None):
     ))
     if ok:
         print(f"  Comments seeded: {len(comments)} → /{path}")
+    return comments
 
 
 def maybe_add_scheduled_comments(site, articles, client, github_token):
@@ -1994,19 +2959,25 @@ def maybe_add_scheduled_comments(site, articles, client, github_token):
     comment_cfg = site.get("comment_schedule", {})
     if not comment_cfg.get("enabled", False):
         return
-    delay_days  = int(comment_cfg.get("delay_days", 0))
-    add_per_run = int(comment_cfg.get("add_per_day", 2))
-    max_count   = int(comment_cfg.get("max_count", 15))
-    headers     = {"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3+json"}
+    delay_days   = int(comment_cfg.get("delay_days", 0))
+    add_per_run  = int(comment_cfg.get("add_per_day", 2))
+    max_count    = int(comment_cfg.get("max_count", 15))
+    # Hard cap on how long after publish we keep adding scheduled comments.
+    # Default 2 days: comments land within 1-2 days of publish.
+    max_age_days = max(1, min(2, int(comment_cfg.get("max_age_days", 2))))
+    headers      = {"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3+json"}
 
     candidates = []
     for a in articles:
         pub_iso = a.get("date_iso", "")
         if pub_iso:
             try:
-                pub = datetime.strptime(pub_iso, "%Y-%m-%d")
-                if (datetime.now() - pub).days < delay_days:
+                pub  = datetime.strptime(pub_iso, "%Y-%m-%d")
+                age  = (datetime.now() - pub).days
+                if age < delay_days:
                     continue
+                if age > max_age_days:
+                    continue  # article is "settled" - stop scheduling new comments
             except Exception:
                 pass
         candidates.append(a)
@@ -2158,12 +3129,15 @@ def _comments_section_js(t=None):
   function rerender(){{
     var el=document.getElementById('comments-list');
     var heading=document.getElementById('comments-heading');
+    var section=document.getElementById('comments-section');
     var likes=getLikes();
     var combined=allComments.concat(getLocal());
     if(!combined.length){{
-      el.innerHTML='<p style="font-size:14px;color:'+META+';padding:20px 0">No comments yet  -  be the first to share your thoughts below.</p>';
-      if(heading)heading.textContent='Comments (0)';return;
+      // Hide the entire section when there are zero comments.
+      if(section)section.style.display='none';
+      return;
     }}
+    if(section)section.style.display='';
     var total=combined.reduce(function(s,c){{return s+1+(c.replies?c.replies.length:0);}},0);
     if(heading)heading.textContent='Comments ('+total+')';
     el.innerHTML=combined.map(function(c,i){{
@@ -2179,6 +3153,209 @@ def _comments_section_js(t=None):
       allComments=cs||[];rerender();
     }}).catch(function(){{allComments=[];rerender();}});
   }}
+}})();
+</script>"""
+
+
+def _inline_comment_block(c, t, accent, bg2, border_color, meta_color, text_color, text2_color, site_url, is_reply=False, parent_name=""):
+    """Render a single comment (or reply) as schema.org-compliant HTML.
+    Used by _comments_section_inline to bake comments into the static page."""
+    name        = (c.get("name") or "Anonymous").replace("<", "&lt;").replace(">", "&gt;")
+    text        = (c.get("text") or "").replace("<", "&lt;").replace(">", "&gt;")
+    date_iso    = c.get("date_iso", "")
+    date_disp   = c.get("date_display") or date_iso
+    initials    = c.get("initials") or "".join(w[0].upper() for w in re.findall(r'\w+', name)[:2]) or "?"
+    color       = c.get("color") or accent
+    likes       = int(c.get("likes", 0) or 0)
+    is_author   = bool(c.get("is_author"))
+    key         = c.get("id") or f"{name}_{date_iso}"
+    sz          = "30" if is_reply else "40"
+    fsz         = "11" if is_reply else "13"
+    if is_reply:
+        wrap_style = f"margin-left:44px;margin-top:10px;padding:12px 16px;background:{bg2};border-radius:10px;border-left:3px solid {accent};"
+    else:
+        wrap_style = f"padding:18px 0;border-bottom:1px solid {border_color};"
+
+    author_badge = (
+        f'<span style="font-size:10px;font-weight:700;background:{accent}22;color:{accent};border:1px solid {accent}55;border-radius:100px;padding:1px 8px;margin-left:6px">Author</span>'
+        if is_author else ""
+    )
+
+    # schema.org/Comment microdata. Use itemprop="author" with nested Person.
+    schema_type = "https://schema.org/Comment"
+    itemprop = 'itemprop="parentItem"' if is_reply else 'itemprop="comment"'
+    # Author URL: use site root if author of site, else omit.
+    author_block = (
+        f'<span itemprop="author" itemscope itemtype="https://schema.org/Person">'
+        f'<meta itemprop="name" content="{name}">'
+        f'<span style="font-size:14px;font-weight:700;color:{text_color}">{name}</span>'
+        f'</span>'
+    )
+
+    heart_svg = (
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="' + accent +
+        '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px">'
+        '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>'
+        '</svg>'
+    )
+
+    return (
+        f'<div {itemprop} itemscope itemtype="{schema_type}" data-key="{key}" '
+        f'style="display:flex;gap:12px;{wrap_style}">'
+        f'<div style="width:{sz}px;height:{sz}px;border-radius:50%;background:{color};display:flex;align-items:center;justify-content:center;font-size:{fsz}px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:-.5px">{initials}</div>'
+        f'<div style="flex:1;min-width:0">'
+        f'<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:6px">'
+        f'{author_block}{author_badge}'
+        f'<time itemprop="dateCreated" datetime="{date_iso}" style="font-size:11px;color:{meta_color}">{date_disp}</time>'
+        f'</div>'
+        f'<p itemprop="text" style="font-size:14px;line-height:1.7;margin:0 0 10px;color:{text2_color}">{text}</p>'
+        f'<button onclick="toggleLike(\'{key}\',this)" data-likes="{likes}" '
+        f'style="background:none;border:1px solid {border_color};border-radius:100px;padding:4px 12px;cursor:pointer;font-size:12px;color:{meta_color};display:inline-flex;align-items:center;gap:2px;font-family:inherit;transition:all .15s">'
+        f'{heart_svg}<span class="lc">{likes}</span></button>'
+        f'</div></div>'
+    )
+
+
+def _comments_section_inline(article, site, comments_data, t=None):
+    """Server-rendered comments section. All comments are baked into the HTML
+    (Google-crawlable, schema.org/Comment microdata). A small JS handles like
+    buttons and the new-comment form (writes to localStorage on the client).
+
+    Per-site (comment_schedule.enabled=False) and per-article (article.comments_disabled=True)
+    toggles short-circuit. Articles with zero comments also render nothing  -  the
+    section is only inlined once there is at least one comment.
+    """
+    cfg = (site or {}).get("comment_schedule", {})
+    if not cfg.get("enabled", False):
+        return ""
+    if (article or {}).get("comments_disabled") is True:
+        return ""
+    if not (comments_data or []):
+        return ""
+    border_color = (t["border"] if t else "rgba(128,128,128,.2)")
+    meta_color   = (t["meta"]   if t else "#888")
+    text2_color  = (t["text2"]  if t else "inherit")
+    accent       = (t["accent"] if t else "#3ecf8e")
+    bg2          = (t["bg2"]    if t else "#f9f9f9")
+    bg           = (t["bg"]     if t else "#ffffff")
+    text_color   = (t["text"]   if t else "#111")
+    site_url     = f"https://{site.get('domain','')}/" if site else ""
+
+    comments_data = comments_data or []
+    total = sum(1 + len(c.get("replies", []) or []) for c in comments_data)
+
+    if not comments_data:
+        rendered = (
+            f'<p style="font-size:14px;color:{meta_color};padding:20px 0" id="c-empty">'
+            f'Comments coming soon. Be the first to share your thoughts below.'
+            f'</p>'
+        )
+    else:
+        parts = []
+        for c in comments_data:
+            parts.append(_inline_comment_block(c, t, accent, bg2, border_color, meta_color, text_color, text2_color, site_url, is_reply=False))
+            for r in (c.get("replies") or []):
+                parts.append(_inline_comment_block(r, t, accent, bg2, border_color, meta_color, text_color, text2_color, site_url, is_reply=True, parent_name=c.get("name","")))
+        rendered = "".join(parts)
+
+    return f"""
+<section id="comments" itemscope itemtype="https://schema.org/WebPage" data-total="{total}" style="max-width:760px;margin:64px auto 0;padding:0 24px 48px">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <h2 id="comments-heading" style="font-size:21px;font-weight:800;color:{text_color};margin:0;letter-spacing:-.4px">Comments ({total})</h2>
+  </div>
+  <div id="comment-form" style="display:flex;gap:14px;margin-bottom:32px;scroll-margin-top:90px">
+    <div style="width:44px;height:44px;border-radius:50%;background:{accent};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;line-height:1">+</div>
+    <div style="flex:1;min-width:0;background:{bg2};border:1px solid {border_color};border-radius:16px;padding:16px 16px 12px;transition:border-color .2s" id="c-box">
+      <textarea id="c-text" placeholder="Add your thoughts to the discussion..." rows="3" style="width:100%;padding:4px 2px;border:none;font-size:15px;background:transparent;color:{text_color};outline:none;font-family:inherit;resize:vertical;min-height:62px;display:block;box-sizing:border-box" onfocus="document.getElementById('c-box').style.borderColor='{accent}'" onblur="document.getElementById('c-box').style.borderColor='{border_color}'"></textarea>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid {border_color}">
+        <input id="c-name" placeholder="Your name" style="flex:1;min-width:120px;padding:9px 13px;border:1px solid {border_color};border-radius:100px;font-size:13px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box">
+        <input id="c-email" placeholder="Email (private)" style="flex:1;min-width:120px;padding:9px 13px;border:1px solid {border_color};border-radius:100px;font-size:13px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box">
+        <button onclick="submitComment()" style="background:{accent};color:#fff;border:none;border-radius:100px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s,opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Post</button>
+      </div>
+      <div id="c-success" style="display:none;margin-top:12px;padding:9px 13px;background:{accent}18;border:1px solid {accent}44;border-radius:10px;font-size:13px;color:{accent};font-weight:600">Posted. Thanks for joining the discussion.</div>
+    </div>
+  </div>
+  <div id="comments-list">{rendered}</div>
+  <div id="user-comments-list"></div>
+</section>
+<script>
+(function(){{
+  var ACCENT='{accent}';
+  var BRD='{border_color}';
+  var META='{meta_color}';
+  var TXT='{text_color}';
+  var TXT2='{text2_color}';
+  var BG2='{bg2}';
+  var slug=location.pathname.split('/').filter(Boolean).join('-')||'home';
+
+  function getLikes(){{try{{return JSON.parse(localStorage.getItem('lk_'+slug)||'{{}}');}}catch(e){{return{{}};}}}}
+  function saveLikes(l){{try{{localStorage.setItem('lk_'+slug,JSON.stringify(l));}}catch(e){{}}}}
+  function getLocal(){{try{{return JSON.parse(localStorage.getItem('uc_'+slug)||'[]');}}catch(e){{return[];}}}}
+  function saveLocal(cs){{try{{localStorage.setItem('uc_'+slug,JSON.stringify(cs));}}catch(e){{}}}}
+
+  // Apply persisted like state to server-rendered buttons.
+  var likes=getLikes();
+  document.querySelectorAll('#comments-list [data-key]').forEach(function(node){{
+    var key=node.getAttribute('data-key');
+    var btn=node.querySelector('button[onclick^="toggleLike"]');
+    if(!btn)return;
+    var liked=!!likes[key];
+    if(liked){{
+      btn.style.borderColor=ACCENT;btn.style.color=ACCENT;
+      var svg=btn.querySelector('svg');if(svg)svg.setAttribute('fill',ACCENT);
+      var lc=btn.querySelector('.lc');if(lc){{lc.textContent=parseInt(lc.textContent||'0')+1;}}
+    }}
+  }});
+
+  window.toggleLike=function(key,btn){{
+    var l=getLikes();l[key]=!l[key];var liked=l[key];saveLikes(l);
+    btn.style.borderColor=liked?ACCENT:BRD;btn.style.color=liked?ACCENT:META;
+    var svg=btn.querySelector('svg');if(svg)svg.setAttribute('fill',liked?ACCENT:'none');
+    var lc=btn.querySelector('.lc');
+    if(lc){{var n=parseInt(lc.textContent||'0');lc.textContent=liked?n+1:Math.max(0,n-1);}}
+  }};
+
+  function renderUserComment(c){{
+    var name=(c.name||'You').replace(/</g,'&lt;');
+    var text=(c.text||'').replace(/</g,'&lt;');
+    var ini=name.split(/\\s+/).map(function(w){{return w[0];}}).join('').slice(0,2).toUpperCase()||'?';
+    return '<div style="display:flex;gap:12px;padding:18px 0;border-bottom:1px solid '+BRD+';">'+
+      '<div style="width:40px;height:40px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:-.5px">'+ini+'</div>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:6px">'+
+          '<span style="font-size:14px;font-weight:700;color:'+TXT+'">'+name+'</span>'+
+          '<span style="font-size:10px;font-weight:700;background:#3b82f622;color:#3b82f6;border:1px solid #3b82f655;border-radius:100px;padding:1px 8px;margin-left:6px">You</span>'+
+          '<span style="font-size:11px;color:'+META+'">'+c.date_display+'</span></div>'+
+        '<p style="font-size:14px;line-height:1.7;margin:0;color:'+TXT2+'">'+text+'</p>'+
+      '</div></div>';
+  }}
+
+  function paintLocal(){{
+    var el=document.getElementById('user-comments-list');
+    if(!el)return;
+    el.innerHTML=getLocal().map(renderUserComment).join('');
+  }}
+  paintLocal();
+
+  window.submitComment=function(){{
+    var name=(document.getElementById('c-name').value||'').trim();
+    var text=(document.getElementById('c-text').value||'').trim();
+    var nameEl=document.getElementById('c-name'),textEl=document.getElementById('c-text');
+    nameEl.style.borderColor=BRD;textEl.style.borderColor=BRD;
+    if(!name){{nameEl.style.borderColor='#ef4444';nameEl.focus();return;}}
+    if(!text){{textEl.style.borderColor='#ef4444';textEl.focus();return;}}
+    var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var now=new Date();
+    var ds=mo[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+    var c={{name:name,text:text,date_display:ds,_id:'u_'+Date.now()}};
+    var local=getLocal();local.push(c);saveLocal(local);
+    nameEl.value='';document.getElementById('c-email').value='';textEl.value='';
+    var succ=document.getElementById('c-success');
+    succ.style.display='block';setTimeout(function(){{succ.style.display='none';}},4000);
+    paintLocal();
+    var empty=document.getElementById('c-empty');if(empty)empty.style.display='none';
+  }};
 }})();
 </script>"""
 
@@ -3224,15 +4401,15 @@ def _nav_dalmendhome(site):
     """Cormorant Garamond warm-stone nav matching dalmend-home interior design homepage."""
     return (
         '<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">\n<style>\n'
-        '.a-dh{background:#fefcf7;border-bottom:1px solid #ddd8cc;position:sticky;top:0;z-index:100}\n'
+        '.a-dh{background:#0a0908;border-bottom:1px solid rgba(243,239,231,.07);position:sticky;top:0;z-index:100}\n'
         '.a-dh-in{max-width:1200px;margin:0 auto;padding:0 28px;display:flex;align-items:center;height:68px;gap:0}\n'
-        '.a-dh-logo{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:#1c1814;letter-spacing:.01em;text-decoration:none;margin-right:auto;font-style:italic}\n'
-        '.a-dh-logo span{color:#c8a47e;font-style:normal}\n'
+        '.a-dh-logo{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:#f3efe7;letter-spacing:.01em;text-decoration:none;margin-right:auto;font-style:italic}\n'
+        '.a-dh-logo span{color:#c9a55c;font-style:normal}\n'
         '.a-dh-links{display:flex;gap:0;height:100%;align-items:center}\n'
-        '.a-dh-links a{font-family:Inter,sans-serif;font-size:12px;font-weight:400;letter-spacing:.8px;text-transform:uppercase;color:#8c8070;padding:0 18px;height:68px;display:flex;align-items:center;transition:color .2s;text-decoration:none;border-bottom:1px solid transparent}\n'
-        '.a-dh-links a:hover{color:#1c1814;border-bottom-color:#c8a47e}\n'
-        '.a-dh-cta{font-family:Inter,sans-serif;font-size:12px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;color:#1c1814;border:1px solid #c8a47e;padding:8px 20px;margin-left:14px;text-decoration:none;white-space:nowrap;transition:all .2s}\n'
-        '.a-dh-cta:hover{background:#c8a47e;color:#fff}\n'
+        '.a-dh-links a{font-family:Inter,sans-serif;font-size:12px;font-weight:400;letter-spacing:.8px;text-transform:uppercase;color:rgba(243,239,231,.55);padding:0 18px;height:68px;display:flex;align-items:center;transition:color .2s;text-decoration:none;border-bottom:1px solid transparent}\n'
+        '.a-dh-links a:hover{color:#f3efe7;border-bottom-color:#c9a55c}\n'
+        '.a-dh-cta{font-family:Inter,sans-serif;font-size:12px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;color:#171411;background:linear-gradient(135deg,#c9a55c,#e3c987);border:none;padding:8px 20px;margin-left:14px;text-decoration:none;white-space:nowrap;transition:all .2s}\n'
+        '.a-dh-cta:hover{filter:brightness(1.05)}\n'
         '@media(max-width:640px){.a-dh-links{display:none}}\n</style>',
         f'<nav class="a-dh"><div class="a-dh-in">'
         f'<a href="../" class="a-dh-logo">Dalmend<span>Home</span></a>'
@@ -3427,15 +4604,19 @@ def article_standard(article, site, image_url, photographer, t):
 def article_sidebar(article, site, image_url, photographer, t):
     """Two-column: article body + sticky TOC sidebar."""
     sections    = article["sections"]
-    toc_items   = "".join([f'<li><a href="#s{i}" style="color:{t["text2"]};font-size:13px;line-height:1.8;transition:color .2s;text-decoration:none" onmouseover="this.style.color=\'{t["accent"]}\'" onmouseout="this.style.color=\'{t["text2"]}\'">{s["heading"]}</a></li>' for i, s in enumerate(sections)])
+    toc_items   = "".join([f'<li class="art-side-li"><a href="#s{i}" class="art-side-a">{s["heading"]}</a></li>' for i, s in enumerate(sections)])
     body_html   = "".join([f'<h2 id="s{i}" class="art-h2">{s["heading"]}</h2><div>{s["content"]}</div>' for i, s in enumerate(sections)])
     img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;height:380px;object-fit:cover;border-radius:8px;margin:24px 0"><p style="font-size:11px;color:{t["meta"]};margin-top:-12px">Photo: {photographer} / Pexels</p>' if image_url else ""
 
     css = f"""
 .art-grid{{max-width:1060px;margin:48px auto;padding:0 24px;display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:start}}
 .art-grid .art-side{{position:sticky;top:24px;background:{t["bg2"]};border:1px solid {t["border"]};border-top:3px solid {t["accent"]};border-radius:8px;padding:20px}}
-.art-grid .art-side h3{{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]};margin-bottom:12px}}
-.art-grid .art-side ul{{list-style:none;border-left:2px solid {t["accent"]};padding-left:12px;opacity:.7}}
+.art-grid .art-side h3{{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:{t["accent"]};margin-bottom:14px;line-height:1.3}}
+.art-grid .art-side ul{{list-style:none;border-left:2px solid {t["accent"]};padding-left:14px;margin:0;opacity:1}}
+.art-grid .art-side .art-side-li{{margin:0 0 12px;padding:0;line-height:1.4;list-style:none}}
+.art-grid .art-side .art-side-li:last-child{{margin-bottom:0}}
+.art-grid .art-side .art-side-a{{display:block;color:{t["text2"]}!important;font-size:13px!important;line-height:1.4!important;letter-spacing:0!important;text-decoration:none!important;text-decoration-line:none!important;text-decoration-color:transparent!important;border-bottom:none!important;transition:color .2s;background:none!important;padding:0!important;font-weight:500}}
+.art-grid .art-side .art-side-a:hover{{color:{t["accent"]}!important;text-decoration:none!important}}
 .art-grid h1{{font-family:{t["heading_font"]};font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.1;margin-bottom:14px;color:{t["text"]}}}
 .art-grid p{{margin-bottom:18px;color:{t["text2"]};line-height:1.75}}
 .art-grid .intro{{font-size:18px;line-height:1.7;color:{t["text"]}}}
@@ -3715,13 +4896,267 @@ def article_neuro(article, site, image_url, photographer, t):
     return css, body
 
 
+def article_lesson(article, site, image_url, photographer, t):
+    """Teaching-style lesson layout: kicker, big serif title, lesson preview chips,
+    sectioned body with H2 numbers, and a prominent dark-gray 'Try this today'
+    action callout in place of a generic conclusion. Inherits site theme tokens
+    so palette + fonts match the homepage 100%. Tight on mobile."""
+    sections    = article.get("sections", []) or []
+    sections_html = "\n".join(
+        f'<section class="ls-sec"><div class="ls-sec-num">{i+1:02d}</div>'
+        f'<h2 class="ls-h2" id="s{i}">{s.get("heading","").strip()}</h2>'
+        f'<div class="ls-sec-body">{s.get("content","")}</div></section>'
+        for i, s in enumerate(sections)
+    )
+    chips_html = "".join(
+        f'<a href="#s{i}" class="ls-chip"><span class="ls-chip-n">{i+1:02d}</span>'
+        f'<span class="ls-chip-t">{s.get("heading","").strip()}</span></a>'
+        for i, s in enumerate(sections)
+    )
+
+    if image_url:
+        img = (
+            f'<figure class="ls-hero-fig">'
+            f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy">'
+            f'<figcaption>Photograph by {photographer} / Pexels</figcaption>'
+            f'</figure>'
+        )
+    else:
+        img = ""
+
+    css = f"""
+.ls{{max-width:740px;margin:0 auto;padding:40px 24px 96px;color:{t['text2']};font-family:{t['font']}}}
+.ls a{{color:{t['accent']};text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}}
+.ls a:hover{{color:{t['accent2']}}}
+.ls .ls-meta{{display:flex;align-items:center;gap:10px;font-size:11.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:{t['accent']};margin-bottom:18px}}
+.ls .ls-meta .dot{{width:6px;height:6px;border-radius:50%;background:{t['accent']};display:inline-block}}
+.ls h1{{font-family:{t['heading_font']};font-size:clamp(32px,5.6vw,52px);font-weight:600;line-height:1.05;letter-spacing:-.012em;color:{t['text']};margin-bottom:18px}}
+.ls .ls-deck{{font-family:{t['heading_font']};font-size:clamp(18px,2.4vw,22px);font-style:italic;font-weight:500;color:{t['text2']};line-height:1.5;margin-bottom:22px;max-width:640px}}
+.ls .ls-byline{{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;font-size:13px;color:{t['meta']};border-top:1px solid {t['border']};border-bottom:1px solid {t['border']};padding:14px 0;margin-bottom:36px}}
+.ls .ls-byline strong{{color:{t['text']};font-weight:600}}
+.ls .ls-byline .sep{{color:{t['border']}}}
+.ls-hero-fig{{margin:0 -8px 36px;border-radius:14px;overflow:hidden;background:{t['bg2']}}}
+.ls-hero-fig img{{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover}}
+.ls-hero-fig figcaption{{font-size:11px;color:{t['meta']};letter-spacing:.04em;padding:10px 14px;background:{t['bg2']}}}
+.ls .ls-intro{{font-family:{t['heading_font']};font-size:20px;font-weight:500;line-height:1.65;color:{t['text']};margin-bottom:18px}}
+.ls .ls-intro2{{font-size:16.5px;line-height:1.8;color:{t['text2']};margin-bottom:32px}}
+.ls .ls-preview{{background:{t['bg2']};border:1px solid {t['border']};border-radius:14px;padding:22px 24px;margin:24px 0 40px}}
+.ls .ls-preview-lbl{{font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:{t['accent']};margin-bottom:14px;display:flex;align-items:center;gap:9px}}
+.ls .ls-preview-lbl::before{{content:"";width:24px;height:1px;background:{t['accent']}}}
+.ls .ls-chips{{display:flex;flex-direction:column;gap:8px}}
+.ls .ls-chip{{display:flex;align-items:baseline;gap:14px;color:{t['text']};padding:8px 4px;border-radius:8px;transition:all .18s;text-decoration:none}}
+.ls .ls-chip:hover{{background:{t['bg3']};padding-left:10px;color:{t['accent']}}}
+.ls .ls-chip-n{{font-family:{t['heading_font']};font-size:14px;font-weight:600;color:{t['accent']};letter-spacing:.04em;flex-shrink:0;width:28px}}
+.ls .ls-chip-t{{font-family:{t['heading_font']};font-size:17px;font-weight:500;line-height:1.35}}
+.ls-sec{{position:relative;padding:24px 0 32px;border-top:1px solid {t['border']}}}
+.ls-sec:first-of-type{{border-top:0}}
+.ls-sec-num{{font-family:{t['heading_font']};font-size:13px;font-weight:600;color:{t['accent']};letter-spacing:.14em;margin-bottom:10px}}
+.ls-h2{{font-family:{t['heading_font']};font-size:clamp(24px,3.4vw,32px);font-weight:600;line-height:1.18;letter-spacing:-.005em;color:{t['text']};margin:0 0 18px}}
+.ls-sec-body p{{font-size:16.5px;line-height:1.8;color:{t['text2']};margin-bottom:16px}}
+.ls-sec-body h3{{font-family:{t['heading_font']};font-size:20px;font-weight:600;color:{t['text']};margin:24px 0 10px;letter-spacing:-.005em}}
+.ls-sec-body ul,.ls-sec-body ol{{margin:8px 0 18px 22px}}
+.ls-sec-body li{{font-size:16px;line-height:1.7;color:{t['text2']};margin-bottom:8px}}
+.ls-sec-body strong{{color:{t['text']};font-weight:600}}
+.ls-sec-body blockquote{{margin:22px 0;padding:18px 22px;border-left:3px solid {t['accent']};background:{t['bg2']};font-family:{t['heading_font']};font-style:italic;color:{t['text']};font-size:18px;line-height:1.55;border-radius:0 8px 8px 0}}
+.ls .ls-action{{background:#1f2024;color:#f1efe9;border-radius:16px;padding:28px 28px 30px;margin:48px 0 32px;border:1px solid #2c2d32;box-shadow:0 24px 50px -22px rgba(0,0,0,.55);position:relative;overflow:hidden}}
+.ls .ls-action::before{{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,{t['accent']},{t['accent2']})}}
+.ls .ls-action-lbl{{display:inline-flex;align-items:center;gap:9px;font-size:10.5px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:{t['accent']};margin-bottom:14px;padding:6px 12px;background:rgba(245,177,77,.1);border:1px solid {t['accent']}55;border-radius:999px}}
+.ls .ls-action-lbl::before{{content:"";width:6px;height:6px;border-radius:50%;background:{t['accent']}}}
+.ls .ls-action p{{font-family:{t['heading_font']};font-size:19px;font-style:italic;font-weight:500;line-height:1.6;color:#f1efe9;margin-bottom:0}}
+.ls .ls-action p + p{{margin-top:14px}}
+.ls .ls-sources{{border-top:1px solid {t['border']};margin-top:48px;padding-top:24px}}
+.ls .ls-sources-lbl{{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:{t['meta']};margin-bottom:12px}}
+.ls .ls-sources ul{{list-style:none;margin:0;padding:0}}
+.ls .ls-sources li{{font-size:13.5px;line-height:1.6;color:{t['text2']};padding:6px 0;border-bottom:1px dotted {t['border']}}}
+.ls .ls-sources li:last-child{{border-bottom:0}}
+@media(max-width:560px){{
+  .ls{{padding:28px 18px 64px}}
+  .ls .ls-byline{{font-size:12px;gap:6px 14px}}
+  .ls-hero-fig{{margin-left:-2px;margin-right:-2px;border-radius:10px}}
+  .ls .ls-preview{{padding:18px}}
+  .ls-sec-body p,.ls-sec-body li{{font-size:15.5px}}
+  .ls .ls-action{{padding:22px 20px 24px;margin:36px -2px 24px;border-radius:12px}}
+  .ls .ls-action p{{font-size:17px}}
+}}
+"""
+
+    author = _resolve_author(site, article)["name"]
+    cat    = site.get("category", "Lesson")
+    date   = article.get("date", "")
+
+    sources_block = ""
+    srcs = article.get("sources") or []
+    if isinstance(srcs, list) and srcs:
+        items = "".join(
+            f'<li><a href="{s.get("url","#")}" target="_blank" rel="noopener">{s.get("name","Source")}</a></li>'
+            for s in srcs if isinstance(s, dict)
+        )
+        if items:
+            sources_block = f'<div class="ls-sources"><div class="ls-sources-lbl">Sources &amp; references</div><ul>{items}</ul></div>'
+
+    body = f"""<article class="ls">
+  <div class="ls-meta"><span class="dot"></span><span>{cat} &middot; Lesson</span></div>
+  <h1>{article["title"]}</h1>
+  <p class="ls-deck">{article.get("meta_description","")}</p>
+  <div class="ls-byline"><span>By <strong>{author}</strong></span><span class="sep">/</span><span>{date}</span></div>
+  {img}
+  <div class="ls-intro">{article.get("intro","")}</div>
+  {_wrap_block(article.get("intro2",""), "p", "ls-intro2")}
+  <div class="ls-preview">
+    <div class="ls-preview-lbl">In this lesson</div>
+    <div class="ls-chips">{chips_html}</div>
+  </div>
+  {sections_html}
+  <div class="ls-action">
+    <div class="ls-action-lbl">Try this today</div>
+    {article.get("conclusion","")}
+  </div>
+  {sources_block}
+</article>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+
+    return css, body
+
+
+def article_press(article, site, image_url, photographer, t):
+    """Unified press / long-form magazine layout. Used for every site so the
+    network reads like a legit publication. Honors each site's heading_font
+    and accent; body uses Lora as a fixed editorial serif. Drop cap on the
+    intro, single pull quote mid-piece, conclusion strip."""
+    sections_list = article.get("sections", []) or []
+    sections_html = _article_sections(sections_list, t)
+
+    # Read time off the entire body content.
+    body_text = (
+        (article.get("intro", "") or "") + " " +
+        (article.get("intro2", "") or "") + " " +
+        " ".join((s.get("content", "") or "") for s in sections_list) + " " +
+        (article.get("conclusion", "") or "")
+    )
+    words = len(re.sub(r"<[^>]+>", " ", body_text).split())
+    read_time = max(1, round(words / 220))
+
+    author_info = _resolve_author(site, article)
+    author      = author_info["name"]
+    author_role = author_info.get("title", "") or site.get("category", "")
+    category    = article.get("category") or site.get("category", "")
+
+    img_block = ""
+    if image_url:
+        img_block = (
+            f'<figure class="ap-hero">'
+            f'  <img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager">'
+            f'  <figcaption>Photograph &middot; {photographer} / Pexels</figcaption>'
+            f'</figure>'
+        )
+
+    # Split sections so a single pull quote can sit visually mid-article.
+    pull_text = (article.get("meta_description") or "").strip().strip('"').strip("'")
+    if len(pull_text) > 180:
+        pull_text = pull_text[:177].rsplit(" ", 1)[0] + "..."
+    if len(sections_list) >= 3 and pull_text:
+        mid = max(1, len(sections_list) // 2)
+        sec_before = _article_sections(sections_list[:mid], t)
+        sec_after  = _article_sections(sections_list[mid:], t)
+        sections_html_with_pull = (
+            f"{sec_before}"
+            f'<blockquote class="ap-pull">{pull_text}</blockquote>'
+            f"{sec_after}"
+        )
+    else:
+        sections_html_with_pull = sections_html
+
+    intro_html  = _wrap_block(article.get("intro", ""), "p", "ap-lede")
+    intro2_html = _wrap_block(article.get("intro2", ""), "p")
+
+    css = f"""
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+.ap,.ap-concl,.ap-pull,.ap-body,.ap-deck{{box-sizing:border-box;overflow-wrap:break-word;word-wrap:break-word;word-break:normal;hyphens:auto;max-width:100%}}
+.ap{{max-width:720px;margin:0 auto;padding:56px 24px 80px;font-family:'Lora',Georgia,serif}}
+.ap-kicker{{display:flex;align-items:center;gap:12px;font-family:{t["heading_font"]};font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:{t["accent"]};margin:0 0 26px}}
+.ap-kicker::before{{content:'';width:28px;height:1px;background:{t["accent"]}}}
+.ap-kicker .ap-sep{{opacity:.4;font-weight:400;letter-spacing:1px;color:{t["meta"]}}}
+.ap h1{{font-family:{t["heading_font"]};font-size:clamp(32px,5.4vw,54px);font-weight:800;line-height:1.05;letter-spacing:-.6px;color:{t["text"]};margin:0 0 22px;max-width:680px}}
+.ap-deck{{font-family:'Lora',Georgia,serif;font-size:20px;font-style:italic;line-height:1.5;color:{t["text2"]};margin:0 0 36px;max-width:620px}}
+.ap-byline{{display:flex;align-items:center;gap:14px;padding:18px 0;border-top:1px solid {t["border"]};border-bottom:1px solid {t["border"]};margin:0 0 40px;font-family:{t["heading_font"]}}}
+.ap-byline-author{{font-size:14px;font-weight:600;color:{t["text"]}}}
+.ap-byline-author strong{{font-weight:700;color:{t["text"]}}}
+.ap-byline-meta{{font-size:12.5px;color:{t["meta"]};display:flex;align-items:center;gap:8px;margin-top:3px;letter-spacing:.2px}}
+.ap-byline-meta .dot{{width:3px;height:3px;border-radius:50%;background:{t["meta"]};opacity:.6;display:inline-block}}
+.ap-hero{{margin:0 0 44px}}
+.ap-hero img{{width:100%;height:auto;max-height:560px;object-fit:cover;display:block;border-radius:2px}}
+.ap-hero figcaption{{font-family:'Lora',Georgia,serif;font-style:italic;font-size:13px;color:{t["meta"]};text-align:center;margin-top:12px}}
+.ap-body{{font-size:18px;line-height:1.78;color:{t["text"]}}}
+.ap-body p{{margin:0 0 24px;color:{t["text2"]}}}
+.ap-body p.ap-lede{{font-size:21px;line-height:1.55;color:{t["text"]};margin-bottom:28px}}
+.ap-body p.ap-lede::first-letter{{float:left;font-family:{t["heading_font"]};font-size:76px;font-weight:800;line-height:.82;margin:8px 12px -2px 0;color:{t["accent"]}}}
+.ap-body h2,.ap-body .art-h2{{font-family:{t["heading_font"]};font-size:26px;font-weight:800;line-height:1.2;color:{t["text"]};margin:52px 0 16px;letter-spacing:-.3px}}
+.ap-body h3,.ap-body .art-h3{{font-family:{t["heading_font"]};font-size:19px;font-weight:700;color:{t["text"]};margin:34px 0 12px;letter-spacing:-.1px}}
+.ap-body h4{{font-family:{t["heading_font"]};font-size:14px;font-weight:700;color:{t["text"]};margin:24px 0 10px;text-transform:uppercase;letter-spacing:1.2px}}
+.ap-body ul,.ap-body ol{{margin:0 0 24px 24px;color:{t["text2"]}}}
+.ap-body li{{margin-bottom:9px;line-height:1.7}}
+.ap-body a{{color:{t["accent"]};text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}}
+.ap-body strong{{color:{t["text"]};font-weight:700}}
+.ap-body em{{font-style:italic;color:{t["text"]}}}
+.ap-body img{{width:100%;height:auto;margin:32px 0;border-radius:2px;display:block}}
+.ap-body blockquote{{border-left:3px solid {t["accent"]};padding:6px 0 6px 22px;margin:28px 0;font-style:italic;color:{t["text"]};font-size:18px}}
+.ap-body code{{font-family:'SFMono-Regular',Menlo,Consolas,monospace;background:{t["bg2"]};padding:2px 7px;border-radius:3px;font-size:14px;color:{t["text"]}}}
+.ap-body table{{width:100%;border-collapse:collapse;margin:28px 0;font-family:{t["heading_font"]};font-size:14px}}
+.ap-body th{{text-align:left;padding:10px 12px;border-bottom:2px solid {t["text"]};font-weight:700;text-transform:uppercase;letter-spacing:.5px;font-size:11px;color:{t["text"]}}}
+.ap-body td{{padding:10px 12px;border-bottom:1px solid {t["border"]};color:{t["text2"]}}}
+.ap-pull{{font-family:{t["heading_font"]};font-size:28px;font-weight:600;font-style:italic;line-height:1.3;color:{t["text"]};margin:56px 0;padding:0 0 0 24px;border-left:0;position:relative}}
+.ap-pull::before{{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:{t["accent"]}}}
+.ap-pull::after{{content:'';display:block;width:48px;height:2px;background:{t["accent"]};margin-top:18px;opacity:.5}}
+.ap-concl{{font-family:'Lora',Georgia,serif;font-size:19px;line-height:1.7;color:{t["text"]};margin-top:56px;padding-top:32px;position:relative}}
+.ap-concl::before{{content:'In closing';display:block;font-family:{t["heading_font"]};font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:{t["accent"]};margin-bottom:14px;font-weight:700;font-style:normal}}
+.ap-concl::after{{content:'';position:absolute;top:0;left:0;width:60px;height:2px;background:{t["text"]}}}
+.ap-concl p{{color:{t["text"]};margin-bottom:18px}}
+@media(max-width:760px){{
+  .ap{{padding:40px 22px 72px}}
+  .ap h1{{font-size:34px;letter-spacing:-.4px}}
+  .ap-deck{{font-size:18px}}
+  .ap-body{{font-size:17px}}
+  .ap-body p.ap-lede{{font-size:19px}}
+  .ap-body p.ap-lede::first-letter{{font-size:60px}}
+  .ap-pull{{font-size:22px;margin:42px 0}}
+  .ap-hero img{{max-height:380px}}
+}}
+"""
+
+    body = f"""<div class="ap">
+  <div class="ap-kicker"><span>{category}</span><span class="ap-sep">&middot;</span><span>{article.get("date","")}</span></div>
+  <h1>{article["title"]}</h1>
+  {f'<p class="ap-deck">{article.get("meta_description","")}</p>' if article.get("meta_description") else ''}
+  <div class="ap-byline">
+    <div>
+      <div class="ap-byline-author">By <strong>{author}</strong></div>
+      <div class="ap-byline-meta">{author_role}{'<span class="dot"></span>' if author_role else ''}{read_time} min read</div>
+    </div>
+  </div>
+  {img_block}
+  <div class="ap-body">
+    {intro_html}
+    {intro2_html}
+    {sections_html_with_pull}
+    <div class="ap-concl">{article.get("conclusion","")}</div>
+    {_sources_block(article, t)}
+  </div>
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+
+    return css, body
+
+
 ARTICLE_BUILDERS = {
-    "standard":  article_standard,
-    "sidebar":   article_sidebar,
-    "magazine":  article_magazine,
-    "minimal":   article_minimal,
-    "immersive": article_immersive,
-    "neuro":     article_neuro,
+    # All historic layout names route to the unified press builder so the whole
+    # network reads as a single publication. Keep the keys around so any stored
+    # article_layout value in network-config.json still resolves cleanly.
+    "press":     article_press,
+    "standard":  article_press,
+    "sidebar":   article_press,
+    "magazine":  article_press,
+    "minimal":   article_press,
+    "immersive": article_press,
+    "neuro":     article_press,
+    "lesson":    article_press,
 }
 
 
@@ -3994,9 +5429,13 @@ def build_homepage(site, articles, themes, global_header_scripts="", global_foot
     return html
 
 
-def build_article_page(article, site, image_url, photographer, themes, global_header_scripts="", global_footer_scripts=""):
+def build_article_page(article, site, image_url, photographer, themes, global_header_scripts="", global_footer_scripts="", comments_data=None):
     """Build an article page wrapped in the homepage shell (header + footer + chrome
-    come straight from templates/<stem>-index.html, so they always match the homepage)."""
+    come straight from templates/<stem>-index.html, so they always match the homepage).
+
+    If comments_data is provided (list of comment dicts), inline-renders comments
+    into the static HTML so Google can index them. Otherwise emits a placeholder
+    'Comments coming soon' section (the JS-only fallback is no longer the default)."""
     t       = SITE_THEMES.get(site.get("id"), themes.get(site.get("theme", "minimal"), themes["minimal"]))
     # Article accent must match the site's homepage brand color (not a generic theme
     # value). Pull it from the homepage's SHELL:ACCENT marker.
@@ -4008,6 +5447,23 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     layout  = site.get("article_layout", "standard")
     builder = ARTICLE_BUILDERS.get(layout, article_standard)
     css, body = builder(article, site, image_url, photographer, t)
+
+    # Replace the JS-only comments section with a server-rendered, schema.org
+    # compliant block so Google can index every reader comment + author reply.
+    # If no comments_data is available yet, emits a "Comments coming soon"
+    # placeholder. The legacy _comments_section_js is only used as a fallback
+    # if this regex substitution misses.
+    try:
+        inline_block = _comments_section_inline(article, site, comments_data or [], t)
+        new_body, n_sub = re.subn(
+            r'<div id="comments-section".*?</script>',
+            lambda _m: inline_block,
+            body, count=1, flags=re.DOTALL,
+        )
+        if n_sub:
+            body = new_body
+    except Exception as _e:
+        print(f"  Inline comments swap failed: {_e}")
 
     custom = site.get("custom_css", "").strip()
     if custom:
@@ -4423,6 +5879,16 @@ def run(topic_overrides=None, site_filter=None):
         # defaults to True if missing; historical pipeline gated by historical_mode.
         new_on  = site.get("new_posts_enabled", True) is not False
         hist_on = site.get("historical_mode", False) is True
+
+        # is_historical_due() below needs the article index, so load it before
+        # the kill-switch branching. On fetch failure, skip the site rather than
+        # NameError later.
+        try:
+            articles = load_article_index(site["repo"], github_token)
+        except Exception as e:
+            print(f"  ERROR loading article index for {site['domain']}: {e}")
+            continue
+
         if bulk_hist > 0:
             # Bulk backfill ignores new_posts_enabled (it is historical-only by intent)
             # but still requires historical_mode so a site that opted out is not bulk-fed.
@@ -4448,9 +5914,6 @@ def run(topic_overrides=None, site_filter=None):
             time.sleep(delay)
 
         try:
-            # Load existing articles for topic cycling and sitemap
-            articles = load_article_index(site["repo"], github_token)
-
             # Auto-expand topics when list is nearly exhausted
             topics = site.get("topics", [])
             if topics and len(articles) >= len(topics) - 2:
@@ -4537,20 +6000,42 @@ def run(topic_overrides=None, site_filter=None):
                     article["slug"] = slug  # apply deduplicated slug
 
                     site_sources = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
+                    # Build a fallback-query chain so we never reuse the same photo
+                    # across articles in the same site. Order: primary image_query,
+                    # then the article's category, then the site category, then a
+                    # generic visual hook tied to the site theme.
+                    _primary  = article.get("image_query", site.get("category", "lifestyle"))
+                    _fallbacks = [
+                        article.get("category", ""),
+                        site.get("category", ""),
+                        site.get("image_fallback_query", ""),
+                        f"{site.get('category','')} editorial photography",
+                    ]
                     image_url, photographer = fetch_image(
-                        article.get("image_query", site.get("category", "lifestyle")),
+                        _primary,
                         pexels_key, unsplash_key=unsplash_key or None,
                         replicate_key=replicate_key or None,
                         sources=site_sources,
                         exclude_urls=used_image_urls,
+                        fallback_queries=_fallbacks,
                     )
                     article["image"] = image_url or ""
                     if image_url:
                         used_image_urls.add(image_url)  # prevent reuse in subsequent posts this run
 
+                    # Generate comments BEFORE building HTML so they can be
+                    # inlined into the static page (Google-crawlable).
+                    seeded_comments = []
+                    try:
+                        if site.get("comment_schedule", {}).get("enabled", False):
+                            seeded_comments = generate_comments(article, site, client) or []
+                    except Exception as _ce:
+                        print(f"  Pre-build comment generation failed: {_ce}")
+
                     article_html = build_article_page(article, site, image_url, photographer, THEMES,
                                                       global_header_scripts=global_header_scripts,
-                                                      global_footer_scripts=global_footer_scripts)
+                                                      global_footer_scripts=global_footer_scripts,
+                                                      comments_data=seeded_comments)
 
                     article_html = insert_internal_links(article_html, articles, site["domain"], current_slug=slug)
 
@@ -4594,7 +6079,7 @@ def run(topic_overrides=None, site_filter=None):
                     broadcast_social(site, article, site.get("social_media", {}))
                     ping_google_indexing(f"https://{site['domain']}/{slug}/", indexing_cfg)
                     push_backlink_content(article, site, client, github_token, settings)
-                    push_comments(article, site, client, github_token)
+                    push_comments(article, site, client, github_token, comments=seeded_comments)
 
                     print(f"  Done → https://{site['domain']}/{slug}/")
 
