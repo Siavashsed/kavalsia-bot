@@ -1,5 +1,5 @@
 {
-  "_name": "Kavalsia Network",
+  "_name": "Spider Web",
   "global_prompt": "Write like a seasoned human expert with direct experience, not an AI assistant. Use contractions, vary sentence length, reference your own experience at least twice, include one specific data point or study reference with a year. Take a clear editorial position. NEVER use em-dashes. NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion. Somewhere in the article - not at the start, not as the conclusion - include one paragraph that reads like a real human wrote it in a slightly different mood: uncertain phrasing, an offhand mention of someone ('my friend tried this and honestly...'), a personal anecdote that is specific and slightly embarrassing or funny, or a moment of genuine doubt ('I'm not 100% sure this works for everyone, but...'). The tone of this paragraph can be looser, funnier, or more uncertain than the rest. It should feel like the writer briefly forgot they were writing an article.",
   "global_negative_prompt": "DO NOT EVER USE \" —\" (em-dash). NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion, in summary, to summarize, it is important to note, as an AI language model.",
   "global_header_scripts": "",
@@ -11,7 +11,7 @@
     "post_every_n": 7
   },
   "settings": {
-    "network_name": "Kavalsia Network",
+    "network_name": "Spider Web",
     "bot_repo": "Siavashsed/kavalsia-bot",
     "branch": "main",
     "workflow_file": "daily-post.yml",
@@ -136,7 +136,11 @@
         "window_to": "22:00",
         "delay_days": 1,
         "target": "recent"
-      }
+      },
+      "name": "Nexus",
+      "author": "Nexus Editorial Team",
+      "posts_per_day_new": 0,
+      "historical_per_week": 0
     },
     {
       "id": "cryptopulse",
@@ -205,9 +209,9 @@
       "author_names": [
         "Marcus Webb",
         "Jordan Osei",
-        "Elena Vasquez",
         "David Kim",
-        "Siavash Sadighi"
+        "Siavash Sadighi",
+        "Hiroshi Fujita"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -220,7 +224,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Cryptopulse",
+      "author": "Marcus Webb"
     },
     {
       "id": "passive-wealth",
@@ -289,9 +295,9 @@
       "author_names": [
         "Ryan Mitchell",
         "Sarah Chen",
-        "Marcus Reid",
         "Tanya Kumar",
-        "Siavash Sadighi"
+        "Siavash Sadighi",
+        "Lucia Mendes"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -304,7 +310,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Passivewealthguide",
+      "author": "Ryan Mitchell"
     },
     {
       "id": "trading-tech",
@@ -372,10 +380,10 @@
       "nav_style": "pulse",
       "author_names": [
         "Alex Turner",
-        "Jordan Cole",
         "Sam Nakamura",
-        "Rachel Obi",
-        "Siavash Sadighi"
+        "Siavash Sadighi",
+        "Bryce Donlan",
+        "Idris Bello"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -388,7 +396,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Tradingtechreview",
+      "author": "Alex Turner"
     },
     {
       "id": "ai-marketing",
@@ -458,8 +468,8 @@
         "Jordan Cole",
         "Alex Merritt",
         "Priya Nair",
-        "Marcus Reid",
-        "Siavash Sadighi"
+        "Siavash Sadighi",
+        "Rohan Mehta"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -472,7 +482,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "ai-marketing",
       "default_author": "",
       "custom_prompt": "",
@@ -510,7 +520,8 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author": "Jordan Cole"
     },
     {
       "id": "ecommerce-edge",
@@ -577,11 +588,11 @@
       "articles_per_day": 1,
       "nav_style": "grid",
       "author_names": [
-        "Nina Patel",
-        "Sophie Chen",
         "Jake Morrison",
         "Aisha Williams",
-        "Siavash Sadighi"
+        "Siavash Sadighi",
+        "Theo Bramhall",
+        "Pia Holzer"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -632,7 +643,8 @@
       "posts_unit": "week",
       "historical_count": 14,
       "historical_unit": "week",
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "author": "Nina Patel"
     },
     {
       "id": "mochapoo-pets",
@@ -722,7 +734,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "mochapoo-pets",
       "default_author": "",
       "custom_prompt": "Open with a small playful hook or observation about the pet (one line, max). Use light humor sparingly through the piece - one or two dry asides per article, never forced. Always pay the joke off with real, specific, owner-actionable advice. End every article with a quick 'TL;DR' style summary the reader can act on this week.",
@@ -779,7 +791,8 @@
           "calming aids",
           "training treats"
         ]
-      }
+      },
+      "author": "Dr. Emily Ross"
     },
     {
       "id": "supplement-verge",
@@ -848,9 +861,9 @@
       "author_names": [
         "Ryan Ellis",
         "Sarah Cole",
-        "Marcus Reid",
         "Nina Patel",
-        "Siavash Sadighi"
+        "Dr. Yara Saito",
+        "Dr. Aki Maeda"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -863,7 +876,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Supplementverge",
+      "author": "Dr. James Holloway"
     },
     {
       "id": "sight-reading",
@@ -873,7 +888,7 @@
       "category": "Music Education",
       "theme": "light",
       "layout": "magazine",
-      "article_layout": "standard",
+      "article_layout": "lesson",
       "tone": "encouraging and methodical, like a conservatory-trained teacher who has taught beginners for 20 years.",
       "persona": "Professor Laura Kim, Juilliard-trained pianist and music educator",
       "brevo_list_id": 16,
@@ -891,6 +906,7 @@
         "window_from": "08:00",
         "window_to": "22:00",
         "delay_days": 1,
+        "max_age_days": 4,
         "target": "recent"
       },
       "client": {
@@ -929,11 +945,11 @@
       "articles_per_day": 1,
       "nav_style": "leaf",
       "author_names": [
-        "Elena Vasquez",
         "Tom Clarke",
         "Rachel Kim",
         "Jordan Webb",
-        "Siavash Sadighi"
+        "Jonas Eklund",
+        "Henrik Nyborg"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -946,7 +962,9 @@
       "posts_unit": "week",
       "historical_count": 14,
       "historical_unit": "week",
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Sightreadingacademy",
+      "author": "Professor Laura Kim"
     },
     {
       "id": "newborn-iq",
@@ -1017,7 +1035,7 @@
         "Amy Chen",
         "Emma Torres",
         "Ryan Park",
-        "Siavash Sadighi"
+        "Cora Beauchamp"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1030,7 +1048,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Newborniq",
+      "author": "Melissa Torres"
     },
     {
       "id": "dalmend-home",
@@ -1038,7 +1058,7 @@
       "domain": "interiors.dalmend.com",
       "repo": "Siavashsed/dalmend-home",
       "category": "Home Design & Real Estate",
-      "theme": "light",
+      "theme": "dark",
       "layout": "magazine",
       "article_layout": "minimal",
       "tone": "design-forward and practical, like an interior designer who also flips houses for profit.",
@@ -1097,11 +1117,11 @@
       "articles_per_day": 1,
       "nav_style": "leaf",
       "author_names": [
-        "Alex Morrison",
         "Nina Webb",
-        "Jordan Clarke",
         "Sophie Reid",
-        "Siavash Sadighi"
+        "Halle Drummond",
+        "Ines Carvalho",
+        "Liesel Wolff"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1127,7 +1147,8 @@
       "posts_unit": "week",
       "historical_count": 14,
       "historical_unit": "week",
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "author": "Olivia Grant"
     },
     {
       "id": "onlinebiz-pro",
@@ -1194,11 +1215,11 @@
       "articles_per_day": 1,
       "nav_style": "stack",
       "author_names": [
-        "Ryan Cross",
-        "Maya Torres",
         "Derek Sullivan",
         "Keiko Adams",
-        "Siavash Sadighi"
+        "Siavash Sadighi",
+        "Adaeze Onyeka",
+        "Vesna Markovic"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1211,7 +1232,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Onlinebizpro",
+      "author": "Ryan Cross"
     },
     {
       "id": "sportiq-pro",
@@ -1279,10 +1302,10 @@
       "nav_style": "dark",
       "author_names": [
         "Marcus Cole",
-        "Jake Turner",
         "Rachel Obi",
-        "Alex Nash",
-        "Siavash Sadighi"
+        "Mikael Ronstad",
+        "Tasha Velasquez",
+        "Calder Whitfield"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1295,7 +1318,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Sportiqpro",
+      "author": "Coach Daniel Webb"
     },
     {
       "id": "makeup-craft",
@@ -1364,9 +1389,9 @@
       "author_names": [
         "Sofia Marino",
         "Emma Clarke",
-        "Priya Nair",
-        "Maya Torres",
-        "Siavash Sadighi"
+        "Bibiana Russo",
+        "Roxana Petrescu",
+        "Selma Khoury"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1379,7 +1404,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "name": "Makeupcraft",
+      "author": "Sofia Marino"
     },
     {
       "id": "dating-edge",
@@ -1450,7 +1477,7 @@
         "Jordan Lee",
         "Alex Webb",
         "Sarah Kim",
-        "Siavash Sadighi"
+        "Pippa Sennett"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1463,7 +1490,9 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": true,
+      "name": "Datingedge",
+      "author": "Dr. Priya Sharma"
     },
     {
       "id": "fitpulse-pro",
@@ -1530,11 +1559,11 @@
       "articles_per_day": 1,
       "nav_style": "dark",
       "author_names": [
-        "Marcus Reid",
         "Jake Cole",
         "Rachel Turner",
         "Alex Nash",
-        "Siavash Sadighi"
+        "Brendan Ahearn",
+        "Petros Halas"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1547,7 +1576,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "fitpulse-pro",
       "default_author": "",
       "custom_prompt": "",
@@ -1585,7 +1614,8 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author": "Coach Rachel Stone"
     },
     {
       "id": "mashestate-home",
@@ -1652,10 +1682,10 @@
       "articles_per_day": 1,
       "nav_style": "grid",
       "author_names": [
-        "Tom Mash",
-        "Jordan Webb",
-        "Sarah Cole",
-        "Alex Morrison"
+        "Mira Vasquez",
+        "Aoibhinn Ryan",
+        "Tobias Reinhardt",
+        "Cassian Bell"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -1715,7 +1745,8 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author": "David Mash"
     },
     {
       "id": "kanona-events",
@@ -1734,7 +1765,7 @@
         "Marcus Reid",
         "Jordan Park",
         "Sophie Clarke",
-        "Siavash Sadighi"
+        "Theo Halverson"
       ],
       "use_random_author": true,
       "brevo_list_id": 20,
@@ -1800,7 +1831,8 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false
+      "new_posts_enabled": true,
+      "author": "Kani Sedighi"
     },
     {
       "id": "mashestate-construction",
@@ -1928,7 +1960,8 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author": "Tom Mash"
     },
     {
       "id": "insight-insure",
@@ -1995,10 +2028,10 @@
       "articles_per_day": 2,
       "nav_style": "grid",
       "author_names": [
-        "Ryan Mitchell",
         "Sarah Clarke",
-        "Marcus Cole",
-        "Jordan Kim"
+        "Jordan Kim",
+        "Greta Holmstrom",
+        "Cyrus Khorrami"
       ],
       "use_random_author": true,
       "posts_per_run": 2,
@@ -2011,7 +2044,7 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "insight-insure",
       "default_author": "",
       "custom_prompt": "",
@@ -2049,7 +2082,8 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author": "Patrick Lane"
     },
     {
       "id": "carverge",
@@ -2116,10 +2150,10 @@
       "articles_per_day": 2,
       "nav_style": "carverge",
       "author_names": [
-        "Alex Turner",
-        "Marcus Webb",
-        "Jake Morrison",
-        "Rachel Cole"
+        "Rachel Cole",
+        "Camillo Tessari",
+        "Tobias Larsen",
+        "Daichi Murakami"
       ],
       "use_random_author": true,
       "posts_per_run": 2,
@@ -2177,7 +2211,8 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author": "James Carr"
     },
     {
       "id": "travelverge",
@@ -2247,7 +2282,7 @@
         "Ana Verge",
         "Jordan Clarke",
         "Sophie Kim",
-        "Marcus Reid"
+        "Ronan Ferreira"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -2307,7 +2342,8 @@
         "store_domain": "",
         "admin_token": "",
         "storefront_token": ""
-      }
+      },
+      "author": "Ana Verge"
     },
     {
       "id": "topproduct",
@@ -2321,7 +2357,7 @@
       "article_layout": "standard",
       "tone": "direct and trustworthy, like a friend who has already bought and tested the product and gives you the honest answer without brand partnerships clouding the advice.",
       "persona": "Jamie Cole, product reviewer and consumer advocate",
-      "author": "",
+      "author": "Jamie Cole",
       "brevo_list_id": 12,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -2382,10 +2418,10 @@
       "nav_style": "dark",
       "author_names": [
         "Jamie Cole",
-        "Marcus Reid",
         "Sophie Chen",
         "Alex Torres",
-        "Siavash Sadighi"
+        "Tabitha Fellows",
+        "Marcus Engelhardt"
       ],
       "use_random_author": true,
       "posts_per_run": 2,
@@ -2398,7 +2434,8 @@
       "historical_count": 14,
       "historical_unit": "week",
       "posts_per_week": 3,
-      "new_posts_enabled": true
+      "new_posts_enabled": true,
+      "name": "Topproduct"
     },
     {
       "id": "mindframe",
