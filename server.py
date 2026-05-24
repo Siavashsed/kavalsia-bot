@@ -16,6 +16,7 @@ CONFIG_PATH          = BASE_DIR / "network-config.json"
 CHANGELOG_PATH       = BASE_DIR / "changelog.json"
 BACKLINKS_PATH       = BASE_DIR / "backlinks-tracker.json"
 CLAUDE_HISTORY_PATH  = BASE_DIR / "claude_history.json"
+LATEST_ARTICLES_PATH = BASE_DIR / "latest_articles.json"
 # Secrets live in the user's home so they are NEVER tracked by git or pushed by
 # deploy-bot.py. Any browser/device hitting the local server reads the same
 # file, so opening the dashboard fresh auto-loads every API key + token.
@@ -1272,6 +1273,703 @@ def update_article_author():
         "new_author":     new_aut,
         "messages":       messages,
     })
+
+# ── Latest Posts: cross-network feed + per-article metadata edits ─────────────
+def _gh_headers(token):
+    return {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
+
+def _resolve_gh_token(body):
+    t = ((body or {}).get("token") or "").strip() \
+        or request.headers.get("X-GH-Token", "").strip() \
+        or os.environ.get("GITHUB_TOKEN", "").strip()
+    if not t:
+        try:
+            t = (_load_secrets_file().get("ghToken") or "").strip()
+        except Exception:
+            t = ""
+    return t
+
+def _load_articles_index(repo, token):
+    """Returns (articles_list, sha, error_str_or_none)."""
+    import base64
+    try:
+        r = requests.get(f"https://api.github.com/repos/{repo}/contents/articles.json",
+                         headers=_gh_headers(token), timeout=15)
+    except requests.exceptions.RequestException as e:
+        return [], None, f"network: {e}"
+    if r.status_code == 404:
+        return [], None, "no articles.json"
+    if r.status_code != 200:
+        return [], None, f"http {r.status_code}"
+    try:
+        d = r.json()
+        return json.loads(base64.b64decode(d["content"]).decode("utf-8")), d["sha"], None
+    except Exception as e:
+        return [], None, f"parse: {e}"
+
+@app.route("/api/latest-articles", methods=["GET"])
+def latest_articles_get():
+    """Return the cached latest-articles mirror."""
+    if not LATEST_ARTICLES_PATH.exists():
+        return jsonify({"items": [], "last_refreshed": None, "errors": []})
+    try:
+        return jsonify(json.loads(LATEST_ARTICLES_PATH.read_text(encoding="utf-8")))
+    except Exception as e:
+        return jsonify({"items": [], "last_refreshed": None, "errors": [str(e)]}), 500
+
+@app.route("/api/latest-articles/refresh", methods=["POST"])
+def latest_articles_refresh():
+    """
+    Pull articles.json from every configured site's GitHub repo, build a flat
+    list sorted by date desc, and write it to latest_articles.json.
+    Body: { token? } - GitHub PAT (also accepted via X-GH-Token / GITHUB_TOKEN).
+    """
+    body  = request.get_json(force=True, silent=True) or {}
+    token = _resolve_gh_token(body)
+    if not token:
+        return jsonify({"error": "GitHub token required"}), 400
+
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+
+    items, errors = [], []
+    for s in cfg.get("sites", []):
+        site_id = (s.get("id") or "").strip()
+        repo    = (s.get("repo") or "").strip()
+        if not site_id or not repo or "YOUR_" in repo:
+            continue
+        # Skip aggregator/non-publisher sites (e.g. nexus).
+        if s.get("new_posts_enabled") is False and not s.get("historical_mode"):
+            # Still include - the user may want to edit older posts.
+            pass
+
+        arts, _sha, err = _load_articles_index(repo, token)
+        if err:
+            errors.append({"site_id": site_id, "error": err})
+            continue
+        domain   = (s.get("domain") or "").strip()
+        sitename = (s.get("name") or s.get("_name") or site_id).strip()
+        for a in arts:
+            slug = (a.get("slug") or "").strip("/")
+            if not slug:
+                continue
+            items.append({
+                "site_id":   site_id,
+                "site_name": sitename,
+                "repo":      repo,
+                "slug":      slug,
+                "title":     a.get("title", ""),
+                "author":    a.get("author", ""),
+                "date":      a.get("date", ""),
+                "date_iso":  a.get("date_iso", ""),
+                "category":  a.get("category", ""),
+                "meta_description": a.get("meta_description", ""),
+                "image":     a.get("image", ""),
+                "url":       f"https://{domain}/{slug}/" if domain else "",
+                "posted_iso": a.get("posted_iso", ""),
+            })
+
+    # Sort by ISO date desc (fallback to posted_iso, then empty last).
+    items.sort(key=lambda x: (x.get("date_iso") or x.get("posted_iso") or ""), reverse=True)
+
+    payload = {
+        "items":          items,
+        "last_refreshed": datetime.now().isoformat(timespec="seconds"),
+        "errors":         errors,
+    }
+    try:
+        LATEST_ARTICLES_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    except Exception as e:
+        return jsonify({"error": f"Could not write latest_articles.json: {e}"}), 500
+
+    return jsonify(payload)
+
+@app.route("/api/article-meta", methods=["POST"])
+def update_article_meta():
+    """
+    Body: { site_id, slug, title?, author?, date?, date_iso?, category?,
+            meta_description?, token? }
+    Updates the article metadata in BOTH:
+      - <repo>/articles.json (the index entry)
+      - <repo>/<slug>/index.html (best-effort regex patches for title tag,
+        og/twitter meta, article:published_time, h1, byline date/author)
+    Also patches the local latest_articles.json mirror so the dashboard refresh
+    reflects the change instantly.
+    Returns { ok, updated_index, updated_html, changed_fields, messages }.
+    """
+    import base64, re as _re
+
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    slug    = (body.get("slug") or "").strip().strip("/")
+    token   = _resolve_gh_token(body)
+    if not site_id or not slug:
+        return jsonify({"error": "site_id and slug are required"}), 400
+    if not token:
+        return jsonify({"error": "GitHub token required"}), 400
+
+    # Fields we accept. Missing keys = no change.
+    EDITABLE = ["title", "author", "date", "date_iso", "category", "meta_description"]
+    edits = {k: body[k] for k in EDITABLE if k in body and body[k] is not None}
+    if not edits:
+        return jsonify({"error": "no editable fields provided"}), 400
+    # Normalize strings (don't strip date_iso since it must stay ISO).
+    for k in list(edits.keys()):
+        if isinstance(edits[k], str):
+            edits[k] = edits[k].strip()
+
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+    site = next((s for s in cfg.get("sites", []) if s.get("id") == site_id), None)
+    if not site:
+        return jsonify({"error": f"Unknown site_id '{site_id}'"}), 404
+    repo = (site.get("repo") or "").strip()
+    if not repo or "YOUR_" in repo:
+        return jsonify({"error": f"Site '{site_id}' has no valid repo"}), 400
+
+    headers  = _gh_headers(token)
+    messages = []
+
+    # 1. Load articles.json
+    articles, idx_sha, err = _load_articles_index(repo, token)
+    if err:
+        return jsonify({"error": f"articles.json: {err}"}), 502
+    art = next((a for a in articles if (a.get("slug","").strip("/") == slug)), None)
+    if art is None:
+        return jsonify({"error": f"Article slug '{slug}' not found"}), 404
+
+    old = {k: (art.get(k) or "") for k in EDITABLE}
+    changed = {k: edits[k] for k in edits if str(edits[k]) != str(old.get(k,""))}
+    if not changed:
+        return jsonify({"ok": True, "updated_index": False, "updated_html": False,
+                        "changed_fields": [], "messages": ["No changes."]})
+
+    # 2. Fetch + patch the article HTML (best-effort)
+    html_path = f"{slug}/index.html"
+    updated_html = False
+    try:
+        hr = requests.get(f"https://api.github.com/repos/{repo}/contents/{html_path}",
+                          headers=headers, timeout=15)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": f"Network fetching article HTML: {e}"}), 502
+    if hr.status_code in (401, 403):
+        return jsonify({"error": f"GitHub auth failed ({hr.status_code})"}), hr.status_code
+    if hr.status_code == 404:
+        messages.append(f"{html_path} not found - articles.json only.")
+        html, html_sha = None, None
+    elif hr.status_code != 200:
+        return jsonify({"error": f"GitHub returned {hr.status_code} for {html_path}"}), hr.status_code
+    else:
+        hd       = hr.json()
+        html_sha = hd["sha"]
+        html     = base64.b64decode(hd["content"]).decode("utf-8", errors="replace")
+
+    if html:
+        new_html = html
+        patches  = []
+
+        # --- Title ---
+        if "title" in changed:
+            old_t, new_t = old.get("title",""), changed["title"]
+            if old_t:
+                esc = _re.escape(old_t)
+                # <title>OLD ...</title>  (preserve site-name suffix)
+                new_html, n = _re.subn(rf"(<title[^>]*>)\s*{esc}", lambda m: m.group(1) + new_t, new_html, count=1)
+                if n: patches.append(f"title:{n}")
+                # og/twitter title meta
+                for prop in ('property="og:title"', 'name="twitter:title"', 'name="title"'):
+                    new_html, n = _re.subn(rf'(<meta\s+{prop}\s+content=")' + esc + r'(")',
+                                           lambda m: m.group(1) + new_t + m.group(2), new_html)
+                    if n: patches.append(f"meta-title:{n}")
+                # h1 inside article body
+                new_html, n = _re.subn(rf'(<h1\b[^>]*>)\s*{esc}\s*(</h1>)',
+                                       lambda m: m.group(1) + new_t + m.group(2), new_html, count=1)
+                if n: patches.append(f"h1:{n}")
+                # JSON-LD "headline": "OLD"
+                new_html, n = _re.subn(rf'("headline"\s*:\s*")' + esc + r'(")',
+                                       lambda m: m.group(1) + new_t + m.group(2), new_html, count=1)
+                if n: patches.append(f"ld-headline:{n}")
+
+        # --- Description ---
+        if "meta_description" in changed:
+            old_d, new_d = old.get("meta_description",""), changed["meta_description"]
+            if old_d:
+                esc = _re.escape(old_d)
+                for sel in ('name="description"', 'property="og:description"', 'name="twitter:description"'):
+                    new_html, n = _re.subn(rf'(<meta\s+{sel}\s+content=")' + esc + r'(")',
+                                           lambda m: m.group(1) + new_d + m.group(2), new_html)
+                    if n: patches.append(f"meta-desc:{n}")
+                new_html, n = _re.subn(rf'("description"\s*:\s*")' + esc + r'(")',
+                                       lambda m: m.group(1) + new_d + m.group(2), new_html, count=1)
+                if n: patches.append(f"ld-desc:{n}")
+
+        # --- Author byline (reuse the author patterns) ---
+        if "author" in changed:
+            old_a, new_a = old.get("author",""), changed["author"]
+            if old_a:
+                esc = _re.escape(old_a)
+                pats = [
+                    rf'(By\s*<strong\b[^>]*>)\s*{esc}\s*(</strong>)',
+                    rf'(<div\b[^>]*class="[^"]*\bbyline\b[^"]*"[^>]*>)([^<]*?){esc}([^<]*?)(</div>)',
+                    rf'(<(?:span|div|a|p)\b[^>]*class="[^"]*\bauthor\b[^"]*"[^>]*>)\s*{esc}\s*(</(?:span|div|a|p)>)',
+                    rf'(itemprop="author"[^>]*>)\s*{esc}\s*(<)',
+                    rf'(>\s*By\s+){esc}(\b)',
+                ]
+                total = 0
+                for p in pats:
+                    new_html, n = _re.subn(p, lambda m: m.group(0).replace(old_a, new_a), new_html,
+                                           flags=_re.IGNORECASE | _re.DOTALL)
+                    total += n
+                if total: patches.append(f"author:{total}")
+
+        # --- Date display + ISO ---
+        if "date" in changed:
+            old_dt, new_dt = old.get("date",""), changed["date"]
+            if old_dt:
+                # Inside <time>OLD</time> first (most specific)
+                esc = _re.escape(old_dt)
+                new_html, n = _re.subn(rf'(<time\b[^>]*>)\s*{esc}\s*(</time>)',
+                                       lambda m: m.group(1) + new_dt + m.group(2), new_html, count=1)
+                if n: patches.append(f"time:{n}")
+                else:
+                    # Loose: replace first occurrence in the body
+                    new_html, n = _re.subn(esc, new_dt, new_html, count=1)
+                    if n: patches.append(f"date-text:{n}")
+
+        if "date_iso" in changed:
+            old_iso, new_iso = old.get("date_iso",""), changed["date_iso"]
+            if old_iso:
+                esc = _re.escape(old_iso)
+                # article:published_time meta
+                new_html, n = _re.subn(rf'(<meta\s+property="article:published_time"\s+content=")' + esc + r'(")',
+                                       lambda m: m.group(1) + new_iso + m.group(2), new_html)
+                if n: patches.append(f"pub-iso:{n}")
+                # <time datetime="OLD">
+                new_html, n = _re.subn(rf'(<time\b[^>]*datetime=")' + esc + r'(")',
+                                       lambda m: m.group(1) + new_iso + m.group(2), new_html)
+                if n: patches.append(f"datetime:{n}")
+                # JSON-LD datePublished
+                new_html, n = _re.subn(rf'("datePublished"\s*:\s*")' + esc + r'(")',
+                                       lambda m: m.group(1) + new_iso + m.group(2), new_html)
+                if n: patches.append(f"ld-pub:{n}")
+
+        if new_html != html:
+            put = {
+                "message": f"Edit metadata for {slug}: {', '.join(changed.keys())}",
+                "content": base64.b64encode(new_html.encode("utf-8")).decode(),
+                "sha":     html_sha,
+            }
+            try:
+                pr = requests.put(f"https://api.github.com/repos/{repo}/contents/{html_path}",
+                                  headers=headers, json=put, timeout=20)
+            except requests.exceptions.RequestException as e:
+                return jsonify({"error": f"Network pushing HTML: {e}"}), 502
+            if pr.status_code not in (200, 201):
+                return jsonify({"error": f"HTML push failed ({pr.status_code}): {pr.text[:300]}"}), pr.status_code
+            updated_html = True
+            messages.append("HTML patched: " + ", ".join(patches) if patches else "HTML rewritten.")
+        else:
+            messages.append("No regex matched in HTML - articles.json updated, but page text may still show old values until next rebuild-articles.")
+
+    # 3. Patch articles.json
+    for k, v in changed.items():
+        art[k] = v
+    content_b64 = base64.b64encode(json.dumps(articles, indent=2).encode("utf-8")).decode()
+    def _put_idx(sha):
+        return requests.put(f"https://api.github.com/repos/{repo}/contents/articles.json",
+                            headers=headers,
+                            json={"message": f"Edit metadata for {slug}: {', '.join(changed.keys())}",
+                                  "content": content_b64, "sha": sha},
+                            timeout=20)
+    try:
+        ir = _put_idx(idx_sha)
+        if ir.status_code == 409:
+            rr = requests.get(f"https://api.github.com/repos/{repo}/contents/articles.json",
+                              headers=headers, timeout=15)
+            if rr.status_code == 200:
+                fresh = rr.json()
+                fresh_articles = json.loads(base64.b64decode(fresh["content"]).decode("utf-8"))
+                for fa in fresh_articles:
+                    if (fa.get("slug","").strip("/") == slug):
+                        for k, v in changed.items():
+                            fa[k] = v
+                        break
+                content_b64 = base64.b64encode(json.dumps(fresh_articles, indent=2).encode("utf-8")).decode()
+                ir = _put_idx(fresh["sha"])
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": f"Network pushing articles.json: {e}",
+                        "updated_html": updated_html}), 502
+    if ir.status_code not in (200, 201):
+        return jsonify({"error": f"articles.json push failed ({ir.status_code}): {ir.text[:300]}",
+                        "updated_html": updated_html}), ir.status_code
+
+    # 4. Patch the local latest_articles.json mirror so dashboard reflects instantly.
+    try:
+        if LATEST_ARTICLES_PATH.exists():
+            mirror = json.loads(LATEST_ARTICLES_PATH.read_text(encoding="utf-8"))
+            for it in mirror.get("items", []):
+                if it.get("site_id") == site_id and (it.get("slug","").strip("/") == slug):
+                    for k, v in changed.items():
+                        it[k] = v
+                    break
+            LATEST_ARTICLES_PATH.write_text(json.dumps(mirror, indent=2), encoding="utf-8")
+    except Exception as e:
+        messages.append(f"local mirror not updated: {e}")
+
+    return jsonify({
+        "ok":             True,
+        "updated_index":  True,
+        "updated_html":   updated_html,
+        "changed_fields": list(changed.keys()),
+        "messages":       messages,
+    })
+
+# ── Comment Date Audit + Fix (enforce comment.date_iso >= post.date_iso + 1d) ──
+@app.route("/api/comments-fix", methods=["POST"])
+def comments_fix():
+    """
+    Walk every site's articles.json, fetch each <slug>/comments.json, and enforce:
+      comment.date_iso >= article.date_iso + 1 day
+    Violations are spread evenly across [art+1d, art+max_age_days] (max_age from
+    site.comment_schedule.max_age_days, default 4). Replies are also enforced and
+    pinned to >= parent comment's adjusted date.
+    Body: { token?, only_site_id?, dry_run? (default false) }
+    Returns: { ok, scanned, fixed, sites:[{site_id, articles_scanned, articles_with_violations, fixes, errors:[]}] }
+    """
+    import base64, random as _rand
+    body         = request.get_json(force=True, silent=True) or {}
+    token        = _resolve_gh_token(body)
+    only_site    = (body.get("only_site_id") or "").strip()
+    dry_run      = bool(body.get("dry_run", False))
+    if not token:
+        return jsonify({"error": "GitHub token required"}), 400
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+
+    headers = _gh_headers(token)
+    today   = datetime.now()
+    sites_report = []
+    total_scanned = total_fixed = 0
+
+    for site in cfg.get("sites", []):
+        sid  = (site.get("id") or "").strip()
+        repo = (site.get("repo") or "").strip()
+        if not sid or not repo or "YOUR_" in repo: continue
+        if only_site and sid != only_site:        continue
+
+        max_age = max(1, int((site.get("comment_schedule") or {}).get("max_age_days", 4)))
+        s_rep   = {"site_id": sid, "repo": repo, "articles_scanned": 0,
+                   "articles_with_violations": 0, "fixes": 0, "errors": []}
+
+        arts, _sha, err = _load_articles_index(repo, token)
+        if err:
+            s_rep["errors"].append(f"articles.json: {err}")
+            sites_report.append(s_rep); continue
+
+        for a in arts:
+            slug   = (a.get("slug") or "").strip("/")
+            artiso = (a.get("date_iso") or "").strip()
+            if not slug or not artiso:
+                continue
+            try:
+                art_dt = datetime.strptime(artiso, "%Y-%m-%d")
+            except Exception:
+                continue
+            s_rep["articles_scanned"] += 1
+            total_scanned += 1
+
+            # Fetch comments.json
+            url = f"https://api.github.com/repos/{repo}/contents/{slug}/comments.json"
+            try:
+                cr = requests.get(url, headers=headers, timeout=15)
+            except requests.exceptions.RequestException as e:
+                s_rep["errors"].append(f"{slug}: network {e}")
+                continue
+            if cr.status_code == 404:
+                continue  # no comments yet
+            if cr.status_code != 200:
+                s_rep["errors"].append(f"{slug}: http {cr.status_code}")
+                continue
+            try:
+                cdata = cr.json()
+                csha  = cdata["sha"]
+                comments = json.loads(base64.b64decode(cdata["content"]).decode("utf-8"))
+            except Exception as e:
+                s_rep["errors"].append(f"{slug}: parse {e}")
+                continue
+            if not isinstance(comments, list) or not comments:
+                continue
+
+            min_floor = art_dt + timedelta(days=1)
+            max_ceil  = art_dt + timedelta(days=max_age)
+            if max_ceil > today:
+                max_ceil = today
+            if max_ceil < min_floor:
+                max_ceil = min_floor  # tight window for very fresh posts
+
+            n_fixes_in_article = 0
+
+            # Pass 1: fix top-level comments
+            for c in comments:
+                ciso = (c.get("date_iso") or "").strip()
+                try:
+                    cdt = datetime.strptime(ciso, "%Y-%m-%d") if ciso else None
+                except Exception:
+                    cdt = None
+                if cdt is None or cdt < min_floor:
+                    # Pick a new date evenly spread across [min_floor, max_ceil]
+                    span = max(0, (max_ceil - min_floor).days)
+                    new_dt = min_floor + timedelta(days=_rand.randint(0, span),
+                                                   hours=_rand.randint(1, 22))
+                    if new_dt > today:
+                        new_dt = today - timedelta(hours=_rand.randint(1, 18))
+                    c["date_iso"]     = new_dt.strftime("%Y-%m-%d")
+                    c["date_display"] = new_dt.strftime("%b %d, %Y")
+                    n_fixes_in_article += 1
+
+            # Pass 2: fix replies (must be >= parent.date_iso AND >= min_floor)
+            for c in comments:
+                replies = c.get("replies") or []
+                if not isinstance(replies, list): continue
+                try:
+                    parent_dt = datetime.strptime(c["date_iso"], "%Y-%m-%d")
+                except Exception:
+                    parent_dt = min_floor
+                reply_floor = max(parent_dt, min_floor)
+                for r in replies:
+                    riso = (r.get("date_iso") or "").strip()
+                    try:
+                        rdt = datetime.strptime(riso, "%Y-%m-%d") if riso else None
+                    except Exception:
+                        rdt = None
+                    if rdt is None or rdt < reply_floor:
+                        span = max(0, (max_ceil - reply_floor).days)
+                        new_dt = reply_floor + timedelta(days=_rand.randint(0, span),
+                                                         hours=_rand.randint(1, 22))
+                        if new_dt > today:
+                            new_dt = today - timedelta(hours=_rand.randint(1, 18))
+                        r["date_iso"]     = new_dt.strftime("%Y-%m-%d")
+                        r["date_display"] = new_dt.strftime("%b %d, %Y")
+                        n_fixes_in_article += 1
+
+            if n_fixes_in_article == 0:
+                continue
+
+            # Sort comments by date_iso for tidy display.
+            comments.sort(key=lambda x: x.get("date_iso", ""))
+            for c in comments:
+                if isinstance(c.get("replies"), list):
+                    c["replies"].sort(key=lambda x: x.get("date_iso", ""))
+
+            s_rep["articles_with_violations"] += 1
+            s_rep["fixes"] += n_fixes_in_article
+            total_fixed   += n_fixes_in_article
+
+            if dry_run:
+                continue
+
+            # Push the corrected comments.json back.
+            put = {
+                "message": f"Fix comment dates (>= post+1d) for {slug}",
+                "content": base64.b64encode(json.dumps(comments, indent=2).encode()).decode(),
+                "sha":     csha,
+            }
+            try:
+                pr = requests.put(url, headers=headers, json=put, timeout=20)
+            except requests.exceptions.RequestException as e:
+                s_rep["errors"].append(f"{slug}: push network {e}")
+                continue
+            if pr.status_code not in (200, 201):
+                s_rep["errors"].append(f"{slug}: push http {pr.status_code}")
+                continue
+
+        sites_report.append(s_rep)
+
+    return jsonify({
+        "ok": True, "dry_run": dry_run,
+        "scanned": total_scanned, "fixed": total_fixed,
+        "sites": sites_report,
+    })
+
+# ── Article delete (removes from articles.json + deletes slug folder contents) ─
+@app.route("/api/article-delete", methods=["POST"])
+def article_delete():
+    """
+    Body: { site_id, slug, token?, files_to_delete? (default ["index.html","comments.json"]) }
+    Removes the entry from <repo>/articles.json AND deletes the article's files
+    under <repo>/<slug>/. Also drops the row from the local latest_articles.json
+    mirror so the dashboard reflects the removal instantly.
+    Returns { ok, deleted_files:[...], removed_from_index:bool, messages:[] }.
+    """
+    import base64
+    body    = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    slug    = (body.get("slug") or "").strip().strip("/")
+    token   = _resolve_gh_token(body)
+    files   = body.get("files_to_delete") or ["index.html", "comments.json"]
+    if not site_id or not slug:
+        return jsonify({"error": "site_id and slug are required"}), 400
+    if not token:
+        return jsonify({"error": "GitHub token required"}), 400
+
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+    site = next((s for s in cfg.get("sites", []) if s.get("id") == site_id), None)
+    if not site:
+        return jsonify({"error": f"Unknown site_id '{site_id}'"}), 404
+    repo = (site.get("repo") or "").strip()
+    if not repo or "YOUR_" in repo:
+        return jsonify({"error": f"Site '{site_id}' has no valid repo"}), 400
+
+    headers  = _gh_headers(token)
+    messages = []
+    deleted  = []
+
+    # 1. Delete files under <slug>/
+    for fname in files:
+        path = f"{slug}/{fname}"
+        url  = f"https://api.github.com/repos/{repo}/contents/{path}"
+        try:
+            g = requests.get(url, headers=headers, timeout=15)
+        except requests.exceptions.RequestException as e:
+            messages.append(f"{path}: network {e}"); continue
+        if g.status_code == 404:
+            messages.append(f"{path}: not found - skipped"); continue
+        if g.status_code != 200:
+            messages.append(f"{path}: http {g.status_code} - skipped"); continue
+        sha = g.json().get("sha")
+        if not sha:
+            messages.append(f"{path}: no sha - skipped"); continue
+        try:
+            d = requests.delete(url, headers=headers,
+                                json={"message": f"Delete article file {path}", "sha": sha},
+                                timeout=20)
+        except requests.exceptions.RequestException as e:
+            messages.append(f"{path}: delete network {e}"); continue
+        if d.status_code not in (200, 201):
+            messages.append(f"{path}: delete http {d.status_code} - {d.text[:120]}"); continue
+        deleted.append(path)
+
+    # 2. Remove from articles.json
+    removed_index = False
+    arts, idx_sha, err = _load_articles_index(repo, token)
+    if err:
+        messages.append(f"articles.json: {err}")
+    else:
+        new_arts = [a for a in arts if (a.get("slug","").strip("/") != slug)]
+        if len(new_arts) == len(arts):
+            messages.append("articles.json: entry not present (already removed?)")
+        else:
+            content_b64 = base64.b64encode(json.dumps(new_arts, indent=2).encode()).decode()
+            put = {"message": f"Remove article {slug} from index",
+                   "content": content_b64, "sha": idx_sha}
+            try:
+                pr = requests.put(f"https://api.github.com/repos/{repo}/contents/articles.json",
+                                  headers=headers, json=put, timeout=20)
+            except requests.exceptions.RequestException as e:
+                return jsonify({"error": f"articles.json push: {e}",
+                                "deleted_files": deleted}), 502
+            if pr.status_code == 409:
+                # Stale SHA retry
+                arts2, sha2, _ = _load_articles_index(repo, token)
+                new_arts = [a for a in arts2 if (a.get("slug","").strip("/") != slug)]
+                content_b64 = base64.b64encode(json.dumps(new_arts, indent=2).encode()).decode()
+                pr = requests.put(f"https://api.github.com/repos/{repo}/contents/articles.json",
+                                  headers=headers,
+                                  json={"message": f"Remove article {slug} from index",
+                                        "content": content_b64, "sha": sha2}, timeout=20)
+            if pr.status_code not in (200, 201):
+                messages.append(f"articles.json push: http {pr.status_code} - {pr.text[:120]}")
+            else:
+                removed_index = True
+
+    # 3. Update local latest_articles.json mirror
+    try:
+        if LATEST_ARTICLES_PATH.exists():
+            mirror = json.loads(LATEST_ARTICLES_PATH.read_text(encoding="utf-8"))
+            before = len(mirror.get("items", []))
+            mirror["items"] = [
+                it for it in mirror.get("items", [])
+                if not (it.get("site_id") == site_id and it.get("slug","").strip("/") == slug)
+            ]
+            if len(mirror["items"]) != before:
+                LATEST_ARTICLES_PATH.write_text(json.dumps(mirror, indent=2), encoding="utf-8")
+                messages.append("local mirror updated")
+    except Exception as e:
+        messages.append(f"mirror not updated: {e}")
+
+    return jsonify({
+        "ok": True, "deleted_files": deleted, "removed_from_index": removed_index,
+        "messages": messages,
+    })
+
+# ── Anthropic token status (ping the API to verify token works) ───────────────
+@app.route("/api/anthropic-status", methods=["POST"])
+def anthropic_status():
+    """
+    Body: { token? } - sk-ant-... key. Falls back to secrets file's anthropicKey.
+    Pings the Messages API with a minimal call to verify the token works.
+    Returns { valid: bool, message: str, model?: str, usage?: {...} }.
+    Anthropic does not expose remaining credit balance via the customer API, so
+    the UI links to console.anthropic.com/settings/billing for top-ups.
+    """
+    body = request.get_json(force=True, silent=True) or {}
+    key  = (body.get("token") or "").strip()
+    if not key:
+        try:
+            key = (_load_secrets_file().get("anthropicKey") or "").strip()
+        except Exception:
+            key = ""
+    if not key:
+        return jsonify({"valid": False, "message": "No Anthropic key provided."})
+    if not key.startswith("sk-ant-"):
+        return jsonify({"valid": False, "message": "Key does not look like an Anthropic key (sk-ant-...)."})
+    try:
+        r = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key":        key,
+                "anthropic-version":"2023-06-01",
+                "content-type":     "application/json",
+            },
+            json={
+                "model":     "claude-haiku-4-5",
+                "max_tokens": 4,
+                "messages":  [{"role": "user", "content": "ok"}],
+            },
+            timeout=15,
+        )
+    except requests.exceptions.RequestException as e:
+        return jsonify({"valid": False, "message": f"Network error: {e}"})
+    if r.status_code == 200:
+        try:
+            d = r.json()
+            return jsonify({
+                "valid":   True,
+                "message": "Token works.",
+                "model":   d.get("model", ""),
+                "usage":   d.get("usage", {}),
+            })
+        except Exception:
+            return jsonify({"valid": True, "message": "Token works."})
+    if r.status_code == 401:
+        return jsonify({"valid": False, "message": "401 - invalid or revoked key."})
+    if r.status_code == 429:
+        return jsonify({"valid": False, "message": "429 - rate limited / credit balance too low."})
+    # Try to surface the API error message.
+    try:
+        err = (r.json().get("error") or {}).get("message", r.text[:160])
+    except Exception:
+        err = r.text[:160]
+    return jsonify({"valid": False, "message": f"{r.status_code}: {err}"})
 
 # ── Posting Schedule update (historical_mode, posts_per_day_new, historical_per_week) ──
 @app.route("/api/site-schedule", methods=["POST"])
