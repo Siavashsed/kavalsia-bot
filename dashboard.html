@@ -1,10 +1,10 @@
-<!-- Kavalsia Network - © 2026 Kavalsia Inc. [Siavash Sadighi] -->
+<!-- Spider Web - © 2026 Kavalsia Inc. [Siavash Sadighi] -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Kavalsia Dashboard</title>
+<title>Spider Web Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -20,6 +20,14 @@ body{background:radial-gradient(ellipse at 50% 0%,#0d2318 0%,#080c09 65%)}
 a{color:var(--accent);text-decoration:none}
 button{cursor:pointer;font-family:var(--font);font-size:13px;border:none;border-radius:var(--r);padding:8px 16px;transition:all .15s}
 input,textarea,select{font-family:var(--font);color:var(--text);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;font-size:13px;outline:none;transition:border-color .15s;width:100%}
+/* The blanket input rule above applies width:100% + padding to radios + checkboxes,
+   which blows them up to row-width and shoves their labels off to the right.
+   Reset them back to native sizing so every form across the dashboard renders properly. */
+input[type=radio],input[type=checkbox]{width:auto;padding:0;margin:0;border:0;background:transparent;flex:none;accent-color:var(--accent)}
+input[type=radio]{cursor:pointer}
+input[type=checkbox]{cursor:pointer}
+/* Color inputs and date/time inputs also do not want full-row padding from the blanket. */
+input[type=color]{padding:2px;width:42px;height:30px;cursor:pointer}
 input:focus,textarea:focus,select:focus{border-color:var(--accent)}
 textarea{resize:vertical;line-height:1.6}
 ::-webkit-scrollbar{width:4px;height:4px}
@@ -302,7 +310,7 @@ textarea{resize:vertical;line-height:1.6}
 <!-- ════════ LOGIN WALL ════════ -->
 <div id="auth-wall" style="position:fixed;inset:0;z-index:99999;background:#050a06;display:flex;align-items:center;justify-content:center">
   <div style="background:#0d1410;border:1px solid #1e3024;border-radius:16px;padding:48px 40px;width:360px;text-align:center;box-shadow:0 0 60px #3ecf8e1e">
-    <div style="font-size:24px;font-weight:800;color:#ffffff;margin-bottom:4px;font-family:'Courier New',monospace;color:#00ff41;text-shadow:0 0 14px #00ff4180">KAVALSIA NETWORK</div>
+    <div style="font-size:24px;font-weight:800;color:#ffffff;margin-bottom:4px;font-family:'Courier New',monospace;color:#00ff41;text-shadow:0 0 14px #00ff4180">SPIDER WEB</div>
     <div style="font-size:13px;color:#b8d4c0;margin-bottom:32px">Secure Access</div>
     <input id="auth-user" type="text" placeholder="Username" autocomplete="username"
       style="width:100%;padding:12px 16px;background:#121b14;border:1px solid #1e3024;border-radius:8px;color:#ffffff;font-size:14px;margin-bottom:10px;outline:none;box-sizing:border-box"
@@ -345,10 +353,10 @@ textarea{resize:vertical;line-height:1.6}
       <div class="pre-blip b3"></div>
       <div class="pre-center"></div>
     </div>
-    <div class="pre-brand">KAVALSIA</div>
-    <div class="pre-sub-brand">// NETWORK</div>
+    <div class="pre-brand">SPIDER</div>
+    <div class="pre-sub-brand">// WEB</div>
     <div class="pre-bar-wrap"><div class="pre-bar-fill" id="preBar"></div></div>
-    <div class="pre-status" id="preStatus">INITIALIZING NETWORK...</div>
+    <div class="pre-status" id="preStatus">INITIALIZING WEB...</div>
   </div>
 </div>
 <style>
@@ -444,8 +452,8 @@ textarea{resize:vertical;line-height:1.6}
       <div class="radar-dot"></div>
     </div>
     <div style="display:flex;flex-direction:column;line-height:1.2">
-      <span class="siaai-text">KAVALSIA</span>
-      <span class="siaai-sub">NETWORK</span>
+      <span class="siaai-text">SPIDER</span>
+      <span class="siaai-sub">WEB</span>
     </div>
   </div>
   <div class="tb-health" onclick="showPanel('status')">
@@ -486,8 +494,8 @@ textarea{resize:vertical;line-height:1.6}
       <div style="position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,#00ff4130 55deg,transparent 56deg);animation:radarSpin 2s linear infinite"></div>
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:#00ff41;box-shadow:0 0 8px #00ff41"></div>
     </div>
-    <div style="font-family:'Courier New',monospace;font-size:20px;font-weight:700;color:#00ff41;letter-spacing:3px;text-shadow:0 0 16px #00ff4180;margin-bottom:4px">KAVALSIA</div>
-    <div style="font-family:monospace;font-size:9px;letter-spacing:3px;color:#00ff4150;margin-bottom:24px">// NETWORK</div>
+    <div style="font-family:'Courier New',monospace;font-size:20px;font-weight:700;color:#00ff41;letter-spacing:3px;text-shadow:0 0 16px #00ff4180;margin-bottom:4px">SPIDER</div>
+    <div style="font-family:monospace;font-size:9px;letter-spacing:3px;color:#00ff4150;margin-bottom:24px">// WEB</div>
     <div style="font-size:15px;color:#b8d4c0;font-weight:600;margin-bottom:8px">Agent offline</div>
     <div style="font-size:12px;color:#4d7059;line-height:1.6;margin-bottom:24px">The local server needs to be running before the dashboard can connect. Click below to launch it automatically.</div>
     <button onclick="srvOverlayLaunch()" style="width:100%;padding:12px 20px;background:#3ecf8e18;border:1px solid #3ecf8e50;border-radius:10px;color:#3ecf8e;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px;transition:all .15s" onmouseover="this.style.background='#3ecf8e28'" onmouseout="this.style.background='#3ecf8e18'">⚡ Launch Server</button>
@@ -519,6 +527,9 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-comments" onclick="showPanel('comments')"
         data-tip="Generate AI comments for any article (single site or broadcast across all). Per-site auto-comment schedules.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Comments</button>
+      <button class="nav-btn" id="nav-latest" onclick="showPanel('latest');if(typeof latestInit==='function')latestInit()"
+        data-tip="Latest published posts across every site. Edit title, author, date, category, description; saves push to GitHub and update the live article.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Latest Posts</button>
       <button class="nav-btn" id="nav-manualpost" onclick="showPanel('manualpost');if(typeof mpInit==='function')mpInit()"
         data-tip="Hand-write and publish an article. Pick any sites, set author and category, schedule for later, or auto-expire after a date.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span> Manual Post</button>
@@ -579,7 +590,7 @@ textarea{resize:vertical;line-height:1.6}
         data-tip="Meta Pixel + Conversions API setup, custom audiences, lookalikes, retargeting recipes and per-site event names.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Meta Guide</button>
       <button class="nav-btn" id="nav-logobar" onclick="showPanel('logobar');if(typeof logoBarInit==='function')logoBarInit()"
-        data-tip="Live preview and copy-paste snippet of the Kavalsia Network logo bar. Rebuild it from the current SITES list with one click.">
+        data-tip="Live preview and copy-paste snippet of the Spider Web logo bar. Rebuild it from the current SITES list with one click.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="8" rx="2"/><circle cx="7" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="17" cy="12" r="1.4" fill="currentColor"/></svg></span> Logo Bar</button>
     </div>
 
@@ -612,7 +623,7 @@ textarea{resize:vertical;line-height:1.6}
 
 <!-- ════════ DASHBOARD ════════ -->
 <div class="panel active" id="panel-dashboard">
-  <div class="pg-title" style="font-family:'Courier New',monospace;color:#00ff41;text-shadow:0 0 10px #00ff4140">KAVALSIA NETWORK</div>
+  <div class="pg-title" style="font-family:'Courier New',monospace;color:#00ff41;text-shadow:0 0 10px #00ff4140">SPIDER WEB</div>
   <div class="pg-sub" id="dashSub">Loading...</div>
   <div class="grid4" style="margin-bottom:16px" id="statCards">
     <div class="stat-card"><div class="stat-val" id="statSites">-</div><div class="stat-lbl">Total Sites</div></div>
@@ -1628,21 +1639,21 @@ textarea{resize:vertical;line-height:1.6}
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end">
       <div>
         <div class="form-label">Cloudflare API Token</div>
-        <input type="password" id="cfApiToken" placeholder="Bearer token from Cloudflare dashboard">
+        <input type="password" id="cfApiToken" placeholder="Bearer token from Cloudflare dashboard" oninput="lss('cfApiToken',this.value)">
       </div>
       <div>
         <div class="form-label">Zone Tag (Site Tag ID)</div>
-        <input type="text" id="cfZoneTag" placeholder="abc123... (from Cloudflare)">
+        <input type="text" id="cfZoneTag" placeholder="abc123... (from Cloudflare)" oninput="lss('cfZoneTag',this.value)">
       </div>
       <div>
         <div class="form-label">Period</div>
-        <select id="cfPeriod">
+        <select id="cfPeriod" onchange="lss('cfPeriod',this.value)">
           <option value="-1440">Last 24 hours</option>
           <option value="-10080" selected>Last 7 days</option>
           <option value="-43200">Last 30 days</option>
         </select>
       </div>
-      <button class="btn btn-green" onclick="loadCloudflareAnalytics()">↻ Fetch</button>
+      <button class="btn btn-green" id="cfFetchBtn" onclick="loadCloudflareAnalytics()">↻ Fetch</button>
     </div>
     <div class="info-box" style="margin-top:10px">
       Get your Zone Tag from <b>Cloudflare → Web Analytics → your site → Manage site</b>.<br>
@@ -1950,20 +1961,7 @@ textarea{resize:vertical;line-height:1.6}
 </div>
 
 <!-- ════════ TOKEN VAULT ════════ -->
-<div class="panel" id="panel-tokens">
-  <div class="pg-title">Token Vault</div>
-  <div class="pg-sub">All your API keys in one place. Saved permanently in your browser. Use the copy button to paste anywhere.</div>
-  <div class="card" style="margin-bottom:12px">
-    <div class="section-head">Your API Keys</div>
-    <div id="tv-rows" style="display:flex;flex-direction:column;gap:14px;margin-top:4px"></div>
-    <div style="margin-top:14px;display:flex;gap:10px;justify-content:flex-end">
-      <button class="btn btn-accent" onclick="tvSaveAll()">Save All</button>
-    </div>
-    <div style="margin-top:10px;padding:10px 14px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--text3)">
-      Keys are stored only in your browser (localStorage). They are never sent to any server except directly to the API they belong to.
-    </div>
-  </div>
-</div>
+<!-- panel-tokens removed: was a duplicate of Settings -> API Keys with no nav button. -->
 
 <!-- ════════ SETTINGS ════════ -->
 <div class="panel" id="panel-settings">
@@ -2022,6 +2020,37 @@ textarea{resize:vertical;line-height:1.6}
     <div style="margin-top:10px;padding:10px 14px;background:var(--bg4);border-radius:var(--r);font-size:12px;color:var(--text2)">
       <b style="color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="12" height="12" style="margin-right:4px;vertical-align:-1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>GitHub Secrets</b> - the keys above are for local use. For the GitHub Actions workflow to use them, add them as repository secrets at:<br>
       <code>github.com/YOUR_REPO/settings/secrets/actions</code>
+    </div>
+  </div>
+
+  <!-- ── Anthropic API: status + credits ── -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-head">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13" style="margin-right:6px;vertical-align:-2px"><circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+      Anthropic API - status &amp; credits
+    </div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Token validates against the Messages API. Anthropic does not expose remaining credit balance via the customer API, so balance and top-ups live in the billing console.</div>
+
+    <div class="settings-row" style="align-items:flex-end;gap:12px;flex-wrap:wrap">
+      <div class="form-group" style="flex:1;min-width:220px">
+        <div class="form-label">API Key <span style="color:var(--text3)">(same as above; mirrors anthropicKey)</span></div>
+        <div class="input-copy-wrap">
+          <input type="password" id="setAnthropicKey2" placeholder="sk-ant-..." oninput="propagateAnthropicMirror()">
+          <button class="copy-btn" onclick="copyField('setAnthropicKey2',this)" title="Copy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+      </div>
+      <button class="btn btn-sm" onclick="anthropicTest()" id="anth-test-btn" style="height:36px">Test Token</button>
+      <a class="btn btn-sm btn-accent" href="https://console.anthropic.com/settings/billing" target="_blank" rel="noopener" style="height:36px;display:inline-flex;align-items:center;text-decoration:none;font-weight:700">+ Buy / Top Up Credits</a>
+    </div>
+
+    <div id="anth-status" style="margin-top:12px;display:flex;align-items:center;gap:10px;font-size:13px">
+      <span id="anth-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--text3)"></span>
+      <span id="anth-msg" style="color:var(--text2)">Click Test Token to verify.</span>
+    </div>
+    <div id="anth-extra" style="margin-top:6px;font-size:11px;color:var(--text3)"></div>
+
+    <div style="margin-top:14px;padding:10px 14px;background:var(--bg4);border-radius:var(--r);font-size:12px;color:var(--text2);line-height:1.55">
+      <b>How credits work:</b> top up at <a href="https://console.anthropic.com/settings/billing" target="_blank" rel="noopener" style="color:var(--accent)">console.anthropic.com/settings/billing</a>. Each successful Test Token call uses ~4 input tokens (~$0.000005 on Haiku) so you can ping freely. To see actual usage, open <a href="https://console.anthropic.com/usage" target="_blank" rel="noopener" style="color:var(--accent)">console.anthropic.com/usage</a>.
     </div>
   </div>
 
@@ -2842,6 +2871,300 @@ textarea{resize:vertical;line-height:1.6}
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════
+     LATEST POSTS PANEL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="panel" id="panel-latest">
+  <div class="pg-title">Latest Posts</div>
+  <div class="pg-sub">Every published article across the network, newest first. Edit title, author, date, category, or description and push the change live to GitHub.</div>
+
+  <style>
+    .lp-bar{display:flex;gap:10px;align-items:center;margin:14px 0;flex-wrap:wrap}
+    .lp-bar input,.lp-bar select{background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:6px 10px;font-size:13px;font-family:inherit}
+    .lp-bar input{flex:1;min-width:200px}
+    .lp-meta{color:var(--text3);font-size:12px;margin-left:auto}
+    .lp-tbl{width:100%;border-collapse:collapse;font-size:13px}
+    .lp-tbl th,.lp-tbl td{padding:8px 10px;border-bottom:1px solid var(--border2);text-align:left;vertical-align:top}
+    .lp-tbl th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);font-weight:600;background:var(--bg2);position:sticky;top:0;z-index:1}
+    .lp-tbl tr.lp-row:hover{background:var(--bg2)}
+    .lp-tbl td.lp-site{color:var(--accent);font-weight:600;white-space:nowrap}
+    .lp-tbl td.lp-title{font-weight:500;color:var(--text);max-width:380px}
+    .lp-tbl td.lp-author,.lp-tbl td.lp-date,.lp-tbl td.lp-cat{color:var(--text2);white-space:nowrap}
+    .lp-actions{display:flex;gap:6px}
+    .lp-actions button,.lp-actions a{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);border-radius:5px;padding:4px 10px;font-size:11px;cursor:pointer;text-decoration:none;font-family:inherit}
+    .lp-actions button:hover,.lp-actions a:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+    .lp-edit{background:var(--bg2);padding:14px;border:1px solid var(--accent);border-radius:8px;margin:8px 0}
+    .lp-edit .lp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:800px){.lp-edit .lp-grid{grid-template-columns:1fr}}
+    .lp-edit label{display:block;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-bottom:4px}
+    .lp-edit input,.lp-edit textarea{display:block;width:100%;background:var(--bg3);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;box-sizing:border-box}
+    .lp-edit textarea{resize:vertical;min-height:60px}
+    .lp-edit input:focus,.lp-edit textarea:focus{outline:none;border-color:var(--accent)}
+    .lp-edit .lp-full{grid-column:1/-1}
+    .lp-edit .lp-btns{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+    .lp-edit .lp-btns button{padding:6px 14px;font-size:12px;border-radius:6px;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text)}
+    .lp-edit .lp-btns button.lp-save{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+    .lp-edit .lp-btns button:disabled{opacity:.5;cursor:not-allowed}
+    .lp-msg{font-size:12px;color:var(--text3);margin-top:8px}
+    .lp-msg.err{color:#f87171}
+    .lp-msg.ok{color:#4ade80}
+    .lp-empty{color:var(--text3);padding:24px;text-align:center;font-size:13px}
+  </style>
+
+  <div class="lp-bar">
+    <input id="lp-search" placeholder="Filter by title, site, author, slug..." oninput="lpRender()">
+    <select id="lp-site-filter" onchange="lpRender()"><option value="">All sites</option></select>
+    <button class="btn btn-sm" onclick="lpRefresh()" id="lp-refresh-btn">Refresh from GitHub</button>
+    <button class="btn btn-sm" onclick="lpFixCommentDates()" id="lp-fix-btn" title="Walk every comments.json and shift any comment dated <= post.date up to post.date + 1 day">Fix Comment Dates</button>
+    <span class="lp-meta" id="lp-meta">-</span>
+  </div>
+
+  <div style="max-height:calc(100vh - 280px);overflow-y:auto;border:1px solid var(--border2);border-radius:8px">
+    <table class="lp-tbl">
+      <thead>
+        <tr><th style="width:140px">Site</th><th>Title</th><th style="width:160px">Author</th><th style="width:120px">Date</th><th style="width:120px">Category</th><th style="width:170px">Actions</th></tr>
+      </thead>
+      <tbody id="lp-tbody"><tr><td colspan="6" class="lp-empty">Click "Refresh from GitHub" to load.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ── Latest Posts panel ─────────────────────────────────────────────────────
+let _lpItems = [];
+let _lpEditingKey = null;
+
+async function latestInit() {
+  try {
+    const r = await fetch('/api/latest-articles');
+    if (!r.ok) throw new Error('http ' + r.status);
+    const data = await r.json();
+    _lpItems = data.items || [];
+    _lpUpdateMeta(data.last_refreshed, data.errors || []);
+    _lpPopulateSiteFilter();
+    lpRender();
+  } catch (e) {
+    document.getElementById('lp-meta').textContent = 'Load failed: ' + e.message;
+  }
+}
+
+function _lpUpdateMeta(ts, errors) {
+  const el = document.getElementById('lp-meta');
+  const n = _lpItems.length;
+  const errTxt = (errors && errors.length) ? ` - ${errors.length} site error(s)` : '';
+  el.textContent = ts ? `${n} posts - refreshed ${new Date(ts).toLocaleString()}${errTxt}` : `${n} posts - never refreshed`;
+}
+
+function _lpPopulateSiteFilter() {
+  const sel = document.getElementById('lp-site-filter');
+  const current = sel.value;
+  const sites = [...new Set(_lpItems.map(i => i.site_id))].sort();
+  sel.innerHTML = '<option value="">All sites</option>' + sites.map(s => `<option value="${_lpEsc(s)}">${_lpEsc(s)}</option>`).join('');
+  if (sites.includes(current)) sel.value = current;
+}
+
+async function lpRefresh() {
+  const btn = document.getElementById('lp-refresh-btn');
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  btn.disabled = true; btn.textContent = 'Refreshing...';
+  try {
+    const r = await fetch('/api/latest-articles/refresh', {
+      method: 'POST', headers: {'Content-Type':'application/json','X-GH-Token': token},
+      body: JSON.stringify({token})
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || ('http ' + r.status));
+    _lpItems = data.items || [];
+    _lpUpdateMeta(data.last_refreshed, data.errors || []);
+    _lpPopulateSiteFilter();
+    lpRender();
+  } catch (e) {
+    alert('Refresh failed: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Refresh from GitHub';
+  }
+}
+
+function _lpEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function lpRender() {
+  const q = (document.getElementById('lp-search').value || '').toLowerCase();
+  const siteFilter = document.getElementById('lp-site-filter').value;
+  const tbody = document.getElementById('lp-tbody');
+  let items = _lpItems;
+  if (siteFilter) items = items.filter(i => i.site_id === siteFilter);
+  if (q) items = items.filter(i =>
+    (i.title || '').toLowerCase().includes(q) ||
+    (i.site_id || '').toLowerCase().includes(q) ||
+    (i.site_name || '').toLowerCase().includes(q) ||
+    (i.author || '').toLowerCase().includes(q) ||
+    (i.slug || '').toLowerCase().includes(q));
+
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="lp-empty">No posts match the filter.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = items.map(i => {
+    const key = i.site_id + '::' + i.slug;
+    const isEditing = (_lpEditingKey === key);
+    const row = `
+      <tr class="lp-row" data-key="${_lpEsc(key)}">
+        <td class="lp-site" title="${_lpEsc(i.site_name)}">${_lpEsc(i.site_id)}</td>
+        <td class="lp-title">${_lpEsc(i.title)}<div style="color:var(--text3);font-size:11px;margin-top:2px">/${_lpEsc(i.slug)}/</div></td>
+        <td class="lp-author">${_lpEsc(i.author)}</td>
+        <td class="lp-date">${_lpEsc(i.date)}</td>
+        <td class="lp-cat">${_lpEsc(i.category)}</td>
+        <td>
+          <div class="lp-actions">
+            <button onclick="lpEdit('${_lpEsc(key)}')">Edit</button>
+            ${i.url ? `<a href="${_lpEsc(i.url)}" target="_blank" rel="noopener">View</a>` : ''}
+            <button onclick="lpDelete('${_lpEsc(key)}')" style="background:rgba(239,68,68,.10);color:#ef4444;border-color:rgba(239,68,68,.35)" onmouseover="this.style.background='#ef4444';this.style.color='#fff'" onmouseout="this.style.background='rgba(239,68,68,.10)';this.style.color='#ef4444'">Remove</button>
+          </div>
+        </td>
+      </tr>`;
+    const editor = isEditing ? `<tr><td colspan="6">${_lpEditorHTML(i)}</td></tr>` : '';
+    return row + editor;
+  }).join('');
+}
+
+function _lpEditorHTML(i) {
+  return `
+    <div class="lp-edit" data-key="${_lpEsc(i.site_id + '::' + i.slug)}">
+      <div class="lp-grid">
+        <div class="lp-full">
+          <label>Title</label>
+          <input data-f="title" value="${_lpEsc(i.title)}">
+        </div>
+        <div>
+          <label>Author</label>
+          <input data-f="author" value="${_lpEsc(i.author)}">
+        </div>
+        <div>
+          <label>Category</label>
+          <input data-f="category" value="${_lpEsc(i.category)}">
+        </div>
+        <div>
+          <label>Display Date (e.g. May 21, 2026)</label>
+          <input data-f="date" value="${_lpEsc(i.date)}">
+        </div>
+        <div>
+          <label>ISO Date (YYYY-MM-DD)</label>
+          <input data-f="date_iso" value="${_lpEsc(i.date_iso)}" placeholder="2026-05-21">
+        </div>
+        <div class="lp-full">
+          <label>Meta Description</label>
+          <textarea data-f="meta_description" rows="2">${_lpEsc(i.meta_description)}</textarea>
+        </div>
+      </div>
+      <div class="lp-btns">
+        <button onclick="lpEdit(null)">Cancel</button>
+        <button class="lp-save" onclick="lpSave('${_lpEsc(i.site_id + '::' + i.slug)}')">Save & Push</button>
+      </div>
+      <div class="lp-msg" data-msg></div>
+    </div>`;
+}
+
+function lpEdit(key) {
+  _lpEditingKey = (_lpEditingKey === key) ? null : key;
+  lpRender();
+  if (_lpEditingKey) {
+    const el = document.querySelector(`.lp-edit[data-key="${_lpEditingKey.replace(/"/g,'\\"')}"]`);
+    if (el) el.scrollIntoView({block:'center', behavior:'smooth'});
+  }
+}
+
+async function lpDelete(key) {
+  const [site_id, slug] = key.split('::');
+  const it = _lpItems.find(x => x.site_id === site_id && x.slug === slug);
+  const label = it ? `"${it.title}" (${site_id}/${slug})` : `${site_id}/${slug}`;
+  if (!confirm(`Permanently DELETE ${label}?\n\nThis removes the article from GitHub:\n  - articles.json entry\n  - ${slug}/index.html\n  - ${slug}/comments.json\n\nThe live URL will 404. There is no undo.`)) return;
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  try {
+    const r = await fetch('/api/article-delete', {
+      method: 'POST', headers: {'Content-Type':'application/json','X-GH-Token': token},
+      body: JSON.stringify({ site_id, slug, token })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || ('http ' + r.status));
+    // Drop from local list so the table updates immediately.
+    _lpItems = _lpItems.filter(x => !(x.site_id === site_id && x.slug === slug));
+    _lpEditingKey = null;
+    lpRender();
+    if (typeof toast === 'function') toast(`Removed. Files deleted: ${(data.deleted_files||[]).length}. Index updated: ${data.removed_from_index}`, 'ok');
+    else alert(`Removed. ${(data.messages||[]).join(' ')}`);
+  } catch (e) {
+    alert('Delete failed: ' + e.message);
+  }
+}
+
+async function lpFixCommentDates() {
+  if (!confirm('Walk every site, fetch every article\'s comments.json, and shift any comment dated <= post.date up to a date in [post+1d, post+max_age_days].\n\nThis writes to GitHub. Continue?')) return;
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  const btn = document.getElementById('lp-fix-btn');
+  btn.disabled = true; btn.textContent = 'Scanning + fixing...';
+  try {
+    const r = await fetch('/api/comments-fix', {
+      method: 'POST', headers: {'Content-Type':'application/json','X-GH-Token': token},
+      body: JSON.stringify({ token, dry_run: false })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || ('http ' + r.status));
+    const violatingSites = (data.sites||[]).filter(s => s.fixes > 0).map(s => `${s.site_id} (+${s.fixes})`);
+    const msg = `Scanned ${data.scanned} articles across the network. Fixed ${data.fixed} comment dates.\n\n${violatingSites.length ? 'Sites with fixes:\n  ' + violatingSites.join('\n  ') : 'No violations found.'}`;
+    alert(msg);
+  } catch (e) {
+    alert('Fix failed: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Fix Comment Dates';
+  }
+}
+
+async function lpSave(key) {
+  const editor = document.querySelector(`.lp-edit[data-key="${key.replace(/"/g,'\\"')}"]`);
+  if (!editor) return;
+  const msg = editor.querySelector('[data-msg]');
+  const inputs = editor.querySelectorAll('[data-f]');
+  const [site_id, slug] = key.split('::');
+  const body = { site_id, slug };
+  inputs.forEach(el => { body[el.dataset.f] = el.value; });
+
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  body.token = token;
+
+  const saveBtn = editor.querySelector('.lp-save');
+  saveBtn.disabled = true; saveBtn.textContent = 'Saving...';
+  msg.className = 'lp-msg'; msg.textContent = '';
+  try {
+    const r = await fetch('/api/article-meta', {
+      method: 'POST', headers: {'Content-Type':'application/json','X-GH-Token': token},
+      body: JSON.stringify(body)
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || ('http ' + r.status));
+    // Update local item so UI reflects the change.
+    const it = _lpItems.find(x => x.site_id === site_id && x.slug === slug);
+    if (it && data.changed_fields) {
+      data.changed_fields.forEach(f => { it[f] = body[f]; });
+    }
+    msg.className = 'lp-msg ok';
+    msg.textContent = `Saved. Updated: ${(data.changed_fields||[]).join(', ') || 'none'}. ${data.updated_html ? 'Live HTML patched.' : ''} ${(data.messages||[]).join(' ')}`;
+    setTimeout(() => { _lpEditingKey = null; lpRender(); }, 1400);
+  } catch (e) {
+    msg.className = 'lp-msg err';
+    msg.textContent = 'Save failed: ' + e.message;
+  } finally {
+    saveBtn.disabled = false; saveBtn.textContent = 'Save & Push';
+  }
+}
+</script>
+
 <!-- ════════ TERMINAL PANEL ════════ -->
 <!-- ═══════════════════════════════════════════════════════════
      MANUAL POST PANEL
@@ -2865,10 +3188,12 @@ textarea{resize:vertical;line-height:1.6}
     .mp-scope-btns button.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
     .mp-sites-pick{max-height:160px;overflow:auto;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px;display:none}
     .mp-sites-pick label{display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 0;color:var(--text2);cursor:pointer}
-    .mp-author-row{display:flex;flex-direction:column;gap:6px}
-    .mp-author-row label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);cursor:pointer;padding:6px 8px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px}
-    .mp-author-row label.active{border-color:var(--accent)}
-    .mp-author-row select,.mp-author-row input[type=text]{flex:1;background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:5px;padding:5px 8px;font-size:12px}
+    .mp-author-row{display:flex;flex-direction:column;gap:8px}
+    .mp-author-row label{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);cursor:pointer;padding:10px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;min-height:44px;line-height:1.3}
+    .mp-author-row label:hover{border-color:var(--border)}
+    .mp-author-row label:has(input:checked){border-color:var(--accent);background:rgba(62,207,142,.06);color:var(--text)}
+    .mp-author-row label > span.mp-author-label-text{flex:0 0 auto;white-space:nowrap}
+    .mp-author-row select,.mp-author-row input[type=text]{flex:1;min-width:120px;background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:5px;padding:7px 10px;font-size:12px}
     .mp-tabs{display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid var(--border2)}
     .mp-tabs button{padding:6px 14px;font-size:12px;background:none;color:var(--text3);border:none;border-bottom:2px solid transparent;cursor:pointer;font-weight:600}
     .mp-tabs button.active{color:var(--accent);border-bottom-color:var(--accent)}
@@ -2983,12 +3308,12 @@ textarea{resize:vertical;line-height:1.6}
       <div class="mp-card">
         <h4>Author</h4>
         <div class="mp-author-row">
-          <label><input type="radio" name="mp-author" value="site_default" checked onchange="mpAuthorChange()"> Use the site's default author</label>
-          <label><input type="radio" name="mp-author" value="pick" onchange="mpAuthorChange()"> Pick from the site's author pool
+          <label><input type="radio" name="mp-author" value="site_default" checked onchange="mpAuthorChange()"><span class="mp-author-label-text">Use the site's default author</span></label>
+          <label><input type="radio" name="mp-author" value="pick" onchange="mpAuthorChange()"><span class="mp-author-label-text">Pick from author pool</span>
             <select id="mp-author-pool" disabled></select>
           </label>
-          <label><input type="radio" name="mp-author" value="random" onchange="mpAuthorChange()"> Random per site at publish time</label>
-          <label><input type="radio" name="mp-author" value="custom" onchange="mpAuthorChange()"> Custom byline
+          <label><input type="radio" name="mp-author" value="random" onchange="mpAuthorChange()"><span class="mp-author-label-text">Random per site at publish time</span></label>
+          <label><input type="radio" name="mp-author" value="custom" onchange="mpAuthorChange()"><span class="mp-author-label-text">Custom byline</span>
             <input id="mp-author-custom" type="text" placeholder="Name to publish under" disabled>
           </label>
         </div>
@@ -3293,7 +3618,7 @@ textarea{resize:vertical;line-height:1.6}
 <!-- ════════ LOGO BAR ════════ -->
 <div class="panel" id="panel-logobar">
   <div class="pg-title">Logo Bar</div>
-  <div class="pg-sub">Drop-in marquee snippet for the Kavalsia Network. Live preview, one-click copy, and rebuild from the current SITES list.</div>
+  <div class="pg-sub">Drop-in marquee snippet for Spider Web. Live preview, one-click copy, and rebuild from the current SITES list.</div>
 
   <!-- Sites in the bar (per-site include toggles) -->
   <div class="card" style="margin-bottom:14px">
@@ -3626,7 +3951,7 @@ async function showMorningBriefing() {
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
         <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3ecf8e,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">✦</div>
         <div>
-          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Courier New',monospace;color:#00ff41">${greeting}  -  KAVALSIA Briefing</div>
+          <div style="font-size:15px;font-weight:800;color:var(--text);font-family:'Courier New',monospace;color:#00ff41">${greeting}  -  SPIDER WEB Briefing</div>
           <div style="font-size:11px;color:var(--text3)">${new Date().toLocaleDateString('en',{weekday:'long',month:'long',day:'numeric'})}</div>
         </div>
       </div>
@@ -6346,7 +6671,7 @@ async function sendTelegramReport() {
   const more = active.length > 15 ? `\n  + ${active.length - 15} more…` : '';
 
   const text = [
-    `📊 <b>Kavalsia Network Report</b>`,
+    `📊 <b>Spider Web Report</b>`,
     `🗓 ${dateStr} at ${timeStr}`,
     ``,
     `<b>Network Health</b>`,
@@ -6377,7 +6702,67 @@ function propagateKey(type) {
   const val = document.getElementById(el)?.value.trim();
   if (val) {
     lss(key, val);
+    if (type === 'anthropic') {
+      const m = document.getElementById('setAnthropicKey2');
+      if (m && m.value !== val) m.value = val;
+    }
     addLog('info', 'info', `${type.charAt(0).toUpperCase()+type.slice(1)} API key saved and propagated`);
+  }
+}
+
+// Mirror the secondary Anthropic key field in the dedicated Anthropic card back
+// to the primary input + localStorage so the two stay in sync.
+function propagateAnthropicMirror() {
+  const v = document.getElementById('setAnthropicKey2')?.value.trim() || '';
+  const main = document.getElementById('setAnthropicKey');
+  if (main && main.value !== v) main.value = v;
+  if (v) lss('anthropicKey', v);
+}
+
+async function anthropicTest() {
+  const btn = document.getElementById('anth-test-btn');
+  const dot = document.getElementById('anth-dot');
+  const msg = document.getElementById('anth-msg');
+  const extra = document.getElementById('anth-extra');
+  const token = (document.getElementById('setAnthropicKey2')?.value
+              || document.getElementById('setAnthropicKey')?.value
+              || ls('anthropicKey') || '').trim();
+  if (!token) {
+    dot.style.background = '#ef4444';
+    msg.style.color = '#ef4444';
+    msg.textContent = 'No API key in the field above.';
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Testing...';
+  dot.style.background = 'var(--text3)';
+  msg.style.color = 'var(--text2)';
+  msg.textContent = 'Pinging api.anthropic.com...';
+  extra.textContent = '';
+  try {
+    const r = await fetch('/api/anthropic-status', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token})
+    });
+    const data = await r.json();
+    if (data.valid) {
+      dot.style.background = '#10b981';
+      msg.style.color = '#10b981';
+      msg.textContent = `Valid - ${data.message}`;
+      const u = data.usage || {};
+      if (u.input_tokens != null) {
+        extra.textContent = `Last call: model=${data.model || '?'}, input_tokens=${u.input_tokens}, output_tokens=${u.output_tokens||0}.`;
+      }
+    } else {
+      dot.style.background = '#ef4444';
+      msg.style.color = '#ef4444';
+      msg.textContent = data.message || 'Invalid.';
+    }
+  } catch (e) {
+    dot.style.background = '#ef4444';
+    msg.style.color = '#ef4444';
+    msg.textContent = 'Network error: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Test Token';
   }
 }
 
@@ -6454,6 +6839,56 @@ function saveSettings() {
   toast('Saved', 'ok');
 }
 
+// Niche map -> matches push-sites.py NEXUS_SITE_NICHES + per-niche brand color
+// so the dashboard pill color matches the Nexus mosaic. One source of truth.
+const NICHE_BY_ID = {
+  cryptopulse:'finance', tradingtechreview:'finance', passivewealthguide:'finance', insightinsure:'finance',
+  'mashestate-home':'realestate', 'mashestate-construction':'realestate',
+  aimarketingpro:'business', onlinebizpro:'business', ecommerceedge:'business', topproduct:'business',
+  fitpulsepro:'health', sportiqpro:'health', supplementverge:'health',
+  datingedge:'lifestyle', newborniq:'lifestyle', 'mochapoo-pets':'lifestyle',
+  'dalmend-home':'home',
+  travelverge:'travel', 'kanona-events':'travel',
+  carverge:'auto',
+  makeupcraft:'beauty',
+  sightreadingacademy:'education',
+  mindframe:'wellness',
+  folioatelier:'arts',
+  modeformstudio:'fashion',
+  calibernotes:'watches',
+  crestcharter:'luxury',
+  strobeatlas:'nightlife',
+};
+const NICHE_META = {
+  finance:    { label: 'Finance',         color: '#10b981', emoji: '🪙' },
+  realestate: { label: 'Real Estate',     color: '#14b8a6', emoji: '🏠' },
+  business:   { label: 'Business',        color: '#a855f7', emoji: '📊' },
+  health:     { label: 'Health',          color: '#ef4444', emoji: '💪' },
+  lifestyle:  { label: 'Lifestyle',       color: '#ec4899', emoji: '❤️' },
+  home:       { label: 'Home',            color: '#a78bfa', emoji: '🛋️' },
+  travel:     { label: 'Travel',          color: '#0ea5e9', emoji: '✈️' },
+  auto:       { label: 'Auto',            color: '#6366f1', emoji: '🚗' },
+  beauty:     { label: 'Beauty',          color: '#f43f5e', emoji: '💄' },
+  education:  { label: 'Education',       color: '#14b8a6', emoji: '🎼' },
+  wellness:   { label: 'Mind',            color: '#ff5a4e', emoji: '🧠' },
+  arts:       { label: 'Arts',            color: '#7b4a32', emoji: '🖼' },
+  fashion:    { label: 'Fashion',         color: '#e8c47a', emoji: '👗' },
+  watches:    { label: 'Watches',         color: '#cdb87a', emoji: '⏱' },
+  luxury:     { label: 'Luxury Travel',   color: '#c9a55c', emoji: '🛥' },
+  nightlife:  { label: 'Nightlife',       color: '#ff2bd6', emoji: '🎶' },
+  other:      { label: 'Other',           color: '#64748b', emoji: '·' },
+};
+function _siteNichePill(s) {
+  const isNexus = s.is_mother_site || s.layout === 'nexus' || s.id === 'nexus';
+  if (isNexus) return '<span style="font-size:10px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,.10);padding:2px 8px;border-radius:10px;border:1px solid rgba(245,158,11,.35);margin-left:6px">🌐 HUB</span>';
+  const meta = NICHE_META[NICHE_BY_ID[s.id]] || NICHE_META.other;
+  const c = meta.color;
+  const rgb = c.replace('#','').match(/.{2}/g).map(h => parseInt(h, 16));
+  const bg = `rgba(${rgb.join(',')},.13)`;
+  const brd = `rgba(${rgb.join(',')},.45)`;
+  return `<span style="font-size:10px;font-weight:700;color:${c};background:${bg};padding:2px 8px;border-radius:10px;border:1px solid ${brd};margin-left:6px;letter-spacing:.3px" title="Niche group">${meta.emoji} ${meta.label}</span>`;
+}
+
 function renderSiteToggles() {
   if (!cfg) return;
   const list = document.getElementById('siteToggleList');
@@ -6480,10 +6915,10 @@ function renderSiteToggles() {
         <span style="position:absolute;inset:0;border-radius:20px;background:${active?'var(--green)':'var(--text3)'};transition:.2s;cursor:${isNexus?'not-allowed':'pointer'}" id="togtrack-${s.id}"></span>
         <span style="position:absolute;left:${active?'18':'2'}px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s" id="togthumb-${s.id}"></span>
       </label>
-      <div style="flex:1;min-width:180px">
+      <div style="flex:1;min-width:200px;display:flex;align-items:center;flex-wrap:wrap;gap:4px">
         <span style="font-size:13px;font-weight:600;color:${active?'var(--text)':'var(--text3)'}">${s.domain||s.id}</span>
-        <span style="font-size:11px;color:var(--text3);margin-left:6px">${s.category||''}</span>
-        ${isNexus ? '<span style="font-size:10px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,.1);padding:1px 6px;border-radius:4px;margin-left:4px">HUB</span>' : ''}
+        ${_siteNichePill(s)}
+        ${s.category && !isNexus ? `<span style="font-size:11px;color:var(--text3);margin-left:4px">${s.category}</span>` : ''}
       </div>
       ${isNexus ? '<div style="font-size:11px;color:var(--text3)">HUB - no posts</div>' : (() => {
         const newOn  = s.new_posts_enabled !== false; // default true
@@ -6642,6 +7077,7 @@ function saveSiteToggles() {
 function loadSettings() {
   const map = {
     setAnthropicKey:  'anthropicKey',
+    setAnthropicKey2: 'anthropicKey',
     setModel:         'claudeModel',
     setGhToken:       'ghToken',
     setPexelsKey:     'pexelsKey',
@@ -7799,7 +8235,7 @@ function cfRenderSites() {
       const statusLabel = isGH
         ? '<span style="font-size:11px;color:var(--text3)">✓ No CF needed</span>'
         : zone
-          ? `<span id="cfst-${site.id}" style="font-size:11px;color:var(--text3)">Check ↓</span>`
+          ? `<span style="font-size:11px;color:var(--text3)">Check ↓</span>`
           : `<span style="font-size:11px;color:var(--amber)">Add to CF first</span>`;
       const actionBtn = isGH ? ''
         : zone
@@ -7983,6 +8419,7 @@ async function loadCloudflareAnalytics() {
   const zoneTag = document.getElementById('cfZoneTag').value.trim();
   const period  = document.getElementById('cfPeriod').value;
   const out     = document.getElementById('cfResults');
+  const btn     = document.getElementById('cfFetchBtn');
 
   if (!token || !zoneTag) {
     out.innerHTML = '<div class="card"><div style="color:var(--red);padding:20px">Please enter your API token and zone tag.</div></div>';
@@ -7990,6 +8427,7 @@ async function loadCloudflareAnalytics() {
   }
 
   out.innerHTML = '<div class="card"><div style="text-align:center;padding:40px;color:var(--text3)">Fetching analytics…</div></div>';
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'wait'; }
 
   try {
     const endpoint = serverMode
@@ -8015,7 +8453,8 @@ async function loadCloudflareAnalytics() {
 
     const groups = data?.data?.viewer?.zones?.[0]?.httpRequests1dGroups || [];
     if (!groups.length) {
-      out.innerHTML = '<div class="card"><div style="padding:20px;color:var(--text3)">No data returned. Check zone tag and token permissions.</div></div>';
+      const safeTag = (zoneTag||'').replace(/[<>&"']/g, c=>({ '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;' }[c]));
+      out.innerHTML = `<div class="card"><div style="padding:20px;color:var(--text3);line-height:1.6"><b>No data returned for zone tag <code style="color:var(--text)">${safeTag}</code>.</b><br><br>Tip: verify the token has <b>Zone Analytics:Read</b> scope and the zone tag matches the domain you're querying. A zero-traffic zone will also return empty.</div></div>`;
       return;
     }
 
@@ -8057,7 +8496,24 @@ async function loadCloudflareAnalytics() {
       </div>`;
   } catch(e) {
     out.innerHTML = `<div class="card"><div style="color:var(--red);padding:20px">Error: ${e.message}</div></div>`;
+  } finally {
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; }
   }
+}
+
+// ── Analytics panel init (restore creds + auto-fetch) ─────────────────────
+function analyticsInit() {
+  const tokEl = document.getElementById('cfApiToken');
+  const zoneEl = document.getElementById('cfZoneTag');
+  const perEl = document.getElementById('cfPeriod');
+  if (!tokEl || !zoneEl) return;
+  const tok = ls('cfApiToken') || '';
+  const zone = ls('cfZoneTag') || '';
+  const per = ls('cfPeriod') || '';
+  if (tok) tokEl.value = tok;
+  if (zone) zoneEl.value = zone;
+  if (per) perEl.value = per;
+  if (tok && zone) loadCloudflareAnalytics();
 }
 
 // ── Backup ─────────────────────────────────────────────────────────────────
@@ -9743,12 +10199,12 @@ async function termSend() {
     const cfgR = await fetch('/api/config');
     const cfg  = await cfgR.json();
     const sites = (cfg.sites||[]).map(s=>`${s.id}|${s.domain}|${s.active?'active':'inactive'}`).join('\n');
-    cfgCtx = `Network: ${cfg._name||'Kavalsia Network'}\nSites:\n${sites}`;
+    cfgCtx = `Network: ${cfg._name||'Spider Web'}\nSites:\n${sites}`;
   } catch(e) {}
 
   const aisIntegrations = JSON.parse(localStorage.getItem('ais_integrations')||'{}');
   const intLine = Object.keys(aisIntegrations).length ? '\nConnected platforms: '+Object.keys(aisIntegrations).join(', ') : '';
-  const sys = `You are AI[S], the intelligent agent for the Kavalsia Network  -  a 22-site content automation system.
+  const sys = `You are AI[S], the intelligent agent for Spider Web  -  a 22-site content automation system.
 Today: ${new Date().toISOString().split('T')[0]}
 ${cfgCtx}${intLine}
 
@@ -9853,7 +10309,7 @@ Be direct and concise.`;
 function termRenderMessages() {
   const el = document.getElementById('termMessages'); if (!el) return;
   if (!termMsgs.length) {
-    el.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--text3);font-size:13px;font-family:monospace">▸ AI[S] has full context of your Kavalsia Network.<br>Ask anything  -  sites, integrations, strategy, config.</div>';
+    el.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--text3);font-size:13px;font-family:monospace">▸ AI[S] has full context of Spider Web.<br>Ask anything  -  sites, integrations, strategy, config.</div>';
     return;
   }
   el.innerHTML = termMsgs.map(m => {
@@ -10565,6 +11021,7 @@ window.showPanel = function(name) {
   if (name==='terminal' && !termCurrent) termInit();
   if (name==='sponsors') sponsorsInit();
   if (name==='manualpost' && typeof mpInit === 'function') mpInit();
+  if (name==='analytics') analyticsInit();
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -11049,8 +11506,16 @@ window.showPanel = function(name) {
     return atob(d.content.replace(/\n/g,''));
   }
   function countComments(j) {
-    if (!j || typeof j !== 'object') return 0;
-    return (Array.isArray(j.comments) ? j.comments.length : 0) + (Array.isArray(j.author_replies) ? j.author_replies.length : 0);
+    // comments.json shape: flat array of comment objects, each with optional .replies[]
+    if (!j) return 0;
+    if (Array.isArray(j)) {
+      return j.reduce((n, c) => n + 1 + (Array.isArray(c && c.replies) ? c.replies.length : 0), 0);
+    }
+    // Legacy fallback if any old file used the {comments, author_replies} shape.
+    if (typeof j === 'object') {
+      return (Array.isArray(j.comments) ? j.comments.length : 0) + (Array.isArray(j.author_replies) ? j.author_replies.length : 0);
+    }
+    return 0;
   }
 
   window.mcScan = async function() {
@@ -11134,6 +11599,8 @@ window.showPanel = function(name) {
     </div>`;
   }
 
+  // comments.json schema: flat array of comment objects
+  // [{id, name, initials, color, date_iso, date_display, text, likes, replies:[{id, name, date_iso, date_display, text, likes}], _persona}]
   window.mcToggle = async function(repo, slug, headEl) {
     const wrap = headEl.parentElement; const editEl = wrap.querySelector('.mc-edit'); const chev = headEl.querySelector('.mc-chev');
     if (editEl.style.display === 'block') { editEl.style.display = 'none'; chev.textContent = '▸'; return; }
@@ -11141,56 +11608,137 @@ window.showPanel = function(name) {
     editEl.innerHTML = '<div style="font-size:11px;color:var(--text3)">Loading...</div>';
     try {
       const cj = await fetchJson(`repos/${repo}/contents/${slug}/comments.json`);
-      const data = cj._404 ? { comments: [], author_replies: [], _new: true } : JSON.parse(decodeContent(cj));
-      const sha = cj._404 ? '' : cj.sha;
-      mcRenderEditor(editEl, repo, slug, data, sha);
+      let list;
+      if (cj._404) {
+        list = [];
+      } else {
+        const parsed = JSON.parse(decodeContent(cj));
+        list = Array.isArray(parsed) ? parsed
+             : (parsed && Array.isArray(parsed.comments)) ? parsed.comments  // legacy fallback
+             : [];
+      }
+      editEl.dataset.sha = cj._404 ? '' : (cj.sha || '');
+      editEl.dataset.slug = slug; editEl.dataset.repo = repo;
+      editEl._working = JSON.parse(JSON.stringify(list));
+      mcRenderEditor(editEl);
     } catch(e) { editEl.innerHTML = '<div style="font-size:11px;color:var(--red)">Error: ' + e.message + '</div>'; }
   };
 
-  function mcRenderEditor(el, repo, slug, data, sha) {
-    el.dataset.sha = sha || '';
-    el.dataset.slug = slug; el.dataset.repo = repo;
+  function _mcIsoToDisplay(iso) {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso + 'T12:00:00');
+      return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    } catch(_) { return iso; }
+  }
+
+  function mcRenderEditor(el) {
+    const list = el._working || [];
     const today = new Date().toISOString().slice(0,10);
-    const card = (kind, c, i) => `<div style="border:1px solid var(--border2);border-radius:6px;padding:8px;margin-bottom:6px;background:var(--bg2)" data-kind="${kind}" data-i="${i}">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <span style="font-size:9px;font-weight:800;background:${kind==='author'?'rgba(245,158,11,.18)':'rgba(56,189,248,.18)'};color:${kind==='author'?'#f59e0b':'#38bdf8'};padding:2px 6px;border-radius:3px;letter-spacing:.6px">${kind.toUpperCase()}</span>
-        <input type="text" value="${(c.name||c.reply_to||'').replace(/"/g,'&quot;')}" placeholder="${kind==='author'?'reply_to (reader name)':'name'}" class="mc-f-name" style="flex:1;font-size:12px;padding:4px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
-        <input type="date" value="${(c.date||today).slice(0,10)}" class="mc-f-date" style="font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
-        ${kind==='reader' ? `<input type="number" min="0" max="9999" value="${c.likes||0}" class="mc-f-likes" style="width:62px;font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);text-align:center" title="likes">` : ''}
-        <button onclick="this.closest('[data-kind]').remove()" title="Delete" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 6px" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text3)'">×</button>
+    const inputs = (c, kind) => `
+      <input type="text" value="${(c.name||'').replace(/"/g,'&quot;')}" placeholder="name" class="mc-f-name" style="flex:1;min-width:120px;font-size:12px;padding:4px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
+      <input type="date" value="${(c.date_iso||today).slice(0,10)}" class="mc-f-date" style="font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
+      <input type="number" min="0" max="9999" value="${c.likes||0}" class="mc-f-likes" style="width:62px;font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);text-align:center" title="likes">`;
+
+    const replyCard = (r, ci, ri) => `<div style="border:1px solid var(--border2);border-radius:6px;padding:8px;margin:6px 0 6px 24px;background:var(--bg)" data-kind="author" data-ci="${ci}" data-ri="${ri}">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="font-size:9px;font-weight:800;background:rgba(245,158,11,.18);color:#f59e0b;padding:2px 6px;border-radius:3px;letter-spacing:.6px">REPLY</span>
+        ${inputs(r, 'author')}
+        <button onclick="mcDelete(this)" title="Delete" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 6px" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text3)'">×</button>
+      </div>
+      <textarea rows="2" class="mc-f-text" placeholder="reply text" style="width:100%;font-size:12px;padding:6px 8px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;color:var(--text);resize:vertical;line-height:1.5">${(r.text||'').replace(/</g,'&lt;')}</textarea>
+    </div>`;
+
+    const readerCard = (c, ci) => `<div style="border:1px solid var(--border2);border-radius:6px;padding:8px;margin-bottom:8px;background:var(--bg2)" data-kind="reader" data-ci="${ci}">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="font-size:9px;font-weight:800;background:rgba(56,189,248,.18);color:#38bdf8;padding:2px 6px;border-radius:3px;letter-spacing:.6px">COMMENT</span>
+        ${inputs(c, 'reader')}
+        <button onclick="mcDelete(this)" title="Delete this comment + its replies" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 6px" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='var(--text3)'">×</button>
       </div>
       <textarea rows="2" class="mc-f-text" placeholder="comment text" style="width:100%;font-size:12px;padding:6px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);resize:vertical;line-height:1.5">${(c.text||'').replace(/</g,'&lt;')}</textarea>
+      <div style="margin-top:6px">
+        ${(c.replies||[]).map((r, ri) => replyCard(r, ci, ri)).join('')}
+        <button class="btn btn-sm" style="margin-left:24px;font-size:11px;padding:3px 8px" onclick="mcAddReply(this, ${ci})">+ Add author reply</button>
+      </div>
     </div>`;
+
     el.innerHTML = `
-      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
-        <button class="btn btn-sm" onclick="mcAdd(this,'reader')">+ Add reader comment</button>
-        <button class="btn btn-sm" onclick="mcAdd(this,'author')">+ Add author reply</button>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-sm" onclick="mcAddReader(this)">+ Add comment</button>
+        <span style="font-size:11px;color:var(--text3);margin-left:6px">${list.length} comments, ${list.reduce((n,c) => n + (c.replies?.length||0), 0)} replies</span>
         <button class="btn btn-sm btn-accent" style="margin-left:auto" onclick="mcSaveEditor(this)">Save all</button>
       </div>
-      <div id="mc-list-${slug}">
-        ${(data.comments||[]).map((c,i) => card('reader', c, i)).join('')}
-        ${(data.author_replies||[]).map((c,i) => card('author', c, i)).join('')}
+      <div id="mc-list-${el.dataset.slug}">
+        ${list.map((c, ci) => readerCard(c, ci)).join('') || '<div style="font-size:12px;color:var(--text3);padding:12px;text-align:center">No comments yet. Click "+ Add comment" to create one.</div>'}
       </div>
     `;
   }
 
-  window.mcAdd = function(btn, kind) {
+  // Sync the DOM values back into the working list, then call refresh/save.
+  function _mcSyncFromDOM(editor) {
+    const list = editor._working || [];
+    editor.querySelectorAll('[data-kind="reader"]').forEach(card => {
+      const ci = +card.dataset.ci;
+      const c  = list[ci];
+      if (!c) return;
+      c.name      = card.querySelector('.mc-f-name')?.value.trim() || c.name || '';
+      c.date_iso  = card.querySelector('.mc-f-date')?.value || c.date_iso || '';
+      c.date_display = _mcIsoToDisplay(c.date_iso);
+      c.likes     = parseInt(card.querySelector('.mc-f-likes')?.value, 10) || 0;
+      c.text      = card.querySelector(':scope > textarea.mc-f-text')?.value || '';
+    });
+    editor.querySelectorAll('[data-kind="author"]').forEach(card => {
+      const ci = +card.dataset.ci, ri = +card.dataset.ri;
+      const r  = list[ci] && list[ci].replies && list[ci].replies[ri];
+      if (!r) return;
+      r.name        = card.querySelector('.mc-f-name')?.value.trim() || r.name || '';
+      r.date_iso    = card.querySelector('.mc-f-date')?.value || r.date_iso || '';
+      r.date_display = _mcIsoToDisplay(r.date_iso);
+      r.likes       = parseInt(card.querySelector('.mc-f-likes')?.value, 10) || 0;
+      r.text        = card.querySelector('textarea.mc-f-text')?.value || '';
+    });
+    return list;
+  }
+
+  window.mcAddReader = function(btn) {
     const editor = btn.closest('.mc-edit');
-    const list   = editor.querySelector('[id^="mc-list-"]');
-    const today  = new Date().toISOString().slice(0,10);
-    const wrap = document.createElement('div');
-    const html = `<div style="border:1px solid var(--accent);border-radius:6px;padding:8px;margin-bottom:6px;background:var(--bg2)" data-kind="${kind}" data-i="new">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
-        <span style="font-size:9px;font-weight:800;background:${kind==='author'?'rgba(245,158,11,.18)':'rgba(56,189,248,.18)'};color:${kind==='author'?'#f59e0b':'#38bdf8'};padding:2px 6px;border-radius:3px;letter-spacing:.6px">${kind.toUpperCase()}</span>
-        <input type="text" placeholder="${kind==='author'?'reply_to (reader name)':'name'}" class="mc-f-name" style="flex:1;font-size:12px;padding:4px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
-        <input type="date" value="${today}" class="mc-f-date" style="font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text)">
-        ${kind==='reader' ? `<input type="number" min="0" max="9999" value="0" class="mc-f-likes" style="width:62px;font-size:11px;padding:4px 6px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);text-align:center">` : ''}
-        <button onclick="this.closest('[data-kind]').remove()" title="Delete" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 6px">×</button>
-      </div>
-      <textarea rows="2" class="mc-f-text" placeholder="comment text" style="width:100%;font-size:12px;padding:6px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);resize:vertical"></textarea>
-    </div>`;
-    wrap.innerHTML = html;
-    list.appendChild(wrap.firstElementChild);
+    _mcSyncFromDOM(editor);
+    const today = new Date().toISOString().slice(0,10);
+    editor._working.push({
+      id: 'c' + Date.now().toString(36),
+      name: '', text: '',
+      date_iso: today, date_display: _mcIsoToDisplay(today),
+      likes: 0, replies: [],
+    });
+    mcRenderEditor(editor);
+  };
+
+  window.mcAddReply = function(btn, ci) {
+    const editor = btn.closest('.mc-edit');
+    _mcSyncFromDOM(editor);
+    const today = new Date().toISOString().slice(0,10);
+    if (!editor._working[ci]) return;
+    if (!editor._working[ci].replies) editor._working[ci].replies = [];
+    editor._working[ci].replies.push({
+      id: 'r' + Date.now().toString(36),
+      name: '', text: '',
+      date_iso: today, date_display: _mcIsoToDisplay(today),
+      likes: 0,
+    });
+    mcRenderEditor(editor);
+  };
+
+  window.mcDelete = function(btn) {
+    const card = btn.closest('[data-kind]');
+    const editor = card.closest('.mc-edit');
+    _mcSyncFromDOM(editor);
+    if (card.dataset.kind === 'reader') {
+      editor._working.splice(+card.dataset.ci, 1);
+    } else {
+      const ci = +card.dataset.ci, ri = +card.dataset.ri;
+      if (editor._working[ci]?.replies) editor._working[ci].replies.splice(ri, 1);
+    }
+    mcRenderEditor(editor);
   };
 
   window.mcSaveEditor = async function(btn) {
@@ -11198,32 +11746,20 @@ window.showPanel = function(name) {
     const repo   = editor.dataset.repo;
     const slug   = editor.dataset.slug;
     const sha    = editor.dataset.sha;
-    const cards  = editor.querySelectorAll('[data-kind]');
-    const data = { comments: [], author_replies: [] };
-    cards.forEach(c => {
-      const kind  = c.dataset.kind;
-      const name  = c.querySelector('.mc-f-name')?.value.trim() || '';
-      const text  = c.querySelector('.mc-f-text')?.value.trim() || '';
-      const date  = c.querySelector('.mc-f-date')?.value || '';
-      if (!name || !text) return;
-      if (kind === 'reader') {
-        const likes = parseInt(c.querySelector('.mc-f-likes')?.value, 10) || 0;
-        data.comments.push({ name, text, date, likes });
-      } else {
-        data.author_replies.push({ reply_to: name, text, date });
-      }
-    });
+    const list   = _mcSyncFromDOM(editor)
+                    .filter(c => (c.name || c.text)) // drop blank rows
+                    .map(c => ({ ...c, replies: (c.replies||[]).filter(r => r.name || r.text) }))
+                    .sort((a,b) => (a.date_iso||'').localeCompare(b.date_iso||''));
+
     btn.disabled = true; btn.textContent = 'Saving...';
     try {
-      const body = { message: 'edit: manage comments via dashboard', content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))) };
+      const body = { message: 'edit: manage comments via dashboard',
+                     content: btoa(unescape(encodeURIComponent(JSON.stringify(list, null, 2)))) };
       if (sha) body.sha = sha;
       let r = await fetch(`/api/github/repos/${repo}/contents/${slug}/comments.json`, {
-        method: 'PUT',
-        headers: { 'Content-Type':'application/json', ...headers() },
-        body: JSON.stringify(body),
+        method: 'PUT', headers: { 'Content-Type':'application/json', ...headers() }, body: JSON.stringify(body),
       });
       if (r.status === 409) {
-        // refetch sha + retry once
         const fresh = await fetchJson(`repos/${repo}/contents/${slug}/comments.json`);
         body.sha = fresh.sha;
         r = await fetch(`/api/github/repos/${repo}/contents/${slug}/comments.json`, {
@@ -11232,11 +11768,12 @@ window.showPanel = function(name) {
       }
       if (!r.ok) { const e = await r.text(); throw new Error('HTTP ' + r.status + ' ' + e.slice(0,80)); }
       const out = await r.json(); editor.dataset.sha = out.content?.sha || '';
+      editor._working = list;
       toast('Saved', 'ok');
       // update the count badge for this article in the open detail view
       const row = editor.closest('div');
       const badge = row.parentElement.querySelector('span[style*="background:rgba(168,85,247"], span[style*="background:transparent"]');
-      if (badge) { const n = data.comments.length + data.author_replies.length; badge.textContent = n; }
+      if (badge) badge.textContent = list.reduce((n,c) => n + 1 + (c.replies?.length||0), 0);
     } catch(e) { toast('Save failed: ' + e.message, 'error'); }
     finally { btn.disabled = false; btn.textContent = 'Save all'; }
   };
