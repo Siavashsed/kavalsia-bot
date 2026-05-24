@@ -24,8 +24,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import layout_shell
-from bot import (_seo_meta, _seo_title_tag, _comments_section_js, THEMES, SITE_THEMES,
-                 assign_category, _count_words, _site_name, _resolve_author)
+from bot import (_seo_meta, _seo_title_tag, _comments_section_js,
+                 _comments_section_inline, THEMES, SITE_THEMES,
+                 assign_category, _count_words, _site_name, _resolve_author,
+                 _article_section_css, article_press)
 
 
 def _theme_for(site):
@@ -56,7 +58,10 @@ BASE_DIR    = Path(__file__).parent
 CONFIG_FILE = BASE_DIR / "network-config.json"
 
 # Known top-level wrapper classes emitted by the article builders (old and new).
-WRAPPERS = ("art-grid", "art-min", "mag-hero", "imm-hero", "art", "wrap", "hero", "body")
+# "ap" is the press-layout wrapper produced by article_press() and is the
+# canonical wrapper going forward; the others stay so rebuild can still parse
+# pages last rendered by a legacy builder.
+WRAPPERS = ("ap", "art-grid", "art-min", "mag-hero", "imm-hero", "art", "wrap", "hero", "body")
 
 
 def _headers(token):
@@ -81,6 +86,136 @@ def _put_file(repo, path, content_str, token, sha=None, msg="rebuild: re-wrap ar
         headers={**_headers(token), "Content-Type": "application/json"},
         json=payload, timeout=30,
     )
+
+
+def _extract_article_structure(body_html, article):
+    """Parse an already-rendered article body into a structured dict that
+    article_press() can re-render. Works across the legacy layouts (.art,
+    .art-grid, .mag-hero, .imm-hero, .art-min, etc.) by anchoring on the
+    semantic content - h1, first image, first paragraphs, h2 + content
+    pairs, conclusion - rather than wrapper-specific class names."""
+    import re as _re
+
+    # Scrub artifacts that earlier rebuilds left in the body. Multiple prior
+    # passes accumulate <article> open/close pairs, author-card sections, and
+    # comment placeholders inside the captured body - if we don't strip them
+    # before section parsing, they leak into the LAST section's content and
+    # break the .ap-body wrapper on the next render.
+    body_html = _re.sub(r'</?article\b[^>]*>', '', body_html, flags=_re.IGNORECASE)
+    body_html = _re.sub(r'<section[^>]*class="[^"]*\bauthor-card\b[^"]*"[^>]*>.*?</section>',
+                        '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
+    body_html = _re.sub(r'<div[^>]*id="comments-section"[^>]*>.*?</script>',
+                        '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
+    body_html = _re.sub(r'<div[^>]*class="giscus"[^>]*>.*?</script>',
+                        '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
+
+    # Hero image: first <img> outside obvious nav/logo, with its src and alt.
+    img_url = ""; img_alt = ""; photographer = "Staff"
+    for m in _re.finditer(r'<img\b[^>]*>', body_html, _re.IGNORECASE):
+        tag = m.group(0)
+        src = (_re.search(r'\bsrc=["\']([^"\']+)["\']', tag) or [None, ""])[1]
+        if not src or "logo" in src.lower() or "avatar" in src.lower():
+            continue
+        # Skip anything inside the schema author block.
+        before = body_html[:m.start()][-200:].lower()
+        if "itemprop=\"author\"" in before or "author-card" in before:
+            continue
+        img_url = src
+        img_alt = (_re.search(r'\balt=["\']([^"\']*)["\']', tag) or [None, ""])[1]
+        # Photographer is the next "Photo[graph] by/: <name>" string after the img.
+        rest = body_html[m.end(): m.end()+400]
+        pm = _re.search(r'(?:Photo(?:graph)?\s*(?:by|:)\s*)([^<\n/]+?)(?:\s*/\s*Pexels)?[<\n]', rest, _re.IGNORECASE)
+        if pm:
+            photographer = pm.group(1).strip().rstrip(",").strip() or "Staff"
+        break
+
+    # Title comes from the article metadata; the in-body h1 is dropped from
+    # the parsed sections so it isn't double-rendered by article_press().
+    title = article.get("title") or ""
+
+    # Strip the hero image block + h1 + byline scaffolding so the remaining
+    # HTML is the prose body we can scan for sections.
+    work = body_html
+    work = _re.sub(r'<h1\b[^>]*>.*?</h1>', '', work, count=1, flags=_re.DOTALL|_re.IGNORECASE)
+    work = _re.sub(r'<img\b[^>]*>\s*(?:<p[^>]*>\s*Photo[^<]*</p>)?', '', work, count=1, flags=_re.IGNORECASE)
+    work = _re.sub(r'<figure\b[^>]*>.*?</figure>', '', work, count=1, flags=_re.DOTALL|_re.IGNORECASE)
+    # Drop header/sidebar/TOC blocks present in some legacy layouts.
+    for sel in (r'<aside\b[^>]*>.*?</aside>',
+                r'<div class="art-side"[^>]*>.*?</div>\s*(?=</section>|</div>|$)'):
+        work = _re.sub(sel, '', work, flags=_re.DOTALL|_re.IGNORECASE)
+
+    # Pull out everything before the first h2 as the "intro lede". If the first
+    # paragraph has class="intro" or class="lead", that wins; otherwise take the
+    # first two <p>s.
+    intro = ""; intro2 = ""
+    pre_h2_match = _re.search(r'(?is)(.*?)(<h2\b|$)', work)
+    pre_h2 = pre_h2_match.group(1) if pre_h2_match else work
+    # Author byline lines look like "<div ...>By <strong>...</strong></div>" or
+    # plain "By <strong>...</strong>" - strip them so they don't leak into intro.
+    pre_h2 = _re.sub(r'<(?:div|p|span|section|header)[^>]*>\s*(?:&nbsp;)?\s*[Bb]y\s*<strong[^>]*>[^<]+</strong>.*?</(?:div|p|span|section|header)>',
+                     '', pre_h2, flags=_re.DOTALL)
+    pre_h2 = _re.sub(r'(?:&nbsp;)?\s*[Bb]y\s*<strong[^>]*>[^<]+</strong>', '', pre_h2)
+    # Date / category meta strip ("date · category").
+    pre_h2 = _re.sub(r'<div[^>]*class="[^"]*(?:meta|kicker)[^"]*"[^>]*>.*?</div>',
+                     '', pre_h2, flags=_re.DOTALL|_re.IGNORECASE)
+    # Prefer the layout-specific lede containers (.lead / .intro / .lede) and
+    # fall back to the first plain <p>. Whatever wins becomes the intro; the
+    # next non-empty <p> becomes the intro2 secondary lede.
+    pre_h2_clean = _re.sub(r'<img\b[^>]*>', '', pre_h2)
+    pre_h2_clean = _re.sub(r'<p[^>]*>\s*Photo[^<]*</p>', '', pre_h2_clean, flags=_re.IGNORECASE)
+    lead_classes = ("lead", "intro", "lede", "deck")
+    for cls in lead_classes:
+        lm = _re.search(rf'<(?:div|p)[^>]*class="[^"]*\b{cls}\b[^"]*"[^>]*>(.*?)</(?:div|p)>',
+                        pre_h2_clean, _re.DOTALL|_re.IGNORECASE)
+        if lm and lm.group(1).strip():
+            intro = lm.group(1).strip()
+            pre_h2_clean = pre_h2_clean.replace(lm.group(0), "", 1)
+            break
+    paras = _re.findall(r'<p\b[^>]*>(.*?)</p>', pre_h2_clean, flags=_re.DOTALL|_re.IGNORECASE)
+    paras = [p.strip() for p in paras if p.strip()]
+    if not intro and paras:
+        intro = paras.pop(0)
+    if paras:
+        intro2 = paras[0]
+
+    # Sections: every h2 followed by content up to the next h2 or .concl/end.
+    sections = []
+    # Normalize art-h2 / art-h3 class wrappers - article_press regenerates them.
+    section_iter = _re.finditer(
+        r'<h2\b[^>]*>(?P<head>.*?)</h2>(?P<body>.*?)(?=<h2\b|<div[^>]+class="[^"]*\bconcl\b[^"]*"|<section[^>]+class="[^"]*\bauthor\b[^"]*"|<div[^>]+id="comments-section|<aside\b|$)',
+        work, flags=_re.DOTALL|_re.IGNORECASE)
+    for m in section_iter:
+        head = _re.sub(r'<[^>]+>', '', m.group('head')).strip()
+        if not head:
+            continue
+        sec_body = m.group('body').strip()
+        # Drop a leading inner-wrapping <div> so the section content reads cleanly.
+        sec_body = _re.sub(r'^\s*<div[^>]*>(.*)</div>\s*$', r'\1', sec_body, flags=_re.DOTALL)
+        sections.append({"heading": head, "content": sec_body.strip()})
+
+    # Conclusion: prefer .concl block; otherwise tail paragraph after last h2.
+    conclusion = ""
+    cm = _re.search(r'<div[^>]*class="[^"]*\bconcl\b[^"]*"[^>]*>(.*?)</div>', work, _re.DOTALL|_re.IGNORECASE)
+    if cm:
+        conclusion = cm.group(1).strip()
+
+    return {
+        "title":            title,
+        "intro":            intro,
+        "intro2":           intro2,
+        "sections":         sections,
+        "conclusion":       conclusion,
+        "image":            img_url,
+        "image_url":        img_url,
+        "image_alt":        img_alt or title,
+        "photographer":     photographer,
+        "date":             article.get("date", ""),
+        "date_iso":         article.get("date_iso", ""),
+        "meta_description": article.get("meta_description", ""),
+        "category":         article.get("category", ""),
+        "author":           article.get("author", ""),
+        "slug":             article.get("slug", ""),
+    }
 
 
 def extract_body_and_css(html):
@@ -161,7 +296,14 @@ def patch_site(stem, site, token, log):
     if new_accent:
         t["accent"] = new_accent
         t["accent2"] = new_accent
-    fresh_comments = _comments_section_js(t).strip()
+    # JS fallback only used when comments.json is missing AND we can't even
+    # render a placeholder (we should always be able to render a placeholder).
+    fresh_comments_js = _comments_section_js(t).strip()
+
+    # Per-site counters threaded back to caller for the summary line.
+    site_inlined = 0
+    site_placeholder = 0
+    site_js_fallback = 0
 
     for i, article in enumerate(articles):
         slug = (article.get("slug") or "").strip()
@@ -185,6 +327,25 @@ def patch_site(stem, site, token, log):
 
         body, css = extract_body_and_css(original)
         if body:
+            # ── Press rewrap: parse the legacy body, reconstruct as a structured
+            # article dict, then re-render through article_press() so every site
+            # ends up with the same long-form magazine layout regardless of which
+            # builder originally produced the page. Skipped only if extraction
+            # fails (we keep the original body in that case).
+            try:
+                synth = _extract_article_structure(body, article)
+                if synth.get("sections") or synth.get("intro"):
+                    fresh_css, fresh_body = article_press(
+                        synth, site,
+                        synth.get("image_url") or article.get("image", ""),
+                        synth.get("photographer") or "Staff",
+                        t,
+                    )
+                    body = fresh_body
+                    css = fresh_css
+            except Exception as _press_err:
+                log(f"  [{i+1}] ! {slug}  -  press rewrap fell back ({_press_err})")
+
             # Collapse legacy nested <time><time>...</time></time> chains from
             # earlier rebuilds that re-wrapped an already-wrapped date.
             prev = None
@@ -192,14 +353,80 @@ def patch_site(stem, site, token, log):
                 prev = body
                 body = re.sub(r'<time\b[^>]*>\s*(<time\b[^>]*>)', r'\1', body, flags=re.IGNORECASE)
                 body = re.sub(r'</time>\s*</time>', '</time>', body, flags=re.IGNORECASE)
+
+            # Strip legacy inline heading styles introduced by the old
+            # _article_sections() template (font-family + font-size:22px etc.).
+            # Replace with the scoped .art-h2 / .art-h3 classes. The matching
+            # CSS rule is injected below so the visual outcome is unchanged.
+            had_inline_h2 = bool(re.search(
+                r'<h2\b([^>]*?)\sstyle="font-family:[^"]*font-size:22px[^"]*"',
+                body, flags=re.IGNORECASE))
+            had_inline_h3 = bool(re.search(
+                r'<h3\b([^>]*?)\sstyle="font-family:[^"]*font-size:18px[^"]*"',
+                body, flags=re.IGNORECASE))
+            if had_inline_h2:
+                body = re.sub(
+                    r'<h2\b([^>]*?)\sstyle="font-family:[^"]*font-size:22px[^"]*"',
+                    lambda m: f'<h2{m.group(1)} class="art-h2"',
+                    body, flags=re.IGNORECASE)
+            if had_inline_h3:
+                body = re.sub(
+                    r'<h3\b([^>]*?)\sstyle="font-family:[^"]*font-size:18px[^"]*"',
+                    lambda m: f'<h3{m.group(1)} class="art-h3"',
+                    body, flags=re.IGNORECASE)
+            # If neither inline form existed but the body uses .art-h2 already
+            # (e.g. fresh build from updated bot.py), the class rule still
+            # needs to be present in CSS. Inject when missing.
+            if (had_inline_h2 or had_inline_h3
+                    or "art-h2" in body or "art-h3" in body) and ".art-h2{" not in css:
+                css = css + "\n/* heading classes */\n" + _article_section_css(t)
         if not body:
             log(f"  [{i+1}] x {slug}  -  could not locate article body")
             fail += 1
             continue
 
-        # Swap the comment section for the redesigned one.
-        body = re.sub(r'<div id="comments-section".*?</script>',
-                      lambda _m: fresh_comments, body, count=1, flags=re.DOTALL)
+        # Pull this article's comments.json from the repo (if present) and
+        # render an inline, schema.org-compliant comments section. Falls back
+        # to a "Comments coming soon" placeholder when no comments.json exists.
+        comments_data = []
+        cj = _get(f"{api}/{slug}/comments.json", token)
+        if cj:
+            try:
+                jd = cj.json()
+                raw_b64 = jd.get("content", "")
+                if raw_b64:
+                    comments_data = json.loads(_decode(raw_b64))
+                elif jd.get("git_url"):
+                    blob = requests.get(jd["git_url"], headers=_headers(token), timeout=20)
+                    if blob.ok:
+                        comments_data = json.loads(_decode(blob.json()["content"]))
+            except Exception:
+                comments_data = []
+
+        try:
+            inline_block = _comments_section_inline(article, site, comments_data, t)
+            new_body, n_sub = re.subn(
+                r'<div id="comments-section".*?</script>|<section id="comments".*?</script>',
+                lambda _m: inline_block, body, count=1, flags=re.DOTALL,
+            )
+            if n_sub:
+                body = new_body
+                if comments_data:
+                    site_inlined += 1
+                else:
+                    site_placeholder += 1
+            else:
+                # Could not locate either comment section variant: append inline.
+                body = body + inline_block
+                if comments_data:
+                    site_inlined += 1
+                else:
+                    site_placeholder += 1
+        except Exception as _e:
+            # Last resort: keep the JS-only fallback.
+            body = re.sub(r'<div id="comments-section".*?</script>',
+                          lambda _m: fresh_comments_js, body, count=1, flags=re.DOTALL)
+            site_js_fallback += 1
         # Recolor the article accent to the site's brand accent. Replace both the
         # theme accents and the accent actually detected in this article's CSS.
         if new_accent:
@@ -329,7 +556,8 @@ def patch_site(stem, site, token, log):
         except Exception as e:
             log(f"  ! articles.json category push failed: {e}")
 
-    return ok, fail
+    log(f"  summary: ok={ok} fail={fail} inlined={site_inlined} placeholder={site_placeholder} js_fallback={site_js_fallback}")
+    return ok, fail, site_inlined, site_placeholder, site_js_fallback
 
 
 def main():
@@ -350,18 +578,32 @@ def main():
     only  = {x.strip() for x in args.only.split(",") if x.strip()}
 
     total_ok = total_fail = 0
+    total_inlined = total_placeholder = total_js = 0
+    per_site = []
     for site in sites:
         stem = site.get("repo", "").rsplit("/", 1)[-1] or site.get("id", "")
         if only and stem not in only and site.get("id") not in only:
             continue
         if not layout_shell.template_path(stem).exists():
             continue
-        ok, fail = patch_site(stem, site, args.gh_token, log=print)
+        try:
+            ok, fail, inlined, placeholder, js_fb = patch_site(stem, site, args.gh_token, log=print)
+        except Exception as e:
+            print(f"  !! site {stem} crashed: {e}")
+            continue
         total_ok += ok
         total_fail += fail
+        total_inlined += inlined
+        total_placeholder += placeholder
+        total_js += js_fb
+        per_site.append((stem, ok, fail, inlined, placeholder, js_fb))
 
     print(f"\n{'-'*50}")
-    print(f"Done. {total_ok} re-wrapped, {total_fail} failed.")
+    print(f"Per-site article counts:")
+    for stem, ok, fail, inlined, placeholder, js_fb in per_site:
+        print(f"  {stem}: ok={ok} fail={fail} inlined={inlined} placeholder={placeholder} js_fallback={js_fb}")
+    print(f"\nDone. {total_ok} re-wrapped, {total_fail} failed.")
+    print(f"Inlined comments: {total_inlined} | Placeholder only: {total_placeholder} | JS fallback: {total_js}")
     sys.exit(1 if total_fail else 0)
 
 
