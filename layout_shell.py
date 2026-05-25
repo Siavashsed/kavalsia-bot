@@ -432,7 +432,7 @@ def clean(html):
 
 
 def wrap_page(stem, *, title, body_html, description="", extra_css="",
-              head_meta="", depth=0):
+              head_meta="", depth=0, lang="en", text_dir="ltr"):
     """Assemble a full HTML page wrapped in the homepage shell of `stem`.
 
     title       - <title> text.
@@ -441,6 +441,9 @@ def wrap_page(stem, *, title, body_html, description="", extra_css="",
     extra_css   - page-specific CSS appended after the homepage style.
     head_meta   - extra raw <head> tags (canonical / OG / JSON-LD for articles).
     depth       - 0 for static pages, 1 for articles at <slug>/index.html.
+    lang        - BCP-47 language code emitted as <html lang> (default "en").
+    text_dir    - text direction emitted as <html dir> (default "ltr"; use "rtl"
+                  for Persian, Arabic, Hebrew, Sorani Kurdish pages).
     """
     shell = get_shell(stem)
     header = rewrite_links(shell["header_html"], depth)
@@ -449,7 +452,7 @@ def wrap_page(stem, *, title, body_html, description="", extra_css="",
     page_css = f"\n/* page */\n{extra_css}" if extra_css.strip() else ""
 
     return clean(f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="{lang}" dir="{text_dir}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
