@@ -25,6 +25,7 @@
         1216351013
       ]
     },
+    "weekly_ideas_enabled": true,
     "web_search": {
       "enabled": false,
       "provider": "tavily",
