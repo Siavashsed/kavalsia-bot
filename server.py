@@ -2068,6 +2068,8 @@ ALLOWED_SITE_FIELDS = {
     "meta",
     # WordPress / WooCommerce / Shopify per-site integration overrides
     "wordpress", "woocommerce", "shopify",
+    # Translation mode (multi-language sites only)
+    "translation_mode",
 }
 
 SITE_FIELD_VALIDATORS = {
@@ -2089,6 +2091,7 @@ SITE_FIELD_VALIDATORS = {
     "wordpress":           lambda v: isinstance(v, dict),
     "woocommerce":         lambda v: isinstance(v, dict),
     "shopify":             lambda v: isinstance(v, dict),
+    "translation_mode":    lambda v: v in ("primary_only", "primary_plus_english", "auto_all"),
 }
 
 @app.route("/api/site-settings", methods=["POST"])
