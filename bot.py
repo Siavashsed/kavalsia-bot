@@ -768,6 +768,22 @@ SITE_THEMES = {
         "font":"'Space Grotesk','Inter',sans-serif",
         "heading_font":"'Anton','Space Grotesk',sans-serif",
     },
+    "agyan": {
+        "bg":"#0d0a13","bg2":"#1a0e1d","bg3":"#241a2a",
+        "text":"#f5e6d3","text2":"#c9bcb0",
+        "accent":"#e6b9a6","accent2":"#c98a73",
+        "meta":"#a89aa6","border":"rgba(245,230,211,.10)",
+        "font":"'Vazirmatn',system-ui,sans-serif",
+        "heading_font":"'Estedad','Vazirmatn',serif",
+    },
+    "risheh": {
+        "bg":"#fdfcf8","bg2":"#fafaf7","bg3":"#ffffff",
+        "text":"#1a1f1e","text2":"#5a6c66",
+        "accent":"#0f6e6c","accent2":"#0a4f4d",
+        "meta":"#8a9590","border":"rgba(15,110,108,.08)",
+        "font":"'Vazirmatn',system-ui,sans-serif",
+        "heading_font":"'Estedad','Vazirmatn',serif",
+    },
 }
 
 
@@ -1016,6 +1032,34 @@ def get_network_links(site, all_sites):
     return ""
 
 
+# Dashes Claude sometimes injects despite explicit prompt rules. Mapped to a
+# plain hyphen so the project's "no em/en dashes anywhere" rule is enforced
+# at the data layer, not just by trusting the model.
+_DASH_REPLACEMENTS = [
+    (" — ", " - "),  # spaced em dash
+    ("—", "-"),       # em dash
+    ("–", "-"),       # en dash
+    ("―", "-"),       # horizontal bar
+    ("‒", "-"),       # figure dash
+]
+
+
+def _strip_dashes(obj):
+    """Recursively replace em/en dashes with hyphens in every string field of
+    a nested dict/list structure. Returns a new object (strings are immutable
+    so we rebuild containers in-place when needed)."""
+    if isinstance(obj, str):
+        out = obj
+        for old, new in _DASH_REPLACEMENTS:
+            out = out.replace(old, new)
+        return out
+    if isinstance(obj, list):
+        return [_strip_dashes(x) for x in obj]
+    if isinstance(obj, dict):
+        return {k: _strip_dashes(v) for k, v in obj.items()}
+    return obj
+
+
 def generate_article(topic, site, all_sites, client, global_prompt="", author_name="", client_context=None, web_context="", internal_links=None, global_negative_prompt=""):
     """Call Claude to produce a full human-sounding article with cross-links."""
     print(f"  Generating: {topic}")
@@ -1081,8 +1125,17 @@ Use descriptive anchor text matching the linked article's angle. Only link when 
 {global_negative_prompt.strip()}
 """
 
+    # Persian-language sites get an explicit language directive prepended to the
+    # prompt. Brand names and proper nouns stay in their original form.
+    language_section = ""
+    if site.get("language") == "fa":
+        language_section = """
+LANGUAGE DIRECTIVE - PERSIAN (FARSI):
+The user-visible language for this article is Persian (Farsi). Write the entire article body, headings, captions, and meta description in Persian (فارسی), using proper Persian Unicode (ی not ي for yeh, ک not ك for kaf). Audience: Iranian, Afghan-Persian, and Tajik readers, plus Kurdish-Iranian readers in the diaspora. Tone: clear, academic, evidence-based, calm. Use idiomatic Persian, not literal translation. Format dates in Solar Hijri (شمسی) calendar where natural. Brand name and proper nouns (e.g. "Agyan", "Risheh", "Avin Dabaghchimokri", "Dr. Tofigh Sedighi") stay in their original form. The "slug" field must remain in lowercase Latin characters (ASCII), kebab-case, so URLs work in GitHub Pages. The "image_query" field stays in English (3-word Pexels search term) so the image search returns useful results. All other text fields - title, meta_description, intro, intro2, sections, conclusion, image_alt - must be in Persian.
+"""
+
     prompt = f"""You are {site.get("persona", "an expert writer")}. Write under your own name and perspective.
-{negative_section}
+{language_section}{negative_section}
 
 Write an original, expert-level article for {site.get("domain", "")} - a publication covering {site.get("category", "")}.
 
@@ -1117,8 +1170,8 @@ HUMAN WRITING - strict rules (burstiness and perplexity):
 • Start 2-3 sentences with And, But, or So. It's fine. It sounds human.
 • Specific numbers even when approximate: "around 340,000 accounts", "somewhere between $180 and $400"
 • Natural hedges: "arguably", "in most cases", "at least in my experience", "most of the time"
-• ABSOLUTE RULE: NEVER use em-dash ( - ) or the character - anywhere. Not once. Replace with a comma, period, or restructure entirely.
-• Also never use double-hyphen (--). Use a comma instead.
+• ABSOLUTE RULE: DO NOT USE EM DASHES (U+2014) OR EN DASHES (U+2013) anywhere in the article, JSON-LD, meta description, slug, title, or any field. Not once. Use hyphens (-) or rewrite the sentence. This is the single most-broken rule, so be vigilant: every place you would normally type an em or en dash, type a hyphen or restructure into two sentences.
+• Also never use double-hyphen (--), horizontal bar (U+2015), or figure dash (U+2012). Use a comma or hyphen instead.
 • BANNED AI FINGERPRINTS - forbidden words and phrases (use NONE of these):
   delve, delve into, tapestry, in the fast-paced world of, navigating the landscape,
   it's important to note, a testament to, unlock, unleash, elevate, foster, facilitate,
@@ -1187,7 +1240,123 @@ Return ONLY valid JSON - no markdown, no extra text:
     text = response.content[0].text.strip()
     text = re.sub(r'^```json\s*', '', text)
     text = re.sub(r'\s*```$', '', text)
-    return json.loads(text)
+    article = json.loads(text)
+
+    # ── Post-generation dash sweep ─────────────────────────────────────────
+    # Even with explicit prompt rules, Claude occasionally slips an em or en
+    # dash into body HTML, JSON-LD strings, or quoted text. Sweep the whole
+    # article dict recursively before it goes downstream to build_article_page.
+    article = _strip_dashes(article)
+
+    # ── Per-site translation step ──────────────────────────────────────────
+    # If the site declares additional languages and translation_mode requests
+    # auto-translation, generate a parallel translation for each TARGET
+    # language. Stored as title_<code>, body_html_<code>, meta_description_<code>
+    # on the article dict so build_article_page can emit <template> blocks.
+    try:
+        article = _maybe_translate_article(article, site, client)
+    except Exception as _te:
+        print(f"  Translation step failed: {_te}")
+
+    return article
+
+
+# Map of language codes to human-readable names used in translation prompts.
+LANG_NAMES = {
+    "en":  "English",
+    "ckb": "Sorani Kurdish (Central Kurdish, written in Arabic script)",
+    "fa":  "Persian (Farsi)",
+    "ar":  "Arabic",
+    "tr":  "Turkish",
+    "ku":  "Kurmanji Kurdish (Northern Kurdish, written in Latin script)",
+}
+
+
+def _translation_targets(site):
+    """Resolve the list of target language codes for this site based on
+    translation_mode. Returns [] if translation is disabled or no extra
+    languages are listed."""
+    mode = site.get("translation_mode", "primary_only")
+    if mode == "primary_only":
+        return []
+    primary = (site.get("language") or "").strip()
+    listed  = [c for c in (site.get("languages") or []) if c and c != primary]
+    if mode == "primary_plus_english":
+        return [c for c in listed if c == "en"]
+    if mode == "auto_all":
+        return listed
+    return []
+
+
+def _maybe_translate_article(article, site, client):
+    """For each target language requested by site.translation_mode, call
+    Claude with a translation prompt and store the result on the article
+    dict under per-language keys. Body is rebuilt from intro+intro2+sections+
+    conclusion HTML so the translator gets the whole post in one pass."""
+    targets = _translation_targets(site)
+    if not targets:
+        return article
+
+    # Reassemble the primary-language body so the model sees one coherent piece.
+    sections_html = ""
+    for s in (article.get("sections") or []):
+        h = s.get("heading", "")
+        c = s.get("content", "")
+        sections_html += f"<h2>{h}</h2>\n{c}\n"
+    full_body_html = (
+        (article.get("intro", "") or "") + "\n" +
+        (article.get("intro2", "") or "") + "\n" +
+        sections_html +
+        (article.get("conclusion", "") or "")
+    )
+
+    primary_name = LANG_NAMES.get(site.get("language", ""), site.get("language", "Persian"))
+    for code in targets:
+        target_name = LANG_NAMES.get(code, code)
+        prompt = f"""Translate the following article from {primary_name} to {target_name}. Preserve the structure (h2/h3 headings, ordered/unordered lists, blockquotes, internal links). Translate the title, all body headings, body paragraphs, meta_description, and image alt text. Keep proper nouns intact (Agyan, Risheh, Avin Dabaghchimokri, Dr. Tofigh Sedighi, place names, citations). Use idiomatic, scholarly {target_name}, not literal word-for-word. Mark any term you cannot confidently translate with `[CHECK]` so a reviewer can verify. Return JSON with keys: title, body_html, meta_description.
+
+TITLE: {article.get("title", "")}
+
+META_DESCRIPTION: {article.get("meta_description", "")}
+
+IMAGE_ALT: {article.get("image_alt", "")}
+
+BODY_HTML:
+{full_body_html}
+
+Return ONLY valid JSON, no markdown fences, no extra text:
+{{
+  "title": "translated title",
+  "body_html": "<p>...</p>",
+  "meta_description": "translated meta description",
+  "image_alt": "translated image alt"
+}}"""
+        try:
+            resp = _retry(lambda: client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=4000,
+                messages=[{"role": "user", "content": prompt}]
+            ))
+            raw = resp.content[0].text.strip()
+            raw = re.sub(r'^```json\s*', '', raw)
+            raw = re.sub(r'\s*```$', '', raw)
+            data = json.loads(raw)
+            article[f"title_{code}"]            = data.get("title", "")
+            article[f"body_html_{code}"]        = data.get("body_html", "")
+            article[f"meta_description_{code}"] = data.get("meta_description", "")
+            article[f"image_alt_{code}"]        = data.get("image_alt", "")
+            print(f"  Translated to {code} ({target_name})")
+        except Exception as _e:
+            print(f"  Translation to {code} failed: {_e}")
+
+    # Persist the list of languages successfully produced (primary + any with body_html)
+    primary = (site.get("language") or "").strip()
+    available = [primary] if primary else []
+    for code in targets:
+        if article.get(f"body_html_{code}"):
+            available.append(code)
+    article["available_languages"] = available
+    return article
 
 
 def _pexels_photo_id(url):
@@ -5199,6 +5368,95 @@ def article_press(article, site, image_url, photographer, t):
 }}
 """
 
+    # ── Translation <template> blocks + language-switch JS ────────────────
+    # If the article carries translated variants (body_html_en, body_html_ckb, etc.)
+    # we emit them as inert <template data-lang="..."> blocks so the existing
+    # language switcher (data-i18n) can swap the visible body in place.
+    primary_lang = (site.get("language") or "en").strip() or "en"
+    translation_templates = ""
+    available_langs = article.get("available_languages") or []
+    extra_langs = [c for c in available_langs if c and c != primary_lang]
+    for code in extra_langs:
+        body_html_other = article.get(f"body_html_{code}", "")
+        if not body_html_other:
+            continue
+        title_other = article.get(f"title_{code}", article.get("title", ""))
+        meta_other  = article.get(f"meta_description_{code}", "")
+        dir_other   = "rtl" if code in ("fa", "ar", "he", "ckb", "ur", "ps") else "ltr"
+        deck_html = f'<p class="ap-deck" dir="{dir_other}">{meta_other}</p>' if meta_other else ""
+        translation_templates += (
+            f'<template data-lang="{code}" data-article-translation="1">'
+            f'<h1 dir="{dir_other}">{title_other}</h1>'
+            f'{deck_html}'
+            f'<div class="ap-body" dir="{dir_other}">{body_html_other}</div>'
+            f'</template>\n'
+        )
+
+    # Switcher script: listens for the existing data-i18n language change events
+    # (custom event "i18n:change" or change on [data-i18n-switcher]) and swaps
+    # the article body content from the matching <template>. Falls back to a
+    # pending-message when no translation exists. Safe to embed even when there
+    # are no translations (the loop is a no-op).
+    switcher_js = ""
+    if translation_templates:
+        primary_safe = primary_lang
+        switcher_js = """
+<script>
+(function(){
+  var ROOT = document.currentScript && document.currentScript.parentElement;
+  if (!ROOT) ROOT = document.querySelector('.ap');
+  if (!ROOT) return;
+  var PRIMARY = '__PRIMARY__';
+  var primary = {
+    title:    ROOT.querySelector('h1') ? ROOT.querySelector('h1').outerHTML : '',
+    deck:     ROOT.querySelector('.ap-deck') ? ROOT.querySelector('.ap-deck').outerHTML : '',
+    body:     ROOT.querySelector('.ap-body') ? ROOT.querySelector('.ap-body').outerHTML : ''
+  };
+  function applyLang(code){
+    if (!code) return;
+    var doc = document.documentElement;
+    if (code === PRIMARY) {
+      var h1 = ROOT.querySelector('h1'); if (h1) h1.outerHTML = primary.title;
+      var dk = ROOT.querySelector('.ap-deck'); if (dk && primary.deck) dk.outerHTML = primary.deck;
+      var bd = ROOT.querySelector('.ap-body'); if (bd) bd.outerHTML = primary.body;
+      doc.setAttribute('lang', PRIMARY);
+      doc.setAttribute('dir', (['fa','ar','he','ckb','ur','ps'].indexOf(PRIMARY) >= 0) ? 'rtl' : 'ltr');
+      return;
+    }
+    var tpl = ROOT.querySelector('template[data-lang="' + code + '"]');
+    var bd  = ROOT.querySelector('.ap-body');
+    var h1  = ROOT.querySelector('h1');
+    var dk  = ROOT.querySelector('.ap-deck');
+    if (!tpl) {
+      if (bd) bd.innerHTML = '<p style="opacity:.7;font-style:italic">Translation pending for this language.</p>';
+      return;
+    }
+    var clone = tpl.content.cloneNode(true);
+    var newH1   = clone.querySelector('h1');
+    var newDeck = clone.querySelector('.ap-deck');
+    var newBody = clone.querySelector('.ap-body');
+    if (h1 && newH1)  h1.outerHTML  = newH1.outerHTML;
+    if (dk && newDeck) dk.outerHTML  = newDeck.outerHTML;
+    if (bd && newBody) bd.outerHTML  = newBody.outerHTML;
+    doc.setAttribute('lang', code);
+    doc.setAttribute('dir', (['fa','ar','he','ckb','ur','ps'].indexOf(code) >= 0) ? 'rtl' : 'ltr');
+  }
+  document.addEventListener('i18n:change', function(e){
+    var code = (e && e.detail && e.detail.lang) || (e && e.detail) || null;
+    if (typeof code === 'string') applyLang(code);
+  });
+  document.addEventListener('change', function(e){
+    var el = e.target;
+    if (el && el.matches && el.matches('[data-i18n-switcher]')) applyLang(el.value);
+  });
+  document.addEventListener('click', function(e){
+    var el = e.target.closest && e.target.closest('[data-i18n-lang]');
+    if (el) applyLang(el.getAttribute('data-i18n-lang'));
+  });
+})();
+</script>
+""".replace("__PRIMARY__", primary_safe)
+
     body = f"""<div class="ap">
   <div class="ap-kicker"><span>{category}</span><span class="ap-sep">&middot;</span><span>{article.get("date","")}</span></div>
   <h1>{article["title"]}</h1>
@@ -5217,6 +5475,7 @@ def article_press(article, site, image_url, photographer, t):
     <div class="ap-concl">{article.get("conclusion","")}</div>
     {_sources_block(article, t)}
   </div>
+  {translation_templates}{switcher_js}
 </div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
 
     return css, body
@@ -5579,9 +5838,14 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     # Wrap body in semantic <article> for stronger schema signal.
     body = f'<article itemscope itemtype="https://schema.org/Article">{body}</article>'
 
+    # Language-aware shell: Persian (Farsi) sites render with lang="fa" dir="rtl"
+    # so screen readers, browsers and Google all read the page in the right direction.
+    _site_lang = (site.get("language") or "en").strip() or "en"
+    _site_dir  = "rtl" if _site_lang in ("fa", "ar", "he", "ckb", "ur", "ps") else "ltr"
     html = layout_shell.wrap_page(
         _site_stem(site), title=tag_title, description=article["meta_description"],
         body_html=body, extra_css=css, head_meta=seo, depth=1,
+        lang=_site_lang, text_dir=_site_dir,
     )
 
     affiliate = site.get("affiliate_links", {})
@@ -6221,6 +6485,11 @@ def run(topic_overrides=None, site_filter=None):
                         _idx_entry["category"] = article["category"]
                     if is_historical:
                         _idx_entry["historical"] = True
+                    # Persist the list of languages this article is available in
+                    # so the dashboard knows what's been translated. Defaults to
+                    # the site's primary language when no translations were made.
+                    _avail = article.get("available_languages") or [site.get("language") or "en"]
+                    _idx_entry["available_languages"] = _avail
                     articles.append(_idx_entry)
 
                     # Each site's freshly-published daily article stays exclusive to it -
