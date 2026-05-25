@@ -10,10 +10,16 @@ on:
         required: false
         default: '0'
 
+# Only one daily publish run at a time. A manual dispatch while a scheduled run
+# is in flight will queue (not cancel) the new run, preventing duplicate posts.
+concurrency:
+  group: daily-publish
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 350
 
     steps:
       - name: Checkout
