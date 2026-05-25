@@ -1124,7 +1124,7 @@ textarea{resize:vertical;line-height:1.6}
       <div id="ss-dom-msg" style="font-size:12px;color:var(--text3);margin-top:8px;min-height:14px"></div>
     </div>
 
-    <!-- ── Posting Schedule (single source of truth — Settings panel no longer duplicates this) ── -->
+    <!-- ── Posting Schedule (single source of truth - Settings panel no longer duplicates this) ── -->
     <div class="card" style="margin-bottom:14px">
       <div class="section-head">Posting Schedule</div>
       <div class="settings-row" style="align-items:center">
@@ -1163,6 +1163,18 @@ textarea{resize:vertical;line-height:1.6}
             <input type="checkbox" id="ss-warming" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
             Warming mode <span style="color:var(--text3);font-size:11px">(gentler cadence while the site is new)</span>
           </label>
+        </div>
+      </div>
+      <!-- Translation mode: shown only for multi-language sites (languages.length > 1) -->
+      <div class="setting-row" id="ss-translation-row" data-show-if="multilang" style="display:none;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)">
+        <div class="form-group">
+          <div class="form-label">Translation mode <span style="color:var(--text3);font-size:11px">(multi-language sites only)</span></div>
+          <select id="ss-translation-mode" style="padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:13px;min-width:280px">
+            <option value="primary_only">Primary language only</option>
+            <option value="primary_plus_english">Primary + English</option>
+            <option value="auto_all">All listed languages (auto-translate)</option>
+          </select>
+          <p class="setting-note" style="font-size:11px;color:var(--text3);margin:6px 0 0">Controls whether the daily bot auto-generates English/Kurdish versions of each article. Auto-translation uses extra API calls.</p>
         </div>
       </div>
     </div>
@@ -1743,7 +1755,7 @@ textarea{resize:vertical;line-height:1.6}
       </div>
       <div style="display:flex;gap:10px;align-items:flex-start">
         <span style="color:var(--accent);font-size:16px;flex-shrink:0">④</span>
-        <div><strong style="color:var(--text)">Sponsored Articles</strong> - Once a site hits 5k monthly visits, enable the client feature (post_every_n: 7). One sponsored mention every 7 articles. Charge $200–$800 per placement in finance/crypto niches.</div>
+        <div><strong style="color:var(--text)">Sponsored Articles</strong> - Once a site hits 5k monthly visits, enable the client feature (post_every_n: 7). One sponsored mention every 7 articles. Charge $200-$800 per placement in finance/crypto niches.</div>
       </div>
     </div>
   </div>
@@ -5585,7 +5597,7 @@ function ssLoadSite() {
   ssSetVal('ss-custom-prompt', site.custom_prompt || '');
   ssSetVal('ss-custom-css', site.custom_css || '');
 
-  // Posting Schedule — single source of truth. Stored as posts_per_day_new
+  // Posting Schedule - single source of truth. Stored as posts_per_day_new
   // (daily-equivalent for the bot) + historical_per_week (weekly-equivalent),
   // plus optional posts_unit/posts_count + historical_unit/historical_count so
   // the UI can round-trip the user's preferred unit. If the unit fields are
@@ -5598,6 +5610,18 @@ function ssLoadSite() {
   ssSetVal('ss-hist-unit',  site.historical_unit || 'week');
   ssSetChk('ss-hist-mode', site.historical_mode === true);
   ssSetChk('ss-warming', !!(site.warming && site.warming.enabled));
+
+  // Translation mode - only visible for multi-language sites
+  var _langs = Array.isArray(site.languages) ? site.languages : [];
+  var _trRow = document.getElementById('ss-translation-row');
+  if (_trRow) {
+    if (_langs.length > 1) {
+      _trRow.style.display = '';
+      ssSetVal('ss-translation-mode', site.translation_mode || 'primary_only');
+    } else {
+      _trRow.style.display = 'none';
+    }
+  }
 
   // Content Pipeline - topics list
   const topics = Array.isArray(site.topics) ? site.topics : [];
@@ -6110,6 +6134,15 @@ async function ssSaveAll() {
       storefront_token: ssVal('ss-shop-storefront').trim(),
     },
   };
+
+  // Translation mode - only send for multi-language sites (server validates value).
+  var _saveLangs = Array.isArray(site.languages) ? site.languages : [];
+  if (_saveLangs.length > 1) {
+    var _tm = ssVal('ss-translation-mode') || 'primary_only';
+    if (['primary_only','primary_plus_english','auto_all'].indexOf(_tm) >= 0) {
+      fields.translation_mode = _tm;
+    }
+  }
 
   statusEl.style.color = 'var(--text2)';
   statusEl.textContent = 'Saving...';
@@ -8045,7 +8078,7 @@ function promoRenderLive() {
       `<span style="font-size:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:2px 7px;border-radius:4px;white-space:nowrap">${n}</span>`
     ).join('') + (p.siteNames.length > 6 ? `<span style="font-size:10px;color:var(--text3);padding:2px 4px">+${p.siteNames.length - 6} more</span>` : '');
     const previewId = `promo-prev-${p.id}`;
-    const badge = p.badgeHtml || '<div style="font-size:11px;color:var(--text3);font-style:italic">(no badge captured for this older promo — regenerate to preview)</div>';
+    const badge = p.badgeHtml || '<div style="font-size:11px;color:var(--text3);font-style:italic">(no badge captured for this older promo - regenerate to preview)</div>';
     // Where it lives + how to view it. Static-only sites need an EXPLICIT push;
     // surface the truth so the user is not searching for a phantom live URL.
     const firstSite = p.siteIds && p.siteIds[0];
