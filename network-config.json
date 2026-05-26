@@ -26,6 +26,7 @@
       ]
     },
     "weekly_ideas_enabled": true,
+    "comments_auto_seed_enabled": false,
     "web_search": {
       "enabled": false,
       "provider": "tavily",
@@ -2820,10 +2821,10 @@
       "tagline": "An academy of breath, language, and cosmos"
     },
     {
-      "id": "risheh",
+      "id": "apex",
       "active": true,
-      "domain": "siavashsed.github.io/risheh",
-      "repo": "Siavashsed/risheh",
+      "domain": "siavashsed.github.io/apex",
+      "repo": "Siavashsed/apex",
       "category": "Clinical Dentistry Education",
       "language": "fa",
       "languages": [
@@ -2836,7 +2837,7 @@
       "layout": "magazine",
       "article_layout": "press",
       "tone": "clinical, evidence-based, calm; writes Persian as a senior dentist explaining technique to colleagues and informed patients; cites literature inline.",
-      "persona": "Dr. Tofigh Sedighi, director of Risheh Academy, five decades of clinical dentistry in Mahabad",
+      "persona": "Dr. Tofigh Sedighi, Editor-in-Chief of Apex Dental Journal, five decades of clinical dentistry in Mahabad",
       "brevo_list_id": 0,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -2900,7 +2901,7 @@
       "historical_mode": false,
       "historical_per_week": 0,
       "posts_per_day_new": 1,
-      "name": "Risheh",
+      "name": "Apex Dental Journal",
       "default_author": "Dr. Tofigh Sedighi",
       "custom_prompt": "",
       "custom_css": "",
@@ -2913,16 +2914,16 @@
         "سیستمیک"
       ],
       "default_category": "",
-      "author_bio": "مدیر آکادمی ریشە؛ زادهٔ ۱۳۴۳ مهاباد. د.م.د. ۱۳۶۵. پنج دهه طبابت بالینی. درس‌گو در پنج محور: پیشگیری، کودکان، ترمیمی، اورژانس و ارتباطات سیستمیک.",
-      "author_bio_fa": "مدیر آکادمی ریشە؛ زادهٔ ۱۳۴۳ مهاباد. د.م.د. ۱۳۶۵. پنج دهه طبابت بالینی. درس‌گو در پنج محور: پیشگیری، کودکان، ترمیمی، اورژانس و ارتباطات سیستمیک.",
+      "author_bio": "سردبیر مجلهٔ دندانپزشکی اپکس؛ زادهٔ ۱۳۴۳ مهاباد. د.م.د. ۱۳۶۵. پنج دهه طبابت بالینی. درس‌گو در پنج محور: پیشگیری، کودکان، ترمیمی، اورژانس و ارتباطات سیستمیک.",
+      "author_bio_fa": "سردبیر مجلهٔ دندانپزشکی اپکس؛ زادهٔ ۱۳۴۳ مهاباد. د.م.د. ۱۳۶۵. پنج دهه طبابت بالینی. درس‌گو در پنج محور: پیشگیری، کودکان، ترمیمی، اورژانس و ارتباطات سیستمیک.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 0,
       "historical_unit": "day",
       "new_posts_enabled": true,
       "author": "Dr. Tofigh Sedighi",
-      "author_title": "Director, Risheh Academy",
-      "tagline": "Five decades of clinical observation"
+      "author_title": "Editor-in-Chief, Apex Dental Journal",
+      "tagline": "Peer-reviewed dental practice, distilled"
     }
   ]
 }
