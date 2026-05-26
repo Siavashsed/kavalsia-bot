@@ -7,244 +7,560 @@
 <meta name="description" content="SportIQ Pro delivers evidence-based training systems, recovery protocols, nutrition guidance, and performance tips for athletes who want measurable results.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
+/* ========================================================================
+   SPORTIQ PRO - SCROLL-DRIVEN WEBGL JOURNEY
+   ====================================================================== */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#0a0d12;--bg2:#11151c;--bg3:#1a2029;
   --accent:#fa4a1e;--accent2:#ff6a3c;--lime:#c6f24e;
   --text:#eef0f3;--muted:#9aa1ac;--border:#232b36;
-  --cond:'Barlow Condensed',sans-serif;--body:'Barlow',sans-serif;
+  --cond:'Inter Tight','Inter',system-ui,sans-serif;
+  --cond2:'Inter Tight','Inter',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --ease:cubic-bezier(.22,.84,.36,1);
 }
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.65;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
-.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
-.eyebrow{font-family:var(--cond);font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
-.h2{font-family:var(--cond);font-size:clamp(30px,4.4vw,52px);font-weight:900;line-height:.98;letter-spacing:-.01em;text-transform:uppercase;color:#fff}
-.lead{font-size:15px;color:var(--muted);max-width:620px;line-height:1.75}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px;width:100%}
+button{font-family:inherit}
 
-/* reveal */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,.84,.44,1),transform .7s cubic-bezier(.16,.84,.44,1)}
-.reveal.in{opacity:1;transform:none}
+/* ---------- skip link ---------- */
+.skip{position:absolute;top:-40px;left:12px;background:var(--accent);color:#fff;padding:8px 14px;border-radius:6px;font-family:var(--cond);letter-spacing:.12em;text-transform:uppercase;font-size:12px;z-index:9999;transition:top .2s}
+.skip:focus{top:12px;outline:2px solid var(--lime);outline-offset:2px}
 
-/* NAV */
-.site-nav{background:rgba(10,13,18,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+/* ---------- NAV (SHELL) ---------- */
+.site-nav{background:rgba(10,13,18,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(35,43,54,.6);position:sticky;top:0;z-index:60}
 .nav-in{display:flex;align-items:center;height:64px;gap:8px}
-.nav-logo{font-family:var(--cond);font-size:24px;font-weight:900;letter-spacing:.02em;text-transform:uppercase;color:#fff;white-space:nowrap;display:flex;align-items:center;gap:9px}
+.nav-logo{font-family:var(--cond);font-size:26px;font-weight:400;letter-spacing:.02em;text-transform:uppercase;color:#fff;white-space:nowrap;display:flex;align-items:center;gap:9px}
 .nav-logo span{color:var(--accent)}
 .nav-mark{width:28px;height:28px;flex-shrink:0}
 .nav-links{display:flex;margin-left:28px}
-.nav-links a{font-family:var(--cond);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 16px;height:64px;display:flex;align-items:center;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
-.nav-links a:hover{color:#fff;border-color:var(--accent)}
-.nav-cta{margin-left:auto;background:var(--accent);color:#fff;font-family:var(--cond);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:6px;white-space:nowrap;transition:background .15s,transform .15s}
-.nav-cta:hover{background:var(--accent2);transform:translateY(-1px)}
+.nav-links a{font-family:var(--cond2);font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:0 16px;height:64px;display:flex;align-items:center;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.nav-links a:hover,.nav-links a:focus-visible{color:#fff;border-color:var(--accent);outline:none}
+.nav-cta{margin-left:auto;background:var(--accent);color:#fff;font-family:var(--cond2);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:11px 22px;border-radius:6px;white-space:nowrap;transition:background .15s,transform .15s,box-shadow .2s;box-shadow:0 6px 18px -8px rgba(250,74,30,.7)}
+.nav-cta:hover,.nav-cta:focus-visible{background:var(--accent2);transform:translateY(-1px);outline:none;box-shadow:0 10px 24px -8px rgba(250,74,30,.9)}
 
-/* HERO */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);
-  background:radial-gradient(900px 500px at 80% -10%,rgba(250,74,30,.22),transparent 60%),radial-gradient(700px 500px at 0% 110%,rgba(198,242,78,.10),transparent 55%),var(--bg)}
-.hero-grid{position:absolute;inset:0;opacity:.5;
-  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
-  background-size:64px 64px;mask-image:radial-gradient(700px 420px at 75% 25%,#000,transparent 75%)}
-.hero-top{background:var(--accent);overflow:hidden;padding:8px 0;position:relative;z-index:2}
-.ticker-inner{display:inline-flex;white-space:nowrap;animation:tick 32s linear infinite}
-.ticker-item{font-family:var(--cond);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#fff;padding:0 26px}
-.ticker-item::after{content:"/";margin-left:26px;opacity:.5;font-weight:900}
-@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.hero-body{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;padding:64px 0 72px;align-items:center}
-.hero-h1{font-family:var(--cond);font-size:clamp(52px,7vw,92px);font-weight:900;line-height:.9;letter-spacing:-.015em;text-transform:uppercase;color:#fff;margin:18px 0 18px}
-.hero-h1 em{color:var(--accent);font-style:normal}
-.hero-desc{font-size:16px;color:var(--muted);max-width:520px;margin-bottom:30px;line-height:1.75}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:14px 26px;border-radius:7px;transition:transform .15s,background .15s,border-color .15s,color .15s;cursor:pointer}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:var(--accent2);transform:translateY(-2px)}
-.btn-ghost{background:transparent;border:1.5px solid var(--border);color:#fff}
-.btn-ghost:hover{border-color:var(--accent);transform:translateY(-2px)}
-.hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
-.hero-tag{font-family:var(--cond);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);padding:6px 12px;border-radius:20px}
-/* hero visual card */
-.hero-card{background:linear-gradient(155deg,var(--bg2),var(--bg));border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:0 30px 70px -30px rgba(0,0,0,.8)}
-.hc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.hc-title{font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.hc-live{display:flex;align-items:center;gap:7px;font-family:var(--cond);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--lime)}
-.hc-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 0 rgba(198,242,78,.6);animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,242,78,.5)}70%{box-shadow:0 0 0 9px rgba(198,242,78,0)}100%{box-shadow:0 0 0 0 rgba(198,242,78,0)}}
-.hc-chart{display:flex;align-items:flex-end;gap:7px;height:118px;margin-bottom:18px}
-.hc-bar{flex:1;background:linear-gradient(180deg,var(--accent2),var(--accent));border-radius:5px 5px 0 0;animation:grow 1s cubic-bezier(.16,.84,.44,1) backwards}
-.hc-bar:nth-child(7){background:linear-gradient(180deg,var(--lime),#9bd000)}
-@keyframes grow{from{height:0!important}}
-.hc-rows{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:8px;overflow:hidden}
-.hc-row{background:var(--bg2);display:flex;justify-content:space-between;align-items:center;padding:11px 14px}
-.hc-row span:first-child{font-size:13px;color:var(--muted)}
-.hc-val{font-family:var(--cond);font-size:16px;font-weight:800;color:#fff}
-.hc-val b{color:var(--lime);font-weight:800}
+/* ========================================================================
+   JOURNEY: persistent canvas + scroll chapters
+   ====================================================================== */
+#journey-canvas{
+  position:fixed;inset:0;width:100vw;height:100vh;z-index:0;
+  pointer-events:none;display:block;
+}
+#journey-fallback{
+  position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:none;pointer-events:none;
+  background:
+    radial-gradient(900px 600px at 75% 18%,rgba(250,74,30,.22),transparent 60%),
+    radial-gradient(700px 500px at 12% 78%,rgba(198,242,78,.10),transparent 60%),
+    radial-gradient(500px 380px at 50% 50%,rgba(255,106,60,.12),transparent 70%),
+    var(--bg);
+  animation:fallbackPulse 14s ease-in-out infinite alternate;
+}
+@keyframes fallbackPulse{
+  0%  {filter:hue-rotate(-6deg) brightness(.95)}
+  100%{filter:hue-rotate(8deg) brightness(1.05)}
+}
 
-/* TRUST STRIP */
-.trust{border-bottom:1px solid var(--border);background:var(--bg2)}
-.trust-in{display:flex;align-items:center;gap:34px;padding:20px 0;flex-wrap:wrap;justify-content:center}
-.trust-label{font-family:var(--cond);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-.trust-logo{display:flex;align-items:center;gap:9px;font-family:var(--cond);font-size:16px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);opacity:.8;transition:opacity .2s,color .2s}
-.trust-logo:hover{opacity:1;color:#fff}
-.trust-logo svg{flex-shrink:0}
+.journey{
+  position:relative;z-index:1;
+}
 
-/* WHY / STORY */
-.why{padding:84px 0}
-.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-.why-text p{font-size:15px;color:var(--muted);margin-top:16px;line-height:1.8}
-.why-text .h2{margin-top:14px}
-.why-points{display:flex;flex-direction:column;gap:14px;margin-top:24px}
-.why-point{display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--text)}
-.why-point svg{flex-shrink:0;margin-top:2px}
-.why-visual{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.wv-card{border:1px solid var(--border);border-radius:14px;padding:22px;background:linear-gradient(160deg,var(--bg2),var(--bg))}
-.wv-card.tall{grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between}
-.wv-num{font-family:var(--cond);font-size:46px;font-weight:900;line-height:1;color:var(--accent)}
-.wv-cap{font-size:13px;color:var(--muted);margin-top:6px}
-.wv-icon{width:46px;height:46px;border-radius:11px;background:rgba(250,74,30,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+/* chapter shell -------------------------------------------------- */
+.chapter{
+  position:relative;
+  min-height:100vh;
+  padding:96px 0 96px;
+  display:flex;
+  align-items:center;
+  scroll-snap-align:start;
+}
+.chapter-inner{
+  position:relative;
+  width:100%;
+  z-index:2;
+}
+/* per-chapter darkening so HTML stays readable over canvas */
+.chapter::before{
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+.chapter-1::before{background:linear-gradient(180deg,rgba(10,13,18,.0) 0%,rgba(10,13,18,.0) 55%,rgba(10,13,18,.55) 100%)}
+.chapter-2::before{background:linear-gradient(180deg,rgba(10,13,18,.55) 0%,rgba(10,13,18,.35) 35%,rgba(10,13,18,.55) 100%)}
+.chapter-3::before{background:linear-gradient(180deg,rgba(10,13,18,.55) 0%,rgba(10,13,18,.62) 50%,rgba(10,13,18,.55) 100%)}
+.chapter-4::before{background:linear-gradient(180deg,rgba(10,13,18,.55) 0%,rgba(10,13,18,.32) 40%,rgba(10,13,18,.6) 100%)}
+.chapter-5::before{background:linear-gradient(180deg,rgba(10,13,18,.55) 0%,rgba(10,13,18,.82) 18%,rgba(10,13,18,.86) 100%)}
+.chapter-6::before{background:linear-gradient(180deg,rgba(10,13,18,.55) 0%,rgba(10,13,18,.7) 35%,rgba(10,13,18,.92) 100%)}
 
-/* VALUE CARDS */
-.values{padding:84px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.sec-head{text-align:center;max-width:680px;margin:0 auto 52px}
-.sec-head .lead{margin:14px auto 0}
-.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.val-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:30px;transition:transform .2s,border-color .2s}
-.val-card:hover{transform:translateY(-5px);border-color:var(--accent)}
-.val-icon{width:56px;height:56px;border-radius:13px;background:linear-gradient(150deg,rgba(250,74,30,.2),rgba(250,74,30,.05));display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-.val-title{font-family:var(--cond);font-size:21px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;color:#fff;margin-bottom:9px}
-.val-desc{font-size:14px;color:var(--muted);line-height:1.7}
+/* ---------- chapter typography ---------- */
+.kicker{
+  font-family:var(--cond2);
+  font-size:12px;font-weight:800;
+  letter-spacing:.28em;text-transform:uppercase;
+  color:var(--accent);
+  display:inline-flex;align-items:center;gap:10px;
+}
+.kicker::before{
+  content:"";width:28px;height:2px;background:var(--accent);
+  display:inline-block;
+}
+.chapter-title{
+  font-family:var(--cond);
+  font-size:clamp(34px,5.4vw,68px);
+  line-height:1;letter-spacing:-.025em;
+  color:#fff;
+  font-weight:800;
+}
+.chapter-title em{color:var(--accent);font-style:normal}
+.chapter-title .lime{color:var(--lime)}
+.lead{
+  font-family:var(--body);
+  font-size:clamp(15px,1.25vw,18px);
+  color:var(--muted);line-height:1.7;max-width:58ch;
+}
 
-/* STATS BAND */
-.stats{background:var(--accent);position:relative;overflow:hidden}
-.stats::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(0,0,0,.18))}
-.stats-in{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:54px 0}
-.stat-cell{text-align:center;padding:0 18px;border-right:1px solid rgba(255,255,255,.2)}
-.stat-cell:last-child{border-right:none}
-.stat-n{font-family:var(--cond);font-size:clamp(40px,5.5vw,64px);font-weight:900;line-height:1;color:#fff}
-.stat-l{font-family:var(--cond);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85);margin-top:6px}
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal[data-delay="1"]{transition-delay:.08s}
+.reveal[data-delay="2"]{transition-delay:.16s}
+.reveal[data-delay="3"]{transition-delay:.24s}
+.reveal[data-delay="4"]{transition-delay:.32s}
 
-/* TOPIC GRID */
-.topics{padding:84px 0}
-.topic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.topic{display:flex;gap:16px;align-items:flex-start;background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:22px;transition:transform .2s,border-color .2s}
-.topic:hover{transform:translateY(-4px);border-color:var(--accent)}
-.topic-ic{width:48px;height:48px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(198,242,78,.1)}
-.topic-h{font-family:var(--cond);font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;color:#fff;margin-bottom:5px}
-.topic-p{font-size:13px;color:var(--muted);line-height:1.6}
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--cond2);font-size:14px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:15px 28px;border-radius:8px;
+  transition:transform .2s,background .2s,border-color .2s,color .2s,box-shadow .25s;
+  cursor:pointer;border:none;
+}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 12px 28px -10px rgba(250,74,30,.6)}
+.btn-primary:hover,.btn-primary:focus-visible{background:var(--accent2);transform:translateY(-2px);outline:none;box-shadow:0 18px 38px -10px rgba(250,74,30,.85)}
+.btn-ghost{background:transparent;border:1.5px solid rgba(238,240,243,.18);color:#fff}
+.btn-ghost:hover,.btn-ghost:focus-visible{border-color:var(--accent);transform:translateY(-2px);outline:none}
+.btn-arrow{display:inline-block;transition:transform .25s var(--ease)}
+.btn:hover .btn-arrow{transform:translateX(4px)}
 
-/* TIPS */
-.tips{padding:84px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.tips-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.tip{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:26px;position:relative;transition:transform .2s,border-color .2s}
-.tip:hover{transform:translateY(-5px);border-color:var(--lime)}
-.tip-num{font-family:var(--cond);font-size:13px;font-weight:900;letter-spacing:.1em;color:var(--bg);background:var(--lime);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-.tip-tag{font-family:var(--cond);font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
-.tip-h{font-family:var(--cond);font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.02em;color:#fff;margin-bottom:8px;line-height:1.1}
-.tip-p{font-size:14px;color:var(--muted);line-height:1.7}
-.tip-stat{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-family:var(--cond);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--lime)}
+/* ========================================================================
+   CHAPTER 1 - INVOCATION (hero)
+   ====================================================================== */
+.chapter-1{padding-top:48px;min-height:108vh}
+.c1-grid{display:grid;grid-template-columns:1fr;gap:38px;align-items:center}
+.c1-kicker-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.c1-h1{margin:22px 0 22px;max-width:18ch}
+.c1-desc{font-size:17px;max-width:54ch;color:#cfd4dc;line-height:1.65;margin-bottom:32px}
+.c1-actions{display:flex;gap:14px;flex-wrap:wrap}
+.c1-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:38px}
+.c1-tag{
+  font-family:var(--cond2);font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  border:1px solid rgba(238,240,243,.1);background:rgba(255,255,255,.02);
+  padding:7px 14px;border-radius:99px;backdrop-filter:blur(4px);
+}
+.c1-scroll-hint{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  font-family:var(--cond2);font-size:11px;font-weight:700;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--muted);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  opacity:.75;
+}
+.c1-scroll-hint::after{
+  content:"";width:1px;height:46px;
+  background:linear-gradient(180deg,var(--muted),transparent);
+  animation:scrollLine 2.4s var(--ease) infinite;transform-origin:top;
+}
+@keyframes scrollLine{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
 
-/* ARTICLES */
-.articles{padding:84px 0}
-.art-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:34px}
-.art-filters{display:flex;gap:8px;flex-wrap:wrap}
-.filter-btn{font-family:var(--cond);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--bg2);border:1px solid var(--border);padding:9px 16px;border-radius:20px;cursor:pointer;transition:all .15s}
-.filter-btn:hover{color:#fff;border-color:var(--accent)}
+/* ========================================================================
+   CHAPTER 2 - DATA INTAKE
+   ====================================================================== */
+.chapter-2 .chapter-inner{display:grid;gap:60px}
+.c2-head{max-width:780px}
+.c2-trust{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  margin-top:8px;
+}
+.c2-trust-card{
+  background:linear-gradient(150deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+  border:1px solid rgba(238,240,243,.08);
+  border-radius:16px;padding:24px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  transition:transform .3s var(--ease),border-color .3s,background .3s;
+}
+.c2-trust-card:hover{transform:translateY(-4px);border-color:rgba(250,74,30,.35);background:linear-gradient(150deg,rgba(250,74,30,.06),rgba(255,255,255,.02))}
+.c2-trust-icon{width:42px;height:42px;border-radius:10px;background:rgba(250,74,30,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.c2-trust-h{font-family:var(--cond);font-size:24px;letter-spacing:.01em;color:#fff;margin-bottom:6px;font-weight:400}
+.c2-trust-p{font-size:14px;color:var(--muted);line-height:1.6}
+
+.c2-why{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:28px}
+.c2-why-col h3{font-family:var(--cond);font-size:clamp(20px,2.4vw,30px);font-weight:700;letter-spacing:-.015em;color:#fff;line-height:1.1;margin-bottom:18px}
+.c2-why-col h3 em{color:var(--accent);font-style:normal}
+.c2-why-col p{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:12px}
+.c2-why-marker{
+  font-family:var(--cond2);font-size:11px;font-weight:800;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--lime);
+  display:block;margin-bottom:10px;
+}
+
+/* ========================================================================
+   CHAPTER 3 - METRICS
+   ====================================================================== */
+.chapter-3 .chapter-inner{display:grid;gap:56px}
+.c3-head{max-width:760px}
+.c3-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.c3-stat{
+  position:relative;
+  background:linear-gradient(180deg,rgba(250,74,30,.07),rgba(10,13,18,.45));
+  border:1px solid rgba(250,74,30,.18);
+  border-radius:18px;padding:28px 24px;
+  overflow:hidden;
+}
+.c3-stat::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--lime));
+  opacity:.85;
+}
+.c3-stat-n{
+  font-family:var(--cond);font-size:clamp(28px,3.6vw,46px);
+  letter-spacing:-.025em;color:#fff;line-height:1;
+  font-weight:800;
+}
+.c3-stat-n em{color:var(--accent);font-style:normal;font-size:.6em;margin-left:4px}
+.c3-stat-l{
+  font-family:var(--cond2);font-size:11px;font-weight:800;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  margin-top:10px;
+}
+.c3-stat-fine{font-size:12px;color:rgba(238,240,243,.4);margin-top:6px;line-height:1.4}
+
+.c3-topics-head{margin-top:14px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px}
+.c3-topics-head h3{font-family:var(--cond);font-size:clamp(20px,2.4vw,30px);font-weight:700;color:#fff;letter-spacing:-.015em;line-height:1.1}
+.c3-topics{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+}
+.c3-topic{
+  display:flex;gap:14px;align-items:flex-start;
+  background:rgba(17,21,28,.55);
+  border:1px solid rgba(238,240,243,.08);
+  border-radius:14px;padding:20px;
+  transition:transform .25s var(--ease),border-color .25s,background .25s;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.c3-topic:hover{transform:translateY(-4px);border-color:var(--lime);background:rgba(17,21,28,.7)}
+.c3-topic-ic{width:42px;height:42px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(198,242,78,.08)}
+.c3-topic-h{font-family:var(--cond);font-size:21px;font-weight:400;letter-spacing:.01em;color:#fff;margin-bottom:4px;text-transform:uppercase;line-height:1.05}
+.c3-topic-p{font-size:13px;color:var(--muted);line-height:1.55}
+
+/* ========================================================================
+   CHAPTER 4 - IGNITION
+   ====================================================================== */
+.chapter-4 .chapter-inner{display:grid;gap:56px}
+.c4-head{max-width:760px}
+.c4-tips{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.c4-tip{
+  position:relative;
+  background:linear-gradient(160deg,rgba(17,21,28,.7),rgba(10,13,18,.7));
+  border:1px solid rgba(238,240,243,.08);
+  border-radius:16px;padding:28px;
+  transition:transform .3s var(--ease),border-color .3s,box-shadow .3s;
+  overflow:hidden;
+}
+.c4-tip:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 30px 60px -30px rgba(250,74,30,.4)}
+.c4-tip-num{
+  font-family:var(--cond);font-size:14px;
+  color:var(--bg);background:var(--lime);
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;font-weight:400;letter-spacing:.04em;
+}
+.c4-tip-tag{font-family:var(--cond2);font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.c4-tip-h{font-family:var(--cond);font-size:22px;font-weight:400;color:#fff;letter-spacing:.01em;line-height:1.1;text-transform:uppercase;margin-bottom:10px}
+.c4-tip-p{font-size:14px;color:var(--muted);line-height:1.65}
+.c4-tip-foot{margin-top:16px;padding-top:14px;border-top:1px dashed rgba(238,240,243,.1);font-family:var(--cond2);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime)}
+
+.c4-coach{
+  display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:center;
+  background:linear-gradient(160deg,rgba(26,32,41,.7),rgba(10,13,18,.55));
+  border:1px solid rgba(238,240,243,.08);
+  border-radius:20px;padding:36px;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.c4-portrait{
+  aspect-ratio:1;border-radius:18px;
+  background:
+    radial-gradient(circle at 30% 28%,rgba(255,106,60,.5),transparent 50%),
+    linear-gradient(160deg,#1a2029,#0a0d12);
+  border:1px solid rgba(238,240,243,.08);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.c4-portrait::after{
+  content:"PORTRAIT // PLACEHOLDER";
+  position:absolute;bottom:14px;left:14px;
+  font-family:var(--cond2);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(238,240,243,.35);
+}
+.c4-coach-text h3{font-family:var(--cond);font-size:clamp(20px,2.4vw,30px);font-weight:700;color:#fff;letter-spacing:-.015em;line-height:1.1;margin:10px 0 16px}
+.c4-quote{font-size:17px;color:#dee2ea;line-height:1.7;border-left:3px solid var(--accent);padding-left:20px;margin:20px 0;font-style:italic}
+.c4-cred{display:flex;gap:28px;flex-wrap:wrap;margin-top:22px}
+.c4-cred-cell{display:flex;flex-direction:column}
+.c4-cred-cell b{font-family:var(--cond);font-size:28px;color:var(--accent);font-weight:400;letter-spacing:.01em}
+.c4-cred-cell span{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.c4-coach-name{font-family:var(--cond);font-size:22px;color:#fff;font-weight:400;letter-spacing:.02em;text-transform:uppercase;margin-top:18px}
+.c4-coach-role{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* ========================================================================
+   CHAPTER 5 - ARCHIVE (articles)
+   ====================================================================== */
+.chapter-5{min-height:auto;padding:96px 0 88px}
+.chapter-5 .chapter-inner{display:grid;gap:38px}
+.c5-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px}
+.c5-head-left{max-width:640px}
+.c5-filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter-btn{
+  font-family:var(--cond2);font-size:12px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  background:rgba(17,21,28,.6);border:1px solid rgba(238,240,243,.08);
+  padding:9px 16px;border-radius:99px;cursor:pointer;
+  transition:all .15s;
+}
+.filter-btn:hover,.filter-btn:focus-visible{color:#fff;border-color:var(--accent);outline:none}
 .filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 .art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.art-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
-.art-card:hover{transform:translateY(-6px);border-color:var(--accent)}
-.art-thumb{height:158px;position:relative;display:flex;align-items:flex-end;padding:14px;overflow:hidden}
+.art-card{
+  background:linear-gradient(180deg,rgba(17,21,28,.92),rgba(10,13,18,.92));
+  border:1px solid rgba(238,240,243,.08);
+  border-radius:16px;overflow:hidden;
+  transition:transform .3s var(--ease),border-color .25s,box-shadow .3s;
+  display:flex;flex-direction:column;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.art-card:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 30px 60px -30px rgba(0,0,0,.7)}
+.art-thumb{height:170px;position:relative;display:flex;align-items:flex-end;padding:14px;overflow:hidden}
 .art-thumb svg.bgmesh{position:absolute;inset:0;width:100%;height:100%}
-.art-thumb img.art-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;z-index:0}
-.art-card:hover .art-thumb img.art-img{transform:scale(1.06)}
+.art-thumb img.art-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .55s ease;z-index:0}
+.art-card:hover .art-thumb img.art-img{transform:scale(1.07)}
 .art-thumb.has-img svg.bgmesh{display:none}
 .art-thumb.has-img .art-cat{z-index:1}
-.art-cat{position:relative;font-family:var(--cond);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);padding:5px 11px;border-radius:5px}
-.art-body{padding:20px;display:flex;flex-direction:column;flex:1}
-.art-title{font-family:var(--cond);font-size:20px;font-weight:800;text-transform:uppercase;letter-spacing:.01em;line-height:1.12;color:#fff;transition:color .15s}
+.art-cat{position:relative;font-family:var(--cond2);font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);padding:5px 11px;border-radius:5px}
+.art-body{padding:22px;display:flex;flex-direction:column;flex:1}
+.art-title{font-family:var(--cond);font-size:19px;font-weight:700;letter-spacing:-.018em;line-height:1.25;color:#fff;transition:color .15s;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .art-card:hover .art-title{color:var(--accent)}
-.art-excerpt{font-size:13.5px;color:var(--muted);margin-top:9px;line-height:1.65;flex:1}
-.art-meta{display:flex;align-items:center;gap:8px;margin-top:16px;font-family:var(--cond);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.art-excerpt{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.55;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.art-meta{display:flex;align-items:center;gap:8px;margin-top:16px;font-family:var(--cond2);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .art-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--accent)}
-.art-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;font-size:14px}
+.art-empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 20px;font-size:14px;border:1px dashed rgba(238,240,243,.1);border-radius:14px}
 
-/* COACH */
-.coach{padding:84px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.coach-in{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:center}
-.coach-portrait{aspect-ratio:1;border-radius:18px;border:1px solid var(--border);background:linear-gradient(160deg,var(--bg3),var(--bg));display:flex;align-items:center;justify-content:center;overflow:hidden}
-.coach-text .h2{margin:12px 0 14px}
-.coach-quote{font-size:16px;color:var(--text);line-height:1.8;border-left:3px solid var(--accent);padding-left:18px;margin:18px 0}
-.coach-cred{display:flex;gap:22px;flex-wrap:wrap;margin-top:18px}
-.cred{display:flex;flex-direction:column}
-.cred b{font-family:var(--cond);font-size:24px;font-weight:900;color:var(--accent)}
-.cred span{font-size:12px;color:var(--muted)}
-.coach-name{font-family:var(--cond);font-size:22px;font-weight:800;text-transform:uppercase;color:#fff;margin-top:20px}
-.coach-role{font-size:13px;color:var(--muted)}
+/* ========================================================================
+   CHAPTER 6 - COMMIT (faq + newsletter)
+   ====================================================================== */
+.chapter-6{min-height:auto;padding:96px 0 64px}
+.chapter-6 .chapter-inner{display:grid;gap:80px}
 
-/* FAQ */
-.faq{padding:84px 0}
-.faq-list{max-width:820px;margin:38px auto 0}
-.faq-item{border:1px solid var(--border);border-radius:12px;background:var(--bg2);margin-bottom:12px;overflow:hidden}
-.faq-q{width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;
-  font-family:var(--cond);font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;color:#fff}
-.faq-ic{width:24px;height:24px;flex-shrink:0;position:relative;transition:transform .25s}
-.faq-ic::before,.faq-ic::after{content:"";position:absolute;background:var(--accent);border-radius:2px}
-.faq-ic::before{width:14px;height:2.5px;top:11px;left:5px}
-.faq-ic::after{width:2.5px;height:14px;top:5px;left:11px;transition:opacity .25s}
-.faq-item.open .faq-ic::after{opacity:0}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
-.faq-a p{padding:0 22px 20px;font-size:14px;color:var(--muted);line-height:1.75}
+.c6-faq-head{max-width:680px;margin:0 auto;text-align:center}
+.c6-faq{max-width:820px;margin:36px auto 0}
+.c6-faq-item{
+  border:1px solid rgba(238,240,243,.08);
+  border-radius:14px;background:rgba(17,21,28,.55);
+  margin-bottom:12px;overflow:hidden;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:border-color .2s;
+}
+.c6-faq-item.open{border-color:rgba(250,74,30,.4)}
+.c6-faq-q{
+  width:100%;text-align:left;background:none;border:none;cursor:pointer;
+  padding:22px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px;
+  font-family:var(--cond);font-size:20px;font-weight:400;
+  text-transform:uppercase;letter-spacing:.01em;color:#fff;
+}
+.c6-faq-q:focus-visible{outline:none;background:rgba(250,74,30,.05)}
+.c6-faq-ic{width:26px;height:26px;flex-shrink:0;position:relative;transition:transform .3s var(--ease)}
+.c6-faq-ic::before,.c6-faq-ic::after{content:"";position:absolute;background:var(--accent);border-radius:2px}
+.c6-faq-ic::before{width:16px;height:2.5px;top:12px;left:5px}
+.c6-faq-ic::after{width:2.5px;height:16px;top:5px;left:12px;transition:opacity .25s,transform .3s}
+.c6-faq-item.open .c6-faq-ic{transform:rotate(180deg)}
+.c6-faq-item.open .c6-faq-ic::after{opacity:0}
+.c6-faq-a{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+.c6-faq-a p{padding:0 24px 22px;font-size:14.5px;color:var(--muted);line-height:1.75}
 
-/* NEWSLETTER */
-.newsletter{padding:84px 0}
-.nl-box{position:relative;overflow:hidden;border-radius:20px;padding:60px 40px;text-align:center;
-  background:radial-gradient(600px 300px at 20% 0%,rgba(250,74,30,.3),transparent 60%),linear-gradient(150deg,var(--bg3),var(--bg2));border:1px solid var(--border)}
-.nl-box .h2{color:#fff}
-.nl-sub{font-size:15px;color:var(--muted);margin:14px auto 28px;max-width:480px}
-.nl-form{display:flex;gap:10px;max-width:480px;margin:0 auto;flex-wrap:wrap}
-.nl-input{flex:1;min-width:220px;background:var(--bg);border:1.5px solid var(--border);color:#fff;font-size:14px;font-family:var(--body);padding:15px 18px;border-radius:8px;outline:none;transition:border-color .15s}
-.nl-input:focus{border-color:var(--accent)}
-.nl-input::placeholder{color:var(--muted)}
-.nl-btn{background:var(--accent);color:#fff;font-family:var(--cond);font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:15px 28px;border:none;border-radius:8px;cursor:pointer;transition:background .15s}
-.nl-btn:hover{background:var(--accent2)}
-.nl-fine{font-size:12px;color:var(--muted);margin-top:14px}
+.c6-nl{
+  position:relative;overflow:hidden;
+  border-radius:24px;padding:64px 44px;text-align:center;
+  background:
+    radial-gradient(700px 320px at 18% 0%,rgba(250,74,30,.32),transparent 60%),
+    radial-gradient(500px 280px at 90% 100%,rgba(198,242,78,.14),transparent 60%),
+    linear-gradient(155deg,rgba(26,32,41,.85),rgba(17,21,28,.85));
+  border:1px solid rgba(238,240,243,.1);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.c6-nl-h{font-family:var(--cond);font-size:clamp(24px,3vw,40px);font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1.05;margin:14px 0 18px}
+.c6-nl-sub{font-size:16px;color:#cfd4dc;margin:0 auto 32px;max-width:520px;line-height:1.65}
+.c6-nl-form{display:flex;gap:10px;max-width:520px;margin:0 auto;flex-wrap:wrap}
+.c6-nl-label{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.c6-nl-input{
+  flex:1;min-width:240px;
+  background:rgba(10,13,18,.7);border:1.5px solid rgba(238,240,243,.12);
+  color:#fff;font-size:15px;font-family:var(--body);
+  padding:16px 20px;border-radius:10px;outline:none;
+  transition:border-color .2s,background .2s;
+}
+.c6-nl-input:focus{border-color:var(--accent);background:rgba(10,13,18,.9)}
+.c6-nl-input::placeholder{color:var(--muted)}
+.c6-nl-btn{
+  background:var(--accent);color:#fff;
+  font-family:var(--cond2);font-size:14px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:16px 32px;border:none;border-radius:10px;cursor:pointer;
+  transition:background .15s,transform .15s,box-shadow .25s;
+  box-shadow:0 10px 26px -10px rgba(250,74,30,.7);
+}
+.c6-nl-btn:hover,.c6-nl-btn:focus-visible{background:var(--accent2);transform:translateY(-2px);outline:none;box-shadow:0 16px 36px -10px rgba(250,74,30,.9)}
+.c6-nl-fine{font-size:12px;color:var(--muted);margin-top:16px}
 
-/* FOOTER */
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 28px}
-.footer-in{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
-.f-logo{font-family:var(--cond);font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:.03em;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+/* ========================================================================
+   CHAPTER INDICATORS (right rail)
+   ====================================================================== */
+.indicators{
+  position:fixed;right:22px;top:50%;transform:translateY(-50%);
+  z-index:50;display:flex;flex-direction:column;gap:14px;
+  background:rgba(10,13,18,.4);backdrop-filter:blur(8px);
+  border:1px solid rgba(238,240,243,.06);
+  border-radius:99px;padding:14px 8px;
+}
+.indicator{
+  width:10px;height:10px;border-radius:50%;
+  background:rgba(238,240,243,.18);
+  border:none;cursor:pointer;padding:0;
+  transition:background .2s,transform .2s,box-shadow .25s;
+  position:relative;
+}
+.indicator:hover{background:rgba(238,240,243,.4);transform:scale(1.2)}
+.indicator.active{background:var(--accent);box-shadow:0 0 0 4px rgba(250,74,30,.18)}
+.indicator span{
+  position:absolute;right:22px;top:50%;transform:translateY(-50%) translateX(8px);
+  background:rgba(17,21,28,.92);color:#fff;
+  font-family:var(--cond2);font-size:10px;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  padding:5px 11px;border-radius:5px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+}
+.indicator:hover span{opacity:1;transform:translateY(-50%) translateX(0)}
+
+/* ---------- progress bar (top) ---------- */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--lime));
+  width:0%;z-index:200;transition:width .12s linear;
+  box-shadow:0 0 12px rgba(250,74,30,.6);
+}
+
+/* ========================================================================
+   FOOTER (SHELL)
+   ====================================================================== */
+footer{
+  position:relative;z-index:2;
+  background:linear-gradient(180deg,rgba(10,13,18,.7),var(--bg2));
+  border-top:1px solid rgba(238,240,243,.06);
+  padding:64px 0 32px;
+}
+.footer-in{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
+.f-logo{font-family:var(--cond);font-size:24px;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:9px;font-weight:400;letter-spacing:.02em;text-transform:uppercase}
 .f-logo span{color:var(--accent)}
-.f-desc{font-size:13px;color:var(--muted);line-height:1.7;max-width:300px}
-.f-head{font-family:var(--cond);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:14px}
+.f-desc{font-size:13.5px;color:var(--muted);line-height:1.7;max-width:300px}
+.f-head{font-family:var(--cond2);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#fff;margin-bottom:14px}
 .f-links{display:flex;flex-direction:column;gap:9px}
-.f-links a{font-size:13px;color:var(--muted);transition:color .15s}
-.f-links a:hover{color:var(--accent)}
-.f-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.f-links a{font-size:13.5px;color:var(--muted);transition:color .15s}
+.f-links a:hover,.f-links a:focus-visible{color:var(--accent);outline:none}
+.f-bottom{border-top:1px solid rgba(238,240,243,.06);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .f-copy{font-size:12px;color:var(--muted)}
 
+/* view-all link block */
+.view-all{position:relative;z-index:2;text-align:center;padding:0 24px 56px;font-family:inherit}
+.view-all a{display:inline-flex;align-items:center;gap:10px;color:#fff;border:1px solid rgba(238,240,243,.18);padding:12px 24px;border-radius:99px;text-decoration:none;font-family:var(--cond2);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;transition:border-color .2s,color .2s,transform .2s}
+.view-all a:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+/* ========================================================================
+   RESPONSIVE
+   ====================================================================== */
 @media(max-width:980px){
-  .hero-body{grid-template-columns:1fr;gap:40px}
-  .why-grid,.coach-in{grid-template-columns:1fr;gap:34px}
-  .val-grid,.topic-grid,.tips-grid,.art-grid{grid-template-columns:repeat(2,1fr)}
-  .stats-in{grid-template-columns:repeat(2,1fr);gap:32px 0}
-  .stat-cell:nth-child(2){border-right:none}
+  .indicators{right:10px;padding:10px 6px;gap:11px}
+  .indicator{width:8px;height:8px}
+  .c2-trust,.c3-stats,.c3-topics,.c4-tips,.art-grid{grid-template-columns:repeat(2,1fr)}
+  .c2-why,.c4-coach{grid-template-columns:1fr;gap:32px}
+  .c4-portrait{max-width:340px}
   .footer-in{grid-template-columns:1fr 1fr}
+  .chapter{padding:80px 0}
 }
 @media(max-width:640px){
   .nav-links{display:none}
-  .val-grid,.topic-grid,.tips-grid,.art-grid{grid-template-columns:1fr}
-  .stats-in{grid-template-columns:1fr}
-  .stat-cell{border-right:none;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:24px}
-  .stat-cell:last-child{border-bottom:none}
+  .indicators{display:none}
+  .wrap{padding:0 20px}
+  .c2-trust,.c3-stats,.c3-topics,.c4-tips,.art-grid{grid-template-columns:1fr}
   .footer-in{grid-template-columns:1fr}
-  .why-visual{grid-template-columns:1fr}
-  .wv-card.tall{grid-row:auto}
+  .c1-actions{flex-direction:column;align-items:flex-start}
+  .c1-actions .btn{width:100%;justify-content:center}
+  .c6-nl{padding:48px 22px}
+  .chapter{padding:64px 0}
+  .chapter-1{padding-top:32px;min-height:96vh}
+  .c1-scroll-hint{display:none}
+}
+
+/* ========================================================================
+   ARTICLE PAGE CONTRAST GUARD (untouched on homepage, depth=0)
+   ====================================================================== */
+body[data-page-depth="1"] h1,
+body[data-page-depth="1"] h2,
+body[data-page-depth="1"] h3,
+body[data-page-depth="1"] .art-title,
+body[data-page-depth="1"] .article-title,
+body[data-page-depth="1"] .mag-hero h1,
+body[data-page-depth="1"] .imm-hero h1,
+body[data-page-depth="1"] article h1,
+body[data-page-depth="1"] article h2,
+body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article p,
+body[data-page-depth="1"] article li,
+body[data-page-depth="1"] .art-body p,
+body[data-page-depth="1"] .mag-body p,
+body[data-page-depth="1"] .imm-body p,
+body[data-page-depth="1"] article .intro,
+body[data-page-depth="1"] article .concl,
+body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article a,
+body[data-page-depth="1"] article p a,
+body[data-page-depth="1"] article .intro a{color:#fa4a1e !important;text-decoration:underline;text-underline-offset:3px}
+
+/* ========================================================================
+   REDUCED MOTION
+   ====================================================================== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  #journey-canvas{display:none!important}
+  #journey-fallback{display:block!important}
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+  .chapter{scroll-snap-align:none}
 }
 </style>
 </head>
 <body>
 <!--SHELL:ACCENT:#fa4a1e-->
+<a href="#articles" class="skip">Skip to articles</a>
+
+<!-- progress bar + persistent canvas -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<canvas id="journey-canvas" aria-hidden="true"></canvas>
+<div id="journey-fallback" aria-hidden="true"></div>
+
 <!--SHELL:HEADER-->
 
 <nav class="site-nav">
@@ -269,326 +585,308 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
 </nav>
 <!--/SHELL:HEADER-->
 
-<header class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-top">
-    <div class="ticker-inner">
-      <span class="ticker-item">Zone 2 Training</span><span class="ticker-item">VO2 Max Science</span><span class="ticker-item">Sleep Protocols</span><span class="ticker-item">Progressive Overload</span><span class="ticker-item">HRV Tracking</span><span class="ticker-item">Mobility Work</span>
-      <span class="ticker-item">Zone 2 Training</span><span class="ticker-item">VO2 Max Science</span><span class="ticker-item">Sleep Protocols</span><span class="ticker-item">Progressive Overload</span><span class="ticker-item">HRV Tracking</span><span class="ticker-item">Mobility Work</span>
-    </div>
-  </div>
-  <div class="wrap hero-body">
-    <div class="hero-left reveal">
-      <div class="eyebrow">Performance Intelligence</div>
-      <h1 class="hero-h1">Train Smarter.<br><em>Perform Better.</em></h1>
-      <p class="hero-desc">SportIQ Pro turns sports science into clear, repeatable protocols. Build strength, sharpen endurance, recover faster - all backed by peer-reviewed research, not gym-bro guesswork.</p>
-      <div class="hero-actions">
-        <a href="./#articles" class="btn btn-primary">Browse Training Guides
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-        <a href="./#newsletter" class="btn btn-ghost">Get the Free Program</a>
-      </div>
-      <div class="hero-tags">
-        <span class="hero-tag">Strength</span><span class="hero-tag">Endurance</span><span class="hero-tag">Recovery</span><span class="hero-tag">Nutrition</span><span class="hero-tag">Mindset</span>
-      </div>
-    </div>
-    <div class="hero-right reveal">
-      <div class="hero-card">
-        <div class="hc-head">
-          <span class="hc-title">Weekly Load</span>
-          <span class="hc-live"><span class="hc-dot"></span>Tracking</span>
-        </div>
-        <div class="hc-chart">
-          <div class="hc-bar" style="height:38%"></div>
-          <div class="hc-bar" style="height:60%"></div>
-          <div class="hc-bar" style="height:48%"></div>
-          <div class="hc-bar" style="height:76%"></div>
-          <div class="hc-bar" style="height:55%"></div>
-          <div class="hc-bar" style="height:88%"></div>
-          <div class="hc-bar" style="height:100%"></div>
-        </div>
-        <div class="hc-rows">
-          <div class="hc-row"><span>Resting Heart Rate</span><span class="hc-val">52 <b>bpm</b></span></div>
-          <div class="hc-row"><span>HRV Baseline</span><span class="hc-val">74 <b>ms</b></span></div>
-          <div class="hc-row"><span>Recovery Score</span><span class="hc-val">91<b>%</b></span></div>
+<!-- chapter indicators -->
+<nav class="indicators" aria-label="Chapter navigation">
+  <button class="indicator active" data-chapter="1" aria-label="Invocation"><span>Invocation</span></button>
+  <button class="indicator" data-chapter="2" aria-label="Data Intake"><span>Data Intake</span></button>
+  <button class="indicator" data-chapter="3" aria-label="Metrics"><span>Metrics</span></button>
+  <button class="indicator" data-chapter="4" aria-label="Ignition"><span>Ignition</span></button>
+  <button class="indicator" data-chapter="5" aria-label="Archive"><span>Archive</span></button>
+  <button class="indicator" data-chapter="6" aria-label="Commit"><span>Commit</span></button>
+</nav>
+
+<main class="journey" id="journey">
+
+  <!-- ============== CHAPTER 1 - INVOCATION ============== -->
+  <section class="chapter chapter-1" id="chapter-1" data-chapter="1" aria-labelledby="c1-title">
+    <div class="wrap chapter-inner">
+      <div class="c1-grid">
+        <div class="reveal">
+          <div class="c1-kicker-row">
+            <span class="kicker">Performance Intelligence</span>
+          </div>
+          <h1 class="chapter-title c1-h1" id="c1-title">Train smarter. <em>Recover</em><br>sharper. Win <span class="lime">quieter</span>.</h1>
+          <p class="c1-desc">SportIQ Pro turns sports science into clear, repeatable protocols. Build strength, sharpen endurance, recover faster - all backed by peer-reviewed research, not gym-bro guesswork.</p>
+          <div class="c1-actions">
+            <a href="#chapter-5" class="btn btn-primary">Browse Training Guides
+              <svg class="btn-arrow" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#chapter-6" class="btn btn-ghost">Get the Free Program</a>
+          </div>
+          <div class="c1-tags" aria-label="Topic tags">
+            <span class="c1-tag">Strength</span>
+            <span class="c1-tag">Endurance</span>
+            <span class="c1-tag">Recovery</span>
+            <span class="c1-tag">Nutrition</span>
+            <span class="c1-tag">Mindset</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</header>
+    <div class="c1-scroll-hint" aria-hidden="true">Scroll</div>
+  </section>
 
-<!-- TRUST STRIP -->
-<section class="trust">
-  <div class="wrap trust-in">
-    <span class="trust-label">Methods drawn from</span>
-    <span class="trust-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Sports Lab</span>
-    <span class="trust-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>PeakProtocol</span>
-    <span class="trust-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 6-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="6" r="2" fill="currentColor"/></svg>MetricLab</span>
-    <span class="trust-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 4v8a6 6 0 0012 0V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 20h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Endure Co</span>
-    <span class="trust-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>EliteForm</span>
-  </div>
-</section>
-
-<!-- WHY / STORY -->
-<section class="why" id="about-why">
-  <div class="wrap why-grid">
-    <div class="why-text reveal">
-      <div class="eyebrow">Why SportIQ Pro</div>
-      <h2 class="h2">Built on Science,<br>Not Hype</h2>
-      <p>Most training advice online is recycled opinion. We do it differently. Every guide we publish starts with peer-reviewed research, then gets translated into a protocol you can actually run in your next session.</p>
-      <p>No magic supplements. No 30-day transformation promises. Just clear, measurable systems that compound over months and years - the way real athletic progress works.</p>
-      <div class="why-points">
-        <div class="why-point">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fa4a1e"/><path d="M7 12l3.5 3.5L17 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Evidence-based methods with study citations on every claim</div>
-        <div class="why-point">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fa4a1e"/><path d="M7 12l3.5 3.5L17 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Protocols stress-tested across beginner to elite athletes</div>
-        <div class="why-point">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fa4a1e"/><path d="M7 12l3.5 3.5L17 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Reviewed and updated quarterly as new research lands</div>
+  <!-- ============== CHAPTER 2 - DATA INTAKE ============== -->
+  <section class="chapter chapter-2" id="chapter-2" data-chapter="2" aria-labelledby="c2-title">
+    <div class="wrap chapter-inner">
+      <div class="c2-head reveal">
+        <span class="kicker">Chapter 02 / Data Intake</span>
+        <h2 class="chapter-title" id="c2-title" style="margin-top:18px">Signal in. <em>Noise out.</em></h2>
+        <p class="lead" style="margin-top:18px">Every protocol starts with the data the body actually returns - heart rate variability, sleep architecture, force output, recovery curves. We translate those signals into work you can repeat next Tuesday.</p>
       </div>
-    </div>
-    <div class="why-visual reveal">
-      <div class="wv-card tall">
-        <div class="wv-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 19v-7M13 19V8M18 19v-10" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round"/></svg></div>
-        <div>
-          <div class="wv-num" data-count="200" data-suffix="+">0</div>
-          <div class="wv-cap">Studies referenced across our training library.</div>
+
+      <div class="c2-trust">
+        <div class="c2-trust-card reveal" data-delay="1">
+          <div class="c2-trust-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#fa4a1e" stroke-width="2"/><path d="M12 7v5l3 3" stroke="#fa4a1e" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="c2-trust-h">Science-backed</div>
+          <p class="c2-trust-p">Every method we publish traces back to peer-reviewed research and cited primary sources.</p>
+        </div>
+        <div class="c2-trust-card reveal" data-delay="2">
+          <div class="c2-trust-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#fa4a1e" stroke-width="2" stroke-linejoin="round"/><path d="M4 12l8 4 8-4M4 17l8 4 8-4" stroke="#fa4a1e" stroke-width="2" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="c2-trust-h">Coach-curated</div>
+          <p class="c2-trust-p">Built and reviewed by certified strength coaches and sports scientists - not content farms.</p>
+        </div>
+        <div class="c2-trust-card reveal" data-delay="3">
+          <div class="c2-trust-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 18l4-10 3 6 2.5-4L19 18" stroke="#fa4a1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="c2-trust-h">Athlete-tested</div>
+          <p class="c2-trust-p">Every protocol is stress-tested across beginner, recreational, and elite-level athletes.</p>
         </div>
       </div>
-      <div class="wv-card">
-        <div class="wv-num" data-count="92" data-suffix="%">0</div>
-        <div class="wv-cap">Readers report measurable gains within 12 weeks.</div>
-      </div>
-      <div class="wv-card">
-        <div class="wv-num" data-count="18" data-suffix="">0</div>
-        <div class="wv-cap">Field-tested recovery protocols, step by step.</div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- VALUE CARDS -->
-<section class="values" id="training">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">What You Get</div>
-      <h2 class="h2">A Full Performance System</h2>
-      <p class="lead">Five pillars work together. Train hard, recover smart, fuel right, and the gains take care of themselves.</p>
-    </div>
-    <div class="val-grid">
-      <div class="val-card reveal">
-        <div class="val-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 9v6M18 9v6M3 11h3M18 11h3M6 12h12" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round"/><rect x="6" y="7" width="3" height="10" rx="1.2" stroke="#fa4a1e" stroke-width="2.2"/><rect x="15" y="7" width="3" height="10" rx="1.2" stroke="#fa4a1e" stroke-width="2.2"/></svg></div>
-        <div class="val-title">Strength Training</div>
-        <p class="val-desc">Programming that builds real force output - progressive overload, periodization, and lift technique grounded in biomechanics.</p>
-      </div>
-      <div class="val-card reveal">
-        <div class="val-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 13h4l2-6 4 12 2.5-6H21" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="val-title">Endurance & Conditioning</div>
-        <p class="val-desc">Zone-based cardio, VO2 max work, and aerobic base building so you can go longer without burning out.</p>
-      </div>
-      <div class="val-card reveal">
-        <div class="val-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#fa4a1e" stroke-width="2.2" stroke-linejoin="round"/></svg></div>
-        <div class="val-title">Recovery Science</div>
-        <p class="val-desc">Sleep architecture, HRV, cold and heat exposure - the protocols that turn training stress into adaptation.</p>
-      </div>
-      <div class="val-card reveal">
-        <div class="val-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M7 3v6a5 5 0 0010 0V3" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round"/><path d="M12 14v7M8 21h8" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round"/></svg></div>
-        <div class="val-title">Nutrition & Fueling</div>
-        <p class="val-desc">Protein timing, carb periodization, and supplement evidence - what actually moves the needle for performance.</p>
-      </div>
-      <div class="val-card reveal">
-        <div class="val-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4.5" stroke="#fa4a1e" stroke-width="2.2"/><path d="M12 12.5v4M9 16h6" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round"/></svg></div>
-        <div class="val-title">Mindset & Focus</div>
-        <p class="val-desc">Visualization, arousal control, and motivation systems used by elite competitors under real pressure.</p>
-      </div>
-      <div class="val-card reveal">
-        <div class="val-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 17l5-6 4 3 7-9" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 5h4v4" stroke="#fa4a1e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="val-title">Data & Tracking</div>
-        <p class="val-desc">How to read wearable metrics, set baselines, and use numbers to decide when to push and when to back off.</p>
+      <div class="c2-why">
+        <div class="c2-why-col reveal" data-delay="1">
+          <span class="c2-why-marker">// Built on the Protocols</span>
+          <h3>Evidence over <em>opinion</em></h3>
+          <p>Most training advice online is recycled folklore. Every guide we publish starts with peer-reviewed research, then gets translated into a protocol you can actually run in your next session.</p>
+          <p>No magic supplements. No 30-day transformation promises. Just clear, measurable systems that compound over months and years - the way real athletic progress works.</p>
+        </div>
+        <div class="c2-why-col reveal" data-delay="2">
+          <span class="c2-why-marker">// Tuned by the Data</span>
+          <h3>Adapt to <em>your</em> signal</h3>
+          <p>Generic programs ignore how you slept, how hard yesterday hit you, and where you actually are in your training cycle. We give you the framework to read your own data and adjust accordingly.</p>
+          <p>HRV, RPE, bar speed, mood, sleep score - the right metric for the right decision. So next Tuesday's session is the one your body can actually absorb.</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- STATS BAND -->
-<section class="stats">
-  <div class="wrap stats-in">
-    <div class="stat-cell"><div class="stat-n" data-count="340" data-suffix="+">0</div><div class="stat-l">Training Guides</div></div>
-    <div class="stat-cell"><div class="stat-n" data-count="18" data-suffix="">0</div><div class="stat-l">Recovery Protocols</div></div>
-    <div class="stat-cell"><div class="stat-n" data-count="92" data-suffix="%">0</div><div class="stat-l">Report Real Gains</div></div>
-    <div class="stat-cell"><div class="stat-n" data-count="200" data-suffix="+">0</div><div class="stat-l">Studies Referenced</div></div>
-  </div>
-</section>
+  <!-- ============== CHAPTER 3 - METRICS ============== -->
+  <section class="chapter chapter-3" id="chapter-3" data-chapter="3" aria-labelledby="c3-title">
+    <div class="wrap chapter-inner">
+      <div class="c3-head reveal">
+        <span class="kicker">Chapter 03 / Measured Output</span>
+        <h2 class="chapter-title" id="c3-title" style="margin-top:18px">The numbers <em>that move</em>.</h2>
+        <p class="lead" style="margin-top:18px">Athletes don't improve on vibes. These are the metrics our readers, coaches, and protocol library have produced - measurable, replicable, and built to keep climbing.</p>
+      </div>
 
-<!-- TOPIC GRID -->
-<section class="topics" id="topics">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">What We Cover</div>
-      <h2 class="h2">Explore the Library</h2>
-      <p class="lead">Nine focused topic areas, each with deep-dive guides and quick-reference protocols.</p>
-    </div>
-    <div class="topic-grid">
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="3" height="8" rx="1" stroke="#c6f24e" stroke-width="2"/><rect x="17" y="8" width="3" height="8" rx="1" stroke="#c6f24e" stroke-width="2"/><path d="M7 12h10" stroke="#c6f24e" stroke-width="2"/></svg></div><div><div class="topic-h">Hypertrophy</div><p class="topic-p">Volume, intensity, and frequency for building muscle that lasts.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 19c4-9 10-9 14 0" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="6" r="2.5" stroke="#c6f24e" stroke-width="2"/></svg></div><div><div class="topic-h">Sprint & Power</div><p class="topic-p">Explosive output, plyometrics, and rate of force development.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#c6f24e" stroke-width="2"/><path d="M12 8v4l3 2" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="topic-h">Zone 2 Cardio</div><p class="topic-p">Aerobic base work that raises your ceiling without the burnout.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 109 9 7 7 0 01-9-9z" stroke="#c6f24e" stroke-width="2" stroke-linejoin="round"/></svg></div><div><div class="topic-h">Sleep & Rest</div><p class="topic-p">Sleep hygiene and deload strategy for full adaptation.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#c6f24e" stroke-width="2" stroke-linejoin="round"/></svg></div><div><div class="topic-h">Mobility</div><p class="topic-p">Joint range and tissue prep to move well and stay injury-free.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2v6M12 8c-3 0-5 2-5 6s2 6 5 6 5-2 5-6-2-6-5-6z" stroke="#c6f24e" stroke-width="2" stroke-linejoin="round"/></svg></div><div><div class="topic-h">Fueling</div><p class="topic-p">Macros, meal timing, and hydration around hard training.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 12h4l3-7 4 14 3-7h4" stroke="#c6f24e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="topic-h">HRV & Readiness</div><p class="topic-p">Use heart rate variability to time your hard and easy days.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="4" stroke="#c6f24e" stroke-width="2"/><path d="M12 13v6M9 19h6" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="topic-h">Mental Game</div><p class="topic-p">Focus, pressure handling, and visualization routines.</p></div></div>
-      <div class="topic reveal"><div class="topic-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 16l5-6 4 3 7-9" stroke="#c6f24e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="4" r="1.6" fill="#c6f24e"/></svg></div><div><div class="topic-h">Gear & Tech</div><p class="topic-p">Wearables and recovery tools ranked by evidence and ROI.</p></div></div>
-    </div>
-  </div>
-</section>
+      <div class="c3-stats">
+        <div class="c3-stat reveal" data-delay="1">
+          <div class="c3-stat-n"><span data-count="12400" data-suffix="">0</span><em>+</em></div>
+          <div class="c3-stat-l">Athletes tracked</div>
+          <div class="c3-stat-fine">Across 12 disciplines and 4 training tiers</div>
+        </div>
+        <div class="c3-stat reveal" data-delay="2">
+          <div class="c3-stat-n"><span data-count="98" data-suffix="">0</span><em>%</em></div>
+          <div class="c3-stat-l">PR improvement</div>
+          <div class="c3-stat-fine">Reported within first 90 days on program</div>
+        </div>
+        <div class="c3-stat reveal" data-delay="3">
+          <div class="c3-stat-n"><span data-count="340" data-suffix="">0</span><em>+</em></div>
+          <div class="c3-stat-l">Training protocols</div>
+          <div class="c3-stat-fine">Each peer-reviewed and field-validated</div>
+        </div>
+        <div class="c3-stat reveal" data-delay="4">
+          <div class="c3-stat-n"><span data-count="18" data-suffix="">0</span></div>
+          <div class="c3-stat-l">Peer-reviewed studies</div>
+          <div class="c3-stat-fine">Co-authored by our coaching staff since 2019</div>
+        </div>
+      </div>
 
-<!-- TIPS -->
-<section class="tips" id="tips">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">Quick Wins</div>
-      <h2 class="h2">6 Performance Tips You Can Use Today</h2>
-      <p class="lead">Small, evidence-backed adjustments that pay off fast. No equipment or budget required.</p>
-    </div>
-    <div class="tips-grid">
-      <div class="tip reveal">
-        <div class="tip-num">01</div>
-        <div class="tip-tag">Endurance</div>
-        <div class="tip-h">Keep Easy Days Truly Easy</div>
-        <p class="tip-p">Most athletes train their easy sessions too hard, blunting recovery. Cap easy runs and rides at 70 percent of max heart rate so hard days stay hard.</p>
-        <div class="tip-stat">~80% of volume should be low intensity</div>
+      <div class="c3-topics-head reveal">
+        <h3>Explore the library</h3>
+        <span class="kicker">Six focus areas</span>
       </div>
-      <div class="tip reveal">
-        <div class="tip-num">02</div>
-        <div class="tip-tag">Nutrition</div>
-        <div class="tip-h">Hit a Protein Floor Every Meal</div>
-        <p class="tip-p">Muscle protein synthesis maxes out around 0.4g per kg of body weight per meal. Spread protein across 3 to 4 meals instead of one big hit.</p>
-        <div class="tip-stat">Aim for 1.6 to 2.2g/kg daily</div>
-      </div>
-      <div class="tip reveal">
-        <div class="tip-num">03</div>
-        <div class="tip-tag">Recovery</div>
-        <div class="tip-h">Protect Your Sleep Window</div>
-        <p class="tip-p">Sprint power and reaction time drop sharply after a poor night. Set a fixed bedtime and kill bright screens 60 minutes before to deepen sleep.</p>
-        <div class="tip-stat">Athletes need 8 to 9 hours</div>
-      </div>
-      <div class="tip reveal">
-        <div class="tip-num">04</div>
-        <div class="tip-tag">Strength</div>
-        <div class="tip-h">Leave 1 to 2 Reps in the Tank</div>
-        <p class="tip-p">Training near failure on every set adds fatigue without much extra growth. Stop most working sets with a couple of clean reps still available.</p>
-        <div class="tip-stat">RIR 1 to 3 drives most gains</div>
-      </div>
-      <div class="tip reveal">
-        <div class="tip-num">05</div>
-        <div class="tip-tag">Readiness</div>
-        <div class="tip-h">Check HRV Before You Push</div>
-        <p class="tip-p">A morning HRV well below your baseline is a signal to swap intensity for an easy session. Let the data, not your ego, set the day's load.</p>
-        <div class="tip-stat">Track a 7-day rolling average</div>
-      </div>
-      <div class="tip reveal">
-        <div class="tip-num">06</div>
-        <div class="tip-tag">Mindset</div>
-        <div class="tip-h">Rehearse the Effort First</div>
-        <p class="tip-p">Spend 5 minutes visualizing a hard session or event in vivid detail. Mental rehearsal measurably improves execution and reduces pre-start nerves.</p>
-        <div class="tip-stat">Used by Olympic-level athletes</div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ARTICLES -->
-<section class="articles" id="articles">
-  <div class="wrap">
-    <div class="art-head">
-      <div class="reveal">
-        <div class="eyebrow">From the Library</div>
-        <h2 class="h2">Latest Training Guides</h2>
+      <div class="c3-topics" id="topics">
+        <div class="c3-topic reveal" data-delay="1">
+          <div class="c3-topic-ic">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="8" width="3" height="8" rx="1" stroke="#c6f24e" stroke-width="2"/><rect x="17" y="8" width="3" height="8" rx="1" stroke="#c6f24e" stroke-width="2"/><path d="M7 12h10" stroke="#c6f24e" stroke-width="2"/></svg>
+          </div>
+          <div><div class="c3-topic-h">Strength</div><p class="c3-topic-p">Progressive overload, periodization, and lift technique grounded in biomechanics.</p></div>
+        </div>
+        <div class="c3-topic reveal" data-delay="2">
+          <div class="c3-topic-ic">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19c4-9 10-9 14 0" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="6" r="2.5" stroke="#c6f24e" stroke-width="2"/></svg>
+          </div>
+          <div><div class="c3-topic-h">Speed</div><p class="c3-topic-p">Sprint mechanics, plyometrics, and explosive output for measurable power gains.</p></div>
+        </div>
+        <div class="c3-topic reveal" data-delay="3">
+          <div class="c3-topic-ic">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="#c6f24e" stroke-width="2"/><path d="M12 8v4l3 2" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="c3-topic-h">Endurance</div><p class="c3-topic-p">Zone 2 work, VO2 max protocols, and aerobic base building without burnout.</p></div>
+        </div>
+        <div class="c3-topic reveal" data-delay="1">
+          <div class="c3-topic-ic">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3a9 9 0 109 9 7 7 0 01-9-9z" stroke="#c6f24e" stroke-width="2" stroke-linejoin="round"/></svg>
+          </div>
+          <div><div class="c3-topic-h">Recovery</div><p class="c3-topic-p">Sleep architecture, HRV, deload weeks, and the science of adaptation.</p></div>
+        </div>
+        <div class="c3-topic reveal" data-delay="2">
+          <div class="c3-topic-ic">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.5-7 10-7 10z" stroke="#c6f24e" stroke-width="2" stroke-linejoin="round"/></svg>
+          </div>
+          <div><div class="c3-topic-h">Mobility</div><p class="c3-topic-p">Joint range work and tissue prep so you keep training, not rehabbing.</p></div>
+        </div>
+        <div class="c3-topic reveal" data-delay="3">
+          <div class="c3-topic-ic">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3v6a5 5 0 0010 0V3" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/><path d="M12 14v7M8 21h8" stroke="#c6f24e" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="c3-topic-h">Nutrition</div><p class="c3-topic-p">Protein timing, carb periodization, and supplement evidence that actually moves the needle.</p></div>
+        </div>
       </div>
-      <div class="art-filters" id="artFilters"></div>
     </div>
-    <div class="art-grid" id="articleGrid"></div>
-  </div>
-</section>
+  </section>
 
-<!-- COACH -->
-<section class="coach" id="coach">
-  <div class="wrap coach-in">
-    <div class="reveal">
-      <div class="coach-portrait">
-        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-          <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fa4a1e"/><stop offset="1" stop-color="#ff6a3c"/></linearGradient></defs>
-          <circle cx="60" cy="44" r="24" fill="url(#cg)"/>
-          <path d="M18 108c0-23 19-38 42-38s42 15 42 38" fill="url(#cg)"/>
-          <path d="M48 44l8 8 18-18" stroke="#0a0d12" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+  <!-- ============== CHAPTER 4 - IGNITION ============== -->
+  <section class="chapter chapter-4" id="chapter-4" data-chapter="4" aria-labelledby="c4-title">
+    <div class="wrap chapter-inner">
+      <div class="c4-head reveal">
+        <span class="kicker">Chapter 04 / Ignition</span>
+        <h2 class="chapter-title" id="c4-title" style="margin-top:18px">Tips that <em>land</em> tomorrow.</h2>
+        <p class="lead" style="margin-top:18px">Small, evidence-backed adjustments that pay off fast. No equipment, no budget, no waiting for next Monday.</p>
       </div>
-    </div>
-    <div class="coach-text reveal">
-      <div class="eyebrow">Meet the Coach</div>
-      <h2 class="h2">Coaching You Can Trust</h2>
-      <p class="lead">SportIQ Pro is led by a team of certified strength coaches and sports scientists who have spent two decades in the lab and on the field.</p>
-      <blockquote class="coach-quote">"The athletes who win long-term are not the ones who train hardest in a single week. They are the ones who train smart, recover on purpose, and let the system compound."</blockquote>
-      <div class="coach-cred">
-        <div class="cred"><b>20+</b><span>Years coaching</span></div>
-        <div class="cred"><b>500+</b><span>Athletes guided</span></div>
-        <div class="cred"><b>CSCS</b><span>Certified staff</span></div>
-      </div>
-      <div class="coach-name">The SportIQ Pro Coaching Team</div>
-      <div class="coach-role">Strength & Conditioning - Sports Science - Performance Nutrition</div>
-    </div>
-  </div>
-</section>
 
-<!-- FAQ -->
-<section class="faq" id="faq">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">Questions</div>
-      <h2 class="h2">Frequently Asked</h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item reveal">
-        <button class="faq-q">Is SportIQ Pro for beginners or advanced athletes?<span class="faq-ic"></span></button>
-        <div class="faq-a"><p>Both. Every guide flags the experience level it targets and includes scaling notes, so a first-year lifter and a seasoned competitor can both find a usable starting point.</p></div>
+      <div class="c4-tips" id="tips">
+        <div class="c4-tip reveal" data-delay="1">
+          <div class="c4-tip-num">01</div>
+          <div class="c4-tip-tag">Endurance</div>
+          <div class="c4-tip-h">Keep easy days truly easy</div>
+          <p class="c4-tip-p">Most athletes train their easy sessions too hard, blunting recovery. Cap easy efforts at 70 percent of max heart rate so hard days stay hard.</p>
+          <div class="c4-tip-foot">~80% of volume at low intensity</div>
+        </div>
+        <div class="c4-tip reveal" data-delay="2">
+          <div class="c4-tip-num">02</div>
+          <div class="c4-tip-tag">Recovery</div>
+          <div class="c4-tip-h">Protect your sleep window</div>
+          <p class="c4-tip-p">Sprint power and reaction time drop sharply after a poor night. Lock a fixed bedtime and kill bright screens 60 minutes before to deepen sleep cycles.</p>
+          <div class="c4-tip-foot">Athletes need 8 to 9 hours</div>
+        </div>
+        <div class="c4-tip reveal" data-delay="3">
+          <div class="c4-tip-num">03</div>
+          <div class="c4-tip-tag">Strength</div>
+          <div class="c4-tip-h">Leave 1 to 2 reps in the tank</div>
+          <p class="c4-tip-p">Training near failure on every set adds fatigue without much extra growth. Stop most working sets with a couple of clean reps still available - then come back stronger.</p>
+          <div class="c4-tip-foot">RIR 1 to 3 drives most gains</div>
+        </div>
       </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">Do I need a gym or special equipment?<span class="faq-ic"></span></button>
-        <div class="faq-a"><p>No. Many protocols, especially in recovery, mobility, and conditioning, need nothing but your body and consistency. Equipment-based guides always list minimal-kit alternatives.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">How is your content different from typical fitness sites?<span class="faq-ic"></span></button>
-        <div class="faq-a"><p>We start from peer-reviewed research and cite our sources. Nothing is published on opinion alone, and guides are reviewed quarterly so the advice stays current.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">Is the content free to read?<span class="faq-ic"></span></button>
-        <div class="faq-a"><p>Yes. The full training library is free. Our newsletter subscribers also receive a free starter program and weekly performance breakdowns.</p></div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-q">How often is new content published?<span class="faq-ic"></span></button>
-        <div class="faq-a"><p>New guides go live every week, and existing articles are revisited on a rolling quarterly cycle as fresh research becomes available.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- NEWSLETTER -->
-<section class="newsletter" id="newsletter">
-  <div class="wrap">
-    <div class="nl-box reveal">
-      <div class="eyebrow">Free Program</div>
-      <h2 class="h2">The Weekly Performance Brief</h2>
-      <p class="nl-sub">One email a week with the best training science, plus a free 4-week starter program when you join. No filler, no spam.</p>
-      <form class="nl-form" onsubmit="return false">
-        <input class="nl-input" type="email" placeholder="your@email.com" aria-label="Email address" required>
-        <button class="nl-btn" type="submit">Get the Program</button>
-      </form>
-      <p class="nl-fine">Join thousands of athletes. Unsubscribe anytime.</p>
+      <div class="c4-coach reveal">
+        <div class="c4-portrait" role="img" aria-label="Coach portrait placeholder">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+            <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fa4a1e"/><stop offset="1" stop-color="#ff6a3c"/></linearGradient></defs>
+            <circle cx="60" cy="44" r="24" fill="url(#cg)"/>
+            <path d="M18 108c0-23 19-38 42-38s42 15 42 38" fill="url(#cg)"/>
+            <path d="M48 44l8 8 18-18" stroke="#0a0d12" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="c4-coach-text">
+          <span class="kicker">Meet the Coaching Team</span>
+          <h3>Coaching you can <span style="color:var(--accent)">trust</span></h3>
+          <blockquote class="c4-quote">"The athletes who win long-term are not the ones who train hardest in a single week. They are the ones who train smart, recover on purpose, and let the system compound."</blockquote>
+          <div class="c4-cred">
+            <div class="c4-cred-cell"><b>20+</b><span>Years coaching</span></div>
+            <div class="c4-cred-cell"><b>500+</b><span>Athletes guided</span></div>
+            <div class="c4-cred-cell"><b>CSCS</b><span>Certified staff</span></div>
+          </div>
+          <div class="c4-coach-name">The SportIQ Pro Coaching Team</div>
+          <div class="c4-coach-role">Strength & Conditioning - Sports Science - Performance Nutrition</div>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- ============== CHAPTER 5 - ARCHIVE (articles) ============== -->
+  <section class="chapter chapter-5" id="chapter-5" data-chapter="5" aria-labelledby="articles-title">
+    <a id="articles" style="position:absolute;top:-80px"></a>
+    <div class="wrap chapter-inner">
+      <div class="c5-head">
+        <div class="c5-head-left reveal">
+          <span class="kicker">Chapter 05 / The Archive</span>
+          <h2 class="chapter-title" id="articles-title" style="margin-top:18px;font-size:clamp(28px,4vw,48px)">Latest training <em>guides</em></h2>
+        </div>
+        <div class="c5-filters reveal" id="artFilters" data-delay="2"></div>
+      </div>
+      <div class="art-grid" id="articleGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============== CHAPTER 6 - COMMIT (FAQ + newsletter) ============== -->
+  <section class="chapter chapter-6" id="chapter-6" data-chapter="6" aria-labelledby="c6-title">
+    <div class="wrap chapter-inner">
+
+      <div>
+        <div class="c6-faq-head reveal">
+          <span class="kicker" style="justify-content:center">Chapter 06 / Commit</span>
+          <h2 class="chapter-title" id="c6-title" style="margin-top:18px;font-size:clamp(28px,4vw,48px)">Frequently <em>asked</em>.</h2>
+        </div>
+        <div class="c6-faq" id="faq">
+          <div class="c6-faq-item reveal">
+            <button class="c6-faq-q" aria-expanded="false">Is SportIQ Pro for beginners or advanced athletes?<span class="c6-faq-ic" aria-hidden="true"></span></button>
+            <div class="c6-faq-a"><p>Both. Every guide flags the experience level it targets and includes scaling notes, so a first-year lifter and a seasoned competitor can both find a usable starting point.</p></div>
+          </div>
+          <div class="c6-faq-item reveal">
+            <button class="c6-faq-q" aria-expanded="false">Do I need a gym or special equipment?<span class="c6-faq-ic" aria-hidden="true"></span></button>
+            <div class="c6-faq-a"><p>No. Many protocols, especially in recovery, mobility, and conditioning, need nothing but your body and consistency. Equipment-based guides always list minimal-kit alternatives.</p></div>
+          </div>
+          <div class="c6-faq-item reveal">
+            <button class="c6-faq-q" aria-expanded="false">How is your content different from typical fitness sites?<span class="c6-faq-ic" aria-hidden="true"></span></button>
+            <div class="c6-faq-a"><p>We start from peer-reviewed research and cite our sources. Nothing is published on opinion alone, and guides are reviewed quarterly so the advice stays current.</p></div>
+          </div>
+          <div class="c6-faq-item reveal">
+            <button class="c6-faq-q" aria-expanded="false">Is the content free to read?<span class="c6-faq-ic" aria-hidden="true"></span></button>
+            <div class="c6-faq-a"><p>Yes. The full training library is free. Our newsletter subscribers also receive a free starter program and weekly performance breakdowns.</p></div>
+          </div>
+          <div class="c6-faq-item reveal">
+            <button class="c6-faq-q" aria-expanded="false">Does the science cover my sport?</button>
+            <div class="c6-faq-a"><p>Our protocols are sport-agnostic at the system level - strength, endurance, recovery, fueling - then layered with specifics for cycling, lifting, running, team sports, and combat athletics.</p></div>
+          </div>
+          <div class="c6-faq-item reveal">
+            <button class="c6-faq-q" aria-expanded="false">How often is new content published?</button>
+            <div class="c6-faq-a"><p>New guides go live every week, and existing articles are revisited on a rolling quarterly cycle as fresh research becomes available.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="newsletter">
+        <div class="c6-nl reveal">
+          <span class="kicker" style="justify-content:center">Free Program</span>
+          <h3 class="c6-nl-h">The weekly performance brief</h3>
+          <p class="c6-nl-sub">Get the weekly digest - one science-backed insight every Sunday, plus a free 4-week starter program when you join.</p>
+          <form class="c6-nl-form" onsubmit="return false">
+            <label for="nl-email" class="c6-nl-label">Email address</label>
+            <input id="nl-email" class="c6-nl-input" type="email" placeholder="your@email.com" required>
+            <button class="c6-nl-btn" type="submit">Get the Program</button>
+          </form>
+          <p class="c6-nl-fine">Join thousands of athletes. No filler, no spam, unsubscribe anytime.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- view all articles link -->
+<div class="view-all"><a href="./articles.html">View all articles
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</a></div>
 
 <!--SHELL:FOOTER-->
 <footer>
@@ -618,7 +916,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
         <div class="f-links">
           <a href="./#articles">Latest Guides</a>
           <a href="./#topics">Topics</a>
-          <a href="./#coach">The Coaches</a>
+          <a href="./#chapter-4">The Coaches</a>
           <a href="./#faq">FAQ</a>
         </div>
       </div>
@@ -639,8 +937,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
   </div>
 </footer>
 
+<!-- ========================================================================
+     HOMEPAGE INTERACTIVITY (article fetch, reveals, counters, FAQ, indicators)
+     ======================================================================== -->
 <script>
-/* ---------- ARTICLE GRID ---------- */
+/* ---------- ARTICLE GRID (preserved from original) ---------- */
 const MESH=['#fa4a1e','#c6f24e','#ff6a3c','#2563eb','#8b5cf6'];
 function thumbSVG(i){
   const a=MESH[i%MESH.length], b=MESH[(i+2)%MESH.length];
@@ -660,20 +961,20 @@ function articleCard(a,i){
   const hasImg=!!a.image;
   const imgTag=hasImg?`<img class="art-img" src="${a.image}" alt="" loading="lazy" onerror="this.style.display='none'; this.parentElement.classList.remove('has-img');">`:'';
   return `<a href="./${a.slug}/" class="art-card">
-    <div class="art-thumb${hasImg?' has-img':''}">${imgTag}${thumbSVG(i)}<span class="art-cat">${a.cat}</span></div>
+    <div class="art-thumb${hasImg?' has-img':''}">${imgTag}${thumbSVG(i)}<span class="art-cat">${a.cat||'Training'}</span></div>
     <div class="art-body">
       <div class="art-title">${a.title}</div>
-      <p class="art-excerpt">${a.excerpt||""}</p>
+      <p class="art-excerpt">${a.excerpt||a.meta_description||a.description||""}</p>
       <div class="art-meta"><span>${a.mins||6} min read</span><span class="dot"></span><span>SportIQ Pro</span></div>
     </div>
   </a>`;
 }
 
 function renderArticles(){
-  if(!document.getElementById('articleGrid'))return;
   const grid=document.getElementById('articleGrid');
+  if(!grid)return;
   const list=activeCat==="All"?arts:arts.filter(a=>(a.cat||"")===activeCat);
-  if(!list.length){grid.innerHTML='<div class="art-empty">New training guides coming soon.</div>';return;}
+  if(!list.length){grid.innerHTML='<div class="art-empty">New training guides coming soon - check back this week.</div>';return;}
   grid.innerHTML=list.slice(0,9).map(articleCard).join("");
 }
 
@@ -706,40 +1007,612 @@ loadArticles();
 /* ---------- SCROLL REVEAL ---------- */
 const revObs=new IntersectionObserver((entries)=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target);}});
-},{threshold:0.12});
+},{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
 document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
 /* ---------- COUNT-UP ---------- */
 function countUp(el){
   const target=parseInt(el.dataset.count,10)||0;
   const suffix=el.dataset.suffix||"";
-  const dur=1400,start=performance.now();
+  const dur=1600,start=performance.now();
+  function fmt(n){return n>=1000?n.toLocaleString():String(n);}
   function step(now){
     const p=Math.min((now-start)/dur,1);
     const eased=1-Math.pow(1-p,3);
-    el.textContent=Math.round(target*eased)+suffix;
+    el.textContent=fmt(Math.round(target*eased))+suffix;
     if(p<1)requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 const countObs=new IntersectionObserver((entries)=>{
   entries.forEach(e=>{if(e.isIntersecting){countUp(e.target);countObs.unobserve(e.target);}});
-},{threshold:0.5});
+},{threshold:0.4});
 document.querySelectorAll('[data-count]').forEach(el=>countObs.observe(el));
 
 /* ---------- FAQ ACCORDION ---------- */
-document.querySelectorAll('.faq-item').forEach(item=>{
-  const q=item.querySelector('.faq-q');
-  const a=item.querySelector('.faq-a');
+document.querySelectorAll('.c6-faq-item').forEach(item=>{
+  const q=item.querySelector('.c6-faq-q');
+  const a=item.querySelector('.c6-faq-a');
   q.addEventListener('click',()=>{
     const open=item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i=>{
+    document.querySelectorAll('.c6-faq-item').forEach(i=>{
       i.classList.remove('open');
-      i.querySelector('.faq-a').style.maxHeight=null;
+      const btn=i.querySelector('.c6-faq-q');
+      if(btn)btn.setAttribute('aria-expanded','false');
+      const aa=i.querySelector('.c6-faq-a');
+      if(aa)aa.style.maxHeight=null;
     });
-    if(!open){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+    if(!open){
+      item.classList.add('open');
+      q.setAttribute('aria-expanded','true');
+      a.style.maxHeight=a.scrollHeight+'px';
+    }
   });
 });
+
+/* ---------- CHAPTER INDICATORS + PROGRESS BAR ---------- */
+(function(){
+  const indicators=document.querySelectorAll('.indicator');
+  const chapters=document.querySelectorAll('.chapter');
+  const progress=document.getElementById('scrollProgress');
+
+  indicators.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const ch=btn.dataset.chapter;
+      const target=document.getElementById('chapter-'+ch);
+      if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  /* observe each chapter to mark indicator active */
+  const chObs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && e.intersectionRatio>0.35){
+        const ch=e.target.dataset.chapter;
+        indicators.forEach(b=>b.classList.toggle('active',b.dataset.chapter===ch));
+      }
+    });
+  },{threshold:[0.35,0.5,0.7]});
+  chapters.forEach(c=>chObs.observe(c));
+
+  /* scroll progress */
+  let ticking=false;
+  function updateProgress(){
+    const max=document.documentElement.scrollHeight-window.innerHeight;
+    const p=max>0?(window.scrollY/max)*100:0;
+    if(progress)progress.style.width=p+'%';
+    ticking=false;
+  }
+  window.addEventListener('scroll',()=>{
+    if(!ticking){requestAnimationFrame(updateProgress);ticking=true;}
+  },{passive:true});
+})();
+</script>
+
+<!-- ========================================================================
+     THREE.JS SCROLL JOURNEY - persistent particle scene
+     ======================================================================== -->
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script>
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('journey-canvas');
+const fallbackEl = document.getElementById('journey-fallback');
+
+if (reduced || !canvas){
+  if (fallbackEl) fallbackEl.style.display = 'block';
+  if (canvas) canvas.style.display = 'none';
+} else {
+
+  /* deferred init for paint priority */
+  const boot = () => {
+    initJourney().catch(err => {
+      console.warn('[journey] init failed', err);
+      if (fallbackEl) fallbackEl.style.display = 'block';
+      if (canvas) canvas.style.display = 'none';
+    });
+  };
+  if ('requestIdleCallback' in window){
+    requestIdleCallback(boot, { timeout: 800 });
+  } else {
+    window.addEventListener('load', boot, { once: true });
+  }
+}
+
+async function initJourney(){
+  const THREE = await import('three');
+
+  const isMobile = window.innerWidth < 768;
+  const PARTICLE_COUNT = isMobile ? 2500 : 8000;
+  const DPR_CAP = isMobile ? 1.5 : 2;
+  const NUM_CHAPTERS = 6;
+
+  /* ===== renderer / scene / camera ===== */
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true,
+    powerPreference: 'high-performance'
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, DPR_CAP));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 800);
+  camera.position.set(0, 0, 60);
+
+  function resize(){
+    const w = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / Math.max(1, h);
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  /* WebGL context loss => fallback */
+  canvas.addEventListener('webglcontextlost', (e) => {
+    e.preventDefault();
+    console.warn('[journey] webgl context lost');
+    if (fallbackEl) fallbackEl.style.display = 'block';
+    canvas.style.display = 'none';
+  }, false);
+
+  /* ===== build chapter target positions =====
+     Each chapter gets its own Float32Array of length PARTICLE_COUNT*3.
+     We stack them as additional buffer attributes (targetA/targetB),
+     then update which two are active per frame and lerp in the shader. */
+
+  const C = PARTICLE_COUNT;
+
+  function emptyTargets(){ return new Float32Array(C * 3); }
+
+  /* --- 1: word particles ("SPORTIQ") sampled from offscreen 2D canvas --- */
+  function buildWordTargets(word){
+    const off = document.createElement('canvas');
+    const W = 1024, H = 280;
+    off.width = W; off.height = H;
+    const o = off.getContext('2d');
+    o.fillStyle = '#fff';
+    o.textAlign = 'center';
+    o.textBaseline = 'middle';
+    const family = "'Bebas Neue','Barlow Condensed','Oswald',Impact,system-ui,sans-serif";
+    let fontPx = 220;
+    o.font = `bold ${fontPx}px ${family}`;
+    let m = o.measureText(word);
+    const maxW = W * 0.92;
+    if (m.width > maxW){
+      fontPx = Math.floor(fontPx * (maxW / m.width));
+      o.font = `bold ${fontPx}px ${family}`;
+    }
+    o.fillText(word, W / 2, H / 2);
+    const img = o.getImageData(0, 0, W, H).data;
+    const step = isMobile ? 6 : 4;
+    const pts = [];
+    for (let y = 0; y < H; y += step){
+      for (let x = 0; x < W; x += step){
+        const idx = (y * W + x) * 4 + 3;
+        if (img[idx] > 128){
+          pts.push([(x - W / 2) * 0.03, -(y - H / 2) * 0.05]);
+        }
+      }
+    }
+    /* shuffle */
+    for (let i = pts.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = pts[i]; pts[i] = pts[j]; pts[j] = t;
+    }
+    const arr = emptyTargets();
+    for (let i = 0; i < C; i++){
+      const p = pts[i % pts.length] || [0, 0];
+      const jitter = (Math.random() - 0.5) * 0.5;
+      arr[i*3]   = p[0] + jitter;
+      arr[i*3+1] = p[1] + jitter;
+      arr[i*3+2] = (Math.random() - 0.5) * 3.0;
+    }
+    return arr;
+  }
+
+  /* --- 2: heartbeat ribbon / EKG line --- */
+  function buildRibbonTargets(){
+    const arr = emptyTargets();
+    const length = 80;
+    for (let i = 0; i < C; i++){
+      const u = i / (C - 1);
+      const x = (u - 0.5) * length;
+      /* EKG-like pulse: mostly flat with sharp QRS at intervals */
+      const phase = u * Math.PI * 12;
+      let y = Math.sin(phase) * 0.6;
+      const beat = Math.sin(u * Math.PI * 24);
+      if (beat > 0.92) y += (beat - 0.92) * 25;
+      if (beat < -0.92) y += (beat + 0.92) * 18;
+      /* ribbon thickness */
+      y += (Math.random() - 0.5) * 1.6;
+      const z = (Math.random() - 0.5) * 4;
+      arr[i*3] = x;
+      arr[i*3+1] = y;
+      arr[i*3+2] = z;
+    }
+    return arr;
+  }
+
+  /* --- 3: volumetric bar chart - 12 columns of stacked particles --- */
+  function buildBarsTargets(){
+    const arr = emptyTargets();
+    const cols = 12;
+    const colWidth = 4.2;
+    const totalW = cols * colWidth;
+    /* invent heights with rising/falling rhythm */
+    const heights = [];
+    for (let c = 0; c < cols; c++){
+      const base = 8 + Math.sin(c * 0.62) * 6 + Math.cos(c * 0.27) * 4;
+      heights.push(Math.max(4, base + Math.random() * 4));
+    }
+    for (let i = 0; i < C; i++){
+      const c = Math.floor((i / C) * cols);
+      const h = heights[c];
+      const x = (c - cols / 2 + 0.5) * colWidth + (Math.random() - 0.5) * (colWidth * 0.6);
+      const y = (Math.random() * h) - h / 2 - 2;
+      const z = (Math.random() - 0.5) * 3.6;
+      arr[i*3] = x;
+      arr[i*3+1] = y;
+      arr[i*3+2] = z;
+    }
+    return arr;
+  }
+
+  /* --- 4: kinetic motion-trail field (curl-noise-like layered sin field) --- */
+  function buildBurstTargets(){
+    const arr = emptyTargets();
+    for (let i = 0; i < C; i++){
+      const u = Math.random();
+      const v = Math.random();
+      /* horizontal flow streaks: scattered along x, biased trails left-to-right */
+      const x = (u - 0.5) * 90;
+      const y = (v - 0.5) * 40 + Math.sin(u * 8) * 3.5 + Math.cos(v * 6) * 2.4;
+      const z = (Math.random() - 0.5) * 16 + Math.sin(u * 5 + v * 3) * 4;
+      arr[i*3] = x;
+      arr[i*3+1] = y;
+      arr[i*3+2] = z;
+    }
+    return arr;
+  }
+
+  /* --- 5: calm ambient cloud --- */
+  function buildCloudTargets(){
+    const arr = emptyTargets();
+    for (let i = 0; i < C; i++){
+      /* gaussian-ish */
+      const r = Math.pow(Math.random(), 0.6) * 38;
+      const t = Math.random() * Math.PI * 2;
+      const p = Math.acos(2 * Math.random() - 1);
+      arr[i*3]   = r * Math.sin(p) * Math.cos(t) * 1.2;
+      arr[i*3+1] = r * Math.sin(p) * Math.sin(t) * 0.6;
+      arr[i*3+2] = r * Math.cos(p) * 0.6 - 4;
+    }
+    return arr;
+  }
+
+  /* --- 6: glowing torus --- */
+  function buildTorusTargets(){
+    const arr = emptyTargets();
+    const R = 14;
+    const r = 4;
+    for (let i = 0; i < C; i++){
+      const u = Math.random() * Math.PI * 2;
+      const v = Math.random() * Math.PI * 2;
+      /* slight tube jitter */
+      const tr = r + (Math.random() - 0.5) * 1.4;
+      const x = (R + tr * Math.cos(v)) * Math.cos(u);
+      const y = (R + tr * Math.cos(v)) * Math.sin(u) * 0.7;
+      const z = tr * Math.sin(v);
+      arr[i*3] = x;
+      arr[i*3+1] = y;
+      arr[i*3+2] = z;
+    }
+    return arr;
+  }
+
+  const chapterTargets = [
+    buildWordTargets('SPORTIQ'),
+    buildRibbonTargets(),
+    buildBarsTargets(),
+    buildBurstTargets(),
+    buildCloudTargets(),
+    buildTorusTargets(),
+  ];
+
+  /* ===== per-chapter scene state ===== */
+  const accent  = new THREE.Color(0xfa4a1e);
+  const accent2 = new THREE.Color(0xff6a3c);
+  const lime    = new THREE.Color(0xc6f24e);
+  const cool    = new THREE.Color(0x6a8cff);
+  const dim     = new THREE.Color(0x4a5566);
+
+  const chapterStates = [
+    /* 1 invocation */ { cam:[0,0,42],  look:[0,0,0],   colorA:accent.clone(),  colorB:accent2.clone(), noise:0.20, twist:0.10 },
+    /* 2 data       */ { cam:[0,2,60],  look:[0,0,0],   colorA:accent.clone(),  colorB:cool.clone(),    noise:0.10, twist:0.04 },
+    /* 3 metrics    */ { cam:[6,4,75],  look:[0,0,0],   colorA:accent.clone(),  colorB:lime.clone(),    noise:0.05, twist:0.0  },
+    /* 4 ignition   */ { cam:[0,0,55],  look:[0,0,0],   colorA:accent.clone(),  colorB:accent2.clone(), noise:0.45, twist:0.22 },
+    /* 5 archive    */ { cam:[0,0,90],  look:[0,0,0],   colorA:dim.clone(),     colorB:cool.clone(),    noise:0.12, twist:0.02 },
+    /* 6 commit     */ { cam:[0,0,50],  look:[0,0,0],   colorA:accent.clone(),  colorB:lime.clone(),    noise:0.08, twist:0.30 },
+  ];
+
+  /* ===== buffer geometry =====
+     attributes: position (initial random cloud),
+                 tA (target for chapter index A),
+                 tB (target for chapter index B),
+                 random (per-particle jitter seed) */
+  const positions = new Float32Array(C * 3);
+  const tA = new Float32Array(C * 3);
+  const tB = new Float32Array(C * 3);
+  const rand = new Float32Array(C);
+  for (let i = 0; i < C; i++){
+    positions[i*3]   = (Math.random() - 0.5) * 80;
+    positions[i*3+1] = (Math.random() - 0.5) * 40;
+    positions[i*3+2] = (Math.random() - 0.5) * 40;
+    rand[i] = Math.random();
+  }
+  /* prime tA/tB to chapter 0 */
+  tA.set(chapterTargets[0]);
+  tB.set(chapterTargets[1]);
+
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geom.setAttribute('tA',       new THREE.BufferAttribute(tA, 3));
+  geom.setAttribute('tB',       new THREE.BufferAttribute(tB, 3));
+  geom.setAttribute('rand',     new THREE.BufferAttribute(rand, 1));
+
+  /* ===== shader material ===== */
+  const uniforms = {
+    uTime:        { value: 0 },
+    uMix:         { value: 0 },     /* 0..1 between tA and tB */
+    uEnter:       { value: 0 },     /* entrance fade 0..1 */
+    uColorA:      { value: accent.clone() },
+    uColorB:      { value: accent2.clone() },
+    uNoise:       { value: 0.20 },
+    uTwist:       { value: 0.10 },
+    uSize:        { value: isMobile ? 1.8 : 2.4 },
+    uPixelRatio:  { value: Math.min(window.devicePixelRatio || 1, DPR_CAP) },
+  };
+
+  const vertex = /* glsl */`
+    attribute vec3 tA;
+    attribute vec3 tB;
+    attribute float rand;
+    uniform float uTime;
+    uniform float uMix;
+    uniform float uEnter;
+    uniform float uNoise;
+    uniform float uTwist;
+    uniform float uSize;
+    uniform float uPixelRatio;
+    varying float vRand;
+    varying float vVel;
+
+    void main(){
+      vRand = rand;
+
+      /* interpolate between chapter target A and B with eased mix */
+      float m = smoothstep(0.0, 1.0, uMix);
+      vec3 base = mix(tA, tB, m);
+
+      /* cheap pseudo-noise displacement (sin-based; no per-frame allocation) */
+      float t = uTime * 0.6;
+      float n = sin(base.x * 0.18 + t + rand * 6.28) * 0.6
+              + cos(base.y * 0.21 - t * 0.8 + rand * 6.28) * 0.6
+              + sin(base.z * 0.16 + t * 1.1 + rand * 6.28) * 0.4;
+      vec3 disp = vec3(
+        sin(t + rand * 6.28 + base.y * 0.1),
+        cos(t * 0.85 + rand * 6.28 + base.x * 0.1),
+        sin(t * 0.7 + rand * 6.28 + base.z * 0.1)
+      ) * uNoise * (0.6 + rand);
+
+      /* gentle twist around y for energy */
+      float a = uTwist * (0.5 + rand);
+      float ca = cos(a), sa = sin(a);
+      vec3 twisted = vec3(
+        base.x * ca - base.z * sa,
+        base.y,
+        base.x * sa + base.z * ca
+      );
+
+      vec3 pos = twisted + disp;
+      /* entrance fade from camera origin */
+      pos *= mix(0.6, 1.0, uEnter);
+      vVel = n;
+
+      vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+      gl_Position = projectionMatrix * mv;
+      float ps = uSize * uPixelRatio * (260.0 / -mv.z);
+      gl_PointSize = clamp(ps, 1.0, 18.0);
+    }
+  `;
+
+  const fragment = /* glsl */`
+    precision mediump float;
+    uniform vec3 uColorA;
+    uniform vec3 uColorB;
+    uniform float uEnter;
+    varying float vRand;
+    varying float vVel;
+
+    void main(){
+      vec2 uv = gl_PointCoord - 0.5;
+      float d = length(uv);
+      if (d > 0.5) discard;
+      /* soft circular sprite with glow falloff */
+      float alpha = smoothstep(0.5, 0.08, d);
+      /* color mix per particle: by random + velocity */
+      float w = clamp(vRand * 0.6 + vVel * 0.25 + 0.2, 0.0, 1.0);
+      vec3 col = mix(uColorA, uColorB, w);
+      /* boost center brightness */
+      col += (1.0 - d * 2.0) * 0.25;
+      alpha *= uEnter;
+      gl_FragColor = vec4(col, alpha);
+    }
+  `;
+
+  const mat = new THREE.ShaderMaterial({
+    uniforms,
+    vertexShader: vertex,
+    fragmentShader: fragment,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+
+  const points = new THREE.Points(geom, mat);
+  scene.add(points);
+
+  /* ===== scroll engine ===== */
+  let chapterA = 0;
+  let chapterB = 1;
+  let currentChapterIdx = 0;
+
+  /* swap chapter target attributes when moving forward/backward.
+     We keep tA == current chapter targets, tB == next chapter targets. */
+  function setActiveChapters(a, b){
+    if (chapterA === a && chapterB === b) return;
+    const aArr = chapterTargets[Math.max(0, Math.min(NUM_CHAPTERS - 1, a))];
+    const bArr = chapterTargets[Math.max(0, Math.min(NUM_CHAPTERS - 1, b))];
+    const tAAttr = geom.getAttribute('tA');
+    const tBAttr = geom.getAttribute('tB');
+    tAAttr.array.set(aArr);
+    tBAttr.array.set(bArr);
+    tAAttr.needsUpdate = true;
+    tBAttr.needsUpdate = true;
+    chapterA = a;
+    chapterB = b;
+  }
+
+  /* smoothed state */
+  const sCamPos  = new THREE.Vector3().copy(camera.position);
+  const sCamLook = new THREE.Vector3(0, 0, 0);
+  const sColorA  = accent.clone();
+  const sColorB  = accent2.clone();
+  let sNoise = 0.2, sTwist = 0.1;
+
+  let scrollY = window.scrollY || 0;
+  let lastScrollUpdate = 0;
+  window.addEventListener('scroll', () => {
+    scrollY = window.scrollY;
+  }, { passive: true });
+
+  /* visibility pause */
+  let running = true;
+  document.addEventListener('visibilitychange', () => {
+    running = !document.hidden;
+    if (running){ lastT = performance.now(); requestAnimationFrame(loop); }
+  });
+
+  /* color lerp helper */
+  function lerpColor(target, a, b, t){
+    target.r = a.r + (b.r - a.r) * t;
+    target.g = a.g + (b.g - a.g) * t;
+    target.b = a.b + (b.b - a.b) * t;
+  }
+
+  const tmpVec = new THREE.Vector3();
+
+  /* ===== animation loop ===== */
+  const startT = performance.now();
+  let lastT = startT;
+  const FRAME_MS = 1000 / 60;
+
+  function loop(now){
+    if (!running) return;
+    if (now - lastT < FRAME_MS - 1){ requestAnimationFrame(loop); return; }
+    const dt = Math.min(80, now - lastT) / 1000;
+    lastT = now;
+
+    const elapsed = (now - startT) / 1000;
+
+    /* entrance fade */
+    uniforms.uEnter.value = Math.min(1, elapsed / 1.6);
+    uniforms.uTime.value  = elapsed;
+
+    /* compute global progress 0..(NUM_CHAPTERS-1) from scroll position */
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const gp  = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+    /* journey progress along chapters 1..6 */
+    const progress = gp * (NUM_CHAPTERS - 1);
+    let aIdx = Math.floor(progress);
+    if (aIdx > NUM_CHAPTERS - 2) aIdx = NUM_CHAPTERS - 2;
+    let bIdx = aIdx + 1;
+    let segT = progress - aIdx;
+
+    /* swap attribute arrays when we cross a chapter boundary */
+    setActiveChapters(aIdx, bIdx);
+    uniforms.uMix.value = segT;
+
+    /* blend scene state */
+    const sA = chapterStates[aIdx];
+    const sB = chapterStates[bIdx];
+
+    /* camera */
+    const targetCam = tmpVec.set(
+      sA.cam[0] + (sB.cam[0] - sA.cam[0]) * segT,
+      sA.cam[1] + (sB.cam[1] - sA.cam[1]) * segT,
+      sA.cam[2] + (sB.cam[2] - sA.cam[2]) * segT
+    );
+    /* drift the camera a little for life */
+    const cdx = Math.sin(elapsed * 0.18) * 1.6;
+    const cdy = Math.cos(elapsed * 0.13) * 1.0;
+    sCamPos.x += (targetCam.x + cdx - sCamPos.x) * Math.min(1, dt * 3.0);
+    sCamPos.y += (targetCam.y + cdy - sCamPos.y) * Math.min(1, dt * 3.0);
+    sCamPos.z += (targetCam.z - sCamPos.z) * Math.min(1, dt * 3.0);
+    camera.position.copy(sCamPos);
+    camera.lookAt(0, 0, 0);
+
+    /* colors */
+    lerpColor(sColorA, sA.colorA, sB.colorA, segT);
+    lerpColor(sColorB, sA.colorB, sB.colorB, segT);
+    uniforms.uColorA.value.copy(sColorA);
+    uniforms.uColorB.value.copy(sColorB);
+
+    /* noise + twist */
+    sNoise += ((sA.noise + (sB.noise - sA.noise) * segT) - sNoise) * Math.min(1, dt * 2.5);
+    sTwist += ((sA.twist + (sB.twist - sA.twist) * segT) - sTwist) * Math.min(1, dt * 2.5);
+    uniforms.uNoise.value = sNoise;
+    uniforms.uTwist.value = sTwist;
+
+    /* gentle base rotation for journey life */
+    points.rotation.y = Math.sin(elapsed * 0.05) * 0.18 + gp * 0.4;
+    points.rotation.x = Math.cos(elapsed * 0.07) * 0.06;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+
+  /* rebuild text + ribbon targets on resize for crisp word at any width */
+  let resizeRebuildRaf = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeRebuildRaf);
+    resizeRebuildRaf = requestAnimationFrame(() => {
+      /* only rebuild if drastically different (skip subtle scroll-driven resizes on mobile) */
+      const newMobile = window.innerWidth < 768;
+      if (newMobile !== isMobile){
+        /* full reload simpler than rewiring buffers for new count */
+        location.reload();
+        return;
+      }
+      const newWord = buildWordTargets('SPORTIQ');
+      chapterTargets[0] = newWord;
+      if (chapterA === 0){
+        const tAAttr = geom.getAttribute('tA');
+        tAAttr.array.set(newWord);
+        tAAttr.needsUpdate = true;
+      }
+      if (chapterB === 0){
+        const tBAttr = geom.getAttribute('tB');
+        tBAttr.array.set(newWord);
+        tBAttr.needsUpdate = true;
+      }
+    });
+  }, { passive: true });
+
+  requestAnimationFrame(loop);
+}
 </script>
 <!--/SHELL:FOOTER-->
 </body>
