@@ -634,6 +634,435 @@ body::before{
   .reveal{opacity:1;transform:none}
   .live .pulse{animation:none}
 }
+
+/* === FOLLOW THE NIGHT filter chips === */
+.feed-filter{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin:0 0 26px;align-items:center;
+}
+.feed-filter .ff-label{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-right:6px;
+}
+.feed-filter .chip{
+  font-family:var(--mono);font-size:10.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--hair);color:var(--paper);
+  padding:8px 12px;border-radius:2px;
+  transition:border-color .2s, color .2s, background .2s;
+}
+.feed-filter .chip:hover{border-color:var(--magenta);color:var(--magenta)}
+.feed-filter .chip.on{background:var(--magenta);color:var(--jet);border-color:var(--magenta)}
+.recap.fade-out{opacity:.18;filter:grayscale(.6)}
+
+/* === DISPATCH (lead news) === */
+.dispatch{
+  background:var(--card);border:1px solid var(--hair);
+  display:grid;grid-template-columns:1.1fr 1fr;gap:0;margin-bottom:42px;
+  position:relative;overflow:hidden;
+}
+.dispatch::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--magenta);
+}
+.dispatch-img{position:relative;height:100%;min-height:340px;overflow:hidden}
+.dispatch-img img{width:100%;height:100%;object-fit:cover}
+.dispatch-img .badge{
+  position:absolute;top:16px;left:16px;
+  background:var(--magenta);color:var(--jet);
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:6px 10px;
+}
+.dispatch-body{padding:34px 32px;display:flex;flex-direction:column;justify-content:center}
+.dispatch-tags{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:14px;
+}
+.dispatch-tags b{color:var(--acid)}
+.dispatch h3{
+  font-family:var(--display);font-size:clamp(28px,3.4vw,46px);
+  text-transform:uppercase;color:var(--white);letter-spacing:.005em;
+  line-height:1;margin-bottom:14px;
+}
+.dispatch .dek{font-size:15.5px;color:var(--paper);margin-bottom:18px;line-height:1.55}
+.dispatch-byline{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);
+}
+.dispatch-byline b{color:var(--magenta)}
+@media(max-width:880px){.dispatch{grid-template-columns:1fr}}
+
+/* === BRIEFING (news stack) === */
+.briefing{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  border:1px solid var(--hair);background:var(--raven);
+}
+.brief-item{
+  padding:22px 22px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);
+}
+.brief-item:nth-child(3n){border-right:0}
+.brief-item:nth-last-child(-n+3){border-bottom:0}
+.brief-item .date{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--magenta);margin-bottom:10px;
+}
+.brief-item h4{
+  font-family:var(--sans);font-size:16px;font-weight:600;color:var(--white);
+  line-height:1.3;margin-bottom:8px;
+}
+.brief-item p{font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:10px}
+.brief-item .place{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--acid);
+}
+@media(max-width:880px){
+  .briefing{grid-template-columns:1fr}
+  .brief-item{border-right:0;border-bottom:1px solid var(--hair)}
+  .brief-item:last-child{border-bottom:0}
+}
+
+/* === INTERVIEW === */
+.interview{
+  display:grid;grid-template-columns:1fr 1.4fr;gap:28px;align-items:start;
+}
+.interview-img{
+  background:var(--card);overflow:hidden;aspect-ratio:4/5;
+  border:1px solid var(--hair);
+}
+.interview-img img{width:100%;height:100%;object-fit:cover}
+.interview-body .iv-kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:14px;
+}
+.interview-body h3{
+  font-family:var(--display);font-size:clamp(32px,4vw,56px);
+  text-transform:uppercase;color:var(--white);letter-spacing:.005em;
+  line-height:.95;margin-bottom:8px;
+}
+.interview-body .iv-sub{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:22px;
+}
+.iv-pull{
+  font-family:var(--display);font-size:clamp(22px,2.4vw,32px);
+  text-transform:uppercase;color:var(--magenta);
+  line-height:1.05;letter-spacing:.005em;
+  border-left:3px solid var(--magenta);padding:6px 0 6px 18px;
+  margin:20px 0 26px;
+}
+.iv-qa{padding:14px 0;border-top:1px solid var(--hair)}
+.iv-q{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:8px;
+}
+.iv-a{font-size:15px;color:var(--paper);line-height:1.6}
+@media(max-width:780px){.interview{grid-template-columns:1fr}}
+
+/* === ANATOMY OF A SET === */
+.anatomy{
+  background:var(--raven);border:1px solid var(--hair);overflow:hidden;
+}
+.anatomy-head{
+  padding:22px 26px;border-bottom:1px solid var(--hair);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.anatomy-head h3{
+  font-family:var(--display);font-size:28px;text-transform:uppercase;
+  color:var(--white);letter-spacing:.005em;
+}
+.anatomy-head .meta{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);
+}
+.anatomy-head .meta b{color:var(--magenta)}
+.anatomy table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}
+.anatomy th, .anatomy td{
+  padding:14px 18px;text-align:left;border-bottom:1px solid var(--hair);
+}
+.anatomy th{
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  background:var(--jet);
+}
+.anatomy td.time{color:var(--magenta)}
+.anatomy td.title{color:var(--white);font-family:var(--sans);font-weight:500;font-size:14px}
+.anatomy td.bpm{color:var(--acid);text-align:right;width:60px}
+.anatomy td.label{color:var(--dim);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.anatomy td.note{color:var(--paper);font-family:var(--sans);font-size:13px;line-height:1.5}
+@media(max-width:780px){
+  .anatomy th.lbl, .anatomy td.label{display:none}
+}
+
+/* === LINEUP LEAKS === */
+.lineup{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.lineup-card{
+  background:var(--raven);border:1px solid var(--hair);
+  padding:18px;display:flex;flex-direction:column;gap:8px;
+  transition:border-color .2s, transform .25s;
+}
+.lineup-card:hover{border-color:var(--magenta);transform:translateY(-3px)}
+.lineup-card .ll-date{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--acid);
+}
+.lineup-card .ll-headliner{
+  font-family:var(--display);font-size:22px;text-transform:uppercase;
+  color:var(--white);letter-spacing:.005em;line-height:1;
+}
+.lineup-card .ll-venue{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);
+}
+.lineup-card .ll-foot{
+  margin-top:auto;padding-top:14px;border-top:1px solid var(--hair);
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);
+}
+.lineup-card .ll-foot .px{color:var(--magenta)}
+.lineup-card .ll-foot .wc{color:var(--acid);display:inline-flex;align-items:center;gap:6px}
+.lineup-card .ll-foot .wc::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--acid);animation:pulse 1.6s infinite}
+@media(max-width:980px){.lineup{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.lineup{grid-template-columns:1fr}}
+
+/* === FIELD NOTES === */
+.fnotes{
+  display:flex;gap:18px;overflow-x:auto;padding-bottom:10px;
+  scroll-snap-type:x mandatory;
+}
+.fnote{
+  flex:0 0 300px;background:#1a1a22;
+  padding:12px 12px 18px;border:1px solid var(--hair);
+  scroll-snap-align:start;
+  transform:rotate(-.5deg);transition:transform .35s;
+}
+.fnote:nth-child(even){transform:rotate(.7deg)}
+.fnote:hover{transform:rotate(0)}
+.fnote .pic{
+  height:200px;background:var(--card);overflow:hidden;margin-bottom:14px;
+}
+.fnote .pic img{width:100%;height:100%;object-fit:cover}
+.fnote .meta{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);
+  display:flex;justify-content:space-between;margin-bottom:8px;
+}
+.fnote .meta b{color:var(--magenta)}
+.fnote p{font-size:13.5px;color:var(--paper);line-height:1.55;margin-bottom:10px}
+.fnote .stars{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--acid);
+}
+
+/* === SOUND SYSTEM REVIEW === */
+.ssr{
+  display:grid;grid-template-columns:1fr 1.2fr;gap:0;
+  background:var(--raven);border:1px solid var(--hair);
+}
+.ssr-img{height:100%;min-height:280px;overflow:hidden;background:var(--card)}
+.ssr-img img{width:100%;height:100%;object-fit:cover}
+.ssr-body{padding:28px}
+.ssr-body .kk{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:10px;
+}
+.ssr-body h3{
+  font-family:var(--display);font-size:36px;text-transform:uppercase;
+  color:var(--white);letter-spacing:.005em;line-height:1;margin-bottom:14px;
+}
+.ssr-body p{font-size:14px;color:var(--paper);line-height:1.6;margin-bottom:20px}
+.ssr-specs{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+  border:1px solid var(--hair);margin-bottom:20px;font-family:var(--mono);font-size:12px;
+}
+.ssr-specs div{padding:10px 14px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.ssr-specs div:nth-child(2n){border-right:0}
+.ssr-specs div:nth-last-child(-n+2){border-bottom:0}
+.ssr-specs .k{color:var(--dim);font-size:10px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:4px}
+.ssr-specs .v{color:var(--white)}
+.ssr-grade{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.ssr-grade .gx{
+  background:var(--jet);border:1px solid var(--hair);
+  padding:10px 8px;text-align:center;
+}
+.ssr-grade .gx .lbl{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:6px;
+}
+.ssr-grade .gx .sc{
+  font-family:var(--display);font-size:28px;color:var(--magenta);line-height:1;
+}
+@media(max-width:780px){.ssr{grid-template-columns:1fr}.ssr-grade{grid-template-columns:repeat(5,1fr);gap:4px}.ssr-grade .gx .sc{font-size:20px}}
+
+/* === NEW TOOLS === */
+.quiz-prompt{
+  background:var(--jet);border:1px solid var(--hair);
+  padding:22px;margin-bottom:18px;
+  font-family:var(--mono);font-size:14px;color:var(--white);line-height:1.6;
+  min-height:80px;
+}
+.quiz-prompt b{color:var(--magenta)}
+.quiz-prompt .bpm{font-family:var(--display);font-size:36px;color:var(--acid);display:block;margin-top:6px;line-height:1}
+.quiz-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.quiz-chip{
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  border:1px solid var(--hair);background:transparent;color:var(--paper);
+  padding:10px 14px;transition:all .2s;
+}
+.quiz-chip:hover{border-color:var(--magenta);color:var(--magenta)}
+.quiz-chip.right{background:var(--acid);color:var(--jet);border-color:var(--acid)}
+.quiz-chip.wrong{background:var(--magenta);color:var(--jet);border-color:var(--magenta)}
+.quiz-stat{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);
+  display:flex;justify-content:space-between;border-top:1px solid var(--hair);padding-top:14px;
+}
+.quiz-stat b{color:var(--acid)}
+
+.vmatch-q{margin-bottom:14px}
+.vmatch-q .qt{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--acid);margin-bottom:8px;
+}
+.vmatch-q .qbody{font-family:var(--sans);font-size:14px;color:var(--white);margin-bottom:10px}
+.vmatch-opts{display:flex;flex-wrap:wrap;gap:8px}
+.vmatch-opt{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--hair);color:var(--paper);
+  padding:9px 12px;transition:all .2s;
+}
+.vmatch-opt:hover, .vmatch-opt.sel{background:var(--magenta);color:var(--jet);border-color:var(--magenta)}
+.vmatch-result{
+  background:var(--jet);border:1px solid var(--acid);padding:20px;margin-top:18px;
+}
+.vmatch-result h4{font-family:var(--display);font-size:24px;color:var(--white);text-transform:uppercase;margin-bottom:8px;letter-spacing:.005em}
+.vmatch-result p{font-size:13.5px;color:var(--paper);line-height:1.55}
+
+.check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.check-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--jet);border:1px solid var(--hair);padding:12px 14px;
+  font-family:var(--mono);font-size:12px;color:var(--paper);letter-spacing:.06em;
+  cursor:pointer;transition:border-color .2s, color .2s;
+}
+.check-item:hover{border-color:var(--magenta)}
+.check-item input{accent-color:var(--magenta);width:14px;height:14px}
+.check-item.done{color:var(--dim);text-decoration:line-through;border-color:var(--acid)}
+.check-ping{
+  position:absolute;width:6px;height:6px;border-radius:50%;background:var(--acid);
+  pointer-events:none;animation:pingOut .6s ease-out forwards;
+}
+@keyframes pingOut{
+  0%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(6)}
+}
+.check-ready{
+  margin-top:14px;padding:18px;background:var(--acid);color:var(--jet);
+  font-family:var(--display);font-size:22px;text-transform:uppercase;text-align:center;
+  letter-spacing:.02em;display:none;
+}
+.check-ready.on{display:block}
+@media(max-width:600px){.check-grid{grid-template-columns:1fr}}
+
+.near-grid{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.near-card{
+  display:grid;grid-template-columns:90px 1fr auto;gap:14px;align-items:center;
+  background:var(--jet);border:1px solid var(--hair);padding:14px 16px;
+}
+.near-card .nt{
+  font-family:var(--display);font-size:28px;color:var(--magenta);line-height:1;
+}
+.near-card .nb h5{
+  font-family:var(--sans);font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px;
+}
+.near-card .nb .nv{
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+}
+.near-card .nw{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--acid);text-align:right;
+}
+.near-pick{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.near-pick select{
+  background:var(--jet);border:1px solid var(--hair);color:var(--white);
+  padding:10px 12px;font-family:var(--mono);font-size:12px;
+}
+.near-status{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+}
+
+/* upgrades */
+.bpm-lock{
+  text-align:center;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+  margin-top:-4px;margin-bottom:10px;
+}
+.bpm-lock.locked{color:var(--acid)}
+.bpm-lock.drift{color:var(--magenta)}
+.bpm-lock.lost{color:#ff5050}
+
+.tl-peak{cursor:ew-resize}
+.tl-peak:hover{filter:brightness(1.4)}
+.tl-handle{
+  position:absolute;top:0;bottom:0;width:8px;background:var(--magenta);cursor:ew-resize;
+  opacity:.6;
+}
+.tl-handle:hover{opacity:1}
+
+.fit-out-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fit-lock{
+  background:transparent;border:1px solid var(--hair);color:var(--dim);
+  padding:2px 8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.fit-lock.on{background:var(--magenta);color:var(--jet);border-color:var(--magenta)}
+
+.copy-btn{
+  background:transparent;border:1px solid var(--hair);color:var(--paper);
+  padding:10px 14px;font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;margin-top:10px;
+  transition:all .2s;
+}
+.copy-btn:hover{border-color:var(--acid);color:var(--acid)}
+.copy-btn.copied{background:var(--acid);color:var(--jet);border-color:var(--acid)}
+
+/* annotated floor map (recaps) */
+.floor-map{
+  position:relative;width:100%;height:280px;
+  background:var(--jet);border:1px solid var(--hair);margin:18px 0;
+}
+.floor-room{
+  position:absolute;border:1px solid var(--hair);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--paper);background:rgba(124,77,255,.08);
+}
+.floor-room.r-main{background:rgba(255,43,214,.12);color:var(--magenta);border-color:var(--magenta)}
+.floor-room.r-side{background:rgba(198,255,58,.08);color:var(--acid);border-color:var(--acid)}
+
+/* CONTRAST-AUDIT v1 */
+/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
+   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+body[data-page-depth="1"] h1,
+body[data-page-depth="1"] h2,
+body[data-page-depth="1"] h3,
+body[data-page-depth="1"] .art-title,
+body[data-page-depth="1"] .article-title,
+body[data-page-depth="1"] .mag-hero h1,
+body[data-page-depth="1"] .imm-hero h1,
+body[data-page-depth="1"] article h1,
+body[data-page-depth="1"] article h2,
+body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article p,
+body[data-page-depth="1"] article li,
+body[data-page-depth="1"] .art-body p,
+body[data-page-depth="1"] .mag-body p,
+body[data-page-depth="1"] .imm-body p,
+body[data-page-depth="1"] article .intro,
+body[data-page-depth="1"] article .concl,
+body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article a,
+body[data-page-depth="1"] article p a,
+body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decoration:underline;text-underline-offset:3px}
+/* /CONTRAST-AUDIT */
 </style>
 </head>
 <body>
@@ -694,19 +1123,47 @@ body::before{
   <div class="stat"><div class="n" data-c="9">0</div><div class="l">Continents</div></div>
 </div>
 
+<!-- DISPATCH (lead news) -->
+<section class="section" id="dispatch" style="padding-bottom:0">
+  <div class="section-head">
+    <h2>Dispatch.</h2>
+    <div class="meta">Filed <b>17 MAY 2026</b> / BERLIN DESK<br>Berghain phone policy / 6 min read</div>
+  </div>
+  <article class="dispatch reveal">
+    <div class="dispatch-img">
+      <span class="badge">BREAKING</span>
+      <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1400&q=85" loading="lazy" alt="Berghain phone policy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&q=85'">
+    </div>
+    <div class="dispatch-body">
+      <div class="dispatch-tags"><b>NEWS</b> / BERLIN / VENUE POLICY</div>
+      <h3>Berghain extends phone-free policy across all rooms; club logs 31 percent rise in dance-floor density</h3>
+      <p class="dek">After a six-month pilot in the Säule, the Friedrichshain club confirms cameras will be stickered at the door across Halle, Panorama Bar and the kitchen takeover. Internal counts shared with Strobe Atlas put weekend dwell time on the main floor up by nearly a third.</p>
+      <div class="dispatch-byline">By <b>Riv Solano</b> / Berlin / Updated 17 May 2026, 14:20 CET</div>
+    </div>
+  </article>
+</section>
+
 <!-- THE LAST THREE NIGHTS -->
 <section class="section" id="recaps">
   <div class="section-head">
     <h2>The last<br>three nights.</h2>
     <div class="meta"><b>03 / 03</b> field reports filed<br>Spring 2026 cycle</div>
   </div>
+  <div class="feed-filter" role="tablist" aria-label="Follow the night">
+    <span class="ff-label">FOLLOW THE NIGHT /</span>
+    <button class="chip on" data-filter="all">ALL</button>
+    <button class="chip" data-filter="rave">RAVE</button>
+    <button class="chip" data-filter="halloween">HALLOWEEN</button>
+    <button class="chip" data-filter="warehouse">WAREHOUSE</button>
+    <button class="chip" data-filter="university">UNIVERSITY</button>
+  </div>
   <div class="recaps">
 
-    <article class="recap reveal">
+    <article class="recap reveal" data-tags="rave warehouse">
       <div class="recap-inner">
         <div class="cover">
           <span class="num">01</span>
-          <img src="https://images.unsplash.com/photo-1571266028243-d220bc562f7b?w=1600&q=85" alt="Sublimation 04 warehouse">
+          <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&q=85" alt="Sublimation 04 warehouse">
         </div>
         <div class="recap-body">
           <h3>Sublimation 04</h3>
@@ -717,7 +1174,7 @@ body::before{
       </div>
     </article>
 
-    <article class="recap reveal">
+    <article class="recap reveal" data-tags="halloween rave">
       <div class="recap-inner">
         <div class="cover">
           <span class="num">02</span>
@@ -732,7 +1189,7 @@ body::before{
       </div>
     </article>
 
-    <article class="recap reveal">
+    <article class="recap reveal" data-tags="university warehouse">
       <div class="recap-inner">
         <div class="cover">
           <span class="num">03</span>
@@ -750,11 +1207,209 @@ body::before{
   </div>
 </section>
 
+<!-- BRIEFING -->
+<section class="section" id="briefing">
+  <div class="section-head">
+    <h2>The briefing.</h2>
+    <div class="meta">Eight stories you missed this week<br><b>Filed 11 - 18 MAY 2026</b></div>
+  </div>
+  <div class="briefing reveal">
+    <div class="brief-item">
+      <div class="date">18 MAY / 09:40 CET</div>
+      <h4>Tresor wins extended late-licence after eighteen-month council standoff</h4>
+      <p>Mitte authorities sign off on a 96-hour weekend window. Promoters say the change brings the Sunday tea dance back inside the building.</p>
+      <div class="place">BERLIN / TRESOR</div>
+    </div>
+    <div class="brief-item">
+      <div class="date">17 MAY / 23:10 BST</div>
+      <h4>FOLD announces twelve-month residency for Anastasia Kristensen</h4>
+      <p>The Canning Town room hands the Saturday closing slot to the Copenhagen producer through April 2027. First date 7 June.</p>
+      <div class="place">LONDON / FOLD</div>
+    </div>
+    <div class="brief-item">
+      <div class="date">16 MAY / 02:55 EDT</div>
+      <h4>Brooklyn warehouse Public Records loses neighbour appeal, files for second sound test</h4>
+      <p>A six-month bass-bin recalibration is scheduled for July. Operators say the floor stays open through the rebuild.</p>
+      <div class="place">NEW YORK / PUBLIC RECORDS</div>
+    </div>
+    <div class="brief-item">
+      <div class="date">15 MAY / 18:00 CET</div>
+      <h4>Boiler Room confirms streaming deal with Resident Advisor for ten flagship nights</h4>
+      <p>Both platforms will share archive rights through 2027. The first co-stream is the Tbilisi takeover on 22 June.</p>
+      <div class="place">GLOBAL / BOILER ROOM</div>
+    </div>
+    <div class="brief-item">
+      <div class="date">14 MAY / 11:20 CST</div>
+      <h4>New Roma Norte basement opens as Sala Bizarro sister venue</h4>
+      <p>A 320-cap room called La Trinchera takes the Wednesday-and-Thursday slots. Opening week is six local DJs, no headliners announced.</p>
+      <div class="place">MEXICO CITY / LA TRINCHERA</div>
+    </div>
+    <div class="brief-item">
+      <div class="date">13 MAY / 16:45 GET</div>
+      <h4>Khidi quietly tests Saturday afters in the underpass</h4>
+      <p>Unlisted 4am-to-noon programme runs three weekends in a row. Door is invite-only through the Bassiani staff Telegram.</p>
+      <div class="place">TBILISI / KHIDI</div>
+    </div>
+    <div class="brief-item">
+      <div class="date">12 MAY / 21:00 JST</div>
+      <h4>Tokyo's Contact-replacement venue confirmed for autumn opening</h4>
+      <p>The Shibuya basement formerly home to Contact will reopen as Liminal Bay under former Air staff. Capacity stays at 600.</p>
+      <div class="place">TOKYO / LIMINAL BAY</div>
+    </div>
+    <div class="brief-item">
+      <div class="date">11 MAY / 13:00 BST</div>
+      <h4>UK noise-complaint ruling clears Printworks reopening pilot</h4>
+      <p>Southwark grants a 12-month trial of weekend programming inside the printworks shell. First three dates sell out in 14 minutes.</p>
+      <div class="place">LONDON / PRINTWORKS</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERVIEW -->
+<section class="section" id="interview">
+  <div class="section-head">
+    <h2>Interview.</h2>
+    <div class="meta"><b>SAFFRON STONE</b> on tempo, sleep, and the last hour<br>Recorded 12 May / London / 38 min</div>
+  </div>
+  <div class="interview reveal">
+    <div class="interview-img">
+      <img src="https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1000&q=85" loading="lazy" alt="Saffron Stone portrait" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&q=85'">
+    </div>
+    <div class="interview-body">
+      <div class="iv-kicker">Q+A / DnB / CLOSING SLOTS</div>
+      <h3>Saffron Stone</h3>
+      <div class="iv-sub">Ahead of her Boomtown set / Interview by Noor Halabi</div>
+      <p>Saffron Stone has closed eleven of the last fourteen nights she has played. She is the working DJ that other working DJs come down to watch. We caught her between a soundcheck and a Tube delay on a Tuesday afternoon in Hackney.</p>
+      <div class="iv-pull">"The last hour is a different job. You stop choosing tracks. The room chooses them and you just queue them up fast enough."</div>
+      <div class="iv-qa">
+        <div class="iv-q">Q / On tempo strategy</div>
+        <div class="iv-a">I never start above 168. People think DnB DJs walk in and detonate. I walk in and tune the room. The room tells you when to push. If you push first, you lose the room by 03:30 and you never get it back.</div>
+      </div>
+      <div class="iv-qa">
+        <div class="iv-q">Q / On sleep</div>
+        <div class="iv-a">Two flights in a week and I am useless. I have a rule now. No second gig in the same 48 hours unless it is in walking distance. The set quality drops a clean fifteen percent without it. I can hear it in the recordings.</div>
+      </div>
+      <div class="iv-qa">
+        <div class="iv-q">Q / On the Boomtown closing slot</div>
+        <div class="iv-a">I am bringing two USBs and a notebook. The notebook is for the order. The order is the whole job. I have been writing the last six tracks down on paper since 2019 and I will not change that for anybody.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANATOMY OF A SET -->
+<section class="section" id="anatomy">
+  <div class="section-head">
+    <h2>Anatomy<br>of a set.</h2>
+    <div class="meta">Marcel Dettmann / 22:00 - 02:00<br><b>Sublimation 04 / Berghain / Main</b></div>
+  </div>
+  <div class="anatomy reveal">
+    <div class="anatomy-head">
+      <h3>Six tracks, four hours</h3>
+      <div class="meta">Logged by Riv Solano / from the booth corner<br><b>BPM range 128 - 138</b></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Time</th><th>Track</th><th class="lbl">Label</th><th>BPM</th><th>Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="time">22:08</td><td class="title">Vril / Outer (Dettmann edit, white)</td><td class="label">Dystopian</td><td class="bpm">128</td><td class="note">Opener. He clears the chatter inside 90 seconds.</td></tr>
+        <tr><td class="time">23:14</td><td class="title">Sandwell District / Untitled B2 (unreleased)</td><td class="label">SD WL</td><td class="bpm">132</td><td class="note">Drop hits at 23:14. Room locks in, hands up, no phones.</td></tr>
+        <tr><td class="time">00:42</td><td class="title">Stef Mendesidis / Strom</td><td class="label">Planet Rhythm</td><td class="bpm">134</td><td class="note">First sub bin recalibration of the night. Floor reorganises.</td></tr>
+        <tr><td class="time">01:50</td><td class="title">Anastasia Kristensen / Fragment</td><td class="label">Kompakt</td><td class="bpm">136</td><td class="note">Bridge into the Oaks handover. Tempo nudges up.</td></tr>
+        <tr><td class="time">02:38</td><td class="title">Marcel Dettmann / Lattice</td><td class="label">Ostgut Ton</td><td class="bpm">137</td><td class="note">Self-played. Pulled the lights to dark blue. Crowd held its breath.</td></tr>
+        <tr><td class="time">03:15</td><td class="title">Hector Oaks / KAOS edit (CCTV B1)</td><td class="label">KAOS</td><td class="bpm">138</td><td class="note">The handover. Oaks slides in. Room understands within four bars.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- LINEUP LEAKS -->
+<section class="section" id="leaks">
+  <div class="section-head">
+    <h2>Lineup leaks.</h2>
+    <div class="meta">Eight nights worth watching<br><b>Counters update live</b></div>
+  </div>
+  <div class="lineup reveal" id="lineupGrid">
+    <div class="lineup-card" data-watch="184"><div class="ll-date">22 MAY / FRI</div><div class="ll-headliner">Saffron Stone</div><div class="ll-venue">FOLD / London UK</div><div class="ll-foot"><span class="px">25 GBP</span><span class="wc"><span class="wn">184</span> watching</span></div></div>
+    <div class="lineup-card" data-watch="412"><div class="ll-date">24 MAY / SAT</div><div class="ll-headliner">Indira Paganotto</div><div class="ll-venue">Tresor / Berlin DE</div><div class="ll-foot"><span class="px">28 EUR</span><span class="wc"><span class="wn">412</span> watching</span></div></div>
+    <div class="lineup-card" data-watch="97"><div class="ll-date">29 MAY / WED</div><div class="ll-headliner">Sherelle</div><div class="ll-venue">Khidi / Tbilisi GE</div><div class="ll-foot"><span class="px">40 GEL</span><span class="wc"><span class="wn">97</span> watching</span></div></div>
+    <div class="lineup-card" data-watch="263"><div class="ll-date">31 MAY / SAT</div><div class="ll-headliner">Mac Declos b2b Voia</div><div class="ll-venue">Sala Bizarro / CDMX MX</div><div class="ll-foot"><span class="px">650 MXN</span><span class="wc"><span class="wn">263</span> watching</span></div></div>
+    <div class="lineup-card" data-watch="148"><div class="ll-date">7 JUN / SAT</div><div class="ll-headliner">Anastasia Kristensen</div><div class="ll-venue">Basement / NYC US</div><div class="ll-foot"><span class="px">35 USD</span><span class="wc"><span class="wn">148</span> watching</span></div></div>
+    <div class="lineup-card" data-watch="91"><div class="ll-date">14 JUN / SAT</div><div class="ll-headliner">Joy Anonymous</div><div class="ll-venue">Boomtown / UK</div><div class="ll-foot"><span class="px">240 GBP wknd</span><span class="wc"><span class="wn">91</span> watching</span></div></div>
+    <div class="lineup-card" data-watch="206"><div class="ll-date">21 JUN / SAT</div><div class="ll-headliner">Donato Dozzy (sunrise)</div><div class="ll-venue">Warehouse 19 / Melbourne AU</div><div class="ll-foot"><span class="px">85 AUD</span><span class="wc"><span class="wn">206</span> watching</span></div></div>
+    <div class="lineup-card" data-watch="55"><div class="ll-date">28 JUN / SAT</div><div class="ll-headliner">Carlita</div><div class="ll-venue">Liminal Bay / Tokyo JP</div><div class="ll-foot"><span class="px">6500 JPY</span><span class="wc"><span class="wn">55</span> watching</span></div></div>
+  </div>
+</section>
+
+<!-- FIELD NOTES -->
+<section class="section" id="fieldnotes">
+  <div class="section-head">
+    <h2>Field notes.</h2>
+    <div class="meta">Four micro-recaps / scroll right<br><b>Polaroids by the crew</b></div>
+  </div>
+  <div class="fnotes reveal">
+    <div class="fnote">
+      <div class="pic"><img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=600&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&q=85'"></div>
+      <div class="meta"><span>09 MAY</span><b>LONDON / FOLD</b></div>
+      <p>Sherelle warm-up at 152. Hands up by minute three. The room knew. The room always knows. I had to leave at 04:00 for the Stansted bus and I am still mad about it.</p>
+      <div class="stars">VIBE / 5 STROBES</div>
+    </div>
+    <div class="fnote">
+      <div class="pic"><img src="https://images.unsplash.com/photo-1564585222527-c2777a5bc6cb?w=600&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&q=85'"></div>
+      <div class="meta"><span>06 MAY</span><b>BERLIN / SÄULE</b></div>
+      <p>Two-hour Sunday tea dance. The lights were the wrong shade of green for ninety minutes and nobody minded. Coffee was served from the back bar in proper cups.</p>
+      <div class="stars">VIBE / 4 STROBES</div>
+    </div>
+    <div class="fnote">
+      <div class="pic"><img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=600&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&q=85'"></div>
+      <div class="meta"><span>02 MAY</span><b>TBILISI / KHIDI</b></div>
+      <p>Underpass afters until 11am. The bartender knew everyone's order without asking. The sun came in through a vent and somebody opened an umbrella.</p>
+      <div class="stars">VIBE / 5 STROBES</div>
+    </div>
+    <div class="fnote">
+      <div class="pic"><img src="https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=600&q=85" loading="lazy" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&q=85'"></div>
+      <div class="meta"><span>27 APR</span><b>CDMX / ROOFTOP</b></div>
+      <p>Carlita until sunrise. The cumbia bleeding into the techno like neither one noticed. I lost a friend in the smoking corner and found her again in a different corner two hours later, unchanged.</p>
+      <div class="stars">VIBE / 4 STROBES</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOUND SYSTEM REVIEW -->
+<section class="section" id="ssr">
+  <div class="section-head">
+    <h2>System review.</h2>
+    <div class="meta">Funktion-One Evo 7 / Tresor Globus<br><b>Tested over three weekends</b></div>
+  </div>
+  <div class="ssr reveal">
+    <div class="ssr-img"><img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=1200&q=85" loading="lazy" alt="Sound system" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&q=85'"></div>
+    <div class="ssr-body">
+      <div class="kk">DEEP REVIEW / 9 MIN</div>
+      <h3>Tresor Globus / Evo 7 install</h3>
+      <p>The 2025 Funktion-One install at Tresor's Globus floor is the cleanest big-room system in Berlin right now. We brought a calibrated meter, three weekends of sets, and a stubborn opinion that everything sounds the same at 04:00. The opinion did not survive contact with the F1-218 stack.</p>
+      <div class="ssr-specs">
+        <div><span class="k">Drivers</span><span class="v">F1-218 sub / Evo 7T tops</span></div>
+        <div><span class="k">Peak dB</span><span class="v">112 dBA at FOH</span></div>
+        <div><span class="k">Room volume</span><span class="v">2,140 m3</span></div>
+        <div><span class="k">Frequency floor</span><span class="v">26 Hz at -3 dB</span></div>
+      </div>
+      <div class="ssr-grade">
+        <div class="gx"><div class="lbl">Bass</div><div class="sc">9.4</div></div>
+        <div class="gx"><div class="lbl">Mids</div><div class="sc">8.7</div></div>
+        <div class="gx"><div class="lbl">Highs</div><div class="sc">9.0</div></div>
+        <div class="gx"><div class="lbl">Clarity</div><div class="sc">9.2</div></div>
+        <div class="gx"><div class="lbl">Headroom</div><div class="sc">8.5</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- NIGHT TOOLS -->
 <section class="section" id="tools">
   <div class="section-head">
     <h2>Night tools.</h2>
-    <div class="meta">Four utilities for the night itself<br><b>Built in browser / No accounts</b></div>
+    <div class="meta">Nine utilities for the night itself<br><b>Built in browser / No accounts</b></div>
   </div>
   <div class="tools">
 
@@ -770,6 +1425,7 @@ body::before{
       <div class="tool-body"><div class="tool-inner">
         <div class="bpm-display" id="bpmDisp">- -</div>
         <div class="bpm-class" id="bpmClass">Tap any key or the button</div>
+        <div class="bpm-lock" id="bpmLock">MIX STATE / -</div>
         <div class="bpm-wave" id="bpmWave"></div>
         <div class="bpm-actions">
           <button class="tap-btn" id="tapBtn">TAP</button>
@@ -827,6 +1483,7 @@ body::before{
           </div>
         </div>
         <div class="fit-out" id="fitOut">Press reroll to generate a fit.</div>
+        <div style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:-4px 0 12px">Tap LOCK on a row to keep it on reroll.</div>
         <button class="tap-btn" id="fitBtn">REROLL</button>
       </div></div>
     </div>
@@ -855,6 +1512,87 @@ body::before{
           <div class="split-card"><div class="v" id="spHead">0</div><div class="k">Per head</div></div>
           <div class="split-card"><div class="v" id="spRem">0</div><div class="k">Rounding pot</div></div>
         </div>
+        <button class="copy-btn" id="spCopy">COPY VENMO FORMAT</button>
+      </div></div>
+    </div>
+
+    <!-- GENRE GUESS -->
+    <div class="tool" data-tool="genre">
+      <div class="tool-head">
+        <div>
+          <h3>Genre Guess</h3>
+          <div class="tag">Listen on paper / pick the genre</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div class="quiz-prompt" id="gqPrompt">Press start to begin.</div>
+        <div class="quiz-chips" id="gqChips">
+          <button class="quiz-chip" data-g="House">House</button>
+          <button class="quiz-chip" data-g="Tech-House">Tech-House</button>
+          <button class="quiz-chip" data-g="Techno">Techno</button>
+          <button class="quiz-chip" data-g="Trance">Trance</button>
+          <button class="quiz-chip" data-g="DnB">DnB</button>
+          <button class="quiz-chip" data-g="Hardcore">Hardcore</button>
+        </div>
+        <div class="quiz-stat"><span>ROUND <b id="gqRound">0</b> / 10</span><span>SCORE <b id="gqScore">0</b></span><span>ALL-TIME <b id="gqAll">0</b></span></div>
+        <div style="margin-top:14px"><button class="copy-btn" id="gqStart">START / NEXT</button> <button class="copy-btn" id="gqReset">RESET STATS</button></div>
+      </div></div>
+    </div>
+
+    <!-- VENUE MATCH -->
+    <div class="tool" data-tool="vmatch">
+      <div class="tool-head">
+        <div>
+          <h3>Venue Match</h3>
+          <div class="tag">Five questions / one city</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div id="vmatchQs"></div>
+        <div id="vmatchResult"></div>
+      </div></div>
+    </div>
+
+    <!-- PRE-NIGHT CHECKLIST -->
+    <div class="tool" data-tool="check">
+      <div class="tool-head">
+        <div>
+          <h3>Pre-Night Checklist</h3>
+          <div class="tag">Twelve things before you leave</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div class="check-grid" id="checkGrid"></div>
+        <div class="check-ready" id="checkReady">READY / GO. The night is on.</div>
+        <button class="copy-btn" id="checkClear" style="margin-top:14px">CLEAR ALL</button>
+      </div></div>
+    </div>
+
+    <!-- NEAREST RAVE TONIGHT -->
+    <div class="tool" data-tool="near">
+      <div class="tool-head">
+        <div>
+          <h3>Nearest Rave Tonight</h3>
+          <div class="tag">Three picks / walk or cab</div>
+        </div>
+        <div class="chev">+</div>
+      </div>
+      <div class="tool-body"><div class="tool-inner">
+        <div class="near-pick">
+          <button class="copy-btn" id="nearGeo">USE LOCATION</button>
+          <select id="nearCity">
+            <option value="">Or pick a city</option>
+            <option>Berlin</option><option>London</option><option>New York</option>
+            <option>Mexico City</option><option>Tbilisi</option><option>Tokyo</option>
+            <option>Melbourne</option><option>Paris</option><option>Amsterdam</option>
+            <option>Barcelona</option><option>Seoul</option><option>Sao Paulo</option>
+          </select>
+        </div>
+        <div class="near-status" id="nearStatus">Awaiting permission or city pick.</div>
+        <div class="near-grid" id="nearGrid"></div>
       </div></div>
     </div>
 
@@ -965,6 +1703,9 @@ body::before{
   </div>
 </section>
 
+
+<!-- VIEW_ALL_ARTICLES_LINK -->
+<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
 <!--SHELL:FOOTER-->
 <footer class="footer">
   <div class="footer-grid">
@@ -1299,7 +2040,7 @@ body::before{
         const venue = a.venue || a.city || a.category || 'Field';
         const img = a.image || '';
         const note = (a.excerpt || a.description || '').slice(0,180);
-        const fb = "this.onerror=null;this.src='https://images.unsplash.com/photo-1571266028243-d220bc562f7b?w=600&q=80'";
+        const fb = "this.onerror=null;this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80'";
         return '<div class="arc-row"><div class="arc-meta">'+date+'<b>'+venue+'</b></div><div class="arc-body"><h4>'+a.title+'</h4><p>'+note+'</p></div><div class="arc-thumb">'+(img?'<img src="'+img+'" alt="" onerror="'+fb+'">':'')+'</div></div>';
       }).join('');
     }catch(err){
@@ -1341,6 +2082,407 @@ body::before{
     }
     tick();
   }
+
+  /* === FOLLOW THE NIGHT chip filter === */
+  document.querySelectorAll('.feed-filter .chip').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.feed-filter .chip').forEach(b=>b.classList.remove('on'));
+      btn.classList.add('on');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.recaps .recap').forEach(r=>{
+        const tags = (r.dataset.tags||'').split(/\s+/);
+        if(f==='all' || tags.includes(f)) r.classList.remove('fade-out');
+        else r.classList.add('fade-out');
+      });
+      try{ localStorage.setItem('sa_tool_filter', f); }catch(e){}
+    });
+  });
+  try{
+    const f = localStorage.getItem('sa_tool_filter');
+    if(f){ const b = document.querySelector('.feed-filter .chip[data-filter="'+f+'"]'); if(b) b.click(); }
+  }catch(e){}
+
+  /* === LINEUP LEAKS watcher counter === */
+  (function(){
+    const cards = document.querySelectorAll('#lineupGrid .lineup-card');
+    if(!cards.length) return;
+    function bump(){
+      if(document.hidden) return;
+      cards.forEach(c=>{
+        const el = c.querySelector('.wn');
+        if(!el) return;
+        let n = +el.textContent || 0;
+        n += Math.floor(Math.random()*3) + 1;
+        el.textContent = n;
+      });
+    }
+    setInterval(bump, 60000);
+  })();
+
+  /* === BPM mix state upgrade === */
+  const bpmLock = document.getElementById('bpmLock');
+  function updateLock(){
+    if(!bpmLock || taps.length < 4){ if(bpmLock) bpmLock.textContent = 'MIX STATE / -'; return; }
+    const intervals = [];
+    for(let i=1;i<taps.length;i++) intervals.push(taps[i]-taps[i-1]);
+    const avg = intervals.reduce((a,b)=>a+b,0)/intervals.length;
+    const variance = intervals.reduce((a,b)=>a+Math.pow(b-avg,2),0)/intervals.length;
+    const sd = Math.sqrt(variance);
+    const ratio = sd/avg;
+    bpmLock.classList.remove('locked','drift','lost');
+    if(ratio < 0.04){ bpmLock.textContent='MIX STATE / LOCKED'; bpmLock.classList.add('locked'); }
+    else if(ratio < 0.12){ bpmLock.textContent='MIX STATE / DRIFTING'; bpmLock.classList.add('drift'); }
+    else{ bpmLock.textContent='MIX STATE / LOST'; bpmLock.classList.add('lost'); }
+  }
+  if(tapBtn){
+    const _origTap = tap;
+    document.getElementById('tapBtn').addEventListener('click', updateLock);
+    document.addEventListener('keydown',(e)=>{ if(e.code==='Space') setTimeout(updateLock,10); });
+    document.getElementById('bpmReset').addEventListener('click', ()=>{
+      if(bpmLock){ bpmLock.textContent='MIX STATE / -'; bpmLock.classList.remove('locked','drift','lost'); }
+    });
+  }
+
+  /* === OUTFIT lock upgrade === */
+  const fitLocks = { mood:false, top:false, bot:false, acc:false, foot:false };
+  const fitCurrent = {};
+  function renderFit(){
+    const out = document.getElementById('fitOut');
+    if(!out) return;
+    const rows = [['mood','Mood'],['top','Top'],['bot','Bottom'],['acc','Accessory'],['foot','Footwear']];
+    out.innerHTML = rows.map(([k,lbl])=>{
+      const val = fitCurrent[k] || '-';
+      const locked = fitLocks[k] ? 'on' : '';
+      return '<div class="fit-out-row"><div>'+lbl+' / <span>'+val+'</span></div><button class="fit-lock '+locked+'" data-flk="'+k+'">'+(fitLocks[k]?'LOCKED':'LOCK')+'</button></div>';
+    }).join('');
+    out.querySelectorAll('.fit-lock').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const k = b.dataset.flk;
+        fitLocks[k] = !fitLocks[k];
+        try{ localStorage.setItem('sa_tool_fitlocks', JSON.stringify(fitLocks)); }catch(e){}
+        renderFit();
+      });
+    });
+  }
+  try{
+    const s = JSON.parse(localStorage.getItem('sa_tool_fitlocks')||'null');
+    if(s) Object.assign(fitLocks, s);
+    const sc = JSON.parse(localStorage.getItem('sa_tool_fitcurrent')||'null');
+    if(sc) Object.assign(fitCurrent, sc);
+  }catch(e){}
+  function reroll2(){
+    const v = document.getElementById('fitVibe').value;
+    const m = document.getElementById('fitMood').value;
+    const p = fitPools[v];
+    if(!fitLocks.mood) fitCurrent.mood = m;
+    if(!fitLocks.top || !fitCurrent.top) fitCurrent.top = pick(p.top);
+    if(!fitLocks.bot || !fitCurrent.bot) fitCurrent.bot = pick(p.bot);
+    if(!fitLocks.acc || !fitCurrent.acc) fitCurrent.acc = pick(p.acc);
+    if(!fitLocks.foot || !fitCurrent.foot) fitCurrent.foot = pick(p.foot);
+    if(!fitLocks.mood) fitCurrent.mood = m;
+    try{ localStorage.setItem('sa_tool_fitcurrent', JSON.stringify(fitCurrent)); }catch(e){}
+    renderFit();
+  }
+  if(fitBtn){
+    fitBtn.removeEventListener('click', reroll);
+    fitBtn.addEventListener('click', reroll2);
+    if(Object.values(fitCurrent).some(Boolean)) renderFit();
+  }
+
+  /* === SPLIT venmo copy === */
+  const spCopy = document.getElementById('spCopy');
+  if(spCopy){
+    spCopy.addEventListener('click', ()=>{
+      const p = +document.getElementById('spPeople').value || 1;
+      const head = document.getElementById('spHead').textContent;
+      const text = 'Night split / '+p+' heads / '+head+' each / Venmo @your-handle';
+      navigator.clipboard && navigator.clipboard.writeText(text).then(()=>{
+        spCopy.textContent = 'COPIED';
+        spCopy.classList.add('copied');
+        setTimeout(()=>{ spCopy.textContent='COPY VENMO FORMAT'; spCopy.classList.remove('copied'); },1600);
+      });
+    });
+  }
+
+  /* === TIMELINE drag handles === */
+  (function(){
+    const bar = document.getElementById('tlBar');
+    if(!bar) return;
+    let dragging = null;
+    bar.addEventListener('mousedown', (e)=>{
+      const peak = bar.querySelector('.tl-peak');
+      if(!peak) return;
+      const rect = bar.getBoundingClientRect();
+      const x = ((e.clientX - rect.left)/rect.width)*100;
+      const pl = parseFloat(peak.style.left);
+      const pw = parseFloat(peak.style.width);
+      if(Math.abs(x - pl) < 3) dragging = 'a';
+      else if(Math.abs(x - (pl+pw)) < 3) dragging = 'b';
+      else if(x > pl && x < pl+pw) dragging = 'm';
+    });
+    document.addEventListener('mousemove', (e)=>{
+      if(!dragging) return;
+      const rect = bar.getBoundingClientRect();
+      const x = Math.max(0, Math.min(100, ((e.clientX - rect.left)/rect.width)*100));
+      const s = toMin(document.getElementById('tlStart').value);
+      let end = toMin(document.getElementById('tlEnd').value);
+      if(end<=s) end+=1440;
+      const span = end-s;
+      const mins = Math.round(s + (x/100)*span);
+      const pa = toMin(document.getElementById('tlPeakA').value);
+      const pb = toMin(document.getElementById('tlPeakB').value);
+      if(dragging==='a'){ document.getElementById('tlPeakA').value = fromMin(mins); }
+      else if(dragging==='b'){ document.getElementById('tlPeakB').value = fromMin(mins); }
+      renderTL();
+    });
+    document.addEventListener('mouseup', ()=>{ dragging = null; });
+  })();
+
+  /* === GENRE GUESS === */
+  (function(){
+    const prompts = [
+      {bpm:124, desc:'Four-on-the-floor, warm Rhodes pad, soulful vocal chop', g:'House'},
+      {bpm:126, desc:'Bouncy off-beat hats, deep rolling bass, no synth pad', g:'Tech-House'},
+      {bpm:128, desc:'Driving sub kick, metallic stab, no melody, industrial reverb', g:'Techno'},
+      {bpm:138, desc:'Acid line on a 303, four-on-the-floor, euphoric pad swell at 16 bars', g:'Trance'},
+      {bpm:174, desc:'Two-step amen break, sub bass wobble, pitched vocal stab', g:'DnB'},
+      {bpm:200, desc:'Distorted kick, hoover stab, no swing, breakdown into 909 fills', g:'Hardcore'},
+      {bpm:122, desc:'Disco loop, filtered string sample, conga percussion layer', g:'House'},
+      {bpm:130, desc:'Punchy kick, jacking percussion, vocal one-shot every two bars', g:'Tech-House'},
+      {bpm:135, desc:'Modular sequence, no melody, industrial hi-hat, 16-bar build', g:'Techno'},
+      {bpm:140, desc:'Long airy pad, supersaw lead, four-on-the-floor, anthemic build', g:'Trance'},
+      {bpm:170, desc:'Liquid pad, female vocal chops, smooth Reece bass, jazzy chords', g:'DnB'},
+      {bpm:190, desc:'Gabber kick, no swing, screaming distortion, hoover stab', g:'Hardcore'},
+      {bpm:125, desc:'Deep house chords, soulful vocal, congas on the off-beat', g:'House'},
+      {bpm:127, desc:'Minimal percussion, rolling sub, dubby chord stab every 8 bars', g:'Tech-House'},
+      {bpm:132, desc:'Punishing kick, no melody, white noise sweeps, hypnotic loop', g:'Techno'},
+      {bpm:142, desc:'Uplifting arp, breakdown with piano, supersaw climax at the drop', g:'Trance'},
+      {bpm:172, desc:'Half-time drum pattern, Reece bass, sparse pad, garage swing', g:'DnB'},
+      {bpm:175, desc:'Neurofunk bass design, mechanical percussion, no vocal', g:'DnB'},
+      {bpm:128, desc:'Garage swing, 2-step kick pattern, female vocal chops', g:'Tech-House'},
+      {bpm:138, desc:'Driving warehouse kick, raw distorted snare, no melody, no vocal', g:'Techno'},
+      {bpm:130, desc:'Pumping kick, vocal hook, big melodic drop, euphoric chord progression', g:'House'},
+      {bpm:140, desc:'Stomping techno kick, psytrance flavour, no breakdown, hypnotic', g:'Techno'},
+      {bpm:138, desc:'Layered supersaws, no kick during break, gated reverb on snare', g:'Trance'},
+      {bpm:124, desc:'Tropical percussion, marimba melody, female vocal verse', g:'House'},
+      {bpm:168, desc:'Jungle break, ragga vocal stab, sub bass, no melody', g:'DnB'},
+      {bpm:180, desc:'Distorted kick at every beat, tearing acid lead, no breakdown', g:'Hardcore'},
+      {bpm:126, desc:'Stripped tech-house groove, no chord, dry kick, percussive top', g:'Tech-House'},
+      {bpm:134, desc:'Industrial percussion, no melody, modular sequence, dry kick', g:'Techno'},
+      {bpm:140, desc:'Trance arp building over 32 bars, no kick during break, anthemic vocal', g:'Trance'},
+      {bpm:178, desc:'Liquid roller, female vocal, jazz chord stab, smooth Reece bass', g:'DnB'},
+      {bpm:128, desc:'Disco filter sweep, female vocal, four-on-the-floor, no acid', g:'House'},
+      {bpm:135, desc:'Schranz industrial techno, no melody, modular acid, painful', g:'Techno'}
+    ];
+    let round = 0, score = 0, current = null;
+    try{ const s = +localStorage.getItem('sa_tool_genre_all'); if(s) document.getElementById('gqAll').textContent = s; }catch(e){}
+    function next(){
+      current = prompts[Math.floor(Math.random()*prompts.length)];
+      document.getElementById('gqPrompt').innerHTML = current.desc + '<b class="bpm">'+current.bpm+' BPM</b>';
+      document.querySelectorAll('#gqChips .quiz-chip').forEach(c=>c.classList.remove('right','wrong'));
+      round++;
+      document.getElementById('gqRound').textContent = round;
+      if(round > 10){
+        document.getElementById('gqPrompt').innerHTML = 'Round complete. Score <b>'+score+'</b> / 10. Press start for another.';
+        try{
+          let all = +localStorage.getItem('sa_tool_genre_all') || 0;
+          all += score;
+          localStorage.setItem('sa_tool_genre_all', all);
+          document.getElementById('gqAll').textContent = all;
+        }catch(e){}
+        round = 0; score = 0;
+        document.getElementById('gqRound').textContent = 0;
+        document.getElementById('gqScore').textContent = 0;
+        current = null;
+      }
+    }
+    document.getElementById('gqStart').addEventListener('click', next);
+    document.getElementById('gqReset').addEventListener('click', ()=>{
+      try{ localStorage.removeItem('sa_tool_genre_all'); }catch(e){}
+      document.getElementById('gqAll').textContent = 0;
+    });
+    document.querySelectorAll('#gqChips .quiz-chip').forEach(c=>{
+      c.addEventListener('click', ()=>{
+        if(!current) return;
+        if(c.dataset.g === current.g){
+          c.classList.add('right'); score++;
+          document.getElementById('gqScore').textContent = score;
+        } else {
+          c.classList.add('wrong');
+          document.querySelectorAll('#gqChips .quiz-chip').forEach(cc=>{
+            if(cc.dataset.g === current.g) cc.classList.add('right');
+          });
+        }
+        current = null;
+      });
+    });
+  })();
+
+  /* === VENUE MATCH === */
+  (function(){
+    const wrap = document.getElementById('vmatchQs');
+    if(!wrap) return;
+    const qs = [
+      {k:'density', q:'Crowd density tolerance?', opts:['Empty room','Comfortable','Shoulder-to-shoulder','Pressed against the booth']},
+      {k:'phone', q:'Phone policy preference?', opts:['I want my phone','Tolerated','Stickered','Banned entirely']},
+      {k:'depth', q:'Music depth?', opts:['Top 40 fine','Recognisable','Underground','Six unreleased tracks in a row']},
+      {k:'ceiling', q:'Ceiling height preference?', opts:['Low and sweaty','Mid','Cathedral','Open sky']},
+      {k:'after', q:'Afters appetite?', opts:['Bed by 4','Until sunrise','24 hours','I have not slept in three days']}
+    ];
+    const ans = {};
+    const venues = [
+      {name:'Berghain', city:'Berlin', tags:'phone3 density3 depth3 ceiling2 after2', why:'High density, stickered phones, three-room depth, marathon afters built into the room.'},
+      {name:'Tresor', city:'Berlin', tags:'phone2 density2 depth3 ceiling0 after2', why:'Low-ceiling industrial techno crucible. Sweaty in the best way.'},
+      {name:'Bassiani', city:'Tbilisi', tags:'phone3 density3 depth3 ceiling2 after2', why:'Underground pool basement. Phones away by policy, depth by booking.'},
+      {name:'FOLD', city:'London', tags:'phone3 density2 depth3 ceiling1 after1', why:'No-photo policy, intimate Canning Town warehouse, deep bookings.'},
+      {name:'The Cause', city:'London', tags:'phone1 density2 depth2 ceiling2 after2', why:'High-ceiling warehouse, UKG and bass, robust afters culture.'},
+      {name:'Public Records', city:'New York', tags:'phone1 density1 depth2 ceiling1 after0', why:'Audiophile bar, mid density, sound-first programming, polite bedtime.'},
+      {name:'Sala Bizarro', city:'Mexico City', tags:'phone1 density3 depth2 ceiling0 after2', why:'Basement plus rooftop. Hot, loud, sky-open afters.'},
+      {name:'Khidi', city:'Tbilisi', tags:'phone3 density3 depth3 ceiling1 after2', why:'Hard techno, long sets, underpass afters when nobody is watching.'},
+      {name:'Liminal Bay', city:'Tokyo', tags:'phone2 density1 depth2 ceiling1 after0', why:'Polite density, deep selectors, 04:00 closing by law.'},
+      {name:'Warehouse 19', city:'Melbourne', tags:'phone1 density2 depth2 ceiling3 after1', why:'High-ceiling warehouse takeover, big room sound, sunrise outdoor stage.'}
+    ];
+    function render(){
+      wrap.innerHTML = qs.map(q=>{
+        return '<div class="vmatch-q"><div class="qt">'+q.k+'</div><div class="qbody">'+q.q+'</div><div class="vmatch-opts" data-k="'+q.k+'">'+
+          q.opts.map((o,i)=>'<button class="vmatch-opt" data-v="'+i+'">'+o+'</button>').join('')+'</div></div>';
+      }).join('');
+      wrap.querySelectorAll('.vmatch-opts').forEach(row=>{
+        const k = row.dataset.k;
+        row.querySelectorAll('.vmatch-opt').forEach(b=>{
+          b.addEventListener('click', ()=>{
+            row.querySelectorAll('.vmatch-opt').forEach(x=>x.classList.remove('sel'));
+            b.classList.add('sel');
+            ans[k] = +b.dataset.v;
+            try{ localStorage.setItem('sa_tool_vmatch', JSON.stringify(ans)); }catch(e){}
+            if(Object.keys(ans).length === qs.length) score();
+          });
+        });
+      });
+      try{
+        const s = JSON.parse(localStorage.getItem('sa_tool_vmatch')||'null');
+        if(s){
+          Object.assign(ans, s);
+          Object.entries(s).forEach(([k,v])=>{
+            const row = wrap.querySelector('[data-k="'+k+'"]');
+            if(row){ const b = row.querySelector('[data-v="'+v+'"]'); if(b) b.classList.add('sel'); }
+          });
+          if(Object.keys(ans).length === qs.length) score();
+        }
+      }catch(e){}
+    }
+    function score(){
+      let best = null, bestScore = -1;
+      venues.forEach(v=>{
+        const t = {}; v.tags.split(' ').forEach(p=>{ t[p.replace(/\d+$/,'')] = +p.match(/\d+$/)[0]; });
+        let s = 0;
+        Object.entries(ans).forEach(([k,val])=>{
+          if(t[k] != null) s -= Math.abs(t[k] - val);
+        });
+        if(s > bestScore){ bestScore = s; best = v; }
+      });
+      const out = document.getElementById('vmatchResult');
+      out.innerHTML = '<div class="vmatch-result"><h4>You belong at: '+best.name+' / '+best.city+'</h4><p>'+best.why+'</p></div>';
+    }
+    render();
+  })();
+
+  /* === PRE-NIGHT CHECKLIST === */
+  (function(){
+    const items = ['ID','Cash','Earplugs','Water','Phone charged','Transit pass','Emergency contact','Layers','Comfortable shoes','Keys','Hand sanitiser','Door code or ticket'];
+    const grid = document.getElementById('checkGrid');
+    if(!grid) return;
+    let state = {};
+    try{ state = JSON.parse(localStorage.getItem('sa_tool_check')||'{}'); }catch(e){}
+    function render(){
+      grid.innerHTML = items.map((it,i)=>{
+        const on = state[i] ? 'done' : '';
+        return '<label class="check-item '+on+'" data-i="'+i+'"><input type="checkbox" '+(state[i]?'checked':'')+'> '+it+'</label>';
+      }).join('');
+      grid.querySelectorAll('.check-item').forEach(el=>{
+        el.addEventListener('click', (e)=>{
+          if(e.target.tagName !== 'INPUT'){ e.preventDefault(); const cb = el.querySelector('input'); cb.checked = !cb.checked; }
+          const i = +el.dataset.i;
+          state[i] = el.querySelector('input').checked;
+          try{ localStorage.setItem('sa_tool_check', JSON.stringify(state)); }catch(e){}
+          el.classList.toggle('done', state[i]);
+          if(state[i]){
+            const ping = document.createElement('span');
+            ping.className = 'check-ping';
+            const r = el.getBoundingClientRect();
+            ping.style.left = (r.left + r.width - 18) + 'px';
+            ping.style.top = (r.top + r.height/2) + 'px';
+            ping.style.position = 'fixed';
+            document.body.appendChild(ping);
+            setTimeout(()=>ping.remove(), 700);
+          }
+          const done = Object.values(state).filter(Boolean).length;
+          document.getElementById('checkReady').classList.toggle('on', done >= items.length);
+        });
+      });
+      const done = Object.values(state).filter(Boolean).length;
+      document.getElementById('checkReady').classList.toggle('on', done >= items.length);
+    }
+    document.getElementById('checkClear').addEventListener('click', ()=>{
+      state = {}; try{ localStorage.removeItem('sa_tool_check'); }catch(e){}
+      render();
+    });
+    render();
+  })();
+
+  /* === NEAREST RAVE TONIGHT === */
+  (function(){
+    const cityData = {
+      'Berlin':[{n:'Säule Sunday Tea',v:'Berghain Säule',t:'23:00',d:'Tonight',mins:18,mode:'cab'},{n:'Tresor Globus',v:'Tresor Mitte',t:'23:30',d:'Tonight',mins:9,mode:'walk'},{n:'Klubnacht Floor',v:'About Blank',t:'00:00',d:'Tonight',mins:22,mode:'cab'}],
+      'London':[{n:'FOLD Saturday',v:'FOLD Canning Town',t:'22:00',d:'Tonight',mins:34,mode:'cab'},{n:'The Cause Afters',v:'Tottenham',t:'02:00',d:'Tonight',mins:18,mode:'cab'},{n:'Corsica Late',v:'Corsica Studios',t:'23:00',d:'Tonight',mins:12,mode:'walk'}],
+      'New York':[{n:'Basement BK',v:'Basement Brooklyn',t:'23:00',d:'Tonight',mins:24,mode:'cab'},{n:'Public Records',v:'Gowanus',t:'22:00',d:'Tonight',mins:16,mode:'walk'},{n:'Nowadays Nonstop',v:'Ridgewood',t:'00:00',d:'Tonight',mins:28,mode:'cab'}],
+      'Mexico City':[{n:'Sala Bizarro Basement',v:'Roma Norte',t:'23:00',d:'Tonight',mins:14,mode:'walk'},{n:'La Trinchera Opening',v:'Roma Norte',t:'22:30',d:'Tonight',mins:11,mode:'walk'},{n:'Yu Yu Rooftop',v:'Juarez',t:'21:00',d:'Tonight',mins:22,mode:'cab'}],
+      'Tbilisi':[{n:'Bassiani All-Night',v:'Dinamo Stadium',t:'00:00',d:'Tonight',mins:17,mode:'cab'},{n:'Khidi Underpass',v:'Vakhushti Bridge',t:'01:00',d:'Tonight',mins:12,mode:'walk'},{n:'Mtkvarze Floor',v:'Old Tbilisi',t:'23:00',d:'Tonight',mins:9,mode:'walk'}],
+      'Tokyo':[{n:'Liminal Bay Preview',v:'Shibuya',t:'22:00',d:'Tonight',mins:14,mode:'walk'},{n:'Vent Aoyama',v:'Aoyama',t:'23:00',d:'Tonight',mins:21,mode:'cab'},{n:'Contact Memorial',v:'Shibuya',t:'21:30',d:'Tonight',mins:10,mode:'walk'}],
+      'Melbourne':[{n:'Warehouse 19',v:'Brunswick',t:'23:00',d:'Tonight',mins:18,mode:'cab'},{n:'Sub Club Late',v:'Fitzroy',t:'22:30',d:'Tonight',mins:11,mode:'walk'},{n:'My Aeon Open Air',v:'Footscray',t:'19:00',d:'Tonight',mins:24,mode:'cab'}],
+      'Paris':[{n:'Concrete Reopening',v:'12e Arrondissement',t:'23:00',d:'Tonight',mins:20,mode:'cab'},{n:'La Station Outdoor',v:'Porte de la Chapelle',t:'22:00',d:'Tonight',mins:28,mode:'cab'},{n:'T7 Late',v:'Bagnolet',t:'00:00',d:'Tonight',mins:18,mode:'cab'}],
+      'Amsterdam':[{n:'Shelter Saturday',v:'A-Dam Tower',t:'23:00',d:'Tonight',mins:13,mode:'walk'},{n:'De School Afters',v:'West',t:'04:00',d:'Tonight',mins:18,mode:'cab'},{n:'Garage Noord',v:'Noord',t:'22:00',d:'Tonight',mins:22,mode:'cab'}],
+      'Barcelona':[{n:'Razzmatazz Late',v:'Poblenou',t:'00:30',d:'Tonight',mins:14,mode:'walk'},{n:'Nitsa Floor',v:'Apolo',t:'01:00',d:'Tonight',mins:10,mode:'walk'},{n:'Input High Fidelity',v:'Hostafrancs',t:'23:30',d:'Tonight',mins:19,mode:'cab'}],
+      'Seoul':[{n:'Faust Saturday',v:'Itaewon',t:'23:00',d:'Tonight',mins:12,mode:'walk'},{n:'Vurt Floor',v:'Hannam',t:'22:30',d:'Tonight',mins:17,mode:'cab'},{n:'Cakeshop Late',v:'Itaewon',t:'00:00',d:'Tonight',mins:14,mode:'walk'}],
+      'Sao Paulo':[{n:'D-Edge Floor',v:'Barra Funda',t:'23:00',d:'Tonight',mins:22,mode:'cab'},{n:'Mona Saturday',v:'Vila Madalena',t:'00:00',d:'Tonight',mins:18,mode:'cab'},{n:'ODD Basement',v:'Centro',t:'22:30',d:'Tonight',mins:14,mode:'walk'}]
+    };
+    function show(city){
+      const grid = document.getElementById('nearGrid');
+      const ev = cityData[city];
+      if(!ev){ grid.innerHTML=''; return; }
+      document.getElementById('nearStatus').textContent = 'Showing 3 picks near '+city.toUpperCase();
+      grid.innerHTML = ev.map(e=>{
+        const note = e.mode==='walk' ? e.mins+' min walk' : e.mins+' min cab';
+        return '<div class="near-card"><div class="nt">'+e.t+'</div><div class="nb"><h5>'+e.n+'</h5><div class="nv">'+e.v+'</div></div><div class="nw">'+note+'</div></div>';
+      }).join('');
+      try{ localStorage.setItem('sa_tool_near', city); }catch(e){}
+    }
+    document.getElementById('nearCity').addEventListener('change', (e)=>{
+      if(e.target.value) show(e.target.value);
+    });
+    document.getElementById('nearGeo').addEventListener('click', ()=>{
+      const st = document.getElementById('nearStatus');
+      if(!navigator.geolocation){ st.textContent='Geolocation unavailable. Pick a city.'; return; }
+      st.textContent='Asking the browser politely...';
+      navigator.geolocation.getCurrentPosition((pos)=>{
+        const lat = pos.coords.latitude, lng = pos.coords.longitude;
+        const map = [
+          {c:'Berlin',la:52.52,ln:13.40},{c:'London',la:51.51,ln:-0.13},{c:'New York',la:40.71,ln:-74.01},
+          {c:'Mexico City',la:19.43,ln:-99.13},{c:'Tbilisi',la:41.72,ln:44.79},{c:'Tokyo',la:35.68,ln:139.69},
+          {c:'Melbourne',la:-37.81,ln:144.96},{c:'Paris',la:48.85,ln:2.35},{c:'Amsterdam',la:52.37,ln:4.90},
+          {c:'Barcelona',la:41.39,ln:2.16},{c:'Seoul',la:37.57,ln:126.98},{c:'Sao Paulo',la:-23.55,ln:-46.63}
+        ];
+        let best = map[0], bd = 1e9;
+        map.forEach(m=>{ const d = Math.pow(m.la-lat,2)+Math.pow(m.ln-lng,2); if(d<bd){bd=d;best=m;} });
+        document.getElementById('nearCity').value = best.c;
+        show(best.c);
+      }, ()=>{ st.textContent='Permission denied. Pick a city from the dropdown.'; });
+    });
+    try{
+      const saved = localStorage.getItem('sa_tool_near');
+      if(saved && cityData[saved]){ document.getElementById('nearCity').value = saved; show(saved); }
+    }catch(e){}
+  })();
 
 })();
 </script>
