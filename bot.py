@@ -1136,8 +1136,17 @@ LANGUAGE DIRECTIVE - PERSIAN (FARSI):
 The user-visible language for this article is Persian (Farsi). Write the entire article body, headings, captions, and meta description in Persian (فارسی), using proper Persian Unicode (ی not ي for yeh, ک not ك for kaf). Audience: Iranian, Afghan-Persian, and Tajik readers, plus Kurdish-Iranian readers in the diaspora. Tone: clear, academic, evidence-based, calm. Use idiomatic Persian, not literal translation. Format dates in Solar Hijri (شمسی) calendar where natural. Brand name and proper nouns (e.g. "Agyan", "Apex Dental Journal", "Avin Dabaghchimokri", "Dr. Tofigh Sedighi") stay in their original form. The "slug" field must remain in lowercase Latin characters (ASCII), kebab-case, so URLs work in GitHub Pages. The "image_query" field stays in English (3-word Pexels search term) so the image search returns useful results. All other text fields - title, meta_description, intro, intro2, sections, conclusion, image_alt - must be in Persian.
 """
 
+    # Kanona Projects gets an editorial-arts voice directive so the prose
+    # reads like Cabana / Apartamento / Cereal rather than a generic guide.
+    kanona_section = ""
+    if site.get("id") in ("kanona-events", "kanona"):
+        kanona_section = """
+KANONA EDITORIAL VOICE - mandatory register:
+This article is for Kanona Projects, an experiential event curation journal. Write in the register of editorial arts/lifestyle magazines like Cabana, Apartamento, or Cereal: literary, sensory, restrained. Lead with a small specific image (the smell of wax, the weight of bread, the angle of late light) before any abstraction. Use long sentences sparingly and short ones for emphasis. Avoid "guide" or "tips" framing. Treat the reader as someone who already cares about the craft. Italics for emphasis are welcome; ALL-CAPS and exclamation points are not. End on an image, not a takeaway.
+"""
+
     prompt = f"""You are {site.get("persona", "an expert writer")}. Write under your own name and perspective.
-{language_section}{negative_section}
+{language_section}{kanona_section}{negative_section}
 
 Write an original, expert-level article for {site.get("domain", "")} - a publication covering {site.get("category", "")}.
 
@@ -5515,6 +5524,300 @@ def article_press(article, site, image_url, photographer, t):
     return css, body
 
 
+def article_kanona(article, site, image_url, photographer, t):
+    """Editorial arts-journal layout for Kanona Projects ONLY.
+
+    Visual signature: Cormorant Garamond throughout, full-bleed hero with
+    title bleeding off the image, gold drop-cap lede, gold hairline rule down
+    the left margin, eight-pointed star ornaments after every third paragraph,
+    a fleuron at the end of the body. Tuned to feel like Cabana / Apartamento /
+    Cereal rather than a generic blog post.
+    """
+    sections_list = article.get("sections", []) or []
+
+    # Read time off the entire body content.
+    body_text = (
+        (article.get("intro", "") or "") + " " +
+        (article.get("intro2", "") or "") + " " +
+        " ".join((s.get("content", "") or "") for s in sections_list) + " " +
+        (article.get("conclusion", "") or "")
+    )
+    words = len(re.sub(r"<[^>]+>", " ", body_text).split())
+    read_time = max(1, round(words / 220))
+
+    author_info = _resolve_author(site, article)
+    author      = author_info["name"]
+    category    = article.get("category") or site.get("category", "")
+
+    # ── Decorative SVGs ───────────────────────────────────────────────────────
+    # Eight-pointed star fleuron used both above each h2 and as the
+    # mid-paragraph break ornament.
+    star_svg = (
+        '<svg class="kn-star" viewBox="0 0 24 24" width="14" height="14" '
+        'aria-hidden="true" focusable="false">'
+        '<path d="M12 1.5 L13.2 10.8 L22.5 12 L13.2 13.2 L12 22.5 '
+        'L10.8 13.2 L1.5 12 L10.8 10.8 Z" '
+        'fill="currentColor" opacity="0.85"/>'
+        '<circle cx="12" cy="12" r="1.1" fill="currentColor"/>'
+        '</svg>'
+    )
+    # Fleur-de-lis style "fin" ornament at end of body.
+    fin_svg = (
+        '<svg class="kn-fin" viewBox="0 0 60 24" width="60" height="24" '
+        'aria-hidden="true" focusable="false">'
+        '<line x1="0"  y1="12" x2="22" y2="12" stroke="currentColor" '
+        'stroke-width="1" opacity="0.45"/>'
+        '<line x1="38" y1="12" x2="60" y2="12" stroke="currentColor" '
+        'stroke-width="1" opacity="0.45"/>'
+        '<path d="M30 4 L31.5 10.5 L38 12 L31.5 13.5 L30 20 '
+        'L28.5 13.5 L22 12 L28.5 10.5 Z" fill="currentColor"/>'
+        '</svg>'
+    )
+
+    # ── Custom sections renderer that injects an ornament every 3 <p> ────────
+    # We walk the cleaned section list (same scrub as _article_sections),
+    # split each content body on </p> boundaries, and reinsert ornaments at
+    # multiples of 3. Headings get a small star above them.
+    def _kn_render_sections(sections):
+        clean = []
+        for s in sections:
+            head = (s.get("heading") or "").strip()
+            if _COMMENT_HEADING_RE.match(head):
+                continue
+            body = _scrub_section_pollution(s.get("content", "") or "")
+            if not re.sub(r"<[^>]+>|\s", "", body):
+                continue
+            clean.append({"heading": head, "content": body})
+
+        out_parts = []
+        para_count = 0  # running paragraph counter across the whole article
+        for s in clean:
+            out_parts.append(
+                f'<div class="kn-h2-wrap"><span class="kn-h2-orn">{star_svg}'
+                f'</span><h2 class="art-h2 kn-h2">{s["heading"]}</h2></div>'
+            )
+            # Split on closing </p> so we can count paragraphs and weave in
+            # ornaments. Other block tags (h3, ul, blockquote) just pass
+            # through inside whichever chunk they fall into.
+            chunks = re.split(r"(</p>)", s["content"])
+            buf = ""
+            for ch in chunks:
+                buf += ch
+                if ch == "</p>":
+                    para_count += 1
+                    if para_count % 3 == 0:
+                        out_parts.append(f'<div>{buf}</div>')
+                        out_parts.append(
+                            f'<div class="kn-orn-row">{star_svg}</div>'
+                        )
+                        buf = ""
+            if buf.strip():
+                out_parts.append(f"<div>{buf}</div>")
+        return "\n".join(out_parts)
+
+    sections_html = _kn_render_sections(sections_list)
+
+    # ── Pull quote (mid-piece) ────────────────────────────────────────────────
+    pull_text = (article.get("meta_description") or "").strip().strip('"').strip("'")
+    if len(pull_text) > 180:
+        pull_text = pull_text[:177].rsplit(" ", 1)[0] + "..."
+    if len(sections_list) >= 3 and pull_text:
+        mid_marker = '<div class="kn-orn-row">' + star_svg + '</div>'
+        # Replace the FIRST ornament-row after the half-way point with a pull
+        # quote, so the pull quote sits naturally in the rhythm of the page.
+        half = len(sections_html) // 2
+        idx = sections_html.find(mid_marker, half)
+        if idx != -1:
+            pull_html = (
+                f'<blockquote class="kn-pull">'
+                f'<span class="kn-pull-q kn-pull-q-l">&ldquo;</span>'
+                f'{pull_text}'
+                f'<span class="kn-pull-q kn-pull-q-r">&rdquo;</span>'
+                f'</blockquote>'
+            )
+            sections_html = sections_html[:idx] + pull_html + sections_html[idx + len(mid_marker):]
+
+    intro_html  = _wrap_block(article.get("intro", ""), "p", "kn-lede")
+    intro2_html = _wrap_block(article.get("intro2", ""), "p")
+
+    # ── Hero image (full-bleed, big, fade-to-bg) ─────────────────────────────
+    img_block = ""
+    if image_url:
+        img_block = (
+            f'<figure class="kn-hero">'
+            f'  <img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager">'
+            f'  <div class="kn-hero-fade"></div>'
+            f'  <figcaption>Photograph &middot; {photographer} / Pexels</figcaption>'
+            f'</figure>'
+        )
+
+    css = f"""
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
+.kn,.kn-body,.kn-pull,.kn-concl,.kn-deck{{box-sizing:border-box;overflow-wrap:break-word;word-wrap:break-word;hyphens:auto;max-width:100%}}
+.kn{{background:{t["bg"]};color:{t["text"]};font-family:'Cormorant Garamond',Georgia,serif;position:relative}}
+.kn-hero{{position:relative;width:100%;height:60vh;min-height:420px;max-height:780px;margin:0;overflow:hidden}}
+.kn-hero img{{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92) contrast(1.02)}}
+.kn-hero-fade{{position:absolute;left:0;right:0;bottom:0;height:55%;pointer-events:none;background:linear-gradient(to bottom, transparent 0%, {t["bg"]} 95%)}}
+.kn-hero figcaption{{position:absolute;right:18px;bottom:14px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:12px;color:{t["text2"]};letter-spacing:.3px;opacity:.85;text-shadow:0 1px 6px rgba(0,0,0,.55)}}
+.kn-wrap{{max-width:680px;margin:0 auto;padding:0 28px 32px;position:relative}}
+.kn-title-block{{position:relative;margin-top:-14vh;padding-top:8px}}
+.kn-kicker{{display:flex;align-items:center;gap:14px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:13px;letter-spacing:2.4px;text-transform:uppercase;color:{t["accent"]};margin:0 0 20px;font-weight:500}}
+.kn-kicker::before{{content:'';width:34px;height:1px;background:{t["accent"]}}}
+.kn-kicker .kn-sep{{opacity:.55;font-style:normal;letter-spacing:1px;color:{t["meta"]}}}
+.kn h1{{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(38px,6.2vw,68px);line-height:1.04;letter-spacing:-.8px;color:{t["text"]};margin:0 0 26px;max-width:640px}}
+.kn h1 em,.kn h1 i{{font-style:italic;color:{t["accent"]}}}
+.kn-deck{{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-style:italic;line-height:1.5;color:{t["text2"]};margin:0 0 40px;max-width:600px;font-weight:400}}
+.kn-rail{{position:absolute;left:14px;top:32px;bottom:90px;width:1px;background:{t["accent"]};opacity:.6;pointer-events:none}}
+.kn-body{{font-size:19px;line-height:1.82;color:{t["text"]};position:relative;padding-left:18px}}
+.kn-body p{{margin:0 0 26px;color:{t["text"]};font-weight:400}}
+.kn-body p.kn-lede{{font-size:24px;line-height:1.5;color:{t["text"]};font-style:italic;margin-bottom:34px;font-weight:400}}
+.kn-body p.kn-lede::first-letter{{float:left;font-family:'Cormorant Garamond',Georgia,serif;font-style:normal;font-size:88px;font-weight:500;line-height:.82;margin:10px 14px -4px 0;color:{t["accent"]}}}
+.kn-h2-wrap{{margin:64px 0 18px;text-align:center}}
+.kn-h2-orn{{display:inline-block;color:{t["accent"]};opacity:.7;margin-bottom:10px}}
+.kn-body h2.kn-h2,.kn-body .art-h2{{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(28px,4.2vw,42px);line-height:1.2;letter-spacing:-.5px;color:{t["text"]};margin:0;text-align:center}}
+.kn-body h3,.kn-body .art-h3{{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:500;font-size:24px;color:{t["text"]};margin:36px 0 14px;letter-spacing:-.2px}}
+.kn-body h4{{font-family:'Cormorant Garamond',Georgia,serif;font-size:13px;font-weight:600;color:{t["accent"]};margin:24px 0 10px;text-transform:uppercase;letter-spacing:2.2px;font-style:normal}}
+.kn-body ul,.kn-body ol{{margin:0 0 26px 22px;color:{t["text"]}}}
+.kn-body li{{margin-bottom:10px;line-height:1.75}}
+.kn-body a{{color:{t["accent"]};text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}}
+.kn-body strong{{font-weight:600;color:{t["accent"]}}}
+.kn-body em,.kn-body i{{font-style:italic;color:{t["accent"]}}}
+.kn-body img{{width:100%;height:auto;margin:36px 0;border-radius:1px;display:block}}
+.kn-body blockquote{{border-left:2px solid {t["accent"]};padding:8px 0 8px 24px;margin:32px 0;font-style:italic;color:{t["text"]};font-size:22px;font-family:'Cormorant Garamond',Georgia,serif;line-height:1.55}}
+.kn-body code{{font-family:'SFMono-Regular',Menlo,Consolas,monospace;background:{t["bg2"]};padding:2px 7px;border-radius:2px;font-size:14px;color:{t["text"]}}}
+.kn-orn-row{{text-align:center;margin:36px 0 32px;color:{t["accent"]};opacity:.55;line-height:0}}
+.kn-orn-row svg{{display:inline-block}}
+.kn-pull{{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:32px;font-weight:400;line-height:1.32;color:{t["text"]};text-align:center;margin:54px -8px;padding:38px 12px;border:0;border-top:1px solid {t["border"]};border-bottom:1px solid {t["border"]};position:relative}}
+.kn-pull-q{{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:54px;line-height:0;color:{t["accent"]};vertical-align:-12px;font-weight:500;opacity:.85}}
+.kn-pull-q-l{{margin-right:6px}}
+.kn-pull-q-r{{margin-left:6px}}
+.kn-concl{{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;line-height:1.7;color:{t["text"]};margin-top:44px;padding-top:30px;position:relative;font-style:italic}}
+.kn-concl::before{{content:'Coda';display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:{t["accent"]};margin-bottom:14px;font-weight:600;font-style:normal}}
+.kn-concl::after{{content:'';position:absolute;top:0;left:0;width:48px;height:1px;background:{t["accent"]}}}
+.kn-concl p{{color:{t["text"]};margin-bottom:18px}}
+.kn-fin-row{{text-align:center;margin:44px 0 8px;color:{t["accent"]};opacity:.75;line-height:0}}
+.kn-fin-row svg{{display:inline-block}}
+@media(max-width:760px){{
+  .kn-hero{{height:48vh;min-height:320px}}
+  .kn-wrap{{padding:0 22px 24px}}
+  .kn-title-block{{margin-top:-10vh}}
+  .kn h1{{font-size:38px;letter-spacing:-.4px}}
+  .kn-deck{{font-size:19px}}
+  .kn-body{{font-size:18px;padding-left:14px}}
+  .kn-rail{{left:8px}}
+  .kn-body p.kn-lede{{font-size:21px}}
+  .kn-body p.kn-lede::first-letter{{font-size:66px}}
+  .kn-pull{{font-size:24px;margin:42px 0;padding:28px 8px}}
+  .kn-pull-q{{font-size:38px;vertical-align:-8px}}
+  .kn-body h2.kn-h2{{font-size:30px}}
+}}
+"""
+
+    # ── Translation <template> blocks + language-switch JS ────────────────
+    primary_lang = (site.get("language") or "en").strip() or "en"
+    translation_templates = ""
+    available_langs = article.get("available_languages") or []
+    extra_langs = [c for c in available_langs if c and c != primary_lang]
+    for code in extra_langs:
+        body_html_other = article.get(f"body_html_{code}", "")
+        if not body_html_other:
+            continue
+        title_other = article.get(f"title_{code}", article.get("title", ""))
+        meta_other  = article.get(f"meta_description_{code}", "")
+        dir_other   = "rtl" if code in ("fa", "ar", "he", "ckb", "ur", "ps") else "ltr"
+        deck_html = f'<p class="kn-deck" dir="{dir_other}">{meta_other}</p>' if meta_other else ""
+        translation_templates += (
+            f'<template data-lang="{code}" data-article-translation="1">'
+            f'<h1 dir="{dir_other}">{title_other}</h1>'
+            f'{deck_html}'
+            f'<div class="kn-body" dir="{dir_other}">{body_html_other}</div>'
+            f'</template>\n'
+        )
+
+    switcher_js = ""
+    if translation_templates:
+        primary_safe = primary_lang
+        switcher_js = """
+<script>
+(function(){
+  var ROOT = document.currentScript && document.currentScript.parentElement;
+  if (!ROOT) ROOT = document.querySelector('.kn');
+  if (!ROOT) return;
+  var PRIMARY = '__PRIMARY__';
+  var primary = {
+    title:    ROOT.querySelector('h1') ? ROOT.querySelector('h1').outerHTML : '',
+    deck:     ROOT.querySelector('.kn-deck') ? ROOT.querySelector('.kn-deck').outerHTML : '',
+    body:     ROOT.querySelector('.kn-body') ? ROOT.querySelector('.kn-body').outerHTML : ''
+  };
+  function applyLang(code){
+    if (!code) return;
+    var doc = document.documentElement;
+    if (code === PRIMARY) {
+      var h1 = ROOT.querySelector('h1'); if (h1) h1.outerHTML = primary.title;
+      var dk = ROOT.querySelector('.kn-deck'); if (dk && primary.deck) dk.outerHTML = primary.deck;
+      var bd = ROOT.querySelector('.kn-body'); if (bd) bd.outerHTML = primary.body;
+      doc.setAttribute('lang', PRIMARY);
+      doc.setAttribute('dir', (['fa','ar','he','ckb','ur','ps'].indexOf(PRIMARY) >= 0) ? 'rtl' : 'ltr');
+      return;
+    }
+    var tpl = ROOT.querySelector('template[data-lang="' + code + '"]');
+    var bd  = ROOT.querySelector('.kn-body');
+    var h1  = ROOT.querySelector('h1');
+    var dk  = ROOT.querySelector('.kn-deck');
+    if (!tpl) {
+      if (bd) bd.innerHTML = '<p style="opacity:.7;font-style:italic">Translation pending for this language.</p>';
+      return;
+    }
+    var clone = tpl.content.cloneNode(true);
+    var newH1   = clone.querySelector('h1');
+    var newDeck = clone.querySelector('.kn-deck');
+    var newBody = clone.querySelector('.kn-body');
+    if (h1 && newH1)  h1.outerHTML  = newH1.outerHTML;
+    if (dk && newDeck) dk.outerHTML  = newDeck.outerHTML;
+    if (bd && newBody) bd.outerHTML  = newBody.outerHTML;
+    doc.setAttribute('lang', code);
+    doc.setAttribute('dir', (['fa','ar','he','ckb','ur','ps'].indexOf(code) >= 0) ? 'rtl' : 'ltr');
+  }
+  document.addEventListener('i18n:change', function(e){
+    var code = (e && e.detail && e.detail.lang) || (e && e.detail) || null;
+    if (typeof code === 'string') applyLang(code);
+  });
+  document.addEventListener('change', function(e){
+    var el = e.target;
+    if (el && el.matches && el.matches('[data-i18n-switcher]')) applyLang(el.value);
+  });
+  document.addEventListener('click', function(e){
+    var el = e.target.closest && e.target.closest('[data-i18n-lang]');
+    if (el) applyLang(el.getAttribute('data-i18n-lang'));
+  });
+})();
+</script>
+""".replace("__PRIMARY__", primary_safe)
+
+    body = f"""<div class="kn">
+  {img_block}
+  <div class="kn-wrap">
+    <div class="kn-rail"></div>
+    <div class="kn-title-block">
+      <div class="kn-kicker"><span>{category}</span><span class="kn-sep">&middot;</span><span>{article.get("date","")}</span><span class="kn-sep">&middot;</span><span>{read_time} min read</span></div>
+      <h1>{article["title"]}</h1>
+      {f'<p class="kn-deck">{article.get("meta_description","")}</p>' if article.get("meta_description") else ''}
+    </div>
+    <div class="kn-body">
+      {intro_html}
+      {intro2_html}
+      {sections_html}
+      <div class="kn-concl">{article.get("conclusion","")}</div>
+      <div class="kn-fin-row">{fin_svg}</div>
+      {_sources_block(article, t)}
+    </div>
+    {translation_templates}{switcher_js}
+  </div>
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+
+    return css, body
+
+
 ARTICLE_BUILDERS = {
     # All historic layout names route to the unified press builder so the whole
     # network reads as a single publication. Keep the keys around so any stored
@@ -5527,6 +5830,7 @@ ARTICLE_BUILDERS = {
     "immersive": article_press,
     "neuro":     article_press,
     "lesson":    article_press,
+    "kanona":    article_kanona,   # artistic editorial layout for Kanona Projects
 }
 
 
