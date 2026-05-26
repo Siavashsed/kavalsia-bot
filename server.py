@@ -102,6 +102,64 @@ def config_hash():
         return jsonify({"hash": "", "mtime": 0})
 
 
+# ── Global Settings (network-config.json -> settings.*) ───────────────────────
+# Lightweight merge endpoint for top-level boolean / scalar flags that live
+# under the "settings" block. Used by the dashboard for one-shot toggles
+# (e.g. weekly Telegram ideas) so the user does not have to re-save the whole
+# Settings tab to flip a single switch. Atomic write using the same tmp + os
+# replace pattern as /api/site-settings.
+GLOBAL_SETTING_KEYS_ALLOWED = {
+    "weekly_ideas_enabled",
+}
+
+GLOBAL_SETTING_VALIDATORS = {
+    "weekly_ideas_enabled": lambda v: isinstance(v, bool),
+}
+
+
+@app.route("/api/global-settings", methods=["POST"])
+def update_global_settings():
+    body = request.get_json(silent=True) or {}
+    if not isinstance(body, dict) or not body:
+        return jsonify({"error": "body must be a non-empty object"}), 400
+
+    clean = {}
+    rejected = []
+    for k, v in body.items():
+        if k not in GLOBAL_SETTING_KEYS_ALLOWED:
+            rejected.append(k)
+            continue
+        validator = GLOBAL_SETTING_VALIDATORS.get(k)
+        if validator and not validator(v):
+            return jsonify({"error": f"Invalid value for field '{k}'"}), 400
+        clean[k] = v
+
+    if not clean:
+        return jsonify({"error": "No valid fields provided", "rejected": rejected}), 400
+
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+
+    cfg.setdefault("settings", {})
+    for k, v in clean.items():
+        cfg["settings"][k] = v
+
+    try:
+        tmp_path = CONFIG_PATH.with_suffix(".json.tmp")
+        tmp_path.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+        os.replace(str(tmp_path), str(CONFIG_PATH))
+    except Exception as e:
+        return jsonify({"error": f"Could not write network-config.json: {e}"}), 500
+
+    return jsonify({
+        "ok":       True,
+        "updated":  sorted(clean.keys()),
+        "rejected": rejected,
+    })
+
+
 # ── Secrets vault (API keys + tokens, persisted to disk) ──────────────────────
 # Stored at ~/.kavalsia/secrets.json. Never committed, never deployed. Read by
 # every browser tab that opens the dashboard so a new browser does not need to
@@ -1796,6 +1854,140 @@ def comments_fix():
         "scanned": total_scanned, "fixed": total_fixed,
         "sites": sites_report,
     })
+
+
+# ── Manual comment seeding ─────────────────────────────────────────────────────
+@app.route("/api/seed-comments", methods=["POST"])
+def seed_comments():
+    """Manually seed comments on a single article on demand.
+
+    Body: { site_id, slug, count? (default 3), token?, _api_key? }
+    Returns: { ok, comments_added, slug, site_id, messages:[...] }
+
+    Daily run no longer auto-seeds comments (settings.comments_auto_seed_enabled
+    defaults to false). This endpoint is the user-triggered path.
+    """
+    body = request.get_json(force=True, silent=True) or {}
+    site_id = (body.get("site_id") or "").strip()
+    slug    = (body.get("slug") or "").strip().strip("/")
+    try:
+        count = int(body.get("count") or 3)
+    except (TypeError, ValueError):
+        count = 3
+    count = max(1, min(count, 17))
+
+    token   = _resolve_gh_token(body)
+    api_key = (body.get("_api_key") or "").strip() or os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        try:
+            api_key = (_load_secrets_file().get("anthropicKey") or "").strip()
+        except Exception:
+            api_key = ""
+
+    if not site_id or not slug:
+        return jsonify({"error": "site_id and slug required"}), 400
+    if not token:
+        return jsonify({"error": "GitHub token required"}), 400
+    if not api_key:
+        return jsonify({"error": "Anthropic API key required"}), 401
+
+    # Resolve the site config from network-config.json
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+    site = next((s for s in (cfg.get("sites") or []) if s.get("id") == site_id), None)
+    if not site:
+        return jsonify({"error": f"site_id '{site_id}' not found"}), 404
+    repo = (site.get("repo") or "").strip()
+    if not repo or "YOUR_" in repo:
+        return jsonify({"error": f"site '{site_id}' has no usable repo"}), 400
+
+    # Fetch the article entry from articles.json so generate_comments has the
+    # title + intro + date_iso it expects.
+    arts, _sha, err = _load_articles_index(repo, token)
+    if err:
+        return jsonify({"error": f"articles.json: {err}"}), 502
+    article = next((a for a in arts if (a.get("slug") or "").strip("/") == slug), None)
+    if not article:
+        return jsonify({"error": f"article '{slug}' not found in {repo}"}), 404
+
+    # Ensure comment generation is allowed on the article (manual override:
+    # the dashboard explicitly asked for it, so we ignore comments_disabled at
+    # the article level but still honor the site's per-site enable flag if it
+    # was deliberately turned off). The site flag default is treated as True
+    # for the manual path - if a user clicked the button they want comments.
+    article = dict(article)  # don't mutate the index
+    article.setdefault("intro", article.get("meta_description", ""))
+    article.pop("comments_disabled", None)
+    # Force-enable the per-site schedule for this single call so generate_comments
+    # doesn't short-circuit on sites that have it disabled by default.
+    cs_orig = site.get("comment_schedule")
+    site = dict(site)
+    site["comment_schedule"] = dict(cs_orig or {})
+    site["comment_schedule"]["enabled"] = True
+
+    # Lazy import bot.py (large module, only loaded when this endpoint is hit).
+    import sys as _sys
+    if str(BASE_DIR) not in _sys.path:
+        _sys.path.insert(0, str(BASE_DIR))
+    try:
+        import bot as _bot
+        import anthropic as _ant
+    except Exception as e:
+        return jsonify({"error": f"could not import bot/anthropic: {e}"}), 500
+
+    messages = []
+    try:
+        client = _ant.Anthropic(api_key=api_key)
+        # Generate comments via the bot's existing logic.
+        comments = _bot.generate_comments(article, site, client, count=count) or []
+        if not comments:
+            return jsonify({"ok": True, "comments_added": 0, "site_id": site_id, "slug": slug,
+                            "messages": ["generate_comments returned empty"]}), 200
+        # Merge with any existing comments.json so a second click adds more
+        # rather than overwriting the first batch.
+        import base64 as _b64
+        url = f"https://api.github.com/repos/{repo}/contents/{slug}/comments.json"
+        cr  = requests.get(url, headers=_gh_headers(token), timeout=15)
+        existing = []
+        existing_sha = None
+        if cr.status_code == 200:
+            try:
+                cdata = cr.json()
+                existing_sha = cdata.get("sha")
+                existing = json.loads(_b64.b64decode(cdata["content"]).decode("utf-8"))
+                if not isinstance(existing, list):
+                    existing = []
+            except Exception:
+                existing = []
+        merged = (existing or []) + comments
+        # Stable sort by date_iso for tidy rendering.
+        merged.sort(key=lambda x: x.get("date_iso", ""))
+
+        payload = {
+            "message": f"Seed comments (+{len(comments)}): {article.get('title','')[:50]}",
+            "content": _b64.b64encode(json.dumps(merged, indent=2).encode("utf-8")).decode(),
+        }
+        if existing_sha:
+            payload["sha"] = existing_sha
+        pr = requests.put(url, headers=_gh_headers(token), json=payload, timeout=20)
+        if pr.status_code not in (200, 201):
+            return jsonify({"error": f"github push http {pr.status_code}: {pr.text[:200]}"}), 502
+        messages.append(f"merged {len(existing)} existing + {len(comments)} new = {len(merged)} total")
+    except Exception as e:
+        import traceback as _tb
+        return jsonify({"error": f"seed failed: {e}", "trace": _tb.format_exc()[-800:]}), 500
+
+    return jsonify({
+        "ok":             True,
+        "site_id":        site_id,
+        "slug":           slug,
+        "comments_added": len(comments),
+        "total":          len(merged),
+        "messages":       messages,
+    })
+
 
 # ── Article delete (removes from articles.json + deletes slug folder contents) ─
 @app.route("/api/article-delete", methods=["POST"])
