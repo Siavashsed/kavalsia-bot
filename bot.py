@@ -16,6 +16,8 @@ Environment variables (GitHub Secrets or .env):
 """
 
 import os, re, json, time, random, base64, sys
+import threading
+import concurrent.futures
 import requests
 import anthropic
 from datetime import datetime, timedelta
@@ -776,7 +778,7 @@ SITE_THEMES = {
         "font":"'Vazirmatn',system-ui,sans-serif",
         "heading_font":"'Estedad','Vazirmatn',serif",
     },
-    "risheh": {
+    "apex": {
         "bg":"#fdfcf8","bg2":"#fafaf7","bg3":"#ffffff",
         "text":"#1a1f1e","text2":"#5a6c66",
         "accent":"#0f6e6c","accent2":"#0a4f4d",
@@ -1131,7 +1133,7 @@ Use descriptive anchor text matching the linked article's angle. Only link when 
     if site.get("language") == "fa":
         language_section = """
 LANGUAGE DIRECTIVE - PERSIAN (FARSI):
-The user-visible language for this article is Persian (Farsi). Write the entire article body, headings, captions, and meta description in Persian (فارسی), using proper Persian Unicode (ی not ي for yeh, ک not ك for kaf). Audience: Iranian, Afghan-Persian, and Tajik readers, plus Kurdish-Iranian readers in the diaspora. Tone: clear, academic, evidence-based, calm. Use idiomatic Persian, not literal translation. Format dates in Solar Hijri (شمسی) calendar where natural. Brand name and proper nouns (e.g. "Agyan", "Risheh", "Avin Dabaghchimokri", "Dr. Tofigh Sedighi") stay in their original form. The "slug" field must remain in lowercase Latin characters (ASCII), kebab-case, so URLs work in GitHub Pages. The "image_query" field stays in English (3-word Pexels search term) so the image search returns useful results. All other text fields - title, meta_description, intro, intro2, sections, conclusion, image_alt - must be in Persian.
+The user-visible language for this article is Persian (Farsi). Write the entire article body, headings, captions, and meta description in Persian (فارسی), using proper Persian Unicode (ی not ي for yeh, ک not ك for kaf). Audience: Iranian, Afghan-Persian, and Tajik readers, plus Kurdish-Iranian readers in the diaspora. Tone: clear, academic, evidence-based, calm. Use idiomatic Persian, not literal translation. Format dates in Solar Hijri (شمسی) calendar where natural. Brand name and proper nouns (e.g. "Agyan", "Apex Dental Journal", "Avin Dabaghchimokri", "Dr. Tofigh Sedighi") stay in their original form. The "slug" field must remain in lowercase Latin characters (ASCII), kebab-case, so URLs work in GitHub Pages. The "image_query" field stays in English (3-word Pexels search term) so the image search returns useful results. All other text fields - title, meta_description, intro, intro2, sections, conclusion, image_alt - must be in Persian.
 """
 
     prompt = f"""You are {site.get("persona", "an expert writer")}. Write under your own name and perspective.
@@ -1313,7 +1315,7 @@ def _maybe_translate_article(article, site, client):
     primary_name = LANG_NAMES.get(site.get("language", ""), site.get("language", "Persian"))
     for code in targets:
         target_name = LANG_NAMES.get(code, code)
-        prompt = f"""Translate the following article from {primary_name} to {target_name}. Preserve the structure (h2/h3 headings, ordered/unordered lists, blockquotes, internal links). Translate the title, all body headings, body paragraphs, meta_description, and image alt text. Keep proper nouns intact (Agyan, Risheh, Avin Dabaghchimokri, Dr. Tofigh Sedighi, place names, citations). Use idiomatic, scholarly {target_name}, not literal word-for-word. Mark any term you cannot confidently translate with `[CHECK]` so a reviewer can verify. Return JSON with keys: title, body_html, meta_description.
+        prompt = f"""Translate the following article from {primary_name} to {target_name}. Preserve the structure (h2/h3 headings, ordered/unordered lists, blockquotes, internal links). Translate the title, all body headings, body paragraphs, meta_description, and image alt text. Keep proper nouns intact (Agyan, Apex Dental Journal, Avin Dabaghchimokri, Dr. Tofigh Sedighi, place names, citations). Use idiomatic, scholarly {target_name}, not literal word-for-word. Mark any term you cannot confidently translate with `[CHECK]` so a reviewer can verify. Return JSON with keys: title, body_html, meta_description.
 
 TITLE: {article.get("title", "")}
 
@@ -3376,60 +3378,69 @@ def _comments_section_js(t=None):
 
 def _inline_comment_block(c, t, accent, bg2, border_color, meta_color, text_color, text2_color, site_url, is_reply=False, parent_name=""):
     """Render a single comment (or reply) as schema.org-compliant HTML.
-    Used by _comments_section_inline to bake comments into the static page."""
+    Used by _comments_section_inline to bake comments into the static page.
+
+    Editorial style: typography-led header (name + date inline), no avatar
+    circle, hairline-bordered card, replies indent with a vertical accent rule,
+    likes shown as inline text ('. N likes'), author replies get a small pill
+    badge in the site's accent color, body text uses a serif treatment to
+    match the editorial article body."""
     name        = (c.get("name") or "Anonymous").replace("<", "&lt;").replace(">", "&gt;")
     text        = (c.get("text") or "").replace("<", "&lt;").replace(">", "&gt;")
     date_iso    = c.get("date_iso", "")
     date_disp   = c.get("date_display") or date_iso
-    initials    = c.get("initials") or "".join(w[0].upper() for w in re.findall(r'\w+', name)[:2]) or "?"
-    color       = c.get("color") or accent
     likes       = int(c.get("likes", 0) or 0)
     is_author   = bool(c.get("is_author"))
     key         = c.get("id") or f"{name}_{date_iso}"
-    sz          = "30" if is_reply else "40"
-    fsz         = "11" if is_reply else "13"
-    if is_reply:
-        wrap_style = f"margin-left:44px;margin-top:10px;padding:12px 16px;background:{bg2};border-radius:10px;border-left:3px solid {accent};"
-    else:
-        wrap_style = f"padding:18px 0;border-bottom:1px solid {border_color};"
 
+    if is_reply:
+        wrap_style = (
+            f"margin:10px 0 0 22px;padding:18px 22px;background:{bg2};"
+            f"border:1px solid {border_color};border-left:2px solid {accent};"
+            f"border-radius:0 10px 10px 0;"
+        )
+    else:
+        wrap_style = (
+            f"margin:0 0 14px;padding:22px 24px;background:transparent;"
+            f"border:1px solid {border_color};border-radius:10px;"
+        )
+
+    # Author reply pill: small badge in the site accent color
     author_badge = (
-        f'<span style="font-size:10px;font-weight:700;background:{accent}22;color:{accent};border:1px solid {accent}55;border-radius:100px;padding:1px 8px;margin-left:6px">Author</span>'
+        f'<span style="display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;'
+        f'background:{accent}1a;color:{accent};border:1px solid {accent}55;'
+        f'border-radius:100px;padding:2px 10px;margin-left:4px;line-height:1.4">Reply from {name}</span>'
         if is_author else ""
     )
 
-    # schema.org/Comment microdata. Use itemprop="author" with nested Person.
+    # schema.org/Comment microdata
     schema_type = "https://schema.org/Comment"
     itemprop = 'itemprop="parentItem"' if is_reply else 'itemprop="comment"'
-    # Author URL: use site root if author of site, else omit.
     author_block = (
         f'<span itemprop="author" itemscope itemtype="https://schema.org/Person">'
         f'<meta itemprop="name" content="{name}">'
-        f'<span style="font-size:14px;font-weight:700;color:{text_color}">{name}</span>'
+        f'<span style="font-size:14px;font-weight:600;color:{text_color};letter-spacing:-.005em">{name}</span>'
         f'</span>'
     )
 
-    heart_svg = (
-        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="' + accent +
-        '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px">'
-        '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>'
-        '</svg>'
+    likes_inline = (
+        f'<span style="font-size:12px;color:{meta_color};opacity:.85"> &middot; {likes} like{"" if likes == 1 else "s"}</span>'
+        if likes else ""
     )
 
     return (
-        f'<div {itemprop} itemscope itemtype="{schema_type}" data-key="{key}" '
-        f'style="display:flex;gap:12px;{wrap_style}">'
-        f'<div style="width:{sz}px;height:{sz}px;border-radius:50%;background:{color};display:flex;align-items:center;justify-content:center;font-size:{fsz}px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:-.5px">{initials}</div>'
-        f'<div style="flex:1;min-width:0">'
-        f'<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:6px">'
+        f'<article {itemprop} itemscope itemtype="{schema_type}" data-key="{key}" data-likes="{likes}" '
+        f'style="{wrap_style}">'
+        f'<header style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px">'
         f'{author_block}{author_badge}'
-        f'<time itemprop="dateCreated" datetime="{date_iso}" style="font-size:11px;color:{meta_color}">{date_disp}</time>'
-        f'</div>'
-        f'<p itemprop="text" style="font-size:14px;line-height:1.7;margin:0 0 10px;color:{text2_color}">{text}</p>'
-        f'<button onclick="toggleLike(\'{key}\',this)" data-likes="{likes}" '
-        f'style="background:none;border:1px solid {border_color};border-radius:100px;padding:4px 12px;cursor:pointer;font-size:12px;color:{meta_color};display:inline-flex;align-items:center;gap:2px;font-family:inherit;transition:all .15s">'
-        f'{heart_svg}<span class="lc">{likes}</span></button>'
-        f'</div></div>'
+        f'<time itemprop="dateCreated" datetime="{date_iso}" '
+        f'style="font-size:12px;color:{meta_color};opacity:.85">{date_disp}</time>'
+        f'{likes_inline}'
+        f'</header>'
+        f'<p itemprop="text" '
+        f'style="font-family:\'Lora\',Georgia,serif;font-size:15.5px;line-height:1.7;'
+        f'margin:0;color:{text2_color};max-width:56ch">{text}</p>'
+        f'</article>'
     )
 
 
@@ -3476,23 +3487,19 @@ def _comments_section_inline(article, site, comments_data, t=None):
         rendered = "".join(parts)
 
     return f"""
-<section id="comments" itemscope itemtype="https://schema.org/WebPage" data-total="{total}" style="max-width:760px;margin:64px auto 0;padding:0 24px 48px">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{accent}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    <h2 id="comments-heading" style="font-size:21px;font-weight:800;color:{text_color};margin:0;letter-spacing:-.4px">Comments ({total})</h2>
+<section id="comments" itemscope itemtype="https://schema.org/WebPage" data-total="{total}" style="max-width:760px;margin:72px auto 0;padding:0 24px 56px">
+  <div style="margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid {border_color}">
+    <h2 id="comments-heading" style="font-family:'Lora',Georgia,serif;font-size:24px;font-weight:600;color:{text_color};margin:0;letter-spacing:-.012em">Discussion <span style="font-weight:400;color:{meta_color};font-size:18px"> &middot; {total}</span></h2>
   </div>
-  <div id="comment-form" style="display:flex;gap:14px;margin-bottom:32px;scroll-margin-top:90px">
-    <div style="width:44px;height:44px;border-radius:50%;background:{accent};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;line-height:1">+</div>
-    <div style="flex:1;min-width:0;background:{bg2};border:1px solid {border_color};border-radius:16px;padding:16px 16px 12px;transition:border-color .2s" id="c-box">
-      <textarea id="c-text" placeholder="Add your thoughts to the discussion..." rows="3" style="width:100%;padding:4px 2px;border:none;font-size:15px;background:transparent;color:{text_color};outline:none;font-family:inherit;resize:vertical;min-height:62px;display:block;box-sizing:border-box" onfocus="document.getElementById('c-box').style.borderColor='{accent}'" onblur="document.getElementById('c-box').style.borderColor='{border_color}'"></textarea>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid {border_color}">
-        <input id="c-name" placeholder="Your name" style="flex:1;min-width:120px;padding:9px 13px;border:1px solid {border_color};border-radius:100px;font-size:13px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box">
-        <input id="c-email" placeholder="Email (private)" style="flex:1;min-width:120px;padding:9px 13px;border:1px solid {border_color};border-radius:100px;font-size:13px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box">
-        <button onclick="submitComment()" style="background:{accent};color:#fff;border:none;border-radius:100px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s,opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Post</button>
-      </div>
-      <div id="c-success" style="display:none;margin-top:12px;padding:9px 13px;background:{accent}18;border:1px solid {accent}44;border-radius:10px;font-size:13px;color:{accent};font-weight:600">Posted. Thanks for joining the discussion.</div>
+  <form id="comment-form" onsubmit="event.preventDefault();submitComment();" style="margin:0 0 36px;scroll-margin-top:90px">
+    <textarea id="c-text" placeholder="Share your thoughts..." rows="3" style="width:100%;padding:14px 16px;border:1px solid {border_color};border-radius:8px;font-size:15px;background:{bg};color:{text_color};outline:none;font-family:'Lora',Georgia,serif;line-height:1.6;resize:vertical;min-height:90px;box-sizing:border-box;transition:border-color .15s" onfocus="this.style.borderColor='{accent}'" onblur="this.style.borderColor='{border_color}'"></textarea>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+      <input id="c-name" placeholder="Your name" style="flex:1;min-width:140px;padding:10px 14px;border:1px solid {border_color};border-radius:8px;font-size:13.5px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box;transition:border-color .15s" onfocus="this.style.borderColor='{accent}'" onblur="this.style.borderColor='{border_color}'">
+      <input id="c-email" placeholder="Email (private)" style="flex:1;min-width:140px;padding:10px 14px;border:1px solid {border_color};border-radius:8px;font-size:13.5px;background:{bg};color:{text_color};outline:none;font-family:inherit;box-sizing:border-box;transition:border-color .15s" onfocus="this.style.borderColor='{accent}'" onblur="this.style.borderColor='{border_color}'">
+      <button type="submit" onclick="submitComment()" style="background:{accent};color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.02em;transition:opacity .15s" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Post comment</button>
     </div>
-  </div>
+    <div id="c-success" style="display:none;margin-top:12px;padding:10px 14px;background:{accent}14;border:1px solid {accent}44;border-radius:8px;font-size:13px;color:{accent};font-weight:600">Posted. Thanks for joining the discussion.</div>
+  </form>
   <div id="comments-list">{rendered}</div>
   <div id="user-comments-list"></div>
 </section>
@@ -3536,16 +3543,14 @@ def _comments_section_inline(article, site, comments_data, t=None):
   function renderUserComment(c){{
     var name=(c.name||'You').replace(/</g,'&lt;');
     var text=(c.text||'').replace(/</g,'&lt;');
-    var ini=name.split(/\\s+/).map(function(w){{return w[0];}}).join('').slice(0,2).toUpperCase()||'?';
-    return '<div style="display:flex;gap:12px;padding:18px 0;border-bottom:1px solid '+BRD+';">'+
-      '<div style="width:40px;height:40px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;letter-spacing:-.5px">'+ini+'</div>'+
-      '<div style="flex:1;min-width:0">'+
-        '<div style="display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-bottom:6px">'+
-          '<span style="font-size:14px;font-weight:700;color:'+TXT+'">'+name+'</span>'+
-          '<span style="font-size:10px;font-weight:700;background:#3b82f622;color:#3b82f6;border:1px solid #3b82f655;border-radius:100px;padding:1px 8px;margin-left:6px">You</span>'+
-          '<span style="font-size:11px;color:'+META+'">'+c.date_display+'</span></div>'+
-        '<p style="font-size:14px;line-height:1.7;margin:0;color:'+TXT2+'">'+text+'</p>'+
-      '</div></div>';
+    return '<article style="margin:0 0 14px;padding:22px 24px;background:transparent;border:1px solid '+BRD+';border-radius:10px">'+
+      '<header style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px">'+
+        '<span style="font-size:14px;font-weight:600;color:'+TXT+';letter-spacing:-.005em">'+name+'</span>'+
+        '<span style="display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;background:'+ACCENT+'1a;color:'+ACCENT+';border:1px solid '+ACCENT+'55;border-radius:100px;padding:2px 10px;margin-left:4px;line-height:1.4">You</span>'+
+        '<span style="font-size:12px;color:'+META+';opacity:.85">'+c.date_display+'</span>'+
+      '</header>'+
+      '<p style="font-family:\\'Lora\\',Georgia,serif;font-size:15.5px;line-height:1.7;margin:0;color:'+TXT2+';max-width:56ch">'+text+'</p>'+
+      '</article>';
   }}
 
   function paintLocal(){{
@@ -3597,7 +3602,8 @@ def _author_card(site, author_name, t, article=None):
     initials     = "".join(w[0].upper() for w in info["name"].split()[:2]) or "AU"
     accent       = t.get("accent", "#3ecf8e")
     author_name  = info["name"]
-    return f"""<div style="max-width:760px;margin:48px auto 0;padding:0 24px">
+    return f"""<div style="max-width:760px;margin:24px auto 60px;padding:0 24px 8px">
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["meta"]};margin-bottom:14px">About the author</div>
   <div style="border:1px solid {t["border"]};border-radius:12px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start;background:{t["bg2"]}">
     <div style="width:54px;height:54px;border-radius:50%;background:{accent};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0;letter-spacing:-1px">{initials}</div>
     <div style="flex:1">
@@ -4005,10 +4011,49 @@ def _article_section_css(t):
     )
 
 
+_COMMENT_HEADING_RE = re.compile(r'^\s*Comments\s*\(\s*\d+\s*\)\s*$', re.IGNORECASE)
+_COMMENT_POLLUTION_PATTERNS = [
+    re.compile(r'<section\b[^>]*id=["\']comments["\'][^>]*>.*?</section>', re.DOTALL | re.IGNORECASE),
+    re.compile(r'<div\b[^>]*id=["\']comments-section["\'][^>]*>.*?</script>', re.DOTALL | re.IGNORECASE),
+    re.compile(r'<div\b[^>]*id=["\']comment-form["\'][^>]*>.*?</div>\s*</div>\s*</div>', re.DOTALL | re.IGNORECASE),
+    re.compile(r'<form\b[^>]*id=["\']comment-form["\'][^>]*>.*?</form>', re.DOTALL | re.IGNORECASE),
+    re.compile(r'<div\b[^>]*id=["\']comments-list["\'][^>]*>.*?</div>', re.DOTALL | re.IGNORECASE),
+    re.compile(r'<div\b[^>]*id=["\']user-comments-list["\'][^>]*>.*?</div>', re.DOTALL | re.IGNORECASE),
+    re.compile(r'<script\b[^>]*>.*?toggleLike.*?</script>', re.DOTALL | re.IGNORECASE),
+]
+
+
+def _scrub_section_pollution(content):
+    """Remove comments-block fragments that accumulated in section bodies from
+    prior rebuild passes (form, list, toggle-like script, schema.org sections).
+    Returns the cleaned content string. A no-op when content is clean."""
+    if not content:
+        return content
+    cleaned = content
+    for pat in _COMMENT_POLLUTION_PATTERNS:
+        cleaned = pat.sub("", cleaned)
+    return cleaned
+
+
 def _article_sections(sections, t):
+    # Defensive: drop any section whose heading is a re-extracted "Comments (N)"
+    # pollutant from older rebuild passes, and scrub comment-form/list/script
+    # fragments out of legitimate section content. Both protect against the
+    # corruption that produced a 300-500px duplicate-comments gap between the
+    # article body and the author-bio card.
+    clean = []
+    for s in sections:
+        head = (s.get("heading") or "").strip()
+        if _COMMENT_HEADING_RE.match(head):
+            continue
+        body = _scrub_section_pollution(s.get("content", "") or "")
+        # If scrubbing left nothing useful (just whitespace/empty wrappers), skip.
+        if not re.sub(r'<[^>]+>|\s', '', body):
+            continue
+        clean.append({"heading": head, "content": body})
     return "\n".join(
         f'<h2 class="art-h2">{s["heading"]}</h2>\n<div>{s["content"]}</div>'
-        for s in sections
+        for s in clean
     )
 
 
@@ -5317,17 +5362,12 @@ def article_press(article, site, image_url, photographer, t):
     css = f"""
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 .ap,.ap-concl,.ap-pull,.ap-body,.ap-deck{{box-sizing:border-box;overflow-wrap:break-word;word-wrap:break-word;word-break:normal;hyphens:auto;max-width:100%}}
-.ap{{max-width:720px;margin:0 auto;padding:56px 24px 80px;font-family:'Lora',Georgia,serif}}
+.ap{{max-width:720px;margin:0 auto;padding:56px 24px 24px;font-family:'Lora',Georgia,serif}}
 .ap-kicker{{display:flex;align-items:center;gap:12px;font-family:{t["heading_font"]};font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:{t["accent"]};margin:0 0 26px}}
 .ap-kicker::before{{content:'';width:28px;height:1px;background:{t["accent"]}}}
 .ap-kicker .ap-sep{{opacity:.4;font-weight:400;letter-spacing:1px;color:{t["meta"]}}}
 .ap h1{{font-family:{t["heading_font"]};font-size:clamp(32px,5.4vw,54px);font-weight:800;line-height:1.05;letter-spacing:-.6px;color:{t["text"]};margin:0 0 22px;max-width:680px}}
 .ap-deck{{font-family:'Lora',Georgia,serif;font-size:20px;font-style:italic;line-height:1.5;color:{t["text2"]};margin:0 0 36px;max-width:620px}}
-.ap-byline{{display:flex;align-items:center;gap:14px;padding:18px 0;border-top:1px solid {t["border"]};border-bottom:1px solid {t["border"]};margin:0 0 40px;font-family:{t["heading_font"]}}}
-.ap-byline-author{{font-size:14px;font-weight:600;color:{t["text"]}}}
-.ap-byline-author strong{{font-weight:700;color:{t["text"]}}}
-.ap-byline-meta{{font-size:12.5px;color:{t["meta"]};display:flex;align-items:center;gap:8px;margin-top:3px;letter-spacing:.2px}}
-.ap-byline-meta .dot{{width:3px;height:3px;border-radius:50%;background:{t["meta"]};opacity:.6;display:inline-block}}
 .ap-hero{{margin:0 0 44px}}
 .ap-hero img{{width:100%;height:auto;max-height:560px;object-fit:cover;display:block;border-radius:2px}}
 .ap-hero figcaption{{font-family:'Lora',Georgia,serif;font-style:italic;font-size:13px;color:{t["meta"]};text-align:center;margin-top:12px}}
@@ -5352,12 +5392,12 @@ def article_press(article, site, image_url, photographer, t):
 .ap-pull{{font-family:{t["heading_font"]};font-size:28px;font-weight:600;font-style:italic;line-height:1.3;color:{t["text"]};margin:56px 0;padding:0 0 0 24px;border-left:0;position:relative}}
 .ap-pull::before{{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:{t["accent"]}}}
 .ap-pull::after{{content:'';display:block;width:48px;height:2px;background:{t["accent"]};margin-top:18px;opacity:.5}}
-.ap-concl{{font-family:'Lora',Georgia,serif;font-size:19px;line-height:1.7;color:{t["text"]};margin-top:56px;padding-top:32px;position:relative}}
+.ap-concl{{font-family:'Lora',Georgia,serif;font-size:19px;line-height:1.7;color:{t["text"]};margin-top:40px;padding-top:28px;position:relative}}
 .ap-concl::before{{content:'In closing';display:block;font-family:{t["heading_font"]};font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:{t["accent"]};margin-bottom:14px;font-weight:700;font-style:normal}}
 .ap-concl::after{{content:'';position:absolute;top:0;left:0;width:60px;height:2px;background:{t["text"]}}}
 .ap-concl p{{color:{t["text"]};margin-bottom:18px}}
 @media(max-width:760px){{
-  .ap{{padding:40px 22px 72px}}
+  .ap{{padding:40px 22px 16px}}
   .ap h1{{font-size:34px;letter-spacing:-.4px}}
   .ap-deck{{font-size:18px}}
   .ap-body{{font-size:17px}}
@@ -5461,12 +5501,6 @@ def article_press(article, site, image_url, photographer, t):
   <div class="ap-kicker"><span>{category}</span><span class="ap-sep">&middot;</span><span>{article.get("date","")}</span></div>
   <h1>{article["title"]}</h1>
   {f'<p class="ap-deck">{article.get("meta_description","")}</p>' if article.get("meta_description") else ''}
-  <div class="ap-byline">
-    <div>
-      <div class="ap-byline-author">By <strong>{author}</strong></div>
-      <div class="ap-byline-meta">{author_role}{'<span class="dot"></span>' if author_role else ''}{read_time} min read</div>
-    </div>
-  </div>
   {img_block}
   <div class="ap-body">
     {intro_html}
@@ -6282,270 +6316,322 @@ def run(topic_overrides=None, site_filter=None):
             json.dump(broadcast, f, indent=2)
         os.remove(broadcast_path)
 
-    for site in active_sites:
-        print(f"\n{'='*62}")
-        print(f"Site: {site.get('domain','?')}  [{site.get('layout','cards')} / {site.get('article_layout','standard')}]")
-        print(f"{'='*62}")
+    # Shared-state lock for the cross-site digest list. Only the per-site
+    # process_site() function below touches nexus_digest_articles concurrently.
+    _digest_lock = threading.Lock()
 
-        # Nexus / mother-site: never generates articles - it aggregates content from the network
-        if site.get("is_mother_site") or site.get("layout") == "nexus" or site.get("id") == "nexus":
-            print("  SKIPPED - Nexus is a hub site and does not generate articles")
-            continue
-
-        # Daily plan: N current posts + (optionally) 1 historical if the site has the
-        # historical_mode toggle on and is under its historical_per_week budget.
-        # HISTORICAL_BULK env (e.g. set via workflow_dispatch input) overrides the daily
-        # plan and posts N historicals per site instead - used for one-shot backfills.
-        bulk_hist = int(os.environ.get("HISTORICAL_BULK", "0") or 0)
-        # Per-pipeline kill switches set from the dashboard. new_posts_enabled
-        # defaults to True if missing; historical pipeline gated by historical_mode.
-        new_on  = site.get("new_posts_enabled", True) is not False
-        hist_on = site.get("historical_mode", False) is True
-
-        # is_historical_due() below needs the article index, so load it before
-        # the kill-switch branching. On fetch failure, skip the site rather than
-        # NameError later.
+    def process_site(site):
+        """Run the full daily pipeline for a single site.
+        Returns (site_id, ok, error_str_or_none). Safe to invoke in parallel:
+          - Anthropic Claude client is a thread-safe SDK object (shared HTTPX session).
+          - Each site pushes to its own GitHub repo, so SHA conflicts across
+            threads cannot occur. Within a site, push order is sequential.
+          - articles list is loaded fresh from GitHub inside this function.
+          - nexus_digest_articles appends are guarded by _digest_lock.
+          - settings/global_*/THEMES/SITE_THEMES are read-only after init.
+        """
+        sid = site.get("id", "?")
+        tag = f"[{sid}]"
         try:
-            articles = load_article_index(site["repo"], github_token)
-        except Exception as e:
-            print(f"  ERROR loading article index for {site['domain']}: {e}")
-            continue
+            print(f"\n{'='*62}")
+            print(f"{tag} Site: {site.get('domain','?')}  [{site.get('layout','cards')} / {site.get('article_layout','standard')}]")
+            print(f"{'='*62}")
 
-        if bulk_hist > 0:
-            # Bulk backfill ignores new_posts_enabled (it is historical-only by intent)
-            # but still requires historical_mode so a site that opted out is not bulk-fed.
-            if not hist_on:
-                print("  SKIPPED - historical pipeline OFF (historical_mode=false)")
-                continue
-            new_count = 0
-            hist_due  = True
-            posts_per_run = bulk_hist
-        else:
-            new_count = max(1, int(site.get("posts_per_day_new", site.get("posts_per_run", 1)) or 1)) if new_on else 0
-            hist_due  = hist_on and is_historical_due(site, articles)
-            posts_per_run = new_count + (1 if hist_due else 0)
-            if posts_per_run == 0:
-                print(f"  SKIPPED - both pipelines OFF (new_posts_enabled={new_on}, historical_mode={hist_on})")
-                continue
+            # Daily plan: N current posts + (optionally) 1 historical if the site has the
+            # historical_mode toggle on and is under its historical_per_week budget.
+            # HISTORICAL_BULK env (e.g. set via workflow_dispatch input) overrides the daily
+            # plan and posts N historicals per site instead - used for one-shot backfills.
+            bulk_hist = int(os.environ.get("HISTORICAL_BULK", "0") or 0)
+            # Per-pipeline kill switches set from the dashboard. new_posts_enabled
+            # defaults to True if missing; historical pipeline gated by historical_mode.
+            new_on  = site.get("new_posts_enabled", True) is not False
+            hist_on = site.get("historical_mode", False) is True
 
-        # Randomize publish time - scatter sites across a window to break cadence fingerprint
-        delay_max = int(site.get("publish_delay_max_seconds", 0))
-        if delay_max > 0:
-            delay = random.randint(0, delay_max)
-            print(f"  Publish delay: {delay}s (max {delay_max}s)")
-            time.sleep(delay)
+            # is_historical_due() below needs the article index, so load it before
+            # the kill-switch branching. On fetch failure, skip the site rather than
+            # NameError later.
+            try:
+                articles = load_article_index(site["repo"], github_token)
+            except Exception as e:
+                print(f"  {tag} ERROR loading article index for {site['domain']}: {e}")
+                return (sid, False, f"load_article_index: {e}")
 
-        try:
-            # Auto-expand topics when list is nearly exhausted
-            topics = site.get("topics", [])
-            if topics and len(articles) >= len(topics) - 2:
-                new_topics = expand_topics(site, client, 12)
-                if new_topics:
-                    site["topics"] = topics + new_topics
+            if bulk_hist > 0:
+                # Bulk backfill ignores new_posts_enabled (it is historical-only by intent)
+                # but still requires historical_mode so a site that opted out is not bulk-fed.
+                if not hist_on:
+                    print(f"  {tag} SKIPPED - historical pipeline OFF (historical_mode=false)")
+                    return (sid, True, None)
+                new_count = 0
+                hist_due  = True
+                posts_per_run = bulk_hist
+            else:
+                new_count = max(1, int(site.get("posts_per_day_new", site.get("posts_per_run", 1)) or 1)) if new_on else 0
+                hist_due  = hist_on and is_historical_due(site, articles)
+                posts_per_run = new_count + (1 if hist_due else 0)
+                if posts_per_run == 0:
+                    print(f"  {tag} SKIPPED - both pipelines OFF (new_posts_enabled={new_on}, historical_mode={hist_on})")
+                    return (sid, True, None)
 
-            # Warming check - skip if domain is too new for today's post
-            ok, warm_reason = should_post_today(site, articles)
-            if not ok:
-                print(f"  SKIPPED - {warm_reason}")
-                continue
+            # Randomize publish time - scatter sites across a window to break cadence fingerprint
+            delay_max = int(site.get("publish_delay_max_seconds", 0))
+            if delay_max > 0:
+                delay = random.randint(0, delay_max)
+                print(f"  {tag} Publish delay: {delay}s (max {delay_max}s)")
+                time.sleep(delay)
 
-            # Resolve client config once per site
-            effective_client = get_effective_client(site, global_client)
+            try:
+                # Auto-expand topics when list is nearly exhausted
+                topics = site.get("topics", [])
+                if topics and len(articles) >= len(topics) - 2:
+                    new_topics = expand_topics(site, client, 12)
+                    if new_topics:
+                        site["topics"] = topics + new_topics
 
-            # Build set of already-used image URLs for this site (dedup across runs)
-            used_image_urls = {a.get("image", "") for a in articles if a.get("image")}
+                # Warming check - skip if domain is too new for today's post
+                ok, warm_reason = should_post_today(site, articles)
+                if not ok:
+                    print(f"  {tag} SKIPPED - {warm_reason}")
+                    return (sid, True, None)
 
-            for post_num in range(posts_per_run):
-                print(f"  Post {post_num+1}/{posts_per_run}")
-                try:
-                    is_historical = hist_due and (bulk_hist > 0 or post_num == new_count)
-                    is_client_post = (not is_historical and not overrides.get(site["id"])
-                                      and is_client_post_due(len(articles), effective_client))
-                    is_roundup = (not is_historical and not is_client_post
-                                  and not overrides.get(site["id"])
-                                  and post_num == 0 and is_roundup_due(site, articles))
+                # Resolve client config once per site
+                effective_client = get_effective_client(site, global_client)
 
-                    if is_historical:
-                        hist_year, topic = historical_topic_year(site)
-                        print(f"  HISTORICAL POST ({hist_year}): {topic}")
-                    elif is_client_post:
-                        topic = generate_client_topic(site, effective_client, client)
-                        print(f"  CLIENT POST: {topic}")
-                    elif is_roundup:
-                        topic = roundup_topic(site)
-                        print(f"  WEEKLY ROUNDUP: {topic}")
-                    else:
-                        topic = overrides.get(site["id"]) or get_today_topic(site, len(articles))
-                    print(f"  Topic: {topic}")
+                # Build set of already-used image URLs for this site (dedup across runs)
+                used_image_urls = {a.get("image", "") for a in articles if a.get("image")}
 
-                    author_name = get_author_name(site, settings)
-
-                    web_context = search_web(topic, web_cfg)
-                    internal_link_candidates = get_internal_link_candidates(articles, topic)
-
-                    date_mode = site.get("date_mode", "today")
-                    if is_historical:
-                        pub_date = _random_date_in_year(hist_year)
-                    elif date_mode == "distributed":
-                        span_years = int(site.get("date_span_years", 3))
-                        days_back  = random.randint(0, span_years * 365)
-                        pub_date   = datetime.now() - timedelta(days=days_back)
-                    else:
-                        pub_date = datetime.now()
-                    article_date     = pub_date.strftime("%B %d, %Y")
-                    article_date_iso = pub_date.strftime("%Y-%m-%d")
-
-                    article = generate_article(
-                        topic, site, active_sites, client, global_prompt, author_name,
-                        client_context=effective_client if is_client_post else None,
-                        web_context=web_context,
-                        internal_links=internal_link_candidates,
-                        global_negative_prompt=global_negative_prompt,
-                    )
-                    article["date"]     = article_date
-                    article["date_iso"] = article_date_iso
-                    article["author"]   = article.get("author") or author_name
-                    if is_roundup:
-                        article["category"] = ROUNDUP_CATEGORY
-
-                    # Deduplicate slug against existing articles
-                    existing_slugs = {a.get("slug", "") for a in articles}
-                    base_slug = article["slug"]
-                    slug = base_slug
-                    suffix = 2
-                    while slug in existing_slugs:
-                        slug = f"{base_slug}-{suffix}"
-                        suffix += 1
-                    if slug != base_slug:
-                        print(f"  Slug collision on '{base_slug}' → renamed to '{slug}'")
-
-                    article["slug"] = slug  # apply deduplicated slug
-
-                    site_sources = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
-                    # Build a fallback-query chain so we never reuse the same photo
-                    # across articles in the same site. Order: primary image_query,
-                    # then the article's category, then the site category, then a
-                    # generic visual hook tied to the site theme.
-                    _primary  = article.get("image_query", site.get("category", "lifestyle"))
-                    _fallbacks = [
-                        article.get("category", ""),
-                        site.get("category", ""),
-                        site.get("image_fallback_query", ""),
-                        f"{site.get('category','')} editorial photography",
-                    ]
-                    image_url, photographer = fetch_image(
-                        _primary,
-                        pexels_key, unsplash_key=unsplash_key or None,
-                        replicate_key=replicate_key or None,
-                        sources=site_sources,
-                        exclude_urls=used_image_urls,
-                        fallback_queries=_fallbacks,
-                    )
-                    article["image"] = image_url or ""
-                    if image_url:
-                        used_image_urls.add(image_url)  # prevent reuse in subsequent posts this run
-
-                    # Generate comments BEFORE building HTML so they can be
-                    # inlined into the static page (Google-crawlable).
-                    seeded_comments = []
+                for post_num in range(posts_per_run):
+                    print(f"  {tag} Post {post_num+1}/{posts_per_run}")
                     try:
-                        if site.get("comment_schedule", {}).get("enabled", False):
-                            seeded_comments = generate_comments(article, site, client) or []
-                    except Exception as _ce:
-                        print(f"  Pre-build comment generation failed: {_ce}")
+                        is_historical = hist_due and (bulk_hist > 0 or post_num == new_count)
+                        is_client_post = (not is_historical and not overrides.get(site["id"])
+                                          and is_client_post_due(len(articles), effective_client))
+                        is_roundup = (not is_historical and not is_client_post
+                                      and not overrides.get(site["id"])
+                                      and post_num == 0 and is_roundup_due(site, articles))
 
-                    article_html = build_article_page(article, site, image_url, photographer, THEMES,
-                                                      global_header_scripts=global_header_scripts,
-                                                      global_footer_scripts=global_footer_scripts,
-                                                      comments_data=seeded_comments)
+                        if is_historical:
+                            hist_year, topic = historical_topic_year(site)
+                            print(f"  {tag} HISTORICAL POST ({hist_year}): {topic}")
+                        elif is_client_post:
+                            topic = generate_client_topic(site, effective_client, client)
+                            print(f"  {tag} CLIENT POST: {topic}")
+                        elif is_roundup:
+                            topic = roundup_topic(site)
+                            print(f"  {tag} WEEKLY ROUNDUP: {topic}")
+                        else:
+                            topic = overrides.get(site["id"]) or get_today_topic(site, len(articles))
+                        print(f"  {tag} Topic: {topic}")
 
-                    article_html = insert_internal_links(article_html, articles, site["domain"], current_slug=slug)
+                        author_name = get_author_name(site, settings)
 
-                    pushed = _retry(lambda slug=slug: github_push(
-                        repo    = site["repo"],
-                        path    = f"{slug}/index.html",
-                        content = article_html,
-                        message = f"Post: {article['title']} [{date_str}]",
-                        token   = github_token,
-                    ))
-                    print(f"  Article pushed: {pushed} → /{slug}/")
+                        web_context = search_web(topic, web_cfg)
+                        internal_link_candidates = get_internal_link_candidates(articles, topic)
 
-                    _idx_entry = {
-                        "title":            article["title"],
-                        "slug":             slug,
-                        "meta_description": article["meta_description"],
-                        "date":             article["date"],
-                        "date_iso":         article["date_iso"],
-                        "author":           article["author"],
-                        "image":            article["image"],
-                        "outbound_links":   article.get("outbound_links", []),
-                        "posted_iso":       datetime.now().strftime("%Y-%m-%d"),
-                    }
-                    if article.get("category"):
-                        _idx_entry["category"] = article["category"]
-                    if is_historical:
-                        _idx_entry["historical"] = True
-                    # Persist the list of languages this article is available in
-                    # so the dashboard knows what's been translated. Defaults to
-                    # the site's primary language when no translations were made.
-                    _avail = article.get("available_languages") or [site.get("language") or "en"]
-                    _idx_entry["available_languages"] = _avail
-                    articles.append(_idx_entry)
+                        date_mode = site.get("date_mode", "today")
+                        if is_historical:
+                            pub_date = _random_date_in_year(hist_year)
+                        elif date_mode == "distributed":
+                            span_years = int(site.get("date_span_years", 3))
+                            days_back  = random.randint(0, span_years * 365)
+                            pub_date   = datetime.now() - timedelta(days=days_back)
+                        else:
+                            pub_date = datetime.now()
+                        article_date     = pub_date.strftime("%B %d, %Y")
+                        article_date_iso = pub_date.strftime("%Y-%m-%d")
 
-                    # Each site's freshly-published daily article stays exclusive to it -
-                    # NOT auto-syndicated to mirrored destinations. Cross-site syndication
-                    # is a one-time backfill of older articles only (see sync_articles.py).
+                        article = generate_article(
+                            topic, site, active_sites, client, global_prompt, author_name,
+                            client_context=effective_client if is_client_post else None,
+                            web_context=web_context,
+                            internal_links=internal_link_candidates,
+                            global_negative_prompt=global_negative_prompt,
+                        )
+                        article["date"]     = article_date
+                        article["date_iso"] = article_date_iso
+                        article["author"]   = article.get("author") or author_name
+                        if is_roundup:
+                            article["category"] = ROUNDUP_CATEGORY
 
-                    send_newsletter(site, article, brevo_key)
-                    nexus_digest_articles.append({
-                        "site_id":          site["id"],
-                        "title":            article["title"],
-                        "slug":             slug,
-                        "meta_description": article.get("meta_description", ""),
-                    })
-                    broadcast_social(site, article, site.get("social_media", {}))
-                    ping_google_indexing(f"https://{site['domain']}/{slug}/", indexing_cfg)
-                    push_backlink_content(article, site, client, github_token, settings)
-                    push_comments(article, site, client, github_token, comments=seeded_comments)
+                        # Deduplicate slug against existing articles
+                        existing_slugs = {a.get("slug", "") for a in articles}
+                        base_slug = article["slug"]
+                        slug = base_slug
+                        suffix = 2
+                        while slug in existing_slugs:
+                            slug = f"{base_slug}-{suffix}"
+                            suffix += 1
+                        if slug != base_slug:
+                            print(f"  {tag} Slug collision on '{base_slug}' → renamed to '{slug}'")
 
-                    print(f"  Done → https://{site['domain']}/{slug}/")
+                        article["slug"] = slug  # apply deduplicated slug
 
-                except Exception as post_err:
-                    print(f"  Post {post_num+1} failed: {post_err}")
-                    import traceback; traceback.print_exc()
+                        site_sources = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
+                        # Build a fallback-query chain so we never reuse the same photo
+                        # across articles in the same site. Order: primary image_query,
+                        # then the article's category, then the site category, then a
+                        # generic visual hook tied to the site theme.
+                        _primary  = article.get("image_query", site.get("category", "lifestyle"))
+                        _fallbacks = [
+                            article.get("category", ""),
+                            site.get("category", ""),
+                            site.get("image_fallback_query", ""),
+                            f"{site.get('category','')} editorial photography",
+                        ]
+                        image_url, photographer = fetch_image(
+                            _primary,
+                            pexels_key, unsplash_key=unsplash_key or None,
+                            replicate_key=replicate_key or None,
+                            sources=site_sources,
+                            exclude_urls=used_image_urls,
+                            fallback_queries=_fallbacks,
+                        )
+                        article["image"] = image_url or ""
+                        if image_url:
+                            used_image_urls.add(image_url)  # prevent reuse in subsequent posts this run
 
-                if post_num < posts_per_run - 1:
-                    time.sleep(4)
+                        # Generate comments BEFORE building HTML so they can be
+                        # inlined into the static page (Google-crawlable).
+                        # Gated by global settings.comments_auto_seed_enabled (default
+                        # False) so the daily run is fast. Manual seeding is exposed
+                        # via the dashboard /api/seed-comments endpoint.
+                        seeded_comments = []
+                        if settings.get("comments_auto_seed_enabled", False):
+                            try:
+                                if site.get("comment_schedule", {}).get("enabled", False):
+                                    seeded_comments = generate_comments(article, site, client) or []
+                            except Exception as _ce:
+                                print(f"  {tag} Pre-build comment generation failed: {_ce}")
 
-            # Always rebuild homepage, articles index, and sitemap - even if some posts failed
-            homepage_html = build_homepage(site, articles, THEMES,
-                                          global_header_scripts=global_header_scripts,
-                                          global_footer_scripts=global_footer_scripts)
-            _retry(lambda: github_push(site["repo"], "index.html", homepage_html, f"Index update [{date_str}]", github_token))
-            _retry(lambda: github_push(site["repo"], "articles.json", json.dumps(articles, indent=2), f"Articles index [{date_str}]", github_token))
+                        article_html = build_article_page(article, site, image_url, photographer, THEMES,
+                                                          global_header_scripts=global_header_scripts,
+                                                          global_footer_scripts=global_footer_scripts,
+                                                          comments_data=seeded_comments)
 
-            # robots.txt: create once if missing, never overwrite (in case it has custom rules)
-            robots_url = f"https://api.github.com/repos/{site['repo']}/contents/robots.txt"
-            if requests.get(robots_url, headers={"Authorization": f"token {github_token}"}).status_code != 200:
-                _retry(lambda: github_push(site["repo"], "robots.txt", generate_robots_txt(site["domain"]), "Add robots.txt", github_token))
+                        article_html = insert_internal_links(article_html, articles, site["domain"], current_slug=slug)
 
-            # Sitemap: always regenerated from full article list, includes homepage
-            sitemap_xml = generate_sitemap(site, articles)
-            _retry(lambda: github_push(site["repo"], "sitemap.xml", sitemap_xml, f"Sitemap [{date_str}] ({len(articles)} URLs)", github_token))
-            print(f"  Sitemap updated → {len(articles)} article URLs + homepage")
+                        pushed = _retry(lambda slug=slug: github_push(
+                            repo    = site["repo"],
+                            path    = f"{slug}/index.html",
+                            content = article_html,
+                            message = f"Post: {article['title']} [{date_str}]",
+                            token   = github_token,
+                        ))
+                        print(f"  {tag} Article pushed: {pushed} → /{slug}/")
 
-            # Static pages (About, Contact, Privacy, ads.txt) - created once, never overwritten
-            t = SITE_THEMES.get(site.get("id"), THEMES.get(site.get("theme", "minimal"), THEMES["minimal"]))
-            push_static_pages_if_missing(site, t, github_token)
+                        _idx_entry = {
+                            "title":            article["title"],
+                            "slug":             slug,
+                            "meta_description": article["meta_description"],
+                            "date":             article["date"],
+                            "date_iso":         article["date_iso"],
+                            "author":           article["author"],
+                            "image":            article["image"],
+                            "outbound_links":   article.get("outbound_links", []),
+                            "posted_iso":       datetime.now().strftime("%Y-%m-%d"),
+                        }
+                        if article.get("category"):
+                            _idx_entry["category"] = article["category"]
+                        if is_historical:
+                            _idx_entry["historical"] = True
+                        # Persist the list of languages this article is available in
+                        # so the dashboard knows what's been translated. Defaults to
+                        # the site's primary language when no translations were made.
+                        _avail = article.get("available_languages") or [site.get("language") or "en"]
+                        _idx_entry["available_languages"] = _avail
+                        articles.append(_idx_entry)
 
-            # Scheduled comment growth - add 1-2 comments to older articles each run
-            maybe_add_scheduled_comments(site, articles, client, github_token)
+                        # Each site's freshly-published daily article stays exclusive to it -
+                        # NOT auto-syndicated to mirrored destinations. Cross-site syndication
+                        # is a one-time backfill of older articles only (see sync_articles.py).
 
-        except Exception as e:
-            print(f"  ERROR on {site['domain']}: {e}")
+                        send_newsletter(site, article, brevo_key)
+                        with _digest_lock:
+                            nexus_digest_articles.append({
+                                "site_id":          site["id"],
+                                "title":            article["title"],
+                                "slug":             slug,
+                                "meta_description": article.get("meta_description", ""),
+                            })
+                        broadcast_social(site, article, site.get("social_media", {}))
+                        ping_google_indexing(f"https://{site['domain']}/{slug}/", indexing_cfg)
+                        push_backlink_content(article, site, client, github_token, settings)
+                        if settings.get("comments_auto_seed_enabled", False):
+                            push_comments(article, site, client, github_token, comments=seeded_comments)
+
+                        print(f"  {tag} Done → https://{site['domain']}/{slug}/")
+
+                    except Exception as post_err:
+                        print(f"  {tag} Post {post_num+1} failed: {post_err}")
+                        import traceback; traceback.print_exc()
+
+                    if post_num < posts_per_run - 1:
+                        time.sleep(4)
+
+                # Always rebuild homepage, articles index, and sitemap - even if some posts failed
+                homepage_html = build_homepage(site, articles, THEMES,
+                                              global_header_scripts=global_header_scripts,
+                                              global_footer_scripts=global_footer_scripts)
+                _retry(lambda: github_push(site["repo"], "index.html", homepage_html, f"Index update [{date_str}]", github_token))
+                _retry(lambda: github_push(site["repo"], "articles.json", json.dumps(articles, indent=2), f"Articles index [{date_str}]", github_token))
+
+                # robots.txt: create once if missing, never overwrite (in case it has custom rules)
+                robots_url = f"https://api.github.com/repos/{site['repo']}/contents/robots.txt"
+                if requests.get(robots_url, headers={"Authorization": f"token {github_token}"}).status_code != 200:
+                    _retry(lambda: github_push(site["repo"], "robots.txt", generate_robots_txt(site["domain"]), "Add robots.txt", github_token))
+
+                # Sitemap: always regenerated from full article list, includes homepage
+                sitemap_xml = generate_sitemap(site, articles)
+                _retry(lambda: github_push(site["repo"], "sitemap.xml", sitemap_xml, f"Sitemap [{date_str}] ({len(articles)} URLs)", github_token))
+                print(f"  {tag} Sitemap updated → {len(articles)} article URLs + homepage")
+
+                # Static pages (About, Contact, Privacy, ads.txt) - created once, never overwritten
+                t = SITE_THEMES.get(site.get("id"), THEMES.get(site.get("theme", "minimal"), THEMES["minimal"]))
+                push_static_pages_if_missing(site, t, github_token)
+
+                # Scheduled comment growth - add 1-2 comments to older articles each run
+                if settings.get("comments_auto_seed_enabled", False):
+                    maybe_add_scheduled_comments(site, articles, client, github_token)
+
+            except Exception as e:
+                print(f"  {tag} ERROR on {site['domain']}: {e}")
+                import traceback; traceback.print_exc()
+                return (sid, False, str(e))
+
+            return (sid, True, None)
+        except Exception as outer_err:
             import traceback; traceback.print_exc()
+            return (sid, False, str(outer_err))
 
-        time.sleep(4)  # Rate-limit between sites
+    # Filter out Nexus / mother sites: they aggregate and never publish.
+    publish_sites = [
+        s for s in active_sites
+        if not (s.get("is_mother_site") or s.get("layout") == "nexus" or s.get("id") == "nexus")
+    ]
+    for s in active_sites:
+        if s.get("is_mother_site") or s.get("layout") == "nexus" or s.get("id") == "nexus":
+            print(f"  SKIPPED - {s.get('domain','?')} is a hub site and does not generate articles")
+
+    # Parallelize the per-site loop. Override via env PARALLEL_SITES.
+    # The Anthropic client + read-only globals (settings, THEMES, SITE_THEMES,
+    # overrides) are safely shared across threads. Each site pushes to its own
+    # repo so cross-thread SHA conflicts are impossible. The only mutable shared
+    # state is nexus_digest_articles, guarded by _digest_lock above.
+    max_workers = max(1, int(os.environ.get("PARALLEL_SITES", "6") or 6))
+    print(f"\nProcessing {len(publish_sites)} sites in parallel (max_workers={max_workers})")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(process_site, s): s for s in publish_sites}
+        for fut in concurrent.futures.as_completed(futures):
+            try:
+                site_id, ok, err = fut.result()
+            except Exception as e:
+                s = futures[fut]
+                print(f"  [{s.get('id','?')}] thread crashed: {e}")
+                continue
+            if ok:
+                print(f"  ✓ {site_id} done")
+            else:
+                print(f"  ✗ {site_id} failed: {err}")
 
     # Send Nexus daily digest if any articles were published today
     nexus_site = next((s for s in active_sites if s.get("id") == "nexus"), None)
