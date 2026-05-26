@@ -170,11 +170,44 @@ body::before{
 @media(max-width:600px){
   .hero-meta{gap:14px;font-size:8px;letter-spacing:1.8px;flex-wrap:wrap}
 }
-#gl{
+#gl,#gl-dots,#gl-bg{
   position:absolute;inset:0;
   width:100%;height:100%;
-  pointer-events:none;z-index:1;
+  pointer-events:none;
   transition:opacity .8s;
+}
+/* layered shader canvases inside the hero */
+#gl-bg{z-index:0;opacity:.92}     /* mesh gradient backdrop */
+#gl{z-index:1;opacity:1}          /* energy ring + accents */
+#gl-dots{z-index:2;opacity:.85}   /* orbiting dot field */
+/* static fallback shown only when WebGL/reduced motion */
+.hero-static-fallback{
+  position:absolute;inset:0;z-index:1;pointer-events:none;display:none;
+  background:
+    radial-gradient(ellipse 45% 35% at 50% 42%, rgba(196,160,93,.10) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 110%, rgba(20,14,28,.55) 0%, transparent 60%);
+}
+.no-webgl .hero-static-fallback,
+@media(prefers-reduced-motion:reduce){.hero-static-fallback{display:block}}
+
+/* section shader accent strip - thin gold-tinted GLSL accent that lives in dividers */
+.shader-accent{
+  position:relative;
+  width:100%;height:44px;
+  overflow:hidden;
+  margin:0;
+  opacity:0;
+  transition:opacity 1.2s var(--ease);
+  pointer-events:none;
+}
+.shader-accent.in{opacity:.55}
+.shader-accent canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  display:block;
+  mix-blend-mode:screen;
+}
+@media(prefers-reduced-motion:reduce){
+  .shader-accent{display:none}
 }
 .hero-vignette{
   position:absolute;inset:0;z-index:1;pointer-events:none;
@@ -984,6 +1017,32 @@ body::before{
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
   .reveal,.phi-item{opacity:1!important;transform:none!important}
 }
+
+/* CONTRAST-AUDIT v1 */
+/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
+   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+body[data-page-depth="1"] h1,
+body[data-page-depth="1"] h2,
+body[data-page-depth="1"] h3,
+body[data-page-depth="1"] .art-title,
+body[data-page-depth="1"] .article-title,
+body[data-page-depth="1"] .mag-hero h1,
+body[data-page-depth="1"] .imm-hero h1,
+body[data-page-depth="1"] article h1,
+body[data-page-depth="1"] article h2,
+body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article p,
+body[data-page-depth="1"] article li,
+body[data-page-depth="1"] .art-body p,
+body[data-page-depth="1"] .mag-body p,
+body[data-page-depth="1"] .imm-body p,
+body[data-page-depth="1"] article .intro,
+body[data-page-depth="1"] article .concl,
+body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article a,
+body[data-page-depth="1"] article p a,
+body[data-page-depth="1"] article .intro a{color:#c4a05d !important;text-decoration:underline;text-underline-offset:3px}
+/* /CONTRAST-AUDIT */
 </style>
 </head>
 <body>
@@ -1008,7 +1067,10 @@ body::before{
 <!-- HERO -->
 <section class="hero" id="hero">
   <div class="hero-backdrop" aria-hidden="true"></div>
+  <canvas id="gl-bg" aria-hidden="true"></canvas>
   <canvas id="gl" aria-hidden="true"></canvas>
+  <canvas id="gl-dots" aria-hidden="true"></canvas>
+  <div class="hero-static-fallback" aria-hidden="true"></div>
   <div class="hero-vignette" aria-hidden="true"></div>
 
   <!-- gold filigree corner frames -->
@@ -1161,6 +1223,7 @@ body::before{
 </section>
 
 <!-- ORNAMENT DIVIDER -->
+<div class="shader-accent reveal" data-shader-accent aria-hidden="true"></div>
 <div class="ornament-divider reveal" aria-hidden="true">
   <span class="od-rule"></span>
   <svg viewBox="0 0 88 22" fill="none" stroke-width="1">
@@ -1278,6 +1341,7 @@ body::before{
 </section>
 
 <!-- ORNAMENT DIVIDER -->
+<div class="shader-accent reveal" data-shader-accent aria-hidden="true"></div>
 <div class="ornament-divider reveal" aria-hidden="true">
   <span class="od-rule"></span>
   <svg viewBox="0 0 88 22" fill="none" stroke-width="1">
@@ -1372,6 +1436,9 @@ body::before{
   </div>
 </section>
 
+
+<!-- VIEW_ALL_ARTICLES_LINK -->
+<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
 <!--SHELL:FOOTER-->
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -1426,87 +1493,404 @@ if(!REDUCED&&window.matchMedia('(hover:hover)').matches){
   },{passive:true});
 }else if(orb){orb.style.display='none';}
 
-/* ── THREE.JS - calm field of light ── */
+/* ── KANONA SHADER STACK - mesh gradient + dot orbit + energy ring + GLSL accents ── */
 (function(){
-  var canvas=document.getElementById('gl');
   var hero=document.getElementById('hero');
-  if(!canvas||!hero||!window.THREE||REDUCED){if(canvas)canvas.style.opacity=0;return;}
+  var cBg=document.getElementById('gl-bg');
+  var cFg=document.getElementById('gl');
+  var cDots=document.getElementById('gl-dots');
+  if(!hero||!cBg||!cFg||!cDots||!window.THREE){
+    if(cBg)cBg.style.display='none';
+    if(cFg)cFg.style.display='none';
+    if(cDots)cDots.style.display='none';
+    document.documentElement.classList.add('no-webgl');
+    return;
+  }
+  if(REDUCED){
+    cBg.style.display='none';cFg.style.display='none';cDots.style.display='none';
+    return;
+  }
+
   var mobile=window.innerWidth<760||navigator.maxTouchPoints>0;
-  var N=mobile?34:70;
-  var scene=new THREE.Scene();
-  var W=hero.clientWidth,H=hero.clientHeight;
-  var cam=new THREE.PerspectiveCamera(60,W/H,.1,100);
-  cam.position.set(0,0,8);
-  var renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:false,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,mobile?1.25:1.6));
-  renderer.setSize(W,H);
-  renderer.setClearColor(0,0);
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  if(mobile)DPR=Math.min(DPR,1.5);
+  var DOT_COUNT=mobile?400:1200;
 
-  /* slow, sparse motes of light */
-  var geo=new THREE.BufferGeometry();
-  var pos=new Float32Array(N*3);
-  var ph=[];
-  for(var i=0;i<N;i++){
-    pos[i*3]=(Math.random()-.5)*20;
-    pos[i*3+1]=(Math.random()-.5)*13;
-    pos[i*3+2]=(Math.random()-.5)*6;
-    ph.push(Math.random()*Math.PI*2);
+  /* ─── shared mouse + scroll state ─── */
+  var mouse={x:0,y:0,nx:0,ny:0,active:false};
+  var mouseTarget={x:0,y:0};
+  var heroFade=1;
+  function updateHeroFade(){
+    heroFade=Math.max(0,1-window.scrollY/(hero.offsetHeight*.7));
+    cBg.style.opacity=(0.92*heroFade).toFixed(3);
+    cFg.style.opacity=heroFade.toFixed(3);
+    cDots.style.opacity=(0.85*heroFade).toFixed(3);
   }
-  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  var motes=new THREE.Points(geo,new THREE.PointsMaterial({
-    color:0xc4a05d,size:mobile?.05:.06,sizeAttenuation:true,
-    transparent:true,opacity:.42,
-    blending:THREE.AdditiveBlending,depthWrite:false
-  }));
-  scene.add(motes);
+  window.addEventListener('scroll',updateHeroFade,{passive:true});
 
-  /* a single slow, refined wireframe ring - the WebGL focal point */
-  var ring=new THREE.Mesh(
-    new THREE.TorusGeometry(3.2,.02,2,mobile?64:120),
-    new THREE.MeshBasicMaterial({color:0xc4a05d,transparent:true,opacity:.16,wireframe:true})
-  );
-  ring.rotation.x=1.15;
-  scene.add(ring);
-  var ring2=new THREE.Mesh(
-    new THREE.TorusGeometry(4.6,.015,2,mobile?64:120),
-    new THREE.MeshBasicMaterial({color:0xe8c890,transparent:true,opacity:.08,wireframe:true})
-  );
-  ring2.rotation.x=1.15;
-  scene.add(ring2);
-
-  function resize(){
-    W=hero.clientWidth;H=hero.clientHeight;
-    cam.aspect=W/H;cam.updateProjectionMatrix();
-    renderer.setSize(W,H);
+  if(window.matchMedia('(hover:hover)').matches){
+    hero.addEventListener('mousemove',function(e){
+      var r=hero.getBoundingClientRect();
+      mouseTarget.x=((e.clientX-r.left)/r.width)*2-1;
+      mouseTarget.y=-(((e.clientY-r.top)/r.height)*2-1);
+      mouse.active=true;
+    },{passive:true});
+    hero.addEventListener('mouseleave',function(){mouse.active=false;},{passive:true});
   }
-  window.addEventListener('resize',resize,{passive:true});
 
   var visible=true;
   new IntersectionObserver(function(e){visible=e[0].isIntersecting;},{threshold:0}).observe(hero);
   document.addEventListener('visibilitychange',function(){visible=!document.hidden;});
-  window.addEventListener('scroll',function(){
-    var f=Math.max(0,1-scrollY/(hero.offsetHeight*.6));
-    canvas.style.opacity=f;
-  },{passive:true});
 
+  /* ─────────────────────────────────────────────────────────────
+     LAYER 1: MeshGradient backdrop - fullscreen shader plane
+     gold-veined dark obsidian, ~30s loop
+     ───────────────────────────────────────────────────────────── */
+  var bgScene=new THREE.Scene();
+  var bgCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  var bgRenderer=new THREE.WebGLRenderer({canvas:cBg,alpha:true,antialias:true,powerPreference:'high-performance'});
+  bgRenderer.setPixelRatio(DPR);
+  bgRenderer.setClearColor(0x000000,0);
+
+  var meshGradientFrag=[
+    'precision mediump float;',
+    'varying vec2 vUv;',
+    'uniform float uTime;',
+    'uniform vec2 uRes;',
+    'uniform vec3 uC0;',
+    'uniform vec3 uC1;',
+    'uniform vec3 uC2;',
+    'uniform vec3 uC3;',
+    'uniform float uSpeed;',
+    /* light 2D noise */
+    'float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+    'float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);vec2 u=f*f*(3.0-2.0*f);',
+    'return mix(mix(hash(i),hash(i+vec2(1.,0.)),u.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),u.x),u.y);}',
+    'void main(){',
+    '  vec2 uv=vUv;',
+    '  float t=uTime*uSpeed;',
+    /* slow UV distortion - mesh-style warp */
+    '  vec2 q=uv;',
+    '  q.x+=0.18*sin(uv.y*2.2+t*0.9);',
+    '  q.y+=0.14*cos(uv.x*1.7+t*0.7);',
+    '  float n1=noise(q*1.4+vec2(t*0.08,-t*0.06));',
+    '  float n2=noise(q*2.6+vec2(-t*0.05,t*0.04)+12.3);',
+    '  float n3=noise(q*0.7+vec2(t*0.02,t*0.03)+44.1);',
+    /* layered blend - four colors weighted by distance + noise */
+    '  vec3 col=mix(uC0,uC1,smoothstep(0.0,1.0,n1));',
+    '  col=mix(col,uC2,smoothstep(0.35,0.85,n2));',
+    /* gold accent only in narrow vein band */
+    '  float vein=smoothstep(0.62,0.78,n3)*smoothstep(0.92,0.74,n1);',
+    '  col=mix(col,uC3,vein*0.55);',
+    /* vignette */
+    '  vec2 vUvC=uv-0.5;',
+    '  float vg=1.0-smoothstep(0.35,0.95,length(vUvC));',
+    '  col*=mix(0.45,1.0,vg);',
+    '  gl_FragColor=vec4(col,1.0);',
+    '}'
+  ].join('\n');
+  var basicVert=[
+    'varying vec2 vUv;',
+    'void main(){vUv=uv;gl_Position=vec4(position,1.0);}'
+  ].join('\n');
+
+  var bgUniforms={
+    uTime:{value:0},
+    uRes:{value:new THREE.Vector2(1,1)},
+    uSpeed:{value:1.0},
+    uC0:{value:new THREE.Color(0x050407)},
+    uC1:{value:new THREE.Color(0x0e0c12)},
+    uC2:{value:new THREE.Color(0x2a1f10)},
+    uC3:{value:new THREE.Color(0xc4a05d)}
+  };
+  var bgMat=new THREE.ShaderMaterial({
+    uniforms:bgUniforms,
+    vertexShader:basicVert,
+    fragmentShader:meshGradientFrag,
+    depthTest:false,
+    depthWrite:false
+  });
+  var bgMesh=new THREE.Mesh(new THREE.PlaneGeometry(2,2),bgMat);
+  bgScene.add(bgMesh);
+
+  /* ─────────────────────────────────────────────────────────────
+     LAYER 2 & 3: Foreground 3D scene - energy ring + camera
+     ───────────────────────────────────────────────────────────── */
+  var fgScene=new THREE.Scene();
+  var W=hero.clientWidth,H=hero.clientHeight;
+  var fgCam=new THREE.PerspectiveCamera(55,W/H,.1,100);
+  fgCam.position.set(0,0,8);
+  var fgRenderer=new THREE.WebGLRenderer({canvas:cFg,alpha:true,antialias:true,powerPreference:'high-performance'});
+  fgRenderer.setPixelRatio(DPR);
+  fgRenderer.setClearColor(0x000000,0);
+
+  /* energy ring - hairline gold, slow 3D rotation, opacity pulse */
+  var ringMat=new THREE.MeshBasicMaterial({
+    color:0xc4a05d,transparent:true,opacity:.45,
+    side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false
+  });
+  var ringMatInner=new THREE.MeshBasicMaterial({
+    color:0xe8c890,transparent:true,opacity:.18,
+    side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false
+  });
+  var energyRing=new THREE.Mesh(new THREE.RingGeometry(2.6,2.62,mobile?96:180,1),ringMat);
+  var energyRingInner=new THREE.Mesh(new THREE.RingGeometry(3.4,3.41,mobile?96:180,1),ringMatInner);
+  energyRing.position.z=-2;
+  energyRingInner.position.z=-2;
+  fgScene.add(energyRing);
+  fgScene.add(energyRingInner);
+
+  /* ─────────────────────────────────────────────────────────────
+     LAYER 3 (cont): Dot orbit field as THREE.Points on its own canvas
+     each dot orbits a randomized center, mouse proximity pushes outward
+     ───────────────────────────────────────────────────────────── */
+  var dotScene=new THREE.Scene();
+  var dotCam=new THREE.PerspectiveCamera(55,W/H,.1,100);
+  dotCam.position.set(0,0,8);
+  var dotRenderer=new THREE.WebGLRenderer({canvas:cDots,alpha:true,antialias:true,powerPreference:'high-performance'});
+  dotRenderer.setPixelRatio(DPR);
+  dotRenderer.setClearColor(0x000000,0);
+
+  var dotPositions=new Float32Array(DOT_COUNT*3);
+  /* per-dot: cx,cy,cz,radius,speed,phase  (stored in parallel typed arrays) */
+  var dotCx=new Float32Array(DOT_COUNT);
+  var dotCy=new Float32Array(DOT_COUNT);
+  var dotCz=new Float32Array(DOT_COUNT);
+  var dotR=new Float32Array(DOT_COUNT);
+  var dotSpd=new Float32Array(DOT_COUNT);
+  var dotPh=new Float32Array(DOT_COUNT);
+  for(var i=0;i<DOT_COUNT;i++){
+    dotCx[i]=(Math.random()-0.5)*16;
+    dotCy[i]=(Math.random()-0.5)*10;
+    dotCz[i]=(Math.random()-0.5)*4-1;
+    dotR[i]=0.05+Math.random()*0.5;
+    dotSpd[i]=0.15+Math.random()*0.45;
+    dotPh[i]=Math.random()*Math.PI*2;
+    dotPositions[i*3]=dotCx[i];
+    dotPositions[i*3+1]=dotCy[i];
+    dotPositions[i*3+2]=dotCz[i];
+  }
+  var dotGeo=new THREE.BufferGeometry();
+  dotGeo.setAttribute('position',new THREE.BufferAttribute(dotPositions,3));
+  var dotMat=new THREE.PointsMaterial({
+    color:0xc4a05d,
+    size:mobile?0.025:0.022,
+    sizeAttenuation:true,
+    transparent:true,
+    opacity:0.55,
+    blending:THREE.AdditiveBlending,
+    depthWrite:false
+  });
+  var dots=new THREE.Points(dotGeo,dotMat);
+  dotScene.add(dots);
+
+  /* secondary cream halo dot pass for orbit-color hint */
+  var dotHaloMat=new THREE.PointsMaterial({
+    color:0xede9e2,
+    size:mobile?0.06:0.055,
+    sizeAttenuation:true,
+    transparent:true,
+    opacity:0.04,
+    blending:THREE.AdditiveBlending,
+    depthWrite:false
+  });
+  var dotsHalo=new THREE.Points(dotGeo,dotHaloMat);
+  dotScene.add(dotsHalo);
+
+  /* ─────────────────────────────────────────────────────────────
+     resize handling shared across all three renderers
+     ───────────────────────────────────────────────────────────── */
+  function resize(){
+    W=hero.clientWidth;H=hero.clientHeight;
+    bgRenderer.setSize(W,H,false);
+    fgRenderer.setSize(W,H,false);
+    dotRenderer.setSize(W,H,false);
+    fgCam.aspect=W/H;fgCam.updateProjectionMatrix();
+    dotCam.aspect=W/H;dotCam.updateProjectionMatrix();
+    bgUniforms.uRes.value.set(W,H);
+  }
+  resize();
+  window.addEventListener('resize',resize,{passive:true});
+  updateHeroFade();
+
+  /* ─────────────────────────────────────────────────────────────
+     main animation loop
+     ───────────────────────────────────────────────────────────── */
   var t=0;
+  var clock=performance.now();
   (function loop(){
     requestAnimationFrame(loop);
     if(!visible)return;
-    t+=.0045;
-    var a=geo.attributes.position.array;
-    for(var j=0;j<N;j++){
-      a[j*3+1]+=.0016+Math.sin(t+ph[j])*.0004;
-      if(a[j*3+1]>6.8){a[j*3+1]=-6.8;a[j*3]=(Math.random()-.5)*20;}
+    var now=performance.now();
+    var dt=Math.min(0.05,(now-clock)/1000);
+    clock=now;
+    /* hero fade slows the time uniform - the scene seems to settle as you scroll */
+    var speedFactor=0.35+0.65*heroFade;
+    t+=dt*speedFactor;
+
+    /* smooth mouse lerp */
+    mouse.x+=(mouseTarget.x-mouse.x)*0.06;
+    mouse.y+=(mouseTarget.y-mouse.y)*0.06;
+
+    /* ── background mesh gradient ── */
+    bgUniforms.uTime.value=t;
+    bgUniforms.uSpeed.value=0.22;
+    bgRenderer.render(bgScene,bgCam);
+
+    /* ── energy ring: 3D rotation + opacity pulse ── */
+    energyRing.rotation.z=t*0.18;
+    energyRing.rotation.x=1.05+Math.sin(t*0.25)*0.12;
+    energyRing.rotation.y=Math.cos(t*0.2)*0.15;
+    energyRingInner.rotation.z=-t*0.12;
+    energyRingInner.rotation.x=1.05+Math.cos(t*0.22)*0.1;
+    energyRingInner.rotation.y=-Math.sin(t*0.18)*0.18;
+    var pulse=0.3+0.4*(0.5+0.5*Math.sin(t*2.094));   /* 3s period */
+    ringMat.opacity=pulse*heroFade;
+    ringMatInner.opacity=(pulse*0.4+0.08)*heroFade;
+
+    /* camera parallax: ±2 degrees on cursor position */
+    var maxTilt=Math.PI/90*2;
+    fgCam.position.x=mouse.x*0.6;
+    fgCam.position.y=mouse.y*0.4;
+    fgCam.rotation.x=mouse.y*maxTilt;
+    fgCam.rotation.y=-mouse.x*maxTilt;
+    fgRenderer.render(fgScene,fgCam);
+
+    /* ── dot orbit + cursor proximity push ── */
+    var a=dotGeo.attributes.position.array;
+    /* convert cursor NDC to world coords at z=-1 plane */
+    var cursorWorldX=mouse.x*8.5;
+    var cursorWorldY=mouse.y*5.0;
+    /* 200px push radius in world units: tune so it feels right */
+    var pushR=mobile?1.6:2.2;
+    var pushR2=pushR*pushR;
+    for(var k=0;k<DOT_COUNT;k++){
+      var angle=t*dotSpd[k]+dotPh[k];
+      var ox=Math.cos(angle)*dotR[k];
+      var oy=Math.sin(angle*1.13)*dotR[k];
+      var px=dotCx[k]+ox;
+      var py=dotCy[k]+oy;
+      /* mouse proximity push */
+      if(mouse.active){
+        var dx=px-cursorWorldX;
+        var dy=py-cursorWorldY;
+        var d2=dx*dx+dy*dy;
+        if(d2<pushR2&&d2>0.0001){
+          var fall=1.0-(d2/pushR2);
+          var invd=1.0/Math.sqrt(d2);
+          px+=dx*invd*fall*0.6;
+          py+=dy*invd*fall*0.6;
+        }
+      }
+      a[k*3]=px;
+      a[k*3+1]=py;
+      a[k*3+2]=dotCz[k];
     }
-    geo.attributes.position.needsUpdate=true;
-    ring.rotation.z=t*.6;
-    ring2.rotation.z=-t*.4;
-    cam.position.x=Math.sin(t*.5)*.18;
-    cam.position.y=Math.cos(t*.4)*.12;
-    cam.lookAt(0,0,0);
-    renderer.render(scene,cam);
+    dotGeo.attributes.position.needsUpdate=true;
+    /* mirror camera parallax on dot field for cohesion */
+    dotCam.position.x=mouse.x*0.6;
+    dotCam.position.y=mouse.y*0.4;
+    dotCam.rotation.x=mouse.y*maxTilt;
+    dotCam.rotation.y=-mouse.x*maxTilt;
+    dotRenderer.render(dotScene,dotCam);
   })();
+})();
+
+/* ── LAYER 4: Section shader-accent strips - one small WebGL canvas per divider ── */
+(function(){
+  if(REDUCED||!window.THREE)return;
+  var strips=document.querySelectorAll('[data-shader-accent]');
+  if(!strips.length)return;
+
+  var accentFrag=[
+    'precision mediump float;',
+    'varying vec2 vUv;',
+    'uniform float uTime;',
+    'uniform float uFlash;',
+    'void main(){',
+    '  vec2 uv=vUv;',
+    /* sin/cos noise color blend - the .tsx ShaderPlane technique */
+    '  float t=uTime;',
+    '  float w=sin(uv.x*8.0+t*0.8)*cos(uv.y*14.0-t*0.6);',
+    '  float w2=sin(uv.x*3.0-t*0.4+w*1.2)*0.5+0.5;',
+    /* horizontal soft band, fades at edges */
+    '  float band=smoothstep(0.0,0.3,uv.y)*smoothstep(1.0,0.7,uv.y);',
+    '  float edgeFade=smoothstep(0.0,0.18,uv.x)*smoothstep(1.0,0.82,uv.x);',
+    '  vec3 gold=vec3(0.768,0.628,0.365);',
+    '  vec3 cream=vec3(0.929,0.913,0.886);',
+    '  vec3 col=mix(gold*0.5,cream*0.6,w2);',
+    '  float alpha=band*edgeFade*(0.25+0.45*w2);',
+    /* on-reveal flash */
+    '  alpha=mix(alpha,alpha+0.35,uFlash);',
+    '  gl_FragColor=vec4(col,alpha);',
+    '}'
+  ].join('\n');
+  var basicVert=[
+    'varying vec2 vUv;',
+    'void main(){vUv=uv;gl_Position=vec4(position,1.0);}'
+  ].join('\n');
+
+  strips.forEach(function(strip){
+    var canvas=document.createElement('canvas');
+    canvas.setAttribute('aria-hidden','true');
+    strip.appendChild(canvas);
+    var renderer,scene,cam,uni,mesh,running=false,flash=0,t=0,clock=performance.now();
+    try{
+      renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:true,powerPreference:'low-power'});
+    }catch(err){return;}
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+    renderer.setClearColor(0x000000,0);
+    scene=new THREE.Scene();
+    cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+    uni={uTime:{value:0},uFlash:{value:0}};
+    mesh=new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({
+      uniforms:uni,
+      vertexShader:basicVert,
+      fragmentShader:accentFrag,
+      transparent:true,
+      depthTest:false,
+      depthWrite:false
+    }));
+    scene.add(mesh);
+
+    function resize(){
+      var w=strip.clientWidth,h=strip.clientHeight;
+      if(w<2||h<2)return;
+      renderer.setSize(w,h,false);
+    }
+    resize();
+    window.addEventListener('resize',resize,{passive:true});
+
+    function tick(){
+      if(!running)return;
+      requestAnimationFrame(tick);
+      var now=performance.now();
+      var dt=Math.min(0.05,(now-clock)/1000);
+      clock=now;
+      t+=dt;
+      flash=Math.max(0,flash-dt*0.8);
+      uni.uTime.value=t;
+      uni.uFlash.value=flash;
+      renderer.render(scene,cam);
+    }
+
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          strip.classList.add('in');
+          if(!running){
+            running=true;
+            flash=1;
+            clock=performance.now();
+            tick();
+          }
+        }else{
+          running=false;
+        }
+      });
+    },{threshold:.1,rootMargin:'0px 0px -10px 0px'});
+    io.observe(strip);
+  });
 })();
 
 /* ── SCROLL REVEAL ── */
