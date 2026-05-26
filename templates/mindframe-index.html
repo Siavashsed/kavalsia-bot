@@ -750,6 +750,9 @@ footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;bord
 
 </main>
 
+
+<!-- VIEW_ALL_ARTICLES_LINK -->
+<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
 <!--SHELL:FOOTER-->
 <footer>
   <div class="foot-grid">
@@ -1026,7 +1029,7 @@ function scoreCRT(btn){
   const rows=[];
   CRT.forEach((q,i)=>{
     const raw = body.querySelector(`input[name="crt-${i}"]`).value.trim().toLowerCase();
-    if(!raw){rows.push([i+1,'(skipped)','—']);return}
+    if(!raw){rows.push([i+1,'(skipped)','-']);return}
     answered++;
     const v = q.text?raw:parseFloat(raw);
     const c = q.text?q.correct:q.correct;
