@@ -48,7 +48,9 @@ button,input{font-family:var(--sans)}
 .nav-mark{display:flex;align-items:center;gap:13px;margin-right:auto;flex-shrink:0}
 /* Logo mark: gold disc with a thin dark inner ring + faint outer halo so it pops on any near-black bg. */
 .nav-dh{width:38px;height:38px;border-radius:50%;background:var(--gold-grad);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:600;color:#171411;letter-spacing:.5px;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(12,11,10,.55),0 0 0 1px rgba(227,201,135,.18)}
-.nav-name{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--text);letter-spacing:.4px}
+.nav-brand{display:flex;flex-direction:column;line-height:1.15;gap:1px}
+.nav-name{font-family:var(--serif);font-size:16px;font-weight:500;color:var(--text);letter-spacing:.3px}
+.nav-tag{font-family:var(--sans, 'Inter', system-ui, sans-serif);font-size:10px;font-weight:400;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase}
 /* Wordmark accent uses the lighter cream gold for stronger separation against deep black */
 .nav-name span{color:var(--accent2)}
 .nav-links{display:flex;height:100%;align-items:center}
@@ -67,6 +69,21 @@ button,input{font-family:var(--sans)}
 .nav-mobile a:hover{color:var(--accent);background:var(--surface)}
 .nav-mobile a:last-child{border-bottom:none}
 @media(max-width:860px){.nav-links,.nav-cta{display:none}.nav-burger{display:flex}}
+/* Article-page-only sticky: keep the sticky in white so the gold logo + brand
+   name read clearly against the light article body. Homepage (depth=0) keeps
+   the original near-black nav. body[data-page-depth] is set by layout_shell.wrap_page. */
+body[data-page-depth="1"] .nav{background:#fdfbf6;border-bottom:1px solid #ece3d2}
+body[data-page-depth="1"] .nav.scrolled{background:#ffffff;border-bottom:1px solid #e3d8c2;box-shadow:0 6px 22px rgba(58,42,18,.08)}
+body[data-page-depth="1"] .nav-name{color:#1a1612}
+body[data-page-depth="1"] .nav-tag{color:#8a7e6e}
+body[data-page-depth="1"] .nav-name span{color:#9a7b3c}
+body[data-page-depth="1"] .nav-links a{color:#6f6356}
+body[data-page-depth="1"] .nav-links a:hover{color:#1a1612}
+body[data-page-depth="1"] .nav-dh{box-shadow:inset 0 0 0 1px rgba(40,30,18,.35),0 0 0 1px rgba(60,42,14,.10)}
+body[data-page-depth="1"] .nav-burger span{background:#1a1612}
+body[data-page-depth="1"] .nav-mobile{background:#fdfbf6;border-bottom:1px solid #ece3d2}
+body[data-page-depth="1"] .nav-mobile a{color:#3f3a32}
+body[data-page-depth="1"] .nav-mobile a:hover{color:#1a1612;background:#f7efe0}
 
 /* ── HERO ── */
 .hero{background:var(--bg);padding:96px 32px 104px;overflow:hidden;position:relative}
@@ -383,6 +400,32 @@ button,input{font-family:var(--sans)}
   .nl-form button{border-radius:2px}
   .footer-lower-links{flex-wrap:wrap;gap:16px}
 }
+
+/* CONTRAST-AUDIT v1 */
+/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
+   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+body[data-page-depth="1"] h1,
+body[data-page-depth="1"] h2,
+body[data-page-depth="1"] h3,
+body[data-page-depth="1"] .art-title,
+body[data-page-depth="1"] .article-title,
+body[data-page-depth="1"] .mag-hero h1,
+body[data-page-depth="1"] .imm-hero h1,
+body[data-page-depth="1"] article h1,
+body[data-page-depth="1"] article h2,
+body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article p,
+body[data-page-depth="1"] article li,
+body[data-page-depth="1"] .art-body p,
+body[data-page-depth="1"] .mag-body p,
+body[data-page-depth="1"] .imm-body p,
+body[data-page-depth="1"] article .intro,
+body[data-page-depth="1"] article .concl,
+body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article a,
+body[data-page-depth="1"] article p a,
+body[data-page-depth="1"] article .intro a{color:#c9a55c !important;text-decoration:underline;text-underline-offset:3px}
+/* /CONTRAST-AUDIT */
 </style>
 </head>
 <body>
@@ -394,7 +437,10 @@ button,input{font-family:var(--sans)}
   <div class="nav-inner">
     <a href="./" class="nav-mark">
       <div class="nav-dh">DH</div>
-      <span class="nav-name">Dalmend <span>Home</span></span>
+      <span class="nav-brand">
+        <span class="nav-name">interiors.dalmend.com</span>
+        <span class="nav-tag">Home Design &amp; Real Estate</span>
+      </span>
     </a>
     <div class="nav-links">
       <a href="./#story" class="active">The Studio</a>
@@ -857,6 +903,9 @@ button,input{font-family:var(--sans)}
 </section>
 
 <!-- FOOTER -->
+
+<!-- VIEW_ALL_ARTICLES_LINK -->
+<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
 <!--SHELL:FOOTER-->
 <footer class="footer">
   <div class="footer-upper">
