@@ -2291,6 +2291,16 @@ textarea{resize:vertical;line-height:1.6}
       <strong>Send Network Report</strong>  -  pushes a full status snapshot to your Telegram.<br>
       Commands (via <code>telegram_bot.py</code>): <code>/post all</code> · <code>/post domain.com [topic]</code> · <code>/status</code> · <code>/ideas</code> · <code>/pause domain.com</code>
     </div>
+    <div class="form-group" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text);cursor:pointer;user-select:none">
+        <input type="checkbox" id="setWeeklyIdeasEnabled" checked onchange="saveWeeklyIdeasToggle(this.checked)" style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+        Weekly blog ideas via Telegram
+      </label>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px;margin-left:24px">
+        When ON, you receive 5 fresh article ideas every Monday morning. When OFF, the bot runs fully autonomous.
+      </div>
+      <span id="weeklyIdeasStatus" style="display:none;font-size:11px;margin-top:4px;margin-left:24px"></span>
+    </div>
   </div>
 
   <!-- bulk-apply cadence -->
@@ -3033,6 +3043,7 @@ function lpRender() {
         <td>
           <div class="lp-actions">
             <button onclick="lpEdit('${_lpEsc(key)}')">Edit</button>
+            <button onclick="lpSeedComments('${_lpEsc(key)}')" title="Generate fake reader comments for this article and push comments.json">Seed</button>
             ${i.url ? `<a href="${_lpEsc(i.url)}" target="_blank" rel="noopener">View</a>` : ''}
             <button onclick="lpDelete('${_lpEsc(key)}')" style="background:rgba(239,68,68,.10);color:#ef4444;border-color:rgba(239,68,68,.35)" onmouseover="this.style.background='#ef4444';this.style.color='#fff'" onmouseout="this.style.background='rgba(239,68,68,.10)';this.style.color='#ef4444'">Remove</button>
           </div>
@@ -3111,6 +3122,32 @@ async function lpDelete(key) {
     else alert(`Removed. ${(data.messages||[]).join(' ')}`);
   } catch (e) {
     alert('Delete failed: ' + e.message);
+  }
+}
+
+async function lpSeedComments(key) {
+  const [site_id, slug] = key.split('::');
+  const it = _lpItems.find(x => x.site_id === site_id && x.slug === slug);
+  const label = it ? `"${it.title}"` : `${site_id}/${slug}`;
+  const raw = prompt(`Seed how many comments on ${label}?\n(1 to 17, default 3)`, '3');
+  if (raw === null) return;
+  const count = Math.max(1, Math.min(17, parseInt(raw, 10) || 3));
+  const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  const apiKey = (typeof ls === 'function' ? ls('anthropicKey') : localStorage.getItem('anthropicKey')) || '';
+  try {
+    const r = await fetch('/api/seed-comments', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-GH-Token': token},
+      body: JSON.stringify({ site_id, slug, count, token, _api_key: apiKey })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || ('http ' + r.status));
+    const msg = `Seeded ${data.comments_added} comments on ${slug}. Total now: ${data.total || data.comments_added}.`;
+    if (typeof toast === 'function') toast(msg, 'ok');
+    else alert(msg);
+  } catch (e) {
+    alert('Seed failed: ' + e.message);
   }
 }
 
@@ -7175,6 +7212,56 @@ function loadSettings() {
     if (a)  a.value    = s.admin_token || '';
     if (sf) sf.value   = s.storefront_token || '';
   } catch(_) {}
+  // Weekly Telegram ideas toggle. Default ON if missing.
+  try {
+    const wi = document.getElementById('setWeeklyIdeasEnabled');
+    if (wi) {
+      const v = cfg && cfg.settings && cfg.settings.weekly_ideas_enabled;
+      wi.checked = (v === undefined || v === null) ? true : !!v;
+    }
+  } catch(_) {}
+}
+
+// Persists the weekly-ideas toggle to network-config.json immediately so the
+// Monday GitHub Actions run picks it up without saving the whole Settings tab.
+async function saveWeeklyIdeasToggle(enabled) {
+  const status = document.getElementById('weeklyIdeasStatus');
+  if (status) {
+    status.style.display = 'inline';
+    status.style.color = 'var(--text3)';
+    status.textContent = 'Saving...';
+  }
+  try {
+    const r = await fetch('/api/global-settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ weekly_ideas_enabled: !!enabled }),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (r.ok && data && data.ok) {
+      if (cfg) {
+        cfg.settings = cfg.settings || {};
+        cfg.settings.weekly_ideas_enabled = !!enabled;
+      }
+      if (status) {
+        status.style.color = 'var(--green,#4caf50)';
+        status.textContent = enabled ? 'Saved. Weekly ideas ON.' : 'Saved. Fully autonomous mode.';
+      }
+      toast(enabled ? 'Weekly ideas enabled' : 'Weekly ideas disabled', 'ok');
+    } else {
+      if (status) {
+        status.style.color = 'var(--red,#f44)';
+        status.textContent = 'Save failed: ' + ((data && data.error) || ('HTTP ' + r.status));
+      }
+      toast('Save failed', 'error');
+    }
+  } catch(e) {
+    if (status) {
+      status.style.color = 'var(--red,#f44)';
+      status.textContent = 'Network error: ' + e.message;
+    }
+    toast('Network error', 'error');
+  }
 }
 
 // ── GHL test webhooks (per-site + global) ────────────────────────────────
