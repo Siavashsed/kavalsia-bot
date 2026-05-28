@@ -1620,10 +1620,10 @@
       "author": "Coach Rachel Stone"
     },
     {
-      "id": "mashestate-home",
+      "id": "sellit-ca",
       "active": true,
-      "domain": "siavashsed.github.io/mashestate-home",
-      "repo": "Siavashsed/mashestate-home",
+      "domain": "siavashsed.github.io/sellit-ca",
+      "repo": "Siavashsed/sellit-ca",
       "category": "Home Buying & Selling",
       "theme": "light",
       "layout": "magazine",
@@ -2729,8 +2729,7 @@
       "language": "fa",
       "languages": [
         "fa",
-        "en",
-        "ckb"
+        "en"
       ],
       "translation_mode": "primary_only",
       "theme": "dark",
@@ -2831,11 +2830,10 @@
       "domain": "siavashsed.github.io/apex",
       "repo": "Siavashsed/apex",
       "category": "Clinical Dentistry Education",
-      "language": "fa",
+      "language": "en",
       "languages": [
-        "fa",
         "en",
-        "ckb"
+        "fa"
       ],
       "translation_mode": "primary_only",
       "theme": "light",
