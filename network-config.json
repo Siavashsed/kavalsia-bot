@@ -146,7 +146,7 @@
     },
     {
       "id": "cryptopulse",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/cryptopulse",
       "repo": "Siavashsed/cryptopulse",
       "category": "Crypto & Algorithmic Trading",
@@ -404,7 +404,7 @@
     },
     {
       "id": "ai-marketing",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/aimarketingpro",
       "repo": "Siavashsed/aimarketingpro",
       "category": "AI-Powered Marketing",
@@ -884,7 +884,7 @@
     },
     {
       "id": "sight-reading",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/sightreadingacademy",
       "repo": "Siavashsed/sightreadingacademy",
       "category": "Music Education",
@@ -970,7 +970,7 @@
     },
     {
       "id": "newborn-iq",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/newborniq",
       "repo": "Siavashsed/newborniq",
       "category": "Newborn Care & Parenting",
@@ -1240,7 +1240,7 @@
     },
     {
       "id": "sportiq-pro",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/sportiqpro",
       "repo": "Siavashsed/sportiqpro",
       "category": "Sports Performance & Coaching",
@@ -1498,7 +1498,7 @@
     },
     {
       "id": "fitpulse-pro",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/fitpulsepro",
       "repo": "Siavashsed/fitpulsepro",
       "category": "Fitness & Training",
@@ -1624,12 +1624,12 @@
       "active": true,
       "domain": "siavashsed.github.io/mashestate-home",
       "repo": "Siavashsed/mashestate-home",
-      "category": "Real Estate Investing",
+      "category": "Home Buying & Selling",
       "theme": "light",
       "layout": "magazine",
       "article_layout": "sidebar",
-      "tone": "analytical and investor-focused, like a real estate attorney who also owns 12 doors.",
-      "persona": "David Mash, real estate investor and property law consultant",
+      "tone": "plain-language, practical, evidence-led. Like a friend who actually sells houses for a living, not marketing copy.",
+      "persona": "Sellit.ca editorial team. Practical guides for Canadian buyers and sellers, written by working real estate practitioners.",
       "brevo_list_id": 21,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -1670,50 +1670,52 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
-        "How to analyze a rental property in 30 minutes flat",
-        "Cap rate vs cash-on-cash return - which metric matters more",
-        "House hacking: how to live for free while building equity",
-        "The hidden costs of owning rental property first-timers miss",
-        "How to find off-market deals before they hit the MLS",
-        "BRRRR strategy: a realistic look at what it takes to execute",
-        "Property management vs self-managing - the honest math",
-        "How real estate creates tax advantages other assets cannot",
-        "Short-term vs long-term rental: the 2025 numbers",
-        "Reading a real estate market before everyone else does"
+        "How to stage a home for the fastest sale at the best price",
+        "Pricing strategy: when to list above asking and when not to",
+        "What buyers actually look for in 2026 and how to deliver it",
+        "Renovations that recoup their cost in resale and which ones do not",
+        "Reading a neighborhood's growth signals before everyone else does",
+        "First-time buyer psychology: how to make a confident offer",
+        "Negotiation tactics that win for the seller without losing the deal",
+        "Open house mistakes that quietly lower your sale price",
+        "Curb appeal upgrades under five hundred dollars that move the needle",
+        "Seller mindset: emotional detachment as a strategy, not a slogan",
+        "How to spot a good house in a hot market in under thirty minutes",
+        "Reading multiple offers as a seller without leaving money on the table",
+        "Buyer mindset: the questions to ask before falling in love with a listing",
+        "Renovation order of operations that avoids expensive rework",
+        "How to time the market without trying to time the market"
       ],
       "articles_per_day": 1,
       "nav_style": "grid",
       "author_names": [
-        "Mira Vasquez",
-        "Aoibhinn Ryan",
-        "Tobias Reinhardt",
-        "Cassian Bell"
+        "Sellit.ca"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
       "historical_mode": true,
       "historical_per_week": 14,
       "posts_per_day_new": 1,
-      "author_bio": "Mash Estate is where I publish the analysis I give private clients: market reads, deal structures, and the legal landmines most investors step on.",
+      "author_bio": "Sellit.ca is a practical guide to buying, selling, and growing home value, written by working Canadian real estate practitioners.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "day",
       "posts_per_week": 0,
       "new_posts_enabled": true,
-      "name": "mashestate-home",
-      "default_author": "",
+      "name": "Sellit.ca",
+      "default_author": "Sellit.ca",
       "custom_prompt": "",
       "custom_css": "",
       "categories": [
+        "Selling Tips",
+        "Buying Tips",
+        "Home Value",
+        "Renovation ROI",
+        "Negotiation",
+        "Market Reading",
         "First-Time Buyers",
-        "Luxury Homes",
-        "Investment Property",
-        "Market Timing",
-        "Mortgage & Finance",
-        "Neighborhood Analysis",
-        "New Construction",
-        "Selling Strategy"
+        "Seller Mindset"
       ],
       "default_category": "",
       "ghl": {
@@ -1748,7 +1750,10 @@
         "admin_token": "",
         "storefront_token": ""
       },
-      "author": "David Mash"
+      "author": "Sellit.ca",
+      "tagline": "Tips for buying, selling, and growing home value",
+      "author_title": "Editors, Sellit.ca",
+      "author_bio_fa": ""
     },
     {
       "id": "kanona-events",
@@ -1838,7 +1843,7 @@
     },
     {
       "id": "mashestate-construction",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/mashestate-construction",
       "repo": "Siavashsed/mashestate-construction",
       "category": "Construction & Renovation",
@@ -1967,7 +1972,7 @@
     },
     {
       "id": "insight-insure",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/insightinsure",
       "repo": "Siavashsed/insightinsure",
       "category": "Insurance Advice & Comparisons",
@@ -2656,7 +2661,7 @@
         "delay_days": 1,
         "target": "recent"
       },
-      "active": false
+      "active": true
     },
     {
       "id": "strobeatlas",
@@ -2713,11 +2718,11 @@
         "delay_days": 1,
         "target": "recent"
       },
-      "active": false
+      "active": true
     },
     {
       "id": "agyan",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/agyan",
       "repo": "Siavashsed/agyan",
       "category": "Spiritual Practice & Cosmology",
@@ -2822,7 +2827,7 @@
     },
     {
       "id": "apex",
-      "active": false,
+      "active": true,
       "domain": "siavashsed.github.io/apex",
       "repo": "Siavashsed/apex",
       "category": "Clinical Dentistry Education",
