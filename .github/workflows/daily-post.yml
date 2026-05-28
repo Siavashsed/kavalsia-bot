@@ -38,6 +38,6 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PEXELS_API_KEY:    ${{ secrets.PEXELS_API_KEY }}
-          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN:      ${{ secrets.GH_PAT }}
           BREVO_API_KEY:     ${{ secrets.BREVO_API_KEY }}
           HISTORICAL_BULK:   ${{ github.event.inputs.historical_bulk || '0' }}
