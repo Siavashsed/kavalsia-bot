@@ -146,7 +146,7 @@
     },
     {
       "id": "cryptopulse",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/cryptopulse",
       "repo": "Siavashsed/cryptopulse",
       "category": "Crypto & Algorithmic Trading",
@@ -404,7 +404,7 @@
     },
     {
       "id": "ai-marketing",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/aimarketingpro",
       "repo": "Siavashsed/aimarketingpro",
       "category": "AI-Powered Marketing",
@@ -884,7 +884,7 @@
     },
     {
       "id": "sight-reading",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/sightreadingacademy",
       "repo": "Siavashsed/sightreadingacademy",
       "category": "Music Education",
@@ -970,7 +970,7 @@
     },
     {
       "id": "newborn-iq",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/newborniq",
       "repo": "Siavashsed/newborniq",
       "category": "Newborn Care & Parenting",
@@ -1240,7 +1240,7 @@
     },
     {
       "id": "sportiq-pro",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/sportiqpro",
       "repo": "Siavashsed/sportiqpro",
       "category": "Sports Performance & Coaching",
@@ -1498,7 +1498,7 @@
     },
     {
       "id": "fitpulse-pro",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/fitpulsepro",
       "repo": "Siavashsed/fitpulsepro",
       "category": "Fitness & Training",
@@ -1838,7 +1838,7 @@
     },
     {
       "id": "mashestate-construction",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/mashestate-construction",
       "repo": "Siavashsed/mashestate-construction",
       "category": "Construction & Renovation",
@@ -1967,7 +1967,7 @@
     },
     {
       "id": "insight-insure",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/insightinsure",
       "repo": "Siavashsed/insightinsure",
       "category": "Insurance Advice & Comparisons",
@@ -2656,7 +2656,7 @@
         "delay_days": 1,
         "target": "recent"
       },
-      "active": true
+      "active": false
     },
     {
       "id": "strobeatlas",
@@ -2713,11 +2713,11 @@
         "delay_days": 1,
         "target": "recent"
       },
-      "active": true
+      "active": false
     },
     {
       "id": "agyan",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/agyan",
       "repo": "Siavashsed/agyan",
       "category": "Spiritual Practice & Cosmology",
@@ -2822,7 +2822,7 @@
     },
     {
       "id": "apex",
-      "active": true,
+      "active": false,
       "domain": "siavashsed.github.io/apex",
       "repo": "Siavashsed/apex",
       "category": "Clinical Dentistry Education",
