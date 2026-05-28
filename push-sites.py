@@ -176,8 +176,8 @@ SITES = [
     "font_head":"system-ui,sans-serif","font_body":"system-ui,sans-serif","font_mono":"monospace",
   },
   {
-    "repo":"Siavashsed/mashestate-home","id":"mashestate-home","tpl":"grid",
-    "name":"Mash Estate","tagline":"Real Estate Investing Intelligence",
+    "repo":"Siavashsed/sellit-ca","id":"sellit-ca","tpl":"grid",
+    "name":"Sellit.ca","tagline":"Tips for buying, selling, and growing home value",
     "category":"Real Estate Investing",
     "author":"David Mash","author_title":"Real Estate Investor & Property Law Consultant",
     "bio1":"I own 14 doors across three markets and have practiced real estate law for nine years. The combination gives me a perspective most investors don't have - I can tell you what a deal looks like on paper and what it looks like in court.",
@@ -547,7 +547,7 @@ STORIES = {
     "Most insurance content online is written by people who make money when you buy a policy. That shapes what gets written. Coverage comparisons highlight features that make a carrier's product look good rather than asking what the client's actual risk looks like.",
     "Insight Insure has no carrier allegiances and no referral fees from insurance companies. I write about coverage the way I talk to clients - starting with what they actually need and working backward to what product delivers it. The goal is an informed buyer who understands what they are paying for.",
   ],
-  "mashestate-home": [
+  "sellit-ca": [
     "I bought my first rental property at twenty-seven with money saved over four years working as a paralegal. It was a duplex in a mid-tier market that needed work. The work cost more than planned and the first tenant gave me an education in lease enforcement I could not have gotten any other way.",
     "I went to law school while holding that property. Real estate law was not my initial focus, but the intersection of contract law, landlord-tenant regulation, and property rights kept pulling me back. I graduated and specialized in exactly that intersection.",
     "Fourteen doors across three markets and nine years as a practicing attorney. The combination is unusual enough that clients specifically seek it out. They want to know what a deal looks like on paper and what it looks like when something goes wrong legally. Those are often two very different analyses.",
@@ -632,7 +632,7 @@ PEXELS_QUERIES = {
   "supplementverge":        "nutrition supplements vitamins health science",
   "ecommerceedge":          "online shopping ecommerce website store",
   "insightinsure":          "insurance documents financial planning office",
-  "mashestate-home":        "real estate house property investment",
+  "sellit-ca":        "real estate house property investment",
   "newborniq":              "newborn baby infant care peaceful sleeping",
   "passivewealthguide":     "investing money financial growth savings",
   "mochapoo-pets":          "doodle puppy dog cute fluffy playful",
@@ -781,10 +781,36 @@ CONTRIBUTOR_COMMENTS = [
 import hashlib as _hs
 
 def _site_contributors(s, count=4):
-    """Pick count deterministic contributors for a site (same every run)."""
+    """Pick count deterministic contributors for a site (same every run).
+    If the site declares its own author_names list with 2+ entries, use those
+    real names with neutral roles (no fabricated bios). Sites with a single
+    declared author (or no list) get an empty list so the about page can omit
+    the Contributors section entirely - this avoids the old behavior of
+    showing finance-themed personas like 'Portfolio manager' on a dental
+    journal."""
+    declared = [n for n in (s.get('author_names') or []) if n and n.strip()]
+    if len(declared) >= 2:
+        # Skip the primary author (already shown in the hero card)
+        primary = s.get('author') or s.get('default_author') or declared[0]
+        rest = [n for n in declared if n != primary]
+        if not rest:
+            return []
+        role = "Contributor"
+        return [
+            {
+                "name": n,
+                "role": role,
+                "avatar": ''.join(w[0].upper() for w in n.split()[:2]),
+                "bio": "",
+            }
+            for n in rest[:count]
+        ]
+    # Single-author site - do not invent contributors.
+    if len(declared) <= 1:
+        return []
+    # Fallback (should not reach): old generic pool.
     seed = int(_hs.md5(s['id'].encode()).hexdigest(), 16)
     pool = CONTRIBUTORS[:]
-    # simple deterministic shuffle using seed
     for i in range(len(pool)-1, 0, -1):
         j = seed % (i+1); pool[i], pool[j] = pool[j], pool[i]; seed //= (i+1)
     return pool[:count]
@@ -3839,13 +3865,22 @@ def gen_about(s):
     ini   = ''.join(w[0].upper() for w in s['author'].split()[:2])
     story = _story_html(s, css_class='ab-p')
     contributors = _site_contributors(s, 3)
-    team = '\n      '.join(
-        f"""<div class="ab-card">
+    if contributors:
+        team_cards = '\n      '.join(
+            f"""<div class="ab-card">
         <div class="ab-card-av">{c['avatar']}</div>
         <div class="ab-card-name">{c['name']}</div>
         <div class="ab-card-role">{c['role']}</div>
-        <div class="ab-card-bio">{c['bio']}</div>
+        <div class="ab-card-bio">{c.get('bio','')}</div>
       </div>""" for c in contributors)
+        contributors_block = f'''<div class="ab-h2">Who contributes</div>
+  <p class="ab-p">Alongside {s['author']}, a small group of practitioners review and pressure-test what gets published here.</p>
+  <div class="ab-grid">
+      {team_cards}
+  </div>'''
+    else:
+        contributors_block = ''
+    team = ''  # legacy variable retained for template substitution compatibility
 
     # Use the actual page-body ink (parsed from the homepage shell) for headings/names
     # so they stay readable even when SITES['text'] is tuned for the nav (e.g. cream-on-dark)
@@ -3887,11 +3922,7 @@ def gen_about(s):
   </div>
   <div class="ab-h2">Why this site exists</div>
   {story}
-  <div class="ab-h2">Who contributes</div>
-  <p class="ab-p">Alongside {s['author']}, a small group of practitioners review and pressure-test what gets published here.</p>
-  <div class="ab-grid">
-      {team}
-  </div>
+  {contributors_block}
   <div class="ab-cta">
     <h3>{s['nl_head']}</h3>
     <p>{s['nl_sub']}</p>
@@ -6097,7 +6128,7 @@ def _meta_inject(html, site_obj_inline):
 # fall back to NEXUS_DEFAULT_NICHE so they still appear (just under a generic niche).
 NEXUS_SITE_NICHES = {
   "cryptopulse":"finance","tradingtechreview":"finance","passivewealthguide":"finance","insightinsure":"finance",
-  "mashestate-home":"realestate","mashestate-construction":"realestate",
+  "sellit-ca":"realestate","mashestate-construction":"realestate",
   "aimarketingpro":"business","onlinebizpro":"business","ecommerceedge":"business","topproduct":"business",
   "fitpulsepro":"health","sportiqpro":"health","supplementverge":"health",
   "datingedge":"lifestyle","newborniq":"lifestyle","mochapoo-pets":"lifestyle",
@@ -6141,6 +6172,35 @@ def _sync_nexus_sites_array(html):
     return new_html
 
 
+def _sync_nexus_count(html):
+    """Replace every hardcoded publishing-site count in Nexus's homepage and
+    about page with the live count derived from SITES. Works regardless of
+    what the prior baked-in value was (was 28 in nexus.html, 22 in about.html).
+    Source of truth = number of non-nexus sites in SITES. Safe: only replaces
+    digits in publication-count contexts (followed by 'publications', 'sites',
+    'expert voices', etc.), not in CSS values, rgba alphas, font sizes, or
+    arbitrary tags."""
+    import re as _re
+    site_count  = sum(1 for s in SITES if s.get("id") and s.get("id") != "nexus")
+    sc = str(site_count)
+    patterns = [
+        # 'N publications', 'N sites', 'N specialized', 'N niche', 'N Publications',
+        # 'N Nexus publications', 'N expert voices'
+        (r'\b\d+(\s+(?:publications?|sites?|specialized|niche|Nexus\s+publications|Publications|expert\s+voices))', rf'{sc}\1'),
+        # data-target="N" ONLY when followed by a "Publications" stat label
+        # (don't touch the Niches/Articles/Continents stat counters).
+        (r'(data-target=")\d+("[^>]*>0</div>\s*<div[^>]*class="stat-lbl"[^>]*>Publications)', rf'\g<1>{sc}\g<2>'),
+        # <strong>N</strong> sites  (header nav badge)
+        (r'(<strong[^>]*>)\d+(</strong>\s*sites)', rf'\g<1>{sc}\g<2>'),
+        # <b>N</b> ...Publications  (stat tile where the label "Publications"
+        # follows shortly after the bolded number)
+        (r'(<b[^>]*>)\d+(</b>(?:(?!</?div\s+class).){0,200}?Publications)', rf'\g<1>{sc}\g<2>'),
+    ]
+    for pat, rep in patterns:
+        html = _re.sub(pat, rep, html, flags=_re.DOTALL)
+    return html
+
+
 def push_nexus(token):
     """Push the Nexus mother site (nexus.html + about.html) to Siavashsed/nexus."""
     import json as _json
@@ -6155,6 +6215,9 @@ def push_nexus(token):
         # Auto-sync the in-page SITES array to network-config.json so any newly
         # added site appears in the Nexus mosaic without a manual nexus.html edit.
         html = _sync_nexus_sites_array(html)
+        # Auto-sync the hardcoded publishing-site count (legacy '28') so adding
+        # more sites updates the header, footer, hero, stats, and meta tags too.
+        html = _sync_nexus_count(html)
         # Inject hub API URL so the subscribe form knows where to POST
         hub_url = ""
         if cfg_path.exists():
@@ -6166,7 +6229,11 @@ def push_nexus(token):
         html = html.replace("</head>", inject + "\n</head>", 1)
         ok &= gh_put(token, repo, "index.html", html, "Update Nexus hub")
     if about_src.exists():
-        ok &= gh_put(token, repo, "about.html", about_src.read_text(), "Update Nexus about")
+        about_html = about_src.read_text()
+        # Same dynamic-count rewrite applied to the about page so its hero,
+        # stat tile, footer, and meta description stay in sync with SITES.
+        about_html = _sync_nexus_count(about_html)
+        ok &= gh_put(token, repo, "about.html", about_html, "Update Nexus about")
     ok &= gh_put(token, repo, ".nojekyll", "", "Disable Jekyll")
     # NOTE: do NOT auto-delete CNAME - if the user has a custom domain, that file
     # is what binds it. The previous gh_delete here was wiping live custom domains.
