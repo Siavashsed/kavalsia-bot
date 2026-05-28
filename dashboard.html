@@ -515,54 +515,44 @@ textarea{resize:vertical;line-height:1.6}
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span> Dashboard</button>
     </div>
 
-    <!-- ── CONTENT ── (per-site work + cross-site content) -->
+    <!-- ── DAILY PULSE ── (the things you actually look at every day) -->
     <div class="nav-section">
-      <span class="nav-label">Content</span>
-      <button class="nav-btn" id="nav-site" onclick="showPanel('site')"
-        data-tip="One panel for every per-site control: identity, schedule, topics, every article (edit body, delete, change author, view live URL), and backlinks for this site.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> Site Settings</button>
-      <button class="nav-btn" id="nav-customize" onclick="showPanel('customize')"
-        data-tip="Describe a visual change in plain English (e.g. 'make the header smaller'). AI writes the CSS/JS, previews it, and injects it into your site with one click.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span> Customize Site</button>
-      <button class="nav-btn" id="nav-comments" onclick="showPanel('comments')"
-        data-tip="Generate AI comments for any article (single site or broadcast across all). Per-site auto-comment schedules.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Comments</button>
-      <button class="nav-btn" id="nav-latest" onclick="showPanel('latest');if(typeof latestInit==='function')latestInit()"
-        data-tip="Latest published posts across every site. Edit title, author, date, category, description; saves push to GitHub and update the live article.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Latest Posts</button>
-      <button class="nav-btn" id="nav-manualpost" onclick="showPanel('manualpost');if(typeof mpInit==='function')mpInit()"
-        data-tip="Hand-write and publish an article. Pick any sites, set author and category, schedule for later, or auto-expire after a date.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span> Manual Post</button>
-      <!-- Backlinks nav moved to the secondary section near History & Undo (less used). -->
-      <button class="nav-btn" id="nav-sponsors" onclick="showPanel('sponsors');sponsorsInit()"
-        data-tip="Manage sponsor backlinks. Pre-seeded with Dalmend Candles. Add, enable/disable, scope, and re-run injection across your network.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span> Sponsors</button>
-      <button class="nav-btn" id="nav-promo" onclick="showPanel('promo');promoInit()"
-        data-tip="Sell sponsored posts across your network. Choose sites, write a brief, generate a featured kit with logos + article links.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span> Promotions</button>
-      <button class="nav-btn" id="nav-publish" onclick="showPanel('publish')"
-        data-tip="One-click Publish: pushes every local change (homepages, about bodies, engine files, workflows, dashboard) to the right GitHub repo.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></span> Publish</button>
-    </div>
-
-    <!-- ── MONITORING ── -->
-    <div class="nav-section">
-      <span class="nav-label">Monitoring</span>
+      <span class="nav-label">Daily Pulse</span>
       <button class="nav-btn" id="nav-status" onclick="showPanel('status')"
         data-tip="Live ping of all sites. See which are online, offline, or slow.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> Site Status</button>
       <button class="nav-btn" id="nav-report" onclick="showPanel('report');loadDailyReport()"
         data-tip="All articles published across all sites in the last 24h, 3 days, or 7 days  -  with direct links.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Daily Report</button>
-      <button class="nav-btn" id="nav-analytics" onclick="showPanel('analytics')"
-        data-tip="Traffic data from Cloudflare for all sites  -  page views, unique visitors, bandwidth.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> Analytics</button>
-      <button class="nav-btn" id="nav-github" onclick="showPanel('github')"
-        data-tip="History of every bot run  -  which sites published, which failed, how long it took.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> GitHub Runs</button>
+      <button class="nav-btn" id="nav-latest" onclick="showPanel('latest');if(typeof latestInit==='function')latestInit()"
+        data-tip="Latest published posts across every site. Edit title, author, date, category, description; saves push to GitHub and update the live article.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Latest Posts</button>
       <button class="nav-btn" id="nav-logs" onclick="showPanel('logs')"
         data-tip="Raw event log from this session  -  published articles, errors, config changes.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span> Logs <span class="nav-badge" id="errorBadge" style="display:none">!</span></button>
+      <button class="nav-btn" id="nav-github" onclick="showPanel('github')"
+        data-tip="History of every bot run  -  which sites published, which failed, how long it took.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Bot Runs</button>
+    </div>
+
+    <!-- ── CONTENT ── (per-site work + cross-site content) -->
+    <div class="nav-section">
+      <span class="nav-label">Content</span>
+      <button class="nav-btn" id="nav-site" onclick="showPanel('site')"
+        data-tip="One panel for every per-site control: identity, schedule, topics, every article (edit body, delete, change author, view live URL), and backlinks for this site.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> Site Settings</button>
+      <button class="nav-btn" id="nav-manualpost" onclick="showPanel('manualpost');if(typeof mpInit==='function')mpInit()"
+        data-tip="Hand-write and publish an article. Pick any sites, set author and category, schedule for later, or auto-expire after a date.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></span> Manual Post</button>
+      <button class="nav-btn" id="nav-customize" onclick="showPanel('customize')"
+        data-tip="Describe a visual change in plain English (e.g. 'make the header smaller'). AI writes the CSS/JS, previews it, and injects it into your site with one click.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span> Customize Site</button>
+      <button class="nav-btn" id="nav-comments" onclick="showPanel('comments')"
+        data-tip="Generate AI comments for any article (single site or broadcast across all). Per-site auto-comment schedules.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Comments</button>
+      <button class="nav-btn" id="nav-publish" onclick="showPanel('publish')"
+        data-tip="One-click Publish: pushes every local change (homepages, about bodies, engine files, workflows, dashboard) to the right GitHub repo.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></span> Publish</button>
     </div>
 
     <!-- ── TOOLS ── -->
@@ -574,42 +564,57 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-domains" onclick="showPanel('domains');domainsInit()"
         data-tip="Set up Cloudflare DNS for all your custom domains  -  automatically creates CNAME/A records.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Domains</button>
-      <button class="nav-btn" id="nav-compliance" onclick="showPanel('compliance')"
-        data-tip="Check all sites against content policies. Flags issues with privacy pages, disclaimers, and ad compliance.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> Compliance</button>
       <button class="nav-btn" id="nav-megadash" onclick="showPanel('megadash')"
         data-tip="Full-screen network dashboard. All sites at once with traffic and AI summaries.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span> MegaDash</button>
-      <button class="nav-btn" id="nav-integrations" onclick="showPanel('integrations');if(typeof integrationsRender==='function')integrationsRender()"
-        data-tip="One hub listing every third-party connection: GitHub, Anthropic, Pexels, Brevo, Cloudflare, GHL, Meta, WordPress, WooCommerce, Shopify, and more. Click any row to configure.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="18" x2="15" y2="18"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/></svg></span> Integrations</button>
-      <button class="nav-btn" id="nav-ghl-guide" onclick="showPanel('ghl-guide')"
-        data-tip="GoHighLevel workflow recipes, payload reference, and setup steps for your inbound webhooks.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> GHL Guide</button>
-      <button class="nav-btn" id="nav-meta-guide" onclick="showPanel('meta-guide')"
-        data-tip="Meta Pixel + Conversions API setup, custom audiences, lookalikes, retargeting recipes and per-site event names.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> Meta Guide</button>
       <button class="nav-btn" id="nav-logobar" onclick="showPanel('logobar');if(typeof logoBarInit==='function')logoBarInit()"
         data-tip="Live preview and copy-paste snippet of the Spider Web logo bar. Rebuild it from the current SITES list with one click.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="8" rx="2"/><circle cx="7" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="17" cy="12" r="1.4" fill="currentColor"/></svg></span> Logo Bar</button>
+      <button class="nav-btn" id="nav-guides" onclick="showGuides('ghl-guide')"
+        data-tip="Setup guides for third-party integrations. Switch between GHL workflows and Meta Pixel via the sub-tabs at the top of the guide.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> Guides</button>
+      <button class="nav-btn" id="nav-integrations" onclick="showPanel('integrations');if(typeof integrationsRender==='function')integrationsRender()"
+        data-tip="One hub listing every third-party connection: GitHub, Anthropic, Pexels, Brevo, Cloudflare, GHL, Meta, WordPress, WooCommerce, Shopify, and more. Click any row to configure.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="18" x2="15" y2="18"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/></svg></span> Integrations</button>
     </div>
 
-    <!-- ── SYSTEM ── -->
+    <!-- ── MONETIZATION ── (less frequent, grouped together) -->
+    <div class="nav-section">
+      <span class="nav-label">Monetization</span>
+      <button class="nav-btn" id="nav-sponsors" onclick="showPanel('sponsors');sponsorsInit()"
+        data-tip="Manage sponsor backlinks. Pre-seeded with Dalmend Candles. Add, enable/disable, scope, and re-run injection across your network.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span> Sponsors</button>
+      <button class="nav-btn" id="nav-promo" onclick="showPanel('promo');promoInit()"
+        data-tip="Sell sponsored posts across your network. Choose sites, write a brief, generate a featured kit with logos + article links.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></span> Promotions</button>
+      <button class="nav-btn" id="nav-backlinks" onclick="showPanel('backlinks')"
+        data-tip="Track all backlinks posted to Reddit, LinkedIn, Quora, and other platforms. Per-site backlinks also appear inside Site Settings.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> Backlinks</button>
+    </div>
+
+    <!-- ── QUALITY ── (occasional review tasks) -->
+    <div class="nav-section">
+      <span class="nav-label">Quality</span>
+      <button class="nav-btn" id="nav-compliance" onclick="showPanel('compliance')"
+        data-tip="Check all sites against content policies. Flags issues with privacy pages, disclaimers, and ad compliance.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> Compliance</button>
+      <button class="nav-btn" id="nav-analytics" onclick="showPanel('analytics')"
+        data-tip="Traffic data from Cloudflare for all sites  -  page views, unique visitors, bandwidth.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> Analytics</button>
+    </div>
+
+    <!-- ── SYSTEM ── (set once, rarely touch) -->
     <div class="nav-section">
       <span class="nav-label">System</span>
       <button class="nav-btn" id="nav-settings" onclick="showPanel('settings')"
         data-tip="Global settings: API keys, bot repo, global posting frequency, bulk site toggles, Telegram bot.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Settings</button>
-      <!-- Token Vault nav removed: duplicate of Settings → API Keys card. -->
       <button class="nav-btn" id="nav-backup" onclick="showPanel('backup');backupLoadStatus()"
         data-tip="Full backup to GitHub Releases  -  system files, all site articles, and comments.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> Backup</button>
       <button class="nav-btn" id="nav-history" onclick="showPanel('history')"
         data-tip="Every confirmed command is logged here with a full before/after record. Restore any previous snapshot.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg></span> History &amp; Undo</button>
-      <button class="nav-btn" id="nav-backlinks" onclick="showPanel('backlinks')"
-        data-tip="Track all backlinks posted to Reddit, LinkedIn, Quora, and other platforms. Per-site backlinks also appear inside Site Settings.">
-        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> Backlinks</button>
       <button class="nav-btn" id="nav-server" onclick="showPanel('server')"
         data-tip="The local Python server running at localhost:8765. Required for AI[S], config saves, and Push buttons to work.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="4" rx="1"/><rect x="2" y="10" width="20" height="4" rx="1"/><rect x="2" y="17" width="20" height="4" rx="1"/><line x1="6" y1="5" x2="6.01" y2="5"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="6" y1="19" x2="6.01" y2="19"/></svg></span> Local Server <span id="srvNavBadge" class="nav-badge" style="display:none;background:var(--amber);color:#000">!</span></button>
@@ -981,7 +986,7 @@ textarea{resize:vertical;line-height:1.6}
         <div style="font-size:12px;color:var(--text2);line-height:1.8">
           <div style="margin-bottom:8px"><span style="color:var(--accent)">System Files</span><br>
           dashboard.html, megadash.html, bot.py, server.py, push-sites.py, network-config.json, all HTML files</div>
-          <div style="margin-bottom:8px"><span style="color:var(--accent)">Site Content (all 22 sites)</span><br>
+          <div style="margin-bottom:8px"><span style="color:var(--accent)">Site Content (all <span class="dyn-site-count">22</span> sites)</span><br>
           articles.json, comments per article, article metadata</div>
           <div style="margin-bottom:8px"><span style="color:var(--accent)">export.json</span><br>
           Single machine-readable file with everything. Use this to restore or migrate.</div>
@@ -1763,7 +1768,11 @@ textarea{resize:vertical;line-height:1.6}
 
 <!-- ════════ GHL GUIDE ════════ -->
 <div class="panel" id="panel-ghl-guide">
-  <div class="pg-title">GHL Workflows Guide</div>
+  <div class="pg-title">Guides</div>
+  <div style="display:flex;gap:6px;margin:6px 0 14px;flex-wrap:wrap">
+    <button class="btn btn-sm gs-tab gs-tab-ghl btn-amber" onclick="showGuides('ghl-guide')">GHL Workflows</button>
+    <button class="btn btn-sm gs-tab gs-tab-meta"          onclick="showGuides('meta-guide')">Meta Pixel + CAPI</button>
+  </div>
   <div class="pg-sub">Recipes for connecting your Kavalsia network newsletter signups to GoHighLevel. Set the webhook in Settings (global) or per-site, then build these workflows inside GHL.</div>
 
   <div class="card" style="margin-bottom:14px">
@@ -1919,7 +1928,11 @@ textarea{resize:vertical;line-height:1.6}
 
 <!-- ════════ META GUIDE ════════ -->
 <div class="panel" id="panel-meta-guide">
-  <div class="pg-title">Meta Pixel + Conversions API Guide</div>
+  <div class="pg-title">Guides</div>
+  <div style="display:flex;gap:6px;margin:6px 0 14px;flex-wrap:wrap">
+    <button class="btn btn-sm gs-tab gs-tab-ghl"           onclick="showGuides('ghl-guide')">GHL Workflows</button>
+    <button class="btn btn-sm gs-tab gs-tab-meta btn-amber" onclick="showGuides('meta-guide')">Meta Pixel + CAPI</button>
+  </div>
   <div class="pg-sub">How the Pixel snippet, server-side events, and per-site custom audiences fit together in the Kavalsia network.</div>
 
   <div class="card" style="margin-bottom:14px">
@@ -3533,7 +3546,7 @@ async function lpSave(key) {
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
     <div>
       <div class="pg-title">Daily Report</div>
-      <div class="pg-sub">All articles published across all 22 sites - with direct links</div>
+      <div class="pg-sub">All articles published across all <span class="dyn-site-count">22</span> sites - with direct links</div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <select id="reportDays" class="btn btn-sm" style="padding:5px 10px">
@@ -3634,7 +3647,7 @@ async function lpSave(key) {
 <div class="panel-iframe" id="panel-megadash">
   <div class="panel-iframe-bar">
     <span style="color:var(--accent);font-weight:700">MegaDash</span>
-    <span>All 22 sites  -  traffic, articles, AI summaries</span>
+    <span>All <span class="dyn-site-count">22</span> sites  -  traffic, articles, AI summaries</span>
     <a href="megadash.html" target="_blank" style="margin-left:auto;color:var(--text3);font-size:11px;display:flex;align-items:center;gap:4px">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Open standalone
@@ -3929,6 +3942,7 @@ let logFilter = 'all';
   renderDashboard();
   renderHistory();
   renderLogs();
+  refreshDynSiteCount();
   startPolling();
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) syncConfig();
@@ -3951,20 +3965,23 @@ async function showMorningBriefing() {
   const totalSites = sites.length;
   const activeSites = sites.filter(s => s.active !== false).length;
 
-  // pull recent changelog/activity for yesterday's summary
-  let published = 0, failed = 0, failedNames = [];
+  // Pull yesterday's actual articles from each site's articles.json. The old
+  // implementation read /api/changelog which only logs dashboard actions, not
+  // bot runs - that's why it always said "no activity yesterday".
+  let published = 0, failed = 0, failedNames = [], sitesPublished = 0, articlesData = null;
   try {
-    const r = await fetch('/api/changelog');
+    const token = ls('ghToken') || '';
+    const r = await fetch('/api/daily-report', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({token, days: 1})});
     if (r.ok) {
-      const log = await r.json();
+      articlesData = await r.json();
       const yd = new Date(); yd.setDate(yd.getDate()-1);
       const ydStr = yd.toISOString().slice(0,10);
-      (log || []).forEach(e => {
-        if ((e.ts||'').startsWith(ydStr)) {
-          if (e.type === 'ok') published++;
-          if (e.type === 'err') { failed++; failedNames.push(e.site||'unknown'); }
-        }
+      (articlesData.articles || []).forEach(a => {
+        if ((a.date||'').startsWith(ydStr)) published++;
       });
+      sitesPublished = Object.keys(articlesData.per_site || {}).length;
+      failedNames = (articlesData.failed_sites || []).map(f => f.site_id);
+      failed = failedNames.length;
     }
   } catch(_) {}
 
@@ -3973,7 +3990,7 @@ async function showMorningBriefing() {
 
   let statusLine = '';
   if (published === 0 && failed === 0) {
-    statusLine = `<div style="color:var(--text2);font-size:13px;margin-bottom:8px">No activity logged for yesterday  -  bot may not have run yet, or logs were cleared.</div>`;
+    statusLine = `<div style="color:var(--text2);font-size:13px;margin-bottom:8px">No articles indexed for yesterday yet. The bot may run later today or yesterday's run failed to push - check Bot Runs.</div>`;
   } else {
     statusLine = `<div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
       <div style="background:#3ecf8e18;border:1px solid #3ecf8e30;border-radius:8px;padding:10px 16px;flex:1;min-width:100px">
@@ -4007,6 +4024,10 @@ async function showMorningBriefing() {
       <div style="height:1px;background:var(--border2);margin:14px 0"></div>
       <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:10px">Yesterday's Activity</div>
       ${statusLine}
+      <div id="briefingAiSlot" style="background:linear-gradient(135deg,#3ecf8e10,#a78bfa10);border:1px solid #a78bfa30;border-radius:8px;padding:11px 13px;margin-bottom:14px;display:none">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#a78bfa;margin-bottom:4px">AI Brief - Gemini</div>
+        <div id="briefingAiText" style="font-size:12px;line-height:1.55;color:var(--text2)"></div>
+      </div>
       <div style="font-size:12px;color:var(--text2);margin-bottom:16px">
         Network: <strong style="color:var(--text)">${activeSites}</strong> active sites of <strong style="color:var(--text)">${totalSites}</strong> total. ${serverMode ? '<span style="color:var(--green)">Server online.</span>' : '<span style="color:var(--amber)">Server offline  -  start server.py to unlock all features.</span>'}
       </div>
@@ -4017,6 +4038,19 @@ async function showMorningBriefing() {
     </div>`;
   document.body.appendChild(modal);
   modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+
+  // Background Gemini brief - non-blocking, silent on failure (free tier).
+  if (articlesData && (articlesData.articles || []).length) {
+    const text = `Yesterday's articles: ${published}. Sites publishing: ${sitesPublished}/${activeSites}. Failed: ${failed}${failed?' ('+failedNames.slice(0,4).join(', ')+')':''}.\nSample: ${(articlesData.articles||[]).slice(0,6).map(a=>a.site_id+': '+a.title).join('; ')}`;
+    fetch('/api/gemini-summary', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, style:'terse'})})
+      .then(r => r.json())
+      .then(j => {
+        const slot = document.getElementById('briefingAiSlot');
+        const t    = document.getElementById('briefingAiText');
+        if (slot && t && j.summary) { t.textContent = j.summary; slot.style.display = 'block'; }
+      })
+      .catch(_ => {});
+  }
 }
 
 // ── Server detection ───────────────────────────────────────────────────────
@@ -4470,6 +4504,7 @@ async function syncConfig() {
       configHash = newHash;
       renderDashboard();
       renderStatusGrid();
+      refreshDynSiteCount();
       addLog('info', 'info', 'Config synced from disk');
     }
   } catch(e) { /* silent */ }
@@ -4646,7 +4681,7 @@ const FALLBACK_SITES = [
   {id:'makeup-craft',domain:'siavashsed.github.io/makeupcraft',repo:'Siavashsed/makeupcraft'},
   {id:'dating-edge',domain:'siavashsed.github.io/datingedge',repo:'Siavashsed/datingedge'},
   {id:'fitpulse-pro',domain:'siavashsed.github.io/fitpulsepro',repo:'Siavashsed/fitpulsepro'},
-  {id:'mashestate-home',domain:'siavashsed.github.io/mashestate-home',repo:'Siavashsed/mashestate-home'},
+  {id:'sellit-ca',domain:'siavashsed.github.io/sellit-ca',repo:'Siavashsed/sellit-ca'},
   {id:'kanona-events',domain:'siavashsed.github.io/kanona-events',repo:'Siavashsed/kanona-events'},
   {id:'mashestate-construction',domain:'siavashsed.github.io/mashestate-construction',repo:'Siavashsed/mashestate-construction'},
   {id:'insight-insure',domain:'siavashsed.github.io/insightinsure',repo:'Siavashsed/insightinsure'},
@@ -6913,7 +6948,7 @@ function saveSettings() {
 // so the dashboard pill color matches the Nexus mosaic. One source of truth.
 const NICHE_BY_ID = {
   cryptopulse:'finance', tradingtechreview:'finance', passivewealthguide:'finance', insightinsure:'finance',
-  'mashestate-home':'realestate', 'mashestate-construction':'realestate',
+  'sellit-ca':'realestate', 'mashestate-construction':'realestate',
   aimarketingpro:'business', onlinebizpro:'business', ecommerceedge:'business', topproduct:'business',
   fitpulsepro:'health', sportiqpro:'health', supplementverge:'health',
   datingedge:'lifestyle', newborniq:'lifestyle', 'mochapoo-pets':'lifestyle',
@@ -8748,6 +8783,35 @@ async function backupInstallSchedule() {
 const IFRAME_PANELS = {
   megadash: 'megadash.html',
 };
+
+// Fill every <span class="dyn-site-count"> with the live count of non-nexus
+// publishing sites. Replaces the previous hardcoded '22 sites' labels in the
+// Backup, Daily Report, and MegaDash panels. Called on dashboard init and
+// after any /api/save-config refresh.
+function refreshDynSiteCount() {
+  let n = 0;
+  try {
+    n = (cfg && cfg.sites || []).filter(s => s && s.id && s.id !== 'nexus').length;
+  } catch(_) {}
+  if (!n) return;
+  document.querySelectorAll('.dyn-site-count').forEach(el => { el.textContent = n; });
+}
+
+// Consolidated Guides tab. The "Guides" nav button calls this with either
+// 'ghl-guide' or 'meta-guide'; both share the same nav button so the sidebar
+// has one entry instead of two. The sub-tab bar inside each guide panel lets
+// the user switch without leaving the Guides nav slot.
+function showGuides(id) {
+  if (id !== 'ghl-guide' && id !== 'meta-guide') id = 'ghl-guide';
+  showPanel(id);
+  // showPanel deactivated all nav buttons; re-activate the Guides one.
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const gb = document.getElementById('nav-guides');
+  if (gb) gb.classList.add('active');
+  // Sync the visual active state on the sub-tabs across both panels.
+  document.querySelectorAll('.gs-tab-ghl').forEach(el => el.classList.toggle('btn-amber', id === 'ghl-guide'));
+  document.querySelectorAll('.gs-tab-meta').forEach(el => el.classList.toggle('btn-amber', id === 'meta-guide'));
+}
 
 function showPanel(id) {
   // Deprecated panel IDs route to their new home so legacy links keep working.
@@ -10678,19 +10742,90 @@ async function loadDailyReport(days) {
   const el    = document.getElementById('reportResults');
   if (!el) return;
   el.innerHTML = '<div style="padding:20px;color:var(--text3)">⟳ Fetching articles from all repos…</div>';
+
+  let d;
   try {
     const r = await fetch('/api/daily-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,days})});
-    const d = await r.json();
-    if (d.error) { el.innerHTML = `<div style="color:var(--red);padding:20px">${d.error}</div>`; return; }
-    const arts = d.articles||[];
-    if (!arts.length) { el.innerHTML = `<div style="padding:20px;color:var(--text3)">No articles published in the last ${days} day(s).</div>`; return; }
-    el.innerHTML = `<div style="padding:0 0 12px;font-size:12px;color:var(--text3)">${arts.length} article${arts.length!==1?'s':''} published in the last ${days} day(s) · generated ${new Date(d.generated_at).toLocaleTimeString()}</div>`
-      + arts.map(a=>`<div class="report-row">
-          <div class="report-site">${a.site_name||a.site_id}</div>
-          <div class="report-title">${a.url?`<a href="${a.url}" target="_blank">${a.title}</a>`:a.title}</div>
-          <div class="report-date">${a.date}</div>
-        </div>`).join('');
-  } catch(e) { el.innerHTML = `<div style="color:var(--red);padding:20px">Error: ${e.message}</div>`; }
+    d = await r.json();
+  } catch(e) {
+    el.innerHTML = `<div style="color:var(--red);padding:20px">Error: ${e.message}</div>`;
+    return;
+  }
+  if (d.error) { el.innerHTML = `<div style="color:var(--red);padding:20px">${d.error}</div>`; return; }
+
+  const arts          = d.articles || [];
+  const perSite       = d.per_site || {};
+  const failedSites   = d.failed_sites || [];
+  const siteCount     = Object.keys(perSite).length;
+  const totalActive   = (cfg && cfg.sites || []).filter(s => s.active !== false && s.id !== 'nexus').length;
+
+  // Header with real numbers (and Gemini AI summary slot)
+  const head = `
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="background:#3ecf8e10;border:1px solid #3ecf8e30;border-radius:8px;padding:12px 16px;flex:1;min-width:140px">
+        <div style="font-size:22px;font-weight:800;color:var(--green)">${arts.length}</div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">Articles in last ${days} day${days!==1?'s':''}</div>
+      </div>
+      <div style="background:#38bdf818;border:1px solid #38bdf830;border-radius:8px;padding:12px 16px;flex:1;min-width:140px">
+        <div style="font-size:22px;font-weight:800;color:#38bdf8">${siteCount}/${totalActive}</div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">Sites publishing</div>
+      </div>
+      <div style="background:${failedSites.length?'#ef444418':'#3ecf8e10'};border:1px solid ${failedSites.length?'#ef444430':'#3ecf8e30'};border-radius:8px;padding:12px 16px;flex:1;min-width:140px">
+        <div style="font-size:22px;font-weight:800;color:${failedSites.length?'var(--red)':'var(--green)'}">${failedSites.length}</div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px">Sites with errors</div>
+      </div>
+    </div>
+    <div id="reportAiSummary" style="background:linear-gradient(135deg,#3ecf8e08,#a78bfa08);border:1px solid #a78bfa30;border-radius:10px;padding:14px 16px;margin-bottom:14px;display:none">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#a78bfa;margin-bottom:6px">AI Summary - Gemini</div>
+      <div id="reportAiText" style="font-size:13px;line-height:1.55;color:var(--text2)"></div>
+    </div>`;
+
+  if (!arts.length) {
+    el.innerHTML = head + `<div style="padding:20px;color:var(--text3)">No articles published in the last ${days} day(s). ${failedSites.length?`<br><br>${failedSites.length} sites errored: ${failedSites.slice(0,8).map(f=>f.site_id).join(', ')}`:''}</div>`;
+    return;
+  }
+  el.innerHTML = head
+    + `<div style="padding:0 0 8px;font-size:11px;color:var(--text3)">Generated ${new Date(d.generated_at).toLocaleTimeString()}</div>`
+    + arts.map(a=>`<div class="report-row">
+        <div class="report-site">${a.site_name||a.site_id}</div>
+        <div class="report-title">${a.url?`<a href="${a.url}" target="_blank">${a.title}</a>`:a.title}</div>
+        <div class="report-date">${a.date}</div>
+      </div>`).join('');
+
+  // Gemini summary (free tier; non-blocking; silent on failure)
+  geminiSummarizeReport(d, days);
+}
+
+async function geminiSummarizeReport(d, days) {
+  const slot     = document.getElementById('reportAiSummary');
+  const textSlot = document.getElementById('reportAiText');
+  if (!slot || !textSlot) return;
+  // Build a compact text payload for Gemini (avoid burning tokens on noise)
+  const arts        = d.articles || [];
+  const perSite     = d.per_site || {};
+  const failed      = d.failed_sites || [];
+  const sample      = arts.slice(0, 12).map(a => `${a.site_id}: "${a.title}" (${a.date})`).join('\n');
+  const text = `Articles in last ${days} day(s): ${arts.length}
+Sites that published: ${Object.keys(perSite).length} (${Object.entries(perSite).slice(0,6).map(([k,v])=>k+':'+v).join(', ')}${Object.keys(perSite).length>6?', ...':''})
+Sites errored: ${failed.length}${failed.length?' ('+failed.slice(0,4).map(f=>f.site_id).join(', ')+')':''}
+Sample headlines:
+${sample}`;
+  try {
+    const r = await fetch('/api/gemini-summary', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, style:'executive'})});
+    const j = await r.json();
+    if (j.summary) {
+      textSlot.textContent = j.summary;
+      slot.style.display = 'block';
+    } else if (j.error) {
+      // Show inline error so user knows the AI summary tier check tripped
+      textSlot.style.color = 'var(--text3)';
+      textSlot.style.fontStyle = 'italic';
+      textSlot.textContent = '(' + j.error + ')';
+      slot.style.display = 'block';
+    }
+  } catch(_) {
+    // silent: AI summary is non-critical
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
