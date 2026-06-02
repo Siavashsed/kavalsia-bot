@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>OnlineBiz Pro - Build and Scale an Online Business That Runs Without You</title>
 <meta name="description" content="OnlineBiz Pro is the operator's playbook for building, scaling, and exiting online businesses. Straight talk on acquisition, pricing, hiring, systems, and exits - no fluff, no vanity metrics.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -279,6 +280,13 @@ button{font-family:var(--font)}
   transition:background .2s,border-color .2s}
 .articles-link:hover{background:rgba(108,92,231,.1);border-color:var(--accent2)}
 .articles-link svg{width:14px;height:14px}
+/* centered "view all" CTA below the blog grid */
+.articles-cta-wrap{display:flex;justify-content:center;margin-top:44px}
+.articles-cta{font-size:14px;font-weight:700;color:#0b0b0d;padding:14px 30px;border-radius:11px;
+  background:linear-gradient(120deg,var(--accent2),var(--lime));display:inline-flex;align-items:center;gap:9px;
+  letter-spacing:.2px;transition:transform .22s ease,box-shadow .22s ease;box-shadow:0 14px 34px -16px var(--accent2)}
+.articles-cta:hover{transform:translateY(-2px);box-shadow:0 20px 44px -16px var(--lime)}
+.articles-cta svg{width:16px;height:16px;stroke-width:2.6}
 .articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .article-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
   overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s}
@@ -438,9 +446,9 @@ body[data-page-depth="1"] .article-title{
   color:#000 !important;
 }
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -450,7 +458,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -458,14 +466,15 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#0a0a0a !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
 <body>
+<div style="padding:24px 24px 0;text-align:right"><a href="./articles" style="display:inline-block;color:currentColor;text-decoration:none;font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;opacity:.75;border-bottom:1px solid currentColor;padding-bottom:3px">Browse the archive</a></div>
 <!--SHELL:ACCENT:#6c5ce7-->
 <!--SHELL:HEADER-->
 
@@ -490,7 +499,7 @@ body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decorat
       <a href="./#dashboard">The Numbers</a>
       <a href="./#articles">Articles</a>
       <a href="./#about">About</a>
-      <a href="about.html">More</a>
+      <a href="about">More</a>
     </div>
     <div class="nav-right">
       <a href="./#newsletter" class="nav-btn">Subscribe Free</a>
@@ -504,7 +513,7 @@ body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decorat
     <a href="./#dashboard" onclick="document.getElementById('nav-mobile').classList.remove('open')">The Numbers</a>
     <a href="./#articles" onclick="document.getElementById('nav-mobile').classList.remove('open')">Articles</a>
     <a href="./#about" onclick="document.getElementById('nav-mobile').classList.remove('open')">About</a>
-    <a href="about.html" onclick="document.getElementById('nav-mobile').classList.remove('open')">More</a>
+    <a href="about" onclick="document.getElementById('nav-mobile').classList.remove('open')">More</a>
     <a href="./#newsletter" onclick="document.getElementById('nav-mobile').classList.remove('open')">Subscribe Free</a>
   </div>
 </nav>
@@ -804,7 +813,7 @@ body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decorat
         <div class="kicker">From the Blog</div>
         <h2 class="section-title">Latest <em>operator playbooks</em></h2>
       </div>
-      <a href="./#articles" class="articles-link reveal d1">
+      <a href="articles" class="articles-link reveal d1">
         View all articles
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
@@ -813,6 +822,12 @@ body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decorat
       <div id="articles-empty" style="grid-column:1/-1;text-align:center;padding:60px 24px;color:var(--muted)">
         New operator playbooks are coming soon.
       </div>
+    </div>
+    <div class="articles-cta-wrap reveal">
+      <a href="articles" class="articles-cta">
+        View all articles
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
   </div>
 </section>
@@ -907,8 +922,6 @@ body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decorat
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
 <!--SHELL:FOOTER-->
 <!-- FOOTER -->
 <footer class="foot">
@@ -936,17 +949,17 @@ body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decorat
         <a href="./">Home</a>
         <a href="./#topics">What We Cover</a>
         <a href="./#dashboard">The Numbers</a>
-        <a href="./#articles">Articles</a>
+        <a href="articles">Articles</a>
         <a href="./#about">About Ryan</a>
       </div>
     </div>
     <div>
       <div class="foot-col-title">Company</div>
       <div class="foot-col">
-        <a href="about.html">About</a>
+        <a href="about">About</a>
         <a href="./#newsletter">Newsletter</a>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Use</a>
+        <a href="privacy">Privacy Policy</a>
+        <a href="terms">Terms of Use</a>
       </div>
     </div>
     <div class="foot-nl-mini">
@@ -963,9 +976,9 @@ body[data-page-depth="1"] article .intro a{color:#ffffff !important;text-decorat
       <span class="foot-copy">&copy; 2026 OnlineBiz Pro. For informational purposes only. Not financial or business advice.</span>
       <div class="foot-bottom-links">
         <a href="./">Home</a>
-        <a href="about.html">About</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
+        <a href="about">About</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
       </div>
     </div>
   </div>
