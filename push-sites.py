@@ -128,9 +128,10 @@ SITES = [
     "hero_sub":"Training science that holds up in the real world - backed by research, confirmed by 12 years of coaching results.",
     "nl_head":"The Training Signal","nl_sub":"Weekly training insights, protocol breakdowns, and research you can actually use.",
     "footer_desc":"Evidence-based fitness coaching and training science.",
-    "bg":"#0a0d0f","bg2":"#12171a","surface":"#191f24",
-    "primary":"#06b6d4","primary2":"#0284c7","text":"#e0f4f8","muted":"#5a8a98","brd":"#1a2e36",
-    "font_head":"system-ui,sans-serif","font_body":"system-ui,sans-serif","font_mono":"monospace",
+    "bg":"#0c0e14","bg2":"#13161e","surface":"#1a1e28",
+    "primary":"#d6ff3f","primary2":"#b8e02a","text":"#f0f1f4","muted":"#9aa0aa","brd":"rgba(255,255,255,.08)",
+    "font_head":"'Inter Tight','Inter',system-ui,sans-serif","font_body":"'Inter',system-ui,sans-serif","font_mono":"'JetBrains Mono',ui-monospace,monospace",
+    "performance_archive":True,
   },
   {
     "repo":"Siavashsed/supplementverge","id":"supplementverge","tpl":"stack",
@@ -177,17 +178,21 @@ SITES = [
   },
   {
     "repo":"Siavashsed/sellit-ca","id":"sellit-ca","tpl":"grid",
-    "name":"Sellit.ca","tagline":"Tips for buying, selling, and growing home value",
-    "category":"Real Estate Investing",
-    "author":"David Mash","author_title":"Real Estate Investor & Property Law Consultant",
-    "bio1":"I own 14 doors across three markets and have practiced real estate law for nine years. The combination gives me a perspective most investors don't have - I can tell you what a deal looks like on paper and what it looks like in court.",
-    "bio2":"Mash Estate is where I publish the analysis I give private clients: market reads, deal structures, and the legal landmines most investors step on.",
-    "hero_sub":"Real estate investing analysis from an investor who also practices property law. The numbers and the legal reality.",
-    "nl_head":"The Property Brief","nl_sub":"Monthly market analysis, deal structures, and investor insights.",
-    "footer_desc":"Real estate investing intelligence from an investor and property law background.",
-    "bg":"#f9fafb","bg2":"#f3f4f6","surface":"#e9eaec",
-    "primary":"#1e3a6e","primary2":"#1e40af","text":"#111827","muted":"#6b7280","brd":"#d1d5db",
-    "font_head":"Georgia,serif","font_body":"system-ui,sans-serif","font_mono":"monospace",
+    "name":"Sellit","tagline":"The Unseen Tricks for Selling Your House Better",
+    "category":"Home Selling & Real Estate Intel",
+    "author":"The Sellit Desk","author_title":"Real Estate Insiders & Everyday Sellers",
+    "bio1":"We are a small group of working agents, listing photographers, mortgage brokers, and recent FSBO sellers who got tired of how little useful intel HouseSigma and Realtor.ca actually give a seller. Every piece here was used to sell a real house.",
+    "bio2":"Sellit is the layer between the listing portal and the kitchen-table conversation. The tactics, the numbers, the negotiating moves - the things the agent does not write down because nobody is paying them to teach it.",
+    "hero_sub":"The tactics agents do not share, the listing tricks portals do not show, and the pricing psychology that decides whether you walk away with the right number. A better, freer version of HouseSigma and Realtor.ca.",
+    "nl_head":"The Seller Brief","nl_sub":"One tactical seller move every week. Pricing, staging, negotiating - the moves agents keep off the listing page.",
+    "footer_desc":"The unseen tricks for selling your house better. The newest way of house selling, written by everyday people who actually do it.",
+    # Dark premium scheme - matches the SHELL navy and fixes the white-on-white
+    # contrast bug that made archive card titles invisible.
+    "bg":"#0c1018","bg2":"#141a26","surface":"#1a2233",
+    "primary":"#c8a96a","primary2":"#9e8654","text":"#f4f6fa","muted":"#9ca5b4","brd":"#27303f",
+    "font_head":"'Inter Tight','Inter',system-ui,sans-serif","font_body":"'Inter',system-ui,sans-serif","font_mono":"'JetBrains Mono',ui-monospace,monospace",
+    "editorial_archive":True,
+    "schema_article_type":"BlogPosting",
   },
   {
     "repo":"Siavashsed/newborniq","id":"newborniq","tpl":"bloom",
@@ -298,9 +303,9 @@ SITES = [
     "hero_sub":"Independent travel writing built on specific experience - not press trips, not sponsored content, just what actually happened.",
     "nl_head":"The Travel Letter","nl_sub":"Monthly destination guides and travel notes from 60+ countries of independent experience.",
     "footer_desc":"Independent travel writing from a journalist who pays her own way.",
-    "bg":"#fefce8","bg2":"#fef3c7","surface":"#fde68a",
-    "primary":"#c2410c","primary2":"#9a3412","text":"#1c1408","muted":"#927040","brd":"#f0d890",
-    "font_head":"Georgia,serif","font_body":"system-ui,sans-serif","font_mono":"monospace",
+    "bg":"#0d1a1e","bg2":"#132028","surface":"#1a2d38",
+    "primary":"#14b8a6","primary2":"#0d9488","text":"#f1f7f5","muted":"#9cbdb5","brd":"#27414d",
+    "font_head":"'Merriweather',Georgia,serif","font_body":"'Inter',system-ui,sans-serif","font_mono":"monospace",
   },
   {
     "repo":"Siavashsed/mashestate-construction","id":"mashestate-construction","tpl":"forge",
@@ -328,7 +333,9 @@ SITES = [
     "footer_desc":"Experiential event curation for curious minds who want more from an evening.",
     "bg":"#080709","bg2":"#0e0c10","surface":"#141218",
     "primary":"#c9a96e","primary2":"#a8883d","text":"#f2ede6","muted":"#8a7a6a","brd":"#2a2430",
-    "font_head":"system-ui,sans-serif","font_body":"system-ui,sans-serif","font_mono":"monospace",
+    "font_head":"'Cormorant Garamond',Georgia,serif","font_body":"'Inter',system-ui,sans-serif","font_mono":"'JetBrains Mono',ui-monospace,monospace",
+    # Opt-in to the editorial luxury /articles archive layout.
+    "editorial_archive":True,
   },
   {
     "repo":"Siavashsed/topproduct","id":"topproduct","tpl":"topproduct",
@@ -467,6 +474,151 @@ SITES = [
     "leaf_approach":[("Cite the literature","Every claim links to a real source: a journal, a guideline, or a peer-reviewed paper. No assertion stands alone."),("Conservative first","Drill less. Preserve more. The healthiest restoration is the one you do not need."),("Teach the technique, not the brand","Brushing pressure, paste quantity, flossing angle. The product matters less than the motion."),("Write for the patient too","Every clinical article includes a plain-language section the patient can read."),("Question your reflexes","After fifty years, the most dangerous habit is certainty. Reconsider familiar diagnoses every season.")],
   },
 ]
+
+
+# ── Single source of truth: merge network-config.json into SITES ───────────────
+# The hardcoded SITES list above carries the visual/copy fields each site needs
+# at build time (palette, fonts, hero copy). network-config.json carries the
+# behavior flags edited by the dashboard (active, persona, tone, editorial_archive,
+# custom_domain, schema_article_type, posts_per_day_new, etc.).
+#
+# Historically these two stores drifted - flipping a flag in network-config did
+# nothing because push-sites.py never read it. This merge runs at module load so
+# any field present in network-config wins for matching site IDs, and any extra
+# fields (e.g. editorial_archive, custom_domain, persona) become available on
+# the same `s` dict the generators consume.
+# ── Kit presets (palette + fonts + layout for each template kit) ──────────────
+# Used when a new site is added via the Add-Site wizard. The site's network-
+# config entry gets a `kit: "<slug>"` field and this preset fills in any visual
+# fields the user didn't override. Keeps the kit choice as the single design
+# decision instead of forcing the user to pick a palette by hand.
+KIT_PRESETS = {
+    "editorial-luxury": {
+        "bg":"#080709","bg2":"#0e0c10","surface":"#141218",
+        "primary":"#c9a96e","primary2":"#a8883d","text":"#f2ede6","muted":"#9a8d7d","brd":"#2a2430",
+        "font_head":"'Cormorant Garamond',Georgia,serif",
+        "font_body":"'Inter',system-ui,sans-serif",
+        "font_mono":"'JetBrains Mono',ui-monospace,monospace",
+        "tpl":"kanona",
+        "editorial_archive":True,
+        "schema_article_type":"CreativeWork",
+    },
+    "tech-modern": {
+        "bg":"#0a0e1a","bg2":"#10162a","surface":"#1a2238",
+        "primary":"#3b82f6","primary2":"#1d4ed8","text":"#f1f5f9","muted":"#94a3b8","brd":"#1e2a4a",
+        "font_head":"'Inter',system-ui,sans-serif",
+        "font_body":"'Inter',system-ui,sans-serif",
+        "font_mono":"'JetBrains Mono',ui-monospace,monospace",
+        "tpl":"cryptopulse",
+        "schema_article_type":"TechArticle",
+    },
+    "news-magazine": {
+        "bg":"#fdfdfb","bg2":"#f4f1ec","surface":"#ffffff",
+        "primary":"#dc2626","primary2":"#991b1b","text":"#0e0d0c","muted":"#5a5852","brd":"#e6e2d8",
+        "font_head":"'Playfair Display',Georgia,serif",
+        "font_body":"'Inter',system-ui,sans-serif",
+        "font_mono":"'JetBrains Mono',ui-monospace,monospace",
+        "tpl":"sportiqpro",
+        "schema_article_type":"NewsArticle",
+    },
+    "broadsheet": {
+        "bg":"#f4f0e8","bg2":"#ece6da","surface":"#fffaf0",
+        "primary":"#1a1812","primary2":"#3a3528","text":"#1a1812","muted":"#5a5448","brd":"#d8d2c4",
+        "font_head":"'Libre Caslon Text','Times New Roman',serif",
+        "font_body":"'Inter',system-ui,sans-serif",
+        "font_mono":"'Courier New',monospace",
+        "tpl":"folioatelier",
+        "schema_article_type":"ReportageNewsArticle",
+    },
+    "minimalist": {
+        "bg":"#ffffff","bg2":"#f8f8f7","surface":"#ffffff",
+        "primary":"#0a0a0a","primary2":"#404040","text":"#0a0a0a","muted":"#737373","brd":"#e5e5e5",
+        "font_head":"'Fraunces',Georgia,serif",
+        "font_body":"'Inter',system-ui,sans-serif",
+        "font_mono":"'JetBrains Mono',ui-monospace,monospace",
+        "tpl":"modeformstudio",
+        "schema_article_type":"BlogPosting",
+    },
+}
+
+
+def _site_dict_from_network_entry(nc_entry):
+    """Synthesize a SITES-shaped dict from a network-config entry that has no
+    corresponding hardcoded SITES entry. Pulls visual defaults from the kit
+    preset named in `kit`, then overlays any explicit network-config fields."""
+    kit = (nc_entry.get("kit") or "minimalist").strip().lower()
+    preset = dict(KIT_PRESETS.get(kit, KIT_PRESETS["minimalist"]))
+    sid = nc_entry.get("id", "")
+    site = {
+        "repo": nc_entry.get("repo") or f"Siavashsed/{sid}",
+        "id": sid,
+        "tpl": preset.get("tpl", "minimalist"),
+        "name": nc_entry.get("name", sid),
+        "tagline": nc_entry.get("tagline", ""),
+        "category": nc_entry.get("category", "General"),
+        "author": nc_entry.get("default_author") or "Editorial Team",
+        "author_title": nc_entry.get("author_title", "Editor"),
+        "bio1": (nc_entry.get("author_bio") or "Editor of this site.")[:300],
+        "bio2": "",
+        "hero_sub": nc_entry.get("hero_sub") or nc_entry.get("tagline") or "",
+        "nl_head": "Newsletter",
+        "nl_sub": "Get our best work delivered. No spam.",
+        "footer_desc": nc_entry.get("footer_desc") or nc_entry.get("tagline") or "",
+    }
+    # Fill in palette + fonts from kit preset
+    for k in ("bg","bg2","surface","primary","primary2","text","muted","brd",
+              "font_head","font_body","font_mono"):
+        site[k] = preset.get(k, "")
+    return site
+
+
+def _merge_network_config_into_sites():
+    try:
+        import json as _json
+        from pathlib import Path as _Path
+        cfg_path = _Path(__file__).parent / "network-config.json"
+        if not cfg_path.exists():
+            return
+        cfg = _json.loads(cfg_path.read_text(encoding="utf-8"))
+        by_id = {s.get("id"): s for s in cfg.get("sites", []) if s.get("id")}
+        existing_ids = {s.get("id") for s in SITES}
+        # Apply overrides to known sites
+        for site in SITES:
+            sid = site.get("id")
+            override = by_id.get(sid)
+            if not override:
+                continue
+            for k, v in override.items():
+                if k in {"id", "repo"}:
+                    continue
+                if k in {"bg", "bg2", "surface", "primary", "primary2",
+                         "text", "muted", "brd",
+                         "font_head", "font_body", "font_mono",
+                         "tagline", "hero_sub", "footer_desc", "nl_head", "nl_sub",
+                         "author_title", "tpl"}:
+                    if v in (None, "", []):
+                        continue
+                site[k] = v
+        # Append any network-config sites that aren't in the hardcoded list.
+        # Lets new sites added via the dashboard appear without editing source.
+        for nc_entry in cfg.get("sites", []):
+            sid = nc_entry.get("id")
+            if not sid or sid in existing_ids or sid == "nexus":
+                continue
+            if nc_entry.get("is_mother_site"):
+                continue
+            new_site = _site_dict_from_network_entry(nc_entry)
+            # Overlay any direct overrides from network-config on top
+            for k, v in nc_entry.items():
+                if k in {"id", "repo"} or v in (None, "", []):
+                    continue
+                new_site[k] = v
+            SITES.append(new_site)
+    except Exception:
+        pass
+
+_merge_network_config_into_sites()
+
 
 # ── Per-site story content (4-5 paragraphs per author) ─────────────────────────
 STORIES = {
@@ -3952,11 +4104,471 @@ def _articles_categories(stem):
         return []
 
 
+def _articles_body_editorial(s):
+    """Editorial luxury archive variant (opt-in via site config 'editorial_archive':true).
+    Used by kanona-events; restrained dark editorial layout with a feature hero,
+    2-col article cards in 4:5 portrait crop, italic-serif accents, no chip row
+    or 'X published' badge. Premium feel matching a monograph index."""
+    ink    = _ink_for(s)
+    on_ink = s.get('bg') or '#000'
+    accent = s.get('primary', '#c4a05d')
+    bg     = s.get('bg', '#050407')
+    bg2    = s.get('bg2', '#0a0810')
+    surf   = s.get('surface', '#0e0b15')
+    text   = s.get('text', '#e8e2d9')
+    muted  = s.get('muted', 'rgba(232,226,217,.6)')
+    border = s.get('brd', 'rgba(255,255,255,.06)')
+    fhead  = s.get('font_head', "'Cormorant Garamond',Georgia,serif")
+    fmono  = s.get('font_mono', "'JetBrains Mono',ui-monospace,monospace")
+    fallback_img = ("https://images.unsplash.com/photo-1519671482749-fd09be7ccebf"
+                    "?w=1400&q=85&auto=format&fit=crop")
+
+    css = f""".jr{{max-width:1180px;margin:0 auto;padding:48px 28px 120px;color:{text}}}
+.jr-head{{text-align:center;margin:0 auto 56px;max-width:760px}}
+.jr-eyebrow{{font-family:{fmono};font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:{accent};margin-bottom:18px;display:inline-flex;align-items:center;gap:14px}}
+.jr-eyebrow::before,.jr-eyebrow::after{{content:'';width:24px;height:1px;background:{accent};opacity:.6}}
+.jr-title{{font-family:{fhead};font-weight:300;font-size:clamp(38px,5.4vw,68px);line-height:1.04;letter-spacing:-.012em;color:{text};margin-bottom:18px}}
+.jr-title i{{font-style:italic;color:{accent};font-weight:300}}
+.jr-stand{{font-family:{fhead};font-style:italic;font-weight:300;font-size:clamp(15px,1.4vw,18px);line-height:1.55;color:{muted};max-width:560px;margin:0 auto}}
+.jr-search-row{{display:flex;justify-content:center;margin:32px auto 0;max-width:480px;position:relative}}
+.jr-search{{width:100%;background:transparent;border:none;border-bottom:1px solid {border};padding:10px 0 10px 28px;font-family:{fmono};font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:{text};outline:none}}
+.jr-search:focus{{border-bottom-color:{accent}}}
+.jr-search::placeholder{{color:{muted};letter-spacing:.22em;font-size:10.5px;opacity:.7}}
+.jr-search-row::before{{content:'';position:absolute;left:0;top:14px;width:14px;height:14px;border:1px solid {muted};border-radius:50%;opacity:.5}}
+.jr-search-row::after{{content:'';position:absolute;left:11px;top:24px;width:6px;height:1px;background:{muted};transform:rotate(45deg);opacity:.5}}
+
+/* Category nav - elegant inline links with hairline separators */
+.jr-cats{{display:flex;justify-content:center;flex-wrap:wrap;gap:0;margin:48px 0 64px;border-top:1px solid {border};border-bottom:1px solid {border};padding:14px 0}}
+.jr-cat{{font-family:{fmono};font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:{muted};padding:6px 18px;background:none;border:none;cursor:pointer;font-family:{fmono};transition:color .25s;position:relative}}
+.jr-cat:not(:last-child)::after{{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:1px;height:10px;background:{border}}}
+.jr-cat:hover,.jr-cat.active{{color:{accent}}}
+.jr-cat.active{{font-weight:600}}
+
+/* FEATURE hero - full-width portrait image with overlaid editorial caption */
+.jr-feature{{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;margin-bottom:84px;align-items:center}}
+.jr-feature-img{{aspect-ratio:5/4;overflow:hidden;background:{bg2};border:1px solid {border};position:relative}}
+.jr-feature-img img{{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.22,1,.36,1);filter:grayscale(.08) contrast(1.04)}}
+.jr-feature:hover .jr-feature-img img{{transform:scale(1.04);filter:grayscale(0) contrast(1.06)}}
+.jr-feature-body .jr-num{{font-family:{fmono};font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:{accent};margin-bottom:18px;display:inline-flex;align-items:center;gap:14px}}
+.jr-feature-body .jr-num::before{{content:'';width:38px;height:1px;background:{accent}}}
+.jr-feature-cat{{font-family:{fhead};font-style:italic;font-weight:400;font-size:14px;color:{accent};margin-bottom:14px;letter-spacing:.005em}}
+.jr-feature-h{{font-family:{fhead};font-weight:300;font-size:clamp(28px,3.4vw,46px);line-height:1.08;letter-spacing:-.012em;color:{text};margin-bottom:18px}}
+.jr-feature-h a{{color:inherit;text-decoration:none}}
+.jr-feature-stand{{font-family:{fhead};font-weight:300;font-size:17px;line-height:1.55;color:{muted};margin-bottom:24px;max-width:480px}}
+.jr-feature-meta{{font-family:{fmono};font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:{muted};padding-top:14px;border-top:1px solid {border}}}
+
+/* 2-column editorial grid below the feature */
+.jr-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:56px 48px;margin-bottom:64px}}
+.jr-card{{display:block;color:inherit;text-decoration:none}}
+.jr-card-img-wrap{{aspect-ratio:4/5;overflow:hidden;background:{bg2};border:1px solid {border};margin-bottom:22px;position:relative}}
+.jr-card-img-wrap img{{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.22,1,.36,1);filter:grayscale(.12) contrast(1.04)}}
+.jr-card:hover .jr-card-img-wrap img{{transform:scale(1.05);filter:grayscale(0) contrast(1.06)}}
+.jr-card-num{{font-family:{fmono};font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:{accent};margin-bottom:10px;display:inline-flex;align-items:center;gap:10px}}
+.jr-card-num::before{{content:'';width:24px;height:1px;background:{accent};opacity:.6}}
+.jr-card-cat{{font-family:{fhead};font-style:italic;font-size:13.5px;color:{accent};margin-bottom:10px;letter-spacing:.005em}}
+.jr-card-h{{font-family:{fhead};font-weight:400;font-size:clamp(20px,2vw,26px);line-height:1.15;letter-spacing:-.005em;color:{text};margin-bottom:12px}}
+.jr-card-stand{{font-family:{fhead};font-weight:300;font-size:14.5px;line-height:1.55;color:{muted};margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
+.jr-card-meta{{font-family:{fmono};font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:{muted};padding-top:12px;border-top:1px solid {border}}}
+
+/* Page indicator - "N° 01 / 24" style instead of Prev/Next buttons */
+.jr-page{{display:flex;justify-content:center;align-items:center;gap:36px;margin-top:48px;padding-top:32px;border-top:1px solid {border}}}
+.jr-page-btn{{background:transparent;border:none;font-family:{fmono};font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:{muted};cursor:pointer;padding:8px 0;transition:color .25s}}
+.jr-page-btn:hover:not(:disabled){{color:{accent}}}
+.jr-page-btn:disabled{{opacity:.3;cursor:not-allowed}}
+.jr-page-num{{font-family:{fhead};font-style:italic;font-size:18px;color:{accent};letter-spacing:.02em;min-width:80px;text-align:center}}
+
+.jr-empty{{text-align:center;padding:96px 24px;border:1px solid {border};background:{bg2}}}
+.jr-empty-h{{font-family:{fhead};font-style:italic;font-weight:300;font-size:24px;color:{text};margin-bottom:10px}}
+.jr-empty-p{{font-family:{fhead};font-weight:300;font-size:14px;color:{muted}}}
+
+@media(max-width:960px){{
+  .jr{{padding:36px 22px 80px}}
+  .jr-feature{{grid-template-columns:1fr;gap:28px;margin-bottom:64px}}
+  .jr-grid{{grid-template-columns:1fr;gap:48px}}
+  .jr-cats{{margin:36px 0 48px;padding:10px 0}}
+  .jr-cat{{padding:5px 12px;font-size:9.5px;letter-spacing:.2em}}
+}}
+@media(max-width:560px){{
+  .jr{{padding:28px 18px 64px}}
+  .jr-title{{font-size:clamp(28px,8vw,38px)}}
+  .jr-feature-h{{font-size:clamp(24px,7vw,30px)}}
+  .jr-card-h{{font-size:18px}}
+  .jr-page{{gap:18px}}
+}}"""
+
+    body = f"""<main class="jr">
+  <header class="jr-head">
+    <div class="jr-eyebrow">The Journal</div>
+    <h1 class="jr-title">A record of <i>quiet rooms</i>, considered light, and evenings that remain.</h1>
+    <p class="jr-stand">Notes from the studio on the craft of atmosphere. Field reports, design close-reads, and the occasional letter from a private dinner where everything aligned.</p>
+    <div class="jr-search-row">
+      <input id="jr-search" class="jr-search" type="search" placeholder="Search entries">
+    </div>
+  </header>
+
+  <nav class="jr-cats" id="jr-cats">
+    <button class="jr-cat active" type="button" data-cat="__all__">All entries</button>
+  </nav>
+
+  <article class="jr-feature" id="jr-feature" style="display:none">
+    <a class="jr-feature-img" id="jr-feat-img-link" href="#"><img id="jr-feat-img" loading="lazy" alt=""></a>
+    <div class="jr-feature-body">
+      <div class="jr-num" id="jr-feat-num">The latest entry</div>
+      <div class="jr-feature-cat" id="jr-feat-cat"></div>
+      <h2 class="jr-feature-h"><a id="jr-feat-link" href="#"></a></h2>
+      <p class="jr-feature-stand" id="jr-feat-stand"></p>
+      <div class="jr-feature-meta" id="jr-feat-meta"></div>
+    </div>
+  </article>
+
+  <div class="jr-grid" id="jr-grid"></div>
+
+  <nav class="jr-page" id="jr-page" style="display:none" aria-label="Pagination">
+    <button id="jr-prev" class="jr-page-btn" type="button">&larr; Earlier</button>
+    <span class="jr-page-num" id="jr-page-num"></span>
+    <button id="jr-next" class="jr-page-btn" type="button">Later &rarr;</button>
+  </nav>
+</main>
+
+<script>
+(function(){{
+  if(!document.getElementById('jr-grid'))return;
+  var PER_PAGE=10;
+  var FALLBACK_IMG={json.dumps(fallback_img)};
+  var SITE_CAT={json.dumps(s.get('category') or 'Journal')};
+  var all=[],activeCat='__all__',query='',page=1;
+  var gridEl=document.getElementById('jr-grid');
+  var featEl=document.getElementById('jr-feature');
+  var catsEl=document.getElementById('jr-cats');
+  var pageEl=document.getElementById('jr-page');
+  var prevBtn=document.getElementById('jr-prev');
+  var nextBtn=document.getElementById('jr-next');
+  var pageNumEl=document.getElementById('jr-page-num');
+  var searchEl=document.getElementById('jr-search');
+  function esc(t){{return String(t==null?'':t).replace(/[&<>"']/g,function(c){{return({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}})[c];}});}}
+  function href(p){{return './'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}}
+  function pad(n){{return n<10?'N° 0'+n:'N° '+n;}}
+  function dateStr(iso){{if(!iso)return'';var d=new Date(iso);if(isNaN(d))return iso;return d.toLocaleDateString('en-GB',{{day:'2-digit',month:'short',year:'numeric'}}).toUpperCase();}}
+  function filtered(){{
+    var q=query.trim().toLowerCase();
+    return all.filter(function(p){{
+      if(activeCat!=='__all__'&&(p.category||SITE_CAT)!==activeCat)return false;
+      if(q&&String(p.title||'').toLowerCase().indexOf(q)===-1&&String(p.meta_description||'').toLowerCase().indexOf(q)===-1)return false;
+      return true;
+    }});
+  }}
+  function renderFeature(arr){{
+    if(!arr.length){{featEl.style.display='none';return;}}
+    var lead=arr[0];
+    var img=lead.image||FALLBACK_IMG;
+    document.getElementById('jr-feat-img-link').setAttribute('href',href(lead));
+    document.getElementById('jr-feat-img').src=img;
+    document.getElementById('jr-feat-img').setAttribute('alt',lead.title||'');
+    document.getElementById('jr-feat-img').onerror=function(){{this.onerror=null;this.src=FALLBACK_IMG;}};
+    document.getElementById('jr-feat-cat').textContent=lead.category||SITE_CAT;
+    var lk=document.getElementById('jr-feat-link');
+    lk.setAttribute('href',href(lead));
+    lk.textContent=lead.title||'Untitled';
+    document.getElementById('jr-feat-stand').textContent=lead.meta_description||'';
+    document.getElementById('jr-feat-meta').textContent=[dateStr(lead.date_iso),lead.author||''].filter(Boolean).join('  ·  ');
+    featEl.style.display='grid';
+  }}
+  function renderGrid(arr){{
+    var rest=arr.slice(1);
+    var total=rest.length;
+    var pages=Math.max(1,Math.ceil(total/PER_PAGE));
+    if(page>pages)page=pages;
+    var start=(page-1)*PER_PAGE;
+    var slice=rest.slice(start,start+PER_PAGE);
+    if(!arr.length){{
+      gridEl.innerHTML='<div class="jr-empty"><div class="jr-empty-h">No entries match your filters</div><p class="jr-empty-p">Try clearing the search or picking a different category above.</p></div>';
+      pageEl.style.display='none';
+      return;
+    }}
+    gridEl.innerHTML=slice.map(function(p,i){{
+      var n=pad(start+i+2); // +2 because feature is 01
+      var img=p.image||FALLBACK_IMG;
+      return '<a class="jr-card" href="'+href(p)+'">'+
+        '<div class="jr-card-img-wrap"><img loading="lazy" alt="'+esc(p.title||'')+'" src="'+esc(img)+'" onerror="this.onerror=null;this.src=\\''+FALLBACK_IMG+'\\'"></div>'+
+        '<div class="jr-card-num">'+n+'</div>'+
+        '<div class="jr-card-cat">'+esc(p.category||SITE_CAT)+'</div>'+
+        '<h3 class="jr-card-h">'+esc(p.title||'Untitled')+'</h3>'+
+        '<p class="jr-card-stand">'+esc(p.meta_description||'')+'</p>'+
+        '<div class="jr-card-meta">'+[dateStr(p.date_iso),p.author||''].filter(Boolean).join('  ·  ')+'</div>'+
+      '</a>';
+    }}).join('');
+    if(pages>1){{
+      pageEl.style.display='flex';
+      pageNumEl.textContent=pad(page)+' / '+pad(pages);
+      prevBtn.disabled=page<=1;
+      nextBtn.disabled=page>=pages;
+    }} else {{pageEl.style.display='none';}}
+  }}
+  function rerender(){{var arr=filtered();renderFeature(arr);renderGrid(arr);}}
+  function setCat(c){{activeCat=c;page=1;Array.prototype.forEach.call(catsEl.querySelectorAll('.jr-cat'),function(b){{b.classList.toggle('active',b.getAttribute('data-cat')===c);}});rerender();}}
+  catsEl.addEventListener('click',function(e){{var b=e.target.closest('.jr-cat');if(!b)return;setCat(b.getAttribute('data-cat'));}});
+  var deb;
+  searchEl.addEventListener('input',function(){{clearTimeout(deb);deb=setTimeout(function(){{query=searchEl.value;page=1;rerender();}},200);}});
+  prevBtn.addEventListener('click',function(){{if(page>1){{page--;rerender();window.scrollTo({{top:0,behavior:'smooth'}});}}}});
+  nextBtn.addEventListener('click',function(){{page++;rerender();window.scrollTo({{top:0,behavior:'smooth'}});}});
+  // Archive page lives at /articles/index.html so ./articles.json resolves
+  // to the wrong path. Try both: ../articles.json first (correct path), then
+  // ./articles.json as a fallback for older deploys.
+  function _fetchArts(){{
+    return fetch('../articles.json',{{cache:'no-store'}}).then(function(r){{
+      if(r.ok)return r.json();
+      return fetch('./articles.json',{{cache:'no-store'}}).then(function(r2){{
+        if(!r2.ok)throw 0; return r2.json();
+      }});
+    }});
+  }}
+  _fetchArts().then(function(data){{
+    all=Array.isArray(data)?data.slice():[];
+    all.sort(function(a,b){{return String(b.date_iso||'').localeCompare(String(a.date_iso||''));}});
+    // Build categories from actual data
+    var seen={{}};var cats=[];
+    all.forEach(function(a){{var c=a.category||SITE_CAT;if(!seen[c]){{seen[c]=1;cats.push(c);}}}});
+    cats.forEach(function(c){{
+      var btn=document.createElement('button');
+      btn.className='jr-cat';btn.type='button';btn.setAttribute('data-cat',c);btn.textContent=c;
+      catsEl.appendChild(btn);
+    }});
+    rerender();
+  }}).catch(function(){{
+    gridEl.innerHTML='<div class="jr-empty"><div class="jr-empty-h">The journal opens soon</div><p class="jr-empty-p">New entries will appear here as they publish. Check back soon.</p></div>';
+  }});
+}})();
+</script>"""
+    return body, css
+
+
+def _articles_body_performance(s):
+    """Athletic / performance archive layout. Full-bleed dark hero with a
+    big lime headline, sticky filter row, full-width 4-col card grid that
+    drops to 3/2/1 cleanly. Opt-in via `performance_archive: true` in the
+    site config; used by fitpulsepro and any other athletic / sports site.
+    The visuals are tuned for a dark page with one bold accent color."""
+    accent = s.get('primary') or '#d6ff3f'
+    accent_alt = s.get('primary2') or accent
+    bg     = s.get('bg') or '#0c0e14'
+    bg2    = s.get('bg2') or '#13161e'
+    surf   = s.get('surface') or '#1a1e28'
+    text   = s.get('text') or '#f0f1f4'
+    muted  = s.get('muted') or '#9aa0aa'
+    border = s.get('brd') or 'rgba(255,255,255,.08)'
+    fhead  = s.get('font_head') or "'Inter Tight','Inter',system-ui,sans-serif"
+    fsans  = s.get('font_body') or "'Inter',system-ui,sans-serif"
+    fmono  = s.get('font_mono') or "'JetBrains Mono',ui-monospace,monospace"
+    fallback_img = ("https://images.unsplash.com/photo-1517836357463-d25dfeac3438"
+                    "?w=1400&q=85&auto=format&fit=crop")
+
+    css = f""".pf-wrap{{background:{bg};color:{text};margin:0;padding:0;font-family:{fsans};min-height:100vh}}
+.pf-wrap *{{box-sizing:border-box}}
+.pf-hero{{padding:84px 6vw 56px;max-width:100%;background:linear-gradient(180deg,{bg2} 0%,{bg} 100%);border-bottom:1px solid {border}}}
+.pf-hero-row{{display:flex;align-items:flex-end;justify-content:space-between;gap:48px;flex-wrap:wrap;max-width:1640px;margin:0 auto}}
+.pf-hero-left{{flex:1;min-width:280px}}
+.pf-eyebrow{{font-family:{fmono};font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:{accent};margin-bottom:18px;display:inline-flex;align-items:center;gap:14px}}
+.pf-eyebrow::before{{content:'';display:inline-block;width:32px;height:2px;background:{accent}}}
+.pf-h1{{font-family:{fhead};font-size:clamp(40px,7vw,96px);font-weight:700;line-height:.95;letter-spacing:-.028em;color:{text};margin:0 0 22px;max-width:1100px}}
+.pf-h1 em{{font-style:normal;color:{accent}}}
+.pf-stand{{font-size:clamp(15px,1.4vw,17px);color:{muted};max-width:620px;line-height:1.6}}
+.pf-hero-stats{{display:flex;gap:36px;align-items:flex-end;flex-shrink:0}}
+.pf-stat{{display:flex;flex-direction:column;gap:4px}}
+.pf-stat-n{{font-family:{fhead};font-size:clamp(38px,5vw,64px);font-weight:700;letter-spacing:-.022em;color:{accent};line-height:1}}
+.pf-stat-l{{font-family:{fmono};font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:{muted}}}
+
+/* Sticky filter row */
+.pf-filters{{position:sticky;top:0;z-index:30;background:rgba(12,14,20,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid {border};padding:18px 6vw}}
+.pf-filters-row{{display:flex;align-items:center;gap:14px;max-width:1640px;margin:0 auto;flex-wrap:wrap}}
+.pf-search{{position:relative;flex:1;min-width:200px;max-width:380px}}
+.pf-search input{{width:100%;background:{surf};border:1px solid {border};border-radius:8px;padding:11px 14px 11px 38px;font-family:{fsans};font-size:13.5px;color:{text};outline:none;transition:border-color .2s}}
+.pf-search input:focus{{border-color:{accent}}}
+.pf-search input::placeholder{{color:{muted}}}
+.pf-search::before{{content:'';position:absolute;left:14px;top:13px;width:14px;height:14px;border:1.5px solid {muted};border-radius:50%}}
+.pf-search::after{{content:'';position:absolute;left:24px;top:24px;width:6px;height:1.5px;background:{muted};transform:rotate(45deg);transform-origin:left center}}
+.pf-cats{{display:flex;gap:6px;flex-wrap:wrap;flex:2}}
+.pf-cat{{font-family:{fmono};font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:{muted};padding:8px 14px;background:transparent;border:1px solid {border};border-radius:999px;cursor:pointer;transition:color .2s,border-color .2s,background .2s}}
+.pf-cat:hover{{color:{text};border-color:{accent}}}
+.pf-cat.active{{color:{bg};background:{accent};border-color:{accent};font-weight:600}}
+.pf-count{{font-family:{fmono};font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:{muted};white-space:nowrap}}
+.pf-count b{{color:{accent};font-weight:600}}
+
+/* Main grid - full width */
+.pf-grid-wrap{{padding:48px 6vw 96px;max-width:1640px;margin:0 auto}}
+.pf-grid{{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}}
+.pf-card{{position:relative;display:flex;flex-direction:column;background:{bg2};border:1px solid {border};border-radius:14px;overflow:hidden;text-decoration:none;color:{text};transition:transform .3s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .3s}}
+.pf-card:hover{{transform:translateY(-6px);border-color:{accent};box-shadow:0 24px 48px -24px rgba(0,0,0,.6),0 0 0 1px {accent}55}}
+.pf-card-img{{position:relative;aspect-ratio:16/10;overflow:hidden;background:{surf}}}
+.pf-card-img img{{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.22,1,.36,1)}}
+.pf-card:hover .pf-card-img img{{transform:scale(1.07)}}
+.pf-card-badge{{position:absolute;top:12px;left:12px;background:{accent};color:{bg};font-family:{fmono};font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;padding:5px 10px;border-radius:4px;font-weight:600}}
+.pf-card-mins{{position:absolute;bottom:12px;right:12px;background:rgba(12,14,20,.9);color:{text};font-family:{fmono};font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:4px;backdrop-filter:blur(4px)}}
+.pf-card-body{{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}}
+.pf-card-h{{font-family:{fhead};font-size:18px;font-weight:600;letter-spacing:-.015em;line-height:1.2;color:{text};margin:0 0 10px}}
+.pf-card-excerpt{{font-size:13.5px;line-height:1.6;color:{muted};margin:0 0 16px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
+.pf-card-foot{{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid {border}}}
+.pf-card-date{{font-family:{fmono};font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:{muted}}}
+.pf-card-read{{font-family:{fmono};font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:{accent};font-weight:600}}
+
+.pf-loadmore-wrap{{grid-column:1/-1;text-align:center;margin-top:48px}}
+.pf-loadmore{{background:transparent;border:1.5px solid {accent};color:{accent};font-family:{fmono};font-size:11px;letter-spacing:.28em;text-transform:uppercase;padding:18px 44px;cursor:pointer;border-radius:8px;font-weight:600;transition:background .25s,color .25s}}
+.pf-loadmore:hover{{background:{accent};color:{bg}}}
+
+.pf-empty{{grid-column:1/-1;text-align:center;padding:96px 24px;border:1px dashed {border};border-radius:14px;background:{bg2}}}
+.pf-empty-h{{font-family:{fhead};font-size:24px;color:{text};margin-bottom:10px;font-weight:600}}
+.pf-empty-p{{color:{muted};font-size:14px}}
+
+@media(max-width:1200px){{.pf-grid{{grid-template-columns:repeat(3,1fr)}}}}
+@media(max-width:880px){{
+  .pf-grid{{grid-template-columns:repeat(2,1fr);gap:18px}}
+  .pf-hero{{padding:60px 5vw 44px}}
+  .pf-hero-row{{flex-direction:column;align-items:flex-start;gap:32px}}
+  .pf-hero-stats{{gap:24px}}
+  .pf-grid-wrap{{padding:36px 5vw 72px}}
+}}
+@media(max-width:560px){{
+  .pf-grid{{grid-template-columns:1fr;gap:18px}}
+  .pf-filters{{padding:14px 5vw}}
+  .pf-filters-row{{gap:10px}}
+  .pf-search{{max-width:100%}}
+  .pf-cats{{gap:5px}}
+  .pf-cat{{font-size:9px;padding:6px 10px}}
+}}"""
+
+    body = f"""<div class="pf-wrap">
+  <section class="pf-hero">
+    <div class="pf-hero-row">
+      <div class="pf-hero-left">
+        <div class="pf-eyebrow">The Archive</div>
+        <h1 class="pf-h1">Train <em>smarter</em><br>not harder.</h1>
+        <p class="pf-stand">Every plyometric protocol, strength template, and recovery study we've published. Filter by focus, search by topic, find what your next training block actually needs.</p>
+      </div>
+      <div class="pf-hero-stats">
+        <div class="pf-stat"><span class="pf-stat-n" id="pf-stat-total">0</span><span class="pf-stat-l">Guides</span></div>
+        <div class="pf-stat"><span class="pf-stat-n" id="pf-stat-cats">0</span><span class="pf-stat-l">Focus areas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="pf-filters" aria-label="Filter">
+    <div class="pf-filters-row">
+      <div class="pf-search"><input id="pf-search" type="search" placeholder="Search guides…" aria-label="Search"></div>
+      <div class="pf-cats" id="pf-cats"><button class="pf-cat active" type="button" data-cat="__all__">All</button></div>
+      <div class="pf-count"><b id="pf-count-n">0</b> showing</div>
+    </div>
+  </nav>
+
+  <div class="pf-grid-wrap"><div class="pf-grid" id="pf-grid"></div></div>
+</div>
+
+<script>
+(function(){{
+  if(!document.getElementById('pf-grid'))return;
+  var PER_PAGE=12;
+  var FALLBACK_IMG={json.dumps(fallback_img)};
+  var SITE_CAT={json.dumps(s.get('category') or 'Guide')};
+  var all=[],SHOWN=0,activeCat='__all__',query='';
+  var gridEl=document.getElementById('pf-grid');
+  var catsEl=document.getElementById('pf-cats');
+  var searchEl=document.getElementById('pf-search');
+  var countEl=document.getElementById('pf-count-n');
+  var statTotal=document.getElementById('pf-stat-total');
+  var statCats=document.getElementById('pf-stat-cats');
+  function esc(t){{return String(t==null?'':t).replace(/[&<>"']/g,function(c){{return({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}})[c];}});}}
+  function href(p){{return './'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}}
+  function dateStr(iso){{if(!iso)return'';var d=new Date(iso);if(isNaN(d))return iso;return d.toLocaleDateString('en-US',{{month:'short',day:'numeric',year:'numeric'}}).toUpperCase();}}
+  function filtered(){{
+    var q=query.trim().toLowerCase();
+    return all.filter(function(p){{
+      if(activeCat!=='__all__'&&(p.category||SITE_CAT)!==activeCat)return false;
+      if(q&&String(p.title||'').toLowerCase().indexOf(q)===-1&&String(p.meta_description||'').toLowerCase().indexOf(q)===-1)return false;
+      return true;
+    }});
+  }}
+  function cardHTML(p){{
+    var img=p.image||FALLBACK_IMG;
+    return '<a class="pf-card" href="'+href(p)+'">'+
+      '<div class="pf-card-img"><img loading="lazy" alt="'+esc(p.title||'')+'" src="'+esc(img)+'" onerror="this.onerror=null;this.src=\\''+FALLBACK_IMG+'\\'">'+
+        '<span class="pf-card-badge">'+esc(p.category||SITE_CAT)+'</span>'+
+        (p.mins?'<span class="pf-card-mins">'+p.mins+' min</span>':'')+
+      '</div>'+
+      '<div class="pf-card-body">'+
+        '<h3 class="pf-card-h">'+esc(p.title||'Untitled')+'</h3>'+
+        '<p class="pf-card-excerpt">'+esc(p.meta_description||'')+'</p>'+
+        '<div class="pf-card-foot"><span class="pf-card-date">'+esc(dateStr(p.date_iso))+'</span><span class="pf-card-read">Read &rarr;</span></div>'+
+      '</div>'+
+    '</a>';
+  }}
+  function ensureLoadMore(arr){{
+    var existing=document.getElementById('pf-loadmore-wrap');
+    if(SHOWN>=arr.length){{if(existing)existing.remove();return;}}
+    if(existing)return;
+    var wrap=document.createElement('div');
+    wrap.id='pf-loadmore-wrap';wrap.className='pf-loadmore-wrap';
+    wrap.innerHTML='<button class="pf-loadmore" type="button">Load more guides</button>';
+    gridEl.appendChild(wrap);
+    wrap.querySelector('button').addEventListener('click',function(){{
+      var next=Math.min(SHOWN+PER_PAGE,arr.length);
+      var moreHTML=arr.slice(SHOWN,next).map(cardHTML).join('');
+      wrap.insertAdjacentHTML('beforebegin',moreHTML);
+      SHOWN=next;
+      ensureLoadMore(arr);
+    }});
+  }}
+  function render(){{
+    var arr=filtered();
+    countEl.textContent=arr.length;
+    if(!arr.length){{
+      gridEl.innerHTML='<div class="pf-empty"><div class="pf-empty-h">No matches</div><p class="pf-empty-p">Clear search or pick a different focus area.</p></div>';
+      return;
+    }}
+    SHOWN=Math.min(PER_PAGE,arr.length);
+    gridEl.innerHTML=arr.slice(0,SHOWN).map(cardHTML).join('');
+    ensureLoadMore(arr);
+  }}
+  function setCat(c){{activeCat=c;Array.prototype.forEach.call(catsEl.querySelectorAll('.pf-cat'),function(b){{b.classList.toggle('active',b.getAttribute('data-cat')===c);}});render();}}
+  catsEl.addEventListener('click',function(e){{var b=e.target.closest('.pf-cat');if(!b)return;setCat(b.getAttribute('data-cat'));}});
+  var deb;
+  searchEl.addEventListener('input',function(){{clearTimeout(deb);deb=setTimeout(function(){{query=searchEl.value;render();}},180);}});
+  function fetchArts(){{
+    return fetch('../articles.json',{{cache:'no-store'}}).then(function(r){{
+      if(r.ok)return r.json();
+      return fetch('./articles.json',{{cache:'no-store'}}).then(function(r2){{
+        if(!r2.ok)throw 0; return r2.json();
+      }});
+    }});
+  }}
+  fetchArts().then(function(data){{
+    all=Array.isArray(data)?data.slice():[];
+    all.sort(function(a,b){{return String(b.date_iso||'').localeCompare(String(a.date_iso||''));}});
+    statTotal.textContent=all.length;
+    var seen={{}};var cats=[];
+    all.forEach(function(a){{var c=a.category||SITE_CAT;if(!seen[c]){{seen[c]=1;cats.push(c);}}}});
+    statCats.textContent=cats.length;
+    cats.forEach(function(c){{
+      var btn=document.createElement('button');btn.className='pf-cat';btn.type='button';btn.setAttribute('data-cat',c);btn.textContent=c;
+      catsEl.appendChild(btn);
+    }});
+    render();
+  }}).catch(function(){{
+    gridEl.innerHTML='<div class="pf-empty"><div class="pf-empty-h">Archive opens soon</div><p class="pf-empty-p">New guides will appear here as they publish.</p></div>';
+  }});
+}})();
+</script>"""
+    return body, css
+
+
 def _articles_body(s):
     """Build the body HTML (no chrome) for the All Articles page.
+    Routes to the editorial luxury variant when the site config opts in via
+    `editorial_archive: true`; otherwise emits the default news-style layout.
     Layout: compact hero row, news-style Latest feature block (5 newest),
     then the searchable categorized list + pager. Single fetch of articles.json
     shared across the feature block and the list."""
+    if s.get('editorial_archive'):
+        return _articles_body_editorial(s)
+    if s.get('performance_archive'):
+        return _articles_body_performance(s)
     ink     = _ink_for(s)
     on_ink  = s.get('bg') or '#0b0b0b'
     cats    = _articles_categories(s['id'])
@@ -3967,10 +4579,9 @@ def _articles_body(s):
     fallback_img = ("https://images.unsplash.com/photo-1499750310107-5fef28a66643"
                     "?w=600&q=80")
 
-    css = f""".aa{{max-width:1040px;margin:0 auto;padding:18px 24px 96px;font-family:inherit}}
-.aa-hero{{display:grid;grid-template-columns:1fr minmax(220px,420px) auto;gap:16px;align-items:center;min-height:56px;max-height:80px;padding:10px 0 14px;border-bottom:1px solid {s['brd']}}}
-.aa-kicker{{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:{s['primary']};white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
-.aa-search{{width:100%;background:{s['bg2']};border:1px solid {s['brd']};border-radius:8px;padding:9px 12px;font-size:13px;color:{ink};font-family:inherit;outline:none}}
+    css = f""".aa{{max-width:1040px;margin:0 auto;padding:18px 24px 96px;font-family:inherit;color:{ink}}}
+.aa-hero{{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:16px;align-items:center;min-height:56px;max-height:80px;padding:14px 0 18px;border-bottom:1px solid {s['brd']}}}
+.aa-search{{width:100%;background:{s['bg2']};border:1px solid {s['brd']};border-radius:8px;padding:11px 14px;font-size:14px;color:{ink};font-family:inherit;outline:none}}
 .aa-search:focus{{border-color:{s['primary']}}}
 .aa-count{{display:inline-block;background:{s['primary']};color:{on_ink};font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap}}
 .aa-latest{{margin:22px 0 28px}}
@@ -4012,13 +4623,16 @@ def _articles_body(s):
 .aa-pager button{{background:{s['bg2']};border:1px solid {s['brd']};color:{ink};font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:8px 16px;border-radius:999px;cursor:pointer;font-family:inherit}}
 .aa-pager button:disabled{{opacity:.4;cursor:not-allowed}}
 .aa-pager .aa-page-num{{font-size:12px;color:{s['muted']};font-weight:700}}
+.aa-footer-kicker{{margin-top:48px;padding-top:24px;border-top:1px solid {s['brd']};display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}}
+.aa-kicker-label{{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2.2px;color:{s['primary']}}}
+.aa-back-home{{font-size:12px;font-weight:600;color:{s['muted']};text-decoration:none;letter-spacing:.3px;transition:color .15s}}
+.aa-back-home:hover{{color:{s['primary']}}}
 @media(max-width:760px){{.aa-latest-grid{{grid-template-columns:1fr;gap:14px}}.aa-lead-img{{height:200px}}.aa-sec{{grid-template-columns:1fr 60px;gap:10px;padding:8px}}.aa-sec-img{{order:2;width:60px;height:60px}}.aa-sec-body{{order:1}}}}
-@media(max-width:640px){{.aa-hero{{grid-template-columns:1fr;max-height:140px;gap:8px;padding:8px 0 10px}}.aa-kicker{{font-size:10px;letter-spacing:1.6px}}.aa-count{{justify-self:start}}}}
+@media(max-width:640px){{.aa-hero{{grid-template-columns:1fr;max-height:none;gap:10px;padding:12px 0 14px}}.aa-count{{justify-self:start}}}}
 @media(max-width:560px){{.aa-card{{grid-template-columns:96px 1fr;gap:12px;padding:10px}}.aa-thumb{{height:88px}}.aa-h{{font-size:15px}}}}"""
 
     body = f"""<main class="aa">
   <div class="aa-hero">
-    <div class="aa-kicker">ALL ARTICLES - {s['name']}</div>
     <input id="aa-search" class="aa-search" type="search" placeholder="Search by title..." aria-label="Search articles">
     <span class="aa-count" id="aa-count">0 published</span>
   </div>
@@ -4045,6 +4659,10 @@ def _articles_body(s):
     <span class="aa-page-num" id="aa-page-num">Page 1</span>
     <button id="aa-next" type="button">Next</button>
   </div>
+  <div class="aa-footer-kicker">
+    <span class="aa-kicker-label">ALL ARTICLES &middot; {s['name']}</span>
+    <a href="./" class="aa-back-home">&larr; Back to home</a>
+  </div>
 </main>
 <script>
 (function(){{
@@ -4064,13 +4682,27 @@ def _articles_body(s):
   var latestEl=document.getElementById('aa-latest');
   var leadEl=document.getElementById('aa-lead');
   var secCol=document.getElementById('aa-sec-col');
-  var all=[],activeCat='__all__',query='',page=1;
+  // Honor ?cat=... and ?q=... query params so cards/links elsewhere
+  // on the site can deep-link to a filtered or searched view.
+  var _params=new URLSearchParams(window.location.search);
+  var _initialCat=_params.get('cat')||'__all__';
+  var _initialQ=_params.get('q')||'';
+  var all=[],activeCat=_initialCat,query=_initialQ,page=1;
+  if(_initialQ){{searchEl.value=_initialQ;}}
   function escapeHtml(t){{return String(t==null?'':t).replace(/[&<>"']/g,function(c){{return({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}})[c];}});}}
   function slugHref(p){{return './'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}}
+  // Fuzzy match: a card category like "Europe" should match articles
+  // tagged "Europe", "European Travel", or any cat containing the token.
+  function catMatches(articleCat, filterCat){{
+    if(filterCat==='__all__')return true;
+    if(!articleCat)return false;
+    var a=String(articleCat).toLowerCase(), f=String(filterCat).toLowerCase();
+    return a===f||a.indexOf(f)!==-1||f.indexOf(a)!==-1;
+  }}
   function filtered(){{
     var q=query.trim().toLowerCase();
     return all.filter(function(p){{
-      if(activeCat!=='__all__'&&(p.category||SITE_CAT)!==activeCat)return false;
+      if(!catMatches(p.category||SITE_CAT, activeCat))return false;
       if(q&&String(p.title||'').toLowerCase().indexOf(q)===-1)return false;
       return true;
     }});
@@ -4125,6 +4757,8 @@ def _articles_body(s):
     metaEl.textContent='Showing '+slice.length+' of '+all.length;
   }}
   function setCat(c){{activeCat=c;page=1;Array.prototype.forEach.call(chipsEl.querySelectorAll('.aa-chip'),function(b){{b.classList.toggle('active',b.getAttribute('data-cat')===c);}});render();}}
+  // Apply the chip-active styling for the initial cat from URL ?cat=
+  if(_initialCat!=='__all__'){{Array.prototype.forEach.call(chipsEl.querySelectorAll('.aa-chip'),function(b){{var dc=b.getAttribute('data-cat');b.classList.toggle('active', dc===_initialCat||(dc&&_initialCat&&(dc.toLowerCase().indexOf(_initialCat.toLowerCase())!==-1||_initialCat.toLowerCase().indexOf(dc.toLowerCase())!==-1)));}});}}
   chipsEl.addEventListener('click',function(e){{var b=e.target.closest('.aa-chip');if(!b)return;setCat(b.getAttribute('data-cat'));}});
   var deb;
   searchEl.addEventListener('input',function(){{clearTimeout(deb);deb=setTimeout(function(){{query=searchEl.value;page=1;render();}},200);}});
@@ -4148,6 +4782,40 @@ def _articles_body(s):
   }});
 }})();
 </script>"""
+    # ── OnlineBiz Pro: distinct dark "operator index" skin ───────────────────
+    # The all-articles body is injected into the homepage shell, so we can lean
+    # on the homepage's own CSS variables (--accent2 purple, --lime, --display
+    # Space Grotesk, --bg2/--surface/--border) for guaranteed alignment. These
+    # rules are appended last so they win over the theme-driven defaults above.
+    if s.get('id') in ('onlinebiz-pro', 'onlinebizpro'):
+        css += """
+.aa{font-family:'Inter',system-ui,sans-serif}
+.aa-hero{border-bottom:1px solid var(--border,#222229)}
+.aa-search{background:var(--bg2,#0d0d10);border:1px solid var(--border,#222229);color:var(--text,#f4f4f6);border-radius:10px}
+.aa-search:focus{border-color:var(--accent2,#a78bfa);box-shadow:0 0 0 3px rgba(167,139,250,.15)}
+.aa-count{background:linear-gradient(120deg,var(--accent2,#a78bfa),var(--lime,#bef264));color:#0a0a0b;font-weight:800}
+.aa-latest-head{border-bottom:2px solid var(--accent2,#a78bfa)}
+.aa-latest-label{font-family:'Space Grotesk','Inter',sans-serif;color:var(--lime,#bef264);letter-spacing:2.2px}
+.aa-lead,.aa-sec,.aa-card{background:var(--bg2,#0d0d10);border:1px solid var(--border,#222229);border-radius:14px}
+.aa-lead{border-left:3px solid;border-image:linear-gradient(180deg,var(--accent2,#a78bfa),var(--lime,#bef264)) 1}
+.aa-lead:hover,.aa-card:hover{border-color:var(--accent2,#a78bfa);box-shadow:0 20px 50px -30px rgba(108,92,231,.7)}
+.aa-sec:hover{border-color:var(--accent2,#a78bfa)}
+.aa-lead-cat,.aa-cat{color:var(--lime,#bef264);font-weight:800}
+.aa-lead-h,.aa-h,.aa-sec-h{font-family:'Space Grotesk','Inter',sans-serif;color:var(--text,#f4f4f6)}
+.aa-chip{background:var(--bg2,#0d0d10);border:1px solid var(--border,#222229);color:var(--muted,#8b8b97);font-family:'Space Grotesk','Inter',sans-serif}
+.aa-chip:hover{color:var(--text,#f4f4f6);border-color:var(--accent2,#a78bfa)}
+.aa-chip.active{background:linear-gradient(120deg,var(--accent2,#a78bfa),var(--lime,#bef264));color:#0a0a0b;border-color:transparent}
+.aa-pager button{background:var(--bg2,#0d0d10);border:1px solid var(--border,#222229);color:var(--text,#f4f4f6);font-family:'Space Grotesk','Inter',sans-serif}
+.aa-pager button:hover:not(:disabled){border-color:var(--accent2,#a78bfa)}
+.aa-kicker-label{font-family:'Space Grotesk','Inter',sans-serif;color:var(--lime,#bef264)}
+.aa-back-home:hover{color:var(--accent2,#a78bfa)}
+.aa-footer-kicker{border-top:1px solid var(--border,#222229)}
+/* Beat the shell's light-paper contrast-audit (forces bare h1/h2/h3 dark on
+   article-depth pages) so headings stay light on this dark archive. */
+body[data-page-depth="1"] .aa-lead-h,
+body[data-page-depth="1"] .aa-h,
+body[data-page-depth="1"] .aa-sec-h{color:var(--text,#f4f4f6)!important}
+"""
     return body, css
 
 
@@ -5976,7 +6644,10 @@ def save_local(only=None, sites_filter=None):
         (d / "terms.html").write_text(_meta_inject(gen_terms(s), s), encoding="utf-8")
         (d / "sms.html").write_text(_meta_inject(gen_sms(s), s), encoding="utf-8")
         (d / "meta-policy.html").write_text(_meta_inject(gen_meta_policy(s), s), encoding="utf-8")
-        (d / "articles.html").write_text(_meta_inject(gen_articles_index(s), s), encoding="utf-8")
+        # Write as articles/index.html so the URL works at both /articles and
+        # /articles/ - GitHub Pages 404s the trailing-slash form on bare *.html.
+        (d / "articles").mkdir(parents=True, exist_ok=True)
+        (d / "articles" / "index.html").write_text(_meta_inject(gen_articles_index(s), s), encoding="utf-8")
         for fn, html in extra_pages(s):
             (d / fn).write_text(_meta_inject(html, s), encoding="utf-8")
         (d / ".nojekyll").write_text("", encoding="utf-8")
@@ -6248,11 +6919,27 @@ def push_github(token, only=None, sites_filter=None):
         push_nexus(token)
         time.sleep(0.8)
 
+    # Dedupe by repo - SITES historically carries some entries twice (legacy
+    # id like "passivewealthguide" + modern id like "passive-wealth" pointing
+    # at the same repo). Pushing the same repo twice in one run is wasteful
+    # and the second hit usually has no matching template - which is why
+    # crashes show up as "Template not found: <modern-id>-index.html".
+    pushed_repos = set()
     for s in SITES:
         if filt and s["id"] not in filt:
             continue
-        idx, abt = generate(s)
-        repo = s["repo"]
+        repo = s.get("repo", "")
+        if repo in pushed_repos:
+            continue
+        pushed_repos.add(repo)
+        try:
+            idx, abt = generate(s)
+        except FileNotFoundError as _ex:
+            # No template for this entry - happens when SITES has a stale
+            # duplicate entry pointing at a repo whose template is keyed
+            # on a sibling entry. Skip rather than crash the whole run.
+            print(f"  Skipping {repo} ({s['id']}): {_ex}")
+            continue
         print(f"  Pushing {repo}...", end=" ", flush=True)
         ok = True
         ok &= gh_put(token, repo, "index.html",       _meta_inject(idx, s),                 "Update site index")
@@ -6262,7 +6949,9 @@ def push_github(token, only=None, sites_filter=None):
         ok &= gh_put(token, repo, "terms.html",        _meta_inject(gen_terms(s), s),       "Add terms and conditions")
         ok &= gh_put(token, repo, "sms.html",          _meta_inject(gen_sms(s), s),         "Add SMS compliance policy")
         ok &= gh_put(token, repo, "meta-policy.html",  _meta_inject(gen_meta_policy(s), s), "Add Meta data policy")
-        ok &= gh_put(token, repo, "articles.html",     _meta_inject(gen_articles_index(s), s), "Add all-articles index")
+        # Path is articles/index.html so the URL resolves with or without
+        # trailing slash; bare articles.html 404s the /articles/ form.
+        ok &= gh_put(token, repo, "articles/index.html", _meta_inject(gen_articles_index(s), s), "Add all-articles index")
         for fn, html in extra_pages(s):
             ok &= gh_put(token, repo, fn, _meta_inject(html, s), f"Add {fn}")
         ok &= gh_put(token, repo, ".nojekyll",         "",               "Disable Jekyll")
