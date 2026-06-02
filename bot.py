@@ -5972,14 +5972,13 @@ def article_broadsheet(article, site, image_url, photographer, t):
 .bs-fig{{margin:0 0 36px}}
 .bs-fig img{{width:100%;height:auto;display:block}}
 .bs-fig figcaption{{font-family:{t["body_font"]};font-size:11px;color:{t["meta"]};letter-spacing:.06em;padding-top:8px;border-bottom:1px solid {t["meta"]};padding-bottom:10px}}
-.bs-body{{column-count:2;column-gap:42px;column-rule:1px solid {t["meta"]};font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.72;color:{t["text2"]};font-feature-settings:"ss01","cv11"}}
-.bs-body > p:first-of-type::first-letter{{font-size:5.2em;float:left;line-height:.85;padding:6px 10px 0 0;color:{t["accent"]};font-weight:700}}
-.bs-body p{{margin:0 0 16px;break-inside:avoid-column;text-wrap:pretty}}
+.bs-body{{max-width:720px;font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.75;color:{t["text2"]};font-feature-settings:"ss01","cv11"}}
+.bs-body p{{margin:0 0 18px;text-wrap:pretty}}
 .bs-body .intro{{font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:18px;color:{t["text"]};font-weight:500;letter-spacing:-.005em}}
-.bs-section{{column-span:all;font-family:{t["heading_font"]};font-size:clamp(22px,2.4vw,30px);font-weight:600;line-height:1.15;letter-spacing:-.015em;margin:42px 0 18px;padding-top:18px;border-top:1px solid {t["meta"]}}}
-.bs-concl{{column-span:all;margin:48px 0 0;padding:28px 32px;background:{t["bg2"]};border-left:3px solid {t["accent"]};font-family:{t["heading_font"]};font-size:18px;line-height:1.6;color:{t["text"]}}}
+.bs-section{{font-family:{t["heading_font"]};font-size:clamp(22px,2.4vw,30px);font-weight:600;line-height:1.15;letter-spacing:-.015em;margin:42px 0 18px;padding-top:18px;border-top:1px solid {t["meta"]}}}
+.bs-concl{{margin:48px 0 0;padding:28px 32px;background:{t["bg2"]};border-left:3px solid {t["accent"]};font-family:{t["heading_font"]};font-size:18px;line-height:1.6;color:{t["text"]}}}
 .bs-concl::before{{content:"END NOTE";display:block;font-family:{t["body_font"]};font-size:10.5px;letter-spacing:.32em;color:{t["accent"]};margin-bottom:10px;font-weight:600}}
-@media(max-width:760px){{.bs-body{{column-count:1}}.bs-h1{{font-size:clamp(34px,7vw,52px)}}}}
+@media(max-width:760px){{.bs-h1{{font-size:clamp(34px,7vw,52px)}}}}
 {_article_section_css(t)}"""
 
     body = f"""<div class="bs">
