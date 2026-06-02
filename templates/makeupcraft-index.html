@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>MakeupCraft - Modern Beauty Editorial, Skincare &amp; Technique</title>
 <meta name="description" content="MakeupCraft is a modern beauty editorial - luminous skincare rituals, considered makeup tutorials, technique deep-dives and honest product reviews for every tone and every level.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -349,9 +350,9 @@ footer{background:var(--cream);padding:100px 0 32px;border-top:1px solid var(--l
   .footer-bottom{padding:24px 20px 0}
 }
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -361,7 +362,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#000000 !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -369,10 +370,10 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#1a1a1a !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#0a0a0a !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
@@ -388,7 +389,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <a href="./#topics">The Edit</a>
       <a href="./#journal">Journal</a>
       <a href="./#editor">Editor</a>
-      <a href="about.html">About</a>
+      <a href="about">About</a>
     </div>
     <div class="nav-right">
       <a href="./#newsletter" class="nav-cta">Subscribe</a>
@@ -402,7 +403,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
   <a href="./#journal">Journal</a>
   <a href="./#editor">Editor</a>
   <a href="./#faq">Questions</a>
-  <a href="about.html">About</a>
+  <a href="about">About</a>
   <a href="./#newsletter" class="mp-cta">Subscribe</a>
 </div>
 <!--/SHELL:HEADER-->
@@ -430,6 +431,8 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     </div>
   </div>
 </section>
+<div style="text-align:left;padding:18px 24px 32px;max-width:1280px;margin:0 auto"><a href="./articles" style="display:inline-flex;align-items:center;gap:10px;color:currentColor;text-decoration:none;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:2px">See all posts <span aria-hidden="true">&rarr;</span></a></div>
+
 
 <div class="trust">
   <div class="trust-in">
@@ -457,8 +460,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <p>Every guide is photographed in-house, written by a working artist, and tested across seasons, tones and skin states. No jargon. No impossible standards. Only the considered work of getting the small things right.</p>
       <div class="philo-sign">
         <div>
-          <div class="philo-sign-name">Amara Vale</div>
-          <div class="philo-sign-role">Founder &amp; Editor in Chief</div>
+          
         </div>
       </div>
     </div>
@@ -519,55 +521,6 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
   </div>
 </section>
 
-<section class="section feature">
-  <div class="wrap">
-    <div class="sec-head left reveal">
-      <span class="eyebrow">Featured Editorial</span>
-      <h2 style="font-family:var(--display);font-weight:500;font-size:clamp(38px,5.2vw,72px);line-height:1.04;letter-spacing:-.02em;margin:22px 0 18px">Reading from the <em style="font-style:italic;font-weight:400;color:var(--rose)">studio</em>.</h2>
-    </div>
-    <div class="feature-grid reveal-stagger">
-      <a href="./#journal" class="feat-card lg">
-        <div class="feat-img"><img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1600&q=85" alt="Featured editorial story" onerror="this.style.display='none'"></div>
-        <div class="feat-cat">Cover Story &middot; Skincare</div>
-        <h3 class="feat-title">The slow-beauty manifesto: <em>fewer products, considered better</em>.</h3>
-        <div class="feat-meta"><span>By Amara Vale</span><span class="dot"></span><span>9 min read</span></div>
-      </a>
-      <a href="./#journal" class="feat-card sm">
-        <div class="feat-img"><img src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=1400&q=85" alt="Lip editorial" onerror="this.style.display='none'"></div>
-        <div class="feat-cat">Colour Study</div>
-        <h3 class="feat-title">An anatomy of the <em>perfect</em> nude lip.</h3>
-        <div class="feat-meta"><span>6 min read</span></div>
-      </a>
-      <a href="./#journal" class="feat-card sm">
-        <div class="feat-img"><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=1400&q=85" alt="Skin glow" onerror="this.style.display='none'"></div>
-        <div class="feat-cat">Technique</div>
-        <h3 class="feat-title">Inner glow, <em>quietly</em> drawn from the cheekbone.</h3>
-        <div class="feat-meta"><span>5 min read</span></div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<section class="numbers">
-  <div class="numbers-in reveal-stagger">
-    <div>
-      <div class="stat-num"><span class="count" data-to="640">0</span><em>+</em></div>
-      <div class="stat-lbl">Guides Published</div>
-    </div>
-    <div>
-      <div class="stat-num"><span class="count" data-to="48">0</span><em>k</em></div>
-      <div class="stat-lbl">Monthly Readers</div>
-    </div>
-    <div>
-      <div class="stat-num"><span class="count" data-to="120">0</span><em>+</em></div>
-      <div class="stat-lbl">Products Tested</div>
-    </div>
-    <div>
-      <div class="stat-num"><span class="count" data-to="9">0</span><em>yrs</em></div>
-      <div class="stat-lbl">Of the Craft</div>
-    </div>
-  </div>
-</section>
 
 <section class="section feed" id="journal">
   <div class="wrap">
@@ -580,26 +533,6 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     </div>
     <div class="art-grid" id="artGrid"></div>
     <div class="feed-more reveal"><a href="./#topics" class="btn-ghost">Discover more chapters</a></div>
-  </div>
-</section>
-
-<section class="section editor" id="editor">
-  <div class="wrap editor-in">
-    <div class="editor-img-wrap reveal">
-      <div class="editor-img"><img src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=1400&q=85" alt="Lead beauty editor portrait" onerror="this.style.display='none'"></div>
-      <div class="editor-sig">
-        <div class="name">Amara Vale</div>
-        <div class="role">Editor in Chief</div>
-      </div>
-    </div>
-    <div class="editor-text reveal">
-      <span class="eyebrow">The Editor</span>
-      <h2>A decade behind the <em>chair</em>, a lifetime behind the lens.</h2>
-      <p>Amara built MakeupCraft to publish the considered counsel that working artists rarely write down. Editorial campaigns, fashion week residencies, and a private client list have taught her that the difference between good and quietly remarkable is almost always a small repeatable habit.</p>
-      <div class="editor-quote">"The finest makeup never hides you. It simply turns the volume up on what was already there."</div>
-      <p>Every tutorial passes through her hands before it reaches yours, and every product is held to the same standard she holds her own kit.</p>
-      <a href="about.html" class="btn-primary editor-cta">Read her story <span class="arr"></span></a>
-    </div>
   </div>
 </section>
 
@@ -649,8 +582,8 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED --><a href="./articles" style="display:inline-block;color:currentColor;text-decoration:none;font-size:19px;font-style:italic;border-bottom:1px solid currentColor;padding-bottom:4px">Browse the archive</a></div>
+
 <!--SHELL:FOOTER-->
 <footer>
   <div class="footer-top">
@@ -662,7 +595,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <div class="footer-head">Editorial</div>
       <div class="footer-links">
         <a href="./">Home</a>
-        <a href="about.html">About</a>
+        <a href="about">About</a>
         <a href="./#editor">The Editor</a>
         <a href="./#philosophy">Philosophy</a>
       </div>
@@ -679,8 +612,8 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     <div>
       <div class="footer-head">Legal</div>
       <div class="footer-links">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Use</a>
+        <a href="privacy">Privacy Policy</a>
+        <a href="terms">Terms of Use</a>
       </div>
     </div>
   </div>
