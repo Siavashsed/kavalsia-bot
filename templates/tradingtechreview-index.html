@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>TradingTech Review - Tools, Code & Platforms for Algo Traders</title>
 <meta name="description" content="Honest, production-tested reviews of trading platforms, APIs, and Python libraries from a software engineer who builds and runs algo strategies with real money.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -284,9 +285,9 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 @media(max-width:760px){.ft-top{grid-template-columns:1fr 1fr;gap:32px}}
 @media(max-width:440px){.ft-top{grid-template-columns:1fr}}
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -296,7 +297,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article h3{color:#f5f5f5 !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -304,14 +305,47 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article strong{color:#d4d4d4 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
 body[data-page-depth="1"] article .intro a{color:#f97316 !important;text-decoration:underline;text-underline-offset:3px}
+/* trading-tech is actually dark themed - shell forces #000 bg on article
+   pages but the contrast block defaulted to black-on-black. Light text +
+   brand-orange links. */
+body[data-page-depth="1"]{background:#000}
+body[data-page-depth="1"] .ap{max-width:min(1180px,92vw);padding:72px 36px 24px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;color:#d4d4d4;font-family:'Inter',system-ui,sans-serif;margin:0 auto;justify-content:center}
+body[data-page-depth="1"] .ap > *{grid-column:1}
+body[data-page-depth="1"] .ap .article-sidebar{grid-column:2;grid-row:1 / span 99;position:sticky;top:24px;align-self:start;padding:22px;background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.22);border-radius:12px;max-height:calc(100vh - 48px);overflow-y:auto}
+body[data-page-depth="1"] .ap .article-sidebar .sb-label{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#f97316;font-weight:600;margin-bottom:14px}
+body[data-page-depth="1"] .ap .article-sidebar .sb-name{font-family:'Inter Tight','Inter',sans-serif;font-size:16px;font-weight:700;color:#f5f5f5;margin-bottom:4px;letter-spacing:-.012em}
+body[data-page-depth="1"] .ap .article-sidebar .sb-role{font-family:ui-monospace,Menlo,monospace;font-size:10px;color:#f97316;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+body[data-page-depth="1"] .ap .article-sidebar .sb-bio{font-size:13px;line-height:1.7;color:#bdbdbd;font-family:'Inter',sans-serif}
+body[data-page-depth="1"] .ap .article-sidebar .sb-related{margin-top:22px;padding-top:18px;border-top:1px solid rgba(249,115,22,.18)}
+body[data-page-depth="1"] .ap .article-sidebar .sb-related .sb-r-label{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#f97316;font-weight:600;margin-bottom:12px}
+body[data-page-depth="1"] .ap .article-sidebar .sb-related a{display:block;font-family:'Inter Tight','Inter',sans-serif;font-size:13px;font-weight:500;color:#e5e5e5;text-decoration:none;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);line-height:1.4;transition:color .2s}
+body[data-page-depth="1"] .ap .article-sidebar .sb-related a:hover{color:#f97316}
+body[data-page-depth="1"] .ap .article-sidebar .sb-related a:last-child{border-bottom:none}
+body[data-page-depth="1"] .ap h1{font-family:'Inter Tight','Inter',sans-serif !important;font-size:clamp(28px,3.8vw,46px);font-weight:700;letter-spacing:-.02em;color:#f5f5f5 !important;line-height:1.06}
+body[data-page-depth="1"] .ap-deck{font-size:18px !important;line-height:1.6 !important;color:#a3a3a3 !important;font-style:normal !important;font-family:'Inter',sans-serif !important;max-width:none !important}
+body[data-page-depth="1"] .ap-body{font-size:16.5px !important;line-height:1.78 !important;color:#d4d4d4 !important;font-family:'Inter',sans-serif !important}
+body[data-page-depth="1"] .ap-body p{color:#c5c5c5 !important;margin-bottom:22px}
+body[data-page-depth="1"] .ap-body h2,body[data-page-depth="1"] .ap-body .art-h2{font-size:24px !important;font-family:'Inter Tight','Inter',sans-serif !important;font-weight:700;color:#f5f5f5 !important;letter-spacing:-.012em;margin:44px 0 14px}
+body[data-page-depth="1"] .ap-body h3,body[data-page-depth="1"] .ap-body .art-h3{font-size:18px !important;font-family:'Inter Tight','Inter',sans-serif !important;font-weight:600;color:#f5f5f5 !important}
+body[data-page-depth="1"] .ap-pull{font-size:21px !important;color:#f5f5f5 !important;font-style:normal !important;font-family:'Inter Tight','Inter',sans-serif !important;font-weight:500;border-left:3px solid #f97316 !important;padding:18px 20px !important;background:rgba(249,115,22,.05);border-radius:0 8px 8px 0}
+body[data-page-depth="1"] .ap-concl{font-size:16.5px !important;color:#d4d4d4 !important;font-family:'Inter',sans-serif !important;border-top:1px solid #262626;padding-top:26px}
+/* Hide the bottom author card - now in sidebar on desktop */
+body[data-page-depth="1"] .ap ~ div[style*="max-width:760px"],
+body[data-page-depth="1"] .ap > div[style*="max-width:720px;margin:20px auto"]{display:none}
+@media (max-width:1080px){
+  body[data-page-depth="1"] .ap{grid-template-columns:1fr;gap:32px;max-width:min(800px,95vw)}
+  body[data-page-depth="1"] .ap .article-sidebar{grid-column:1;position:static;max-height:none;margin-top:28px;display:block}
+  body[data-page-depth="1"] .ap ~ div[style*="max-width:760px"]{display:block}
+}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
 <body>
+<div style="background:rgba(0,0,0,.03);padding:8px 24px;text-align:center;border-bottom:1px solid rgba(0,0,0,.06)"><a href="./articles" style="display:inline-block;color:currentColor;text-decoration:none;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.32em;text-transform:uppercase;opacity:.7">All writing &rarr;</a></div>
 <!--SHELL:ACCENT:#f97316-->
 <!--SHELL:HEADER-->
 
@@ -327,7 +361,7 @@ body[data-page-depth="1"] article .intro a{color:#f97316 !important;text-decorat
       <a class="nav-link" href="./#stack">The Stack</a>
       <a class="nav-link" href="./#method">Method</a>
       <a class="nav-link" href="./#faq">FAQ</a>
-      <a class="nav-link" href="about.html">About</a>
+      <a class="nav-link" href="about">About</a>
     </div>
     <div class="nav-r">
       <span class="nav-cnt">reviews: <b id="nav-cnt">--</b></span>
@@ -588,7 +622,7 @@ body[data-page-depth="1"] article .intro a{color:#f97316 !important;text-decorat
         <div class="rev-role">Software Engineer &amp; Algorithmic Trader</div>
         <p class="rev-bio">I started as a software engineer building data pipelines, then spent three years writing and running my own algo strategies with real capital. I have <b>used, broken, and benchmarked</b> most of the tools in this space - and lost money to a few of them.</p>
         <p class="rev-bio">TradingTech Review exists because the coverage I needed did not exist. It was either vendor marketing or a surface-level tutorial. So every tool here gets the same treatment my own trading capital depends on: <b>if it does not hold up under real conditions, I say so plainly.</b></p>
-        <a class="btn-ghost" href="about.html" style="margin-top:8px">Read the full story</a>
+        <a class="btn-ghost" href="about" style="margin-top:8px">Read the full story</a>
       </div>
     </div>
   </div>
@@ -633,8 +667,8 @@ body[data-page-depth="1"] article .intro a{color:#f97316 !important;text-decorat
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
 <footer class="footer">
   <div class="wrap">
@@ -655,14 +689,14 @@ body[data-page-depth="1"] article .intro a{color:#f97316 !important;text-decorat
         <a href="./#stack">The Stack</a>
         <a href="./#method">Our Method</a>
         <a href="./#faq">FAQ</a>
-        <a href="about.html">About</a>
+        <a href="about">About</a>
       </div>
       <div class="ft-col">
         <div class="ft-col-h">Legal</div>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms</a>
-        <a href="sms.html">SMS Policy</a>
-        <a href="meta-policy.html">Meta Policy</a>
+        <a href="privacy">Privacy Policy</a>
+        <a href="terms">Terms</a>
+        <a href="sms">SMS Policy</a>
+        <a href="meta-policy">Meta Policy</a>
       </div>
     </div>
     <div class="ft-bottom">
@@ -750,7 +784,7 @@ let allArts=[], activeFilter='all';
 function renderFeed(){
   let arts=[...allArts];
   if(activeFilter!=='all')arts=arts.filter(a=>a._tag===activeFilter);
-  arts.sort((a,b)=>(b.date||b.published_date||'').localeCompare(a.date||a.published_date||''));
+  arts.sort((a,b)=>(b.date_iso||b.posted_iso||b.date||b.published_date||'').localeCompare(a.date_iso||a.posted_iso||a.date||a.published_date||''));
   const grid=document.getElementById('art-grid'), noRes=document.getElementById('no-res');
   const lbl=TAG_LABELS[activeFilter]||'All';
   document.getElementById('feed-title').innerHTML=activeFilter==='all'?'Latest <span class="hl">reviews.</span>':'<span class="hl">'+lbl+'</span> reviews.';
