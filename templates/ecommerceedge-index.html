@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Ecommerce Edge  -  DTC Strategy, Tools &amp; Conversion Intelligence</title>
 <meta name="description" content="Data-driven ecommerce strategy for DTC brands. Conversion optimization, ad profitability tools, and scaling playbooks from a Shopify Plus consultant.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +50,7 @@ img{display:block;max-width:100%}
 
 /* ── HERO ── */
 .hero{background:linear-gradient(135deg,#fff7ed 0%,#ffffff 50%,#f0fdf4 100%);border-bottom:1px solid var(--brd);overflow:hidden;position:relative;padding:72px 20px 0}
-.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:480px;height:480px;background:radial-gradient(circle,rgba(249,115,22,.1) 0%,transparent 70%);pointer-events:none}
+.hero::before{content:'';position:absolute;top:-320px;left:50%;transform:translateX(-50%);width:min(1500px,150vw);height:900px;background:radial-gradient(ellipse 55% 55% at center top,rgba(255,255,255,.12) 0%,rgba(255,255,255,.04) 38%,transparent 62%);pointer-events:none;z-index:-1}
 .hero-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 480px;gap:60px;align-items:end}
 .hero-content{padding-bottom:64px}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--org);background:#fff7ed;border:1px solid #fed7aa;padding:5px 12px;border-radius:20px;margin-bottom:20px;text-transform:uppercase;letter-spacing:.5px}
@@ -264,9 +265,11 @@ canvas#rev-canvas{width:100%;flex:1;min-height:160px;display:block;border-radius
 @media(max-width:1024px){.three-wrap{grid-template-columns:1fr}}
 @media(max-width:768px){.three-canvas-wrap{height:300px}.three-legend{grid-template-columns:1fr 1fr}}
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - light-theme corrected. The previous block forced
+   #f4f4f4 / #d4d4d4 (off-white) on article text assuming a dark page bg,
+   but ecommerceedge is a LIGHT-theme site (bg #ffffff). Those overrides
+   made every paragraph invisible. Replaced with near-black values that
+   pass WCAG AAA on white. */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -276,7 +279,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#000000 !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -284,14 +287,15 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#1a1a1a !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#f97316 !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
 <body>
+<div style="background:rgba(0,0,0,.03);padding:8px 24px;text-align:center;border-bottom:1px solid rgba(0,0,0,.06)"><a href="./articles" style="display:inline-block;color:currentColor;text-decoration:none;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.32em;text-transform:uppercase;opacity:.7">All writing &rarr;</a></div>
 <!--SHELL:ACCENT:#f97316-->
 <!--SHELL:HEADER-->
 
@@ -309,7 +313,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <a href="./" class="active">Home</a>
       <a href="#analysis">Articles</a>
       <a href="#tools">Calculators</a>
-      <a href="about.html">About</a>
+      <a href="about">About</a>
     </div>
     <div class="nav-right">
       <div id="nav-date" style="font-size:11px;color:var(--muted)"></div>
@@ -322,7 +326,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
   <div class="nav-mobile" id="nav-mobile">
     <a href="#analysis" onclick="document.getElementById('nav-mobile').classList.remove('open')">Articles</a>
     <a href="#tools" onclick="document.getElementById('nav-mobile').classList.remove('open')">Calculators</a>
-    <a href="about.html">About</a>
+    <a href="about">About</a>
     <a href="#newsletter" onclick="document.getElementById('nav-mobile').classList.remove('open')">Free Newsletter</a>
   </div>
 </nav>
@@ -568,7 +572,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
         <p>I've spent the last decade building and scaling DTC brands  -  from $0 to $1M, from $1M through $10M, and a few past $50M. I've been Shopify Plus Partner certified since 2019 and have consulted for brands across fashion, supplements, home goods, and pet products.</p>
         <p>Ecommerce Edge is where I document what actually works: the conversion tests with real results, the ad structures that survived iOS 14.5, and the margin math that makes or breaks a DTC business. No sponsored posts. No agency fluff. Just numbers and tactics.</p>
       </div>
-      <a href="about.html" class="about-link">Full bio &amp; methodology →</a>
+      <a href="about" class="about-link">Full bio &amp; methodology →</a>
     </div>
   </div>
 </section>
@@ -583,8 +587,8 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
 
 <!-- FOOTER -->
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
 <footer class="foot">
   <div class="foot-top">
@@ -601,7 +605,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <a href="#analysis">Latest Articles</a>
       <a href="#tools">Free Calculators</a>
       <a href="#newsletter">Newsletter</a>
-      <a href="about.html">About</a>
+      <a href="about">About</a>
     </div>
     <div class="foot-col">
       <div class="foot-col-title">Tools</div>
@@ -612,16 +616,16 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     </div>
     <div class="foot-col">
       <div class="foot-col-title">Legal</div>
-      <a href="about.html">About</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Use</a>
+      <a href="about">About</a>
+      <a href="privacy">Privacy Policy</a>
+      <a href="terms">Terms of Use</a>
     </div>
   </div>
   <div class="foot-bottom">
     <div class="foot-bottom-inner">
       <span class="foot-copy">© 2026 Ecommerce Edge · For informational purposes only. Not business or financial advice.</span>
       <div class="foot-links">
-        <a href="./">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
+        <a href="./">Home</a><a href="about">About</a><a href="privacy">Privacy</a><a href="terms">Terms</a>
       </div>
     </div>
   </div>
