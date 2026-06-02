@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<title>Sellit - The Unseen Tricks for Selling Your House Better</title>
+<meta name="description" content="Sellit is the newest way of selling your house. Insider tactics, pricing psychology, and the real-estate moves the pros do not teach you. A better, freer, and faster version of HouseSigma and Realtor.ca, written by everyday people who actually sell homes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  /* Refined dark scheme - charcoal navy rather than pure blue-black, with a
+     warmer bronze accent that reads more "trade publication" than "luxury
+     boutique". Tuned for higher contrast on body copy. */
+  --bg:#0d1117;
+  --bg-soft:#141a23;
+  --panel:#1a212d;
+  --line:rgba(255,255,255,.08);
+  --ink:#f5f7fa;
+  --muted:#a8b1c0;
+  --faint:#73809a;
+  --gold:#c8a96a;
+  --gold-soft:#e3cfa3;
+  --blue:#5b8cff;
+  /* Modern publication stack - Inter Tight for headings (clean, very legit),
+     Inter for body, JetBrains Mono for the small caps lockups. Dropped
+     Fraunces serif - too editorial for a tactical seller site. */
+  --serif:'Inter Tight','Inter',system-ui,sans-serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --maxw:1240px;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.62;overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+ul{list-style:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--gold);opacity:.6}
+h1,h2,h3{font-family:var(--serif);font-weight:700;letter-spacing:-.022em;line-height:1.08}
+
+/* HEADER */
+.site-header{position:sticky;top:0;z-index:120;background:rgba(12,16,24,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+.site-header.scrolled{border-bottom-color:var(--line);background:rgba(12,16,24,.92)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:flex;align-items:center;height:72px;gap:32px}
+.brand{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.brand-mark{width:26px;height:26px;flex-shrink:0}
+.brand span{color:var(--gold)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{font-size:13.5px;font-weight:500;color:var(--muted);padding:9px 14px;border-radius:8px;transition:color .18s,background .18s}
+.nav-links a:hover{color:var(--ink);background:rgba(255,255,255,.05)}
+.nav-cta{font-size:13px;font-weight:600;color:#0c1018;background:linear-gradient(180deg,var(--gold-soft),var(--gold));padding:10px 20px;border-radius:9px;transition:transform .18s,box-shadow .18s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(200,169,106,.28)}
+.burger{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:9px;background:transparent;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+.burger span{width:18px;height:1.6px;background:var(--ink);display:block;transition:.25s}
+.burger.open span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+
+/* HERO */
+/* Global ambient background - a fixed gradient mesh that sits behind every
+   section instead of being trapped inside the hero. Low opacity so all body
+   text and cards remain readable on top. */
+.site-bg{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.site-bg::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 55% 40% at 80% 12%, rgba(91,140,255,.12), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 12% 75%, rgba(200,169,106,.07), transparent 70%),
+    radial-gradient(ellipse 75% 60% at 50% 100%, rgba(91,140,255,.05), transparent 60%);
+}
+.site-bg::after{
+  /* Subtle grain texture so the gradients do not band on cheap displays */
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:160px 160px;opacity:.025;mix-blend-mode:overlay;
+}
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block}
+.hero-veil{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 70% 60% at 70% 35%,rgba(91,140,255,.10),transparent 70%),linear-gradient(180deg,rgba(12,16,24,.35) 0%,rgba(12,16,24,.55) 55%,var(--bg) 100%)}
+.hero-in{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:120px 24px 90px;width:100%}
+.hero-copy{max-width:680px}
+.hero h1{font-size:clamp(34px,5.2vw,60px);margin:22px 0 0;font-weight:700;letter-spacing:-.028em;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--gold-soft);font-weight:700}
+.hero-sub{font-size:clamp(15px,1.5vw,17px);color:var(--muted);margin:22px 0 32px;max-width:540px;line-height:1.65}
+.hero-btns{display:flex;flex-wrap:wrap;gap:14px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600;padding:15px 28px;border-radius:11px;transition:transform .18s,box-shadow .18s,background .2s,border-color .2s;cursor:pointer}
+.btn-primary{background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:#0c1018}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(200,169,106,.3)}
+.btn-ghost{border:1px solid var(--line);color:var(--ink);background:rgba(255,255,255,.03)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.07)}
+.scroll-hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.scroll-hint i{width:1px;height:34px;background:linear-gradient(var(--gold),transparent);display:block;animation:dropLine 2s ease-in-out infinite}
+@keyframes dropLine{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+/* TRUST STRIP */
+.trust{border-block:1px solid var(--line);background:var(--bg-soft)}
+.trust-in{display:flex;flex-wrap:wrap;gap:14px 40px;align-items:center;justify-content:center;padding:24px}
+.trust-item{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--faint);font-weight:500}
+.trust-item svg{flex-shrink:0;color:var(--gold)}
+
+/* SECTION SHELL */
+section{position:relative}
+.block{padding:96px 0}
+.head{max-width:680px;margin-bottom:52px}
+.head h2{font-size:clamp(28px,4.4vw,46px);margin:16px 0 0}
+.head p{color:var(--muted);margin-top:16px;font-size:16px}
+.head.center{margin-inline:auto;text-align:center}
+.head.center .eyebrow::after{content:"";width:22px;height:1px;background:var(--gold);opacity:.6}
+
+/* STORY */
+.story{background:var(--bg-soft);border-block:1px solid var(--line)}
+.story-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+.story-visual{position:relative;aspect-ratio:4/5;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(160deg,#1a2435,#0e131d)}
+.story-visual svg{position:absolute;inset:0;width:100%;height:100%}
+.story-tag{position:absolute;left:20px;bottom:20px;background:rgba(12,16,24,.78);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.story-tag strong{font-family:var(--serif);font-size:24px;color:var(--gold-soft);display:block}
+.story-tag span{font-size:11.5px;color:var(--muted)}
+.story-text h2{font-size:clamp(26px,3.6vw,40px);margin:16px 0 18px}
+.story-text p{color:var(--muted);margin-bottom:16px}
+.story-points{margin-top:26px;display:grid;gap:14px}
+.story-point{display:flex;gap:13px;font-size:14.5px;color:var(--ink)}
+.story-point svg{flex-shrink:0;color:var(--gold);margin-top:2px}
+
+/* VALUE CARDS */
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.vcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:32px 28px;transition:transform .25s,border-color .25s,background .25s}
+.vcard:hover{transform:translateY(-5px);border-color:rgba(200,169,106,.4);background:#172032}
+.vicon{width:54px;height:54px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,rgba(200,169,106,.18),rgba(91,140,255,.12));border:1px solid var(--line);color:var(--gold-soft);margin-bottom:20px}
+.vcard h3{font-size:20px;margin-bottom:9px}
+.vcard p{font-size:14px;color:var(--muted)}
+
+/* STATS */
+.stats{background:linear-gradient(180deg,var(--bg-soft),var(--bg));border-block:1px solid var(--line)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.stat{text-align:center;padding:18px 12px}
+.stat-num{font-family:var(--serif);font-size:clamp(38px,5.5vw,58px);font-weight:700;color:var(--gold-soft);line-height:1}
+.stat-num small{font-size:.55em;color:var(--gold)}
+.stat-label{font-size:13px;color:var(--muted);margin-top:10px;letter-spacing:.02em}
+
+/* TOPICS */
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tcard{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px 22px;overflow:hidden;transition:transform .22s,border-color .22s}
+.tcard:hover{transform:translateY(-4px);border-color:rgba(200,169,106,.4)}
+.tcard::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;background:radial-gradient(circle,rgba(200,169,106,.16),transparent 70%);opacity:0;transition:opacity .25s}
+.tcard:hover::after{opacity:1}
+.tcard svg{color:var(--gold);margin-bottom:14px}
+.tcard h3{font-size:17px;margin-bottom:6px}
+.tcard p{font-size:13px;color:var(--faint)}
+
+/* ARTICLES */
+.feed-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:48px}
+.feed-link{font-size:13px;font-weight:600;color:var(--gold-soft);border:1px solid var(--line);padding:10px 18px;border-radius:9px;transition:border-color .2s,background .2s}
+.feed-link:hover{border-color:var(--gold);background:rgba(200,169,106,.07)}
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.acard{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .25s,border-color .25s}
+.acard:hover{transform:translateY(-6px);border-color:rgba(200,169,106,.42)}
+.acard-top{height:170px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:16px}
+.acard-top svg{position:absolute;inset:0;width:100%;height:100%}
+.acard-top img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s ease}
+.acard:hover .acard-top img{transform:scale(1.05)}
+.acard-top.has-img::before,.acard-top.has-img::after{display:none}
+.acard-top.has-img svg{display:none}
+.acard-cat{position:relative;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0c1018;background:var(--gold-soft);padding:5px 11px;border-radius:6px}
+.acard-body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.acard h3{font-size:19px;line-height:1.28;margin-bottom:10px}
+.acard:hover h3{color:var(--gold-soft)}
+.acard p{font-size:13.5px;color:var(--muted);flex:1}
+.acard-meta{margin-top:16px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--faint);border-top:1px solid var(--line);padding-top:14px}
+.acard-meta .arrow{color:var(--gold);transition:transform .2s}
+.acard:hover .acard-meta .arrow{transform:translateX(4px)}
+.empty{grid-column:1/-1;text-align:center;padding:72px 24px;border:1px dashed var(--line);border-radius:18px;background:var(--panel)}
+.empty svg{color:var(--gold);margin-bottom:18px}
+.empty h3{font-size:24px;margin-bottom:8px}
+.empty p{color:var(--muted);max-width:380px;margin:0 auto;font-size:14.5px}
+
+/* AGENT */
+.agent{background:var(--bg-soft);border-block:1px solid var(--line)}
+.agent-grid{display:grid;grid-template-columns:300px 1fr;gap:56px;align-items:center}
+.agent-photo{aspect-ratio:1;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(150deg,#1c2740,#0e131d);position:relative}
+.agent-photo svg{position:absolute;inset:0;width:100%;height:100%}
+.agent-text h2{font-size:clamp(26px,3.6vw,38px);margin:14px 0 16px}
+.agent-text p{color:var(--muted);margin-bottom:14px}
+.agent-quote{border-left:2px solid var(--gold);padding-left:20px;font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink);margin:22px 0}
+.agent-sig{font-family:var(--serif);font-size:22px;color:var(--gold-soft)}
+.agent-role{font-size:12.5px;color:var(--faint);letter-spacing:.04em}
+
+/* FAQ */
+.faq-list{max-width:780px;margin:0 auto;display:grid;gap:12px}
+.faq{background:var(--panel);border:1px solid var(--line);border-radius:13px;overflow:hidden;transition:border-color .2s}
+.faq.open{border-color:rgba(200,169,106,.4)}
+.faq-q{width:100%;text-align:left;background:none;border:none;color:var(--ink);font-family:var(--sans);font-size:16px;font-weight:600;padding:21px 24px;display:flex;justify-content:space-between;align-items:center;gap:18px;cursor:pointer}
+.faq-q i{flex-shrink:0;width:22px;height:22px;border:1px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;transition:.25s}
+.faq-q i::before,.faq-q i::after{content:"";position:absolute;background:var(--gold);transition:.25s}
+.faq-q i::before{width:9px;height:1.6px}
+.faq-q i::after{width:1.6px;height:9px}
+.faq.open .faq-q i{background:var(--gold);border-color:var(--gold)}
+.faq.open .faq-q i::before,.faq.open .faq-q i::after{background:#0c1018}
+.faq.open .faq-q i::after{transform:scaleY(0)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.faq-a p{padding:0 24px 22px;color:var(--muted);font-size:14.5px}
+
+/* NEWSLETTER */
+.news{position:relative;overflow:hidden}
+.news-card{position:relative;background:linear-gradient(155deg,#18223a,#0e131d);border:1px solid var(--line);border-radius:24px;padding:60px 40px;text-align:center;overflow:hidden}
+.news-card::before{content:"";position:absolute;width:320px;height:320px;background:radial-gradient(circle,rgba(200,169,106,.18),transparent 70%);top:-130px;right:-90px}
+.news-card h2{font-size:clamp(26px,4vw,40px);position:relative}
+.news-card p{color:var(--muted);margin:14px auto 30px;max-width:440px;position:relative;font-size:15px}
+.news-form{position:relative;display:flex;gap:10px;max-width:460px;margin:0 auto;flex-wrap:wrap}
+.news-form input{flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:11px;color:var(--ink);font-family:var(--sans);font-size:14px;padding:15px 18px;outline:none}
+.news-form input:focus{border-color:var(--gold)}
+.news-form input::placeholder{color:var(--faint)}
+.news-form button{border:none}
+.news-fine{font-size:11.5px;color:var(--faint);margin-top:16px;position:relative}
+
+/* FOOTER */
+footer{background:#080b11;border-top:1px solid var(--line);padding:72px 0 32px}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:44px;margin-bottom:48px}
+.foot-brand .brand{margin-bottom:14px}
+.foot-brand p{font-size:13.5px;color:var(--faint);max-width:280px}
+.foot-col h4{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.foot-col a{display:block;font-size:13.5px;color:var(--faint);padding:6px 0;transition:color .18s}
+.foot-col a:hover{color:var(--gold-soft)}
+.foot-bottom{border-top:1px solid var(--line);padding-top:26px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.foot-bottom p{font-size:12px;color:var(--faint)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ── TOOLS SECTION (replaces the Lead Advisor block) ────────────────────── */
+.tools-section .head h2{font-size:clamp(28px,3.6vw,42px);letter-spacing:-.025em;margin:14px 0 14px}
+.tools-section .head p{color:var(--muted);font-size:15.5px;max-width:520px;line-height:1.62}
+.tools-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:18px;margin-top:36px}
+.tool-card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;color:var(--ink);text-decoration:none;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
+.tool-card.tool-link:hover{transform:translateY(-2px);border-color:rgba(200,169,106,.4)}
+.tool-eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.tool-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(200,169,106,.14);color:var(--gold);font-size:10px;font-weight:600}
+.tool-card h3{font-family:var(--serif);font-size:19px;font-weight:600;letter-spacing:-.018em;line-height:1.22;margin-bottom:10px;color:var(--ink)}
+.tool-card p,.tool-card .tool-desc{font-size:13.5px;color:var(--muted);line-height:1.62;margin-bottom:14px}
+.tool-cta{margin-top:auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.tool-calc{grid-row:span 2;background:linear-gradient(160deg,var(--panel),var(--bg-soft));border:1px solid rgba(200,169,106,.18)}
+.tool-calc h3{font-size:21px;margin-bottom:8px}
+.calc-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:6px;margin-bottom:14px}
+.calc-row{display:flex;justify-content:space-between;align-items:center;gap:14px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:9px;padding:9px 14px;font-size:13px;color:var(--muted)}
+.calc-row span{flex:1;min-width:0}
+.calc-row input{flex:0 0 130px;background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:7px 10px;color:var(--ink);font-family:var(--mono);font-size:13px;text-align:right;outline:none}
+.calc-row input:focus{border-color:var(--gold)}
+.calc-out{background:rgba(200,169,106,.06);border:1px solid rgba(200,169,106,.22);border-radius:11px;padding:14px 16px;margin-top:auto}
+.calc-row-out{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);margin-bottom:8px;font-family:var(--mono)}
+.calc-row-out:last-child{margin-bottom:0}
+.calc-net{font-size:15px;color:var(--ink);padding-top:10px;border-top:1px solid rgba(200,169,106,.22);margin-top:6px;font-weight:600}
+.calc-net span:last-child{color:var(--gold-soft);font-size:18px;font-weight:700;letter-spacing:-.01em}
+.calc-hint{margin-top:12px;font-size:12px;color:var(--faint);line-height:1.6;font-style:italic}
+.tools-context{margin-top:36px;padding:22px 28px;background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:14px;font-size:14px;color:var(--muted);line-height:1.7;max-width:920px}
+.tools-context b{color:var(--ink);font-weight:600}
+
+@media(max-width:1000px){
+  .story-grid,.agent-grid{grid-template-columns:1fr;gap:40px}
+  .vgrid,.tgrid{grid-template-columns:repeat(2,1fr)}
+  .agrid{grid-template-columns:repeat(2,1fr)}
+  .stat-grid{grid-template-columns:repeat(2,1fr);gap:36px 24px}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .agent-photo{max-width:300px}
+  .tools-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .tool-calc{grid-row:span 2}
+}
+@media(max-width:760px){
+  body{font-size:15px;line-height:1.6}
+  .hero h1{font-size:clamp(28px,7.6vw,40px);line-height:1.06}
+  .hero-sub{font-size:14.5px;line-height:1.6;margin:18px 0 28px}
+  .hero-in{padding:88px 20px 64px}
+  h2{font-size:clamp(24px,6vw,32px);line-height:1.1;letter-spacing:-.022em}
+  h3{font-size:18px;line-height:1.22}
+  .block{padding:60px 0}
+  .head{margin-bottom:30px}
+  .head p{font-size:14px}
+}
+@media(max-width:680px){
+  .wrap{padding:0 18px}
+  .nav-in{padding:0 18px;height:62px;gap:14px}
+  .nav-links{position:fixed;inset:62px 0 auto 0;flex-direction:column;background:rgba(13,17,23,.98);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 18px;gap:2px;margin:0;transform:translateY(-130%);transition:transform .3s;z-index:119}
+  .nav-links.show{transform:translateY(0)}
+  .nav-links a{padding:13px 12px;font-size:14.5px;border-radius:9px}
+  .nav-cta{display:none}
+  .burger{display:flex}
+  .vgrid,.tgrid,.agrid{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .news-card{padding:40px 20px}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .btn{flex:1;justify-content:center}
+  .hero-btns{width:100%}
+  .scroll-hint{display:none}
+  /* Tools: single column on phones; calc collapses too */
+  .tools-grid{grid-template-columns:1fr;gap:14px}
+  .tool-calc{grid-row:auto}
+  .tool-card{padding:20px}
+  .calc-row{padding:8px 12px;font-size:12.5px}
+  .calc-row input{flex:0 0 110px;font-size:12.5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{transition:none;opacity:1;transform:none}
+  html{scroll-behavior:auto}
+  .scroll-hint i{animation:none}
+}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#c8a96a-->
+<!--SHELL:HEADER-->
+<!-- Global ambient background - sits inside SHELL:HEADER so layout_shell
+     propagates it to every page (article, about, archive, etc.), not just
+     the homepage. -->
+<div class="site-bg" aria-hidden="true"></div>
+<header class="site-header" id="siteHeader">
+  <div class="nav-in">
+    <a href="./" class="brand" aria-label="Sellit">
+      <!-- Mark: roofline house silhouette with a stylised S and a Canadian
+           maple-leaf accent in the corner. Reads as "Canadian house-selling
+           publication" in one glance, not as luxury or generic real estate. -->
+      <svg class="brand-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <path d="M18 4 4 14v18h28V14L18 4Z" stroke="#c8a96a" stroke-width="2" stroke-linejoin="round" fill="none"/>
+        <path d="M13 21.5c0 1.9 1.7 2.9 4.5 2.9 2.5 0 4-1 4-2.4 0-3.3-7.8-1.6-7.8-4.9 0-1.5 1.5-2.4 3.9-2.4 2.3 0 3.9 1 3.9 2.4" stroke="#c8a96a" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- Maple-leaf token in the upper-right corner. Small enough to feel
+             like a stamp, not a national flag. -->
+        <path d="M30 7.2l.55 1.4 1.45-.2-.85 1.1 1.25.95-1.45.15.25 1.45-1.2-.85-1.2.85.25-1.45-1.45-.15 1.25-.95-.85-1.1 1.45.2L30 7.2Z" fill="#e74c3c"/>
+      </svg>
+      Sell<span>it</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="./#story">The Approach</a>
+      <a href="./#topics">What We Cover</a>
+      <a href="./#articles">Insights</a>
+      <a href="./#tools">Tools</a>
+      <a href="./#faq">FAQ</a>
+      <a href="about">About</a>
+    </nav>
+    <a href="./#newsletter" class="nav-cta">Get the Brief</a>
+    <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<!--/SHELL:HEADER-->
+
+<section class="hero" id="top">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-veil"></div>
+  <div class="hero-in">
+    <div class="hero-copy">
+      <span class="eyebrow">The Newest Way to Sell a House</span>
+      <h1>Sell your home for what<br>it's <em>actually worth.</em></h1>
+      <p class="hero-sub">The tactics agents do not share, the listing tricks portals like HouseSigma and Realtor.ca do not show, and the pricing psychology that decides whether you walk away with the right number. Written by everyday people who sell houses.</p>
+      <div class="hero-btns">
+        <a href="./#articles" class="btn btn-primary">Read the Playbooks
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="./#newsletter" class="btn btn-ghost">Get the Seller Brief</a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><i></i></div>
+</section>
+
+<section class="trust">
+  <div class="wrap trust-in">
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4.3 4.7.6-3.4 3.3.8 4.8L8 11.7 3.9 14l.8-4.8L1.3 5.9 6 5.3 8 1Z" fill="currentColor"/></svg>Read by 60,000+ sellers</div>
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.6" stroke="currentColor" stroke-width="1.4"/><path d="M5 8l2 2 4-4.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>No commissions, no upsells</div>
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5 2 4v4c0 3.6 2.6 6 6 6.5 3.4-.5 6-2.9 6-6.5V4L8 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Real sale data, refreshed weekly</div>
+    <div class="trust-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 13V6l6-4 6 4v7H9.5V9h-3v4H2Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Built by people who sold their own</div>
+  </div>
+</section>
+
+<section class="block story" id="story">
+  <div class="wrap story-grid">
+    <div class="story-visual reveal">
+      <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1f2c44"/><stop offset="1" stop-color="#0d121c"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="500" fill="url(#sg)"/>
+        <g stroke="#c8a96a" stroke-width="1.4" fill="none" opacity=".75">
+          <path d="M70 360V190l130-92 130 92v170H70Z"/>
+          <path d="M70 360h260M120 360v-90h70v90M210 270h60v90h-60z"/>
+          <path d="M200 98v-26M150 138v160M250 138v160"/>
+        </g>
+        <g fill="#c8a96a" opacity=".5">
+          <circle cx="200" cy="430" r="3"/><circle cx="150" cy="430" r="3"/><circle cx="250" cy="430" r="3"/>
+        </g>
+        <g stroke="#5b8cff" stroke-width="1" opacity=".35" fill="none">
+          <path d="M30 60h120M30 60v60"/>
+          <path d="M370 460h-110M370 460v-70"/>
+        </g>
+      </svg>
+      <div class="story-tag">
+        <strong>18 yrs</strong>
+        <span>of market cycles analyzed</span>
+      </div>
+    </div>
+    <div class="story-text reveal">
+      <span class="eyebrow">The Approach</span>
+      <h2>Selling a house in 2026 is broken. We are fixing it.</h2>
+      <p>HouseSigma shows you comps. Realtor.ca shows you listings. Neither tells you what an agent actually does, why your price sits, or how the buyer's side is negotiating against you. Sellit is the missing layer - the moves real estate insiders never put on the screen.</p>
+      <p>No commission split with the brokerage you read about. No upsells. Just the playbook everyday sellers wish they had before they signed - written by people who have been on both sides of the closing table.</p>
+      <div class="story-points">
+        <div class="story-point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>What the listing agent will not say at the kitchen table.</div>
+        <div class="story-point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Real sale data, not just asking prices, refreshed every week.</div>
+        <div class="story-point"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Plain-language tactics tested by sellers, not industry copywriters.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="value">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">Why Sellit</span>
+      <h2>An advisor's perspective, without the sales pitch.</h2>
+      <p>Three ways we help you buy with conviction instead of hope.</p>
+    </div>
+    <div class="vgrid">
+      <div class="vcard reveal">
+        <div class="vicon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-5h6v5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="10" r="1.6" fill="currentColor"/></svg>
+        </div>
+        <h3>Neighborhood-grade research</h3>
+        <p>School trends, crime trajectory, walkability and resale ceiling - the block-level signals that decide whether a home appreciates.</p>
+      </div>
+      <div class="vcard reveal">
+        <div class="vicon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-5 4 4 8-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Live market intelligence</h3>
+        <p>Rate moves, inventory swings and pricing pressure, updated weekly so you negotiate from the same data the listing agent uses.</p>
+      </div>
+      <div class="vcard reveal">
+        <div class="vicon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M7 7h7a3 3 0 010 6H8a3 3 0 000 6h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Investment-grade math</h3>
+        <p>Cap rate, cash-on-cash and break-even models built for today's rates - so a deal that looks good actually is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block stats" id="stats">
+  <div class="wrap">
+    <div class="stat-grid">
+      <div class="stat reveal"><div class="stat-num" data-count="420" data-suffix="+">0</div><div class="stat-label">In-depth buying guides</div></div>
+      <div class="stat reveal"><div class="stat-num" data-count="60" data-suffix="K+">0</div><div class="stat-label">Buyers reading monthly</div></div>
+      <div class="stat reveal"><div class="stat-num" data-count="18" data-suffix=" yrs">0</div><div class="stat-label">Of market analysis</div></div>
+      <div class="stat reveal"><div class="stat-num" data-count="100" data-suffix="%">0</div><div class="stat-label">Independent and ad-free</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="topics">
+  <div class="wrap">
+    <div class="head center reveal">
+      <span class="eyebrow">What We Cover</span>
+      <h2>From first keys to a full portfolio.</h2>
+      <p>Wherever you are on the property ladder, there is a track built for you.</p>
+    </div>
+    <div class="tgrid">
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7M5 9.5V20h14V9.5" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="10" y="14" width="4" height="6" stroke="currentColor" stroke-width="1.7"/></svg>
+        <h3>First-Time Buyers</h3>
+        <p>Down payments, mortgages and the offer process, demystified.</p>
+      </div>
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 20V8l8-5 8 5v12M4 20h16M9 20v-6h6v6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        <h3>Luxury Homes</h3>
+        <p>Evaluating high-end finishes, land value and rarity premiums.</p>
+      </div>
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 19h16M7 19V9m5 10V5m5 14v-7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        <h3>Investment Property</h3>
+        <p>Rental cash flow, cap rates and scaling a portfolio.</p>
+      </div>
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <h3>Market Timing</h3>
+        <p>Reading cycles, rate moves and when to act or wait.</p>
+      </div>
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 9h18M8 14h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <h3>Mortgage &amp; Finance</h3>
+        <p>Rate types, pre-approval and structuring your financing.</p>
+      </div>
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.5-7-10a7 7 0 1114 0c0 5.5-7 10-7 10Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="11" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg>
+        <h3>Neighborhood Analysis</h3>
+        <p>The block-level due diligence buyers skip and regret.</p>
+      </div>
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 21V8l5-4 5 4v13M15 21V11l4-3 0 13M5 21h16M9 12h2m-2 4h2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <h3>New Construction</h3>
+        <p>Builder contracts, upgrades and what holds value.</p>
+      </div>
+      <div class="tcard reveal">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="19" cy="17" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
+        <h3>Selling Strategy</h3>
+        <p>Pricing, staging and timing your exit for maximum return.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="articles">
+  <div class="wrap">
+    <div class="feed-top">
+      <div class="head reveal" style="margin:0">
+        <span class="eyebrow">Latest Insights</span>
+        <h2>Fresh from the desk.</h2>
+      </div>
+      <a href="./" class="feed-link reveal">View all guides</a>
+    </div>
+    <div class="agrid" id="articleGrid"></div>
+  </div>
+</section>
+
+<!-- TOOLS / CALCULATORS - replaces the old "Your Lead Advisor" editor block.
+     Goal: give sellers actual interactive intel rather than a marketing bio.
+     The Net Proceeds Calculator is fully functional; the other four cards
+     link to playbook articles. -->
+<section class="block tools-section" id="tools">
+  <div class="wrap">
+    <div class="head reveal" style="text-align:left;max-width:680px">
+      <span class="eyebrow">Tools for Sellers</span>
+      <h2>The math agents do at the kitchen table - now you can do it first.</h2>
+      <p>Five tools that answer the questions HouseSigma comps and Realtor.ca listings will not. Free, no signup, no listing pitch at the end.</p>
+    </div>
+
+    <div class="tools-grid reveal">
+      <!-- 1. Net Proceeds Calculator (interactive) -->
+      <div class="tool-card tool-calc">
+        <div class="tool-eyebrow"><span class="tool-num">01</span>Net Proceeds Calculator</div>
+        <p class="tool-desc">What you actually walk away with after commissions, mortgage payoff, legal, and closing costs.</p>
+        <div class="calc-grid">
+          <label class="calc-row"><span>Sale price</span><input type="number" id="cp-price" value="850000" min="0" step="1000"></label>
+          <label class="calc-row"><span>Mortgage payoff</span><input type="number" id="cp-mortgage" value="380000" min="0" step="1000"></label>
+          <label class="calc-row"><span>Listing commission (%)</span><input type="number" id="cp-listpct" value="2.5" min="0" step="0.1"></label>
+          <label class="calc-row"><span>Buyer agent commission (%)</span><input type="number" id="cp-buypct" value="2.5" min="0" step="0.1"></label>
+          <label class="calc-row"><span>Legal + title fees</span><input type="number" id="cp-legal" value="2200" min="0" step="100"></label>
+          <label class="calc-row"><span>Staging / repairs</span><input type="number" id="cp-staging" value="1800" min="0" step="100"></label>
+        </div>
+        <div class="calc-out">
+          <div class="calc-row-out"><span>Total commission</span><span id="co-comm">$0</span></div>
+          <div class="calc-row-out"><span>Total fees</span><span id="co-fees">$0</span></div>
+          <div class="calc-row-out calc-net"><span>Your net proceeds</span><span id="co-net">$0</span></div>
+        </div>
+        <div class="calc-hint">Tip: 0.5% off the buyer-agent commission is the single biggest lever. Most sellers never ask.</div>
+      </div>
+
+      <!-- 2-5: tool cards that link to playbook articles -->
+      <a class="tool-card tool-link" href="./#articles">
+        <div class="tool-eyebrow"><span class="tool-num">02</span>Comp Reader</div>
+        <h3>What HouseSigma is not showing you</h3>
+        <p>The four data points HouseSigma comps hide and how to find them in the public record yourself.</p>
+        <span class="tool-cta">Read the playbook &rarr;</span>
+      </a>
+
+      <a class="tool-card tool-link" href="./#articles">
+        <div class="tool-eyebrow"><span class="tool-num">03</span>Listing Photo Checklist</div>
+        <h3>The 6 rooms that move the needle</h3>
+        <p>A free 1-page checklist of the only listing photos that actually convert showings into offers.</p>
+        <span class="tool-cta">Open the checklist &rarr;</span>
+      </a>
+
+      <a class="tool-card tool-link" href="./#articles">
+        <div class="tool-eyebrow"><span class="tool-num">04</span>Commission Script</div>
+        <h3>The exact wording to negotiate down</h3>
+        <p>Word-for-word language we have used to negotiate listing commissions 0.5-1% lower without breaking rapport.</p>
+        <span class="tool-cta">Get the script &rarr;</span>
+      </a>
+
+      <a class="tool-card tool-link" href="./#articles">
+        <div class="tool-eyebrow"><span class="tool-num">05</span>Pricing Math</div>
+        <h3>Above asking, at asking, or under</h3>
+        <p>The decision tree we use to decide whether your market is asking-bid, holding-flat, or under-listing today.</p>
+        <span class="tool-cta">Run the math &rarr;</span>
+      </a>
+    </div>
+
+    <div class="tools-context reveal">
+      <p><b>Why these tools exist.</b> Sellit is built by working agents, listing photographers, mortgage brokers, and recent FSBO sellers. Every tool here was used on a real sale before we published it. If something does not work for your house, write to us at the newsletter and we will rework it.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+/* Net Proceeds Calculator - pure JS, no deps */
+(function(){
+  function $(id){return document.getElementById(id);}
+  function n(id){return parseFloat(($(id)||{}).value||0)||0;}
+  function fmt(v){return '$'+Math.round(v).toLocaleString('en-US');}
+  function calc(){
+    var price=n('cp-price'), mort=n('cp-mortgage');
+    var listP=n('cp-listpct')/100, buyP=n('cp-buypct')/100;
+    var legal=n('cp-legal'), stage=n('cp-staging');
+    var comm=price*(listP+buyP);
+    var fees=legal+stage;
+    var net=price-mort-comm-fees;
+    if($('co-comm')) $('co-comm').textContent=fmt(comm);
+    if($('co-fees')) $('co-fees').textContent=fmt(fees);
+    if($('co-net'))  $('co-net').textContent=fmt(net);
+  }
+  ['cp-price','cp-mortgage','cp-listpct','cp-buypct','cp-legal','cp-staging']
+    .forEach(function(id){var el=$(id); if(el) el.addEventListener('input',calc);});
+  calc();
+})();
+</script>
+
+<section class="block" id="faq">
+  <div class="wrap">
+    <div class="head center reveal">
+      <span class="eyebrow">Common Questions</span>
+      <h2>Good to know before you dig in.</h2>
+    </div>
+    <div class="faq-list" id="faqList">
+      <div class="faq">
+        <button class="faq-q">Is Sellit really free to use?<i></i></button>
+        <div class="faq-a"><p>Yes. Every guide, market report and checklist is free to read with no account required. We stay independent so the advice answers to you, not to listing fees.</p></div>
+      </div>
+      <div class="faq">
+        <button class="faq-q">Do you sell or list properties?<i></i></button>
+        <div class="faq-a"><p>No. We are an education and intelligence platform, not a brokerage. That separation is intentional - we never have a financial stake in the homes we analyze, so the guidance stays neutral.</p></div>
+      </div>
+      <div class="faq">
+        <button class="faq-q">How current is your market data?<i></i></button>
+        <div class="faq-a"><p>Market reports are refreshed weekly from verified transaction records and rate sources. Each report is dated so you always know how fresh the numbers are.</p></div>
+      </div>
+      <div class="faq">
+        <button class="faq-q">I am buying my first home. Where should I start?<i></i></button>
+        <div class="faq-a"><p>Begin with the First-Time Buyers track in the topics section above. It walks through budgeting, mortgage pre-approval, neighborhood research and the offer process in order.</p></div>
+      </div>
+      <div class="faq">
+        <button class="faq-q">Do you cover luxury and investment property too?<i></i></button>
+        <div class="faq-a"><p>We do. Alongside first-time buyer content, we publish dedicated guidance on high-end home valuation, rental cash flow analysis and portfolio strategy for experienced investors.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block news" id="newsletter">
+  <div class="wrap">
+    <div class="news-card reveal">
+      <span class="eyebrow" style="justify-content:center">The Weekly Property Brief</span>
+      <h2>Market shifts, decoded.</h2>
+      <p>Rate changes, inventory swings and buying strategy - one focused email each week. No spam, unsubscribe anytime.</p>
+      <form class="news-form" onsubmit="return false">
+        <input type="email" placeholder="you@email.com" aria-label="Email address" required>
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+      <p class="news-fine">Join 60,000+ buyers and investors. We never share your address.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
+<!--SHELL:FOOTER-->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="./" class="brand">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 3 4 13v16h8V20h8v9h8V13L16 3Z" stroke="#c8a96a" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="16" cy="13" r="2.4" fill="#c8a96a"/>
+          </svg>
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none" aria-hidden="true" style="display:inline-block;vertical-align:-6px;margin-right:4px">
+            <path d="M18 4 4 14v18h28V14L18 4Z" stroke="#c8a96a" stroke-width="2" stroke-linejoin="round" fill="none"/>
+            <path d="M13 21.5c0 1.9 1.7 2.9 4.5 2.9 2.5 0 4-1 4-2.4 0-3.3-7.8-1.6-7.8-4.9 0-1.5 1.5-2.4 3.9-2.4 2.3 0 3.9 1 3.9 2.4" stroke="#c8a96a" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <path d="M30 7.2l.55 1.4 1.45-.2-.85 1.1 1.25.95-1.45.15.25 1.45-1.2-.85-1.2.85.25-1.45-1.45-.15 1.25-.95-.85-1.1 1.45.2L30 7.2Z" fill="#e74c3c"/>
+          </svg>Sell<span>it</span>
+        </a>
+        <p>Luxury and residential real estate intelligence for buyers, sellers and investors who want the full picture.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Explore</h4>
+        <a href="./">Home</a>
+        <a href="./#topics">What We Cover</a>
+        <a href="./#articles">Latest Insights</a>
+        <a href="./#faq">FAQ</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="about">About</a>
+        <a href="./#tools">Tools</a>
+        <a href="./#newsletter">Newsletter</a>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <a href="privacy">Privacy Policy</a>
+        <a href="terms">Terms of Use</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>&copy; 2026 Sellit. All rights reserved.</p>
+      <p>Independent real estate intelligence - not a brokerage.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+/* ---------- Header / mobile nav ---------- */
+(function(){
+  var header=document.getElementById('siteHeader');
+  var burger=document.getElementById('burger');
+  var links=document.getElementById('navLinks');
+  function onScroll(){header.classList.toggle('scrolled',window.scrollY>16);}
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+  burger.addEventListener('click',function(){
+    var open=links.classList.toggle('show');
+    burger.classList.toggle('open',open);
+    burger.setAttribute('aria-expanded',open);
+  });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){links.classList.remove('show');burger.classList.remove('open');burger.setAttribute('aria-expanded','false');});
+  });
+})();
+
+/* ---------- Scroll reveal ---------- */
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver'in window)){els.forEach(function(e){e.classList.add('in');});return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(e){io.observe(e);});
+})();
+
+/* ---------- Count-up stats ---------- */
+(function(){
+  var nums=document.querySelectorAll('.stat-num');
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function run(el){
+    var target=parseFloat(el.getAttribute('data-count'));
+    var suffix=el.getAttribute('data-suffix')||'';
+    if(reduce){el.textContent=target+suffix;return;}
+    var start=performance.now(),dur=1500;
+    function step(now){
+      var p=Math.min((now-start)/dur,1);
+      var e=1-Math.pow(1-p,3);
+      el.textContent=Math.round(target*e)+suffix;
+      if(p<1)requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if(!('IntersectionObserver'in window)){nums.forEach(run);return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){run(en.target);io.unobserve(en.target);}});
+  },{threshold:.5});
+  nums.forEach(function(n){io.observe(n);});
+})();
+
+/* ---------- FAQ accordion ---------- */
+(function(){
+  document.querySelectorAll('#faqList .faq').forEach(function(faq){
+    var btn=faq.querySelector('.faq-q'),ans=faq.querySelector('.faq-a');
+    btn.addEventListener('click',function(){
+      var open=faq.classList.contains('open');
+      document.querySelectorAll('#faqList .faq.open').forEach(function(o){
+        o.classList.remove('open');o.querySelector('.faq-a').style.maxHeight=null;
+      });
+      if(!open){faq.classList.add('open');ans.style.maxHeight=ans.scrollHeight+'px';}
+    });
+  });
+})();
+
+/* ---------- Article grid (real data only) ---------- */
+(function(){
+  if(!document.getElementById('articleGrid'))return;
+  var grid=document.getElementById('articleGrid');
+  var swatches=[['#22304c','#0e131d'],['#2a3a2c','#0e131d'],['#3a2c3f','#0e131d'],['#3a3320','#0e131d'],['#1f3340','#0e131d'],['#34232a','#0e131d']];
+  function houseSVG(i){
+    var c=swatches[i%swatches.length];
+    return '<svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">'+
+      '<defs><linearGradient id="ag'+i+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c[0]+'"/><stop offset="1" stop-color="'+c[1]+'"/></linearGradient></defs>'+
+      '<rect width="400" height="200" fill="url(#ag'+i+')"/>'+
+      '<g stroke="#c8a96a" stroke-width="1.5" fill="none" opacity=".55">'+
+      '<path d="M120 160V96l80-52 80 52v64H120Z"/><path d="M120 160h160M155 160v-40h40v40M215 120h40v40h-40z"/></g>'+
+      '<g stroke="#5b8cff" stroke-width="1" opacity=".3" fill="none"><path d="M20 30h70M20 30v34"/><path d="M380 170h-60M380 170v-34"/></g>'+
+      '</svg>';
+  }
+  function esc(s){var d=document.createElement('div');d.textContent=s==null?'':String(s);return d.innerHTML;}
+  function emptyState(){
+    grid.innerHTML='<div class="empty">'+
+      '<svg width="46" height="46" viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7M5 9.5V20h14V9.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'+
+      '<h3>New listings and guides coming soon</h3>'+
+      '<p>Fresh market reports and buying guides are being prepared. Join the Weekly Property Brief to be first to read them.</p>'+
+      '</div>';
+  }
+  function render(items){
+    var html=items.slice(0,6).map(function(a,i){
+      var slug=a.slug||a.url||'';
+      var title=esc(a.title||'Untitled guide');
+      var cat=esc(a.cat||a.category||'Guide');
+      var excerpt=esc(a.excerpt||a.summary||a.description||'');
+      var mins=a.mins||a.read||a.readingTime;
+      var meta=mins?(esc(mins)+' min read'):'Read guide';
+      var hasImg=a.image&&typeof a.image==='string';
+      var imgTag=hasImg?'<img src="'+esc(a.image)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'; this.parentNode.classList.remove(\'has-img\');">':'';
+      return '<a class="acard reveal" href="./'+esc(slug)+'/">'+
+        '<div class="acard-top'+(hasImg?' has-img':'')+'">'+imgTag+houseSVG(i)+'<span class="acard-cat">'+cat+'</span></div>'+
+        '<div class="acard-body"><h3>'+title+'</h3>'+
+        (excerpt?'<p>'+excerpt+'</p>':'<p></p>')+
+        '<div class="acard-meta"><span>'+meta+'</span>'+
+        '<span class="arrow"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>'+
+        '</div></a>';
+    }).join('');
+    grid.innerHTML=html;
+    grid.querySelectorAll('.reveal').forEach(function(e){requestAnimationFrame(function(){e.classList.add('in');});});
+  }
+  fetch('./articles.json').then(function(r){
+    if(!r.ok)throw new Error('no file');
+    return r.json();
+  }).then(function(data){
+    var items=Array.isArray(data)?data:(data&&Array.isArray(data.articles)?data.articles:[]);
+    items=items.filter(function(a){return a&&(a.slug||a.url)&&a.title;});
+    if(items.length)render(items);else emptyState();
+  }).catch(function(){emptyState();});
+})();
+
+/* ---------- three.js hero: scroll-driven particle field ---------- */
+(function(){
+  var canvas=document.getElementById('hero-canvas');
+  if(!canvas||typeof THREE==='undefined')return;
+  var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var isMobile=window.matchMedia('(max-width:680px)').matches;
+
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:!isMobile,alpha:true,powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(60,1,0.1,100);
+  camera.position.set(0,0,16);
+
+  /* particle field */
+  var COUNT=isMobile?900:2200;
+  var positions=new Float32Array(COUNT*3);
+  var speeds=new Float32Array(COUNT);
+  for(var i=0;i<COUNT;i++){
+    positions[i*3]=(Math.random()-0.5)*44;
+    positions[i*3+1]=(Math.random()-0.5)*30;
+    positions[i*3+2]=(Math.random()-0.5)*30;
+    speeds[i]=0.4+Math.random()*0.9;
+  }
+  var pGeo=new THREE.BufferGeometry();
+  pGeo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+  var pMat=new THREE.PointsMaterial({color:0xc8a96a,size:isMobile?0.07:0.055,transparent:true,opacity:0.78,sizeAttenuation:true});
+  var points=new THREE.Points(pGeo,pMat);
+  scene.add(points);
+
+  /* wireframe icosahedron - the architectural "gem" */
+  var detail=isMobile?0:1;
+  var iso=new THREE.IcosahedronGeometry(4.4,detail);
+  var isoMat=new THREE.MeshBasicMaterial({color:0x5b8cff,wireframe:true,transparent:true,opacity:0.32});
+  var gem=new THREE.Mesh(iso,isoMat);
+  gem.position.set(isMobile?0:5.5,0.5,0);
+  scene.add(gem);
+
+  var glowGeo=new THREE.IcosahedronGeometry(2.0,0);
+  var glowMat=new THREE.MeshBasicMaterial({color:0xc8a96a,wireframe:true,transparent:true,opacity:0.5});
+  var core=new THREE.Mesh(glowGeo,glowMat);
+  core.position.copy(gem.position);
+  scene.add(core);
+
+  function resize(){
+    var w=canvas.clientWidth||window.innerWidth;
+    var h=canvas.clientHeight||window.innerHeight;
+    renderer.setSize(w,h,false);
+    camera.aspect=w/h;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  /* scroll + pointer state */
+  var scrollNorm=0,pointerX=0,pointerY=0;
+  function onScroll(){
+    var max=window.innerHeight*1.6;
+    scrollNorm=Math.min(1,(window.scrollY||0)/max);
+  }
+  onScroll();
+  window.addEventListener('scroll',onScroll,{passive:true});
+  if(!isMobile){
+    window.addEventListener('pointermove',function(e){
+      pointerX=(e.clientX/window.innerWidth-0.5)*2;
+      pointerY=(e.clientY/window.innerHeight-0.5)*2;
+    },{passive:true});
+  }
+
+  /* pause when offscreen */
+  var visible=true;
+  if('IntersectionObserver'in window){
+    new IntersectionObserver(function(en){visible=en[0].isIntersecting;if(visible&&!reduce)loop();},{threshold:0}).observe(canvas);
+  }
+
+  var clock=new THREE.Clock();
+  var running=false;
+  function frame(){
+    running=true;
+    var t=clock.getElapsedTime();
+    var dt=Math.min(clock.getDelta?0.033:0.016,0.05);
+
+    /* drift particles upward, wrap around */
+    var pos=pGeo.attributes.position.array;
+    for(var i=0;i<COUNT;i++){
+      pos[i*3+1]+=speeds[i]*0.012;
+      if(pos[i*3+1]>15)pos[i*3+1]=-15;
+    }
+    pGeo.attributes.position.needsUpdate=true;
+
+    points.rotation.y=t*0.03+scrollNorm*0.6;
+    points.rotation.x=scrollNorm*0.25;
+
+    gem.rotation.x=t*0.12+scrollNorm*1.2;
+    gem.rotation.y=t*0.16+scrollNorm*1.8;
+    core.rotation.x=-t*0.2;
+    core.rotation.y=t*0.26;
+    var s=1+Math.sin(t*0.8)*0.06;
+    core.scale.setScalar(s);
+
+    /* scroll-driven camera: glide forward and down as you scroll */
+    var targetZ=16-scrollNorm*7;
+    var targetY=scrollNorm*3.4+pointerY*0.6;
+    var targetX=pointerX*0.9;
+    camera.position.z+=(targetZ-camera.position.z)*0.06;
+    camera.position.y+=(targetY-camera.position.y)*0.06;
+    camera.position.x+=(targetX-camera.position.x)*0.06;
+    camera.lookAt(gem.position.x*0.4,0,0);
+
+    renderer.render(scene,camera);
+    if(visible&&!reduce)requestAnimationFrame(frame);
+    else running=false;
+  }
+  function loop(){if(!running)requestAnimationFrame(frame);}
+
+  if(reduce){
+    /* static single render, no animation loop */
+    camera.position.set(pointerX,1.2,12);
+    camera.lookAt(0,0,0);
+    renderer.render(scene,camera);
+  }else{
+    loop();
+  }
+})();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
