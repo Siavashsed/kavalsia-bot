@@ -5446,7 +5446,7 @@ def article_press(article, site, image_url, photographer, t):
    Pin every descendant of .ap to max-width:100% and the wrapper to a hard
    720px so nothing can break out regardless of homepage CSS quirks. */
 .ap,.ap *,.ap-concl,.ap-concl *,.ap-pull,.ap-body,.ap-body *,.ap-deck{{box-sizing:border-box;overflow-wrap:anywhere;word-wrap:break-word;word-break:normal;hyphens:auto;max-width:100%;min-width:0}}
-.ap{{max-width:720px !important;margin:0 auto !important;padding:56px 24px 24px;font-family:{body_font};position:relative;overflow:hidden;width:100%}}
+.ap{{max-width:780px !important;margin:0 auto !important;padding:56px 24px 24px;font-family:{body_font};position:relative;overflow:hidden;width:100%}}
 .ap-body,.ap-concl,.ap-deck,.ap-pull{{max-width:100% !important;width:100%;min-width:0}}
 /* Defensive: any long URL or unbreakable string inside the article is
    forced to break so it cannot push the parent column wider than 720px. */
