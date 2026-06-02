@@ -4558,6 +4558,81 @@ def _articles_body_performance(s):
     return body, css
 
 
+# ── Per-site bespoke /articles modules ───────────────────────────────────────
+# Each site can ship a UNIQUE archive design (distinct DOM, CSS, card markup)
+# while sharing ONE proven engine for data load / search / category filter /
+# pagination. A module = 3 files in archive_modules/<id>.{shell.html,css,tpl.js}:
+#   shell.html : static page body (site-unique structure). MUST contain an
+#                element id="all-list". May contain id= aa-search, aa-count,
+#                aa-chips (with token __CHIPS__), aa-meta, aa-pager (+aa-prev,
+#                aa-page-num, aa-next), and a latest block (aa-latest > aa-lead
+#                + aa-sec-col). Tokens: __SITE_NAME__, __CHIPS__.
+#   css        : site-unique styling (mobile-first, theme-var driven).
+#   tpl.js     : defines window.AA = {card,lead,sec, cardClass?, secClass?,
+#                perPage?}. Each fn(p) returns INNER markup; the engine wraps it
+#                in the <a href>. Use window.__AA_HELP.esc / .fallback.
+# The shared engine fetches ../articles.json (falls back to ./articles.json).
+_ARCHIVE_MODULE_DIR = Path(__file__).parent / "archive_modules"
+
+_ARCHIVE_ENGINE_TEMPLATE = r'''(function(){
+  var listEl=document.getElementById('all-list'); if(!listEl)return;
+  var AA=window.AA||{};
+  var PER=AA.perPage||__PER_PAGE__, FB="__FALLBACK__", SC=__SITE_CAT__;
+  var cardCls=AA.cardClass||'aa-item', secCls=AA.secClass||'aa-sec-link';
+  var $=function(id){return document.getElementById(id);};
+  var metaEl=$('aa-meta'),countEl=$('aa-count'),pagerEl=$('aa-pager'),prevB=$('aa-prev'),nextB=$('aa-next'),pageN=$('aa-page-num'),searchEl=$('aa-search'),chipsEl=$('aa-chips'),latestEl=$('aa-latest'),leadEl=$('aa-lead'),secCol=$('aa-sec-col');
+  var P=new URLSearchParams(location.search), cat=P.get('cat')||'__all__', q=P.get('q')||'', page=1, all=[];
+  if(q&&searchEl)searchEl.value=q;
+  function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
+  function href(p){return '../'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}
+  window.__AA_HELP={esc:esc,fallback:FB,siteCat:SC};
+  function match(ac,fc){if(fc==='__all__')return true;if(!ac)return false;var a=(''+ac).toLowerCase(),f=(''+fc).toLowerCase();return a===f||a.indexOf(f)>-1||f.indexOf(a)>-1;}
+  function filt(){var s=q.trim().toLowerCase();return all.filter(function(p){if(!match(p.category||SC,cat))return false;if(s&&(''+(p.title||'')).toLowerCase().indexOf(s)===-1)return false;return true;});}
+  function renderLatest(){if(!latestEl)return;if(!all.length){latestEl.style.display='none';return;}var f=all.slice(0,5);if(leadEl&&AA.lead){leadEl.setAttribute('href',href(f[0]));leadEl.innerHTML=AA.lead(f[0]);}if(secCol&&AA.sec){secCol.innerHTML=f.slice(1).map(function(p){return '<a class="'+secCls+'" href="'+href(p)+'">'+AA.sec(p)+'</a>';}).join('');}latestEl.style.display='';}
+  function render(){var arr=filt(),tot=arr.length,pages=Math.max(1,Math.ceil(tot/PER));if(page>pages)page=pages;var sl=arr.slice((page-1)*PER,(page-1)*PER+PER);if(!tot){listEl.innerHTML='<div class="aa-empty">No articles match your filters.</div>';if(pagerEl)pagerEl.style.display='none';}else{listEl.innerHTML=sl.map(function(p){return '<a class="'+cardCls+'" href="'+href(p)+'">'+(AA.card?AA.card(p):esc(p.title||''))+'</a>';}).join('');if(pagerEl){pagerEl.style.display=pages>1?'':'none';if(pageN)pageN.textContent='Page '+page+' of '+pages;if(prevB)prevB.disabled=page<=1;if(nextB)nextB.disabled=page>=pages;}}if(metaEl)metaEl.textContent='Showing '+sl.length+' of '+all.length;}
+  function setCat(c){cat=c;page=1;if(chipsEl)[].forEach.call(chipsEl.querySelectorAll('[data-cat]'),function(b){b.classList.toggle('active',b.getAttribute('data-cat')===c);});render();}
+  if(chipsEl)chipsEl.addEventListener('click',function(e){var b=e.target.closest('[data-cat]');if(b)setCat(b.getAttribute('data-cat'));});
+  if(searchEl){var d;searchEl.addEventListener('input',function(){clearTimeout(d);d=setTimeout(function(){q=searchEl.value;page=1;render();},180);});}
+  if(prevB)prevB.addEventListener('click',function(){if(page>1){page--;render();scrollTo({top:0,behavior:'smooth'});}});
+  if(nextB)nextB.addEventListener('click',function(){page++;render();scrollTo({top:0,behavior:'smooth'});});
+  function load(){return fetch('../articles.json',{cache:'no-store'}).then(function(r){if(r.ok)return r.json();return fetch('./articles.json',{cache:'no-store'}).then(function(r2){if(!r2.ok)throw 0;return r2.json();});});}
+  load().then(function(d){all=Array.isArray(d)?d.slice():[];all.sort(function(a,b){return(''+(b.date_iso||'')).localeCompare(''+(a.date_iso||''));});if(countEl)countEl.textContent=all.length+' published';if(!all.length){listEl.innerHTML='<div class="aa-empty">No articles published yet.</div>';if(metaEl)metaEl.textContent='';return;}renderLatest();render();}).catch(function(){if(countEl)countEl.textContent='0 published';listEl.innerHTML='<div class="aa-empty">No articles published yet.</div>';});
+})();'''
+
+
+def _archive_engine_js(s):
+    site_cat = json.dumps(s.get("category", ""))
+    fb = (s.get("archive_fallback_img") or
+          "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&q=80")
+    js = (_ARCHIVE_ENGINE_TEMPLATE
+          .replace("__PER_PAGE__", "24")
+          .replace("__FALLBACK__", fb)
+          .replace("__SITE_CAT__", site_cat))
+    return "<script>\n" + js + "\n</script>"
+
+
+def _load_archive_module(s):
+    sid = s.get("id", "")
+    sp = _ARCHIVE_MODULE_DIR / f"{sid}.shell.html"
+    cp = _ARCHIVE_MODULE_DIR / f"{sid}.css"
+    tp = _ARCHIVE_MODULE_DIR / f"{sid}.tpl.js"
+    if not (sp.exists() and cp.exists() and tp.exists()):
+        return None
+    return {"shell": sp.read_text(encoding="utf-8"),
+            "css":   cp.read_text(encoding="utf-8"),
+            "tpl":   tp.read_text(encoding="utf-8")}
+
+
+def _assemble_bespoke_archive(s, mod):
+    cats = _articles_categories(s["id"])
+    chips = ('<button class="aa-chip active" type="button" data-cat="__all__">All</button>'
+             + "".join(f'<button class="aa-chip" type="button" data-cat="{c}">{c}</button>'
+                       for c in cats))
+    shell = mod["shell"].replace("__CHIPS__", chips).replace("__SITE_NAME__", s.get("name", ""))
+    body = shell + "\n<script>\n" + mod["tpl"] + "\n</script>\n" + _archive_engine_js(s)
+    return body, mod["css"]
+
+
 def _articles_body(s):
     """Build the body HTML (no chrome) for the All Articles page.
     Routes to the editorial luxury variant when the site config opts in via
@@ -4569,6 +4644,11 @@ def _articles_body(s):
         return _articles_body_editorial(s)
     if s.get('performance_archive'):
         return _articles_body_performance(s)
+    # Per-site bespoke archive module (distinct DOM/CSS per site) takes priority
+    # when present in archive_modules/. Falls through to the shared default below.
+    _mod = _load_archive_module(s)
+    if _mod:
+        return _assemble_bespoke_archive(s, _mod)
     ink     = _ink_for(s)
     on_ink  = s.get('bg') or '#0b0b0b'
     cats    = _articles_categories(s['id'])
@@ -4709,7 +4789,7 @@ def _articles_body(s):
   var all=[],activeCat=_initialCat,query=_initialQ,page=1;
   if(_initialQ){{searchEl.value=_initialQ;}}
   function escapeHtml(t){{return String(t==null?'':t).replace(/[&<>"']/g,function(c){{return({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}})[c];}});}}
-  function slugHref(p){{return './'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}}
+  function slugHref(p){{return '../'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}}
   // Fuzzy match: a card category like "Europe" should match articles
   // tagged "Europe", "European Travel", or any cat containing the token.
   function catMatches(articleCat, filterCat){{
