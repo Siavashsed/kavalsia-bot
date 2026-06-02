@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Strobe Atlas - Raves, Halloween, Warehouses, and University Nights, Done Properly</title>
 <meta name="description" content="Strobe Atlas is the global index of nightlife. Field reports, recaps, and night tools from raves, halloween parties, warehouse takeovers, rooftops, and university nights in Berlin, London, Mexico City, NYC, Tbilisi and beyond.">
 <meta property="og:title" content="Strobe Atlas">
@@ -1038,9 +1039,9 @@ body::before{
 .floor-room.r-main{background:rgba(255,43,214,.12);color:var(--magenta);border-color:var(--magenta)}
 .floor-room.r-side{background:rgba(198,255,58,.08);color:var(--acid);border-color:var(--acid)}
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -1050,7 +1051,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article h3{color:#f4f4f6 !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -1058,7 +1059,7 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article strong{color:#f4f4f6 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
 body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decoration:underline;text-underline-offset:3px}
@@ -1092,10 +1093,10 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
   <a href="./" class="brand"><span class="mark"></span>Strobe Atlas</a>
   <div class="nav-links">
     <span class="live"><span class="pulse"></span>LIVE</span>
-    <a href="./recaps.html" class="nav-link">Recaps</a>
+    <a href="./recaps" class="nav-link">Recaps</a>
     <a href="./#scenes" class="nav-link">Scenes</a>
     <a href="./#tools" class="nav-link">Tools</a>
-    <a href="./about.html" class="nav-link">About</a>
+    <a href="./about" class="nav-link">About</a>
     <a href="./#newsletter" class="nav-cta">Join</a>
   </div>
 </nav>
@@ -1109,7 +1110,7 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
   <h1>Dance like the<br>city is watching.<br><span class="rot" id="rot">RAVE</span></h1>
   <p class="stand"><b>Strobe Atlas</b> is the global index of nightlife. We show up. We stay until the lights come on. We write it down. Raves, halloween, warehouses, rooftops, university nights - documented properly, indexed obsessively, and shared with the people who actually go.</p>
   <div class="hero-ctas">
-    <a href="./recaps.html" class="btn btn-primary">See the last three nights</a>
+    <a href="./recaps" class="btn btn-primary">See the last three nights</a>
     <a href="#tools" class="btn btn-ghost">Open the night tools</a>
   </div>
 </section>
@@ -1169,7 +1170,7 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
           <h3>Sublimation 04</h3>
           <div class="recap-meta">Berghain side room / Berlin DE<br><b>12 APR 2026 / CAP 2200 / 9PM - NOON</b></div>
           <p class="std">Twelve hours, four rooms, zero phones. Marcel Dettmann opened a vault that nobody saw closing. Then the rumour walked in: a b2b with Hector Oaks at 3am.</p>
-          <a href="./recaps.html#sublimation04" class="recap-link">Read recap -></a>
+          <a href="./recaps#sublimation04" class="recap-link">Read recap -></a>
         </div>
       </div>
     </article>
@@ -1184,7 +1185,7 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
           <h3>Helloween Vortex</h3>
           <div class="recap-meta">Sala Bizarro + rooftop / Mexico City MX<br><b>31 OCT 2025 / CAP 1800 / 10PM - 6AM</b></div>
           <p class="std">The masquerade where the city stopped sleeping. Rebekah hammered the basement while Indira Paganotto burned the roof. Costumes melted into one species by 3am.</p>
-          <a href="./recaps.html#helloweenvortex" class="recap-link">Read recap -></a>
+          <a href="./recaps#helloweenvortex" class="recap-link">Read recap -></a>
         </div>
       </div>
     </article>
@@ -1199,7 +1200,7 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
           <h3>Velvet Quad</h3>
           <div class="recap-meta">Cambridge May Ball + The Cause London / UK<br><b>14-15 MAR 2026 / CAP 1400</b></div>
           <p class="std">Black tie at 9, mesh and sweat by 3. A coach picked us up at the porter's lodge. Joy Anonymous opened London. Sammy Virji finished us. Saffron Stone stayed past sunrise.</p>
-          <a href="./recaps.html#velvetquad" class="recap-link">Read recap -></a>
+          <a href="./recaps#velvetquad" class="recap-link">Read recap -></a>
         </div>
       </div>
     </article>
@@ -1606,27 +1607,27 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
     <div class="meta">Cities we cover monthly<br><b>06 / 38 active scenes</b></div>
   </div>
   <div class="scenes">
-    <a class="scene" href="./recaps.html#sublimation04">
+    <a class="scene" href="./recaps#sublimation04">
       <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=85" alt="Berlin">
       <div class="scene-info"><div><h4>Berlin</h4><span class="s">47 nights / 18 venues</span></div><span class="arrow">-></span></div>
     </a>
-    <a class="scene" href="./recaps.html#velvetquad">
+    <a class="scene" href="./recaps#velvetquad">
       <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&q=85" alt="London">
       <div class="scene-info"><div><h4>London</h4><span class="s">38 nights / 22 venues</span></div><span class="arrow">-></span></div>
     </a>
-    <a class="scene" href="./recaps.html#helloweenvortex">
+    <a class="scene" href="./recaps#helloweenvortex">
       <img src="https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=1200&q=85" alt="Mexico City">
       <div class="scene-info"><div><h4>Mexico City</h4><span class="s">29 nights / 14 venues</span></div><span class="arrow">-></span></div>
     </a>
-    <a class="scene" href="./recaps.html">
+    <a class="scene" href="./recaps">
       <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1200&q=85" alt="New York">
       <div class="scene-info"><div><h4>New York</h4><span class="s">41 nights / 19 venues</span></div><span class="arrow">-></span></div>
     </a>
-    <a class="scene" href="./recaps.html">
+    <a class="scene" href="./recaps">
       <img src="https://images.unsplash.com/photo-1554072675-66db59dba46f?w=1200&q=85" alt="Tbilisi">
       <div class="scene-info"><div><h4>Tbilisi</h4><span class="s">17 nights / 6 venues</span></div><span class="arrow">-></span></div>
     </a>
-    <a class="scene" href="./recaps.html">
+    <a class="scene" href="./recaps">
       <img src="https://images.unsplash.com/photo-1545044846-351ba102b6d5?w=1200&q=85" alt="Melbourne">
       <div class="scene-info"><div><h4>Melbourne</h4><span class="s">22 nights / 11 venues</span></div><span class="arrow">-></span></div>
     </a>
@@ -1704,9 +1705,10 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
+<!-- THE FULL CATALOGUE section removed per request. -->
 <footer class="footer">
   <div class="footer-grid">
     <div class="footer-col">
@@ -1717,22 +1719,22 @@ body[data-page-depth="1"] article .intro a{color:#ff2bd6 !important;text-decorat
     <div class="footer-col">
       <h5>Explore</h5>
       <a href="./">Home</a>
-      <a href="./recaps.html">Recaps</a>
+      <a href="./recaps">Recaps</a>
       <a href="./#scenes">Scenes</a>
       <a href="./#tools">Tools</a>
     </div>
     <div class="footer-col">
       <h5>The Atlas</h5>
-      <a href="./about.html">About</a>
+      <a href="./about">About</a>
       <a href="./#crew">Field crew</a>
       <a href="./#deck">The deck</a>
       <a href="./#newsletter">Guest list</a>
     </div>
     <div class="footer-col">
       <h5>Legal</h5>
-      <a href="./privacy.html">Privacy</a>
-      <a href="./terms.html">Terms</a>
-      <a href="./about.html">Contact</a>
+      <a href="./privacy">Privacy</a>
+      <a href="./terms">Terms</a>
+      <a href="./about">Contact</a>
     </div>
     <div class="footer-col">
       <h5>Follow</h5>
