@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>TopProduct - Editor-Tested Reviews of Viral &amp; Trending Products</title>
 <meta name="description" content="TopProduct independently tests the trending products actually worth buying. Honest, editor-led reviews of viral TikTok finds, tech, home, beauty and fitness gear with zero sponsored fluff.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,9 +41,17 @@ img{display:block;max-width:100%}
 .masthead{background:var(--ink);padding:0 24px;border-bottom:1px solid #000;position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%)}
 .masthead-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
 .masthead-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.masthead-logo{font-family:var(--display);font-size:24px;font-weight:800;color:#fff;letter-spacing:-1px;display:flex;align-items:center;gap:10px;font-variation-settings:"opsz" 32}
-.masthead-logo-mark{width:32px;height:32px;background:var(--accent);border-radius:9px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(220,38,38,.4)}
-.masthead-logo span{color:var(--accent)}
+/* LOGO - custom TP monogram badge with gradient + amber accent dot.
+   Wordmark uses Inter Tight at -.04em tracking; "Product" runs a
+   red→amber gradient via background-clip. */
+.masthead-logo{font-family:'Inter Tight','Inter',system-ui,sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.04em;display:flex;align-items:center;gap:11px;font-variation-settings:"opsz" 32;line-height:1}
+.masthead-logo-mark{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;filter:drop-shadow(0 6px 16px rgba(220,38,38,.4));background:none;box-shadow:none;border-radius:0;transition:transform .25s,filter .25s}
+.masthead-logo-mark svg{display:block;width:100%;height:100%}
+.masthead-logo:hover .masthead-logo-mark{transform:rotate(-4deg) scale(1.04);filter:drop-shadow(0 8px 22px rgba(220,38,38,.6))}
+.masthead-logo-wm{display:inline-flex;align-items:baseline;gap:1px}
+.masthead-logo-pro{background:linear-gradient(115deg,#dc2626 20%,#fbbf24 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.masthead-logo-dot{color:#fbbf24;font-weight:900;margin-left:1px}
+.masthead-logo span{color:inherit}
 .masthead-nav{display:flex;align-items:center;gap:2px}
 .masthead-nav a{font-size:13px;font-weight:500;color:rgba(255,255,255,.72);padding:9px 14px;border-radius:8px;transition:color .2s,background .2s;letter-spacing:-.1px}
 .masthead-nav a:hover{color:#fff;background:rgba(255,255,255,.06)}
@@ -262,9 +271,9 @@ img{display:block;max-width:100%}
   .trust-inner{gap:12px 22px}
 }
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -274,7 +283,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#000000 !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -282,10 +291,10 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#1a1a1a !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#dc2626 !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
@@ -297,11 +306,31 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
 <header class="masthead">
   <div class="masthead-inner">
     <div class="masthead-brand">
-      <a href="./" class="masthead-logo">
-        <span class="masthead-logo-mark">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <a href="./" class="masthead-logo" aria-label="TopProduct - home">
+        <span class="masthead-logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" fill="none">
+            <defs>
+              <linearGradient id="tpGrad" x1="0" y1="0" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#ef4444"/>
+                <stop offset=".55" stop-color="#dc2626"/>
+                <stop offset="1" stop-color="#7f1d1d"/>
+              </linearGradient>
+              <linearGradient id="tpStroke" x1="0" y1="0" x2="0" y2="38" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="rgba(255,255,255,.35)"/>
+                <stop offset="1" stop-color="rgba(255,255,255,.05)"/>
+              </linearGradient>
+            </defs>
+            <rect x="1" y="1" width="36" height="36" rx="10" fill="url(#tpGrad)"/>
+            <rect x="1.5" y="1.5" width="35" height="35" rx="9.5" stroke="url(#tpStroke)" stroke-width="1" fill="none"/>
+            <path d="M7.5 11.5h11" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M13 11.5v15" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M21.5 26.5v-15" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M21.5 11.5h4.2a3.6 3.6 0 0 1 0 7.2h-4.2" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="29" cy="27.5" r="2.4" fill="#fbbf24"/>
+            <circle cx="29" cy="27.5" r="2.4" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".8"/>
+          </svg>
         </span>
-        Top<span>Product</span>
+        <span class="masthead-logo-wm">Top<span class="masthead-logo-pro">Product</span><span class="masthead-logo-dot">.</span></span>
       </a>
     </div>
     <nav class="masthead-nav" id="mainNav">
@@ -309,7 +338,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <a href="./#scorecard">Scorecard</a>
       <a href="./#cover">Categories</a>
       <a href="./#articles">Reviews</a>
-      <a href="about.html">About</a>
+      <a href="about">About</a>
       <a href="./#newsletter" class="masthead-subscribe">Get Weekly Picks</a>
     </nav>
     <button class="menu-toggle" id="menuToggle" aria-label="Menu">
@@ -335,6 +364,53 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     </div>
   </div>
 </section>
+
+<!-- PRODUCT OF THE WEEK announcement - bigger banner, sits between hero
+     and trust strip. Hidden on article/category pages via :not selector.
+     Image uses explicit width/height + decoded background so it never
+     produces a layout shift while the photo is fetched. -->
+<a href="./tuse-bag-convertible-carryall-review/" id="potw-banner">
+  <div class="potw-inner">
+    <div class="potw-img" aria-hidden="true">
+      <img src="https://tusestore.com/cdn/shop/files/52B3F2BD-7237-4314-B2C0-C592EB3CE262.jpg" alt="TUSÉ Bag - product of the week" width="140" height="140" loading="eager" decoding="async" fetchpriority="high" onerror="this.style.display='none';this.parentNode.classList.add('potw-img-fallback')">
+    </div>
+    <div class="potw-body">
+      <div class="potw-eyebrow"><span class="potw-dot"></span>★ Product of the Week &middot; May 2026</div>
+      <div class="potw-title">The TUSÉ Bag <span class="potw-italic">- one carryall, four configurations</span></div>
+      <div class="potw-sub">Backpack, crossbody, tote, briefcase. Same bag. We unpack the build, the math, and where it stands vs. Bellroy and the AliExpress clones.</div>
+    </div>
+    <div class="potw-cta">
+      <span class="potw-price">$49.90</span>
+      <span class="potw-read">Read Review<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+    </div>
+  </div>
+</a>
+<style>
+#potw-banner{display:block;text-decoration:none;color:inherit;background:linear-gradient(135deg,#1a1a1a 0%,#2a1818 100%);border-top:1px solid #2a1818;border-bottom:1px solid #2a1818;padding:28px 24px;transition:background .3s}
+#potw-banner:hover{background:linear-gradient(135deg,#241818 0%,#3a1f1f 100%)}
+.potw-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:140px 1fr auto;gap:28px;align-items:center}
+.potw-img{width:140px;height:140px;border-radius:14px;overflow:hidden;background:#1a1a1a linear-gradient(135deg,#2a1818 0%,#1a1a1a 100%);border:1px solid rgba(255,255,255,.08);flex-shrink:0;position:relative;aspect-ratio:1}
+.potw-img img{width:100%;height:100%;object-fit:cover;display:block;animation:potw-fade .6s ease}
+.potw-img-fallback::before{content:'TUSÉ';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Inter Tight',sans-serif;color:#fff;font-size:22px;font-weight:700;letter-spacing:.05em}
+@keyframes potw-fade{from{opacity:0}to{opacity:1}}
+.potw-body{min-width:0}
+.potw-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#dc2626;font-weight:700;margin-bottom:12px}
+.potw-dot{width:7px;height:7px;border-radius:50%;background:#dc2626;box-shadow:0 0 0 4px rgba(220,38,38,.18),0 0 10px rgba(220,38,38,.7);animation:pulse 2s infinite}
+.potw-title{font-family:var(--display,"Fraunces",serif);font-size:clamp(22px,2.6vw,30px);font-weight:700;color:#fff;line-height:1.15;letter-spacing:-0.6px;margin-bottom:8px}
+.potw-italic{font-style:italic;color:rgba(255,255,255,.55);font-weight:400}
+.potw-sub{font-family:'Inter',system-ui,sans-serif;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.62);max-width:580px}
+.potw-cta{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
+.potw-price{font-family:var(--display,"Fraunces",serif);font-size:26px;color:#fff;font-weight:700;letter-spacing:-0.5px}
+.potw-read{display:inline-flex;align-items:center;gap:8px;background:#dc2626;color:#fff;font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:600;padding:10px 18px;border-radius:999px;letter-spacing:-0.1px}
+@media(max-width:720px){
+  #potw-banner{padding:22px 18px}
+  .potw-inner{grid-template-columns:100px 1fr;gap:18px}
+  .potw-img{width:100px;height:100px;border-radius:12px}
+  .potw-cta{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;margin-top:6px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+  .potw-sub{font-size:13.5px}
+}
+body[data-page-depth] #potw-banner{display:none}
+</style>
 
 <!-- TRUST STRIP -->
 <div class="trust">
@@ -377,6 +453,8 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     </div>
   </div>
 </section>
+
+
 
 <!-- STORY / WHY -->
 <section class="section story-section">
@@ -454,6 +532,38 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
   </div>
 </section>
 
+<!-- PRODUCT VERIFIER teaser - lives on homepage; full tool is on /tools.
+     Kept short here so the homepage flow stays focused. -->
+<section class="section verifier-teaser-section">
+  <div class="section-inner">
+    <a class="vf-teaser reveal" href="./tools">
+      <div class="vf-teaser-side">
+        <div class="vf-teaser-label">★ AI Tool</div>
+        <div class="vf-teaser-title">Verify any product in 10 seconds</div>
+        <div class="vf-teaser-sub">Our AI reads recent reviews, Reddit threads and forum complaints in real time. Gives you a trust score and the red flags before you buy.</div>
+      </div>
+      <div class="vf-teaser-cta">
+        Open Verifier
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </a>
+  </div>
+</section>
+<style>
+.verifier-teaser-section{padding:60px 24px}
+.vf-teaser{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;background:linear-gradient(135deg,#0e0e0d 0%,#1a0e0e 100%);color:#fff;border-radius:18px;padding:36px 40px;text-decoration:none;border:1px solid #2a1818;max-width:1100px;margin:0 auto;transition:transform .25s,box-shadow .25s}
+.vf-teaser:hover{transform:translateY(-2px);box-shadow:0 18px 40px -18px rgba(220,38,38,.4)}
+.vf-teaser-label{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#dc2626;font-weight:700;margin-bottom:10px}
+.vf-teaser-title{font-family:'Inter Tight','Inter',sans-serif;font-size:clamp(22px,2.4vw,28px);font-weight:700;color:#fff;letter-spacing:-.02em;margin-bottom:8px;line-height:1.15}
+.vf-teaser-sub{font-family:'Inter',system-ui,sans-serif;font-size:14.5px;color:rgba(255,255,255,.62);line-height:1.55;max-width:680px}
+.vf-teaser-cta{display:inline-flex;align-items:center;gap:8px;background:#dc2626;color:#fff;font-family:'Inter Tight','Inter',sans-serif;font-size:14px;font-weight:700;padding:14px 22px;border-radius:999px;letter-spacing:-.005em;flex-shrink:0}
+@media(max-width:720px){
+  .vf-teaser{grid-template-columns:1fr;padding:28px 24px;gap:18px}
+  .vf-teaser-cta{justify-self:start}
+}
+</style>
+
+
 <!-- STATS BAND -->
 <section class="stats">
   <div class="stats-inner">
@@ -514,26 +624,6 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
 </section>
 
 <!-- EDITOR -->
-<section class="section">
-  <div class="section-inner section-narrow">
-    <div class="editor-card reveal">
-      <div class="editor-avatar">SC</div>
-      <div class="editor-info">
-        <div class="editor-label">Meet The Editor</div>
-        <h3>Sophie Chen</h3>
-        <div class="editor-role">Product Editor, TopProduct</div>
-        <p>Sophie leads our review desk. She has spent the last decade buying, breaking and benchmarking consumer products, from $20 viral kitchen gadgets to flagship headphones, and has zero patience for marketing fluff.</p>
-        <p>Every verdict that goes live on TopProduct is earned through real money spent and real time used. No agency, no brand on a leash, just careful testing and plain talk.</p>
-        <div class="editor-stats">
-          <div><b>640+</b><span>Products Reviewed</span></div>
-          <div><b>30 Days</b><span>Minimum Per Test</span></div>
-          <div><b>0</b><span>Paid Verdicts</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- FAQ -->
 <section class="section faq-section">
   <div class="section-inner section-narrow">
@@ -581,8 +671,8 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
 <footer class="footer">
   <div class="footer-inner">
@@ -594,15 +684,16 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <h4>Explore</h4>
       <a href="./">Home</a>
       <a href="./#scorecard">Scorecard Tool</a>
+      <a href="./tools">AI Product Verifier</a>
       <a href="./#cover">What We Cover</a>
       <a href="./#articles">Latest Reviews</a>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
-      <a href="about.html">About Us</a>
+      <a href="about">About Us</a>
       <a href="./#newsletter">Newsletter</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Use</a>
+      <a href="privacy">Privacy Policy</a>
+      <a href="terms">Terms of Use</a>
     </div>
     <div class="footer-col">
       <h4>Categories</h4>
