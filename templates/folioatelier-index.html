@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Folio Atelier - A Curated Lens on Art, Ateliers, and Modern Collectives</title>
 <meta name="description" content="Folio Atelier is a slow, editorial index of artists, ateliers, and small collectives. Studio visits, archive notes, and quiet criticism by Imogen Salinger.">
 <meta name="author" content="Imogen Salinger">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ===== Folio Atelier - Editorial Catalogue Theme ===== */
 :root{
@@ -60,14 +61,18 @@ a{color:inherit;text-decoration:none}
 .cover{padding:64px 0 80px;border-bottom:var(--rule-w) solid var(--rule);position:relative}
 .cover-grid{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:start}
 .cover-left{padding-top:8px}
-.issue-tag{display:inline-flex;align-items:center;gap:10px;padding:6px 10px;border:1px solid var(--ink);font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink)}
+.issue-tag{display:inline-flex;align-items:center;gap:12px;padding:9px 0;border:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;color:var(--ink);background:transparent}
+.issue-tag::before{content:"";display:inline-block;width:18px;height:1px;background:var(--ink);margin-right:2px}
 .issue-tag .dot{width:6px;height:6px;background:var(--walnut);border-radius:50%}
-.cover-headline{font-family:var(--serif);font-weight:300;font-size:clamp(46px,6.4vw,92px);line-height:1.02;letter-spacing:-.01em;margin:28px 0 24px;color:var(--ink)}
-.cover-headline .it{font-style:italic;color:var(--walnut-deep)}
+.cover-headline{font-family:var(--serif);font-weight:500;font-size:clamp(56px,8.4vw,132px);line-height:.96;letter-spacing:-.028em;margin:36px 0 30px;color:var(--ink);text-wrap:balance}
+.cover-headline .it{font-style:italic;font-weight:400;color:var(--walnut-deep);letter-spacing:-.015em}
 .cover-headline .br{display:block}
-.cover-stand{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.5;color:var(--ink-soft);max-width:38ch;margin-bottom:32px}
-.cover-meta{display:flex;gap:32px;padding-top:20px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
-.cover-meta b{color:var(--ink);font-weight:500}
+.cover-headline .br:nth-child(1){font-weight:700}
+.cover-stand{font-family:var(--serif);font-weight:400;font-size:clamp(20px,1.7vw,24px);line-height:1.42;color:var(--ink-soft);max-width:42ch;margin-bottom:40px;text-wrap:pretty}
+.cover-stand::first-letter{font-weight:600;color:var(--ink)}
+.cover-meta{display:flex;gap:36px;padding-top:24px;border-top:1px solid var(--ink);font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap}
+.cover-meta b{color:var(--ink);font-weight:500;display:block;font-size:9.5px;margin-bottom:4px;letter-spacing:.3em}
+.cover-meta span{display:flex;flex-direction:column}
 
 .cover-right{position:relative}
 .cover-frame{position:relative;border:1px solid var(--rule);padding:14px;background:var(--bone)}
@@ -284,7 +289,7 @@ a{color:inherit;text-decoration:none}
       <a href="./#archive">Archive</a>
       <a href="./#notes">Acquisition Notes</a>
       <a href="./#index">Index</a>
-      <a href="about.html">About</a>
+      <a href="about">About</a>
     </nav>
     <div class="mh-meta" aria-label="Issue metadata">
       <span>No. 014</span>
@@ -377,6 +382,8 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 </section>
+<div style="text-align:left;padding:18px 24px 32px;max-width:1280px;margin:0 auto"><a href="./articles" style="display:inline-flex;align-items:center;gap:10px;color:currentColor;text-decoration:none;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:2px">See all posts <span aria-hidden="true">&rarr;</span></a></div>
+
 
 <!-- ===== Studio Visits ===== -->
 <section class="sec" id="visits">
@@ -598,8 +605,8 @@ a{color:inherit;text-decoration:none}
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
 <footer class="colophon" role="contentinfo">
   <div class="wrap">
@@ -624,10 +631,10 @@ a{color:inherit;text-decoration:none}
       <div class="cph-col">
         <h4>Publication</h4>
         <ul>
-          <li><a href="about.html">About</a></li>
+          <li><a href="about">About</a></li>
           <li><a href="./#index">Current Issue</a></li>
           <li><a href="./">Subscribe</a></li>
-          <li><a href="about.html">Masthead</a></li>
+          <li><a href="about">Masthead</a></li>
         </ul>
       </div>
       <div class="cph-col">
@@ -643,9 +650,9 @@ a{color:inherit;text-decoration:none}
         <h4>Notices</h4>
         <ul>
           <li><a href="./">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
+          <li><a href="about">About</a></li>
+          <li><a href="privacy">Privacy</a></li>
+          <li><a href="terms">Terms</a></li>
         </ul>
       </div>
     </div>
