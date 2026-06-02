@@ -405,6 +405,15 @@ def patch_site(stem, site, token, log):
         _is_press = _builder is article_press
         _use_distinct = not _is_press
         if not body:
+            # SAFETY GUARD: a stub regen DESTROYS the article body, so only do it
+            # for a genuinely truncated/corrupt partial file (tiny original). If
+            # the original is a full-size page we simply can't re-parse (e.g. a
+            # bespoke layout, or a page this script already rebuilt once), DO NOT
+            # synthesize a stub - leave the live file completely untouched.
+            if len(original or "") > 3000:
+                log(f"  [{i+1}] = {slug}  -  body not re-extractable; left untouched (no stub)")
+                ok += 1
+                continue
             # Source HTML on GitHub is corrupted or truncated (e.g. partial file
             # left by a failed earlier push that wrote only the <head>/CSS).
             # We can't extract real content, but we have the article metadata in
@@ -461,6 +470,31 @@ def patch_site(stem, site, token, log):
                             t,
                         )
                         body = fresh_body
+                        css = fresh_css
+                else:
+                    # Bespoke page: keep the existing markup (re-extraction would
+                    # gut the bespoke DOM), but REFRESH the CSS from the builder so
+                    # theme/design changes (colors, sizing, contrast fixes) actually
+                    # propagate on rebuild. Builder CSS is theme-derived and
+                    # article-independent, so a metadata stub renders identical CSS.
+                    stub = {
+                        "title":            article.get("title", slug),
+                        "intro":            article.get("meta_description", "") or "",
+                        "intro2":           "", "sections": [], "conclusion": "",
+                        "image":            article.get("image", ""),
+                        "image_url":        article.get("image", ""),
+                        "image_alt":        article.get("title", slug),
+                        "photographer":     "Staff",
+                        "date":             article.get("date", ""),
+                        "date_iso":         article.get("date_iso", ""),
+                        "meta_description": article.get("meta_description", ""),
+                        "category":         article.get("category", ""),
+                        "author":           article.get("author", ""),
+                        "slug":             slug,
+                    }
+                    fresh_css, _ = _builder(
+                        stub, site, article.get("image", ""), "Staff", t)
+                    if fresh_css:
                         css = fresh_css
             except Exception as _press_err:
                 log(f"  [{i+1}] ! {slug}  -  rewrap fell back ({_press_err})")
