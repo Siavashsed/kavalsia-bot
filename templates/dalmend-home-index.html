@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Dalmend Home - Luxury Interior Design for High-End Houses and Mansions</title>
 <meta name="description" content="Dalmend Home is a luxury interior design studio decorating high-end houses and mansions - statement rooms, rare materials, sculptural lighting and curated collections. Part of the Dalmend Collective.">
 <meta name="author" content="Olivia Grant">
@@ -401,9 +402,9 @@ body[data-page-depth="1"] .nav-mobile a:hover{color:#1a1612;background:#f7efe0}
   .footer-lower-links{flex-wrap:wrap;gap:16px}
 }
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -413,7 +414,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -421,14 +422,15 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#c9a55c !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#78716c !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
 <body>
+
 <!--SHELL:ACCENT:#c9a55c-->
 <!--SHELL:HEADER-->
 
@@ -447,7 +449,7 @@ body[data-page-depth="1"] article .intro a{color:#c9a55c !important;text-decorat
       <a href="./#services">Services</a>
       <a href="./#topics">What We Cover</a>
       <a href="./#articles">Journal</a>
-      <a href="about.html">About</a>
+      <a href="about">About</a>
     </div>
     <a href="./#newsletter" class="nav-cta">The Atelier Letter</a>
     <button class="nav-burger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Open menu">
@@ -459,7 +461,7 @@ body[data-page-depth="1"] article .intro a{color:#c9a55c !important;text-decorat
     <a href="./#services" onclick="document.getElementById('nav-mobile').classList.remove('open')">Services</a>
     <a href="./#topics" onclick="document.getElementById('nav-mobile').classList.remove('open')">What We Cover</a>
     <a href="./#articles" onclick="document.getElementById('nav-mobile').classList.remove('open')">Journal</a>
-    <a href="about.html" onclick="document.getElementById('nav-mobile').classList.remove('open')">About</a>
+    <a href="about" onclick="document.getElementById('nav-mobile').classList.remove('open')">About</a>
     <a href="./#newsletter" onclick="document.getElementById('nav-mobile').classList.remove('open')">The Atelier Letter</a>
   </div>
 </nav>
@@ -904,8 +906,8 @@ body[data-page-depth="1"] article .intro a{color:#c9a55c !important;text-decorat
 
 <!-- FOOTER -->
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
 <footer class="footer">
   <div class="footer-upper">
@@ -942,11 +944,11 @@ body[data-page-depth="1"] article .intro a{color:#c9a55c !important;text-decorat
       <div class="footer-col footer-col-links">
         <div class="footer-col-title">Studio</div>
         <a href="./">Home</a>
-        <a href="about.html">About</a>
+        <a href="about">About</a>
         <a href="./#author">The Designer</a>
         <a href="https://dalmend.com">Dalmend Collective</a>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Use</a>
+        <a href="privacy">Privacy Policy</a>
+        <a href="terms">Terms of Use</a>
       </div>
     </div>
 
@@ -968,9 +970,9 @@ body[data-page-depth="1"] article .intro a{color:#c9a55c !important;text-decorat
       <span class="footer-lower-copy">&copy; 2026 Dalmend Home, part of the Dalmend Collective. All rights reserved.</span>
       <div class="footer-lower-links">
         <a href="./">Home</a>
-        <a href="about.html">About</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
+        <a href="about">About</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
         <a href="https://dalmend.com">Dalmend Collective</a>
       </div>
     </div>
