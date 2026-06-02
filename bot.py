@@ -6007,6 +6007,21 @@ def article_broadsheet(article, site, image_url, photographer, t):
     return css, body
 
 
+def _readable_text(bg, light="#ffffff", dark="#0b0b0b"):
+    """Pick a legible text color (near-black or white) for a solid background,
+    using WCAG relative luminance. Lets accent-colored chips/callouts stay
+    readable on any site's accent (e.g. white text on lime fails; this returns
+    dark instead). Falls back to white for non-hex inputs (gradients/rgba)."""
+    m = re.fullmatch(r"#?([0-9a-fA-F]{6})", (bg or "").strip())
+    if not m:
+        return light
+    r, g, b = (int(m.group(1)[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    def _lin(c):
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    lum = 0.2126 * _lin(r) + 0.7152 * _lin(g) + 0.0722 * _lin(b)
+    return dark if lum > 0.45 else light
+
+
 def article_tabloid(article, site, image_url, photographer, t):
     """Bold tabloid energy: massive sans-serif headline, full-bleed hero photo
     with kicker tag overlay, vivid color-block frame, scannable body with big
@@ -6032,24 +6047,30 @@ def article_tabloid(article, site, image_url, photographer, t):
                 f'<p class="tb-dek">{article.get("meta_description","")}</p>'
                 f'</div></div>')
     author = _resolve_author(site, article)["name"]
+    on_accent = _readable_text(t.get("accent", "#000000"))
     css = f"""
-.tb-hero{{position:relative;min-height:64vh;background-size:cover;background-position:center;display:flex;align-items:flex-end;margin:0 0 0;color:#fff;overflow:hidden}}
+.tb-hero{{position:relative;min-height:clamp(300px,46vh,460px);background-size:cover;background-position:center;display:flex;align-items:flex-end;margin:0 0 0;color:#fff;overflow:hidden}}
 .tb-hero-flat{{background:linear-gradient(135deg,{t["accent"]} 0%,{t["bg2"]} 100%)}}
-.tb-hero-overlay{{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.92) 100%)}}
-.tb-hero-content{{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:64px 24px 56px;width:100%}}
-.tb-tag{{display:inline-block;background:{t["accent"]};color:#fff;font-family:{t["body_font"]};font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;padding:7px 14px;border-radius:3px;margin-bottom:22px}}
-.tb-h1{{font-family:{t["heading_font"]};font-size:clamp(40px,8vw,108px);font-weight:900;line-height:.94;letter-spacing:-.04em;color:#fff;margin:0 0 18px;max-width:16ch;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.45)}}
+.tb-hero-overlay{{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.34) 0%,rgba(0,0,0,.48) 48%,rgba(0,0,0,.92) 100%)}}
+.tb-hero-content{{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:48px 24px 40px;width:100%}}
+.tb-tag{{display:inline-block;background:{t["accent"]};color:{on_accent};font-family:{t["body_font"]};font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:7px 14px;border-radius:4px;margin-bottom:20px}}
+.tb-h1{{font-family:{t["heading_font"]};font-size:clamp(30px,6vw,56px);font-weight:800;line-height:1.04;letter-spacing:-.02em;color:#fff;margin:0 0 16px;max-width:20ch;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.45)}}
 .tb-dek{{font-family:{t["heading_font"]};font-weight:500;font-size:clamp(18px,1.8vw,24px);line-height:1.4;color:rgba(255,255,255,.92);max-width:60ch;margin:0;text-wrap:pretty}}
 .tb-credit{{position:absolute;bottom:14px;right:22px;font-family:{t["body_font"]};font-size:10.5px;color:rgba(255,255,255,.75);letter-spacing:.16em;text-transform:uppercase}}
+/* Force hero text to stay light over the photo - beats the homepage shell's
+   article-depth contrast-audit that otherwise repaints h1/dek dark. */
+body[data-page-depth="1"] .tb-hero .tb-h1{{color:#fff!important}}
+body[data-page-depth="1"] .tb-hero .tb-dek{{color:rgba(255,255,255,.94)!important}}
+body[data-page-depth="1"] .tb-hero .tb-tag{{color:{on_accent}!important}}
 .tb{{max-width:760px;margin:0 auto;padding:40px 24px 96px;color:{t["text"]}}}
 .tb-meta{{display:flex;gap:24px;flex-wrap:wrap;font-family:{t["body_font"]};font-size:12px;color:{t["meta"]};letter-spacing:.06em;padding:14px 0;border-bottom:2px solid {t["text"]};margin-bottom:32px}}
 .tb-meta strong{{color:{t["text"]};font-weight:700;text-transform:uppercase}}
 .tb p{{font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.7;color:{t["text"]};margin:0 0 22px;text-wrap:pretty;font-feature-settings:"ss01","cv11"}}
 .tb .intro{{font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:21px;line-height:1.55;font-weight:500;color:{t["text"]};border-left:4px solid {t["accent"]};padding-left:20px;margin:0 0 28px;letter-spacing:-.005em}}
-.tb-section{{font-family:{t["heading_font"]};font-size:clamp(24px,3.4vw,38px);font-weight:800;line-height:1.1;letter-spacing:-.02em;color:{t["text"]};margin:48px 0 18px;padding:18px 0 0;border-top:3px solid {t["accent"]};max-width:24ch}}
-.tb-concl{{margin:48px 0 0;padding:32px;background:{t["accent"]};color:#fff;border-radius:6px;font-family:{t["heading_font"]};font-size:20px;line-height:1.55;font-weight:500}}
-.tb-concl::before{{content:"THE TAKEAWAY";display:block;font-family:{t["body_font"]};font-size:11px;letter-spacing:.32em;color:rgba(255,255,255,.85);margin-bottom:12px;font-weight:700}}
-@media(max-width:600px){{.tb-hero{{min-height:54vh}}.tb-hero-content{{padding:40px 20px 32px}}}}
+.tb-section{{font-family:{t["heading_font"]};font-size:clamp(22px,3vw,32px);font-weight:800;line-height:1.15;letter-spacing:-.02em;color:{t["text"]};margin:44px 0 16px;padding:18px 0 0;border-top:3px solid {t["accent"]};max-width:28ch}}
+.tb-concl{{margin:48px 0 0;padding:28px 32px;background:{t["accent"]};color:{on_accent};border-radius:8px;font-family:{t["heading_font"]};font-size:19px;line-height:1.6;font-weight:500}}
+.tb-concl::before{{content:"THE TAKEAWAY";display:block;font-family:{t["body_font"]};font-size:11px;letter-spacing:.28em;color:{on_accent};opacity:.72;margin-bottom:12px;font-weight:700}}
+@media(max-width:600px){{.tb-hero{{min-height:clamp(260px,52vh,400px)}}.tb-hero-content{{padding:32px 20px 28px}}.tb-h1{{font-size:clamp(26px,8vw,40px)}}}}
 {_article_section_css(t)}"""
 
     body = f"""{hero}
