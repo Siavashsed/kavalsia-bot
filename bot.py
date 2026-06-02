@@ -634,7 +634,7 @@ SITE_THEMES = {
         "font":"'Inter',system-ui,sans-serif",
         "heading_font":"'Playfair Display',Georgia,serif",
     },
-    "mashestate-home": {
+    "sellit-ca": {
         "bg":"#0c1018","bg2":"#141a25","bg3":"#1d2535",
         "text":"#ecedf0","text2":"#b8bcc6",
         "accent":"#c8a96a","accent2":"#5b8cff",
@@ -1080,7 +1080,9 @@ def generate_article(topic, site, all_sites, client, global_prompt="", author_na
             parts.append("SITE-SPECIFIC ADDITIONS:\n" + site["site_prompt"].strip())
         writing_rules = "\n\n".join(parts) if parts else site.get("tone", "Write clearly and engagingly.")
 
-    word_target = random.choice([820, 920, 1050, 1120, 980])
+    # Per-site override (set in network-config or in-memory) wins so a site can
+    # run longer-form. Falls back to the default spread.
+    word_target = site.get("word_target") or random.choice([820, 920, 1050, 1120, 980])
 
     client_section = ""
     if client_context and client_context.get("enabled"):
@@ -1530,7 +1532,7 @@ def _seo_title_tag(full_title, site_name=""):
 
 def _seo_meta(title, description, canonical="", og_image="", author="", date_iso="",
               modified_iso="", category="", site_name="", site_url="", word_count=0,
-              keywords="", author_title="", author_bio=""):
+              keywords="", author_title="", author_bio="", schema_type="Article"):
     """Build Google-grade SEO + Open Graph + JSON-LD tags for an article page.
 
     Emits: canonical, robots, keywords meta, full Open Graph + Twitter Card,
@@ -1587,7 +1589,7 @@ def _seo_meta(title, description, canonical="", og_image="", author="", date_iso
     # Article JSON-LD.
     article_ld = {
         "@context":      "https://schema.org",
-        "@type":         "Article",
+        "@type":         schema_type,
         "headline":      title,
         "description":   description,
         "datePublished": pub_iso,
@@ -1760,9 +1762,12 @@ def _resolve_author(site, article=None):
         if isinstance(article, dict):
             article["author"] = name
             article["_siavash_eligible"] = False
-    elif name != SIAVASH_NAME and eligible:
-        # Promote to Siavash on ~30% of qualifying articles, deterministically
-        # per slug so repeated rebuilds do not flip the byline on every run.
+    elif name != SIAVASH_NAME and eligible and not (article or {}).get("author"):
+        # Promote to Siavash on ~30% of qualifying articles, but only when the
+        # article has no explicit author yet (i.e., an initial generation).
+        # If an article already has a non-Siavash author baked into the body
+        # byline, do NOT override - that creates the "body says Alex, card
+        # says Siavash" mismatch the user keeps catching.
         slug = (article.get("slug") or article.get("title") or "")
         if slug:
             import hashlib as _hl
@@ -1815,7 +1820,17 @@ def get_author_name(site, settings=None):
 
 
 def generate_robots_txt(domain):
-    return f"User-agent: *\nAllow: /\nSitemap: https://{domain}/sitemap.xml\n"
+    # Hide admin/state JSON from crawlers. articles.json is fetched by the
+    # client-side JS at runtime, but Google/Bing have no reason to index it
+    # (the same content is rendered into the homepage already).
+    return (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /articles.json\n"
+        "Disallow: /_state.json\n"
+        "Disallow: /.posted-tracker.json\n"
+        f"Sitemap: https://{domain}/sitemap.xml\n"
+    )
 
 
 def generate_sitemap(site, articles):
@@ -3611,6 +3626,54 @@ def _author_card(site, author_name, t, article=None):
     initials     = "".join(w[0].upper() for w in info["name"].split()[:2]) or "AU"
     accent       = t.get("accent", "#3ecf8e")
     author_name  = info["name"]
+    # Sites that opt into a compact byline (set in network-config) get a
+    # tighter author card with no avatar circle. Three variants rotate
+    # deterministically by slug-hash so successive articles vary while a
+    # given article always renders the same way. Sites that also set
+    # `single_author_style` to A / B / C lock to one variant.
+    compact      = bool(site.get("compact_author_card"))
+    if compact:
+        # Pick variant deterministically per slug to give a sense of rhythm.
+        forced = (site.get("single_author_style") or "").upper().strip()
+        if forced in ("A", "B", "C"):
+            variant = forced
+        else:
+            slug = (article or {}).get("slug", "") if article else ""
+            h = sum(ord(c) for c in slug) if slug else 0
+            variant = "ABC"[h % 3]
+        if variant == "A":
+            # Variant A: hairline rule + stacked Name / Role / Bio (the
+            # original compact style)
+            return f"""<div style="max-width:720px;margin:20px auto 48px;padding:0 24px">
+  <div style="font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:2.2px;color:{t["meta"]};margin-bottom:10px;padding-top:18px;border-top:1px solid {t["border"]}">About the author</div>
+  <div style="font-size:14.5px;font-weight:700;color:{t["text"]};margin-bottom:3px">{author_name}</div>
+  <div style="font-size:11.5px;color:{accent};margin-bottom:8px;font-weight:500;letter-spacing:.02em">{author_title}</div>
+  <p style="font-size:13.5px;color:{t["text2"]};line-height:1.7;margin:0;max-width:580px">{bio}</p>
+</div>"""
+        if variant == "B":
+            # Variant B: inline byline at top + larger bio paragraph, left
+            # accent rule, monospace small caps for the role
+            return f"""<div style="max-width:720px;margin:24px auto 56px;padding:0 24px">
+  <div style="border-left:2px solid {accent};padding-left:18px">
+    <div style="font-family:ui-monospace,Menlo,monospace;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.28em;color:{accent};margin-bottom:14px">Written by</div>
+    <div style="font-size:18px;font-weight:700;color:{t["text"]};margin-bottom:4px;letter-spacing:-.012em">{author_name}</div>
+    <div style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:{t["meta"]};text-transform:uppercase;letter-spacing:.18em;margin-bottom:14px">{author_title}</div>
+    <p style="font-size:14.5px;color:{t["text2"]};line-height:1.7;margin:0;max-width:560px">{bio}</p>
+  </div>
+</div>"""
+        # Variant C: two-column. Role + small attribution on left, bio on
+        # right. Drops to one column on narrow viewports.
+        return f"""<div style="max-width:720px;margin:24px auto 56px;padding:24px 24px 0;border-top:1px solid {t["border"]}">
+  <div style="display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:start">
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.32em;color:{t["meta"]};margin-bottom:6px">About</div>
+      <div style="font-size:16px;font-weight:700;color:{t["text"]};margin-bottom:2px;letter-spacing:-.008em">{author_name}</div>
+      <div style="font-size:11px;color:{accent};font-weight:500;letter-spacing:.02em">{author_title}</div>
+    </div>
+    <p style="font-size:14px;color:{t["text2"]};line-height:1.72;margin:0;font-style:italic">{bio}</p>
+  </div>
+  <style>@media(max-width:600px){{[data-author-c]{{grid-template-columns:1fr!important;gap:14px!important}}}}</style>
+</div>"""
     return f"""<div style="max-width:760px;margin:24px auto 60px;padding:0 24px 8px">
   <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["meta"]};margin-bottom:14px">About the author</div>
   <div style="border:1px solid {t["border"]};border-radius:12px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start;background:{t["bg2"]}">
@@ -4183,7 +4246,7 @@ def _nav_leaf(site):
 
 
 def _nav_grid(site, t):
-    """Clean white nav with accent underline  -  matches grid template (ecommerceedge, mashestate-home)."""
+    """Clean white nav with accent underline  -  matches grid template (ecommerceedge, sellit-ca)."""
     name = _site_name(site)
     acc  = t["accent"]
     return (
@@ -4474,7 +4537,7 @@ def _nav_fitpulsepro(site):
 
 
 def _nav_mashestatehome(site):
-    """Fraunces / Inter dark gold-and-blue nav matching mashestate-home homepage."""
+    """Fraunces / Inter dark gold-and-blue nav matching sellit-ca homepage."""
     return (
         '<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n<style>\n'
         '.a-mh{background:rgba(12,16,24,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(236,237,240,.07);position:sticky;top:0;z-index:100}\n'
@@ -4819,7 +4882,7 @@ def _get_article_nav(site, t):
         return _nav_datingedge(site)
     if sid == "fitpulse-pro":
         return _nav_fitpulsepro(site)
-    if sid == "mashestate-home":
+    if sid == "sellit-ca":
         return _nav_mashestatehome(site)
     if sid == "newborn-iq":
         return _nav_newborniq(site)
@@ -5368,22 +5431,40 @@ def article_press(article, site, image_url, photographer, t):
     intro_html  = _wrap_block(article.get("intro", ""), "p", "ap-lede")
     intro2_html = _wrap_block(article.get("intro2", ""), "p")
 
+    # Body font - honor the site's configured font_body if set, else fall back
+    # to Lora for the legacy editorial feel. Sites that want a modern sans
+    # (e.g. Sellit with Inter) set font_body in their SITES entry.
+    body_font = site.get("font_body") or "'Lora',Georgia,serif"
+    # Only emit the Lora @import when the site actually uses Lora; otherwise
+    # whatever font_body references is loaded by the homepage shell already.
+    needs_lora_import = "Lora" in body_font
+
     css = f"""
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
-.ap,.ap-concl,.ap-pull,.ap-body,.ap-deck{{box-sizing:border-box;overflow-wrap:break-word;word-wrap:break-word;word-break:normal;hyphens:auto;max-width:100%}}
-.ap{{max-width:720px;margin:0 auto;padding:56px 24px 24px;font-family:'Lora',Georgia,serif}}
+{"@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');" if needs_lora_import else ""}
+/* Defensive width constraint - earlier cascades on some sites were letting
+   the conclusion + sources block escape the 720px column on wide screens.
+   Pin every descendant of .ap to max-width:100% and the wrapper to a hard
+   720px so nothing can break out regardless of homepage CSS quirks. */
+.ap,.ap *,.ap-concl,.ap-concl *,.ap-pull,.ap-body,.ap-body *,.ap-deck{{box-sizing:border-box;overflow-wrap:anywhere;word-wrap:break-word;word-break:normal;hyphens:auto;max-width:100%;min-width:0}}
+.ap{{max-width:720px !important;margin:0 auto !important;padding:56px 24px 24px;font-family:{body_font};position:relative;overflow:hidden;width:100%}}
+.ap-body,.ap-concl,.ap-deck,.ap-pull{{max-width:100% !important;width:100%;min-width:0}}
+/* Defensive: any long URL or unbreakable string inside the article is
+   forced to break so it cannot push the parent column wider than 720px. */
+.ap-body a,.ap-concl a,.ap-pull a{{overflow-wrap:anywhere;word-break:break-word}}
+body[data-page-depth="1"]{{overflow-x:hidden}}
+article[itemscope]{{display:block;max-width:100%;overflow-x:hidden}}
 .ap-kicker{{display:flex;align-items:center;gap:12px;font-family:{t["heading_font"]};font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:{t["accent"]};margin:0 0 26px}}
 .ap-kicker::before{{content:'';width:28px;height:1px;background:{t["accent"]}}}
 .ap-kicker .ap-sep{{opacity:.4;font-weight:400;letter-spacing:1px;color:{t["meta"]}}}
 .ap h1{{font-family:{t["heading_font"]};font-size:clamp(32px,5.4vw,54px);font-weight:800;line-height:1.05;letter-spacing:-.6px;color:{t["text"]};margin:0 0 22px;max-width:680px}}
-.ap-deck{{font-family:'Lora',Georgia,serif;font-size:20px;font-style:italic;line-height:1.5;color:{t["text2"]};margin:0 0 36px;max-width:620px}}
+.ap-deck{{font-family:{body_font};font-size:20px;font-style:italic;line-height:1.5;color:{t["text2"]};margin:0 0 36px;max-width:620px}}
 .ap-hero{{margin:0 0 44px}}
 .ap-hero img{{width:100%;height:auto;max-height:560px;object-fit:cover;display:block;border-radius:2px}}
-.ap-hero figcaption{{font-family:'Lora',Georgia,serif;font-style:italic;font-size:13px;color:{t["meta"]};text-align:center;margin-top:12px}}
-.ap-body{{font-size:18px;line-height:1.78;color:{t["text"]}}}
-.ap-body p{{margin:0 0 24px;color:{t["text2"]}}}
-.ap-body p.ap-lede{{font-size:21px;line-height:1.55;color:{t["text"]};margin-bottom:28px}}
-.ap-body p.ap-lede::first-letter{{float:left;font-family:{t["heading_font"]};font-size:76px;font-weight:800;line-height:.82;margin:8px 12px -2px 0;color:{t["accent"]}}}
+.ap-hero figcaption{{font-family:{body_font};font-style:italic;font-size:13px;color:{t["meta"]};text-align:center;margin-top:12px}}
+.ap-body{{font-size:17.5px;line-height:1.72;color:{t["text"]};letter-spacing:.005em;font-feature-settings:"kern","liga","onum"}}
+.ap-body p{{margin:0 0 22px;color:{t["text2"]}}}
+.ap-body p.ap-lede{{font-size:19.5px;line-height:1.55;color:{t["text"]};margin-bottom:26px;font-weight:400}}
+/* Drop-cap removed - it was reading as theatrical for tactical articles. */
 .ap-body h2,.ap-body .art-h2{{font-family:{t["heading_font"]};font-size:26px;font-weight:800;line-height:1.2;color:{t["text"]};margin:52px 0 16px;letter-spacing:-.3px}}
 .ap-body h3,.ap-body .art-h3{{font-family:{t["heading_font"]};font-size:19px;font-weight:700;color:{t["text"]};margin:34px 0 12px;letter-spacing:-.1px}}
 .ap-body h4{{font-family:{t["heading_font"]};font-size:14px;font-weight:700;color:{t["text"]};margin:24px 0 10px;text-transform:uppercase;letter-spacing:1.2px}}
@@ -5401,7 +5482,7 @@ def article_press(article, site, image_url, photographer, t):
 .ap-pull{{font-family:{t["heading_font"]};font-size:28px;font-weight:600;font-style:italic;line-height:1.3;color:{t["text"]};margin:56px 0;padding:0 0 0 24px;border-left:0;position:relative}}
 .ap-pull::before{{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:{t["accent"]}}}
 .ap-pull::after{{content:'';display:block;width:48px;height:2px;background:{t["accent"]};margin-top:18px;opacity:.5}}
-.ap-concl{{font-family:'Lora',Georgia,serif;font-size:19px;line-height:1.7;color:{t["text"]};margin-top:40px;padding-top:28px;position:relative}}
+.ap-concl{{font-family:{body_font};font-size:19px;line-height:1.7;color:{t["text"]};margin-top:40px;padding-top:28px;position:relative}}
 .ap-concl::before{{content:'In closing';display:block;font-family:{t["heading_font"]};font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:{t["accent"]};margin-bottom:14px;font-weight:700;font-style:normal}}
 .ap-concl::after{{content:'';position:absolute;top:0;left:0;width:60px;height:2px;background:{t["text"]}}}
 .ap-concl p{{color:{t["text"]};margin-bottom:18px}}
@@ -5411,7 +5492,6 @@ def article_press(article, site, image_url, photographer, t):
   .ap-deck{{font-size:18px}}
   .ap-body{{font-size:17px}}
   .ap-body p.ap-lede{{font-size:19px}}
-  .ap-body p.ap-lede::first-letter{{font-size:60px}}
   .ap-pull{{font-size:22px;margin:42px 0}}
   .ap-hero img{{max-height:380px}}
 }}
@@ -5700,9 +5780,14 @@ def article_kanona(article, site, image_url, photographer, t):
 @media(max-width:760px){{
   .kn-hero{{height:48vh;min-height:320px}}
   .kn-wrap{{padding:0 22px 24px}}
-  .kn-title-block{{margin-top:-10vh}}
-  .kn h1{{font-size:38px;letter-spacing:-.4px}}
-  .kn-deck{{font-size:19px}}
+  /* Mobile: center the hero/title banner (kicker, headline, deck) so the
+     opening of the piece reads as a centered title card on a phone. The body
+     below stays left-aligned for long-form readability. */
+  .kn-title-block{{margin-top:-10vh;text-align:center}}
+  .kn-kicker{{justify-content:center}}
+  .kn-kicker::before{{display:none}}
+  .kn h1{{font-size:38px;letter-spacing:-.4px;max-width:100%;margin-left:auto;margin-right:auto}}
+  .kn-deck{{font-size:19px;margin-left:auto;margin-right:auto}}
   .kn-body{{font-size:18px;padding-left:14px}}
   .kn-rail{{left:8px}}
   .kn-body p.kn-lede{{font-size:21px}}
@@ -5710,6 +5795,50 @@ def article_kanona(article, site, image_url, photographer, t):
   .kn-pull{{font-size:24px;margin:42px 0;padding:28px 8px}}
   .kn-pull-q{{font-size:38px;vertical-align:-8px}}
   .kn-body h2.kn-h2{{font-size:30px}}
+}}
+/* ── Brand-accurate type + colour, consistent on every screen ──────────────
+   Reuses the homepage shell's own variables (--serif Cormorant, --gold,
+   --text, --text2) and outranks the shell's contrast-audit !important rules
+   with higher specificity so headings, body and accents always render in the
+   exact Kanona palette rather than a generic light-on-dark fallback. */
+body[data-page-depth="1"] .kn,
+body[data-page-depth="1"] .kn-body,
+body[data-page-depth="1"] .kn h1,
+body[data-page-depth="1"] .kn .kn-deck,
+body[data-page-depth="1"] .kn .kn-h2,
+body[data-page-depth="1"] .kn h2.kn-h2,
+body[data-page-depth="1"] .kn h3{{font-family:var(--serif,'Cormorant Garamond',Georgia,serif)}}
+body[data-page-depth="1"] .kn h1,
+body[data-page-depth="1"] .kn .kn-h2,
+body[data-page-depth="1"] .kn h2.kn-h2,
+body[data-page-depth="1"] .kn h3,
+body[data-page-depth="1"] .kn-body,
+body[data-page-depth="1"] .kn-body p,
+body[data-page-depth="1"] .kn-body li,
+body[data-page-depth="1"] .kn-body p.kn-lede,
+body[data-page-depth="1"] .kn-concl,
+body[data-page-depth="1"] .kn-concl p{{color:var(--text,#ece6dd) !important}}
+body[data-page-depth="1"] .kn-deck{{color:var(--text2,rgba(236,230,221,.78)) !important}}
+body[data-page-depth="1"] .kn-kicker,
+body[data-page-depth="1"] .kn-body strong,
+body[data-page-depth="1"] .kn-body em,
+body[data-page-depth="1"] .kn-body i,
+body[data-page-depth="1"] .kn-body a,
+body[data-page-depth="1"] .kn-body p.kn-lede::first-letter{{color:var(--gold,#c4a05d) !important}}
+/* fluid sizing: phone -> tablet -> desktop, no awkward jumps */
+.kn-body{{font-size:clamp(17px,0.7vw + 15px,20px)}}
+.kn h1{{font-size:clamp(34px,5.2vw,64px)}}
+.kn-deck{{font-size:clamp(18px,1.4vw,22px)}}
+@media(min-width:1100px){{.kn-wrap{{max-width:720px}}}}
+@media(max-width:480px){{
+  .kn-wrap{{padding:0 18px 22px}}
+  .kn h1{{font-size:29px;letter-spacing:-.3px}}
+  .kn-deck{{font-size:17px}}
+  .kn-body{{font-size:17px;line-height:1.78}}
+  .kn-body p.kn-lede{{font-size:19px}}
+  .kn-body p.kn-lede::first-letter{{font-size:58px}}
+  .kn-body h2.kn-h2{{font-size:25px}}
+  .kn-pull{{font-size:22px}}
 }}
 """
 
@@ -5818,19 +5947,452 @@ def article_kanona(article, site, image_url, photographer, t):
     return css, body
 
 
+def article_broadsheet(article, site, image_url, photographer, t):
+    """Newspaper-broadsheet feel: serif display headline, masthead rule, drop-cap
+    intro, two-column body on desktop, byline + dateline above the fold,
+    footnoted sources. Best for finance/business/journal sites that want
+    editorial credibility."""
+    sections = _article_sections(article["sections"], t)
+    img = ""
+    if image_url:
+        img = (f'<figure class="bs-fig">'
+               f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy">'
+               f'<figcaption>Photo by {photographer} / Pexels</figcaption>'
+               f'</figure>')
+    author = _resolve_author(site, article)["name"]
+    kicker = (site.get("category") or "Editorial").upper()
+    css = f"""
+.bs{{max-width:1080px;margin:0 auto;padding:32px 24px 96px;color:{t["text"]}}}
+.bs-masthead{{border-top:2px solid {t["text"]};border-bottom:1px solid {t["meta"]};padding:14px 0 12px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:baseline;font-family:{t["body_font"]};font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:{t["meta"]}}}
+.bs-kicker{{font-family:{t["body_font"]};font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:{t["accent"]};margin-bottom:14px;font-weight:600}}
+.bs-h1{{font-family:{t["heading_font"]};font-size:clamp(36px,5.2vw,72px);font-weight:700;line-height:1.02;letter-spacing:-.02em;color:{t["text"]};margin:0 0 18px;max-width:18ch;text-wrap:balance}}
+.bs-dek{{font-family:{t["heading_font"]};font-weight:400;font-size:clamp(18px,1.8vw,24px);line-height:1.45;color:{t["text2"]};max-width:54ch;margin:0 0 26px}}
+.bs-byline{{border-top:1px solid {t["meta"]};border-bottom:1px solid {t["meta"]};padding:14px 0;margin-bottom:32px;display:flex;gap:18px;flex-wrap:wrap;font-family:{t["body_font"]};font-size:12px;color:{t["meta"]};letter-spacing:.04em}}
+.bs-byline strong{{color:{t["text"]};font-weight:600;letter-spacing:.06em;text-transform:uppercase}}
+.bs-fig{{margin:0 0 36px}}
+.bs-fig img{{width:100%;height:auto;display:block}}
+.bs-fig figcaption{{font-family:{t["body_font"]};font-size:11px;color:{t["meta"]};letter-spacing:.06em;padding-top:8px;border-bottom:1px solid {t["meta"]};padding-bottom:10px}}
+.bs-body{{column-count:2;column-gap:42px;column-rule:1px solid {t["meta"]};font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.72;color:{t["text2"]};font-feature-settings:"ss01","cv11"}}
+.bs-body > p:first-of-type::first-letter{{font-size:5.2em;float:left;line-height:.85;padding:6px 10px 0 0;color:{t["accent"]};font-weight:700}}
+.bs-body p{{margin:0 0 16px;break-inside:avoid-column;text-wrap:pretty}}
+.bs-body .intro{{font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:18px;color:{t["text"]};font-weight:500;letter-spacing:-.005em}}
+.bs-section{{column-span:all;font-family:{t["heading_font"]};font-size:clamp(22px,2.4vw,30px);font-weight:600;line-height:1.15;letter-spacing:-.015em;margin:42px 0 18px;padding-top:18px;border-top:1px solid {t["meta"]}}}
+.bs-concl{{column-span:all;margin:48px 0 0;padding:28px 32px;background:{t["bg2"]};border-left:3px solid {t["accent"]};font-family:{t["heading_font"]};font-size:18px;line-height:1.6;color:{t["text"]}}}
+.bs-concl::before{{content:"END NOTE";display:block;font-family:{t["body_font"]};font-size:10.5px;letter-spacing:.32em;color:{t["accent"]};margin-bottom:10px;font-weight:600}}
+@media(max-width:760px){{.bs-body{{column-count:1}}.bs-h1{{font-size:clamp(34px,7vw,52px)}}}}
+{_article_section_css(t)}"""
+
+    body = f"""<div class="bs">
+  <div class="bs-masthead">
+    <span>{_site_name(site)}</span>
+    <span>{article.get("date","")}</span>
+  </div>
+  <div class="bs-kicker">{kicker}</div>
+  <h1 class="bs-h1">{article["title"]}</h1>
+  <p class="bs-dek">{article.get("meta_description","")}</p>
+  <div class="bs-byline">
+    <span><strong>By</strong> &nbsp; {author}</span>
+    <span><strong>Filed</strong> &nbsp; {site["category"]}</span>
+    <span><strong>Read</strong> &nbsp; {max(3, _count_words(_wrap_block(article.get("intro",""),"p")+sections)//220)} min</span>
+  </div>
+  {img}
+  <div class="bs-body">
+    {_wrap_block(article["intro"], "p", "intro")}
+    {_wrap_block(article.get("intro2",""), "p")}
+    {_inject_section_breaks(sections, 'bs-section')}
+    <div class="bs-concl">{article["conclusion"]}</div>
+  </div>
+  {_sources_block(article, t)}
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+    return css, body
+
+
+def article_tabloid(article, site, image_url, photographer, t):
+    """Bold tabloid energy: massive sans-serif headline, full-bleed hero photo
+    with kicker tag overlay, vivid color-block frame, scannable body with big
+    pull quotes and sub-deck breaks. Best for tech, marketing, mens-lifestyle,
+    sport sites where you want immediate visual impact."""
+    sections = _article_sections(article["sections"], t)
+    hero = ""
+    if image_url:
+        hero = (f'<div class="tb-hero" style="background-image:url(\'{image_url}\')">'
+                f'<div class="tb-hero-overlay"></div>'
+                f'<div class="tb-hero-content">'
+                f'<span class="tb-tag">{(article.get("category") or site.get("category") or "Story").upper()}</span>'
+                f'<h1 class="tb-h1">{article["title"]}</h1>'
+                f'<p class="tb-dek">{article.get("meta_description","")}</p>'
+                f'</div>'
+                f'<div class="tb-credit">Photo: {photographer} / Pexels</div>'
+                f'</div>')
+    else:
+        hero = (f'<div class="tb-hero tb-hero-flat">'
+                f'<div class="tb-hero-content">'
+                f'<span class="tb-tag">{(article.get("category") or site.get("category") or "Story").upper()}</span>'
+                f'<h1 class="tb-h1">{article["title"]}</h1>'
+                f'<p class="tb-dek">{article.get("meta_description","")}</p>'
+                f'</div></div>')
+    author = _resolve_author(site, article)["name"]
+    css = f"""
+.tb-hero{{position:relative;min-height:64vh;background-size:cover;background-position:center;display:flex;align-items:flex-end;margin:0 0 0;color:#fff;overflow:hidden}}
+.tb-hero-flat{{background:linear-gradient(135deg,{t["accent"]} 0%,{t["bg2"]} 100%)}}
+.tb-hero-overlay{{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.35) 55%,rgba(0,0,0,.92) 100%)}}
+.tb-hero-content{{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:64px 24px 56px;width:100%}}
+.tb-tag{{display:inline-block;background:{t["accent"]};color:#fff;font-family:{t["body_font"]};font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;padding:7px 14px;border-radius:3px;margin-bottom:22px}}
+.tb-h1{{font-family:{t["heading_font"]};font-size:clamp(40px,8vw,108px);font-weight:900;line-height:.94;letter-spacing:-.04em;color:#fff;margin:0 0 18px;max-width:16ch;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.45)}}
+.tb-dek{{font-family:{t["heading_font"]};font-weight:500;font-size:clamp(18px,1.8vw,24px);line-height:1.4;color:rgba(255,255,255,.92);max-width:60ch;margin:0;text-wrap:pretty}}
+.tb-credit{{position:absolute;bottom:14px;right:22px;font-family:{t["body_font"]};font-size:10.5px;color:rgba(255,255,255,.75);letter-spacing:.16em;text-transform:uppercase}}
+.tb{{max-width:760px;margin:0 auto;padding:40px 24px 96px;color:{t["text"]}}}
+.tb-meta{{display:flex;gap:24px;flex-wrap:wrap;font-family:{t["body_font"]};font-size:12px;color:{t["meta"]};letter-spacing:.06em;padding:14px 0;border-bottom:2px solid {t["text"]};margin-bottom:32px}}
+.tb-meta strong{{color:{t["text"]};font-weight:700;text-transform:uppercase}}
+.tb p{{font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.7;color:{t["text"]};margin:0 0 22px;text-wrap:pretty;font-feature-settings:"ss01","cv11"}}
+.tb .intro{{font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:21px;line-height:1.55;font-weight:500;color:{t["text"]};border-left:4px solid {t["accent"]};padding-left:20px;margin:0 0 28px;letter-spacing:-.005em}}
+.tb-section{{font-family:{t["heading_font"]};font-size:clamp(24px,3.4vw,38px);font-weight:800;line-height:1.1;letter-spacing:-.02em;color:{t["text"]};margin:48px 0 18px;padding:18px 0 0;border-top:3px solid {t["accent"]};max-width:24ch}}
+.tb-concl{{margin:48px 0 0;padding:32px;background:{t["accent"]};color:#fff;border-radius:6px;font-family:{t["heading_font"]};font-size:20px;line-height:1.55;font-weight:500}}
+.tb-concl::before{{content:"THE TAKEAWAY";display:block;font-family:{t["body_font"]};font-size:11px;letter-spacing:.32em;color:rgba(255,255,255,.85);margin-bottom:12px;font-weight:700}}
+@media(max-width:600px){{.tb-hero{{min-height:54vh}}.tb-hero-content{{padding:40px 20px 32px}}}}
+{_article_section_css(t)}"""
+
+    body = f"""{hero}
+<div class="tb">
+  <div class="tb-meta">
+    <span><strong>By</strong> {author}</span>
+    <span><strong>·</strong> {article.get("date","")}</span>
+    <span><strong>·</strong> {site["category"]}</span>
+    <span><strong>·</strong> {max(3, _count_words(_wrap_block(article.get("intro",""),"p")+sections)//220)} min read</span>
+  </div>
+  {_wrap_block(article["intro"], "p", "intro")}
+  {_wrap_block(article.get("intro2",""), "p")}
+  {_inject_section_breaks(sections, 'tb-section')}
+  <div class="tb-concl">{article["conclusion"]}</div>
+  {_sources_block(article, t)}
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+    return css, body
+
+
+def article_onlinebiz(article, site, image_url, photographer, t):
+    """Operator-dossier layout for OnlineBiz Pro ONLY. Mirrors the homepage:
+    near-black canvas, Space Grotesk display, Inter body, electric purple
+    (#a78bfa) + lime (#bef264) accents, gradient hairlines, a contained hero
+    image card with a soft purple glow, a left-rail lede, dashboard-style
+    section headers, a 'THE BOTTOM LINE' conclusion panel and a custom dark
+    author dossier. Deliberately distinct from the Kanona serif editorial."""
+    sections = _article_sections(article["sections"], t)
+    author_info = _resolve_author(site, article)
+    author = author_info["name"]
+    a_title = author_info.get("title") or "OnlineBiz Pro"
+    a_bio   = author_info.get("bio") or site.get("author_bio") or ""
+    initials = "".join(w[0] for w in author.split()[:2]).upper() or "OB"
+    category = (article.get("category") or site.get("category") or "Playbook").upper()
+    read_time = max(3, _count_words(_wrap_block(article.get("intro",""),"p")+sections)//220)
+
+    hero_img = ""
+    if image_url:
+        hero_img = (f'<figure class="ob-hero-fig">'
+                    f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager">'
+                    f'<figcaption>Photo: {photographer} / Pexels</figcaption>'
+                    f'</figure>')
+
+    css = f"""
+.ob{{--ob-bg:#070708;--ob-bg2:#0d0d10;--ob-surface:#131318;--ob-accent:#6c5ce7;--ob-accent2:#a78bfa;--ob-cyan:#22d3ee;--ob-lime:#bef264;--ob-text:#f4f4f6;--ob-muted:#8b8b97;--ob-dim:#5c5c68;--ob-border:#222229;background:var(--ob-bg);color:var(--ob-text);font-family:'Inter',system-ui,sans-serif;position:relative;overflow:hidden}}
+.ob::before{{content:'';position:absolute;top:-180px;left:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(108,92,231,.22),transparent 70%);filter:blur(120px);pointer-events:none;z-index:0}}
+.ob-wrap{{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:56px 24px 40px}}
+.ob-kicker{{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ob-muted);letter-spacing:.04em;margin-bottom:26px}}
+.ob-chip{{font-family:'Space Grotesk','Inter',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#0a0a0b;background:linear-gradient(120deg,var(--ob-accent2),var(--ob-lime));padding:5px 12px;border-radius:999px}}
+.ob-kicker .ob-dot{{width:3px;height:3px;border-radius:50%;background:var(--ob-dim)}}
+.ob-bar{{width:54px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--ob-accent2),var(--ob-lime));margin:0 0 20px}}
+.ob h1{{font-family:'Space Grotesk','Inter',sans-serif;font-size:clamp(34px,5.4vw,60px);font-weight:700;line-height:1.04;letter-spacing:-.03em;color:var(--ob-text);margin:0 0 20px;text-wrap:balance}}
+.ob-dek{{font-size:clamp(17px,2vw,21px);line-height:1.5;color:var(--ob-muted);font-weight:400;margin:0 0 30px;max-width:60ch}}
+.ob-hero-fig{{margin:0 0 40px}}
+.ob-hero-fig img{{width:100%;border-radius:16px;border:1px solid var(--ob-border);box-shadow:0 30px 80px -40px rgba(108,92,231,.6);display:block}}
+.ob-hero-fig figcaption{{font-size:11px;color:var(--ob-dim);letter-spacing:.08em;text-transform:uppercase;margin-top:10px;text-align:right}}
+.ob-body{{font-size:17px;line-height:1.78;color:#d9d9e0}}
+.ob-body p{{margin:0 0 22px}}
+.ob-body .intro{{font-size:21px;line-height:1.6;font-weight:500;color:var(--ob-text);border-left:3px solid;border-image:linear-gradient(180deg,var(--ob-accent2),var(--ob-lime)) 1;padding-left:22px;margin:0 0 30px}}
+.ob-body a{{color:var(--ob-accent2);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}}
+.ob-body strong{{color:var(--ob-text);font-weight:700}}
+.ob-body em,.ob-body i{{color:var(--ob-lime);font-style:italic}}
+.ob-body ul,.ob-body ol{{margin:0 0 22px 20px}}
+.ob-body li{{margin-bottom:9px}}
+.ob-body img{{width:100%;border-radius:12px;border:1px solid var(--ob-border);margin:30px 0}}
+.ob-body blockquote{{margin:34px 0;padding:4px 0 4px 22px;border-left:3px solid var(--ob-accent2);font-family:'Space Grotesk','Inter',sans-serif;font-size:23px;line-height:1.4;font-weight:500;color:var(--ob-text)}}
+.ob-body h2.ob-section,.ob-body .ob-section{{font-family:'Space Grotesk','Inter',sans-serif;font-size:clamp(23px,3.2vw,32px);font-weight:700;line-height:1.14;letter-spacing:-.02em;color:var(--ob-text);margin:50px 0 16px;padding-top:20px;border-top:1px solid var(--ob-border);position:relative}}
+.ob-body h2.ob-section::before,.ob-body .ob-section::before{{content:'';position:absolute;top:-1px;left:0;width:60px;height:2px;background:linear-gradient(90deg,var(--ob-accent2),var(--ob-lime))}}
+.ob-body h3{{font-family:'Space Grotesk','Inter',sans-serif;font-size:20px;font-weight:600;color:var(--ob-text);margin:30px 0 12px}}
+.ob-concl{{margin:48px 0 0;padding:30px 28px;background:var(--ob-bg2);border:1px solid var(--ob-border);border-radius:16px;position:relative;font-size:18px;line-height:1.65;color:#d9d9e0;overflow:hidden}}
+.ob-concl::before{{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ob-accent2),var(--ob-lime))}}
+.ob-concl .ob-concl-label{{display:block;font-family:'Space Grotesk','Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--ob-lime);margin-bottom:12px}}
+.ob-concl p{{margin:0 0 14px}}.ob-concl p:last-child{{margin-bottom:0}}
+.ob-author{{position:relative;z-index:1;max-width:760px;margin:40px auto 0;padding:26px 24px;display:flex;gap:18px;align-items:flex-start;background:var(--ob-bg2);border:1px solid var(--ob-border);border-radius:16px}}
+.ob-avatar{{flex:0 0 auto;width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk','Inter',sans-serif;font-weight:700;font-size:18px;color:#0a0a0b;background:linear-gradient(135deg,var(--ob-accent2),var(--ob-lime))}}
+.ob-author-name{{font-family:'Space Grotesk','Inter',sans-serif;font-size:16px;font-weight:700;color:var(--ob-text)}}
+.ob-author-role{{font-size:12px;color:var(--ob-accent2);letter-spacing:.02em;margin:2px 0 8px;text-transform:uppercase;font-weight:600}}
+.ob-author-bio{{font-size:13.5px;line-height:1.6;color:var(--ob-muted);margin:0}}
+@media(max-width:600px){{.ob-wrap{{padding:42px 20px 32px}}.ob h1{{font-size:32px}}.ob-author{{flex-direction:column;gap:14px}}}}
+{_article_section_css(t)}
+/* Override the homepage shell's light-paper contrast-audit rules
+   (body[data-page-depth="1"] h1/article p -> near-black !important), which
+   would otherwise paint this dark layout's text invisibly dark. Higher
+   specificity + !important so the dark-canvas colours win. */
+body[data-page-depth="1"] .ob h1,
+body[data-page-depth="1"] .ob h2,
+body[data-page-depth="1"] .ob h3,
+body[data-page-depth="1"] .ob .ob-section{{color:#f4f4f6 !important}}
+body[data-page-depth="1"] .ob-body,
+body[data-page-depth="1"] .ob-body p,
+body[data-page-depth="1"] .ob-body li,
+body[data-page-depth="1"] .ob-body .intro,
+body[data-page-depth="1"] .ob-dek,
+body[data-page-depth="1"] .ob-concl,
+body[data-page-depth="1"] .ob-concl p{{color:#d9d9e0 !important}}
+body[data-page-depth="1"] .ob-body strong{{color:#f4f4f6 !important}}
+body[data-page-depth="1"] .ob-body a{{color:#a78bfa !important}}
+body[data-page-depth="1"] .ob-body em,
+body[data-page-depth="1"] .ob-body i{{color:#bef264 !important}}
+body[data-page-depth="1"] .ob-concl .ob-concl-label{{color:#bef264 !important}}"""
+
+    author_box = (f'<div class="ob-author"><div class="ob-avatar">{initials}</div>'
+                  f'<div class="ob-author-meta"><div class="ob-author-name">{author}</div>'
+                  f'<div class="ob-author-role">{a_title}</div>'
+                  + (f'<p class="ob-author-bio">{a_bio}</p>' if a_bio else '')
+                  + '</div></div>')
+
+    body = f"""<div class="ob">
+  <div class="ob-wrap">
+    <div class="ob-kicker"><span class="ob-chip">{category}</span><span class="ob-dot"></span><span>{article.get("date","")}</span><span class="ob-dot"></span><span>{read_time} min read</span></div>
+    <div class="ob-bar"></div>
+    <h1>{article["title"]}</h1>
+    {f'<p class="ob-dek">{article.get("meta_description","")}</p>' if article.get("meta_description") else ''}
+    {hero_img}
+    <div class="ob-body">
+      {_wrap_block(article["intro"], "p", "intro")}
+      {_wrap_block(article.get("intro2",""), "p")}
+      {_inject_section_breaks(sections, 'ob-section')}
+      <div class="ob-concl"><span class="ob-concl-label">The Bottom Line</span>{_wrap_block(article["conclusion"], "p")}</div>
+      {_sources_block(article, t)}
+    </div>
+  </div>
+</div>""" + author_box + _comments_section_js(t) + _giscus(site)
+    return css, body
+
+
+def article_sidebar_wide(article, site, image_url, photographer, t):
+    """Wide, two-column reading layout with a STICKY LEFT SIDEBAR on desktop.
+    Theme-driven (uses each site's bg/text/accent/fonts) so it adapts to the
+    host brand - e.g. carverge reads automotive-tech in its blue/cyan palette,
+    tradingtech reads fintech in its own. Sidebar carries category, date, read
+    time, an 'In this article' jump nav, and a compact byline. The main column
+    is wider than the standard press measure with clean, unambiguous section
+    headings. Mobile collapses to a single column with the nav up top."""
+    bg     = t.get("bg", "#0b0b0f");   bg2 = t.get("bg2", "#14141a")
+    text   = t.get("text", "#f2f2f4"); t2  = t.get("text2", "#b8b8c0")
+    accent = t.get("accent", "#5b9dff"); meta = t.get("meta", "#8a8a96")
+    border = t.get("border", "rgba(255,255,255,.1)")
+    hf     = t.get("heading_font", "'Space Grotesk','Inter',sans-serif")
+    bf     = t.get("body_font", "'Inter',system-ui,sans-serif")
+
+    author_info = _resolve_author(site, article)
+    author   = author_info["name"]
+    a_title  = author_info.get("title") or ""
+    initials = "".join(w[0].upper() for w in author.split()[:2]) or "AU"
+    category = (article.get("category") or site.get("category") or "Feature").upper()
+    read_time = max(3, _count_words(_wrap_block(article.get("intro",""),"p")
+                                    + _article_sections(article["sections"], t))//220)
+
+    # Build sections with stable ids + a matching jump-nav (TOC).
+    toc, sec_html = [], []
+    for idx, s in enumerate(article.get("sections", []) or []):
+        head = (s.get("heading") or "").strip()
+        if not head or _COMMENT_HEADING_RE.match(head):
+            continue
+        body_s = _scrub_section_pollution(s.get("content", "") or "")
+        if not re.sub(r"<[^>]+>|\s", "", body_s):
+            continue
+        sid = "sec-" + re.sub(r"[^a-z0-9]+", "-", head.lower()).strip("-")[:40] + f"-{idx}"
+        toc.append(f'<a class="sw-toc-a" href="#{sid}">{head}</a>')
+        sec_html.append(f'<h2 id="{sid}" class="sw-h2">{head}</h2>\n{body_s}')
+    sections_html = "\n".join(sec_html)
+    toc_html = ("".join(toc)) or ""
+
+    hero = ""
+    if image_url:
+        hero = (f'<figure class="sw-hero"><img src="{image_url}" '
+                f'alt="{article.get("image_alt", article["title"])}" loading="eager">'
+                f'<figcaption>Photo: {photographer} / Pexels</figcaption></figure>')
+
+    css = f"""
+.sw{{background:{bg};color:{text};font-family:{bf};position:relative}}
+.sw-grid{{max-width:1180px;margin:0 auto;padding:40px 28px 64px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:54px;align-items:start}}
+.sw-side-inner{{position:sticky;top:24px;display:flex;flex-direction:column;gap:22px}}
+.sw-kicker{{font-family:{hf};font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:{accent}}}
+.sw-metarow{{display:flex;flex-direction:column;gap:7px;font-size:12.5px;color:{meta};border-top:1px solid {border};border-bottom:1px solid {border};padding:14px 0}}
+.sw-metarow b{{color:{text};font-weight:600}}
+.sw-toc-h{{font-family:{hf};font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:{meta};margin-bottom:4px}}
+.sw-toc{{display:flex;flex-direction:column;gap:2px}}
+.sw-toc-a{{font-size:13px;line-height:1.4;color:{t2};text-decoration:none;padding:6px 0 6px 12px;border-left:2px solid {border};transition:color .15s,border-color .15s}}
+.sw-toc-a:hover{{color:{accent};border-left-color:{accent}}}
+.sw-byline{{display:flex;align-items:center;gap:11px;padding-top:18px;border-top:1px solid {border}}}
+.sw-av{{width:38px;height:38px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:{hf};font-weight:700;font-size:13px;color:#0a0a0b;background:{accent}}}
+.sw-by-name{{font-size:13px;font-weight:700;color:{text};font-family:{hf}}}
+.sw-by-role{{font-size:11px;color:{meta}}}
+.sw-main{{min-width:0}}
+.sw h1{{font-family:{hf};font-size:clamp(30px,3.6vw,50px);font-weight:800;line-height:1.08;letter-spacing:-.02em;color:{text};margin:0 0 16px;text-wrap:balance}}
+.sw-dek{{font-size:clamp(16px,1.4vw,20px);line-height:1.55;color:{t2};margin:0 0 26px;max-width:64ch}}
+.sw-hero{{margin:0 0 32px}}
+.sw-hero img{{width:100%;border-radius:14px;border:1px solid {border};display:block}}
+.sw-hero figcaption{{font-size:11px;color:{meta};letter-spacing:.06em;text-transform:uppercase;margin-top:9px;text-align:right}}
+.sw-body{{font-size:17.5px;line-height:1.78;color:{text}}}
+.sw-body p{{margin:0 0 22px;color:{text}}}
+.sw-body .intro{{font-size:20px;line-height:1.6;font-weight:500;color:{text};border-left:3px solid {accent};padding-left:20px;margin:0 0 28px}}
+.sw-body a{{color:{accent};text-decoration:underline;text-underline-offset:3px}}
+.sw-body strong{{color:{text};font-weight:700}}
+.sw-body ul,.sw-body ol{{margin:0 0 22px 20px}}.sw-body li{{margin-bottom:9px}}
+.sw-body img{{width:100%;border-radius:12px;border:1px solid {border};margin:28px 0}}
+.sw-body blockquote{{margin:30px 0;padding:6px 0 6px 22px;border-left:3px solid {accent};font-family:{hf};font-size:21px;line-height:1.45;font-weight:500;color:{text}}}
+.sw-body h2.sw-h2{{font-family:{hf};font-size:clamp(22px,2.6vw,30px);font-weight:700;line-height:1.18;letter-spacing:-.01em;color:{text};margin:46px 0 14px;padding-top:22px;border-top:1px solid {border};scroll-margin-top:20px}}
+.sw-body h3{{font-family:{hf};font-size:19px;font-weight:600;color:{text};margin:28px 0 10px}}
+.sw-concl{{margin:44px 0 0;padding:26px 26px;background:{bg2};border:1px solid {border};border-radius:14px;position:relative;font-size:17px;line-height:1.65;color:{text}}}
+.sw-concl::before{{content:'The Verdict';position:absolute;top:-10px;left:20px;background:{accent};color:#0a0a0b;font-family:{hf};font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:3px 10px;border-radius:4px}}
+@media(max-width:900px){{
+  .sw-grid{{grid-template-columns:1fr;gap:28px;padding:28px 20px 52px}}
+  .sw-side-inner{{position:static;gap:16px}}
+  .sw-toc{{display:none}}
+  .sw-byline{{display:none}}
+}}
+{_article_section_css(t)}
+/* Defend against host-shell contrast-audit !important rules so this layout's
+   own theme colours always win, light or dark. */
+body[data-page-depth="1"] .sw h1,
+body[data-page-depth="1"] .sw .sw-h2,
+body[data-page-depth="1"] .sw h2.sw-h2,
+body[data-page-depth="1"] .sw h3,
+body[data-page-depth="1"] .sw-body,
+body[data-page-depth="1"] .sw-body p,
+body[data-page-depth="1"] .sw-body li,
+body[data-page-depth="1"] .sw-concl{{color:{text} !important}}
+body[data-page-depth="1"] .sw-dek{{color:{t2} !important}}
+body[data-page-depth="1"] .sw-body a,
+body[data-page-depth="1"] .sw-body strong{{color:{accent} !important}}
+"""
+
+    byline = (f'<div class="sw-byline"><div class="sw-av">{initials}</div>'
+              f'<div><div class="sw-by-name">{author}</div>'
+              + (f'<div class="sw-by-role">{a_title}</div>' if a_title else '')
+              + '</div></div>')
+    toc_block = (f'<div><div class="sw-toc-h">In this article</div>'
+                 f'<nav class="sw-toc">{toc_html}</nav></div>') if toc_html else ''
+
+    body = f"""<div class="sw">
+  <div class="sw-grid">
+    <aside class="sw-side">
+      <div class="sw-side-inner">
+        <div class="sw-kicker">{category}</div>
+        <div class="sw-metarow"><span><b>{article.get("date","")}</b></span><span>{read_time} min read</span></div>
+        {toc_block}
+        {byline}
+      </div>
+    </aside>
+    <div class="sw-main">
+      <h1>{article["title"]}</h1>
+      {f'<p class="sw-dek">{article.get("meta_description","")}</p>' if article.get("meta_description") else ''}
+      {hero}
+      <div class="sw-body">
+        {_wrap_block(article["intro"], "p", "intro")}
+        {_wrap_block(article.get("intro2",""), "p")}
+        {sections_html}
+        <div class="sw-concl">{_wrap_block(article["conclusion"], "p")}</div>
+        {_sources_block(article, t)}
+      </div>
+    </div>
+  </div>
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+    return css, body
+
+
+def article_lifestyle(article, site, image_url, photographer, t):
+    """Lifestyle magazine feel: wide hero with caption rail, oversized serif
+    headline, photo-led rhythm with pull quotes between sections, soft body
+    measure, large whitespace. Best for beauty, travel, pets, parenting,
+    home-decor."""
+    sections = _article_sections(article["sections"], t)
+    hero = ""
+    if image_url:
+        hero = (f'<figure class="lf-hero">'
+                f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy">'
+                f'<figcaption><span>{(article.get("category") or site.get("category") or "Story")}</span><span>Photo by {photographer}</span></figcaption>'
+                f'</figure>')
+    author = _resolve_author(site, article)["name"]
+    pullquote = (article.get("intro2") or article.get("conclusion") or "").strip()
+    if pullquote:
+        # Use first sentence of intro2/conclusion as pull quote
+        pullquote = pullquote.split('.')[0].strip()[:160]
+    css = f"""
+.lf{{max-width:1100px;margin:0 auto;padding:0 24px 96px;color:{t["text"]}}}
+.lf-eyebrow{{font-family:{t["body_font"]};font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:{t["accent"]};margin:48px 0 18px;font-weight:600;text-align:center}}
+.lf-h1{{font-family:{t["heading_font"]};font-size:clamp(38px,6vw,88px);font-weight:500;line-height:1.02;letter-spacing:-.025em;color:{t["text"]};margin:0 auto 22px;max-width:22ch;text-align:center;text-wrap:balance}}
+.lf-h1 em{{font-style:italic;color:{t["accent"]};font-weight:400}}
+.lf-dek{{font-family:{t["heading_font"]};font-weight:400;font-size:clamp(18px,1.6vw,22px);line-height:1.55;color:{t["text2"]};max-width:60ch;margin:0 auto 36px;text-align:center;text-wrap:pretty}}
+.lf-byline{{font-family:{t["body_font"]};font-size:12px;color:{t["meta"]};letter-spacing:.18em;text-align:center;margin:0 0 56px;text-transform:uppercase}}
+.lf-byline strong{{color:{t["text"]};font-weight:600}}
+.lf-hero{{margin:0 -24px 64px;position:relative}}
+.lf-hero img{{width:100%;height:auto;display:block;object-fit:cover;max-height:72vh}}
+.lf-hero figcaption{{display:flex;justify-content:space-between;padding:16px 24px 0;font-family:{t["body_font"]};font-size:11px;color:{t["meta"]};letter-spacing:.16em;text-transform:uppercase}}
+.lf-body{{max-width:680px;margin:0 auto;font-family:{t["heading_font"]};font-size:19px;line-height:1.75;color:{t["text"]}}}
+.lf-body p{{margin:0 0 22px;text-wrap:pretty}}
+.lf-body .intro{{font-size:22px;line-height:1.5;color:{t["text"]};font-weight:400;letter-spacing:-.005em;margin-bottom:30px}}
+.lf-body .intro::first-letter{{font-family:{t["heading_font"]};font-size:4em;float:left;line-height:.92;padding:8px 14px 0 0;color:{t["accent"]};font-weight:500}}
+.lf-section{{font-family:{t["heading_font"]};font-size:clamp(24px,2.8vw,34px);font-weight:500;line-height:1.15;letter-spacing:-.02em;margin:56px 0 22px;color:{t["text"]};text-align:center;max-width:24ch;margin-left:auto;margin-right:auto}}
+.lf-section::after{{content:"";display:block;width:36px;height:1px;background:{t["accent"]};margin:14px auto 0}}
+.lf-pull{{max-width:760px;margin:56px auto;font-family:{t["heading_font"]};font-style:italic;font-size:clamp(24px,3vw,36px);line-height:1.25;letter-spacing:-.015em;color:{t["accent"]};text-align:center;padding:0 24px;text-wrap:balance}}
+.lf-pull::before{{content:"\\201C";display:block;font-size:2em;line-height:.6;color:{t["accent"]};margin-bottom:12px;font-style:normal}}
+.lf-concl{{max-width:680px;margin:64px auto 0;padding:32px 0;border-top:1px solid {t["meta"]};border-bottom:1px solid {t["meta"]};font-family:{t["heading_font"]};font-size:19px;line-height:1.7;color:{t["text"]};text-align:center;font-style:italic}}
+@media(max-width:600px){{.lf-hero{{margin:0 -24px 40px}}.lf-h1{{font-size:clamp(34px,8vw,52px)}}}}
+{_article_section_css(t)}"""
+
+    pullquote_block = f'<aside class="lf-pull">{pullquote}</aside>' if pullquote else ""
+    body = f"""<div class="lf">
+  <div class="lf-eyebrow">{site["category"]}</div>
+  <h1 class="lf-h1">{article["title"]}</h1>
+  <p class="lf-dek">{article.get("meta_description","")}</p>
+  <div class="lf-byline">Words by <strong>{author}</strong> &middot; {article.get("date","")}</div>
+  {hero}
+  <div class="lf-body">
+    {_wrap_block(article["intro"], "p", "intro")}
+    {pullquote_block}
+    {_wrap_block(article.get("intro2",""), "p")}
+    {_inject_section_breaks(sections, 'lf-section')}
+    <div class="lf-concl">{article["conclusion"]}</div>
+  </div>
+  {_sources_block(article, t)}
+</div>""" + _author_card(site, author, t) + _comments_section_js(t) + _giscus(site)
+    return css, body
+
+
+def _inject_section_breaks(sections_html, class_name):
+    """Replace generic <h2> section headers in pre-rendered sections HTML with
+    class-specific markup so each layout's section style applies."""
+    import re as _re
+    return _re.sub(r'<h2[^>]*>(.*?)</h2>',
+                   rf'<h2 class="{class_name}">\1</h2>',
+                   sections_html, flags=_re.DOTALL)
+
+
 ARTICLE_BUILDERS = {
-    # All historic layout names route to the unified press builder so the whole
-    # network reads as a single publication. Keep the keys around so any stored
-    # article_layout value in network-config.json still resolves cleanly.
-    "press":     article_press,
-    "standard":  article_press,
-    "sidebar":   article_press,
-    "magazine":  article_press,
-    "minimal":   article_press,
-    "immersive": article_press,
-    "neuro":     article_press,
-    "lesson":    article_press,
-    "kanona":    article_kanona,   # artistic editorial layout for Kanona Projects
+    # Existing unified press for backwards compat (most sites use this).
+    "press":      article_press,
+    "standard":   article_press,
+    "sidebar":    article_press,
+    "magazine":   article_press,
+    "minimal":    article_press,
+    "immersive":  article_press,
+    "neuro":      article_press,
+    "lesson":     article_press,
+    "kanona":     article_kanona,
+    "onlinebiz":  article_onlinebiz,
+    "sidebarwide": article_sidebar_wide,
+    # New distinct press styles for the 3-style rollout.
+    "broadsheet": article_broadsheet,
+    "tabloid":    article_tabloid,
+    "lifestyle":  article_lifestyle,
 }
 
 
@@ -6103,6 +6665,18 @@ def build_homepage(site, articles, themes, global_header_scripts="", global_foot
     return html
 
 
+def normalize_theme(t):
+    """Backfill theme keys the article builders read but the THEME/SITE_THEME
+    tables don't define. The newer builders (broadsheet/tabloid/lifestyle)
+    introduced `body_font`; the theme tables only carry `font`, so a direct
+    `t["body_font"]` lookup KeyErrors and the rebuild rewrap silently falls
+    back to the original body. Returns a fresh dict (never mutates the shared
+    theme), so callers can override keys afterward safely."""
+    t = dict(t)
+    t.setdefault("body_font", t.get("font") or "'Inter',system-ui,-apple-system,sans-serif")
+    return t
+
+
 def build_article_page(article, site, image_url, photographer, themes, global_header_scripts="", global_footer_scripts="", comments_data=None):
     """Build an article page wrapped in the homepage shell (header + footer + chrome
     come straight from templates/<stem>-index.html, so they always match the homepage).
@@ -6110,12 +6684,11 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     If comments_data is provided (list of comment dicts), inline-renders comments
     into the static HTML so Google can index them. Otherwise emits a placeholder
     'Comments coming soon' section (the JS-only fallback is no longer the default)."""
-    t       = SITE_THEMES.get(site.get("id"), themes.get(site.get("theme", "minimal"), themes["minimal"]))
+    t       = normalize_theme(SITE_THEMES.get(site.get("id"), themes.get(site.get("theme", "minimal"), themes["minimal"])))
     # Article accent must match the site's homepage brand color (not a generic theme
     # value). Pull it from the homepage's SHELL:ACCENT marker.
     _acc = layout_shell.get_shell(_site_stem(site)).get("accent")
     if _acc:
-        t = dict(t)
         t["accent"]  = _acc
         t["accent2"] = _acc
     layout  = site.get("article_layout", "standard")
@@ -6166,6 +6739,11 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
         keywords=category,
         author_title=author_info["title"],
         author_bio=author_info["bio"],
+        # Per-site Schema.org @type so Google sees each site as a distinct
+        # publication type (NewsArticle / TechArticle / BlogPosting / Review /
+        # TravelGuide / HowTo / MedicalScholarlyArticle / etc.) instead of every
+        # site declaring "Article". Falls back to "Article" if unspecified.
+        schema_type=site.get("schema_article_type") or "Article",
     )
 
     # Semantic <time> for byline dates (Google reads it; helps date detection).
@@ -6174,7 +6752,7 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
         body = body.replace(disp_date, f'<time datetime="{date_iso}">{disp_date}</time>', 1)
 
     # Wrap body in semantic <article> for stronger schema signal.
-    body = f'<article itemscope itemtype="https://schema.org/Article">{body}</article>'
+    body = f'<article itemscope itemtype="https://schema.org/{site.get("schema_article_type") or "Article"}">{body}</article>'
 
     # Language-aware shell: Persian (Farsi) sites render with lang="fa" dir="rtl"
     # so screen readers, browsers and Google all read the page in the right direction.
@@ -6603,17 +7181,30 @@ def run(topic_overrides=None, site_filter=None):
     # Check for broadcast.json (dashboard "post to all" feature)
     broadcast_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "broadcast.json")
     broadcast_processed_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "broadcast.processed.json")
+    # html_overrides[site_id] = ready-to-publish HTML the dashboard generated and
+    # previewed. When set, the bot skips topic-based AI generation entirely and
+    # publishes the user's previewed content verbatim - so what the user saw in
+    # the Customize Site preview is what actually goes live.
+    html_overrides = {}
     if os.path.exists(broadcast_path):
         with open(broadcast_path) as f:
             broadcast = json.load(f)
-        topic_str   = broadcast.get("topic", "")
-        target_ids  = broadcast.get("site_ids", [])  # empty = all sites
+        topic_str    = broadcast.get("topic", "")
+        target_ids   = broadcast.get("site_ids", [])  # empty = all sites
+        gen_html     = broadcast.get("generated_html", "")
         if topic_str:
             print(f"\n📡 BROADCAST MODE: '{topic_str}'")
             if target_ids:
                 overrides = {sid: topic_str for sid in target_ids}
             else:
                 overrides = {s["id"]: topic_str for s in active_sites}
+            # If the dashboard previewed concrete HTML, route it to every target
+            # site so process_site publishes the exact previewed content.
+            if gen_html and len(gen_html) > 200:
+                target_set = target_ids or [s["id"] for s in active_sites]
+                for sid in target_set:
+                    html_overrides[sid] = gen_html
+                print(f"  + generated_html attached ({len(gen_html)} chars) - will publish verbatim, skipping AI generation per site")
         # Rename instead of delete - preserves a record if the run crashes mid-way
         broadcast["_processed_at"] = datetime.now().isoformat()
         with open(broadcast_processed_path, "w") as f:
@@ -6879,10 +7470,9 @@ def run(topic_overrides=None, site_filter=None):
                 _retry(lambda: github_push(site["repo"], "index.html", homepage_html, f"Index update [{date_str}]", github_token))
                 _retry(lambda: github_push(site["repo"], "articles.json", json.dumps(articles, indent=2), f"Articles index [{date_str}]", github_token))
 
-                # robots.txt: create once if missing, never overwrite (in case it has custom rules)
-                robots_url = f"https://api.github.com/repos/{site['repo']}/contents/robots.txt"
-                if requests.get(robots_url, headers={"Authorization": f"token {github_token}"}).status_code != 200:
-                    _retry(lambda: github_push(site["repo"], "robots.txt", generate_robots_txt(site["domain"]), "Add robots.txt", github_token))
+                # robots.txt: always overwrite to keep Disallow rules current.
+                # (Previously create-once; flipped so updated bot rules propagate.)
+                _retry(lambda: github_push(site["repo"], "robots.txt", generate_robots_txt(site["domain"]), "Update robots.txt", github_token))
 
                 # Sitemap: always regenerated from full article list, includes homepage
                 sitemap_xml = generate_sitemap(site, articles)
