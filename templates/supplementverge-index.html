@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Supplement Verge - What the Research Actually Says</title>
 <meta name="description" content="Supplement reviews and nutrition science graded by human clinical evidence. No marketing claims, no sponsored opinions. A to D evidence ratings.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -214,9 +215,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:56px 24p
 .reveal{opacity:0;transform:translateY(12px);transition:opacity .45s,transform .45s}
 .reveal.visible{opacity:1;transform:none}
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -226,7 +227,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -234,10 +235,10 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#84cc16 !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#0a0a0a !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
@@ -528,9 +529,10 @@ body[data-page-depth="1"] article .intro a{color:#84cc16 !important;text-decorat
 </div>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
+<div style="margin:32px auto;max-width:760px;padding:0 24px;display:flex;align-items:center;gap:18px"><span style="flex:1;height:1px;background:currentColor;opacity:.15"></span><a href="./articles" style="color:currentColor;text-decoration:none;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.28em;text-transform:uppercase;opacity:.8">More stories</a><span style="flex:1;height:1px;background:currentColor;opacity:.15"></span></div>
 <footer>
   <div class="ft-inner">
     <div class="ft-top">
@@ -574,9 +576,9 @@ body[data-page-depth="1"] article .intro a{color:#84cc16 !important;text-decorat
     <div class="ft-bottom">
       <span class="ft-copy">&#169; 2026 SupplementVerge. For informational purposes only. Not medical advice.</span>
       <div class="ft-legal">
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
-        <a href="meta-policy.html">Disclosure</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
+        <a href="meta-policy">Disclosure</a>
       </div>
     </div>
   </div>
