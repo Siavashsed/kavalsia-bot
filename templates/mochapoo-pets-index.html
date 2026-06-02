@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mochapoo Pets - Science-Backed Dog &amp; Puppy Care from a Practicing Vet</title>
-<meta name="description" content="Mochapoo Pets publishes veterinary-grade dog and puppy care guides written by a practicing DVM. Research-backed nutrition, health, training, and grooming advice with no breeder bias.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<title>MochaPoo Pets - Science-Backed Dog &amp; Puppy Care from a Practicing Vet</title>
+<meta name="description" content="MochaPoo Pets publishes veterinary-grade dog and puppy care guides written by a practicing DVM. Research-backed nutrition, health, training, and grooming advice with no breeder bias.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -277,9 +278,9 @@ footer{background:var(--text);padding:64px 44px 30px}
 @media(max-width:860px){.footer-top{grid-template-columns:1fr 1fr;gap:38px}footer{padding:48px 22px 24px}}
 @media(max-width:480px){.footer-top{grid-template-columns:1fr}.footer-bottom{flex-direction:column;text-align:center}}
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -289,7 +290,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#000000 !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -297,10 +298,10 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#1a1a1a !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#b45309 !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
@@ -314,14 +315,14 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     <div class="nav-logo-paw">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg>
     </div>
-    Mochapoo Pets
+    MochaPoo Pets
   </a>
   <div class="nav-links" id="nav-links">
     <a href="./#story" class="nav-link">Our Story</a>
     <a href="./#topics" class="nav-link">Topics</a>
     <a href="./#guides" class="nav-link">Guides</a>
     <a href="./#faq" class="nav-link">FAQ</a>
-    <a href="about.html" class="nav-link">About</a>
+    <a href="about" class="nav-link">About</a>
     <a href="./#newsletter" class="nav-cta">Free Newsletter</a>
   </div>
   <button class="nav-mob" onclick="document.getElementById('nav-links').classList.toggle('open')" aria-label="Menu">
@@ -339,7 +340,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
         <span>Veterinary-Grade Dog Care</span>
       </div>
       <h1>Care for your dog the way a <em>vet actually would</em></h1>
-      <p class="hero-sub">Mochapoo Pets turns 14 years of clinical practice into clear, honest guidance for dog and puppy owners. Real research, real exam-room experience, and no breeder marketing dressed up as advice.</p>
+      <p class="hero-sub">MochaPoo Pets turns 14 years of clinical practice into clear, honest guidance for dog and puppy owners. Real research, real exam-room experience, and no breeder marketing dressed up as advice.</p>
       <div class="hero-cta-row">
         <a href="./#guides" class="btn-primary">
           Explore the Guides
@@ -421,7 +422,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
       <div class="story-body reveal">
         <div class="sec-label">Why we exist</div>
         <h2 class="sec-h2">Pet advice should come from the <em>exam room</em>, not the marketing department</h2>
-        <p>Mochapoo Pets started after years of watching loving owners arrive at the clinic with the same preventable problems. The cause was rarely neglect. It was confident, well-packaged advice from people selling something.</p>
+        <p>MochaPoo Pets started after years of watching loving owners arrive at the clinic with the same preventable problems. The cause was rarely neglect. It was confident, well-packaged advice from people selling something.</p>
         <p>So we built a different kind of resource. <strong>Every guide here is grounded in clinical experience and peer-reviewed research</strong> - and when the evidence is thin or contradictory, we say that out loud instead of hiding it behind a tidy headline.</p>
         <div class="story-pillars">
           <div class="story-pillar">
@@ -448,7 +449,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     <div class="sec-head center reveal">
       <div class="sec-label">What makes us different</div>
       <h2 class="sec-h2">Care guidance you can <em>actually trust</em></h2>
-      <p class="sec-sub">Every article on Mochapoo Pets is built to give dog and puppy owners calm, accurate answers - the kind you would get from a good vet who has time to explain.</p>
+      <p class="sec-sub">Every article on MochaPoo Pets is built to give dog and puppy owners calm, accurate answers - the kind you would get from a good vet who has time to explain.</p>
     </div>
     <div class="val-grid">
       <div class="val-card reveal">
@@ -605,7 +606,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
         <div class="author-name">Dr. Emily Ross, DVM</div>
         <div class="author-title">Practicing Veterinarian &amp; Canine Nutrition Specialist</div>
         <p class="author-bio">I have spent 14 years in general practice, and most of my days are still spent with dogs and puppies and the owners who adore them. Over and over I met people doing their best with advice that was simply wrong - confident, well-marketed, and not supported by the science.</p>
-        <p class="author-bio">Mochapoo Pets is my answer to that. Everything published here reflects peer-reviewed research and what I genuinely see work in the exam room. If something does not hold up, I will say so plainly. You deserve the same honest guidance I give my own clients.</p>
+        <p class="author-bio">MochaPoo Pets is my answer to that. Everything published here reflects peer-reviewed research and what I genuinely see work in the exam room. If something does not hold up, I will say so plainly. You deserve the same honest guidance I give my own clients.</p>
         <div class="author-creds">
           <div class="author-cred"><b>DVM</b><span>Doctor of Veterinary Medicine</span></div>
           <div class="author-cred"><b>14 yrs</b><span>Clinical Experience</span></div>
@@ -622,19 +623,19 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     <div class="sec-head center reveal">
       <div class="sec-label">Good questions</div>
       <h2 class="sec-h2">Things owners ask us</h2>
-      <p class="sec-sub">A quick look at how Mochapoo Pets works and what you can expect from our guidance.</p>
+      <p class="sec-sub">A quick look at how MochaPoo Pets works and what you can expect from our guidance.</p>
     </div>
     <div class="faq-list">
       <div class="faq-item reveal">
         <button class="faq-q" onclick="toggleFaq(this)">Is Mochapoo a dog breed?<span class="faq-q-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
-        <div class="faq-a"><div class="faq-a-inner">No. Mochapoo Pets is the name of our publication, not a breed of dog. Our guides are written for all dogs and puppies, whatever their breed or mix. We simply liked a warm, friendly name for a warm, friendly resource.</div></div>
+        <div class="faq-a"><div class="faq-a-inner">No. MochaPoo Pets is the name of our publication, not a breed of dog. Our guides are written for all dogs and puppies, whatever their breed or mix. We simply liked a warm, friendly name for a warm, friendly resource.</div></div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-q" onclick="toggleFaq(this)">Who writes the guides?<span class="faq-q-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
         <div class="faq-a"><div class="faq-a-inner">Every guide is written or reviewed by Dr. Emily Ross, a practicing veterinarian with 14 years of clinical experience. Nothing is published without a DVM signing off on the accuracy.</div></div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-q" onclick="toggleFaq(this)">Does Mochapoo Pets sell pet products?<span class="faq-q-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
+        <button class="faq-q" onclick="toggleFaq(this)">Does MochaPoo Pets sell pet products?<span class="faq-q-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></button>
         <div class="faq-a"><div class="faq-a-inner">No. We are a guidance resource, not a store. We have no breeder partnerships and no pay-to-recommend deals. That independence is the entire point - our recommendations answer only to the evidence.</div></div>
       </div>
       <div class="faq-item reveal">
@@ -655,7 +656,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
     <div class="nl-icon">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     </div>
-    <h2 class="nl-h2">The Mochapoo Pets Digest</h2>
+    <h2 class="nl-h2">The MochaPoo Pets Digest</h2>
     <p class="nl-sub">A short weekly email of practical, vet-reviewed dog and puppy care. No spam, no breeder marketing - just the guidance that helps you take better care of your dog.</p>
     <form class="nl-form" onsubmit="nlSub(event)">
       <input type="email" id="nl-email" class="nl-input" placeholder="your@email.com" required>
@@ -667,10 +668,11 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
 </div>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
 <!-- FOOTER -->
+<div style="text-align:center;padding:32px 24px 48px"><a href="./articles" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:11px 26px;border-radius:999px;text-decoration:none;font-size:12.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;opacity:.85">All articles</a></div>
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
@@ -679,7 +681,7 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
           <div class="footer-brand-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg>
           </div>
-          <span class="footer-brand-name">Mochapoo Pets</span>
+          <span class="footer-brand-name">MochaPoo Pets</span>
         </div>
         <p class="footer-desc">Science-backed dog and puppy care guides from a practicing veterinarian. Honest, independent, and written for owners who want the truth.</p>
       </div>
@@ -705,17 +707,17 @@ body[data-page-depth="1"] article .intro a{color:#000000 !important;text-decorat
         <div class="footer-col-title">Site</div>
         <ul class="footer-links">
           <li><a href="./">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="terms.html">Terms of Use</a></li>
+          <li><a href="about">About</a></li>
+          <li><a href="privacy">Privacy Policy</a></li>
+          <li><a href="terms">Terms of Use</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">&copy; 2026 Mochapoo Pets. For informational purposes only and not a substitute for professional veterinary care.</span>
+      <span class="footer-copy">&copy; 2026 MochaPoo Pets. For informational purposes only and not a substitute for professional veterinary care.</span>
       <div class="footer-legal">
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
       </div>
     </div>
   </div>
