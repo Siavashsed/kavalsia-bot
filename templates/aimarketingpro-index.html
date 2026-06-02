@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>AI Marketing Pro - AI-Powered Marketing That Moves Numbers</title>
 <meta name="description" content="Real-world AI marketing analysis from a performance background. Tested with real ad spend, measured by actual results. No hype - just what works.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -926,9 +927,9 @@ body[data-page-depth="1"] .article-title{
   color:#000 !important;
 }
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -938,7 +939,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article h3{color:#f5f5f5 !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -946,10 +947,44 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article strong{color:#e5e5e5 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
 body[data-page-depth="1"] article .intro a{color:#a855f7 !important;text-decoration:underline;text-underline-offset:3px}
+/* ── AI MARKETING ARTICLE STYLE OVERRIDES (dark + purple + 2-col w/ sidebar)
+   Light text on dark bg, larger Inter for readability, 2-column desktop
+   layout with the author bio in a sticky sidebar. Falls back to single
+   column on tablets and phones. */
+body[data-page-depth="1"]{background:#000}
+body[data-page-depth="1"] .ap{max-width:1080px;padding:72px 32px 24px;display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:40px;color:#e5e5e5;font-family:'Inter',system-ui,sans-serif;margin:0 auto;justify-content:center}
+body[data-page-depth="1"] .ap > *{grid-column:1}
+body[data-page-depth="1"] .ap .article-sidebar{grid-column:2;grid-row:1 / span 99;position:sticky;top:24px;align-self:start;padding:24px;background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.25);border-radius:14px;max-height:calc(100vh - 48px);overflow-y:auto}
+body[data-page-depth="1"] .ap .article-sidebar .sb-label{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#a855f7;font-weight:600;margin-bottom:14px}
+body[data-page-depth="1"] .ap .article-sidebar .sb-name{font-family:'Inter Tight','Inter',sans-serif;font-size:17px;font-weight:700;color:#f5f5f5;margin-bottom:4px;letter-spacing:-.012em}
+body[data-page-depth="1"] .ap .article-sidebar .sb-role{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#a855f7;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}
+body[data-page-depth="1"] .ap .article-sidebar .sb-bio{font-size:13.5px;line-height:1.7;color:#d4d4d4;font-family:'Inter',sans-serif}
+body[data-page-depth="1"] .ap h1{font-size:clamp(34px,4.4vw,52px);font-family:'Inter Tight','Inter',sans-serif;font-weight:700;letter-spacing:-.024em;line-height:1.05;color:#f5f5f5 !important;margin-bottom:18px}
+body[data-page-depth="1"] .ap-deck{font-size:20px;line-height:1.55;color:#a3a3a3 !important;font-style:normal;font-weight:400;font-family:'Inter',sans-serif;margin-bottom:38px;padding-bottom:24px;border-bottom:1px solid #262626;max-width:none}
+body[data-page-depth="1"] .ap-body{font-size:17px;line-height:1.75;color:#d4d4d4 !important;font-family:'Inter',sans-serif;letter-spacing:.005em;font-weight:300}
+body[data-page-depth="1"] .ap-body p{margin-bottom:22px;color:#c4c4c4 !important;font-weight:300}
+body[data-page-depth="1"] .ap-body h2,body[data-page-depth="1"] .ap-body .art-h2{font-size:28px;font-weight:700;color:#f5f5f5 !important;font-family:'Inter Tight','Inter',sans-serif;letter-spacing:-.018em;margin:52px 0 16px}
+body[data-page-depth="1"] .ap-body h3,body[data-page-depth="1"] .ap-body .art-h3{font-size:21px;font-weight:600;color:#f5f5f5 !important;font-family:'Inter Tight','Inter',sans-serif}
+body[data-page-depth="1"] .ap-pull{font-family:'Inter Tight','Inter',sans-serif;font-style:normal;font-size:24px;font-weight:500;color:#f5f5f5 !important;line-height:1.32;padding-left:22px;border-left:3px solid #a855f7;margin:40px 0;background:rgba(168,85,247,.04);padding:20px 22px;border-radius:0 10px 10px 0}
+body[data-page-depth="1"] .ap-pull::after{background:#a855f7 !important;width:40px}
+body[data-page-depth="1"] .ap-concl{font-size:18px;color:#d4d4d4 !important;font-family:'Inter',sans-serif;border-top:1px solid #262626;margin-top:48px;padding-top:28px}
+body[data-page-depth="1"] .ap-concl::before{color:#a855f7 !important}
+body[data-page-depth="1"] .ap-kicker{color:#a855f7 !important;font-size:11px;letter-spacing:.28em}
+/* Hide the bottom author card on article pages - it's now in the sidebar */
+body[data-page-depth="1"] .ap ~ div[style*="max-width:760px"],
+body[data-page-depth="1"] .ap > div[style*="max-width:720px;margin:20px auto"]{display:none}
+@media (max-width:1080px){
+  body[data-page-depth="1"] .ap{grid-template-columns:1fr;gap:32px}
+  body[data-page-depth="1"] .ap .article-sidebar{grid-column:1;position:static;max-height:none;margin-top:32px}
+  /* On tablet/mobile, restore the bottom author card */
+  body[data-page-depth="1"] .ap ~ div[style*="max-width:760px"],
+  body[data-page-depth="1"] .ap > div[style*="max-width:720px;margin:20px auto"]{display:block}
+  body[data-page-depth="1"] .ap .article-sidebar{display:none}
+}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
@@ -1055,6 +1090,8 @@ body[data-page-depth="1"] article .intro a{color:#a855f7 !important;text-decorat
 
   </div>
 </section>
+<!-- THE FULL CATALOGUE section removed per request. -->
+
 
 <!-- CAPABILITIES GRID -->
 <section class="caps-section section reveal" id="tools">
@@ -1240,8 +1277,8 @@ body[data-page-depth="1"] article .intro a{color:#a855f7 !important;text-decorat
 
 <!-- FOOTER -->
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED --><a href="./articles" style="display:inline-block;color:currentColor;text-decoration:none;font-size:19px;font-style:italic;border-bottom:1px solid currentColor;padding-bottom:4px">Browse the archive</a></div>
+
 <!--SHELL:FOOTER-->
 <footer class="foot">
   <div class="foot-inner">
@@ -1256,8 +1293,8 @@ body[data-page-depth="1"] article .intro a{color:#a855f7 !important;text-decorat
       <a href="#articles">Articles</a>
       <a href="#about">About</a>
       <a href="#newsletter">Newsletter</a>
-      <a href="privacy.html">Privacy</a>
-      <a href="terms.html">Terms</a>
+      <a href="privacy">Privacy</a>
+      <a href="terms">Terms</a>
     </nav>
 
     <div class="foot-nl-wrap">
@@ -1292,7 +1329,7 @@ body[data-page-depth="1"] article .intro a{color:#a855f7 !important;text-decorat
       <div class="foot-copy">
         &copy; 2026 AI Marketing Pro. For informational purposes only.<br>
         Not financial or business advice. Results vary.
-        <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms</a>
+        <a href="privacy">Privacy</a> &middot; <a href="terms">Terms</a>
       </div>
     </div>
   </div>
