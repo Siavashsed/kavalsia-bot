@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Kanona Projects - Experiential Event Curation</title>
 <meta name="description" content="Kanona Projects designs experiential gatherings - the scent, the silence, the light, the room, the people. Refined event curation for evenings that stay with you.">
 <meta property="og:title" content="Kanona Projects">
@@ -27,10 +28,13 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   --moon:rgba(168,195,230,.18);
   --moon-strong:rgba(168,195,230,.35);
   --frost:rgba(220,235,255,.05);
-  --text:#e8e2d9;
-  --text2:rgba(232,226,217,.6);
-  --muted:#6a6058;
-  --muted2:rgba(106,96,88,.45);
+  --text:#ece6dd;
+  /* Bumped secondary + muted greys for higher visibility on pure-black BG.
+     Old values (rgba .6 / #6a6058) failed WCAG AA on small text; new values
+     keep the restrained editorial palette but lift contrast ~25%. */
+  --text2:rgba(236,230,221,.78);
+  --muted:#9a9088;
+  --muted2:rgba(154,144,136,.6);
   --border:rgba(255,255,255,.055);
   --border2:rgba(255,255,255,.09);
   --serif:'Cormorant Garamond',Georgia,serif;
@@ -43,7 +47,7 @@ body{
   color:var(--text);
   font-family:var(--sans);
   font-size:13px;
-  line-height:1.75;
+  line-height:1.6;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
@@ -85,9 +89,9 @@ body::before{
 .nav-logo-sub{
   font-family:'JetBrains Mono',ui-monospace,monospace;
   font-size:8.5px;font-weight:500;
-  letter-spacing:2.2px;text-transform:uppercase;
-  color:var(--platinum,#dde3eb);opacity:.55;
-  margin-top:2px;
+  letter-spacing:2.8px;text-transform:uppercase;
+  color:var(--gold);opacity:.7;
+  margin-top:3px;
 }
 .nav-links{display:flex;align-items:center;gap:34px}
 .nav-link{
@@ -202,25 +206,27 @@ body::before{
 .no-webgl .hero-static-fallback,
 @media(prefers-reduced-motion:reduce){.hero-static-fallback{display:block}}
 
-/* section shader accent strip - thin gold-tinted GLSL accent that lives in dividers */
+/* Section accent strip - replaced the WebGL shader band (which rendered as a
+   thick metallic sweep on black BG) with a single static gold hairline,
+   centered, that fades at both edges. Premium-editorial restraint, no JS. */
 .shader-accent{
   position:relative;
-  width:100%;height:44px;
-  overflow:hidden;
-  margin:0;
+  width:100%;height:1px;
+  margin:36px auto;
+  max-width:min(420px,60vw);
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(196,160,93,.18) 30%,
+    rgba(196,160,93,.55) 50%,
+    rgba(196,160,93,.18) 70%,
+    transparent 100%);
   opacity:0;
-  transition:opacity 1.2s var(--ease);
+  transition:opacity 1.1s var(--ease);
   pointer-events:none;
 }
-.shader-accent.in{opacity:.55}
-.shader-accent canvas{
-  position:absolute;inset:0;width:100%;height:100%;
-  display:block;
-  mix-blend-mode:screen;
-}
-@media(prefers-reduced-motion:reduce){
-  .shader-accent{display:none}
-}
+.shader-accent.in{opacity:.85}
+.shader-accent canvas{display:none}
+@media(prefers-reduced-motion:reduce){.shader-accent{opacity:.85;transition:none}}
 .hero-vignette{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
@@ -252,13 +258,13 @@ body::before{
   display:block;
   font-family:var(--serif);
   font-style:italic;
-  font-size:clamp(38px,6vw,72px);
+  font-size:clamp(30px,4.6vw,52px);
   font-weight:400;
-  letter-spacing:-.5px;
+  letter-spacing:-.4px;
   text-transform:none;
   color:var(--text);
-  line-height:1.08;
-  margin:18px 0 20px;
+  line-height:1.12;
+  margin:16px 0 18px;
 }
 .hero-h1 span{
   display:block;
@@ -271,12 +277,12 @@ body::before{
   color:rgba(232,226,217,.24);
 }
 .hero-sub{
-  font-size:12.5px;font-weight:300;
+  font-size:11px;font-weight:300;
   color:var(--text2);
-  line-height:2.2;
+  line-height:1.7;
   letter-spacing:.2px;
-  max-width:440px;
-  margin:34px auto 52px;
+  max-width:400px;
+  margin:30px auto 48px;
 }
 .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 .btn-primary{
@@ -311,7 +317,25 @@ body::before{
 }
 @keyframes track-breathe{0%,100%{opacity:.3}50%{opacity:.75}}
 @media(max-width:600px){
-  .hero-content{padding:72px 26px 56px}
+  /* Force hero content to dead-center on mobile - explicit margin + width
+     reset so the flex parent's justify-content actually lands the block
+     centered when the canvas backdrops change layout flow. */
+  .hero-content{
+    padding:72px 22px 56px;
+    margin:0 auto;
+    width:100%;
+    max-width:100%;
+    text-align:center;
+    left:0;right:0;
+  }
+  .hero-h1{margin-left:auto;margin-right:auto;max-width:100%}
+  /* Keep the display sentence on ONE centred line on phones: a viewport-scaled
+     size that always fits "evenings built to remain." inside the screen with
+     side breathing room, and nowrap so it never breaks to a second line. */
+  .hero-h1 i{font-size:clamp(19px,5.7vw,34px);margin:12px auto 16px;max-width:100%;white-space:nowrap}
+  .hero-sub{margin:28px auto 40px;max-width:88vw}
+  .hero-actions{justify-content:center;width:100%}
+  .hero-ornament{margin-left:auto;margin-right:auto;display:block}
 }
 
 /* ── SHARED LAYOUT ── */
@@ -419,14 +443,22 @@ body::before{
 .story-lead em{color:var(--gold);font-style:italic}
 .story-body p{
   font-size:12.5px;font-weight:300;
-  color:var(--text2);line-height:2.2;
+  color:var(--text2);line-height:1.7;
   letter-spacing:.2px;margin-bottom:18px;
 }
 .story-body p:last-child{margin-bottom:0}
 @media(max-width:760px){
-  .story-grid{grid-template-columns:1fr;gap:32px}
-  .story-portrait{aspect-ratio:5/4;max-height:320px}
-  .story-section{padding:clamp(72px,10vh,110px) 0}
+  .story-grid{grid-template-columns:1fr;gap:28px}
+  /* Full-width breakout for the portrait image on mobile - cancels the
+     wrap padding so the artwork goes edge-to-edge of the viewport. */
+  .story-portrait{
+    aspect-ratio:4/5;
+    max-height:none;
+    margin-left:-24px;
+    margin-right:-24px;
+    width:calc(100% + 48px);
+  }
+  .story-section{padding:clamp(64px,10vh,100px) 0}
 }
 
 /* ── STATS ── */
@@ -525,7 +557,7 @@ body::before{
 }
 .svc-p{
   font-size:11.5px;font-weight:300;
-  color:var(--muted);line-height:2.05;
+  color:var(--muted);line-height:1.64;
   letter-spacing:.15px;
 }
 @media(max-width:860px){.svc-grid{grid-template-columns:1fr 1fr}}
@@ -598,7 +630,7 @@ body::before{
 }
 .proc-p{
   font-size:11.5px;font-weight:300;
-  color:var(--text2);line-height:2.05;letter-spacing:.2px;
+  color:var(--text2);line-height:1.64;letter-spacing:.2px;
 }
 @media(max-width:960px){.proc-list{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){
@@ -678,7 +710,7 @@ body::before{
 .exp-desc{
   font-size:11.5px;font-weight:300;
   color:var(--muted);
-  line-height:2.1;
+  line-height:1.66;
   letter-spacing:.15px;
   margin-bottom:24px;
 }
@@ -709,7 +741,7 @@ body::before{
 }
 .exp-empty-p{
   font-size:11.5px;font-weight:300;color:var(--muted);
-  line-height:2;max-width:380px;margin:0 auto;
+  line-height:1.62;max-width:380px;margin:0 auto;
 }
 @media(max-width:860px){.exp-grid{grid-template-columns:1fr 1fr;gap:18px}}
 @media(max-width:560px){
@@ -753,7 +785,7 @@ body::before{
 .phi-p{
   font-size:11.5px;font-weight:300;
   color:var(--muted);
-  line-height:2.1;letter-spacing:.2px;
+  line-height:1.66;letter-spacing:.2px;
 }
 @media(max-width:760px){
   .phi-list{grid-template-columns:1fr;gap:0}
@@ -841,7 +873,7 @@ body::before{
 .creator-text{
   font-size:12px;font-weight:300;
   color:var(--text2);
-  line-height:2.2;letter-spacing:.2px;
+  line-height:1.7;letter-spacing:.2px;
 }
 .creator-text p{margin-bottom:20px}
 .creator-text p:last-child{margin-bottom:0}
@@ -889,7 +921,7 @@ body::before{
 }
 .faq-a-inner{
   font-size:12px;font-weight:300;
-  color:var(--muted);line-height:2.15;letter-spacing:.2px;
+  color:var(--muted);line-height:1.68;letter-spacing:.2px;
   padding:0 0 30px;max-width:660px;
 }
 @media(max-width:600px){.faq-section{padding:clamp(72px,10vh,110px) 0}}
@@ -925,7 +957,7 @@ body::before{
 .nl-h2 i{font-style:italic;color:var(--gold)}
 .nl-sub{
   font-size:12px;font-weight:300;
-  color:var(--muted);line-height:2.2;
+  color:var(--muted);line-height:1.7;
   margin-bottom:44px;
   max-width:420px;margin-left:auto;margin-right:auto;
 }
@@ -983,9 +1015,17 @@ body::before{
   color:var(--text);
 }
 .footer-brand em{color:var(--gold);font-style:normal}
+/* "K-Projects" sub - mono caps under the wordmark, mirrors the header lockup */
+.footer-brand-sub{
+  font-family:'JetBrains Mono',ui-monospace,monospace;
+  font-size:8.5px;font-weight:500;
+  letter-spacing:2.8px;text-transform:uppercase;
+  color:var(--gold);opacity:.7;
+  margin-top:4px;
+}
 .footer-tag{
   font-size:11.5px;font-weight:300;
-  color:var(--muted);line-height:2;
+  color:var(--muted);line-height:1.62;
   margin-top:16px;max-width:280px;
 }
 .footer-col h4{
@@ -1073,11 +1113,14 @@ body::before{
 .atelier-visual{
   position:relative;
   aspect-ratio:4/5;
+  /* Pure black base matching body bg so the card blends seamlessly into the
+     page - only the warm candle pool reads as light source. The previous
+     "moon" blue and purple bleed created a visible navy frame against the
+     surrounding pure-dark area, which broke the editorial illusion. */
   background:
-    radial-gradient(ellipse 55% 45% at 50% 38%, rgba(196,160,93,.18) 0%, transparent 60%),
-    radial-gradient(ellipse 45% 60% at 15% 12%, var(--moon) 0%, transparent 65%),
-    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(20,14,28,.7) 0%, transparent 60%),
-    linear-gradient(180deg,#0a0712 0%,#06050a 55%,#040306 100%);
+    radial-gradient(ellipse 60% 45% at 50% 38%, rgba(196,160,93,.16) 0%, transparent 62%),
+    radial-gradient(ellipse 80% 60% at 50% 95%, rgba(0,0,0,.6) 0%, transparent 70%),
+    var(--bg);
   overflow:hidden;
   border:1px solid var(--border);
 }
@@ -1150,7 +1193,7 @@ body::before{
 .atelier-body .at-h i{font-style:italic;color:var(--gold)}
 .atelier-body .at-p{
   font-size:12.5px;font-weight:300;
-  color:var(--text2);line-height:2.2;letter-spacing:.2px;
+  color:var(--text2);line-height:1.7;letter-spacing:.2px;
   margin-bottom:14px;
 }
 @media(max-width:760px){
@@ -1184,7 +1227,10 @@ body::before{
 }
 
 /* ── LOGO POLISH ── */
-.nav-logo{position:relative;display:inline-block;padding-bottom:4px}
+/* Keep flex-column from the base rule so K-Projects sits BELOW the wordmark
+   instead of beside it. The polish rule used to set display:inline-block,
+   which collapsed the stack on every viewport including mobile. */
+.nav-logo{position:relative;padding-bottom:4px}
 .nav-logo::after{
   content:'';
   position:absolute;left:0;right:0;bottom:0;height:1px;
@@ -1319,7 +1365,7 @@ body::before{
   font-family:'Lora','Cormorant Garamond',Georgia,serif;
   font-size:13px;font-weight:400;
   color:var(--text2);
-  line-height:1.85;letter-spacing:.1px;
+  line-height:1.55;letter-spacing:.1px;
 }
 .fn-attr{
   margin-top:18px;padding-top:16px;
@@ -1352,9 +1398,9 @@ body::before{
   .reveal,.phi-item{opacity:1!important;transform:none!important}
 }
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -1364,7 +1410,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#ffffff !important}
+body[data-page-depth="1"] article h3{color:#f2ede6 !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -1372,15 +1418,270 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#e6e6e6 !important}
+body[data-page-depth="1"] article strong{color:#f2ede6 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#c4a05d !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#c9a96e !important;text-decoration:underline;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
+
+/* ── PREMIUM POLISH (Vestigare-inspired typographic tightening) ────────────
+   Goals: tighter line-heights, restrained letter-spacing on serif display,
+   slightly elevated body kerning, mobile sizes that read as a luxury edition
+   rather than a default phone view. Applied last so it overrides the per-
+   section defaults above without changing their structure. */
+.hero-h,.at-h,.svc-h,.proc-h,.exp-h,.faq-h,.fn-name,.foot-h,
+.pull-mark + *,.atelier-body .at-h,.hero-headline,
+section h2,section h3{
+  letter-spacing:-.012em;
+  font-feature-settings:"liga","kern","dlig","onum","ss01";
+}
+.hero-h,.atelier-body .at-h,.hero-headline{line-height:1.08}
+.svc-h,.proc-h,.exp-h,.faq-h,.foot-h{line-height:1.12}
+/* Eyebrow / mono caps get tighter tracking too - 1.5px was airy, 1.8-2px is
+   the premium-editorial sweet spot. Avoid touching anything wider than 2.5px
+   since those are already intentional. */
+.nav,.nav a,.hero-eyebrow,.eyebrow,.sec-eyebrow,.at-eyebrow,
+.svc-eyebrow,.proc-eyebrow,.exp-eyebrow{
+  font-feature-settings:"kern","ss01";
+}
+/* Body paragraphs: small horizontal kerning bump for a touch of editorial
+   weight, plus consistent margin-bottom that lets long-form breathe. */
+p{letter-spacing:.005em}
+.atelier-body .at-p,.svc-p,.proc-p,.exp-p,.fn-p,.foot-p,article p{
+  font-feature-settings:"kern","liga","onum";
+}
+
+/* ── MOBILE PREMIUM AUDIT ──────────────────────────────────────────────────
+   The original mobile blocks above handle layout, but didn't tune type for
+   premium feel. Override here so the homepage reads at small width like a
+   pocket monograph rather than a default mobile page. */
+@media (max-width:760px){
+  body{font-size:13.5px;line-height:1.6}
+  .nav{padding:0 22px;height:58px}
+  .hero-h,.at-h,.hero-headline{
+    font-size:clamp(28px,7.8vw,40px);
+    line-height:1.08;
+    letter-spacing:-.014em;
+  }
+  .atelier-section{padding:clamp(56px,9vh,84px) 0}
+  .atelier-grid{gap:34px}
+  .atelier-visual{aspect-ratio:5/4;max-height:340px}
+  .atelier-body .at-h{font-size:clamp(24px,6.8vw,32px)}
+  .atelier-body .at-p{font-size:14px;line-height:1.65;letter-spacing:.005em}
+  .svc-h,.proc-h,.exp-h,.faq-h{font-size:clamp(24px,6.4vw,32px);line-height:1.12}
+  .pull-mark{font-size:36px;line-height:1}
+  .nav-logo{font-size:14px;letter-spacing:1.4px}
+  .nav-logo-sub{font-size:8px;letter-spacing:1.6px}
+}
+@media (max-width:480px){
+  body{font-size:13.5px}
+  .nav{padding:0 18px;height:56px}
+  .hero-h,.hero-headline{font-size:clamp(26px,8.4vw,34px)}
+  .atelier-section{padding:48px 0}
+  .atelier-grid{gap:28px}
+  .atelier-visual{max-height:300px}
+  .atelier-body .at-h{font-size:24px}
+  .atelier-body .at-p{font-size:13.5px}
+}
+/* Respect reduced-motion across all flicker/hover animations the page uses. */
+@media (prefers-reduced-motion:reduce){
+  .atelier-flame{animation:none!important}
+  *{transition-duration:.001ms!important;animation-duration:.001ms!important}
+}
+
+/* ── MOBILE: BLUR-IN reveal instead of slide-up.
+   On phones the slide-up bounce was reading as cheap. Soft blur fade matches
+   the editorial atmosphere brand. Desktop keeps its slide because there's
+   more whitespace context for the motion to make sense. */
+@media (max-width:760px){
+  .reveal{opacity:0;transform:none;filter:blur(10px);transition:opacity 1s cubic-bezier(.22,1,.36,1),filter 1s cubic-bezier(.22,1,.36,1)}
+  .reveal.in{opacity:1;filter:blur(0)}
+  .phi-item{opacity:0;transform:none;filter:blur(10px);transition:opacity 1s cubic-bezier(.22,1,.36,1),filter 1s cubic-bezier(.22,1,.36,1)}
+  .phi-item.in{opacity:1;filter:blur(0)}
+}
+
+/* ── ARTICLE OVERRIDES (kanona-specific, applied on article pages only)
+   The user wanted articles smaller + softer + more minimalist. Tones down
+   the body type, dials text away from pure white, shrinks headlines, and
+   lifts line-height for the editorial feel. Scoped via data-page-depth=1 so
+   homepage typography is unaffected. */
+body[data-page-depth="1"] .ap{max-width:min(820px,88vw);padding:88px 32px 16px;font-feature-settings:"kern","liga","onum";margin:0 auto}
+body[data-page-depth="1"] .ap h1{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.018em;font-weight:300;color:#e8e2d6;font-family:'Cormorant Garamond',Georgia,serif}
+body[data-page-depth="1"] .ap-deck{font-size:15px;line-height:1.65;color:#a39c8e;font-style:italic;font-family:'Cormorant Garamond',Georgia,serif;font-weight:300}
+body[data-page-depth="1"] .ap-body{font-size:16px;line-height:1.78;color:#c8c2b4;letter-spacing:.003em;font-family:'Inter',system-ui,sans-serif;font-weight:400}
+body[data-page-depth="1"] .ap-body p{color:#c0bbac;margin-bottom:22px}
+body[data-page-depth="1"] .ap-body p.ap-lede{font-size:17.5px;color:#d4ccbd;font-weight:400;line-height:1.65}
+body[data-page-depth="1"] .ap-body h2,body[data-page-depth="1"] .ap-body .art-h2{font-size:22px;letter-spacing:-.012em;color:#e0d9cb;font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;margin:42px 0 14px}
+body[data-page-depth="1"] .ap-body h3,body[data-page-depth="1"] .ap-body .art-h3{font-size:18px;color:#d4ccbd;font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;letter-spacing:-.008em}
+body[data-page-depth="1"] .ap-pull{font-size:21px;color:#d4ccbd;font-style:italic;font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;margin:38px 0;padding-left:18px;line-height:1.4}
+body[data-page-depth="1"] .ap-concl{font-size:16px;color:#c8c2b4;font-family:'Inter',system-ui,sans-serif;font-weight:400;line-height:1.78}
+body[data-page-depth="1"] .ap-kicker{font-size:10px;letter-spacing:.28em;color:#9a8d7d}
+
+/* ── FOOTER FOG: thin warm mist drifting in just above the footer rule.
+   Sits as a pseudo-element on the footer so it travels with it. Very low
+   opacity, no blur on the content itself - just a soft white-warm haze. */
+.site-footer{position:relative;isolation:isolate}
+.site-footer::before{
+  content:'';
+  position:absolute;
+  top:-40px;left:0;right:0;height:120px;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 60% at 30% 70%, rgba(244,240,232,.04) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 70% at 80% 80%, rgba(196,160,93,.025) 0%, transparent 75%),
+    linear-gradient(180deg, transparent 0%, rgba(244,240,232,.018) 50%, transparent 100%);
+  filter:blur(6px);
+  z-index:-1;
+  animation:footerMist 14s ease-in-out infinite;
+}
+@keyframes footerMist{
+  0%,100%{transform:translateX(-8px);opacity:.9}
+  50%{transform:translateX(8px);opacity:1}
+}
+@media (prefers-reduced-motion:reduce){
+  .site-footer::before{animation:none}
+}
 </style>
 </head>
 <body>
 <!--SHELL:ACCENT:#c4a05d-->
+
+<!-- PRELOADER: smooth charismatic fade-out. Gold hairline that draws across
+     the screen as a single horizontal line, then a tiny serif "Kanona" mark
+     reveals, then everything fades. ~1.4s total. CSS-only, no JS frameworks. -->
+<div id="preloader" aria-hidden="true">
+  <div class="pre-rule"></div>
+  <div class="pre-mark">Kanona <em>Projects</em></div>
+  <div class="pre-sub">A studio of atmosphere</div>
+</div>
+<style>
+#preloader{position:fixed;inset:0;z-index:9999;background:#050407;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .65s cubic-bezier(.22,1,.36,1);pointer-events:auto}
+#preloader.gone{opacity:0;pointer-events:none}
+#preloader .pre-rule{width:0;height:1px;background:linear-gradient(90deg,transparent,#c4a05d 30%,#c4a05d 70%,transparent);animation:preRule 900ms cubic-bezier(.22,1,.36,1) forwards}
+#preloader .pre-mark{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:32px;letter-spacing:.04em;color:#f2ede6;opacity:0;margin-top:22px;animation:preFade 700ms ease 600ms forwards}
+#preloader .pre-mark em{font-style:italic;color:#c4a05d;font-weight:300}
+#preloader .pre-sub{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:#8a7a6a;opacity:0;margin-top:8px;animation:preFade 700ms ease 800ms forwards}
+@keyframes preRule{0%{width:0}100%{width:min(280px,42vw)}}
+@keyframes preFade{0%{opacity:0;transform:translateY(4px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  #preloader .pre-rule,#preloader .pre-mark,#preloader .pre-sub{animation:none;width:280px;opacity:1}
+}
+</style>
+<script>
+(function(){
+  function done(){var p=document.getElementById('preloader');if(p)p.classList.add('gone');setTimeout(function(){if(p&&p.parentNode)p.parentNode.removeChild(p);},700);}
+  if(document.readyState==='complete')setTimeout(done,1400);
+  else window.addEventListener('load',function(){setTimeout(done,1400);});
+})();
+</script>
+
+<!-- AMBIENT SOUND BUTTON - floating, bottom-right. Five curated Solfeggio /
+     ambient frequencies fitting kanona's "atmosphere" brand. Plays via Web
+     Audio API (sine + soft attack envelope). Click again to stop. -->
+<button id="ambient-trigger" aria-label="Play ambient frequency">
+  <svg class="amb-wave" viewBox="0 0 40 24" aria-hidden="true">
+    <path d="M2 12 Q 6 4, 10 12 T 18 12 T 26 12 T 34 12 T 42 12" fill="none" stroke="#c4a05d" stroke-width="1.6" stroke-linecap="round"/>
+  </svg>
+</button>
+<div id="ambient-menu" role="dialog" aria-hidden="true"></div>
+<style>
+#ambient-trigger{position:fixed;right:22px;bottom:22px;z-index:200;width:52px;height:52px;border-radius:50%;background:rgba(20,15,29,.85);border:1px solid rgba(196,160,93,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#c4a05d;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .25s,border-color .25s,box-shadow .25s;padding:0}
+#ambient-trigger .amb-wave{width:26px;height:14px;opacity:.78;transition:opacity .3s}
+#ambient-trigger .amb-wave path{stroke-dasharray:80;stroke-dashoffset:0}
+#ambient-trigger:hover{transform:translateY(-2px);border-color:#c4a05d;box-shadow:0 12px 32px -16px rgba(196,160,93,.4)}
+#ambient-trigger:hover .amb-wave{opacity:1}
+#ambient-trigger.on{border-color:#c4a05d;box-shadow:0 0 28px rgba(196,160,93,.35)}
+#ambient-trigger.on .amb-wave path{animation:waveFlow 2.4s ease-in-out infinite}
+@keyframes waveFlow{
+  0%,100%{d:path("M2 12 Q 6 4, 10 12 T 18 12 T 26 12 T 34 12 T 42 12")}
+  50%{d:path("M2 12 Q 6 20, 10 12 T 18 12 T 26 12 T 34 12 T 42 12")}
+}
+/* Fallback for browsers without animatable d:path - softly pulse opacity instead */
+@supports not (d: path("M0 0 L1 1")){
+  #ambient-trigger.on .amb-wave{animation:wavePulse 2.4s ease-in-out infinite}
+  @keyframes wavePulse{0%,100%{transform:scaleY(1);opacity:.7}50%{transform:scaleY(1.6);opacity:1}}
+}
+#ambient-menu{position:fixed;right:22px;bottom:82px;z-index:201;background:rgba(20,15,29,.96);border:1px solid rgba(196,160,93,.32);border-radius:14px;padding:14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);min-width:240px;opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .3s,transform .3s;font-family:'JetBrains Mono',ui-monospace,monospace}
+#ambient-menu.open{opacity:1;pointer-events:auto;transform:none}
+#ambient-menu .am-title{font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:#c4a05d;margin-bottom:12px;text-align:center}
+#ambient-menu .am-list{display:flex;flex-direction:column;gap:2px}
+#ambient-menu .am-btn{background:none;border:none;color:#f2ede6;font-family:inherit;font-size:11.5px;letter-spacing:.06em;padding:9px 12px;cursor:pointer;text-align:left;border-radius:6px;display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+#ambient-menu .am-btn:hover{background:rgba(196,160,93,.1)}
+#ambient-menu .am-btn.active{color:#c4a05d;background:rgba(196,160,93,.14)}
+#ambient-menu .am-btn .am-hz{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:13px;opacity:.7}
+@media(max-width:560px){
+  #ambient-trigger{right:14px;bottom:14px;width:44px;height:44px}
+  #ambient-menu{right:14px;bottom:68px;min-width:220px}
+}
+</style>
+<script>
+(function(){
+  var btn=document.getElementById('ambient-trigger');
+  var menu=document.getElementById('ambient-menu');
+  if(!btn||!menu)return;
+  var freqs=[
+    {hz:174,label:'Foundation',mood:'grounding low warmth'},
+    {hz:432,label:'Verdure',mood:'cosmic warmth'},
+    {hz:528,label:'Renewal',mood:'transformation tone'},
+    {hz:639,label:'Connection',mood:'relational warmth'},
+    {hz:741,label:'Awakening',mood:'expressive clarity'}
+  ];
+  menu.innerHTML='<div class="am-title">A frequency for the room</div>'+
+    '<div class="am-list">'+freqs.map(function(f,i){
+      return '<button class="am-btn" data-i="'+i+'" data-hz="'+f.hz+'"><span>'+f.label+' <span style="color:#8a7a6a;font-size:9.5px;letter-spacing:.18em">'+f.mood+'</span></span><span class="am-hz">'+f.hz+' Hz</span></button>';
+    }).join('')+'</div>';
+
+  var ctx=null,osc=null,gain=null,currentI=-1,menuOpen=false;
+  function ensureCtx(){if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();return ctx;}
+  function stop(){
+    if(osc){try{gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+.4);}catch(_){}setTimeout(function(){try{osc.stop();}catch(_){}osc=null;gain=null;},420);}
+    btn.classList.remove('on');btn.setAttribute('aria-label','Play ambient frequency');
+    menu.querySelectorAll('.am-btn').forEach(function(b){b.classList.remove('active');});
+    currentI=-1;
+  }
+  function play(hz,i){
+    stop();
+    setTimeout(function(){
+      var c=ensureCtx();
+      gain=c.createGain();gain.gain.setValueAtTime(.0001,c.currentTime);gain.gain.exponentialRampToValueAtTime(.038,c.currentTime+1.6);
+      osc=c.createOscillator();osc.type='sine';osc.frequency.value=hz;osc.connect(gain);gain.connect(c.destination);osc.start();
+      btn.classList.add('on');btn.setAttribute('aria-label','Stop ambient frequency');
+      currentI=i;
+      menu.querySelectorAll('.am-btn').forEach(function(b){b.classList.toggle('active',+b.dataset.i===i);});
+    },450);
+  }
+  btn.addEventListener('click',function(){
+    if(currentI>=0){stop();return;}
+    menuOpen=!menuOpen;menu.classList.toggle('open',menuOpen);
+    menu.setAttribute('aria-hidden',menuOpen?'false':'true');
+  });
+  menu.addEventListener('click',function(e){
+    var b=e.target.closest('.am-btn');if(!b)return;
+    var i=+b.dataset.i,hz=+b.dataset.hz;
+    if(currentI===i){stop();menu.classList.remove('open');menuOpen=false;return;}
+    play(hz,i);
+    menu.classList.remove('open');menuOpen=false;
+  });
+  document.addEventListener('click',function(e){
+    if(!menuOpen)return;
+    if(e.target===btn||btn.contains(e.target))return;
+    if(menu.contains(e.target))return;
+    menu.classList.remove('open');menuOpen=false;
+  });
+})();
+</script>
+
+<!-- Hero overlay strengthening for mobile - adds a darker bottom gradient so
+     the hero copy stays readable on phones where the background image takes
+     up more vertical real estate. -->
+<style>
+@media(max-width:760px){
+  .hero::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(5,4,7,.35) 0%,rgba(5,4,7,.55) 45%,rgba(5,4,7,.85) 100%)}
+  .hero > *{position:relative;z-index:1}
+  .hero .hero-sub{color:#e8e2d9;opacity:.95}
+}
+</style>
+
 <!--SHELL:HEADER-->
 
 <div class="cursor-orb" id="orb"></div>
@@ -1395,7 +1696,7 @@ body[data-page-depth="1"] article .intro a{color:#c4a05d !important;text-decorat
     <a href="./#services" class="nav-link">Services</a>
     <a href="./#process" class="nav-link">Process</a>
     <a href="./#writing" class="nav-link">Journal</a>
-    <a href="./about.html" class="nav-link">About</a>
+    <a href="./about" class="nav-link">About</a>
     <a href="./#newsletter" class="nav-cta">The Letter</a>
   </div>
 </nav>
@@ -1445,8 +1746,6 @@ body[data-page-depth="1"] article .intro a{color:#c4a05d !important;text-decorat
   </div>
 
   <div class="hero-content">
-    <div class="hero-eyebrow">Kanona Projects &middot; Experiential Curation</div>
-
     <!-- editorial ornament above headline -->
     <svg class="hero-ornament" viewBox="0 0 120 22" fill="none" stroke-width="1" aria-hidden="true">
       <line x1="0" y1="11" x2="44" y2="11" opacity=".55"/>
@@ -1481,6 +1780,9 @@ body[data-page-depth="1"] article .intro a{color:#c4a05d !important;text-decorat
     </button>
   </div>
 </section>
+<!-- "See all posts" link removed; the Load More button under the article
+     grid now handles archive navigation per the brand request. -->
+
 
 <!-- STORY -->
 <section id="story" class="story-section">
@@ -1810,14 +2112,15 @@ body[data-page-depth="1"] article .intro a{color:#c4a05d !important;text-decorat
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED --><div style="text-align:center;padding:0 24px 64px"><a href="./articles" style="display:inline-flex;align-items:center;gap:14px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);padding:14px 24px;border-top:1px solid rgba(196,160,93,.4);border-bottom:1px solid rgba(196,160,93,.4);text-decoration:none">The full journal <span style="display:inline-block;width:32px;height:1px;background:var(--gold)"></span></a></div>
+
 <!--SHELL:FOOTER-->
 <!-- FOOTER -->
 <footer class="site-footer">
   <div class="footer-top">
     <div>
-      <div class="footer-brand">Kanona <em>Events</em></div>
+      <div class="footer-brand">Kanona <em>Projects</em></div>
+      <div class="footer-brand-sub">K-Projects</div>
       <p class="footer-tag">An experiential event-curation studio designing evenings built to remain.</p>
     </div>
     <div class="footer-col">
@@ -1831,18 +2134,18 @@ body[data-page-depth="1"] article .intro a{color:#c4a05d !important;text-decorat
       <h4>Explore</h4>
       <a href="./">Home</a>
       <a href="./#writing">Journal</a>
-      <a href="./about.html">About</a>
+      <a href="./about">About</a>
       <a href="./#newsletter">The Letter</a>
     </div>
     <div class="footer-col">
       <h4>Legal</h4>
-      <a href="./privacy.html">Privacy</a>
-      <a href="./terms.html">Terms</a>
+      <a href="./privacy">Privacy</a>
+      <a href="./terms">Terms</a>
     </div>
   </div>
   <div class="footer-bottom">
     <div class="footer-bottom-inner">
-      <div class="footer-copy"><span class="footer-mono">2026</span> &nbsp; Kanona Projects &middot; Kani Sedighi</div>
+      <div class="footer-copy"><span class="footer-mono">2026</span> &nbsp; Kanona Projects</div>
       <div class="footer-copy">Experiential Event Curation</div>
     </div>
   </div>
@@ -2352,26 +2655,49 @@ if(!REDUCED&&window.matchMedia('(hover:hover)').matches){
       +'</div>';
   }
 
-  function render(arts){
-    if(!arts||!arts.length){emptyState();return;}
-    grid.className='exp-grid';
+  var ALL=[],SHOWN=0,PER_PAGE=6;
+  function cardHTML(a,i){
+    var n=(i+1)<10?'0'+(i+1):''+(i+1);
+    var desc=(a.meta_description||a.description||'');
+    if(desc.length>118)desc=desc.slice(0,118)+'...';
+    var hasImg=a.image&&typeof a.image==='string';
+    var thumb=hasImg?'<div class="exp-thumb has-img"><img src="'+a.image+'" alt="'+(a.title||'').replace(/"/g,'&quot;')+'" loading="lazy" onerror="this.style.display=\'none\'; this.parentNode.classList.remove(\'has-img\');"></div>':'';
     var arrow='<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-    grid.innerHTML=arts.map(function(a,i){
-      var n=(i+1)<10?'0'+(i+1):''+(i+1);
-      var desc=(a.meta_description||a.description||'');
-      if(desc.length>118)desc=desc.slice(0,118)+'...';
-      var hasImg=a.image&&typeof a.image==='string';
-      var thumb=hasImg?'<div class="exp-thumb has-img"><img src="'+a.image+'" alt="'+(a.title||'').replace(/"/g,'&quot;')+'" loading="lazy" onerror="this.style.display=\'none\'; this.parentNode.classList.remove(\'has-img\');"></div>':'';
-      return '<a class="exp-card" href="./'+a.slug+'/">'
-        +thumb
-        +'<div class="exp-n">'+n+'</div>'
-        +'<div class="exp-tag">'+(a.category||'Journal')+'</div>'
-        +'<div class="exp-title">'+(a.title||'Untitled')+'</div>'
-        +'<div class="exp-desc">'+desc+'</div>'
-        +'<div class="exp-foot"><span>'+(a.date||'')+'</span>'
-        +'<span class="exp-read">Read '+arrow+'</span></div>'
-        +'</a>';
-    }).join('');
+    return '<a class="exp-card" href="./'+a.slug+'/">'
+      +thumb
+      +'<div class="exp-n">'+n+'</div>'
+      +'<div class="exp-tag">'+(a.category||'Journal')+'</div>'
+      +'<div class="exp-title">'+(a.title||'Untitled')+'</div>'
+      +'<div class="exp-desc">'+desc+'</div>'
+      +'<div class="exp-foot"><span>'+(a.date||'')+'</span>'
+      +'<span class="exp-read">Read '+arrow+'</span></div>'
+      +'</a>';
+  }
+  function renderInitial(arts){
+    if(!arts||!arts.length){emptyState();return;}
+    ALL=arts;SHOWN=Math.min(PER_PAGE,arts.length);
+    grid.className='exp-grid';
+    grid.innerHTML=arts.slice(0,SHOWN).map(cardHTML).join('');
+    ensureLoadMoreBtn();
+  }
+  function ensureLoadMoreBtn(){
+    var existing=document.getElementById('exp-loadmore-wrap');
+    if(SHOWN>=ALL.length){if(existing)existing.remove();return;}
+    if(existing)return;
+    var wrap=document.createElement('div');
+    wrap.id='exp-loadmore-wrap';
+    wrap.style.cssText='text-align:center;margin-top:42px;padding:0 20px';
+    wrap.innerHTML='<button id="exp-loadmore" type="button" style="background:transparent;border:1px solid rgba(196,160,93,.55);color:#c4a05d;font-family:\'JetBrains Mono\',ui-monospace,monospace;font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;padding:14px 32px;cursor:pointer;border-radius:2px;transition:background .3s,border-color .3s;display:inline-flex;align-items:center;gap:14px"><span>Load more entries</span><span style="display:inline-block;width:18px;height:1px;background:#c4a05d"></span></button>';
+    grid.parentNode.insertBefore(wrap,grid.nextSibling);
+    wrap.querySelector('button').addEventListener('mouseenter',function(){this.style.background='rgba(196,160,93,.08)';this.style.borderColor='#c4a05d';});
+    wrap.querySelector('button').addEventListener('mouseleave',function(){this.style.background='transparent';this.style.borderColor='rgba(196,160,93,.55)';});
+    wrap.querySelector('button').addEventListener('click',function(){
+      var next=Math.min(SHOWN+PER_PAGE,ALL.length);
+      var moreHTML=ALL.slice(SHOWN,next).map(cardHTML).join('');
+      grid.insertAdjacentHTML('beforeend',moreHTML);
+      SHOWN=next;
+      ensureLoadMoreBtn();
+    });
   }
 
   fetch('./articles.json')
@@ -2379,7 +2705,7 @@ if(!REDUCED&&window.matchMedia('(hover:hover)').matches){
     .then(function(data){
       var arts=Array.isArray(data)?data:(data&&Array.isArray(data.articles)?data.articles:[]);
       arts=arts.filter(function(a){return a&&a.slug&&a.title;});
-      render(arts);
+      renderInitial(arts);
     })
     .catch(function(){emptyState();});
 })();
