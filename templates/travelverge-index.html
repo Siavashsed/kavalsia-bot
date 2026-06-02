@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>TravelVerge - Independent Travel Intelligence &amp; Destination Guides</title>
 <meta name="description" content="TravelVerge delivers destination deep-dives, practical packing systems, flight strategy, and honest travel advice for independent travelers who want the real experience.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -204,6 +205,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
 </style>
 </head>
 <body>
+
 <!--SHELL:ACCENT:#14b8a6-->
 <!--SHELL:HEADER-->
 
@@ -216,7 +218,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
       <a href="./#articles">Articles</a>
       <a href="./#author">Our Story</a>
       <a href="./#faq">FAQ</a>
-      <a href="about.html">About</a>
+      <a href="about">About</a>
     </div>
     <a href="./#newsletter" class="nav-plan">Get the Dispatch</a>
   </div>
@@ -377,7 +379,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
       </div>
     </div>
     <div class="topic-grid">
-      <a href="./#articles" class="topic-card reveal">
+      <a href="./articles?cat=Europe" class="topic-card reveal">
         <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1200&q=80" alt="European old town street">
         <span class="topic-tag">42 destinations</span>
         <div class="topic-body">
@@ -385,7 +387,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
           <p>From hidden Portugal to slow-travel Italy - the routes beyond the postcard cities.</p>
         </div>
       </a>
-      <a href="./#articles" class="topic-card reveal">
+      <a href="./articles?cat=Asia" class="topic-card reveal">
         <img src="https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=1200&q=80" alt="Temple in Asia at golden hour">
         <span class="topic-tag">38 destinations</span>
         <div class="topic-body">
@@ -393,7 +395,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
           <p>Japan, Vietnam, Thailand and beyond - itineraries that respect both time and budget.</p>
         </div>
       </a>
-      <a href="./#articles" class="topic-card reveal">
+      <a href="./articles?cat=Americas" class="topic-card reveal">
         <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1200&q=80" alt="Mountain landscape in the Americas">
         <span class="topic-tag">31 destinations</span>
         <div class="topic-body">
@@ -401,7 +403,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
           <p>Patagonia trails to Mexican coastlines - big-distance trips planned without the chaos.</p>
         </div>
       </a>
-      <a href="./#articles" class="topic-card reveal">
+      <a href="./articles?cat=Africa" class="topic-card reveal">
         <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&q=80" alt="Desert dunes in Africa">
         <span class="topic-tag">18 destinations</span>
         <div class="topic-body">
@@ -409,15 +411,15 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
           <p>Morocco's medinas to safari logistics - honest guidance for first-time and return travelers.</p>
         </div>
       </a>
-      <a href="./#articles" class="topic-card reveal">
+      <a href="./articles?cat=Caribbean" class="topic-card reveal">
         <img src="https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?w=1200&q=80" alt="Coastal cliffs and ocean">
         <span class="topic-tag">Island guides</span>
         <div class="topic-body">
           <h3>Coast &amp; Islands</h3>
-          <p>Ferry timetables, season windows, and which islands actually deliver what they promise.</p>
+          <p>Caribbean and beyond. Hotels we've actually slept in, transfers we've actually taken.</p>
         </div>
       </a>
-      <a href="./#articles" class="topic-card reveal">
+      <a href="./articles?cat=Mountains" class="topic-card reveal">
         <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=1200&q=80" alt="Snowy mountain peaks">
         <span class="topic-tag">Trail guides</span>
         <div class="topic-body">
@@ -510,8 +512,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
 </section>
 
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED -->
+
 <!--SHELL:FOOTER-->
 <footer>
   <div class="footer-in">
@@ -532,7 +534,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
       <div class="footer-head">Company</div>
       <div class="footer-links">
         <a href="./">Home</a>
-        <a href="about.html">About</a>
+        <a href="about">About</a>
         <a href="./#newsletter">Newsletter</a>
         <a href="./#author">Our Team</a>
       </div>
@@ -540,8 +542,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 2
     <div>
       <div class="footer-head">Legal</div>
       <div class="footer-links">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="terms.html">Terms of Use</a>
+        <a href="privacy">Privacy Policy</a>
+        <a href="terms">Terms of Use</a>
       </div>
     </div>
   </div>
