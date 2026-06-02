@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>Passive Wealth Guide - Build Income That Doesn't Require You</title>
 <meta name="description" content="Realistic passive income strategies from a CFP who retired at 41. Dividends, REITs, rental income - the math, the timeline, the real results.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -285,9 +286,9 @@ img{display:block;max-width:100%}
 .reveal.visible{opacity:1;transform:none}
 #strategies,#calculator,#articles,#about,#newsletter{scroll-margin-top:72px}
 
-/* CONTRAST-AUDIT v1 */
-/* Article-page-only contrast guard. body[data-page-depth="1"] is stamped on
-   every article by layout_shell.wrap_page. Homepage (depth=0) is untouched. */
+/* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
+   palette instead of forcing one fixed color (which broke white-on-white
+   on every light-bg site). */
 body[data-page-depth="1"] h1,
 body[data-page-depth="1"] h2,
 body[data-page-depth="1"] h3,
@@ -297,7 +298,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#000000 !important}
+body[data-page-depth="1"] article h3{color:#0a0a0a !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -305,16 +306,71 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#1a1a1a !important}
+body[data-page-depth="1"] article strong{color:#171717 !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#1a4731 !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:#15803d !important;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
 /* /CONTRAST-AUDIT */
+
+/* ── PASSIVE-WEALTH ARTICLE STYLE OVERRIDES ───────────────────────────────
+   Wider column (720 → 880), warmer body type, refined sub-heads, cleaner
+   pull-quote with the brand green hairline rule. Article-only via depth=1.*/
+body[data-page-depth="1"] .ap{max-width:1040px;padding:48px 32px 24px}
+@media (max-width:1080px){body[data-page-depth="1"] .ap{max-width:920px}}
+@media (max-width:760px){body[data-page-depth="1"] .ap{padding:36px 22px 16px}}
+body[data-page-depth="1"] .ap h1{font-size:clamp(30px,3.8vw,46px);line-height:1.08;letter-spacing:-.018em;font-weight:700;color:#0a0a0a !important;font-family:'Inter Tight','Inter',system-ui,sans-serif;margin-bottom:14px}
+body[data-page-depth="1"] .ap-deck{font-size:18px;line-height:1.55;color:#525252 !important;font-style:normal;font-weight:400;margin-bottom:32px;padding-bottom:22px;border-bottom:1px solid #e5e5e5;font-family:'Inter',system-ui,sans-serif}
+body[data-page-depth="1"] .ap-body{font-size:17px;line-height:1.72;color:#1f1f1f !important;font-family:'Inter',Georgia,serif;letter-spacing:.005em}
+body[data-page-depth="1"] .ap-body p{margin-bottom:22px}
+body[data-page-depth="1"] .ap-body h2,body[data-page-depth="1"] .ap-body .art-h2{font-size:24px;font-weight:700;color:#0a0a0a !important;letter-spacing:-.012em;margin:48px 0 14px;font-family:'Inter Tight','Inter',sans-serif}
+body[data-page-depth="1"] .ap-body h3,body[data-page-depth="1"] .ap-body .art-h3{font-size:19px;font-weight:600;color:#171717 !important;margin:32px 0 10px;font-family:'Inter Tight','Inter',sans-serif}
+body[data-page-depth="1"] .ap-pull{font-family:'Inter Tight','Inter',sans-serif;font-style:normal;font-size:22px;font-weight:500;color:#0a0a0a !important;line-height:1.35;padding:0 0 0 22px;border-left:3px solid #15803d;margin:36px 0}
+body[data-page-depth="1"] .ap-pull::after{background:#15803d !important;width:36px}
+body[data-page-depth="1"] .ap-concl{font-size:17px;color:#1f1f1f !important;border-top:1px solid #e5e5e5;margin-top:48px;padding-top:24px}
+body[data-page-depth="1"] .ap-concl::before{color:#15803d !important}
+body[data-page-depth="1"] .ap-kicker{color:#15803d !important;font-size:11px;letter-spacing:.24em}
+/* Author card refresh: smaller, less padding, hairline rule above. The
+   compact_author_card flag in network-config already strips the avatar
+   circle; this just tunes the spacing + adds a subtle hairline. */
+body[data-page-depth="1"] .compact-author-wrap{padding-top:14px}
+/* Comments section refresh */
+body[data-page-depth="1"] #comments-section{max-width:880px !important;border-top:1px solid #e5e5e5;margin-top:48px !important;padding-top:36px !important}
+body[data-page-depth="1"] #comments-section h2{font-family:'Inter Tight',sans-serif !important;font-size:21px !important;font-weight:700 !important;color:#0a0a0a !important;letter-spacing:-.012em !important}
+body[data-page-depth="1"] #comments-section textarea{border-radius:10px !important;font-family:'Inter',sans-serif !important;border-color:#d4d4d4 !important;font-size:14px !important}
+body[data-page-depth="1"] #comments-section button{background:#15803d !important;color:#fff !important;border-radius:10px !important;padding:11px 22px !important;font-weight:600 !important;font-family:'Inter Tight',sans-serif !important}
+body[data-page-depth="1"] #comments-section button:hover{background:#0d5328 !important}
 </style>
 </head>
 <body>
 <!--SHELL:ACCENT:#1a4731-->
 <!--SHELL:HEADER-->
+<!-- PRELOADER: smooth charismatic fade-in. A vertical hairline draws down,
+     then the "PWG" mark scales in, then everything fades. ~1.3s. CSS-only. -->
+<div id="pw-preloader" aria-hidden="true">
+  <div class="pw-pre-vline"></div>
+  <div class="pw-pre-mark">PWG</div>
+  <div class="pw-pre-sub">Passive Wealth Guide</div>
+</div>
+<style>
+#pw-preloader{position:fixed;inset:0;z-index:9999;background:#fefcf7;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .55s cubic-bezier(.22,1,.36,1);pointer-events:auto}
+#pw-preloader.gone{opacity:0;pointer-events:none}
+#pw-preloader .pw-pre-vline{width:1px;height:0;background:linear-gradient(180deg,transparent,#15803d 35%,#15803d 65%,transparent);animation:pwLine 800ms cubic-bezier(.22,1,.36,1) forwards}
+#pw-preloader .pw-pre-mark{font-family:'Inter Tight','Inter',system-ui,sans-serif;font-weight:700;font-size:42px;letter-spacing:-.022em;color:#0a0a0a;opacity:0;margin-top:18px;transform:scale(.94);animation:pwReveal 600ms cubic-bezier(.22,1,.36,1) 600ms forwards}
+#pw-preloader .pw-pre-sub{font-family:'Inter',ui-monospace,monospace;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:#737373;opacity:0;margin-top:8px;animation:pwReveal 600ms ease 800ms forwards}
+@keyframes pwLine{0%{height:0}100%{height:90px}}
+@keyframes pwReveal{0%{opacity:0;transform:translateY(4px) scale(.94)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  #pw-preloader .pw-pre-vline{animation:none;height:90px}
+  #pw-preloader .pw-pre-mark,#pw-preloader .pw-pre-sub{animation:none;opacity:1}
+}
+</style>
+<script>
+(function(){
+  function done(){var p=document.getElementById('pw-preloader');if(p)p.classList.add('gone');setTimeout(function(){if(p&&p.parentNode)p.parentNode.removeChild(p);},600);}
+  if(document.readyState==='complete')setTimeout(done,1300);
+  else window.addEventListener('load',function(){setTimeout(done,1300);});
+})();
+</script>
 
 <!-- NAV -->
 <nav class="nav" id="main-nav">
@@ -411,6 +467,8 @@ body[data-page-depth="1"] article .intro a{color:#1a4731 !important;text-decorat
     </div>
   </div>
 </section>
+
+
 
 <!-- STATS BAR -->
 <div class="stats-bar">
@@ -757,8 +815,8 @@ body[data-page-depth="1"] article .intro a{color:#1a4731 !important;text-decorat
 
 <!-- FOOTER -->
 
-<!-- VIEW_ALL_ARTICLES_LINK -->
-<div class="view-all" style="text-align:center;padding:28px 24px 40px;font-family:inherit"><a href="./articles.html" style="display:inline-block;color:currentColor;border:1px solid currentColor;padding:10px 22px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">View all articles -&gt;</a></div>
+<!-- VIEW_ALL_ARTICLES_LINK_PLACED --><a href="./articles" style="display:inline-block;color:currentColor;text-decoration:none;font-size:19px;font-style:italic;border-bottom:1px solid currentColor;padding-bottom:4px">Browse the archive</a></div>
+
 <!--SHELL:FOOTER-->
 <footer class="footer">
   <div class="footer-top">
@@ -788,7 +846,7 @@ body[data-page-depth="1"] article .intro a{color:#1a4731 !important;text-decorat
       <a href="#calculator">Calculator</a>
       <a href="#about">About</a>
       <a href="#newsletter">Newsletter</a>
-      <a href="privacy.html">Privacy Policy</a>
+      <a href="privacy">Privacy Policy</a>
     </div>
     <div class="foot-col">
       <div class="foot-head">Recent Posts</div>
@@ -804,8 +862,8 @@ body[data-page-depth="1"] article .intro a{color:#1a4731 !important;text-decorat
       <span class="foot-copy">&#169; 2026 Passive Wealth Guide by Sarah Mills, CFP. For informational purposes only.</span>
       <div class="foot-links">
         <a href="./">Home</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="terms.html">Terms</a>
+        <a href="privacy">Privacy</a>
+        <a href="terms">Terms</a>
         <a href="./#disclaimer">Disclaimer</a>
       </div>
     </div>
@@ -870,15 +928,20 @@ function calcUpdate(){
 }
 calcUpdate();
 
-// Load articles.json
+// Load articles.json - runs on every page so the footer "Recent Posts"
+// populates even on article + about + archive pages, not only the homepage.
 (async function(){
-  if(!document.getElementById('articles-grid'))return;
   var posts=[];
-  try{
-    var r=await fetch('./articles.json');
-    if(r.ok){var d=await r.json();if(Array.isArray(d))posts=d;}
-  }catch(e){}
+  // Article pages live one level deeper - try both paths so the same JS
+  // works on homepage AND inside /<slug>/.
+  for (var url of ['./articles.json','../articles.json']) {
+    try{
+      var r=await fetch(url);
+      if(r.ok){var d=await r.json();if(Array.isArray(d)){posts=d;break;}}
+    }catch(e){}
+  }
   posts=posts.filter(function(p){return p&&p.slug&&p.title;});
+  // Homepage article grid (homepage only)
   var grid=document.getElementById('articles-grid');
   if(grid){
     if(!posts.length){
@@ -900,8 +963,13 @@ calcUpdate();
   }
   var fp=document.getElementById('foot-posts');
   if(fp&&posts.length){
-    fp.innerHTML=posts.slice(0,3).map(function(p){
-      return '<div class="foot-post-item"><a href="./'+p.slug+'/" class="foot-post-title">'+p.title+'</a><div class="foot-post-cat">'+((p.category)||'Passive Income')+'</div></div>';
+    // Detect depth: article pages live one level deeper than homepage, so
+    // links need ../<slug>/ instead of ./<slug>/. body[data-page-depth] is
+    // stamped by layout_shell on every wrapped page.
+    var depth = parseInt(document.body.getAttribute('data-page-depth')||'0',10);
+    var prefix = depth >= 1 ? '../' : './';
+    fp.innerHTML=posts.slice(0,4).map(function(p){
+      return '<div class="foot-post-item"><a href="'+prefix+p.slug+'/" class="foot-post-title">'+p.title+'</a><div class="foot-post-cat">'+((p.category)||'Passive Income')+'</div></div>';
     }).join('');
   }
 })();
