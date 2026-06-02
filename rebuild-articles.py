@@ -27,12 +27,26 @@ import layout_shell
 from bot import (_seo_meta, _seo_title_tag, _comments_section_js,
                  _comments_section_inline, THEMES, SITE_THEMES,
                  assign_category, _count_words, _site_name, _resolve_author,
-                 _article_section_css, article_press)
+                 _article_section_css, article_press, ARTICLE_BUILDERS,
+                 normalize_theme)
+
+# Distinct-design rollout is now DATA-DRIVEN (2026-06-01): a site keeps its
+# bespoke per-layout article design through a rebuild whenever its configured
+# article_layout resolves to a non-press builder in ARTICLE_BUILDERS. No manual
+# allowlist to keep in sync with network-config. Press-aliased layouts
+# (standard/sidebar/magazine/minimal/...) still map to article_press and get
+# the homogenized press rewrap. The bespoke namespaces below are the bare
+# wrapper classes each distinct builder emits; the rebuild loop uses them to
+# detect a page that is ALREADY in its bespoke design (so it is preserved, not
+# re-extracted and gutted).
+_BESPOKE_CLASSES = ("ob", "kn", "sw", "bs", "tb", "lf")
 
 
 def _theme_for(site):
-    """Resolve the theme dict for a site the same way bot.py does."""
-    return dict(SITE_THEMES.get(site.get("id"),
+    """Resolve the theme dict for a site the same way bot.py does, including the
+    body_font backfill the distinct builders need (else broadsheet/tabloid/
+    lifestyle KeyError and the rewrap silently falls back to the old body)."""
+    return normalize_theme(SITE_THEMES.get(site.get("id"),
                 THEMES.get(site.get("theme", "minimal"), THEMES["minimal"])))
 
 
@@ -104,10 +118,69 @@ def _extract_article_structure(body_html, article):
     body_html = _re.sub(r'</?article\b[^>]*>', '', body_html, flags=_re.IGNORECASE)
     body_html = _re.sub(r'<section[^>]*class="[^"]*\bauthor-card\b[^"]*"[^>]*>.*?</section>',
                         '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
+    # bot.py's _author_card() emits the bio as a styled <div>, not a <section
+    # class="author-card">, so the regex above misses it. Each rebuild then
+    # leaves the OLD card baked into the captured body and the renderer appends
+    # a fresh one - producing the duplicate seen in production. Strip both the
+    # legacy inline form and any older variants by balance-counting <div> nesting
+    # starting from the outer wrapper signature.
+    def _strip_inline_author_cards(html):
+        marker_re = _re.compile(
+            r'<div\s+style="max-width:760px;margin:24px auto 60px;padding:0 24px 8px"\s*>',
+            _re.IGNORECASE,
+        )
+        while True:
+            m = marker_re.search(html)
+            if not m:
+                return html
+            i = m.end()
+            depth = 1
+            tag_re = _re.compile(r'</?div\b[^>]*>', _re.IGNORECASE)
+            while depth > 0 and i < len(html):
+                tm = tag_re.search(html, i)
+                if not tm:
+                    return html  # unbalanced; bail without modifying
+                depth += -1 if tm.group(0).lower().startswith('</') else 1
+                i = tm.end()
+            html = html[:m.start()] + html[i:]
+    body_html = _strip_inline_author_cards(body_html)
+    # article_press inserts a single <blockquote class="ap-pull"> at midpoint
+    # using meta_description. Without stripping it before re-rendering, every
+    # rebuild leaves the prior pull-quote in the captured body and the renderer
+    # adds a fresh one - producing the 3-5 stacked identical pull-quotes seen
+    # on modeformstudio + kanona articles. Strip all such blockquotes so the
+    # next render emits exactly one.
+    body_html = _re.sub(r'<blockquote[^>]*class="[^"]*\bap-pull\b[^"]*"[^>]*>.*?</blockquote>',
+                        '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
+    # Collapse deeply-nested empty <div><div><div>...<p> chains that pile up
+    # across rebuilds when each pass re-wraps the same paragraphs. Cap at 1
+    # wrapper - strip any wrapping div that has no class and no style and only
+    # contains another div.
+    for _ in range(8):
+        new = _re.sub(r'<div>\s*(<div\b)', r'\1', body_html)
+        if new == body_html:
+            break
+        body_html = new
     body_html = _re.sub(r'<div[^>]*id="comments-section"[^>]*>.*?</script>',
                         '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
     body_html = _re.sub(r'<div[^>]*class="giscus"[^>]*>.*?</script>',
                         '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
+    # Strip the SERVER-RENDERED inline comments section + its trailing
+    # <script>. Without this, every rebuild stacks the previous comments
+    # block into the captured body and the next render adds another, which
+    # is how datingedge articles ended up with 3-4 "Discussion · N"
+    # headers + 4 "All articles" CTAs.
+    body_html = _re.sub(r'<section[^>]*id="comments"[^>]*>.*?</section>\s*(?:<script\b[^>]*>.*?</script>)?',
+                        '', body_html, flags=_re.DOTALL|_re.IGNORECASE)
+    # Orphan "Discussion · N" headers (left behind when an old comments
+    # section was partially stripped on a previous pass).
+    body_html = _re.sub(r'<h2[^>]*class="[^"]*\bart-h2\b[^"]*"[^>]*>\s*Discussion\s*(?:&middot;|·)?\s*\d*\s*</h2>',
+                        '', body_html, flags=_re.IGNORECASE)
+    # Orphan "All articles" CTAs - the centered pill links to ../articles
+    # that the rebuild keeps stacking. Future templates add a single CTA
+    # in the section footer; body never carries it.
+    body_html = _re.sub(r'<div[^>]*style="[^"]*text-align:\s*center[^"]*"[^>]*>\s*<a[^>]+href="[^"]*articles[^"]*"[^>]*>\s*All\s+articles\s*</a>\s*</div>',
+                        '', body_html, flags=_re.IGNORECASE)
 
     # Hero image: first <img> outside obvious nav/logo, with its src and alt.
     img_url = ""; img_alt = ""; photographer = "Staff"
@@ -326,6 +399,11 @@ def patch_site(stem, site, token, log):
             continue
 
         body, css = extract_body_and_css(original)
+        # Per-site builder dispatch. Kanona / OnlineBiz keep their own builder
+        # (kn- / ob- designs); all other sites use the press rewrap as before.
+        _builder = ARTICLE_BUILDERS.get(site.get("article_layout") or "press", article_press)
+        _is_press = _builder is article_press
+        _use_distinct = not _is_press
         if not body:
             # Source HTML on GitHub is corrupted or truncated (e.g. partial file
             # left by a failed earlier push that wrote only the <head>/CSS).
@@ -351,7 +429,7 @@ def patch_site(stem, site, token, log):
                     "author":           article.get("author", ""),
                     "slug":             slug,
                 }
-                css, body = article_press(
+                css, body = _builder(
                     synth_article, site,
                     article.get("image", ""), "Staff", t,
                 )
@@ -366,19 +444,26 @@ def patch_site(stem, site, token, log):
             # ends up with the same long-form magazine layout regardless of which
             # builder originally produced the page. Skipped only if extraction
             # fails (we keep the original body in that case).
+            # GUARD: the structure extractor only understands press/legacy
+            # markup. Re-extracting an already-bespoke page (ob-/kn-) scrapes
+            # almost nothing and would gut the article. If the page is already
+            # in its bespoke design, keep it as-is (just refresh comments/SEO).
+            _already_bespoke = _use_distinct and any(
+                f'class="{c}"' in body for c in _BESPOKE_CLASSES)
             try:
-                synth = _extract_article_structure(body, article)
-                if synth.get("sections") or synth.get("intro"):
-                    fresh_css, fresh_body = article_press(
-                        synth, site,
-                        synth.get("image_url") or article.get("image", ""),
-                        synth.get("photographer") or "Staff",
-                        t,
-                    )
-                    body = fresh_body
-                    css = fresh_css
+                if not _already_bespoke:
+                    synth = _extract_article_structure(body, article)
+                    if synth.get("sections") or synth.get("intro"):
+                        fresh_css, fresh_body = _builder(
+                            synth, site,
+                            synth.get("image_url") or article.get("image", ""),
+                            synth.get("photographer") or "Staff",
+                            t,
+                        )
+                        body = fresh_body
+                        css = fresh_css
             except Exception as _press_err:
-                log(f"  [{i+1}] ! {slug}  -  press rewrap fell back ({_press_err})")
+                log(f"  [{i+1}] ! {slug}  -  rewrap fell back ({_press_err})")
 
             # Collapse legacy nested <time><time>...</time></time> chains from
             # earlier rebuilds that re-wrapped an already-wrapped date.
@@ -411,7 +496,7 @@ def patch_site(stem, site, token, log):
             # If neither inline form existed but the body uses .art-h2 already
             # (e.g. fresh build from updated bot.py), the class rule still
             # needs to be present in CSS. Inject when missing.
-            if (had_inline_h2 or had_inline_h3
+            if _is_press and (had_inline_h2 or had_inline_h3
                     or "art-h2" in body or "art-h3" in body) and ".art-h2{" not in css:
                 css = css + "\n/* heading classes */\n" + _article_section_css(t)
         if not body:
@@ -463,7 +548,7 @@ def patch_site(stem, site, token, log):
             site_js_fallback += 1
         # Recolor the article accent to the site's brand accent. Replace both the
         # theme accents and the accent actually detected in this article's CSS.
-        if new_accent:
+        if _is_press and new_accent:
             olds = {old_accent, old_accent2, (_detect_accent(css) or "").lower()}
             for oa in olds:
                 if oa and oa != new_accent.lower():
@@ -474,7 +559,7 @@ def patch_site(stem, site, token, log):
         # current one so headlines stay visible if the theme switched dark <-> light.
         new_text = (t.get("text") or "").lower()
         old_text = (_detect_text_color(css) or "").lower()
-        if new_text and old_text and old_text != new_text:
+        if _is_press and new_text and old_text and old_text != new_text:
             css  = re.sub(re.escape(old_text), new_text, css,  flags=re.IGNORECASE)
             body = re.sub(re.escape(old_text), new_text, body, flags=re.IGNORECASE)
 
@@ -527,6 +612,11 @@ def patch_site(stem, site, token, log):
             keywords=category,
             author_title=ainfo["title"],
             author_bio=ainfo["bio"],
+            # Per-site Schema.org @type so Google sees each site as a distinct
+            # publication (NewsArticle / TechArticle / BlogPosting / Review /
+            # HowTo / TravelGuide / MedicalScholarlyArticle / etc.) instead of
+            # every site declaring the generic "Article".
+            schema_type=site.get("schema_article_type") or "Article",
         )
 
         # Semantic <time> on the byline date for Google date detection. Skip
@@ -537,7 +627,7 @@ def patch_site(stem, site, token, log):
             body = body.replace(disp_date, f'<time datetime="{article["date_iso"]}">{disp_date}</time>', 1)
 
         # Wrap content in <article> for stronger schema signal.
-        body = f'<article itemscope itemtype="https://schema.org/Article">{body}</article>'
+        body = f'<article itemscope itemtype="https://schema.org/{site.get("schema_article_type") or "Article"}">{body}</article>'
 
         try:
             # Full title -> og/twitter/JSON-LD (uncapped). Shortened tag_title
