@@ -283,7 +283,7 @@ body[data-page-depth="1"] .mag-hero h1,
 body[data-page-depth="1"] .imm-hero h1,
 body[data-page-depth="1"] article h1,
 body[data-page-depth="1"] article h2,
-body[data-page-depth="1"] article h3{color:#f0f1f4 !important}
+body[data-page-depth="1"] article h3{color:var(--text,#f0f1f4) !important}
 body[data-page-depth="1"] article p,
 body[data-page-depth="1"] article li,
 body[data-page-depth="1"] .art-body p,
@@ -291,21 +291,21 @@ body[data-page-depth="1"] .mag-body p,
 body[data-page-depth="1"] .imm-body p,
 body[data-page-depth="1"] article .intro,
 body[data-page-depth="1"] article .concl,
-body[data-page-depth="1"] article strong{color:#d1d5db !important}
+body[data-page-depth="1"] article strong{color:var(--text,#d1d5db) !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:#d6ff3f !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:var(--text,#d6ff3f) !important;text-decoration:underline;text-underline-offset:3px}
 /* Article page bg matches the dark homepage scheme so the dark text stays
    readable end-to-end. Was rendering near-black-on-near-black because the
    SHELL injects a dark bg from the homepage but the article CSS assumed
    white. */
 body[data-page-depth="1"]{background:#0c0e14}
 body[data-page-depth="1"] .ap{max-width:880px;color:#d1d5db}
-body[data-page-depth="1"] .ap-body{color:#d1d5db !important}
-body[data-page-depth="1"] .ap-deck{color:#a8acb5 !important}
-body[data-page-depth="1"] .ap-kicker{color:#9ca0a8 !important}
-body[data-page-depth="1"] .ap-concl{color:#d1d5db !important}
-body[data-page-depth="1"] .ap-pull{color:#f0f1f4 !important;border-left-color:#d6ff3f !important}
+body[data-page-depth="1"] .ap-body{color:var(--text,#d1d5db) !important}
+body[data-page-depth="1"] .ap-deck{color:var(--text,#a8acb5) !important}
+body[data-page-depth="1"] .ap-kicker{color:var(--text,#9ca0a8) !important}
+body[data-page-depth="1"] .ap-concl{color:var(--text,#d1d5db) !important}
+body[data-page-depth="1"] .ap-pull{color:var(--text,#f0f1f4) !important;border-left-color:var(--text,#d6ff3f) !important}
 /* /CONTRAST-AUDIT */
 </style>
 </head>
