@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<title>Caliber Notes Reference 01 - Mechanical Watch</title>
+<meta name="description" content="The first Caliber Notes mechanical watch. Six dial variants, Swiss automatic movement, 38mm brushed steel case, sapphire crystal. Made to order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf7;
+  --ink:#0e0e0d;
+  --ink2:#3a3a37;
+  --muted:#6f6f6b;
+  --line:#e6e3dd;
+  --gold:#a9883d;
+  --emerald:#1f4f3a;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%;height:auto}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+ul{list-style:none}
+
+/* ── ANNOUNCEMENT ── */
+.announce{background:var(--ink);color:#fff;text-align:center;padding:9px 16px;font-size:12px;font-weight:500;letter-spacing:.04em}
+.announce b{color:var(--gold)}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:80;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1320px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:baseline;gap:6px;font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:-.005em;color:var(--ink)}
+.brand em{color:var(--gold);font-style:italic;font-weight:500}
+.brand sup{font-size:10px;color:var(--muted);margin-left:4px;font-family:var(--sans);font-weight:400;letter-spacing:.04em;position:relative;top:-6px}
+.nav-links{display:flex;gap:0;align-items:center}
+.nav-link{position:relative;padding:8px 16px;font-size:13.5px;font-weight:500;color:var(--ink);transition:color .15s}
+.nav-link:hover{color:var(--gold)}
+.nav-cta{display:flex;align-items:center;gap:18px}
+.nav-icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--ink);transition:background .15s;position:relative}
+.nav-icon:hover{background:var(--line)}
+.nav-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}
+.cart-count{position:absolute;top:5px;right:5px;width:16px;height:16px;background:var(--gold);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.menu-btn{display:none;width:36px;height:36px;align-items:center;justify-content:center;border-radius:50%}
+.menu-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6}
+@media(max-width:880px){
+  .nav-links{display:none}
+  .menu-btn{display:inline-flex}
+}
+
+/* ── HERO PRODUCT ── */
+.pdp{max-width:1320px;margin:0 auto;padding:32px 24px 64px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);gap:48px;align-items:flex-start}
+@media(max-width:980px){.pdp{grid-template-columns:1fr;gap:32px;padding-top:18px}}
+
+/* gallery */
+.gallery{position:sticky;top:88px}
+.g-main{aspect-ratio:1/1;background:#f0ede5;border-radius:6px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.g-main img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .35s}
+.g-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;background:rgba(255,255,255,.92);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.06);z-index:2}
+.g-arrow.prev{left:14px}
+.g-arrow.next{right:14px}
+.g-arrow svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2}
+.g-thumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}
+.g-thumb{aspect-ratio:1/1;background-size:cover;background-position:center;border-radius:4px;cursor:pointer;border:1.5px solid transparent;transition:border-color .15s;background-color:#f0ede5}
+.g-thumb:hover{border-color:var(--gold)}
+.g-thumb.active{border-color:var(--ink)}
+.g-counter{position:absolute;bottom:14px;left:14px;background:rgba(255,255,255,.92);font-size:11.5px;font-weight:600;letter-spacing:.04em;color:var(--ink);padding:5px 10px;border-radius:99px;border:1px solid var(--line)}
+@media(max-width:980px){.gallery{position:static}}
+
+/* info card */
+.info{display:flex;flex-direction:column}
+.crumb{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.crumb a{color:inherit;border-bottom:1px solid transparent;transition:border-color .15s}
+.crumb a:hover{border-color:var(--muted)}
+.h1{font-family:var(--serif);font-size:clamp(34px,4vw,46px);font-weight:600;line-height:1.06;letter-spacing:-.01em;color:var(--ink);margin-bottom:8px}
+.h1 em{color:var(--gold);font-style:italic;font-weight:500}
+.tag{font-size:14px;color:var(--muted);margin-bottom:20px}
+.stars{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);margin-bottom:20px}
+.stars-row{color:var(--gold);font-size:14px;letter-spacing:1px}
+.stars-num{font-weight:600}
+.stars-sep{color:var(--line);margin:0 6px}
+.stars-count{color:var(--muted)}
+.price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.price-now{font-family:var(--serif);font-size:34px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+.price-was{font-size:17px;color:var(--muted);text-decoration:line-through}
+.save-badge{background:#16a34a;color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 9px;border-radius:4px;text-transform:uppercase}
+.price-sub{font-size:12.5px;color:var(--muted);margin-bottom:24px}
+
+/* swatches */
+.opt-label{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.opt-label .opt-val{color:var(--muted);font-weight:500;letter-spacing:.04em;text-transform:none}
+.swatches{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.sw{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);position:relative;cursor:pointer;transition:transform .15s,border-color .2s;overflow:hidden}
+.sw:hover{transform:scale(1.06);border-color:var(--ink)}
+.sw.active{border-color:var(--ink);box-shadow:0 0 0 2px var(--bg) inset,0 0 0 4px var(--ink) inset}
+.sw[data-color="emerald"]{background:linear-gradient(135deg,#1f4f3a 30%,#0d2a1f 100%)}
+.sw[data-color="ocean"]{background:linear-gradient(135deg,#1d3a5e 30%,#0d1f33 100%)}
+.sw[data-color="iron"]{background:linear-gradient(135deg,#4a4a48 30%,#27272a 100%)}
+.sw[data-color="ice"]{background:linear-gradient(135deg,#dbe7ec 30%,#9eb5be 100%)}
+.sw[data-color="obsidian"]{background:linear-gradient(135deg,#171717 30%,#000 100%)}
+.sw[data-color="gold"]{background:linear-gradient(135deg,#d4a849 30%,#8a6c25 100%)}
+
+/* bullet features */
+.bullets{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;padding:18px;background:#fff;border:1px solid var(--line);border-radius:6px}
+.bullets li{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink)}
+.bullets svg{width:14px;height:14px;flex-shrink:0;stroke:#16a34a;fill:none;stroke-width:2.6}
+
+/* timer */
+.timer{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff7e1;border:1px solid #f0d890;border-radius:6px;padding:10px 16px;margin-bottom:14px;font-size:12.5px;font-weight:600;color:#7c5b14}
+.timer-clock{font-family:'Courier New',monospace;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:.05em}
+
+/* CTA */
+.qty-row{display:flex;gap:10px;margin-bottom:14px}
+.qty{display:flex;align-items:center;border:1px solid var(--line);background:#fff;border-radius:4px;overflow:hidden}
+.qty button{width:42px;height:48px;font-size:18px;color:var(--ink);transition:background .15s}
+.qty button:hover{background:var(--line)}
+.qty input{width:48px;height:48px;border:none;background:transparent;text-align:center;font-size:15px;font-weight:600;color:var(--ink);outline:none}
+.add-cart{flex:1;background:var(--ink);color:#fff;font-size:14.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:14px 24px;border-radius:4px;transition:background .15s,transform .1s;display:flex;align-items:center;justify-content:center;gap:10px}
+.add-cart:hover{background:#2a2a27}
+.add-cart svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.buy-now{width:100%;background:var(--gold);color:#fff;font-size:14.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:14px 24px;border-radius:4px;margin-bottom:16px;transition:background .15s}
+.buy-now:hover{background:#8a6c25}
+
+.ship-info{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.ship-info svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;flex-shrink:0}
+.trust-row{display:flex;align-items:center;gap:16px;margin:18px 0 0;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.trust-row span{display:inline-flex;align-items:center;gap:6px}
+.trust-row svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+
+/* PROMO BUNDLE */
+.promo{background:#fff;border:1px solid var(--line);border-radius:8px;padding:0;margin:18px 0;overflow:hidden}
+.promo-head{background:var(--ink);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.promo-eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.promo-title{font-size:14px;font-weight:700;color:#fff}
+.promo-deal{font-size:11px;color:rgba(255,255,255,.7)}
+.promo-body{padding:18px}
+.bundle-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.bundle-grid.four{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:560px){.bundle-grid.four{grid-template-columns:1fr 1fr}}
+.bundle-card{background:#f7f5ef;border-radius:6px;padding:10px;text-align:center;border:1.5px solid transparent;cursor:pointer}
+.bundle-card.active{border-color:var(--gold);background:#fdfaf0}
+.bundle-card .bnum{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.bundle-card .bcolor{font-size:11px;font-weight:600;color:var(--ink)}
+.bundle-card .bswatch{width:24px;height:24px;border-radius:50%;margin:6px auto}
+.promo-price{display:flex;align-items:baseline;justify-content:center;gap:10px;margin:10px 0 12px;font-family:var(--serif);font-size:24px;font-weight:600}
+.promo-price .strike{font-size:15px;color:var(--muted);text-decoration:line-through;font-weight:500}
+.promo-add{width:100%;background:var(--ink);color:#fff;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px;border-radius:4px;transition:background .15s}
+.promo-add:hover{background:#2a2a27}
+
+/* ── EDITORIAL / FULL-WIDTH CRAFT ── */
+.craft{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.craft.reverse{direction:rtl}
+.craft.reverse>*{direction:ltr}
+.craft-text{padding:clamp(48px,8vw,96px) clamp(24px,5vw,72px);display:flex;flex-direction:column;justify-content:center}
+.craft-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.craft-h{font-family:var(--serif);font-size:clamp(32px,4vw,46px);font-weight:600;line-height:1.1;letter-spacing:-.01em;color:var(--ink);margin-bottom:18px}
+.craft-h em{color:var(--gold);font-style:italic;font-weight:500}
+.craft-p{font-size:16px;line-height:1.7;color:var(--ink2);max-width:480px}
+.craft-img{position:relative;min-height:480px;background-size:cover;background-position:center;background-color:#f0ede5}
+@media(max-width:880px){
+  .craft,.craft.reverse{grid-template-columns:1fr;direction:ltr}
+  .craft-img{min-height:360px;order:-1}
+}
+
+/* SPECS */
+.specs{max-width:1100px;margin:96px auto;padding:0 24px}
+.specs-head{text-align:center;margin-bottom:48px}
+.specs-eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.specs-h{font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:600;line-height:1.1;color:var(--ink)}
+.specs-table{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;max-width:780px;margin:0 auto}
+.spec-row{display:grid;grid-template-columns:1fr 1.4fr;padding:18px 28px;border-bottom:1px solid var(--line);gap:14px}
+.spec-row:last-child{border-bottom:none}
+.spec-row span:first-child{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.spec-row span:last-child{font-size:15px;color:var(--ink);font-weight:500}
+
+/* WARRANTY + RETURN */
+.policy{max-width:980px;margin:0 auto;padding:0 24px 96px;display:grid;grid-template-columns:1fr 1fr;gap:48px}
+@media(max-width:760px){.policy{grid-template-columns:1fr;gap:32px}}
+.pol-card h3{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--ink);margin-bottom:10px}
+.pol-card .pol-eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.pol-card p{font-size:15px;line-height:1.7;color:var(--ink2)}
+
+/* CREATE YOUR DESTINY */
+.destiny{background:var(--ink);color:#fff;padding:clamp(80px,12vw,140px) 24px;text-align:center}
+.destiny-eyebrow{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.destiny-h{font-family:var(--serif);font-size:clamp(36px,5vw,60px);font-weight:500;line-height:1.06;letter-spacing:-.015em;color:#fff;max-width:780px;margin:0 auto 24px}
+.destiny-h em{color:var(--gold);font-style:italic;font-weight:500}
+.destiny-p{font-size:16.5px;line-height:1.7;color:rgba(255,255,255,.72);max-width:580px;margin:0 auto 32px}
+.destiny-cta{display:inline-block;background:var(--gold);color:#fff;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:16px 36px;border-radius:4px;transition:background .15s,transform .15s}
+.destiny-cta:hover{background:#8a6c25;transform:translateY(-1px)}
+
+/* ── ARTICLES ── */
+.dispatch{background:#fff;padding:88px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.disp-head{max-width:1240px;margin:0 auto 36px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
+.disp-eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.disp-h{font-family:var(--serif);font-size:clamp(28px,3.6vw,40px);font-weight:600;line-height:1.1;color:var(--ink)}
+.disp-link{font-size:13px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--ink);padding-bottom:2px;transition:color .15s}
+.disp-link:hover{color:var(--gold);border-color:var(--gold)}
+.disp-grid{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+@media(max-width:880px){.disp-grid{grid-template-columns:1fr}}
+.disp-card{background:#fafaf7;border:1px solid var(--line);border-radius:6px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+.disp-card:hover{transform:translateY(-3px);box-shadow:0 18px 36px -20px rgba(14,14,13,.18)}
+.disp-thumb{aspect-ratio:16/10;background-size:cover;background-position:center;background-color:var(--line)}
+.disp-body{padding:22px;flex:1;display:flex;flex-direction:column}
+.disp-cat{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.disp-title{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.25;color:var(--ink);margin-bottom:10px}
+.disp-desc{font-size:13.5px;line-height:1.6;color:var(--muted);margin-bottom:14px;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.disp-meta{font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+
+/* ── FOOTER ── */
+.foot{background:#0e0e0d;color:rgba(255,255,255,.7);padding:64px 24px 24px}
+.foot-in{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+@media(max-width:760px){.foot-in{grid-template-columns:1fr 1fr;gap:32px}}
+.foot-brand{font-family:var(--serif);font-size:26px;font-weight:600;color:#fff;letter-spacing:-.005em;margin-bottom:14px}
+.foot-brand em{color:var(--gold);font-style:italic;font-weight:500}
+.foot-desc{font-size:13.5px;line-height:1.7;color:rgba(255,255,255,.55);max-width:340px;margin-bottom:18px}
+.foot-social{display:flex;gap:10px}
+.foot-social a{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;transition:background .15s}
+.foot-social a:hover{background:var(--gold)}
+.foot-social svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:1.8}
+.foot-col h4{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;margin-bottom:18px}
+.foot-col a{display:block;font-size:13.5px;color:rgba(255,255,255,.55);margin-bottom:10px;transition:color .15s}
+.foot-col a:hover{color:#fff}
+.foot-pay{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.foot-pay-badge{width:36px;height:24px;background:rgba(255,255,255,.08);border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;letter-spacing:.02em;color:rgba(255,255,255,.6)}
+.foot-bot{max-width:1240px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:12px;color:rgba(255,255,255,.45)}
+
+/* ── STICKY BUY BAR ── */
+.sticky-buy{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:12px 24px;display:none;align-items:center;justify-content:space-between;gap:16px;z-index:60;box-shadow:0 -8px 24px rgba(14,14,13,.06);transform:translateY(100%);transition:transform .3s}
+.sticky-buy.show{transform:none;display:flex}
+.sticky-buy-info{display:flex;align-items:center;gap:14px;min-width:0;flex:1}
+.sticky-buy-thumb{width:48px;height:48px;background:var(--line);background-size:cover;background-position:center;border-radius:4px;flex-shrink:0}
+.sticky-buy-body{min-width:0;overflow:hidden}
+.sticky-buy-name{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sticky-buy-price{font-size:13px;color:var(--muted)}
+.sticky-buy-cta{background:var(--ink);color:#fff;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:12px 22px;border-radius:4px;flex-shrink:0;transition:background .15s}
+.sticky-buy-cta:hover{background:#2a2a27}
+@media(max-width:560px){.sticky-buy-info .sticky-buy-body{display:none}}
+</style>
+</head>
+<body data-page-depth="0">
+<!--SHELL:ACCENT:#a9883d-->
+<!--SHELL:HEADER-->
+<!-- ANNOUNCEMENT -->
+<div class="announce">FREE WORLDWIDE SHIPPING <b>&middot;</b> 30 DAY MONEY-BACK GUARANTEE <b>&middot;</b> SHIPPED BY MAY 31</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-in">
+    <a href="./" class="brand">Caliber <em>Notes</em><sup>REF 01</sup></a>
+    <div class="nav-links">
+      <a href="#shop" class="nav-link">Shop</a>
+      <a href="#movement" class="nav-link">Movement</a>
+      <a href="#craft" class="nav-link">Craftsmanship</a>
+      <a href="#dispatch" class="nav-link">Journal</a>
+      <a href="#support" class="nav-link">Support</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#search" class="nav-icon" aria-label="Search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+      </a>
+      <a href="#account" class="nav-icon" aria-label="Account">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a href="#cart" class="nav-icon" aria-label="Cart">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span class="cart-count">1</span>
+      </a>
+      <button class="menu-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<!-- ===== PRODUCT HERO ===== -->
+<section class="pdp" id="shop">
+  <!-- GALLERY -->
+  <div class="gallery">
+    <div class="g-main">
+      <img id="gmain" src="https://luckyfours.com/cdn/shop/files/1_e971742e-9f36-4b2a-a076-90523bb1fb60.webp?v=1760567187&width=1946" alt="Caliber Notes Reference 01 watch">
+      <button class="g-arrow prev" aria-label="Previous image"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="g-arrow next" aria-label="Next image"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <span class="g-counter" id="gcount">1 / 12</span>
+    </div>
+    <div class="g-thumbs" id="gthumbs"></div>
+  </div>
+
+  <!-- INFO CARD -->
+  <div class="info">
+    <div class="crumb"><a href="#shop">Shop</a> / <a href="#movement">Mechanical</a> / Reference 01</div>
+    <h1 class="h1">Caliber Notes <em>Reference&nbsp;01</em></h1>
+    <p class="tag">Swiss automatic mechanical watch. 38mm brushed steel. Six dial variants. First edition, made to order.</p>
+
+    <div class="stars">
+      <span class="stars-row">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <span class="stars-num">4.9</span>
+      <span class="stars-sep">|</span>
+      <span class="stars-count">312 verified reviews</span>
+    </div>
+
+    <div class="price-row">
+      <span class="price-now">$1,495</span>
+      <span class="price-was">$1,895</span>
+      <span class="save-badge">Save $400</span>
+    </div>
+    <div class="price-sub">First-edition launch pricing. Or 4 interest-free payments of $373.75 with Klarna or Affirm.</div>
+
+    <div class="opt-label">Dial <span class="opt-val" id="cur-color">Emerald</span></div>
+    <div class="swatches" id="swatches">
+      <button class="sw active" data-color="emerald" data-name="Emerald" data-img="https://luckyfours.com/cdn/shop/files/1_e971742e-9f36-4b2a-a076-90523bb1fb60.webp?v=1760567187&width=1946" aria-label="Emerald dial"></button>
+      <button class="sw" data-color="ocean" data-name="Ocean" data-img="https://luckyfours.com/cdn/shop/files/3_09470556-c6cd-4379-a9d2-660fa2403c3a.webp?v=1763224474&width=1946" aria-label="Ocean dial"></button>
+      <button class="sw" data-color="iron" data-name="Iron" data-img="https://luckyfours.com/cdn/shop/files/2_2_56c5157b-7035-4523-9f12-cf1d978f95f5.webp?v=1763224474&width=1946" aria-label="Iron dial"></button>
+      <button class="sw" data-color="ice" data-name="Ice" data-img="https://luckyfours.com/cdn/shop/files/4_2_49830824-12e0-4248-af97-8eba777c799b.webp?v=1763224474&width=1946" aria-label="Ice dial"></button>
+      <button class="sw" data-color="obsidian" data-name="Obsidian" data-img="https://luckyfours.com/cdn/shop/files/3_1_b1b7ec41-1dd0-4e24-a73c-20266c0cd992.webp?v=1763224474&width=1946" aria-label="Obsidian dial"></button>
+      <button class="sw" data-color="gold" data-name="Gold" data-img="https://luckyfours.com/cdn/shop/files/1_e0cf3232-57d4-4c16-8dcc-8e51466e0ee2.webp?v=1763224474&width=1946" aria-label="Gold dial"></button>
+    </div>
+
+    <ul class="bullets">
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Swiss automatic mechanical, ETA 2824-2 base</li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> 38mm brushed 316L stainless steel case</li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Sapphire crystal, double-domed, AR-coated</li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> 100m water resistance, screw-down crown</li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Leather strap + steel bracelet included</li>
+    </ul>
+
+    <div class="timer">
+      <span>First-edition pricing ends in</span>
+      <span class="timer-clock" id="timer">71:34:12</span>
+    </div>
+
+    <div class="qty-row">
+      <div class="qty">
+        <button id="qm">&minus;</button>
+        <input type="text" value="1" id="qty" aria-label="Quantity">
+        <button id="qp">+</button>
+      </div>
+      <button class="add-cart" onclick="window.open('https://buy.stripe.com/PLACEHOLDER_REPLACE_WHEN_STRIPE_WIRED','_blank')">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        Add to cart
+      </button>
+    </div>
+    <!-- TODO: replace with real Stripe Payment Link once stripe-product/create endpoint is wired -->
+    <button class="buy-now" onclick="window.open('https://buy.stripe.com/PLACEHOLDER_REPLACE_WHEN_STRIPE_WIRED','_blank')">Buy now &middot; $1,495</button>
+
+    <div class="ship-info">
+      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span>Made to order. Ships within 6 to 8 weeks. Free worldwide shipping included.</span>
+    </div>
+
+    <div class="trust-row">
+      <span><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 30-day money-back</span>
+      <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 5-year warranty</span>
+      <span><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> Authenticated</span>
+    </div>
+
+    <!-- PROMO 1: BUY 1 GET 1 -->
+    <div class="promo">
+      <div class="promo-head">
+        <div>
+          <div class="promo-eyebrow">FOUNDERS BUNDLE</div>
+          <div class="promo-title">Buy 1, get the second 40% off</div>
+        </div>
+        <div class="promo-deal">First 200 orders</div>
+      </div>
+      <div class="promo-body">
+        <div class="bundle-grid">
+          <div class="bundle-card active">
+            <div class="bnum">Watch 1</div>
+            <div class="bswatch" style="background:linear-gradient(135deg,#1f4f3a,#0d2a1f)"></div>
+            <div class="bcolor">Emerald</div>
+          </div>
+          <div class="bundle-card">
+            <div class="bnum">Watch 2</div>
+            <div class="bswatch" style="background:linear-gradient(135deg,#1d3a5e,#0d1f33)"></div>
+            <div class="bcolor">Ocean</div>
+          </div>
+        </div>
+        <div class="promo-price"><span class="strike">$2,990</span> $2,392</div>
+        <button class="promo-add">Add bundle to cart</button>
+      </div>
+    </div>
+
+    <!-- PROMO 2: BUY 2 GET 2 -->
+    <div class="promo">
+      <div class="promo-head">
+        <div>
+          <div class="promo-eyebrow">COLLECTORS SET</div>
+          <div class="promo-title">Buy 2, get 2 more at 50% off</div>
+        </div>
+        <div class="promo-deal">Best value bundle</div>
+      </div>
+      <div class="promo-body">
+        <div class="bundle-grid four">
+          <div class="bundle-card active">
+            <div class="bnum">#1</div>
+            <div class="bswatch" style="background:linear-gradient(135deg,#1f4f3a,#0d2a1f)"></div>
+            <div class="bcolor">Emerald</div>
+          </div>
+          <div class="bundle-card">
+            <div class="bnum">#2</div>
+            <div class="bswatch" style="background:linear-gradient(135deg,#1d3a5e,#0d1f33)"></div>
+            <div class="bcolor">Ocean</div>
+          </div>
+          <div class="bundle-card">
+            <div class="bnum">#3</div>
+            <div class="bswatch" style="background:linear-gradient(135deg,#171717,#000)"></div>
+            <div class="bcolor">Obsidian</div>
+          </div>
+          <div class="bundle-card">
+            <div class="bnum">#4</div>
+            <div class="bswatch" style="background:linear-gradient(135deg,#d4a849,#8a6c25)"></div>
+            <div class="bcolor">Gold</div>
+          </div>
+        </div>
+        <div class="promo-price"><span class="strike">$5,980</span> $4,485</div>
+        <button class="promo-add">Add bundle to cart</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CRAFT 1 ===== -->
+<section class="craft" id="craft">
+  <div class="craft-text">
+    <div class="craft-eyebrow">Timeless Craftsmanship</div>
+    <h2 class="craft-h">Built to be inherited, <em>not replaced</em>.</h2>
+    <p class="craft-p">Reference 01 is assembled and regulated by hand at a small atelier in the Vallée de Joux. Every movement passes a five-position timing test before it leaves the workshop. The case is brushed by hand. The crystal is double-domed sapphire with anti-reflective coating applied to the inside surface so the dial reads clean in any light.</p>
+  </div>
+  <div class="craft-img" style="background-image:url('https://luckyfours.com/cdn/shop/files/2_e2752d25-299c-4845-beb9-729b62cfd333.webp?v=1763224474&width=1500')"></div>
+</section>
+
+<!-- ===== CRAFT 2 ===== -->
+<section class="craft reverse" id="movement">
+  <div class="craft-text">
+    <div class="craft-eyebrow">Quality You Can Trust</div>
+    <h2 class="craft-h">A movement <em>worth servicing</em>.</h2>
+    <p class="craft-p">The ETA 2824-2 inside Reference 01 has been the workhorse of Swiss watchmaking for over fifty years. It is the same caliber a thousand independent restorers can service in any city in the world. Owning Reference 01 means owning a watch you can pass on, not a sealed appliance you throw away when the battery dies.</p>
+  </div>
+  <div class="craft-img" style="background-image:url('https://luckyfours.com/cdn/shop/files/4_0fc33264-fbe3-47c9-9b51-93cfbc68b5f3.webp?v=1763224474&width=1500')"></div>
+</section>
+
+<!-- ===== SPECIFICATIONS ===== -->
+<section class="specs" id="specs">
+  <div class="specs-head">
+    <div class="specs-eyebrow">Specifications</div>
+    <h2 class="specs-h">Every detail, on the record.</h2>
+  </div>
+  <div class="specs-table">
+    <div class="spec-row"><span>Movement</span><span>Swiss automatic mechanical, ETA 2824-2 base, 25 jewels, 28,800 vph</span></div>
+    <div class="spec-row"><span>Power Reserve</span><span>38 hours fully wound</span></div>
+    <div class="spec-row"><span>Case Material</span><span>316L stainless steel, brushed finish</span></div>
+    <div class="spec-row"><span>Case Diameter</span><span>38mm</span></div>
+    <div class="spec-row"><span>Case Thickness</span><span>11.2mm</span></div>
+    <div class="spec-row"><span>Lug-to-Lug</span><span>46mm</span></div>
+    <div class="spec-row"><span>Crystal</span><span>Sapphire, double-domed, AR-coated underside</span></div>
+    <div class="spec-row"><span>Caseback</span><span>Sapphire display caseback</span></div>
+    <div class="spec-row"><span>Crown</span><span>Screw-down, signed Caliber Notes</span></div>
+    <div class="spec-row"><span>Water Resistance</span><span>100m / 10 ATM</span></div>
+    <div class="spec-row"><span>Strap</span><span>20mm vegetable-tanned leather + 316L steel bracelet, quick-release pins, both included</span></div>
+    <div class="spec-row"><span>Edition</span><span>First edition, made to order, no fixed run cap</span></div>
+  </div>
+</section>
+
+<!-- ===== WARRANTY + RETURNS ===== -->
+<section class="policy" id="support">
+  <div class="pol-card">
+    <div class="pol-eyebrow">Warranty</div>
+    <h3>Five years on the movement</h3>
+    <p>Every Reference 01 carries a five-year warranty covering the movement and any manufacturing defect. We service it ourselves in our Geneva workshop. If something breaks that should not have broken, we fix it. No fine print, no proof-of-purchase scavenger hunt.</p>
+  </div>
+  <div class="pol-card">
+    <div class="pol-eyebrow">Returns</div>
+    <h3>Thirty days, no questions</h3>
+    <p>If Reference 01 does not feel right on your wrist, return it within thirty days for a full refund. We pay return shipping. The watch ships unworn or with original tags only. We do not gatekeep returns for cosmetic objections that we caused at the factory.</p>
+  </div>
+</section>
+
+<!-- ===== CREATE YOUR DESTINY ===== -->
+<section class="destiny">
+  <div class="destiny-eyebrow">A statement, not an accessory</div>
+  <h2 class="destiny-h">The watch that <em>tells everyone</em> who actually understands.</h2>
+  <p class="destiny-p">Most luxury watches signal money. Reference 01 signals taste. The person at the next table who notices is the kind of person worth knowing.</p>
+  <a href="#shop" class="destiny-cta">Claim your Reference 01</a>
+</section>
+
+<!-- ===== ARTICLES FROM CALIBER NOTES ===== -->
+<section class="dispatch" id="dispatch">
+  <div class="disp-head">
+    <div>
+      <div class="disp-eyebrow">From the Journal</div>
+      <h2 class="disp-h">Reading for people who think about escapements at 2am.</h2>
+    </div>
+    <a href="./articles" class="disp-link">See the full journal &rarr;</a>
+  </div>
+  <div class="disp-grid" id="disp-grid"></div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <div class="foot-brand">Caliber <em>Notes</em></div>
+      <p class="foot-desc">A small editorial brand for people who think about mechanical watches more than they should. Founded by an independent watchmaker, written for the next generation of collectors.</p>
+      <div class="foot-social">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>Shop</h4>
+      <a href="#shop">Reference 01</a>
+      <a href="#shop">Straps and Bracelets</a>
+      <a href="#shop">Gift Cards</a>
+      <a href="#shop">Pre-Order Waitlist</a>
+    </div>
+    <div class="foot-col">
+      <h4>Support</h4>
+      <a href="#support">Sizing Guide</a>
+      <a href="#support">Track Order</a>
+      <a href="#support">Warranty</a>
+      <a href="#support">Returns</a>
+      <a href="#support">Contact</a>
+    </div>
+    <div class="foot-col">
+      <h4>About</h4>
+      <a href="#about">Our Story</a>
+      <a href="#about">The Workshop</a>
+      <a href="#about">Press</a>
+      <a href="#dispatch">Journal</a>
+      <div class="foot-pay">
+        <span class="foot-pay-badge">VISA</span>
+        <span class="foot-pay-badge">MC</span>
+        <span class="foot-pay-badge">AMEX</span>
+        <span class="foot-pay-badge">PP</span>
+        <span class="foot-pay-badge">APAY</span>
+        <span class="foot-pay-badge">GPAY</span>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <span>&copy; 2026 Caliber Notes. All rights reserved.</span>
+    <span>Geneva, Switzerland</span>
+  </div>
+</footer>
+<!--/SHELL:FOOTER-->
+
+<!-- ===== STICKY BUY BAR ===== -->
+<div class="sticky-buy" id="stickyBuy">
+  <div class="sticky-buy-info">
+    <div class="sticky-buy-thumb" id="stickyThumb" style="background-image:url('https://luckyfours.com/cdn/shop/files/1_e971742e-9f36-4b2a-a076-90523bb1fb60.webp?v=1760567187&width=200')"></div>
+    <div class="sticky-buy-body">
+      <div class="sticky-buy-name">Caliber Notes Reference 01</div>
+      <div class="sticky-buy-price">$1,495 &middot; <span id="stickyColor">Emerald</span></div>
+    </div>
+  </div>
+  <button class="sticky-buy-cta" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Buy now</button>
+</div>
+
+<script>
+(function(){
+  var IMGS=[
+    'https://luckyfours.com/cdn/shop/files/1_e971742e-9f36-4b2a-a076-90523bb1fb60.webp?v=1760567187&width=1946',
+    'https://luckyfours.com/cdn/shop/files/3_09470556-c6cd-4379-a9d2-660fa2403c3a.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/2_2_56c5157b-7035-4523-9f12-cf1d978f95f5.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/4_2_49830824-12e0-4248-af97-8eba777c799b.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/3_1_b1b7ec41-1dd0-4e24-a73c-20266c0cd992.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/1_e0cf3232-57d4-4c16-8dcc-8e51466e0ee2.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/2_e2752d25-299c-4845-beb9-729b62cfd333.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/4_0fc33264-fbe3-47c9-9b51-93cfbc68b5f3.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/2_f8ea0ef2-f200-4835-9d42-08fae1786fd4.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/3_ab304bb1-4abc-47a7-8f13-470e5178d0ef.webp?v=1763224474&width=1946',
+    'https://luckyfours.com/cdn/shop/files/1x1_fa1dac23-6cb8-4970-b46f-f6282cd8c6ba.webp?v=1776241792&width=1946',
+    'https://luckyfours.com/cdn/shop/files/1x1_9034fb4a-1922-4cba-a3d7-004c178b01e0.webp?v=1777476603&width=1946'
+  ];
+  var gMain=document.getElementById('gmain');
+  var gCount=document.getElementById('gcount');
+  var gThumbs=document.getElementById('gthumbs');
+  var idx=0;
+  function setIdx(i){
+    idx=(i+IMGS.length)%IMGS.length;
+    gMain.src=IMGS[idx];
+    gCount.textContent=(idx+1)+' / '+IMGS.length;
+    Array.prototype.forEach.call(gThumbs.querySelectorAll('.g-thumb'),function(t,j){t.classList.toggle('active',j===idx);});
+  }
+  IMGS.forEach(function(src,i){
+    var t=document.createElement('button');
+    t.className='g-thumb'+(i===0?' active':'');
+    t.style.backgroundImage="url('"+src.replace('width=1946','width=200')+"')";
+    t.addEventListener('click',function(){setIdx(i);});
+    gThumbs.appendChild(t);
+  });
+  document.querySelector('.g-arrow.prev').addEventListener('click',function(){setIdx(idx-1);});
+  document.querySelector('.g-arrow.next').addEventListener('click',function(){setIdx(idx+1);});
+
+  Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(s){
+    s.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('.sw'),function(x){x.classList.remove('active');});
+      s.classList.add('active');
+      document.getElementById('cur-color').textContent=s.dataset.name;
+      var stickyColor=document.getElementById('stickyColor');if(stickyColor)stickyColor.textContent=s.dataset.name;
+      var imgI=IMGS.indexOf(s.dataset.img);
+      if(imgI>=0)setIdx(imgI);
+      var thumb=document.getElementById('stickyThumb');
+      if(thumb)thumb.style.backgroundImage="url('"+s.dataset.img.replace('width=1946','width=200')+"')";
+    });
+  });
+
+  var qty=document.getElementById('qty');
+  document.getElementById('qm').addEventListener('click',function(){qty.value=Math.max(1,parseInt(qty.value||1)-1);});
+  document.getElementById('qp').addEventListener('click',function(){qty.value=Math.min(20,parseInt(qty.value||1)+1);});
+
+  Array.prototype.forEach.call(document.querySelectorAll('.bundle-card'),function(c){
+    c.addEventListener('click',function(){c.classList.toggle('active');});
+  });
+
+  var timerEl=document.getElementById('timer');
+  var deadline=Date.now()+(71*3600+34*60+12)*1000;
+  setInterval(function(){
+    var ms=Math.max(0,deadline-Date.now());
+    var s=Math.floor(ms/1000);
+    var hh=String(Math.floor(s/3600)).padStart(2,'0');
+    var mm=String(Math.floor((s%3600)/60)).padStart(2,'0');
+    var ss=String(s%60).padStart(2,'0');
+    timerEl.textContent=hh+':'+mm+':'+ss;
+  },1000);
+
+  var stickyBuy=document.getElementById('stickyBuy');
+  var pdpEl=document.getElementById('shop');
+  function checkSticky(){
+    if(!pdpEl)return;
+    var rect=pdpEl.getBoundingClientRect();
+    stickyBuy.classList.toggle('show',rect.bottom<0);
+  }
+  window.addEventListener('scroll',checkSticky,{passive:true});
+  checkSticky();
+
+  var FALLBACK='https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=800&q=80';
+  fetch('./articles.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(data){
+    var grid=document.getElementById('disp-grid');
+    if(!grid)return;
+    var arts=(Array.isArray(data)?data:[]).slice().sort(function(a,b){return String(b.date_iso||'').localeCompare(String(a.date_iso||''));}).slice(0,3);
+    if(!arts.length){
+      grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:32px">No journal entries yet. The first dispatch ships with the watch.</div>';
+      return;
+    }
+    grid.innerHTML=arts.map(function(p){
+      var slug=encodeURIComponent(p.slug||'').replace(/%2F/g,'/');
+      var img=p.image||FALLBACK;
+      var cat=String(p.category||'Journal').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var title=String(p.title||'Untitled').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var desc=String(p.meta_description||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return '<a class="disp-card" href="./'+slug+'/">'+
+        '<div class="disp-thumb" style="background-image:url(\''+img+'\')"></div>'+
+        '<div class="disp-body">'+
+        '<div class="disp-cat">'+cat+'</div>'+
+        '<div class="disp-title">'+title+'</div>'+
+        '<div class="disp-desc">'+desc+'</div>'+
+        '<div class="disp-meta">'+(p.date||p.date_iso||'')+'</div>'+
+        '</div></a>';
+    }).join('');
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>
