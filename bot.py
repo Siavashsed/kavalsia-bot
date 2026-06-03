@@ -4107,6 +4107,30 @@ def _scrub_section_pollution(content):
     return cleaned
 
 
+def _balance_divs(html):
+    """Balance <div>/</div> in a fragment: drop stray closes that would escape
+    the fragment (the bug that let section content close the article wrapper and
+    spill full-width), and append closers for any unclosed opens. Idempotent, so
+    re-rendering / re-extraction can no longer accumulate stray divs."""
+    out = []
+    depth = 0
+    pos = 0
+    for m in re.finditer(r'<div\b[^>]*>|</div>', html):
+        out.append(html[pos:m.start()])
+        pos = m.end()
+        tok = m.group(0)
+        if tok == '</div>':
+            if depth == 0:
+                continue  # escaping close -> drop
+            depth -= 1
+            out.append(tok)
+        else:
+            depth += 1
+            out.append(tok)
+    out.append(html[pos:])
+    return "".join(out) + ("</div>" * depth)
+
+
 def _article_sections(sections, t):
     # Defensive: drop any section whose heading is a re-extracted "Comments (N)"
     # pollutant from older rebuild passes, and scrub comment-form/list/script
@@ -4118,7 +4142,7 @@ def _article_sections(sections, t):
         head = (s.get("heading") or "").strip()
         if _COMMENT_HEADING_RE.match(head):
             continue
-        body = _scrub_section_pollution(s.get("content", "") or "")
+        body = _balance_divs(_scrub_section_pollution(s.get("content", "") or ""))
         # If scrubbing left nothing useful (just whitespace/empty wrappers), skip.
         if not re.sub(r'<[^>]+>|\s', '', body):
             continue
@@ -6396,6 +6420,153 @@ def _inject_section_breaks(sections_html, class_name):
                    sections_html, flags=_re.DOTALL)
 
 
+def article_ttr_bespoke(article, site, image_url, photographer, t):
+    """PILOT: fully bespoke, per-site article design for Trading Tech (ttr-).
+    Clean tech-editorial: single readable column, sane sizing, mono labels,
+    its OWN author card and its OWN discussion section (unique markup + loader)
+    so NOTHING is shared with other sites. Reuses only the data helpers
+    (_article_sections / _resolve_author / _wrap_block) for reliability."""
+    ai = _resolve_author(site, article)
+    author = ai["name"]
+    initials = "".join(w[0] for w in author.split()[:2]).upper() or "TT"
+    av = ("https://api.dicebear.com/9.x/notionists/svg?seed="
+          + author.replace(" ", "%20") + "&backgroundColor=b6e3f4,c0aede,d1d4f9")
+    hf, bf = t["heading_font"], t.get("body_font") or t.get("font") or "'Inter',system-ui,sans-serif"
+    acc, ink, dim, brd, bg2 = t["accent"], t["text"], t["meta"], t["border"], t["bg2"]
+    sub = t.get("text2", dim)
+    cat = (article.get("category") or site.get("category") or "Report")
+    read_min = max(3, _count_words(_wrap_block(article.get("intro", "")) +
+                   _article_sections(article["sections"], t)) // 220)
+    hero = ""
+    if image_url:
+        hero = (f'<figure class="ttr-hero"><img src="{image_url}" alt="{article.get("image_alt","")}" loading="lazy">'
+                f'<figcaption>Illustration: {photographer} / Pexels</figcaption></figure>')
+    sections = _inject_section_breaks(_article_sections(article["sections"], t), 'ttr-h2')
+    css = f"""
+.ttr{{background:{t['bg']};color:{ink};font-family:{bf}}}
+.ttr *,.ttr *::before,.ttr *::after{{box-sizing:border-box}}
+.ttr-wrap{{max-width:1120px;margin:0 auto;padding:clamp(28px,5vw,56px) clamp(18px,5vw,28px) 80px}}
+.ttr-grid{{display:grid;grid-template-columns:minmax(0,1fr) 304px;gap:clamp(28px,4vw,52px);align-items:start}}
+.ttr-main{{min-width:0;max-width:760px}}
+.ttr-aside{{position:sticky;top:24px;display:flex;flex-direction:column;gap:22px}}
+.ttr-latest{{border:1px solid {brd};border-radius:14px;background:{bg2};padding:18px}}
+.ttr-latest-k{{font-family:ui-monospace,'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:{acc};margin:0 0 12px}}
+.ttr-lat{{display:grid;grid-template-columns:54px 1fr;gap:11px;padding:10px 0;border-top:1px solid {brd};text-decoration:none;color:inherit}}
+.ttr-lat:hover .ttr-lat-t{{color:{acc}}}
+.ttr-lat-img{{width:54px;height:46px;object-fit:cover;border-radius:7px;background:{t['bg']};display:block}}
+.ttr-lat-t{{font-family:{hf};font-size:12.5px;font-weight:600;line-height:1.32;color:{ink};margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:color .15s}}
+.ttr-lat-d{{font-family:ui-monospace,monospace;font-size:9.5px;color:{dim};margin-top:3px}}
+.ttr-viewall{{display:block;text-align:center;margin-top:14px;background:{acc};color:#0a0a0b;font-family:{hf};font-weight:700;font-size:12.5px;padding:11px;border-radius:9px;text-decoration:none}}
+@media(max-width:920px){{.ttr-grid{{grid-template-columns:1fr;gap:34px}}.ttr-aside{{position:static}}.ttr-main{{max-width:none}}}}
+.ttr-kicker{{font-family:ui-monospace,'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:{acc};margin:0 0 16px}}
+.ttr-h1{{font-family:{hf};font-size:clamp(28px,4.2vw,42px);font-weight:800;line-height:1.12;letter-spacing:-.02em;color:{ink};margin:0 0 18px;text-wrap:balance}}
+.ttr-dek{{font-family:{hf};font-weight:400;font-size:clamp(17px,2vw,21px);line-height:1.5;color:{sub};margin:0 0 24px;text-wrap:pretty}}
+.ttr-byline{{display:flex;align-items:center;gap:13px;padding:18px 0;border-top:1px solid {brd};border-bottom:1px solid {brd};margin:0 0 32px}}
+.ttr-av{{width:42px;height:42px;border-radius:10px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:{hf};font-weight:800;font-size:14px;color:#0a0a0b;background:{acc};position:relative;overflow:hidden}}
+.ttr-av img,.ttr-author-av img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}}
+.ttr-by-main{{display:flex;flex-direction:column;gap:2px;min-width:0}}
+.ttr-by-name{{font-family:{hf};font-weight:700;font-size:14px;color:{ink}}}
+.ttr-by-meta{{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.04em;color:{dim}}}
+.ttr-hero{{margin:0 0 34px}}
+.ttr-hero img{{width:100%;border-radius:14px;border:1px solid {brd};display:block}}
+.ttr-hero figcaption{{font-family:ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:{dim};margin-top:9px}}
+.ttr-body{{font-size:18px;line-height:1.78;color:{ink}}}
+.ttr-body p{{margin:0 0 22px;text-wrap:pretty}}
+.ttr-intro{{font-size:20px;line-height:1.65;font-weight:500;color:{ink};border-left:3px solid {acc};padding-left:20px;margin:0 0 28px}}
+.ttr-body a{{color:{acc};text-decoration:underline;text-underline-offset:3px}}
+.ttr-body strong{{color:{ink};font-weight:700}}
+.ttr-h2{{font-family:{hf};font-size:clamp(21px,2.8vw,28px);font-weight:700;line-height:1.2;letter-spacing:-.01em;color:{ink};margin:42px 0 14px;padding-top:20px;border-top:1px solid {brd}}}
+.ttr-body h3{{font-family:{hf};font-size:18px;font-weight:600;color:{ink};margin:26px 0 10px}}
+.ttr-concl{{margin:40px 0 0;padding:24px 26px;background:{bg2};border:1px solid {brd};border-left:3px solid {acc};border-radius:12px;font-size:17px;line-height:1.66;color:{ink}}}
+.ttr-concl::before{{content:'Bottom line';display:block;font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:{acc};margin-bottom:10px}}
+/* unique author card */
+.ttr-author{{margin:0;padding:20px;border:1px solid {brd};border-radius:14px;background:{bg2};display:grid;grid-template-columns:1fr;gap:12px;align-items:start}}
+.ttr-author-av{{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:{hf};font-weight:800;font-size:18px;color:#0a0a0b;background:{acc};position:relative;overflow:hidden}}
+.ttr-author-k{{font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:{dim};margin:0 0 5px}}
+.ttr-author-n{{font-family:{hf};font-size:16px;font-weight:700;color:{ink};margin:0 0 2px}}
+.ttr-author-r{{font-size:12.5px;color:{acc};margin:0 0 9px}}
+.ttr-author-b{{font-size:13.5px;line-height:1.6;color:{sub};margin:0}}
+/* unique discussion section */
+.ttr-disc{{margin:52px 0 0;padding-top:30px;border-top:2px solid {acc}}}
+.ttr-disc-head{{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 18px}}
+.ttr-disc-k{{font-family:{hf};font-size:18px;font-weight:700;color:{ink}}}
+.ttr-disc-c{{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.08em;color:{dim}}}
+.ttr-cm{{padding:14px 0;border-bottom:1px solid {brd}}}
+.ttr-cm-top{{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}}
+.ttr-cm-n{{font-family:{hf};font-weight:700;font-size:13.5px;color:{ink}}}
+.ttr-cm-d{{font-family:ui-monospace,monospace;font-size:10.5px;color:{dim}}}
+.ttr-cm-t{{font-size:14px;line-height:1.6;color:{sub};margin:0}}
+.ttr-empty{{font-size:13.5px;color:{dim};padding:8px 0}}
+.ttr-disc-form{{margin-top:20px;display:flex;flex-direction:column;gap:10px}}
+.ttr-in,.ttr-ta{{background:{t['bg']};border:1px solid {brd};border-radius:9px;padding:11px 13px;font-family:{bf};font-size:14px;color:{ink};outline:none}}
+.ttr-in:focus,.ttr-ta:focus{{border-color:{acc}}}
+.ttr-ta{{min-height:90px;resize:vertical}}
+.ttr-btn{{align-self:flex-start;background:{acc};color:#0a0a0b;border:0;border-radius:9px;padding:11px 22px;font-family:{hf};font-weight:700;font-size:13.5px;cursor:pointer}}
+@media(max-width:560px){{.ttr-author{{grid-template-columns:1fr}}}}
+"""
+    disc = ('<section class="ttr-disc" id="ttr-discussion">'
+            '<div class="ttr-disc-head"><span class="ttr-disc-k">The Thread</span>'
+            '<span class="ttr-disc-c" id="ttr-cc"></span></div>'
+            '<div id="ttr-list"></div>'
+            '<form class="ttr-disc-form" id="ttr-form">'
+            '<input class="ttr-in" id="ttr-name" placeholder="Your name" maxlength="40">'
+            '<textarea class="ttr-ta" id="ttr-msg" placeholder="Add to the discussion" maxlength="800"></textarea>'
+            '<button class="ttr-btn" type="submit">Post comment</button></form></section>'
+            "<script>(function(){"
+            "var L=document.getElementById('ttr-list'),CC=document.getElementById('ttr-cc'),F=document.getElementById('ttr-form');if(!L)return;"
+            "var KEY='ttrc:'+location.pathname;"
+            "function esc(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'})[c];});}"
+            "function row(c){return '<div class=\"ttr-cm\"><div class=\"ttr-cm-top\"><span class=\"ttr-cm-n\">'+esc(c.name||'Reader')+'</span><span class=\"ttr-cm-d\">'+esc(c.date_display||c.date_iso||'')+'</span></div><p class=\"ttr-cm-t\">'+esc(c.text||'')+'</p></div>';}"
+            "function render(a){L.innerHTML=a.length?a.map(row).join(''):'<div class=\"ttr-empty\">Be the first to weigh in.</div>';if(CC)CC.textContent=a.length+(a.length===1?' reply':' replies');}"
+            "var mine=[];try{mine=JSON.parse(localStorage.getItem(KEY))||[];}catch(e){}var seed=[];"
+            "fetch('./comments.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).then(function(j){seed=Array.isArray(j)?j:[];render(seed.concat(mine));}).catch(function(){render(mine);});"
+            "if(F)F.addEventListener('submit',function(e){e.preventDefault();var n=document.getElementById('ttr-name').value.trim(),m=document.getElementById('ttr-msg').value.trim();if(!m)return;mine.push({name:n||'Reader',text:m,date_display:'just now'});try{localStorage.setItem(KEY,JSON.stringify(mine));}catch(e){}render(seed.concat(mine));F.reset();});"
+            "})();</script>")
+    author_card = (f'<aside class="ttr-author"><div class="ttr-author-av">{initials}<img src="{av}" alt="{author}" loading="lazy"></div>'
+                   f'<div><div class="ttr-author-k">Written by</div>'
+                   f'<div class="ttr-author-n">{author}</div>'
+                   f'<div class="ttr-author-r">{ai.get("title","Contributor")}</div>'
+                   f'<p class="ttr-author-b">{ai.get("bio","")}</p></div></aside>')
+    latest = r'''<div class="ttr-latest"><div class="ttr-latest-k">Latest</div>
+<div id="ttr-latest-list"></div>
+<a class="ttr-viewall" href="../articles/">View all articles &rarr;</a></div>
+<script>(function(){
+var L=document.getElementById('ttr-latest-list');if(!L)return;
+var here=location.pathname.replace(/\/$/,'').split('/').pop();
+var FB='https://images.unsplash.com/photo-1518770660439-4636190af475?w=200&q=70';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
+function load(){return fetch('../articles.json',{cache:'no-store'}).then(function(r){if(r.ok)return r.json();return fetch('./articles.json',{cache:'no-store'}).then(function(r2){return r2.ok?r2.json():[];});});}
+load().then(function(d){var a=(Array.isArray(d)?d:[]).slice();a.sort(function(x,y){return(''+(y.date_iso||'')).localeCompare(''+(x.date_iso||''));});a=a.filter(function(p){return (p.slug||'')!==here;}).slice(0,5);
+L.innerHTML=a.map(function(p){return '<a class="ttr-lat" href="../'+encodeURIComponent(p.slug||'')+'/"><img class="ttr-lat-img" loading="lazy" alt="" src="'+esc(p.image||FB)+'"><div><p class="ttr-lat-t">'+esc(p.title||'Untitled')+'</p><div class="ttr-lat-d">'+esc(p.date_iso||'')+'</div></div></a>';}).join('');
+}).catch(function(){});
+})();</script>'''
+    body = f"""<div class="ttr"><div class="ttr-wrap"><div class="ttr-grid">
+  <main class="ttr-main">
+  <div class="ttr-kicker">{cat}</div>
+  <h1 class="ttr-h1">{article["title"]}</h1>
+  <p class="ttr-dek">{article.get("meta_description","")}</p>
+  <div class="ttr-byline"><div class="ttr-av">{initials}<img src="{av}" alt="" loading="lazy"></div>
+    <div class="ttr-by-main"><span class="ttr-by-name">{author}</span>
+    <span class="ttr-by-meta">{article.get("date","")} &middot; {read_min} min read</span></div>
+  </div>
+  {hero}
+  <div class="ttr-body">
+    {_wrap_block(article["intro"], "p", "ttr-intro")}
+    {_wrap_block(article.get("intro2",""), "p")}
+    {sections}
+    <div class="ttr-concl">{article["conclusion"]}</div>
+    {_sources_block(article, t)}
+  </div>
+  {disc}
+  </main>
+  <aside class="ttr-aside">
+  {author_card}
+  {latest}
+  </aside>
+</div></div></div>""" + _giscus(site)
+    return css, body
+
+
 ARTICLE_BUILDERS = {
     # Existing unified press for backwards compat (most sites use this).
     "press":      article_press,
@@ -6414,6 +6585,47 @@ ARTICLE_BUILDERS = {
     "tabloid":    article_tabloid,
     "lifestyle":  article_lifestyle,
 }
+
+# Per-site FULLY bespoke article builders (unique layout + author card +
+# discussion per site; nothing shared). Keyed by site id; checked before
+# ARTICLE_BUILDERS in build_article_page. Grows one site at a time.
+BESPOKE_ARTICLE_BUILDERS = {
+    "trading-tech": article_ttr_bespoke,
+}
+
+
+def _load_bespoke_article_modules():
+    """Load per-site bespoke article builders from bespoke_articles/<id>.py.
+    Each module sets SITE_ID and defines render(article, site, image_url,
+    photographer, t) -> (css, body). The bot data-helpers are injected into the
+    module namespace so modules stay self-contained (no `import bot`, no circular
+    import). One file per site = sub-agents can author them in parallel without
+    touching this file."""
+    import importlib.util
+    import os as _os
+    import glob as _glob
+    d = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "bespoke_articles")
+    if not _os.path.isdir(d):
+        return
+    _inject = {n: globals()[n] for n in (
+        "_article_sections", "_resolve_author", "_wrap_block", "_inject_section_breaks",
+        "_sources_block", "_count_words", "_giscus", "_readable_text", "THEMES", "SITE_THEMES",
+    ) if n in globals()}
+    for path in sorted(_glob.glob(_os.path.join(d, "*.py"))):
+        name = "bespoke_" + _os.path.basename(path)[:-3].replace("-", "_")
+        try:
+            spec = importlib.util.spec_from_file_location(name, path)
+            mod = importlib.util.module_from_spec(spec)
+            mod.__dict__.update(_inject)
+            spec.loader.exec_module(mod)
+            sid = getattr(mod, "SITE_ID", None)
+            if sid and hasattr(mod, "render"):
+                BESPOKE_ARTICLE_BUILDERS[sid] = mod.render
+        except Exception as _e:
+            print(f"[bespoke_articles] skipped {path}: {_e}")
+
+
+_load_bespoke_article_modules()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -6712,7 +6924,10 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
         t["accent"]  = _acc
         t["accent2"] = _acc
     layout  = site.get("article_layout", "standard")
-    builder = ARTICLE_BUILDERS.get(layout, article_standard)
+    # Per-site bespoke article builders take priority (fully unique layout +
+    # author card + discussion per site; nothing shared). Falls back to the
+    # shared layout builders for sites without a bespoke module yet.
+    builder = BESPOKE_ARTICLE_BUILDERS.get(site.get("id")) or ARTICLE_BUILDERS.get(layout, article_standard)
     css, body = builder(article, site, image_url, photographer, t)
 
     # Replace the JS-only comments section with a server-rendered, schema.org
