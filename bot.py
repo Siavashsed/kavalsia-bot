@@ -5775,7 +5775,7 @@ def article_kanona(article, site, image_url, photographer, t):
 .kn-body{{font-size:19px;line-height:1.82;color:{t["text"]};position:relative;padding-left:18px}}
 .kn-body p{{margin:0 0 26px;color:{t["text"]};font-weight:400}}
 .kn-body p.kn-lede{{font-size:24px;line-height:1.5;color:{t["text"]};font-style:italic;margin-bottom:34px;font-weight:400}}
-.kn-body p.kn-lede::first-letter{{float:left;font-family:'Cormorant Garamond',Georgia,serif;font-style:normal;font-size:88px;font-weight:500;line-height:.82;margin:10px 14px -4px 0;color:{t["accent"]}}}
+.kn-body p.kn-lede::first-letter{{float:none;font-size:inherit;font-weight:inherit;margin:0;color:inherit}}
 .kn-h2-wrap{{margin:64px 0 18px;text-align:center}}
 .kn-h2-orn{{display:inline-block;color:{t["accent"]};opacity:.7;margin-bottom:10px}}
 .kn-body h2.kn-h2,.kn-body .art-h2{{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(28px,4.2vw,42px);line-height:1.2;letter-spacing:-.5px;color:{t["text"]};margin:0;text-align:center}}
@@ -5801,6 +5801,7 @@ def article_kanona(article, site, image_url, photographer, t):
 .kn-concl p{{color:{t["text"]};margin-bottom:18px}}
 .kn-fin-row{{text-align:center;margin:44px 0 8px;color:{t["accent"]};opacity:.75;line-height:0}}
 .kn-fin-row svg{{display:inline-block}}
+.kn-tagline{{max-width:560px;margin:42px auto 0;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:15px;line-height:1.65;color:#8f8b82}}
 @media(max-width:760px){{
   .kn-hero{{height:48vh;min-height:320px}}
   .kn-wrap{{padding:0 22px 24px}}
@@ -5815,7 +5816,7 @@ def article_kanona(article, site, image_url, photographer, t):
   .kn-body{{font-size:18px;padding-left:14px}}
   .kn-rail{{left:8px}}
   .kn-body p.kn-lede{{font-size:21px}}
-  .kn-body p.kn-lede::first-letter{{font-size:66px}}
+  .kn-body p.kn-lede::first-letter{{font-size:inherit}}
   .kn-pull{{font-size:24px;margin:42px 0;padding:28px 8px}}
   .kn-pull-q{{font-size:38px;vertical-align:-8px}}
   .kn-body h2.kn-h2{{font-size:30px}}
@@ -5842,6 +5843,13 @@ body[data-page-depth="1"] .kn-body li,
 body[data-page-depth="1"] .kn-body p.kn-lede,
 body[data-page-depth="1"] .kn-concl,
 body[data-page-depth="1"] .kn-concl p{{color:var(--text,#ece6dd) !important}}
+/* article copy: light gray + standard responsive size (headings stay) */
+body[data-page-depth="1"] .kn-body,
+body[data-page-depth="1"] .kn-body p,
+body[data-page-depth="1"] .kn-body li,
+body[data-page-depth="1"] .kn-body p.kn-lede{{color:#b9b5ab !important;font-size:clamp(16px,1.55vw,18px) !important;line-height:1.78 !important}}
+/* nav was gold-on-light (invisible) on article pages: give it a solid dark bar */
+body[data-page-depth="1"] .nav{{background:#0b1224 !important;border-bottom:1px solid rgba(196,160,93,.22)}}
 body[data-page-depth="1"] .kn-deck{{color:var(--text2,rgba(236,230,221,.78)) !important}}
 body[data-page-depth="1"] .kn-kicker,
 body[data-page-depth="1"] .kn-body strong,
@@ -5962,6 +5970,7 @@ body[data-page-depth="1"] .kn-body p.kn-lede::first-letter{{color:var(--gold,#c4
       {sections_html}
       <div class="kn-concl">{article.get("conclusion","")}</div>
       <div class="kn-fin-row">{fin_svg}</div>
+      <div class="kn-tagline">Kanona Projects is for curious minds who believe a gathering can be more than a social obligation. The people who show up wanting to feel something different - and leave carrying a memory they did not expect.</div>
       {_sources_block(article, t)}
     </div>
     {translation_templates}{switcher_js}
@@ -6445,10 +6454,13 @@ def article_ttr_bespoke(article, site, image_url, photographer, t):
     css = f"""
 .ttr{{background:{t['bg']};color:{ink};font-family:{bf}}}
 .ttr *,.ttr *::before,.ttr *::after{{box-sizing:border-box}}
-.ttr-wrap{{max-width:1120px;margin:0 auto;padding:clamp(28px,5vw,56px) clamp(18px,5vw,28px) 80px}}
-.ttr-grid{{display:grid;grid-template-columns:minmax(0,1fr) 304px;gap:clamp(28px,4vw,52px);align-items:start}}
-.ttr-main{{min-width:0;max-width:760px}}
+.ttr-wrap{{max-width:1340px;margin:0 auto;padding:clamp(46px,6vw,86px) clamp(18px,4vw,30px) 90px}}
+.ttr-grid{{display:grid;grid-template-columns:286px minmax(0,1fr) 326px;grid-template-areas:"left main right";gap:clamp(24px,3vw,46px);align-items:start}}
+.ttr-main{{grid-area:main;min-width:0}}
 .ttr-aside{{position:sticky;top:24px;display:flex;flex-direction:column;gap:22px}}
+.ttr-aside-l{{grid-area:left}}
+.ttr-aside-r{{grid-area:right}}
+.ttr-aside-r .ttr-disc{{margin:0;padding-top:0;border-top:0}}
 .ttr-latest{{border:1px solid {brd};border-radius:14px;background:{bg2};padding:18px}}
 .ttr-latest-k{{font-family:ui-monospace,'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:{acc};margin:0 0 12px}}
 .ttr-lat{{display:grid;grid-template-columns:54px 1fr;gap:11px;padding:10px 0;border-top:1px solid {brd};text-decoration:none;color:inherit}}
@@ -6457,7 +6469,7 @@ def article_ttr_bespoke(article, site, image_url, photographer, t):
 .ttr-lat-t{{font-family:{hf};font-size:12.5px;font-weight:600;line-height:1.32;color:{ink};margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;transition:color .15s}}
 .ttr-lat-d{{font-family:ui-monospace,monospace;font-size:9.5px;color:{dim};margin-top:3px}}
 .ttr-viewall{{display:block;text-align:center;margin-top:14px;background:{acc};color:#0a0a0b;font-family:{hf};font-weight:700;font-size:12.5px;padding:11px;border-radius:9px;text-decoration:none}}
-@media(max-width:920px){{.ttr-grid{{grid-template-columns:1fr;gap:34px}}.ttr-aside{{position:static}}.ttr-main{{max-width:none}}}}
+@media(max-width:1180px){{.ttr-grid{{grid-template-columns:1fr;grid-template-areas:"main" "left" "right";gap:38px}}.ttr-aside{{position:static}}}}
 .ttr-kicker{{font-family:ui-monospace,'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:{acc};margin:0 0 16px}}
 .ttr-h1{{font-family:{hf};font-size:clamp(28px,4.2vw,42px);font-weight:800;line-height:1.12;letter-spacing:-.02em;color:{ink};margin:0 0 18px;text-wrap:balance}}
 .ttr-dek{{font-family:{hf};font-weight:400;font-size:clamp(17px,2vw,21px);line-height:1.5;color:{sub};margin:0 0 24px;text-wrap:pretty}}
@@ -6557,11 +6569,13 @@ L.innerHTML=a.map(function(p){return '<a class="ttr-lat" href="../'+encodeURICom
     <div class="ttr-concl">{article["conclusion"]}</div>
     {_sources_block(article, t)}
   </div>
-  {disc}
   </main>
-  <aside class="ttr-aside">
+  <aside class="ttr-aside ttr-aside-l">
   {author_card}
   {latest}
+  </aside>
+  <aside class="ttr-aside ttr-aside-r">
+  {disc}
   </aside>
 </div></div></div>""" + _giscus(site)
     return css, body
