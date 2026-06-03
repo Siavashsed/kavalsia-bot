@@ -6721,7 +6721,8 @@ def generate(site):
 
 # ── Save locally ───────────────────────────────────────────────────────────────
 _EXTRA_TITLES = {"resources": "Resources & Tools", "objections": "Honest Answers",
-                 "tools": "Tools", "guides": "Guides", "recaps": "Recaps"}
+                 "tools": "Tools", "guides": "Guides", "recaps": "Recaps",
+                 "playbook": "The Seller's Playbook", "market": "Canadian Market Watch"}
 
 
 def extra_pages(s):
