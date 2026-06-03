@@ -1,0 +1,213 @@
+<style>
+.mw-wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.mw-hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(640px 420px at 84% -12%,rgba(91,140,255,.14),transparent 70%),
+    radial-gradient(560px 380px at 4% 110%,rgba(200,169,106,.12),transparent 70%),
+    var(--bg)}
+.mw-hero-img{position:absolute;inset:0;background-size:cover;background-position:center 30%;
+  filter:grayscale(.45) brightness(.4) contrast(1.05);opacity:.4}
+.mw-hero-img::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(13,17,23,.5),rgba(13,17,23,.92))}
+.mw-hero-in{position:relative;max-width:780px;margin:0 auto;padding:92px 24px 70px}
+.mw-kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.mw-kicker::before{content:"";width:24px;height:1px;background:var(--gold);opacity:.6}
+.mw-h1{font-family:var(--serif);font-size:clamp(34px,5vw,56px);font-weight:700;line-height:1.05;letter-spacing:-.026em;color:var(--ink);margin-bottom:18px}
+.mw-h1 em{font-style:normal;color:var(--gold-soft)}
+.mw-lead{font-size:18px;color:var(--muted);max-width:640px;line-height:1.62}
+
+.mw-disclaimer{margin-top:24px;font-size:13px;color:var(--faint);max-width:620px;border-left:2px solid var(--line);padding-left:14px;line-height:1.55}
+
+.mw-body{padding:64px 0}
+.mw-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+.mw-card{position:relative;overflow:hidden;background:var(--bg-soft);border:1px solid var(--line);border-radius:18px;transition:transform .2s,border-color .2s,box-shadow .2s}
+.mw-card:hover{transform:translateY(-4px);border-color:rgba(200,169,106,.4);box-shadow:0 24px 48px -28px rgba(0,0,0,.6)}
+.mw-card-img{position:relative;height:148px;background-size:cover;background-position:center;filter:grayscale(.3) brightness(.62) contrast(1.05)}
+.mw-card-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,17,23,.2),rgba(20,26,35,.95))}
+.mw-city{position:absolute;left:20px;bottom:14px;z-index:1;font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.mw-region{position:absolute;left:20px;bottom:-2px;z-index:1;font-size:11.5px;color:var(--muted)}
+.mw-card-in{padding:24px 24px 26px}
+.mw-temp{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;border-radius:100px;margin-bottom:16px}
+.mw-temp.hot{color:#e3a36a;background:rgba(227,163,106,.12);border:1px solid rgba(227,163,106,.3)}
+.mw-temp.balanced{color:var(--gold-soft);background:rgba(200,169,106,.12);border:1px solid rgba(200,169,106,.3)}
+.mw-temp.cool{color:#7fa8ff;background:rgba(91,140,255,.12);border:1px solid rgba(91,140,255,.3)}
+.mw-stats{display:flex;gap:22px;margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.mw-stat strong{display:block;font-family:var(--serif);font-size:20px;color:var(--gold-soft);line-height:1.1}
+.mw-stat span{font-size:11px;color:var(--faint)}
+.mw-card-in p{font-size:14.5px;color:var(--muted);margin-bottom:14px}
+.mw-take{display:flex;gap:11px;font-size:14px;color:var(--ink)}
+.mw-take svg{flex-shrink:0;color:var(--gold);margin-top:3px}
+
+.mw-section-head{max-width:680px;margin:0 0 36px}
+.mw-section-head h2{font-family:var(--serif);font-size:clamp(24px,3.4vw,36px);font-weight:700;letter-spacing:-.02em;color:var(--ink);margin-bottom:12px}
+.mw-section-head p{color:var(--muted)}
+
+.mw-rules{padding:56px 0;border-top:1px solid var(--line)}
+.mw-rules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.mw-rule{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 22px}
+.mw-rule h3{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--gold-soft);margin-bottom:9px}
+.mw-rule p{font-size:14px;color:var(--muted)}
+
+.mw-cta{margin-top:8px;padding:48px 40px;border-radius:20px;text-align:center;
+  background:linear-gradient(135deg,#1a2435,#0e131d);border:1px solid var(--line);position:relative;overflow:hidden}
+.mw-cta::before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(200,169,106,.18);top:-150px;right:-90px}
+.mw-cta h2{font-family:var(--serif);font-size:clamp(24px,3.2vw,32px);font-weight:700;color:var(--ink);margin-bottom:10px}
+.mw-cta p{color:var(--muted);max-width:480px;margin:0 auto 24px}
+.mw-cta a{display:inline-block;background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:#0c1018;font-size:14px;font-weight:600;padding:14px 30px;border-radius:11px;transition:transform .18s}
+.mw-cta a:hover{transform:translateY(-2px)}
+
+@media(max-width:820px){
+  .mw-grid{grid-template-columns:1fr}
+  .mw-rules-grid{grid-template-columns:1fr}
+}
+</style>
+
+<main>
+<section class="mw-hero">
+  <div class="mw-hero-img" aria-hidden="true" style="background-image:url('https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=1900&q=70')"></div>
+  <div class="mw-hero-in">
+    <div class="mw-kicker">Canadian Market Watch</div>
+    <h1 class="mw-h1">What the major markets are telling <em>sellers right now.</em></h1>
+    <p class="mw-lead">A plain-language read on the cities that move the national numbers, written for the person trying to decide whether to list this season or wait. Less chart-staring, more "so what does this mean for my sale."</p>
+    <p class="mw-disclaimer">All figures below are illustrative ranges, refreshed seasonally to reflect the general shape of each market. They are not live quotes or appraisals. For your exact street, pull recent sold comparables on realtor.ca, HouseSigma, or Wahi, and talk to a local agent before you price.</p>
+  </div>
+</section>
+
+<div class="mw-wrap">
+<section class="mw-body">
+  <div class="mw-section-head">
+    <h2>The market snapshots</h2>
+    <p>Each card reads the temperature, the rough numbers, and the one thing a seller in that market should actually do about it.</p>
+  </div>
+
+  <div class="mw-grid">
+
+    <div class="mw-card">
+      <div class="mw-card-img" style="background-image:url('https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=70')">
+        <div class="mw-city">Toronto and the GTA</div>
+        <div class="mw-region">Ontario</div>
+      </div>
+      <div class="mw-card-in">
+        <span class="mw-temp balanced">Balanced, segmented</span>
+        <div class="mw-stats">
+          <div class="mw-stat"><strong>$1.0M to $1.2M</strong><span>typical detached range</span></div>
+          <div class="mw-stat"><strong>$650K to $750K</strong><span>typical condo range</span></div>
+        </div>
+        <p>The GTA is really two markets. Freehold houses in good catchments still draw competition, while the condo segment is heavier with supply and slower to move. Land transfer tax stacks municipal plus provincial here, so buyers are unusually price-sensitive.</p>
+        <div class="mw-take"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Seller takeaway:</b> if you own a house, price at market and let competition work. If you own a condo, price sharp and stage hard; you are competing with a wall of similar units.</span></div>
+      </div>
+    </div>
+
+    <div class="mw-card">
+      <div class="mw-card-img" style="background-image:url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=800&q=70')">
+        <div class="mw-city">Vancouver and Lower Mainland</div>
+        <div class="mw-region">British Columbia</div>
+      </div>
+      <div class="mw-card-in">
+        <span class="mw-temp hot">Pricey, supply-starved</span>
+        <div class="mw-stats">
+          <div class="mw-stat"><strong>$1.8M to $2.2M</strong><span>typical detached range</span></div>
+          <div class="mw-stat"><strong>$750K to $900K</strong><span>typical condo range</span></div>
+        </div>
+        <p>The most expensive market in the country, and chronically short on listings. Detached supply is so tight that well-presented homes in desirable neighbourhoods still see strong interest. Buyers are stretched, so financing conditions and appraisal gaps come up more often here.</p>
+        <div class="mw-take"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Seller takeaway:</b> presentation pays off more here than almost anywhere. Weigh a clean offer with a solid deposit over a higher one leaning on financing, given how stretched buyers are.</span></div>
+      </div>
+    </div>
+
+    <div class="mw-card">
+      <div class="mw-card-img" style="background-image:url('https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&q=70')">
+        <div class="mw-city">Calgary</div>
+        <div class="mw-region">Alberta</div>
+      </div>
+      <div class="mw-card-in">
+        <span class="mw-temp hot">Active, in-demand</span>
+        <div class="mw-stats">
+          <div class="mw-stat"><strong>$600K to $720K</strong><span>typical detached range</span></div>
+          <div class="mw-stat"><strong>$300K to $360K</strong><span>typical apartment range</span></div>
+        </div>
+        <p>Strong interprovincial migration has kept Calgary one of the busier markets relative to its price point. No land transfer tax in Alberta is a real draw for buyers, and affordability compared to Toronto and Vancouver keeps demand healthy across most segments.</p>
+        <div class="mw-take"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Seller takeaway:</b> demand is on your side, but do not get greedy on price. Buyers moving from pricier provinces are savvy and will pass on an overpriced listing fast.</span></div>
+      </div>
+    </div>
+
+    <div class="mw-card">
+      <div class="mw-card-img" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=70')">
+        <div class="mw-city">Ottawa</div>
+        <div class="mw-region">Ontario</div>
+      </div>
+      <div class="mw-card-in">
+        <span class="mw-temp balanced">Steady, stable</span>
+        <div class="mw-stats">
+          <div class="mw-stat"><strong>$700K to $820K</strong><span>typical detached range</span></div>
+          <div class="mw-stat"><strong>$420K to $500K</strong><span>typical condo range</span></div>
+        </div>
+        <p>A government-anchored economy makes Ottawa one of the most even-keeled markets in the country. Fewer wild swings, fewer bidding frenzies, and buyers who tend to be deliberate. Family homes near good schools and transit hold their value reliably.</p>
+        <div class="mw-take"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Seller takeaway:</b> this is a price-it-right market, not a price-it-low-and-pray one. Underpricing rarely sparks a war here, so set a fair number and present cleanly.</span></div>
+      </div>
+    </div>
+
+    <div class="mw-card">
+      <div class="mw-card-img" style="background-image:url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=800&q=70')">
+        <div class="mw-city">Montreal</div>
+        <div class="mw-region">Quebec</div>
+      </div>
+      <div class="mw-card-in">
+        <span class="mw-temp balanced">Resilient, value-driven</span>
+        <div class="mw-stats">
+          <div class="mw-stat"><strong>$550K to $680K</strong><span>typical single-family range</span></div>
+          <div class="mw-stat"><strong>$400K to $480K</strong><span>typical condo range</span></div>
+        </div>
+        <p>Still more affordable than Toronto or Vancouver, with steady demand and a strong rental and plex market. One Quebec quirk worth flagging: a notary, not a lawyer, handles the closing, and the welcome tax (the transfer duty) is a buyer cost that shapes their budget.</p>
+        <div class="mw-take"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Seller takeaway:</b> duplexes and triplexes attract investors as well as families. If you own a plex, market the rental income clearly; it widens your buyer pool.</span></div>
+      </div>
+    </div>
+
+    <div class="mw-card">
+      <div class="mw-card-img" style="background-image:url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=70')">
+        <div class="mw-city">Reading any market</div>
+        <div class="mw-region">The national signals</div>
+      </div>
+      <div class="mw-card-in">
+        <span class="mw-temp cool">The numbers that matter</span>
+        <div class="mw-stats">
+          <div class="mw-stat"><strong>Months of supply</strong><span>under 4 favours sellers</span></div>
+          <div class="mw-stat"><strong>Sale-to-list</strong><span>over 100% means competition</span></div>
+        </div>
+        <p>You do not need to follow every headline. Two numbers tell you most of the story: months of inventory (how long it would take to sell everything listed at the current pace) and the sale-to-list price ratio. Together they reveal who has the leverage.</p>
+        <div class="mw-take"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Seller takeaway:</b> low supply plus sales closing at or above asking means you can price confidently. Rising supply and softening ratios mean price sharp and move quickly.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="mw-rules">
+  <div class="mw-section-head">
+    <h2>Three rules that hold in every market</h2>
+    <p>Conditions change by city and by season. These do not.</p>
+  </div>
+  <div class="mw-rules-grid">
+    <div class="mw-rule">
+      <h3>The first two weeks decide it</h3>
+      <p>Buyer attention peaks the moment you list. Be priced right and show-ready on day one. The home that sits is the home that sells for less, in any market.</p>
+    </div>
+    <div class="mw-rule">
+      <h3>Interest rates set the ceiling</h3>
+      <p>What buyers can offer is capped by what they can borrow. When rates ease, budgets stretch and competition rises. When they climb, buyers get cautious and conditional. Watch the rate, not just the price.</p>
+    </div>
+    <div class="mw-rule">
+      <h3>Local beats national, always</h3>
+      <p>A national average is a blended number that may describe nobody's street. Your neighbourhood, your school catchment, and your home's condition matter far more than the headline. Always pull your own sold comparables.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding-bottom:64px">
+  <div class="mw-cta">
+    <h2>Get the read before you list</h2>
+    <p>The Seller Brief sends a seasonal market read plus one tactical move each week. Real sold data, plain language, no upsells.</p>
+    <a href="./#newsletter">Get the Seller Brief</a>
+  </div>
+</section>
+</div>
+</main>
