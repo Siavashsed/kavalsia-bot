@@ -1,0 +1,32 @@
+<main class="mp">
+  <header class="mp-head">
+    <div class="mp-head-top">
+      <span class="mp-kicker">The MochaPoo Library</span>
+      <span class="mp-count" id="aa-count">0 published</span>
+    </div>
+    <h1 class="mp-title">Stories &amp; Care Guides</h1>
+    <p class="mp-sub">Cozy reads, tips, and tales from __SITE_NAME__, freshly fetched and newest first.</p>
+    <label class="mp-search-wrap">
+      <svg class="mp-search-ico" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20"><path d="M11 4a7 7 0 1 0 4.2 12.6l4.1 4.1 1.4-1.4-4.1-4.1A7 7 0 0 0 11 4Zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z" fill="currentColor"/></svg>
+      <input id="aa-search" class="mp-search" type="search" placeholder="Search stories by title" aria-label="Search articles">
+    </label>
+    <div class="mp-chips" id="aa-chips">__CHIPS__</div>
+  </header>
+
+  <section class="mp-latest" id="aa-latest" style="display:none">
+    <div class="mp-latest-bar"><span class="mp-latest-label">Fresh off the porch</span><span class="mp-paw" aria-hidden="true">&#128062;</span></div>
+    <div class="mp-latest-grid">
+      <a class="mp-lead" id="aa-lead" href="#"></a>
+      <div class="mp-seccol" id="aa-sec-col"></div>
+    </div>
+  </section>
+
+  <div class="mp-meta" id="aa-meta">Fetching stories...</div>
+  <div class="mp-grid" id="all-list"></div>
+
+  <div class="mp-pager" id="aa-pager" style="display:none">
+    <button id="aa-prev" type="button">&larr; Previous</button>
+    <span id="aa-page-num">Page 1</span>
+    <button id="aa-next" type="button">Next &rarr;</button>
+  </div>
+</main>
