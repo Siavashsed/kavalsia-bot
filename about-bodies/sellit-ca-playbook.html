@@ -1,0 +1,182 @@
+<style>
+.pb-wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.pb-hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(640px 420px at 84% -12%,rgba(91,140,255,.14),transparent 70%),
+    radial-gradient(560px 380px at 4% 110%,rgba(200,169,106,.12),transparent 70%),
+    var(--bg)}
+.pb-hero-img{position:absolute;inset:0;background-size:cover;background-position:center;
+  filter:grayscale(.4) brightness(.4) contrast(1.05);opacity:.4}
+.pb-hero-img::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(13,17,23,.5),rgba(13,17,23,.92))}
+.pb-hero-in{position:relative;max-width:760px;margin:0 auto;padding:92px 24px 70px}
+.pb-kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.pb-kicker::before{content:"";width:24px;height:1px;background:var(--gold);opacity:.6}
+.pb-h1{font-family:var(--serif);font-size:clamp(34px,5vw,56px);font-weight:700;line-height:1.05;letter-spacing:-.026em;color:var(--ink);margin-bottom:18px}
+.pb-h1 em{font-style:normal;color:var(--gold-soft)}
+.pb-lead{font-size:18px;color:var(--muted);max-width:620px;line-height:1.62}
+
+.pb-meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:26px;font-size:13px;color:var(--faint)}
+.pb-meta span{display:inline-flex;align-items:center;gap:8px}
+.pb-meta b{color:var(--ink);font-weight:600}
+
+.pb-body{padding:70px 0}
+.pb-step{position:relative;padding:34px 0;border-top:1px solid var(--line)}
+.pb-step:first-child{border-top:none}
+.pb-num{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
+.pb-step h2{font-family:var(--serif);font-size:clamp(24px,3.2vw,34px);font-weight:700;letter-spacing:-.02em;color:var(--ink);margin:8px 0 16px}
+.pb-step h3{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--gold-soft);margin:26px 0 10px}
+.pb-step p{color:var(--muted);margin-bottom:14px;max-width:740px}
+.pb-step p b{color:var(--ink)}
+.pb-list{margin:6px 0 16px;max-width:740px}
+.pb-list li{position:relative;padding-left:28px;margin-bottom:11px;color:var(--muted)}
+.pb-list li::before{content:"";position:absolute;left:0;top:8px;width:13px;height:13px;border-radius:50%;border:2px solid var(--gold);opacity:.85}
+.pb-list li b{color:var(--ink)}
+.pb-callout{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:20px 22px;margin:20px 0;max-width:740px}
+.pb-callout strong{display:block;font-family:var(--serif);color:var(--gold-soft);font-size:15px;margin-bottom:6px}
+.pb-callout p{margin:0;color:var(--muted);font-size:14.5px}
+
+.pb-cta{margin:10px 0 0;padding:48px 40px;border-radius:20px;text-align:center;
+  background:linear-gradient(135deg,#1a2435,#0e131d);border:1px solid var(--line);position:relative;overflow:hidden}
+.pb-cta::before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(200,169,106,.18);top:-150px;right:-90px}
+.pb-cta h2{font-family:var(--serif);font-size:clamp(24px,3.2vw,32px);font-weight:700;color:var(--ink);margin-bottom:10px}
+.pb-cta p{color:var(--muted);max-width:480px;margin:0 auto 24px}
+.pb-cta a{display:inline-block;background:linear-gradient(180deg,var(--gold-soft),var(--gold));color:#0c1018;font-size:14px;font-weight:600;padding:14px 30px;border-radius:11px;transition:transform .18s}
+.pb-cta a:hover{transform:translateY(-2px)}
+
+@media(max-width:640px){
+  .pb-body{padding:48px 0}
+  .pb-cta{padding:36px 24px}
+}
+</style>
+
+<main>
+<section class="pb-hero">
+  <div class="pb-hero-img" aria-hidden="true" style="background-image:url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1800&q=70')"></div>
+  <div class="pb-hero-in">
+    <div class="pb-kicker">The Seller's Playbook</div>
+    <h1 class="pb-h1">How to actually sell a home in Canada, <em>start to close.</em></h1>
+    <p class="pb-lead">No fluff and no industry spin. This is the order of operations a friend who has sold three houses would walk you through at the kitchen table, from the first box you pack to the final wire on closing day.</p>
+    <div class="pb-meta">
+      <span><b>7 steps</b> from prep to keys</span>
+      <span><b>Canada-specific</b> taxes and rules</span>
+      <span><b>FSBO and agent</b> both covered</span>
+    </div>
+  </div>
+</section>
+
+<div class="pb-wrap">
+<section class="pb-body">
+
+  <div class="pb-step">
+    <div class="pb-num">Step 01</div>
+    <h2>Get honest about your number before you do anything</h2>
+    <p>Most sellers start with the wrong question. It is not "what do I want to get," it is "what will a buyer actually pay in this market, this month." Those two numbers are often a deck and a kitchen apart.</p>
+    <p>Pull recent <b>sold</b> prices, not asking prices, for homes like yours within a few blocks. Realtor.ca shows you what is listed. Tools like HouseSigma and Wahi surface what places actually closed at, including the ones that sold over and under. That sold data is the only honest mirror.</p>
+    <ul class="pb-list">
+      <li>Look at the last 60 to 90 days, not the peak from two years ago.</li>
+      <li>Compare like with like: same bedroom count, similar lot, same school catchment.</li>
+      <li>Adjust for condition. A renovated kitchen is worth real money; a 1990s one is a discount in the buyer's head.</li>
+    </ul>
+    <div class="pb-callout">
+      <strong>The cost of selling is bigger than you think</strong>
+      <p>Budget roughly 4 to 6 percent of the sale price for the full exit: agent commission if you use one, legal fees, mortgage discharge or penalty, and moving. Subtract that from your number before you fall in love with a price.</p>
+    </div>
+  </div>
+
+  <div class="pb-step">
+    <div class="pb-num">Step 02</div>
+    <h2>Decide: full agent, discount brokerage, or sell it yourself</h2>
+    <p>There is no single right answer, only the one that fits your time, your market, and your stomach for negotiation.</p>
+    <h3>Full-service agent</h3>
+    <p>You pay the most (commonly 3.5 to 5 percent total split between both sides in many markets), and in exchange you buy time, MLS exposure, and someone to absorb the awkward conversations. Worth it if your home is hard to price, you are time-poor, or you hate negotiating.</p>
+    <h3>Discount or flat-fee brokerage</h3>
+    <p>You get listed on the MLS and Realtor.ca for a flat fee or a reduced rate, and you do more of the legwork yourself. A solid middle path for a clean, easy-to-show home in a busy area.</p>
+    <h3>For sale by owner (FSBO)</h3>
+    <p>You keep the listing-side commission but take on pricing, marketing, showings, paperwork, and negotiation. The catch most people miss: roughly nine in ten buyers are working with an agent, and you will almost always still pay the buyer's agent a commission to bring them in. FSBO saves you one side, not both.</p>
+    <div class="pb-callout">
+      <strong>Interview before you sign</strong>
+      <p>If you go with an agent, talk to two or three. Ask exactly what marketing they do, what their average sale-to-list ratio is, and what the commission covers. A listing agreement is a contract for weeks or months. Read the cancellation terms before you sign.</p>
+    </div>
+  </div>
+
+  <div class="pb-step">
+    <div class="pb-num">Step 03</div>
+    <h2>Prep and stage so the home shows bigger than it is</h2>
+    <p>Staging is not about lying. It is about removing the friction that makes a buyer hesitate. The goal is for them to picture their life there in the first ten seconds, not yours.</p>
+    <ul class="pb-list">
+      <li><b>Declutter hard.</b> Pack away half of everything. Empty closets read as bigger closets.</li>
+      <li><b>Depersonalize.</b> Family photos, fridge magnets, and bold hobby rooms make a buyer feel like a guest, not a future owner.</li>
+      <li><b>Fix the cheap, visible stuff.</b> A leaky tap, a cracked switch plate, a scuffed wall. These are the things buyers fixate on and silently subtract from their offer.</li>
+      <li><b>Light it up.</b> Every bulb working, every blind open. Dark rooms photograph small and feel smaller in person.</li>
+      <li><b>Mind the nose.</b> Pets, smoke, and last night's dinner are the fastest way to lose a buyer before they reach the second floor.</li>
+    </ul>
+    <p>Spend the marketing budget where the eyes go first: the front entrance, the kitchen, the main bathroom, and the primary bedroom. A few hundred dollars on paint and a deep clean returns more than almost any renovation you could rush before listing.</p>
+  </div>
+
+  <div class="pb-step">
+    <div class="pb-num">Step 04</div>
+    <h2>Build a listing that earns the click</h2>
+    <p>The first showing happens on a phone screen. Professional photography is not optional anymore; it is the single highest-return dollar you will spend. Buyers scroll past the dim, crooked, phone-shot listings without a second thought.</p>
+    <ul class="pb-list">
+      <li><b>Photos:</b> wide, bright, level, and in daylight. Twenty good photos beat forty mediocre ones.</li>
+      <li><b>Headline and description:</b> lead with the thing people search for (the location, the layout, the standout feature), then the lifestyle. Skip the realtor cliches like "must see" and "won't last."</li>
+      <li><b>Floor plan:</b> include one. Buyers trust homes they can map in their head.</li>
+      <li><b>Honesty:</b> note the real flaws plainly. A surprise at the showing kills trust; a known quirk in the listing builds it.</li>
+    </ul>
+  </div>
+
+  <div class="pb-step">
+    <div class="pb-num">Step 05</div>
+    <h2>Price with psychology, not ego</h2>
+    <p>Pricing is the lever that moves everything else. Set it wrong and even a great home sits, goes stale, and then sells for less than if you had priced it right on day one.</p>
+    <h3>The strategies, plainly</h3>
+    <ul class="pb-list">
+      <li><b>Price at market:</b> the safe default. Lands you fair offers in a balanced market.</li>
+      <li><b>Price slightly under to spark a bidding war:</b> works in hot, low-inventory markets where multiple buyers will compete and push past your real target. It backfires badly in a slow market, so know your conditions first.</li>
+      <li><b>Price ambitiously high:</b> almost always a trap. The most motivated buyers see your home in the first two weeks. Overprice and you waste that window, then chase the market down with price cuts that signal weakness.</li>
+    </ul>
+    <div class="pb-callout">
+      <strong>The first two weeks are everything</strong>
+      <p>Showings and saved-listing activity peak right after you go live. If a week passes with traffic but no offers, the market is telling you the price is high. Listen early, while you still have momentum.</p>
+    </div>
+  </div>
+
+  <div class="pb-step">
+    <div class="pb-num">Step 06</div>
+    <h2>Run showings and handle offers without flinching</h2>
+    <p>Make the home easy to see. The more buyers through the door, the more competition for it. Be flexible on times, leave during showings so people can talk freely, and keep it show-ready while it is listed.</p>
+    <h3>When the offers come in</h3>
+    <p>Price is only one line of an offer. Read the whole thing.</p>
+    <ul class="pb-list">
+      <li><b>Conditions:</b> financing, home inspection, and sale-of-buyer's-home conditions all add risk that the deal falls through. A slightly lower clean offer can beat a higher conditional one.</li>
+      <li><b>Deposit:</b> a larger deposit signals a serious, capable buyer.</li>
+      <li><b>Closing date:</b> flexibility here is worth real money to the right buyer, and to you if your timing is tight.</li>
+      <li><b>Counter calmly.</b> You can counter price, dates, conditions, or what stays in the home. Negotiation is normal, not an insult.</li>
+    </ul>
+    <p>If you receive multiple offers, you do not have to take the highest blindly. Take the strongest one you actually believe will close.</p>
+  </div>
+
+  <div class="pb-step">
+    <div class="pb-num">Step 07</div>
+    <h2>Close cleanly and walk away with your money</h2>
+    <p>Accepting an offer is the start of the closing period, not the finish line. This is where a good real estate lawyer earns their fee.</p>
+    <ul class="pb-list">
+      <li><b>Conditions period:</b> the buyer does their inspection and finalizes financing. Be reachable and cooperative; this is where deals quietly die.</li>
+      <li><b>Lawyer and title:</b> your lawyer handles the title transfer, pays off your remaining mortgage, and disburses the proceeds to you.</li>
+      <li><b>Mortgage penalty:</b> if you break a fixed mortgage early, you may owe a prepayment penalty. Call your lender and get the exact figure before closing so it is not a surprise on the statement.</li>
+      <li><b>Capital gains:</b> if the home was your principal residence the whole time you owned it, the gain is generally exempt. A second property, cottage, or rental is a different conversation. Talk to an accountant.</li>
+      <li><b>Land transfer tax</b> is a buyer cost in Canada, not a seller cost, but expect buyers to factor it into how much they can offer, especially in Toronto where a second municipal tax stacks on top.</li>
+    </ul>
+    <p>On closing day, the lawyers exchange keys and funds, and the proceeds land in your account. Hand over the keys, the garage remotes, and the manuals, and you are done.</p>
+  </div>
+
+  <div class="pb-cta">
+    <h2>Want the rest of the moves?</h2>
+    <p>The Seller Brief sends one tactical, plain-language email a week. No commissions, no upsells, no industry spin.</p>
+    <a href="./#newsletter">Get the Seller Brief</a>
+  </div>
+
+</section>
+</div>
+</main>
