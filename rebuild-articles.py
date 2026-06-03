@@ -28,7 +28,7 @@ from bot import (_seo_meta, _seo_title_tag, _comments_section_js,
                  _comments_section_inline, THEMES, SITE_THEMES,
                  assign_category, _count_words, _site_name, _resolve_author,
                  _article_section_css, article_press, ARTICLE_BUILDERS,
-                 normalize_theme)
+                 normalize_theme, BESPOKE_ARTICLE_BUILDERS)
 
 # Distinct-design rollout is now DATA-DRIVEN (2026-06-01): a site keeps its
 # bespoke per-layout article design through a rebuild whenever its configured
@@ -75,7 +75,10 @@ CONFIG_FILE = BASE_DIR / "network-config.json"
 # "ap" is the press-layout wrapper produced by article_press() and is the
 # canonical wrapper going forward; the others stay so rebuild can still parse
 # pages last rendered by a legacy builder.
-WRAPPERS = ("ap", "art-grid", "art-min", "mag-hero", "imm-hero", "art", "wrap", "hero", "body")
+WRAPPERS = ("ap", "art-grid", "art-min", "mag-hero", "imm-hero", "art", "wrap", "hero", "body",
+            # distinct + bespoke builder wrappers, so their pages can be re-extracted
+            "bs", "tb", "lf", "sw", "ob", "kn",
+            "ttr", "aimp", "ece", "obz", "cpa", "pwa", "mpa", "sva", "dha", "spq")
 
 
 def _headers(token):
@@ -401,7 +404,9 @@ def patch_site(stem, site, token, log):
         body, css = extract_body_and_css(original)
         # Per-site builder dispatch. Kanona / OnlineBiz keep their own builder
         # (kn- / ob- designs); all other sites use the press rewrap as before.
-        _builder = ARTICLE_BUILDERS.get(site.get("article_layout") or "press", article_press)
+        _bespoke = BESPOKE_ARTICLE_BUILDERS.get(site.get("id"))
+        _is_bespoke = _bespoke is not None
+        _builder = _bespoke or ARTICLE_BUILDERS.get(site.get("article_layout") or "press", article_press)
         _is_press = _builder is article_press
         _use_distinct = not _is_press
         if not body:
@@ -457,7 +462,11 @@ def patch_site(stem, site, token, log):
             # markup. Re-extracting an already-bespoke page (ob-/kn-) scrapes
             # almost nothing and would gut the article. If the page is already
             # in its bespoke design, keep it as-is (just refresh comments/SEO).
-            _already_bespoke = _use_distinct and any(
+            # Bespoke-builder sites ALWAYS re-extract + re-render through their
+            # bespoke builder (so old broadsheet/tabloid articles convert to the
+            # site's bespoke design). The no-gut guard above + _balance_divs keep
+            # content safe if extraction comes up empty.
+            _already_bespoke = (not _is_bespoke) and _use_distinct and any(
                 f'class="{c}"' in body for c in _BESPOKE_CLASSES)
             try:
                 if not _already_bespoke:
@@ -469,8 +478,12 @@ def patch_site(stem, site, token, log):
                             synth.get("photographer") or "Staff",
                             t,
                         )
-                        body = fresh_body
-                        css = fresh_css
+                        _vw = lambda x: len(re.sub(r'<[^>]+>', ' ', re.sub(r'<(script|style)[\s\S]*?</\1>', '', x or '')).split())
+                        if _vw(fresh_body) >= 0.7 * _vw(body):
+                            body = fresh_body
+                            css = fresh_css
+                        else:
+                            log(f"  [{i+1}] = {slug}  -  re-render lost content ({_vw(body)}->{_vw(fresh_body)}w); kept original")
                 else:
                     # Bespoke page: keep the existing markup (re-extraction would
                     # gut the bespoke DOM), but REFRESH the CSS from the builder so
@@ -568,8 +581,9 @@ def patch_site(stem, site, token, log):
                     site_inlined += 1
                 else:
                     site_placeholder += 1
-            else:
+            elif not _is_bespoke:
                 # Could not locate either comment section variant: append inline.
+                # (Bespoke builders render their own discussion, so skip them.)
                 body = body + inline_block
                 if comments_data:
                     site_inlined += 1
