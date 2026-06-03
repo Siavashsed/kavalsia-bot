@@ -63,7 +63,8 @@ img{max-width:100%;display:block}
 .nav-cta svg{width:13px;height:13px;stroke:#1a1206;fill:none;stroke-width:2.6}
 
 /* HERO */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(13,15,18,.8),rgba(13,15,18,.9) 55%,var(--bg) 100%),url(https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1600&q=60) center 30%/cover}
 .hero::before{content:"";position:absolute;inset:0;background:
   radial-gradient(700px 420px at 78% 12%,rgba(245,165,36,.13),transparent 70%),
   radial-gradient(620px 480px at 8% 96%,rgba(91,143,176,.1),transparent 70%)}
@@ -117,11 +118,21 @@ img{max-width:100%;display:block}
 .story-ic svg{width:20px;height:20px;stroke:var(--amber);fill:none;stroke-width:2}
 .story-row b{font-family:var(--display);font-size:16px;font-weight:700;display:block;margin-bottom:2px}
 .story-row p{font-size:14px;color:var(--muted)}
-.story-visual{position:relative;border-radius:16px;border:1px solid var(--border);background:linear-gradient(150deg,var(--bg3),var(--bg));padding:34px;overflow:hidden}
-.story-visual::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(245,165,36,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(245,165,36,.05) 1px,transparent 1px);background-size:36px 36px}
+.story-visual{position:relative;border-radius:16px;border:1px solid var(--border);background:linear-gradient(150deg,var(--bg3),var(--bg));padding:34px;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end}
+.story-visual::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,15,18,.45),rgba(13,15,18,.9)),url(https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=900&q=65) center/cover}
 .story-quote{position:relative;font-family:var(--display);font-size:clamp(20px,2.4vw,28px);font-weight:800;line-height:1.25;letter-spacing:-.01em}
 .story-quote span{color:var(--amber)}
 .story-attr{position:relative;margin-top:20px;font-size:13px;color:var(--faint);font-family:var(--display);letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+/* project photo gallery */
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px;margin-top:42px}
+.gframe{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--bg3)}
+.gframe.tall{grid-row:span 2}
+.gframe.wide{grid-column:span 2}
+.gframe img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;filter:saturate(.92) contrast(1.02)}
+.gframe:hover img{transform:scale(1.06)}
+.gframe figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 16px 14px;font-family:var(--display);font-size:12.5px;font-weight:700;letter-spacing:.04em;color:#fff;background:linear-gradient(180deg,transparent,rgba(13,15,18,.85));text-transform:uppercase}
+.gframe figcaption b{color:var(--amber)}
+@media(max-width:760px){.gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px}.gframe.wide{grid-column:span 2}}
 
 /* VALUE CARDS */
 .val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -533,6 +544,25 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:64px 0 2
       <div class="stat reveal"><b data-count="42" data-suffix="K">0</b><small>Homeowners helped monthly</small></div>
       <div class="stat reveal"><b data-count="120" data-suffix="+">0</b><small>Cost benchmarks tracked</small></div>
       <div class="stat reveal"><b data-count="9" data-suffix="/10">0</b><small>Readers feel build-ready</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="projects">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="eyebrow">From The Field</span>
+      <h2 class="sec-title">What a real build actually looks like</h2>
+      <p class="sec-sub">From the first stud wall to the final backsplash. These are the stages every guide on MashEstate walks you through.</p>
+    </div>
+    <div class="gallery reveal">
+      <figure class="gframe tall"><img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=700&q=65" alt="Home under construction" loading="lazy" onerror="this.closest('.gframe').style.display='none'"><figcaption><b>01</b> Framing &amp; structure</figcaption></figure>
+      <figure class="gframe wide"><img src="https://images.unsplash.com/photo-1581094271901-8022df4466f9?auto=format&fit=crop&w=900&q=65" alt="Interior renovation in progress" loading="lazy" onerror="this.closest('.gframe').style.display='none'"><figcaption><b>02</b> Drywall &amp; rough-in</figcaption></figure>
+      <figure class="gframe"><img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=600&q=65" alt="Finished kitchen renovation" loading="lazy" onerror="this.closest('.gframe').style.display='none'"><figcaption><b>03</b> Kitchen finishes</figcaption></figure>
+      <figure class="gframe"><img src="https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=600&q=65" alt="Renovated bathroom" loading="lazy" onerror="this.closest('.gframe').style.display='none'"><figcaption><b>04</b> Bath &amp; tile</figcaption></figure>
+      <figure class="gframe wide"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=65" alt="Finished modern living room" loading="lazy" onerror="this.closest('.gframe').style.display='none'"><figcaption><b>05</b> Final walk-through</figcaption></figure>
+      <figure class="gframe"><img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&w=600&q=65" alt="Contractor tools on site" loading="lazy" onerror="this.closest('.gframe').style.display='none'"><figcaption><b>The crew</b></figcaption></figure>
+      <figure class="gframe"><img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=600&q=65" alt="Completed home exterior" loading="lazy" onerror="this.closest('.gframe').style.display='none'"><figcaption><b>Curb appeal</b></figcaption></figure>
     </div>
   </div>
 </section>
