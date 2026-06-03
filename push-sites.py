@@ -8,7 +8,7 @@ Usage:
   python push-sites.py --push TOKEN     # Push all to GitHub
   python push-sites.py --push TOKEN --only cryptopulse
 """
-import base64, json, sys, time, argparse
+import base64, json, sys, time, argparse, re
 import requests
 from pathlib import Path
 
@@ -4039,6 +4039,18 @@ def gen_about(s):
     # while the page body is light (e.g. MindFrame's cream paper body).
     ink     = _ink_for(s)
     on_ink  = s.get('bg') or '#0b0b0b'  # text-on-primary buttons/avatars
+    # Card text color: the cards use bg2, which on dark-theme sites is dark navy.
+    # `ink` is tuned for the (light) page body, so on a dark card the name went
+    # invisible. Pick a card-readable color from bg2's luminance.
+    def _lum(hx):
+        m = re.fullmatch(r'#?([0-9a-fA-F]{6})', (hx or '').strip())
+        if not m:
+            return 1.0
+        r, g, b = (int(m.group(1)[i:i + 2], 16) / 255 for i in (0, 2, 4))
+        f = lambda c: c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
+    card_ink = '#f3efe6' if _lum(s.get('bg2', '#fff')) < 0.4 else ink
+    card_sub = '#c8ccd6' if _lum(s.get('bg2', '#fff')) < 0.4 else s['muted']
 
     css = f""".ab{{max-width:840px;margin:0 auto;padding:56px 24px 88px}}
 .ab-kicker{{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:{s['primary']};margin-bottom:14px}}
@@ -4046,18 +4058,19 @@ def gen_about(s):
 .ab-lead{{font-size:17px;line-height:1.7;color:{s['muted']};margin-bottom:40px}}
 .ab-author{{display:flex;gap:16px;align-items:center;background:{s['bg2']};border:1px solid {s['brd']};border-radius:10px;padding:20px 22px;margin-bottom:32px}}
 .ab-avatar{{width:56px;height:56px;border-radius:50%;background:{s['primary']};color:{on_ink};font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}}
-.ab-name{{font-size:17px;font-weight:700;color:{ink}}}
+.ab-name{{font-size:17px;font-weight:700;color:{card_ink}}}
 .ab-role{{font-size:13px;color:{s['primary']};font-weight:600;margin-top:2px}}
 .ab-h2{{font-family:{s['font_head']};font-size:20px;font-weight:700;color:{ink};margin:40px 0 14px}}
 .ab-p{{font-size:15px;line-height:1.85;color:{s['muted']};margin-bottom:14px}}
 .ab-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:14px}}
 .ab-card{{background:{s['bg2']};border:1px solid {s['brd']};border-radius:10px;padding:18px}}
 .ab-card-av{{width:38px;height:38px;border-radius:50%;background:{s['primary']};color:{on_ink};font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}}
-.ab-card-name{{font-size:14px;font-weight:700;color:{ink}}}
+.ab-card-name{{font-size:14px;font-weight:700;color:{card_ink}}}
 .ab-card-role{{font-size:11px;font-weight:600;color:{s['primary']};margin:2px 0 7px}}
 .ab-card-bio{{font-size:12px;line-height:1.65;color:{s['muted']}}}
 .ab-cta{{margin-top:44px;background:{s['bg2']};border:1px solid {s['brd']};border-radius:12px;padding:30px 26px;text-align:center}}
-.ab-cta h3{{font-family:{s['font_head']};font-size:19px;font-weight:700;color:{ink};margin:0 0 8px}}
+.ab-cta h3{{font-family:{s['font_head']};font-size:19px;font-weight:700;color:{card_ink};margin:0 0 8px}}
+.ab-card-bio,.ab-cta p{{color:{card_sub}}}
 .ab-cta p{{font-size:14px;color:{s['muted']};margin:0 0 18px}}
 .ab-cta a{{display:inline-block;background:{s['primary']};color:{on_ink};padding:11px 28px;border-radius:7px;font-size:14px;font-weight:700;text-decoration:none}}"""
 
