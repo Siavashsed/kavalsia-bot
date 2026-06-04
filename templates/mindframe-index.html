@@ -322,9 +322,70 @@ footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;bord
 .foot-bottom{max-width:1240px;margin:0 auto;padding:24px 28px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:rgba(255,255,255,.4);flex-wrap:wrap;gap:14px}
 @media(max-width:820px){.foot-grid{grid-template-columns:1fr 1fr;gap:30px}}
 @media(max-width:480px){.foot-grid{grid-template-columns:1fr}}
+
+/* ───── THREE.JS NEURAL HERO CANVAS ───── */
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
+.hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 30% 38%,transparent 0%,rgba(11,18,36,.30) 60%,rgba(11,18,36,.72) 100%),linear-gradient(90deg,rgba(11,18,36,.55) 0%,rgba(11,18,36,.12) 48%,transparent 100%)}
+.hero.has-canvas .hero-net{display:none}
+
+/* ───── GSAP REVEAL STATES (only applied when JS adds .gsap-on) ───── */
+.gsap-on .reveal{opacity:0;transform:translateY(18px);will-change:transform,opacity}
+
+/* ───── PRELOADER ───── */
+#preloader{position:fixed;inset:0;z-index:9999;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:26px;transition:opacity .5s ease,visibility .5s ease}
+#preloader.pl-hidden{opacity:0;visibility:hidden;pointer-events:none}
+#preloader::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,rgba(255,90,78,.10),transparent 60%);pointer-events:none}
+.pl-mark{position:relative;width:128px;height:128px;display:grid;place-items:center}
+.pl-mark svg{width:100%;height:100%;overflow:visible}
+.pl-ring{fill:none;stroke:rgba(255,255,255,.10);stroke-width:1.2}
+.pl-eeg{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:340;stroke-dashoffset:340;
+  filter:drop-shadow(0 0 5px rgba(255,90,78,.55));
+  animation:plEEG 1.7s cubic-bezier(.45,0,.25,1) infinite}
+.pl-node{fill:#fff;opacity:.0;animation:plNode 1.7s ease-in-out infinite}
+.pl-node.n2{animation-delay:.18s}.pl-node.n3{animation-delay:.36s}.pl-node.n4{animation-delay:.54s}
+.pl-synapse{stroke:rgba(255,90,78,.30);stroke-width:1;fill:none;animation:plSyn 1.7s ease-in-out infinite}
+@keyframes plEEG{0%{stroke-dashoffset:340}55%{stroke-dashoffset:0}100%{stroke-dashoffset:-340}}
+@keyframes plNode{0%,100%{opacity:.15;r:2.2}50%{opacity:1;r:3.4}}
+@keyframes plSyn{0%,100%{opacity:.2}50%{opacity:.7}}
+.pl-name{font-family:var(--serif);font-weight:500;font-size:24px;letter-spacing:-.4px;color:#fff;position:relative}
+.pl-name b{color:var(--accent);font-weight:500}
+.pl-sub{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.42);position:relative;margin-top:-14px}
+.pl-bar{position:relative;width:160px;height:2px;background:rgba(255,255,255,.10);border-radius:2px;overflow:hidden}
+.pl-bar i{position:absolute;inset:0 100% 0 0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;animation:plBar 1.4s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes plBar{0%{right:100%}40%{right:30%}100%{right:0%}}
+@media(max-width:480px){.pl-mark{width:96px;height:96px}.pl-name{font-size:20px}.pl-bar{width:130px}}
+
+/* ───── REDUCED MOTION ───── */
+@media (prefers-reduced-motion: reduce){
+  .gsap-on .reveal{opacity:1!important;transform:none!important}
+  .pl-eeg,.pl-node,.pl-synapse,.pl-bar i{animation:none!important}
+  .pl-eeg{stroke-dashoffset:0}
+  .pl-node{opacity:.7}
+  .pl-bar i{right:0}
+  #preloader{transition:none}
+}
 </style>
 </head>
 <body>
+
+<!-- PRELOADER (CSS/SVG only, no JS-lib dependency) -->
+<div id="preloader" role="status" aria-live="polite" aria-label="Loading MindFrame">
+  <div class="pl-mark">
+    <svg viewBox="0 0 128 128" aria-hidden="true">
+      <circle class="pl-ring" cx="64" cy="64" r="58"/>
+      <path class="pl-synapse" d="M22 64 H42 M86 64 H106 M64 22 V42 M64 86 V106"/>
+      <path class="pl-eeg" d="M16 64 H40 L46 64 L52 40 L60 88 L68 28 L76 92 L82 64 L88 64 H112"/>
+      <circle class="pl-node n1" cx="42" cy="64" r="2.6"/>
+      <circle class="pl-node n2" cx="64" cy="42" r="2.6"/>
+      <circle class="pl-node n3" cx="86" cy="64" r="2.6"/>
+      <circle class="pl-node n4" cx="64" cy="86" r="2.6"/>
+    </svg>
+  </div>
+  <div class="pl-name">Mind<b>Frame</b></div>
+  <div class="pl-sub">Calibrating</div>
+  <div class="pl-bar"><i></i></div>
+</div>
 
 <!--SHELL:ACCENT:#ff5a4e-->
 <!--SHELL:HEADER-->
@@ -358,6 +419,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;bord
 
 <!-- HERO -->
 <section class="hero" role="banner">
+  <canvas class="hero-canvas" id="neuralCanvas" aria-hidden="true"></canvas>
   <svg class="hero-net" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <radialGradient id="nodeG" cx="50%" cy="50%" r="50%">
@@ -387,10 +449,10 @@ footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;bord
   </svg>
   <div class="hero-inner">
     <div>
-      <div class="kicker"><span class="dot"></span>Issue 014 · May 2026</div>
-      <h1>The science of <em>how you think</em>, written for people who like to think.</h1>
-      <p class="lede">MindFrame publishes serious, readable, evidence-based writing on psychology and neurobiology. No clickbait, no horoscopes, no certainty where the data doesn't support it. Plus a lab of five interactive self-tests you can take right now.</p>
-      <div class="hero-ctas">
+      <div class="kicker" id="hKicker"><span class="dot"></span>Issue 014 · May 2026</div>
+      <h1 id="hTitle">The science of <em>how you think</em>, written for people who like to think.</h1>
+      <p class="lede" id="hLede">MindFrame publishes serious, readable, evidence-based writing on psychology and neurobiology. No clickbait, no horoscopes, no certainty where the data doesn't support it. Plus a lab of five interactive self-tests you can take right now.</p>
+      <div class="hero-ctas" id="hCtas">
         <a href="#lab" class="btn btn-primary">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6l-5 8a3 3 0 0 0 3 4h10a3 3 0 0 0 3-4l-5-8V3"/><path d="M8 3h8"/></svg>
           Take a test
@@ -400,10 +462,10 @@ footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;bord
           Read latest
         </a>
       </div>
-      <div class="hero-meta">
-        <span><strong>42</strong> peer-reviewed sources cited this week</span>
-        <span><strong>5</strong> interactive lab tests</span>
-        <span><strong>0</strong> AI-generated filler</span>
+      <div class="hero-meta" id="hMeta">
+        <span><strong data-count="42">42</strong> peer-reviewed sources cited this week</span>
+        <span><strong data-count="5">5</strong> interactive lab tests</span>
+        <span><strong data-count="0">0</strong> AI-generated filler</span>
       </div>
     </div>
     <aside class="hero-panel" aria-label="This week in the lab">
@@ -636,7 +698,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;bord
           <span class="feat-cat">Memory · 14 min read</span>
           <h3>Why your most confident memories are often the least accurate ones.</h3>
           <p class="feat-dek">The flashbulb-memory literature, four decades on. What survived replication, what didn't, and what to do with the difference between vividness and truth.</p>
-          <div class="feat-meta"><span>By Dr. Maya Holloway</span><span>May 16, 2026</span></div>
+          <div class="feat-meta"><span>By Shahnoosh Nasiri</span><span>May 16, 2026</span></div>
         </div>
       </a>
       <a href="./#articles" class="feat-card">
@@ -687,9 +749,9 @@ footer{background:var(--ink);color:rgba(255,255,255,.6);padding:60px 0 30px;bord
     </div>
     <div class="contrib-grid">
       <article class="contrib-card">
-        <div class="contrib-av">MH</div>
+        <div class="contrib-av">SN</div>
         <div>
-          <h3 class="contrib-name">Dr. Maya Holloway</h3>
+          <h3 class="contrib-name">Shahnoosh Nasiri</h3>
           <div class="contrib-role">Cognitive Neuroscientist</div>
         </div>
         <p class="contrib-bio">Memory researcher with a decade of work on consolidation and reconsolidation. Writes about memory, learning, and the science of forgetting.</p>
@@ -1261,6 +1323,303 @@ function genSleep(){
     <span style="color:var(--text2);font-size:13px">Then space subsequent reviews at expanding intervals: 3 days, 7 days, 16 days.</span></p>
     <p style="margin-top:14px;font-size:12px;color:var(--muted)">Based on the spacing effect (Cepeda et al. 2008) and sleep-dependent consolidation work (Walker, Stickgold). The "review before sleep, retest after sleep" sandwich consistently outperforms cramming of equal total time.</p>`;
 }
+</script>
+
+<!-- ───── PINNED CDN LIBS (cdnjs) ───── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- ───── NEURAL HERO + GSAP MOTION + PRELOADER INIT ───── -->
+<script>
+(function(){
+  'use strict';
+  var reduceMotion = false;
+  try{ reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  var isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+
+  // ───── PRELOADER (always succeeds, hard failsafe) ─────
+  var preloader = document.getElementById('preloader');
+  var preloaderHidden = false;
+  function hidePreloader(){
+    if(preloaderHidden || !preloader) return;
+    preloaderHidden = true;
+    preloader.classList.add('pl-hidden');
+    preloader.setAttribute('aria-hidden','true');
+    // remove from DOM after fade so it can never trap focus or block scroll
+    setTimeout(function(){ if(preloader && preloader.parentNode){ preloader.parentNode.removeChild(preloader); } }, 600);
+  }
+  // hard failsafe: never let it get stuck
+  setTimeout(hidePreloader, reduceMotion ? 300 : 1500);
+
+  // ───── THREE.JS NEURAL NETWORK HERO ─────
+  function initNeural(){
+    var canvas = document.getElementById('neuralCanvas');
+    var hero = canvas ? canvas.closest('.hero') : null;
+    if(!canvas || !hero || !window.THREE) return false;
+
+    var THREE = window.THREE;
+    var scene, camera, renderer, group, animId, running = true;
+    var pointer = { x:0, y:0, tx:0, ty:0 };
+
+    var W = hero.clientWidth, H = hero.clientHeight || 600;
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
+    try{
+      renderer = new THREE.WebGLRenderer({ canvas:canvas, antialias:true, alpha:true });
+    }catch(e){ return false; }
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(W, H, false);
+    renderer.setClearColor(0x000000, 0);
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(60, W/H, 0.1, 1000);
+    camera.position.z = 60;
+
+    group = new THREE.Group();
+    scene.add(group);
+
+    // Node field sized for device. Brain-connectivity feel: clustered nodes.
+    var NODE_COUNT = isMobile ? 26 : 58;
+    var CONNECT_DIST = isMobile ? 26 : 22;
+    var spreadX = 90, spreadY = 52, spreadZ = 34;
+
+    var nodes = [];
+    for(var i=0;i<NODE_COUNT;i++){
+      var p = new THREE.Vector3(
+        (Math.random()*2-1)*spreadX,
+        (Math.random()*2-1)*spreadY,
+        (Math.random()*2-1)*spreadZ
+      );
+      nodes.push({
+        pos: p,
+        vel: new THREE.Vector3((Math.random()*2-1)*0.012,(Math.random()*2-1)*0.010,(Math.random()*2-1)*0.008)
+      });
+    }
+
+    // Node glow sprites (white/coral)
+    function makeGlowTexture(){
+      var c = document.createElement('canvas'); c.width = c.height = 64;
+      var ctx = c.getContext('2d');
+      var g = ctx.createRadialGradient(32,32,0,32,32,32);
+      g.addColorStop(0,'rgba(255,255,255,1)');
+      g.addColorStop(0.25,'rgba(255,170,160,0.9)');
+      g.addColorStop(0.55,'rgba(255,90,78,0.45)');
+      g.addColorStop(1,'rgba(255,90,78,0)');
+      ctx.fillStyle = g; ctx.fillRect(0,0,64,64);
+      var t = new THREE.Texture(c); t.needsUpdate = true; return t;
+    }
+    var glowTex = makeGlowTexture();
+    var nodePositions = new Float32Array(NODE_COUNT*3);
+    var nodeGeo = new THREE.BufferGeometry();
+    nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+    var nodeMat = new THREE.PointsMaterial({
+      size: isMobile ? 3.2 : 3.0, map: glowTex, transparent:true,
+      depthWrite:false, blending:THREE.AdditiveBlending, sizeAttenuation:true, opacity:0.95
+    });
+    var points = new THREE.Points(nodeGeo, nodeMat);
+    group.add(points);
+
+    // Synapse line segments (recomputed each frame)
+    var maxSeg = NODE_COUNT * 6;
+    var linePositions = new Float32Array(maxSeg*2*3);
+    var lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+    var lineMat = new THREE.LineBasicMaterial({
+      color: 0xbcd0ff, transparent:true, opacity:0.16,
+      blending:THREE.AdditiveBlending, depthWrite:false
+    });
+    var lines = new THREE.LineSegments(lineGeo, lineMat);
+    group.add(lines);
+
+    // Signal pulses travelling along active connections
+    var PULSE_COUNT = isMobile ? 6 : 14;
+    var pulses = [];
+    var pulsePositions = new Float32Array(PULSE_COUNT*3);
+    var pulseGeo = new THREE.BufferGeometry();
+    pulseGeo.setAttribute('position', new THREE.BufferAttribute(pulsePositions, 3));
+    var pulseMat = new THREE.PointsMaterial({
+      size: isMobile ? 3.4 : 3.6, map: glowTex, transparent:true,
+      depthWrite:false, blending:THREE.AdditiveBlending, color:0xff5a4e, opacity:1, sizeAttenuation:true
+    });
+    var pulsePoints = new THREE.Points(pulseGeo, pulseMat);
+    group.add(pulsePoints);
+
+    function seedPulse(p){
+      var a = (Math.random()*NODE_COUNT)|0;
+      var b = (Math.random()*NODE_COUNT)|0;
+      if(a===b) b=(b+1)%NODE_COUNT;
+      p.a=a; p.b=b; p.t=Math.random(); p.speed=0.004+Math.random()*0.010;
+    }
+    for(var k=0;k<PULSE_COUNT;k++){ var pp={}; seedPulse(pp); pulses.push(pp); }
+
+    function rebuildLinesAndStep(){
+      // step node motion + gentle bounds
+      for(var i=0;i<NODE_COUNT;i++){
+        var n=nodes[i];
+        n.pos.add(n.vel);
+        if(n.pos.x> spreadX||n.pos.x<-spreadX) n.vel.x*=-1;
+        if(n.pos.y> spreadY||n.pos.y<-spreadY) n.vel.y*=-1;
+        if(n.pos.z> spreadZ||n.pos.z<-spreadZ) n.vel.z*=-1;
+        nodePositions[i*3]=n.pos.x; nodePositions[i*3+1]=n.pos.y; nodePositions[i*3+2]=n.pos.z;
+      }
+      nodeGeo.attributes.position.needsUpdate = true;
+
+      // connections within distance
+      var seg=0;
+      for(var a=0;a<NODE_COUNT;a++){
+        for(var b=a+1;b<NODE_COUNT;b++){
+          if(seg>=maxSeg) break;
+          var dx=nodes[a].pos.x-nodes[b].pos.x;
+          var dy=nodes[a].pos.y-nodes[b].pos.y;
+          var dz=nodes[a].pos.z-nodes[b].pos.z;
+          var d2=dx*dx+dy*dy+dz*dz;
+          if(d2 < CONNECT_DIST*CONNECT_DIST){
+            var o=seg*6;
+            linePositions[o]=nodes[a].pos.x; linePositions[o+1]=nodes[a].pos.y; linePositions[o+2]=nodes[a].pos.z;
+            linePositions[o+3]=nodes[b].pos.x; linePositions[o+4]=nodes[b].pos.y; linePositions[o+5]=nodes[b].pos.z;
+            seg++;
+          }
+        }
+      }
+      lineGeo.setDrawRange(0, seg*2);
+      lineGeo.attributes.position.needsUpdate = true;
+    }
+
+    function stepPulses(){
+      for(var i=0;i<PULSE_COUNT;i++){
+        var p=pulses[i];
+        p.t += p.speed;
+        if(p.t>=1){ seedPulse(p); p.t=0; }
+        var na=nodes[p.a].pos, nb=nodes[p.b].pos;
+        pulsePositions[i*3]   = na.x+(nb.x-na.x)*p.t;
+        pulsePositions[i*3+1] = na.y+(nb.y-na.y)*p.t;
+        pulsePositions[i*3+2] = na.z+(nb.z-na.z)*p.t;
+      }
+      pulseGeo.attributes.position.needsUpdate = true;
+    }
+
+    function onResize(){
+      W = hero.clientWidth; H = hero.clientHeight || 600;
+      camera.aspect = W/H; camera.updateProjectionMatrix();
+      renderer.setSize(W, H, false);
+    }
+    var resizeT;
+    function resizeHandler(){ clearTimeout(resizeT); resizeT=setTimeout(onResize, 150); }
+    window.addEventListener('resize', resizeHandler, {passive:true});
+
+    function onMove(e){
+      var nx = (e.clientX / window.innerWidth) * 2 - 1;
+      var ny = (e.clientY / window.innerHeight) * 2 - 1;
+      pointer.tx = nx; pointer.ty = ny;
+    }
+    if(!isMobile) window.addEventListener('mousemove', onMove, {passive:true});
+
+    // pause when hero off-screen (perf)
+    var inView = true;
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(en){ inView = en[0].isIntersecting; }, {threshold:0});
+      io.observe(hero);
+    }
+
+    function render(){
+      rebuildLinesAndStep();
+      stepPulses();
+      group.rotation.y += 0.0006;
+      group.rotation.x = Math.sin(Date.now()*0.00007)*0.06;
+      // parallax ease
+      pointer.x += (pointer.tx - pointer.x)*0.04;
+      pointer.y += (pointer.ty - pointer.y)*0.04;
+      camera.position.x = pointer.x * 6;
+      camera.position.y = -pointer.y * 4;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+    }
+
+    function loop(){
+      if(!running){ return; }
+      animId = requestAnimationFrame(loop);
+      if(inView) render();
+    }
+
+    hero.classList.add('has-canvas');
+
+    if(reduceMotion){
+      // static single frame, no animation loop
+      onResize();
+      rebuildLinesAndStep();
+      stepPulses();
+      renderer.render(scene, camera);
+    } else {
+      loop();
+    }
+    return true;
+  }
+
+  // ───── GSAP MOTION ─────
+  function initGsap(){
+    if(!window.gsap) return;
+    var gsap = window.gsap;
+    if(window.ScrollTrigger){ gsap.registerPlugin(window.ScrollTrigger); }
+
+    if(reduceMotion){
+      // no motion: ensure everything visible, mark stat numbers final
+      document.querySelectorAll('[data-count]').forEach(function(el){ el.textContent = el.getAttribute('data-count'); });
+      return;
+    }
+
+    document.documentElement.classList.add('gsap-on');
+
+    // hero entrance after preloader hides
+    var heroEls = ['#hKicker','#hTitle','#hLede','#hCtas','#hMeta']
+      .map(function(s){ return document.querySelector(s); }).filter(Boolean);
+    gsap.set(heroEls, {opacity:0, y:18});
+    gsap.to(heroEls, {opacity:1, y:0, duration:0.6, ease:'power2.out', stagger:0.09, delay:0.15});
+
+    // scroll reveals: tag targets, then animate as they enter
+    if(window.ScrollTrigger){
+      var sel = '.sec-head, .lab-card, .tool-card, .topic, .feat-card, .contrib-card, .why-prose, .why-side, .faq-item';
+      document.querySelectorAll(sel).forEach(function(el){
+        el.classList.add('reveal');
+        gsap.fromTo(el, {opacity:0, y:18}, {
+          opacity:1, y:0, duration:0.6, ease:'power2.out',
+          scrollTrigger:{ trigger:el, start:'top 88%', once:true }
+        });
+      });
+    }
+
+    // count-up on stat numbers when in view
+    document.querySelectorAll('[data-count]').forEach(function(el){
+      var target = parseInt(el.getAttribute('data-count'),10);
+      if(isNaN(target)){ return; }
+      if(!window.ScrollTrigger){ el.textContent = target; return; }
+      var obj = {v:0};
+      el.textContent = '0';
+      gsap.to(obj, {
+        v: target, duration:1.1, ease:'power1.out',
+        scrollTrigger:{ trigger:el, start:'top 92%', once:true },
+        onUpdate:function(){ el.textContent = Math.round(obj.v); }
+      });
+    });
+  }
+
+  // ───── BOOT ─────
+  function boot(){
+    var ok = false;
+    try{ ok = initNeural(); }catch(e){ ok = false; }
+    try{ initGsap(); }catch(e){}
+    // hide preloader once init attempted (DOM is ready); failsafe already armed
+    hidePreloader();
+  }
+
+  if(document.readyState === 'complete'){
+    boot();
+  } else {
+    window.addEventListener('load', boot);
+    // also hide preloader on DOMContentLoaded as an earlier opportunity
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(hidePreloader, reduceMotion ? 200 : 900); });
+  }
+})();
 </script>
 </body>
 </html>
