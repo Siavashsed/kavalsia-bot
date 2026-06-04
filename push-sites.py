@@ -21,6 +21,20 @@ OUT  = BASE / "site-templates"
 # ── 22 site configs ────────────────────────────────────────────────────────────
 SITES = [
   {
+    "repo":"Siavashsed/kani","id":"kani","tpl":"magazine",
+    "name":"Kani","tagline":"Kurdistan business, guides and news",
+    "category":"Kurdistan Business & News",
+    "author":"Karwan Aziz","author_title":"Kurdistan Business & Culture Desk",
+    "bio1":"Kani means spring, a source. We started Kani to be the source people reach for when they want to find a good business, follow what is opening in Erbil and Slemani, and keep up with news across the Kurdistan Region.",
+    "bio2":"We cover the companies, the markets, the food and the daily life of the Region in four languages, so locals, visitors and the diaspora can all read it in their own words.",
+    "hero_sub":"Find businesses, read the latest from Erbil and Slemani, and follow news across the Kurdistan Region. In Kurdish, Arabic and English.",
+    "nl_head":"The Kani Brief","nl_sub":"A short weekly digest of Kurdistan business and news, in your language.",
+    "footer_desc":"A four-language guide to business, culture and news across the Kurdistan Region and Iraq.",
+    "bg":"#faf8f3","bg2":"#f1ede2","surface":"#ffffff",
+    "primary":"#137a63","primary2":"#0f5f4d","text":"#16201c","muted":"#6a766f","brd":"#e4ddcf",
+    "font_head":"'Plus Jakarta Sans','Noto Kufi Arabic',system-ui,sans-serif","font_body":"'Inter','Noto Sans Arabic',system-ui,sans-serif","font_mono":"'Courier New',Courier,monospace",
+  },
+  {
     "repo":"Siavashsed/cryptopulse","id":"cryptopulse","tpl":"terminal",
     "name":"CryptoPulse","tagline":"Algorithmic Trading Intelligence",
     "category":"Crypto & Trading",
