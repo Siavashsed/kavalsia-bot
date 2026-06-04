@@ -3037,6 +3037,141 @@
       "author_title": "Editor-in-Chief, Apex Dental Journal",
       "tagline": "Peer-reviewed dental practice, distilled",
       "schema_article_type": "MedicalScholarlyArticle"
+    },
+    {
+      "id": "kani",
+      "active": true,
+      "domain": "siavashsed.github.io/kani",
+      "repo": "Siavashsed/kani",
+      "category": "Kurdistan Business & News",
+      "theme": "light",
+      "layout": "magazine",
+      "article_layout": "sidebarwide",
+      "tone": "Local, informative and welcoming, like a well-connected city guide who knows the businesses, the neighbourhoods and the news across the Kurdistan Region. Clear and useful, never hype.",
+      "persona": "The Kani desk, a Kurdistan business and culture team covering companies, markets, food, tourism and daily life in Erbil (Hewler), Sulaymaniyah (Slemani) and across the Kurdistan Region and Iraq.",
+      "brevo_list_id": 24,
+      "signup_url": "",
+      "adsense_publisher_id": "",
+      "publish_delay_max_seconds": 3600,
+      "giscus_repo_id": "",
+      "giscus_category_id": "",
+      "comment_schedule": {
+        "enabled": true,
+        "initial_count": 3,
+        "max_count": 17,
+        "add_per_run": 1,
+        "interval_hours": 24,
+        "window_from": "08:00",
+        "window_to": "22:00",
+        "delay_days": 1,
+        "target": "recent"
+      },
+      "client": {
+        "enabled": false,
+        "business_name": "",
+        "description": "",
+        "post_every_n": 7
+      },
+      "warming": {
+        "enabled": true,
+        "started": "2026-06-04"
+      },
+      "social_media": {
+        "enabled": false,
+        "webhook_url": "",
+        "twitter_enabled": false,
+        "twitter_bearer_token": "",
+        "linkedin_enabled": false,
+        "linkedin_token": "",
+        "linkedin_org_id": ""
+      },
+      "affiliate_links": {},
+      "header_scripts": "",
+      "footer_scripts": "",
+      "topics": [
+        "The best new restaurants opening in Erbil this year",
+        "How to start a business in the Kurdistan Region: licences and steps",
+        "Sulaymaniyah's growing cafe and coworking scene",
+        "A guide to Erbil's Citadel and old bazaar for visitors",
+        "Kurdistan's startup ecosystem: who is building what",
+        "Cost of living in Erbil compared to other Iraqi cities",
+        "The top hotels in Erbil for business travellers",
+        "Real estate in the Kurdistan Region: what buyers should know",
+        "Traditional Kurdish dishes every visitor should try",
+        "Investment and trade trends across the Kurdistan Region",
+        "Dohuk and the road to the mountains: a weekend guide",
+        "How Kurdistan businesses are using social media to grow"
+      ],
+      "articles_per_day": 1,
+      "nav_style": "",
+      "author_names": [
+        "Karwan Aziz",
+        "Hero Ahmad",
+        "Dilan Brahim",
+        "Rebin Salar",
+        "Lana Mahmud"
+      ],
+      "use_random_author": true,
+      "posts_per_run": 1,
+      "historical_mode": true,
+      "historical_per_week": 2,
+      "posts_per_day_new": 1,
+      "author_bio": "Kani is a guide to doing business and living well across the Kurdistan Region, from Erbil and Slemani to the rest of Iraq. We cover the companies, the markets, the food and the news that matter locally.",
+      "posts_count": 2,
+      "posts_unit": "week",
+      "historical_count": 2,
+      "historical_unit": "week",
+      "posts_per_week": 2,
+      "new_posts_enabled": true,
+      "name": "Kani",
+      "default_author": "",
+      "custom_prompt": "",
+      "custom_css": "",
+      "categories": [
+        "Business",
+        "Erbil / Hewler",
+        "Sulaymaniyah / Slemani",
+        "Economy & Trade",
+        "Tourism",
+        "Food & Culture",
+        "News",
+        "Startups"
+      ],
+      "default_category": "Business",
+      "ghl": {
+        "enabled": false,
+        "webhook_url": "",
+        "tags": []
+      },
+      "meta": {
+        "enabled": false,
+        "pixel_id": "",
+        "capi_dataset_id": "",
+        "capi_token": "",
+        "test_event_code": "",
+        "custom_audience_id": "",
+        "fire_pageview": true
+      },
+      "wordpress": {
+        "enabled": false,
+        "url": "",
+        "username": "",
+        "app_password": ""
+      },
+      "woocommerce": {
+        "enabled": false,
+        "url": "",
+        "consumer_key": "",
+        "consumer_secret": ""
+      },
+      "shopify": {
+        "enabled": false,
+        "store_domain": "",
+        "admin_token": "",
+        "storefront_token": ""
+      },
+      "author": "Karwan Aziz",
+      "schema_article_type": "Article"
     }
   ]
 }
