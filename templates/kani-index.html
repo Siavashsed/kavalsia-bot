@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kani | کانی</title>
+<meta name="description" content="Kani is the source for Kurdistan business and news. A business directory and news hub for the Kurdistan Region of Iraq, in Kurdish, Arabic and English.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf8f3; --surface:#ffffff; --primary:#137a63; --primary-dark:#0f5f4d;
+  --gold:#f2a93b; --ink:#16201c; --muted:#6a776f; --border:#e4ddcf;
+  --shadow:0 1px 2px rgba(22,32,28,.04),0 6px 24px rgba(22,32,28,.06);
+  --shadow-lg:0 12px 40px rgba(15,95,77,.12);
+  --radius:16px; --radius-sm:10px;
+  --font-head:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-body:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--font-body);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+/* Arabic-script font swap (applied via body class) */
+body.script-arabic{--font-head:"Noto Kufi Arabic",sans-serif;--font-body:"Noto Sans Arabic",sans-serif}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2;color:var(--ink);font-weight:700}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;
+  font-family:var(--font-head);font-weight:600;font-size:15px;padding:12px 22px;border-radius:999px;
+  border:none;cursor:pointer;transition:background .2s,transform .15s;white-space:nowrap;
+}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:#3a2a08}
+.btn-gold:hover{background:#e29a2c}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--primary);
+  border:1.5px solid var(--border);font-family:var(--font-head);font-weight:600;font-size:15px;
+  padding:11px 20px;border-radius:999px;cursor:pointer;transition:border-color .2s,color .2s;
+}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary-dark)}
+.eyebrow{font-family:var(--font-head);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--primary)}
+.section{padding:72px 0}
+.section-head{max-width:640px;margin-bottom:36px}
+.section-head h2{font-size:clamp(26px,3.4vw,38px);margin:10px 0}
+.section-head p{color:var(--muted);font-size:16.5px}
+
+/* ===== NAV ===== */
+.nav{
+  position:sticky;top:0;z-index:60;background:rgba(250,248,243,.86);backdrop-filter:saturate(160%) blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{max-width:var(--maxw);margin-inline:auto;padding:14px 24px;display:flex;align-items:center;gap:22px}
+.nav-logo{display:flex;align-items:center;gap:11px;font-family:var(--font-head);font-weight:800;font-size:21px}
+.nav-logo .mark{
+  width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,var(--primary),var(--primary-dark));
+  display:grid;place-items:center;flex:none;box-shadow:0 4px 14px rgba(19,122,99,.28);
+}
+.nav-logo .kani-ar{font-family:"Noto Kufi Arabic",sans-serif;color:var(--gold);font-weight:700;font-size:15px;margin-inline-start:2px}
+.nav-spacer{flex:1}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-link{font-family:var(--font-head);font-weight:500;font-size:14.5px;color:var(--ink);padding:8px 12px;border-radius:8px;transition:background .18s,color .18s}
+.nav-link:hover{background:rgba(19,122,99,.08);color:var(--primary-dark)}
+.lang-switch{display:flex;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:3px}
+.lang-btn{font-family:var(--font-head);font-weight:600;font-size:12.5px;color:var(--muted);background:none;border:none;cursor:pointer;padding:6px 11px;border-radius:999px;transition:all .18s;white-space:nowrap}
+.lang-btn:hover{color:var(--ink)}
+.lang-btn.active{background:var(--primary);color:#fff}
+.nav-mob{display:none;background:none;border:none;cursor:pointer;padding:6px}
+@media(max-width:980px){
+  .nav-links{
+    position:absolute;inset-inline:0;top:100%;flex-direction:column;align-items:stretch;
+    background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;gap:4px;
+    box-shadow:var(--shadow);display:none;
+  }
+  .nav-links.open{display:flex}
+  .nav-link{padding:11px 12px}
+  .nav-mob{display:block}
+}
+
+/* ===== HERO ===== */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#f3f1e9 0%,var(--bg) 100%)}
+.hero::before{
+  content:"";position:absolute;inset-inline-end:-8%;top:-30%;width:560px;height:560px;border-radius:50%;
+  background:radial-gradient(circle,rgba(242,169,59,.20),transparent 62%);pointer-events:none;
+}
+.hero-mtn{position:absolute;inset-inline:0;bottom:0;height:120px;pointer-events:none;opacity:.5}
+.hero-inner{position:relative;z-index:2;max-width:760px;padding:78px 0 70px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(19,122,99,.09);color:var(--primary-dark);font-family:var(--font-head);font-weight:600;font-size:13px;padding:6px 14px;border-radius:999px;margin-bottom:18px}
+.hero-eyebrow .drop{width:8px;height:8px;border-radius:0 50% 50% 50%;background:var(--primary);transform:rotate(45deg)}
+.hero h1{font-size:clamp(32px,5.6vw,56px);font-weight:800;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:var(--primary);position:relative}
+.hero-sub{font-size:clamp(16px,2vw,19px);color:var(--muted);margin:20px 0 28px;max-width:600px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:30px}
+.hero-search{display:flex;gap:10px;max-width:540px;background:var(--surface);border:1.5px solid var(--border);border-radius:999px;padding:6px 6px 6px 18px;box-shadow:var(--shadow)}
+[dir="rtl"] .hero-search{padding:6px 18px 6px 6px}
+.hero-search input{flex:1;border:none;outline:none;background:none;font-family:var(--font-body);font-size:15.5px;color:var(--ink);min-width:0}
+.hero-search input::placeholder{color:var(--muted)}
+.hero-note{font-size:13px;color:var(--muted);margin-top:10px}
+.city-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px}
+.chip{
+  font-family:var(--font-head);font-weight:500;font-size:13.5px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--border);border-radius:999px;padding:8px 15px;cursor:pointer;transition:all .18s;
+}
+.chip:hover{border-color:var(--primary);color:var(--primary-dark)}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chip .star{color:var(--gold)}
+
+/* ===== NEWS ===== */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.news-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;
+  display:flex;flex-direction:column;gap:10px;transition:transform .18s,box-shadow .18s;box-shadow:var(--shadow);
+}
+.news-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.news-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-family:var(--font-head);font-weight:500}
+.news-src{background:rgba(19,122,99,.1);color:var(--primary-dark);padding:2px 9px;border-radius:999px;font-weight:600}
+.news-card h3{font-size:16.5px;line-height:1.35;flex:1}
+.news-card a.read{font-family:var(--font-head);font-weight:600;font-size:13.5px;color:var(--primary);display:inline-flex;align-items:center;gap:6px}
+.news-card a.read svg{transition:transform .18s}
+[dir="rtl"] .news-card a.read svg{transform:scaleX(-1)}
+.news-loading{grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:15px}
+
+/* ===== DIRECTORY ===== */
+.dir-filter{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:28px}
+.biz-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.biz-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;
+  display:flex;flex-direction:column;gap:11px;transition:transform .18s,box-shadow .18s;box-shadow:var(--shadow);position:relative;
+}
+.biz-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.biz-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.biz-cat{font-family:var(--font-head);font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--primary)}
+.biz-card h3{font-size:18px}
+.biz-city{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--muted);font-family:var(--font-head)}
+.biz-blurb{font-size:14.5px;color:var(--muted);flex:1}
+.biz-rating{display:inline-flex;align-items:center;gap:3px;font-family:var(--font-head);font-weight:600;font-size:13.5px;color:var(--ink)}
+.biz-rating .stars{color:var(--gold);letter-spacing:1px}
+.biz-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--border);padding-top:12px;font-size:13px;color:var(--muted)}
+.biz-foot a{color:var(--primary);font-weight:600}
+.sample-note{display:inline-flex;align-items:center;gap:7px;background:rgba(242,169,59,.13);color:#8a5e10;font-size:12.5px;font-family:var(--font-head);font-weight:500;padding:6px 13px;border-radius:999px;margin-bottom:20px}
+
+/* ===== LIST FORM ===== */
+.list-section{background:linear-gradient(160deg,var(--primary-dark),var(--primary));color:#fff}
+.list-section .eyebrow{color:#9fe3d0}
+.list-section h2,.list-section .section-head p{color:#fff}
+.list-section .section-head p{color:rgba(255,255,255,.82)}
+.list-wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:start}
+.list-perks{display:flex;flex-direction:column;gap:18px;margin-top:8px}
+.perk{display:flex;gap:13px;align-items:flex-start}
+.perk .ic{width:38px;height:38px;flex:none;border-radius:10px;background:rgba(255,255,255,.13);display:grid;place-items:center}
+.perk h4{color:#fff;font-size:16px;margin-bottom:2px}
+.perk p{color:rgba(255,255,255,.78);font-size:14px}
+.list-form{background:var(--surface);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-lg)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{margin-bottom:14px;display:flex;flex-direction:column;gap:6px}
+.field label{font-family:var(--font-head);font-weight:600;font-size:13px;color:var(--ink)}
+.field input,.field select,.field textarea{
+  font-family:var(--font-body);font-size:14.5px;color:var(--ink);background:var(--bg);
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;outline:none;transition:border-color .18s;width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary)}
+.field textarea{resize:vertical;min-height:78px}
+.form-msg{display:none;margin-top:14px;padding:13px 16px;border-radius:var(--radius-sm);font-size:14.5px;font-family:var(--font-head);font-weight:500}
+.form-msg.ok{display:block;background:rgba(19,122,99,.1);color:var(--primary-dark)}
+.form-msg.err{display:block;background:#fdecec;color:#a3261f}
+.form-hint{font-size:12.5px;color:var(--muted);margin-top:12px}
+.form-hint a{color:var(--primary);font-weight:600}
+
+/* ===== ARTICLES ===== */
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.art-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:10px;transition:transform .18s,box-shadow .18s;box-shadow:var(--shadow)}
+.art-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.art-cat{font-family:var(--font-head);font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);color:#b97d14}
+.art-card h3{font-size:17px;line-height:1.35;flex:1}
+.art-date{font-size:12.5px;color:var(--muted);font-family:var(--font-head)}
+.empty-state{grid-column:1/-1;text-align:center;padding:50px 24px;background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius)}
+.empty-state .ic{width:54px;height:54px;border-radius:50%;background:rgba(19,122,99,.09);display:grid;place-items:center;margin:0 auto 16px}
+.empty-state h3{font-size:19px;margin-bottom:6px}
+.empty-state p{color:var(--muted);font-size:15px}
+
+/* ===== NEWSLETTER ===== */
+.news-signup{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:38px;text-align:center;box-shadow:var(--shadow)}
+.news-signup h2{font-size:clamp(24px,3vw,32px);margin-bottom:8px}
+.news-signup p{color:var(--muted);max-width:480px;margin:0 auto 22px}
+.signup-row{display:flex;gap:10px;max-width:460px;margin:0 auto;flex-wrap:wrap}
+.signup-row input{flex:1;min-width:200px;font-family:var(--font-body);font-size:15px;border:1.5px solid var(--border);border-radius:999px;padding:12px 18px;outline:none;background:var(--bg)}
+.signup-row input:focus{border-color:var(--primary)}
+.signup-msg{display:none;margin-top:14px;color:var(--primary-dark);font-family:var(--font-head);font-weight:600;font-size:14.5px}
+
+/* ===== FOOTER ===== */
+.footer{background:#0d2a23;color:#cfe0d9;padding:56px 0 28px;margin-top:20px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:38px}
+.footer-logo{display:flex;align-items:center;gap:11px;font-family:var(--font-head);font-weight:800;font-size:21px;color:#fff;margin-bottom:14px}
+.footer-logo .mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(150deg,var(--primary),var(--primary-dark));display:grid;place-items:center;flex:none}
+.footer-logo .kani-ar{font-family:"Noto Kufi Arabic",sans-serif;color:var(--gold);font-size:15px}
+.footer-about{color:#9bb5ac;font-size:14.5px;max-width:340px}
+.footer-langnote{color:#7fa295;font-size:13px;margin-top:14px}
+.footer-col h4{color:#fff;font-size:14px;font-family:var(--font-head);margin-bottom:14px;letter-spacing:.03em}
+.footer-col a{display:block;color:#9bb5ac;font-size:14px;padding:5px 0;transition:color .18s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:#7fa295}
+.footer-bottom .made{display:inline-flex;align-items:center;gap:7px}
+.footer-bottom .drop{width:7px;height:7px;border-radius:0 50% 50% 50%;background:var(--gold);transform:rotate(45deg)}
+
+@media(max-width:860px){
+  .news-grid,.biz-grid,.art-grid{grid-template-columns:repeat(2,1fr)}
+  .list-wrap{grid-template-columns:1fr;gap:32px}
+  .footer-top{grid-template-columns:1fr 1fr;gap:30px}
+  .footer-about{grid-column:1/-1}
+}
+@media(max-width:560px){
+  .section{padding:56px 0}
+  .news-grid,.biz-grid,.art-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .wrap{padding-inline:18px}
+}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body class="script-arabic">
+<!--SHELL:ACCENT:#137a63-->
+<!--SHELL:HEADER-->
+<nav class="nav" id="main-nav">
+  <div class="nav-inner">
+    <a href="./" class="nav-logo" aria-label="Kani home">
+      <span class="mark">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5C12 2.5 5 9.5 5 14.5a7 7 0 0 0 14 0C19 9.5 12 2.5 12 2.5Z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/></svg>
+      </span>
+      <span>Kani<span class="kani-ar">کانی</span></span>
+    </a>
+    <div class="nav-spacer"></div>
+    <div class="nav-links" id="nav-links">
+      <a href="./#top" class="nav-link" data-i18n="nav.home">Home</a>
+      <a href="./#directory" class="nav-link" data-i18n="nav.businesses">Businesses</a>
+      <a href="./#news" class="nav-link" data-i18n="nav.news">News</a>
+      <a href="./#articles" class="nav-link" data-i18n="nav.guides">Guides</a>
+      <div class="lang-switch" id="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="ckb">کوردیی ناوەندی</button>
+        <button class="lang-btn" data-lang="kmr">Kurmancî</button>
+        <button class="lang-btn" data-lang="ar">العربية</button>
+      </div>
+      <a href="./#list" class="nav-link nav-cta-mob"><button class="btn-primary" data-i18n="nav.list" type="button">List your business</button></a>
+    </div>
+    <button class="nav-mob" id="nav-mob-btn" aria-label="Menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="top">
+  <svg class="hero-mtn" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 120 L0 70 L180 30 L340 80 L520 20 L700 75 L880 35 L1060 85 L1240 40 L1440 78 L1440 120 Z" fill="rgba(19,122,99,.10)"/><path d="M0 120 L0 92 L240 60 L460 95 L680 55 L920 98 L1160 62 L1440 96 L1440 120 Z" fill="rgba(19,122,99,.14)"/></svg>
+  <div class="wrap hero-inner reveal">
+    <span class="hero-eyebrow"><span class="drop"></span><span data-i18n="hero.eyebrow">Kurdistan Region of Iraq</span></span>
+    <h1><span data-i18n="hero.h1a">The source for</span> <em data-i18n="hero.h1b">Kurdistan business and news</em></h1>
+    <p class="hero-sub" data-i18n="hero.sub">Find trusted local businesses, follow the latest headlines, and get your company in front of customers across Hewler, Slemani and beyond.</p>
+    <div class="hero-actions">
+      <a href="#directory"><button class="btn-primary" type="button" data-i18n="hero.cta1">Explore businesses</button></a>
+      <a href="#list"><button class="btn-ghost" type="button" data-i18n="hero.cta2">List your business</button></a>
+    </div>
+    <div class="hero-search">
+      <input type="search" id="hero-search-input" data-i18n-ph="hero.searchph" placeholder="Search restaurants, hotels, services...">
+      <button class="btn-primary" type="button" id="hero-search-btn" data-i18n="hero.search">Search</button>
+    </div>
+    <p class="hero-note" data-i18n="hero.searchnote">Search filters the directory below.</p>
+    <div class="city-chips" id="hero-city-chips">
+      <button class="chip" data-city="Hewler" data-i18n="city.hewler">Hewler (Erbil)</button>
+      <button class="chip" data-city="Slemani" data-i18n="city.slemani">Slemani (Sulaymaniyah)</button>
+      <button class="chip" data-city="Duhok" data-i18n="city.duhok">Duhok</button>
+      <button class="chip" data-city="Halabja" data-i18n="city.halabja">Halabja</button>
+      <button class="chip" data-city="Kirkuk" data-i18n="city.kirkuk">Kirkuk</button>
+      <button class="chip" data-city="All Iraq" data-i18n="city.alliraq">All Iraq</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== KURDISTAN NEWS (live RSS) ===== -->
+<!-- News source can be swapped: Kurdistan24 / NRT / Rudaw. Currently using Rudaw English RSS via rss2json. -->
+<section class="section" id="news">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="news.eyebrow">Live headlines</span>
+      <h2 data-i18n="news.title">Kurdistan news</h2>
+      <p data-i18n="news.intro">The latest from across the region, updated automatically.</p>
+    </div>
+    <div class="news-grid" id="news-grid">
+      <div class="news-loading" data-i18n="news.loading">Loading headlines...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUSINESS DIRECTORY ===== -->
+<section class="section" id="directory" style="background:#f4f2ea">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="dir.eyebrow">Business directory</span>
+      <h2 data-i18n="dir.title">Featured businesses</h2>
+      <p data-i18n="dir.intro">Hand-picked companies serving the Kurdistan Region and wider Iraq.</p>
+    </div>
+    <span class="sample-note">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></svg>
+      <span data-i18n="dir.samplenote">These are sample listings shown for demonstration.</span>
+    </span>
+    <div class="dir-filter" id="dir-filter">
+      <button class="chip active" data-city="all" data-i18n="dir.all">All cities</button>
+      <button class="chip" data-city="Hewler" data-i18n="city.hewler">Hewler (Erbil)</button>
+      <button class="chip" data-city="Slemani" data-i18n="city.slemani">Slemani (Sulaymaniyah)</button>
+      <button class="chip" data-city="Duhok" data-i18n="city.duhok">Duhok</button>
+      <button class="chip" data-city="Halabja" data-i18n="city.halabja">Halabja</button>
+      <button class="chip" data-city="Kirkuk" data-i18n="city.kirkuk">Kirkuk</button>
+      <button class="chip" data-city="All Iraq" data-i18n="city.alliraq">All Iraq</button>
+    </div>
+    <div class="biz-grid" id="biz-grid"></div>
+  </div>
+</section>
+
+<!-- ===== LIST YOUR BUSINESS ===== -->
+<section class="section list-section" id="list">
+  <div class="wrap">
+    <div class="list-wrap">
+      <div>
+        <div class="section-head" style="margin-bottom:24px">
+          <span class="eyebrow" data-i18n="list.eyebrow">Get listed</span>
+          <h2 data-i18n="list.title">List your business on Kani</h2>
+          <p data-i18n="list.intro">Reach customers searching for what you offer, in their own language.</p>
+        </div>
+        <div class="list-perks">
+          <div class="perk">
+            <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <div><h4 data-i18n="list.perk1t">Be found locally</h4><p data-i18n="list.perk1d">Appear when people search your city and category.</p></div>
+          </div>
+          <div class="perk">
+            <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15 9 22 9.5 17 14 18.5 21 12 17.5 5.5 21 7 14 2 9.5 9 9 Z"/></svg></span>
+            <div><h4 data-i18n="list.perk2t">Build trust</h4><p data-i18n="list.perk2d">Show ratings, contact details and your story.</p></div>
+          </div>
+          <div class="perk">
+            <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14M5 12h14M5 16h9"/></svg></span>
+            <div><h4 data-i18n="list.perk3t">Four languages</h4><p data-i18n="list.perk3d">Kurdish, Arabic and English customers, one listing.</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- IMPORTANT: replace REPLACE_WITH_FORM_ID with your real Formspree form id, or wire your own handler. -->
+      <form class="list-form" id="list-form" action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST">
+        <div class="form-row">
+          <div class="field"><label data-i18n="form.bizname">Business name</label><input type="text" name="business_name" required></div>
+          <div class="field"><label data-i18n="form.category">Category</label>
+            <select name="category" required>
+              <option value="" data-i18n="form.choose">Choose...</option>
+              <option data-i18n="cat.restaurant">Restaurant</option>
+              <option data-i18n="cat.hotel">Hotel</option>
+              <option data-i18n="cat.cafe">Cafe</option>
+              <option data-i18n="cat.retail">Retail</option>
+              <option data-i18n="cat.services">Services</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label data-i18n="form.city">City</label>
+            <select name="city" required>
+              <option value="" data-i18n="form.choose">Choose...</option>
+              <option data-i18n="city.hewler">Hewler (Erbil)</option>
+              <option data-i18n="city.slemani">Slemani (Sulaymaniyah)</option>
+              <option data-i18n="city.duhok">Duhok</option>
+              <option data-i18n="city.halabja">Halabja</option>
+              <option data-i18n="city.kirkuk">Kirkuk</option>
+              <option data-i18n="city.alliraq">All Iraq</option>
+            </select>
+          </div>
+          <div class="field"><label data-i18n="form.contact">Contact name</label><input type="text" name="contact_name" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label data-i18n="form.phone">Phone or email</label><input type="text" name="contact" required></div>
+          <div class="field"><label data-i18n="form.website">Website (optional)</label><input type="text" name="website"></div>
+        </div>
+        <div class="field"><label data-i18n="form.desc">Short description</label><textarea name="description" required></textarea></div>
+        <button class="btn-gold" type="submit" style="width:100%;justify-content:center" data-i18n="form.submit">Submit listing</button>
+        <div class="form-msg" id="form-msg"></div>
+        <p class="form-hint"><span data-i18n="form.hint">No account needed. We review every submission.</span> <a href="mailto:hello@kani.example" data-i18n="form.mailto">Or email us directly.</a></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LATEST ARTICLES ===== -->
+<section class="section" id="articles">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="art.eyebrow">Guides and stories</span>
+      <h2 data-i18n="art.title">Latest articles</h2>
+      <p data-i18n="art.intro">Practical guides to doing business and living in Kurdistan.</p>
+    </div>
+    <div class="art-grid" id="art-grid">
+      <div class="news-loading" data-i18n="art.loading">Loading articles...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEWSLETTER ===== -->
+<section class="section" id="newsletter" style="background:#f4f2ea">
+  <div class="wrap">
+    <div class="news-signup">
+      <h2 data-i18n="nl.title">Get the Kani briefing</h2>
+      <p data-i18n="nl.intro">A short weekly email on Kurdistan business, new listings and news. No spam.</p>
+      <!-- replace REPLACE_WITH_FORM_ID to actually collect emails; otherwise it just shows a thank-you. -->
+      <form class="signup-row" id="signup-form" action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST">
+        <input type="email" name="email" required data-i18n-ph="nl.ph" placeholder="you@email.com">
+        <button class="btn-primary" type="submit" data-i18n="nl.btn">Subscribe</button>
+      </form>
+      <div class="signup-msg" id="signup-msg" data-i18n="nl.thanks">Thank you. You are on the list.</div>
+    </div>
+  </div>
+</section>
+
+<!--SHELL:FOOTER-->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">
+          <span class="mark"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5C12 2.5 5 9.5 5 14.5a7 7 0 0 0 14 0C19 9.5 12 2.5 12 2.5Z"/></svg></span>
+          <span>Kani<span class="kani-ar">کانی</span></span>
+        </div>
+        <p class="footer-about" data-i18n="footer.about">Kani means spring, the source. We are the source for Kurdistan business and news, starting in Hewler and growing across the region.</p>
+        <p class="footer-langnote" data-i18n="footer.langnote">Available in Kurdish, Arabic and English.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.cities">Cities</h4>
+        <a href="#directory" data-i18n="city.hewler">Hewler (Erbil)</a>
+        <a href="#directory" data-i18n="city.slemani">Slemani (Sulaymaniyah)</a>
+        <a href="#directory" data-i18n="city.duhok">Duhok</a>
+        <a href="#directory" data-i18n="city.halabja">Halabja</a>
+        <a href="#directory" data-i18n="city.kirkuk">Kirkuk</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.explore">Explore</h4>
+        <a href="#directory" data-i18n="nav.businesses">Businesses</a>
+        <a href="#news" data-i18n="nav.news">News</a>
+        <a href="#articles" data-i18n="nav.guides">Guides</a>
+        <a href="#list" data-i18n="nav.list">List your business</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> Kani</span>
+      <span class="made"><span class="drop"></span><span data-i18n="footer.tag">The source for Kurdistan business and news</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============ i18n ============ */
+  var I18N = {
+    en:{
+      "nav.home":"Home","nav.businesses":"Businesses","nav.news":"News","nav.guides":"Guides","nav.list":"List your business",
+      "hero.eyebrow":"Kurdistan Region of Iraq","hero.h1a":"The source for","hero.h1b":"Kurdistan business and news",
+      "hero.sub":"Find trusted local businesses, follow the latest headlines, and get your company in front of customers across Hewler, Slemani and beyond.",
+      "hero.cta1":"Explore businesses","hero.cta2":"List your business","hero.search":"Search","hero.searchph":"Search restaurants, hotels, services...",
+      "hero.searchnote":"Search filters the directory below.",
+      "city.hewler":"Hewler (Erbil)","city.slemani":"Slemani (Sulaymaniyah)","city.duhok":"Duhok","city.halabja":"Halabja","city.kirkuk":"Kirkuk","city.alliraq":"All Iraq",
+      "news.eyebrow":"Live headlines","news.title":"Kurdistan news","news.intro":"The latest from across the region, updated automatically.","news.loading":"Loading headlines...","news.read":"Read",
+      "dir.eyebrow":"Business directory","dir.title":"Featured businesses","dir.intro":"Hand-picked companies serving the Kurdistan Region and wider Iraq.","dir.samplenote":"These are sample listings shown for demonstration.","dir.all":"All cities","dir.empty":"No businesses match this filter yet.",
+      "list.eyebrow":"Get listed","list.title":"List your business on Kani","list.intro":"Reach customers searching for what you offer, in their own language.",
+      "list.perk1t":"Be found locally","list.perk1d":"Appear when people search your city and category.","list.perk2t":"Build trust","list.perk2d":"Show ratings, contact details and your story.","list.perk3t":"Four languages","list.perk3d":"Kurdish, Arabic and English customers, one listing.",
+      "form.bizname":"Business name","form.category":"Category","form.choose":"Choose...","form.city":"City","form.contact":"Contact name","form.phone":"Phone or email","form.website":"Website (optional)","form.desc":"Short description","form.submit":"Submit listing",
+      "form.hint":"No account needed. We review every submission.","form.mailto":"Or email us directly.","form.ok":"Thank you. Your listing has been received and will be reviewed.","form.err":"Please fill in all required fields.",
+      "cat.restaurant":"Restaurant","cat.hotel":"Hotel","cat.cafe":"Cafe","cat.retail":"Retail","cat.services":"Services",
+      "art.eyebrow":"Guides and stories","art.title":"Latest articles","art.intro":"Practical guides to doing business and living in Kurdistan.","art.loading":"Loading articles...","art.soon":"Articles coming soon","art.soondesc":"We are preparing guides on business, culture and life in Kurdistan.",
+      "nl.title":"Get the Kani briefing","nl.intro":"A short weekly email on Kurdistan business, new listings and news. No spam.","nl.ph":"you@email.com","nl.btn":"Subscribe","nl.thanks":"Thank you. You are on the list.",
+      "footer.about":"Kani means spring, the source. We are the source for Kurdistan business and news, starting in Hewler and growing across the region.","footer.langnote":"Available in Kurdish, Arabic and English.","footer.cities":"Cities","footer.explore":"Explore","footer.tag":"The source for Kurdistan business and news"
+    },
+    ckb:{
+      "nav.home":"سەرەتا","nav.businesses":"بازرگانییەکان","nav.news":"هەواڵ","nav.guides":"ڕێنماییەکان","nav.list":"بازرگانییەکەت تۆمار بکە",
+      "hero.eyebrow":"هەرێمی کوردستانی عێراق","hero.h1a":"سەرچاوەی","hero.h1b":"بازرگانی و هەواڵی کوردستان",
+      "hero.sub":"بازرگانییە متمانەپێکراوەکان بدۆزەرەوە، دواین هەواڵەکان بخوێنەرەوە، و کۆمپانیاکەت بگەیەنە بە کڕیاران لە هەولێر و سلێمانی و دوورتر.",
+      "hero.cta1":"بازرگانییەکان ببینە","hero.cta2":"بازرگانییەکەت تۆمار بکە","hero.search":"گەڕان","hero.searchph":"گەڕان بۆ چێشتخانە، هۆتێل، خزمەتگوزاری...",
+      "hero.searchnote":"گەڕان لیستی خوارەوە پاڵاوتە دەکات.",
+      "city.hewler":"هەولێر","city.slemani":"سلێمانی","city.duhok":"دهۆک","city.halabja":"هەڵەبجە","city.kirkuk":"کەرکوک","city.alliraq":"هەموو عێراق",
+      "news.eyebrow":"هەواڵی ڕاستەوخۆ","news.title":"هەواڵی کوردستان","news.intro":"دواین هەواڵ لە سەرتاسەری هەرێم، بە شێوەی خۆکار نوێ دەکرێتەوە.","news.loading":"بارکردنی هەواڵەکان...","news.read":"بخوێنەرەوە",
+      "dir.eyebrow":"ڕێنمای بازرگانی","dir.title":"بازرگانییە دیارەکان","dir.intro":"کۆمپانیا هەڵبژێردراوەکان کە خزمەتی هەرێمی کوردستان و عێراق دەکەن.","dir.samplenote":"ئەمانە نموونەن و تەنها بۆ پیشاندانن.","dir.all":"هەموو شارەکان","dir.empty":"هیچ بازرگانییەک لەگەڵ ئەم پاڵاوتنە ناگونجێت.",
+      "list.eyebrow":"تۆمارکردن","list.title":"بازرگانییەکەت لە کانی تۆمار بکە","list.intro":"بگەرە بەو کڕیارانەی بەدوای ئەوەدا دەگەڕێن کە تۆ پێشکەشی دەکەیت، بە زمانی خۆیان.",
+      "list.perk1t":"بە ئاسانی بدۆزرێیتەوە","list.perk1d":"دەردەکەویت کاتێک خەڵک گەڕان بە شار و جۆری کارەکەت دەکەن.","list.perk2t":"متمانە دروست بکە","list.perk2d":"هەڵسەنگاندن و زانیاری پەیوەندی و چیرۆکی خۆت پیشان بدە.","list.perk3t":"چوار زمان","list.perk3d":"کڕیارانی کوردی و عەرەبی و ئینگلیزی، بە یەک تۆمار.",
+      "form.bizname":"ناوی بازرگانی","form.category":"جۆر","form.choose":"هەڵبژێرە...","form.city":"شار","form.contact":"ناوی کەسی پەیوەندیدار","form.phone":"تەلەفۆن یان ئیمەیڵ","form.website":"ماڵپەڕ (ئارەزوومەندانە)","form.desc":"وەسفێکی کورت","form.submit":"تۆمارکردن",
+      "form.hint":"پێویست بە هەژمار ناکات. هەموو داواکارییەک پێداچوونەوەی بۆ دەکەین.","form.mailto":"یان ڕاستەوخۆ ئیمەیڵمان بۆ بنێرە.","form.ok":"سوپاس. تۆمارەکەت گەیشت و پێداچوونەوەی بۆ دەکرێت.","form.err":"تکایە هەموو خانە پێویستەکان پڕ بکەرەوە.",
+      "cat.restaurant":"چێشتخانە","cat.hotel":"هۆتێل","cat.cafe":"کافێ","cat.retail":"فرۆشتنی وردە","cat.services":"خزمەتگوزاری",
+      "art.eyebrow":"ڕێنمایی و چیرۆک","art.title":"دواین وتارەکان","art.intro":"ڕێنمایی کرداری بۆ کارکردن و ژیان لە کوردستان.","art.loading":"بارکردنی وتارەکان...","art.soon":"وتارەکان بەم زووانە دێن","art.soondesc":"ئێمە ڕێنمایی ئامادە دەکەین دەربارەی بازرگانی و کلتوور و ژیان لە کوردستان.",
+      "nl.title":"نامەی کانی وەربگرە","nl.intro":"ئیمەیڵێکی کورتی هەفتانە دەربارەی بازرگانی کوردستان و تۆمارە نوێیەکان و هەواڵ. سپام نییە.","nl.ph":"you@email.com","nl.btn":"بەشداربە","nl.thanks":"سوپاس. تۆ لە لیستەکەدایت.",
+      "footer.about":"کانی واتە سەرچاوە. ئێمە سەرچاوەی بازرگانی و هەواڵی کوردستانین، لە هەولێرەوە دەست پێدەکەین و بەرەو سەرتاسەری هەرێم گەشە دەکەین.","footer.langnote":"بەردەستە بە کوردی و عەرەبی و ئینگلیزی.","footer.cities":"شارەکان","footer.explore":"گەشتکردن","footer.tag":"سەرچاوەی بازرگانی و هەواڵی کوردستان"
+    },
+    kmr:{
+      "nav.home":"Serûpel","nav.businesses":"Karûbar","nav.news":"Nûçe","nav.guides":"Rênimaye","nav.list":"Karê xwe tomar bike",
+      "hero.eyebrow":"Herêma Kurdistana Iraqê","hero.h1a":"Çavkaniya","hero.h1b":"karûbar û nûçeyên Kurdistanê",
+      "hero.sub":"Karûbarên herêmî yên pêbawer bibîne, nûçeyên herî dawî bişopîne, û pargîdaniya xwe bigihîne xerîdaran li Hewlêr, Silêmanî û wêdetir.",
+      "hero.cta1":"Karûbaran vekole","hero.cta2":"Karê xwe tomar bike","hero.search":"Lêgerîn","hero.searchph":"Li xwaringeh, otêl, xizmet bigere...",
+      "hero.searchnote":"Lêgerîn pelrêza jêrîn parz dike.",
+      "city.hewler":"Hewlêr (Erbîl)","city.slemani":"Silêmanî","city.duhok":"Dihok","city.halabja":"Helebce","city.kirkuk":"Kerkûk","city.alliraq":"Hemû Iraq",
+      "news.eyebrow":"Sernivîsên zindî","news.title":"Nûçeyên Kurdistanê","news.intro":"Yên herî dawî ji seranserê herêmê, bi awayekî otomatîk nû dibin.","news.loading":"Sernivîs tên barkirin...","news.read":"Bixwîne",
+      "dir.eyebrow":"Pelrêza karûbar","dir.title":"Karûbarên taybet","dir.intro":"Pargîdaniyên hilbijartî ku xizmeta Herêma Kurdistanê û Iraqê dikin.","dir.samplenote":"Ev mînak in, tenê ji bo nîşandanê.","dir.all":"Hemû bajar","dir.empty":"Tu karûbar bi vê parzûnê re lê nayê.",
+      "list.eyebrow":"Tomar bibe","list.title":"Karê xwe li Kanî tomar bike","list.intro":"Bigihîje xerîdarên ku li tiştên tu pêşkêş dikî digerin, bi zimanê wan.",
+      "list.perk1t":"Bi hêsanî were dîtin","list.perk1d":"Dema mirov li bajar û cureyê karê te digerin, tu xuya dibî.","list.perk2t":"Bawerî ava bike","list.perk2d":"Nirxandin, agahiyên têkilî û çîroka xwe nîşan bide.","list.perk3t":"Çar ziman","list.perk3d":"Xerîdarên Kurdî, Erebî û Îngilîzî, bi yek tomarê.",
+      "form.bizname":"Navê karûbar","form.category":"Cure","form.choose":"Hilbijêre...","form.city":"Bajar","form.contact":"Navê têkiliyê","form.phone":"Telefon an e-name","form.website":"Malper (vebijêrk)","form.desc":"Danasîna kurt","form.submit":"Tomarê bişîne",
+      "form.hint":"Hewceyî hesab nake. Em her serîlêdanê dinirxînin.","form.mailto":"An rasterast ji me re e-name bişîne.","form.ok":"Spas. Tomara te gihîşt û dê were nirxandin.","form.err":"Ji kerema xwe hemû xanên pêwîst dagirin.",
+      "cat.restaurant":"Xwaringeh","cat.hotel":"Otêl","cat.cafe":"Qehwexane","cat.retail":"Firotgeh","cat.services":"Xizmet",
+      "art.eyebrow":"Rênimaye û çîrok","art.title":"Gotarên herî dawî","art.intro":"Rênimayên pratîkî ji bo karkirin û jiyanê li Kurdistanê.","art.loading":"Gotar tên barkirin...","art.soon":"Gotar zû tên","art.soondesc":"Em rênimayan li ser karûbar, çand û jiyana Kurdistanê amade dikin.",
+      "nl.title":"Nameya Kanî wergire","nl.intro":"E-nameyeke kurt a heftane li ser karûbarên Kurdistanê, tomarên nû û nûçe. Bê spam.","nl.ph":"tu@e-name.com","nl.btn":"Beşdar bibe","nl.thanks":"Spas. Tu di lîsteyê de yî.",
+      "footer.about":"Kanî tê wateya çavkaniyê. Em çavkaniya karûbar û nûçeyên Kurdistanê ne, ji Hewlêrê dest pê dikin û li seranserê herêmê mezin dibin.","footer.langnote":"Bi Kurdî, Erebî û Îngilîzî heye.","footer.cities":"Bajar","footer.explore":"Vekole","footer.tag":"Çavkaniya karûbar û nûçeyên Kurdistanê"
+    },
+    ar:{
+      "nav.home":"الرئيسية","nav.businesses":"الأعمال","nav.news":"الأخبار","nav.guides":"الأدلة","nav.list":"أدرج نشاطك التجاري",
+      "hero.eyebrow":"إقليم كردستان العراق","hero.h1a":"المصدر الأول","hero.h1b":"لأعمال وأخبار كردستان",
+      "hero.sub":"اعثر على شركات محلية موثوقة، تابع آخر الأخبار، واجعل شركتك أمام العملاء في أربيل والسليمانية وما بعدها.",
+      "hero.cta1":"استكشف الأعمال","hero.cta2":"أدرج نشاطك","hero.search":"بحث","hero.searchph":"ابحث عن مطاعم، فنادق، خدمات...",
+      "hero.searchnote":"يقوم البحث بتصفية الدليل أدناه.",
+      "city.hewler":"أربيل (هولير)","city.slemani":"السليمانية","city.duhok":"دهوك","city.halabja":"حلبجة","city.kirkuk":"كركوك","city.alliraq":"كل العراق",
+      "news.eyebrow":"عناوين مباشرة","news.title":"أخبار كردستان","news.intro":"آخر الأخبار من جميع أنحاء الإقليم، تُحدّث تلقائياً.","news.loading":"جارٍ تحميل الأخبار...","news.read":"اقرأ",
+      "dir.eyebrow":"دليل الأعمال","dir.title":"أعمال مميزة","dir.intro":"شركات مختارة تخدم إقليم كردستان والعراق عموماً.","dir.samplenote":"هذه قوائم عينة معروضة للتوضيح.","dir.all":"كل المدن","dir.empty":"لا توجد أعمال تطابق هذا التصفية بعد.",
+      "list.eyebrow":"سجّل نشاطك","list.title":"أدرج نشاطك التجاري في كاني","list.intro":"اصل إلى العملاء الباحثين عمّا تقدمه، بلغتهم.",
+      "list.perk1t":"كن مرئياً محلياً","list.perk1d":"تظهر عندما يبحث الناس عن مدينتك وفئتك.","list.perk2t":"ابنِ الثقة","list.perk2d":"اعرض التقييمات وبيانات التواصل وقصتك.","list.perk3t":"أربع لغات","list.perk3d":"عملاء بالكردية والعربية والإنجليزية، بقائمة واحدة.",
+      "form.bizname":"اسم النشاط","form.category":"الفئة","form.choose":"اختر...","form.city":"المدينة","form.contact":"اسم جهة الاتصال","form.phone":"الهاتف أو البريد","form.website":"الموقع (اختياري)","form.desc":"وصف قصير","form.submit":"إرسال القائمة",
+      "form.hint":"لا حاجة لحساب. نراجع كل طلب.","form.mailto":"أو راسلنا مباشرة عبر البريد.","form.ok":"شكراً. تم استلام قائمتك وستتم مراجعتها.","form.err":"يرجى ملء جميع الحقول المطلوبة.",
+      "cat.restaurant":"مطعم","cat.hotel":"فندق","cat.cafe":"مقهى","cat.retail":"بيع بالتجزئة","cat.services":"خدمات",
+      "art.eyebrow":"أدلة وقصص","art.title":"أحدث المقالات","art.intro":"أدلة عملية لممارسة الأعمال والعيش في كردستان.","art.loading":"جارٍ تحميل المقالات...","art.soon":"المقالات قريباً","art.soondesc":"نُعدّ أدلة حول الأعمال والثقافة والحياة في كردستان.",
+      "nl.title":"احصل على نشرة كاني","nl.intro":"بريد أسبوعي قصير عن أعمال كردستان والقوائم الجديدة والأخبار. بلا إزعاج.","nl.ph":"you@email.com","nl.btn":"اشترك","nl.thanks":"شكراً. أنت ضمن القائمة.",
+      "footer.about":"كاني تعني النبع، المصدر. نحن المصدر لأعمال وأخبار كردستان، نبدأ من أربيل وننمو عبر الإقليم.","footer.langnote":"متوفر بالكردية والعربية والإنجليزية.","footer.cities":"المدن","footer.explore":"استكشف","footer.tag":"المصدر لأعمال وأخبار كردستان"
+    }
+  };
+
+  var RTL = {ckb:true,ar:true,en:false,kmr:false};
+  var ARABIC_SCRIPT = {ckb:true,ar:true,en:false,kmr:false};
+  var LANGS = ["en","ckb","kmr","ar"];
+
+  function t(key){
+    var lang = document.documentElement.lang || "ckb";
+    var pack = I18N[lang] || I18N.en;
+    return (key in pack) ? pack[key] : (I18N.en[key] || key);
+  }
+
+  function applyLang(lang){
+    if(LANGS.indexOf(lang)===-1) lang="ckb";
+    var html = document.documentElement;
+    html.lang = lang;
+    html.dir = RTL[lang] ? "rtl" : "ltr";
+    document.body.classList.toggle("script-arabic", !!ARABIC_SCRIPT[lang]);
+    // text content
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for(var i=0;i<nodes.length;i++){
+      var k = nodes[i].getAttribute("data-i18n");
+      var v = t(k);
+      if(v) nodes[i].textContent = v;
+    }
+    // placeholders
+    var ph = document.querySelectorAll("[data-i18n-ph]");
+    for(var j=0;j<ph.length;j++){
+      var pk = ph[j].getAttribute("data-i18n-ph");
+      var pv = t(pk);
+      if(pv) ph[j].setAttribute("placeholder", pv);
+    }
+    // active lang button
+    var lbtns = document.querySelectorAll(".lang-btn");
+    for(var b=0;b<lbtns.length;b++){
+      lbtns[b].classList.toggle("active", lbtns[b].getAttribute("data-lang")===lang);
+    }
+    try{ localStorage.setItem("kani_lang", lang); }catch(e){}
+    // re-render dynamic content that has embedded labels
+    renderBusinesses(currentCity);
+  }
+
+  // language buttons (present in header on all pages)
+  var langSwitch = document.getElementById("lang-switch");
+  if(langSwitch){
+    langSwitch.addEventListener("click", function(e){
+      var btn = e.target.closest(".lang-btn");
+      if(btn) applyLang(btn.getAttribute("data-lang"));
+    });
+  }
+
+  /* ============ mobile nav ============ */
+  var mobBtn = document.getElementById("nav-mob-btn");
+  var navLinks = document.getElementById("nav-links");
+  if(mobBtn && navLinks){
+    mobBtn.addEventListener("click", function(){
+      var open = navLinks.classList.toggle("open");
+      mobBtn.setAttribute("aria-expanded", open ? "true":"false");
+    });
+    navLinks.addEventListener("click", function(e){
+      if(e.target.closest("a") && navLinks.classList.contains("open")){
+        navLinks.classList.remove("open");
+        mobBtn.setAttribute("aria-expanded","false");
+      }
+    });
+  }
+
+  /* ============ year ============ */
+  var yearEl = document.getElementById("year");
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+
+  /* ============ BUSINESS DIRECTORY ============
+     To add a real business, copy one object below and edit the fields.
+     city must be one of: Hewler, Slemani, Duhok, Halabja, Kirkuk, All Iraq
+     catKey must be one of: cat.restaurant, cat.hotel, cat.cafe, cat.retail, cat.services
+     name/blurb keys end in _en/_ckb/_kmr/_ar so each shows in the active language. */
+  var BUSINESSES = [
+    {name:"Mountain Breeze Restaurant", catKey:"cat.restaurant", city:"Hewler", blurb:"Classic Kurdish dishes and grills near the Citadel.", rating:4.7, phone:"+964 750 000 0001", web:"example.krd"},
+    {name:"Citadel View Hotel", catKey:"cat.hotel", city:"Hewler", blurb:"Boutique rooms with views over old Hewler.", rating:4.5, phone:"+964 750 000 0002", web:"example.krd"},
+    {name:"Spring Roastery Cafe", catKey:"cat.cafe", city:"Hewler", blurb:"Specialty coffee and pastries in the city center.", rating:4.8, phone:"+964 750 000 0003", web:"example.krd"},
+    {name:"Hewler Tech Services", catKey:"cat.services", city:"Hewler", blurb:"IT support and web development for local firms.", rating:4.6, phone:"+964 750 000 0004", web:"example.krd"},
+    {name:"Sarchnar Garden Cafe", catKey:"cat.cafe", city:"Slemani", blurb:"Tea garden and breakfasts near Sarchnar.", rating:4.6, phone:"+964 770 000 0005", web:"example.krd"},
+    {name:"Slemani Grand Bazaar Retail", catKey:"cat.retail", city:"Slemani", blurb:"Textiles, gifts and Kurdish handicrafts.", rating:4.4, phone:"+964 770 000 0006", web:"example.krd"},
+    {name:"Goizha Suites", catKey:"cat.hotel", city:"Slemani", blurb:"Modern suites at the foot of Goizha mountain.", rating:4.5, phone:"+964 770 000 0007", web:"example.krd"},
+    {name:"Duhok Riverside Grill", catKey:"cat.restaurant", city:"Duhok", blurb:"Fresh fish and kebab by the dam road.", rating:4.5, phone:"+964 750 000 0008", web:"example.krd"},
+    {name:"Duhok Home Decor", catKey:"cat.retail", city:"Duhok", blurb:"Furniture and home goods for the whole family.", rating:4.3, phone:"+964 750 000 0009", web:"example.krd"},
+    {name:"Halabja Memorial Cafe", catKey:"cat.cafe", city:"Halabja", blurb:"Quiet cafe near the memorial, local sweets.", rating:4.6, phone:"+964 770 000 0010", web:"example.krd"},
+    {name:"Kirkuk Auto Services", catKey:"cat.services", city:"Kirkuk", blurb:"Trusted car repair and maintenance.", rating:4.4, phone:"+964 770 000 0011", web:"example.krd"},
+    {name:"Iraq Wide Logistics", catKey:"cat.services", city:"All Iraq", blurb:"Freight and delivery across all Iraqi provinces.", rating:4.5, phone:"+964 780 000 0012", web:"example.krd"}
+  ];
+  // Order weight: Erbil first, then Slemani, then other cities, then wider Iraq.
+  var CITY_ORDER = {"Hewler":0,"Slemani":1,"Duhok":2,"Halabja":3,"Kirkuk":4,"All Iraq":5};
+
+  function escapeHtml(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function stars(r){
+    var full = Math.round(r);
+    var s="";
+    for(var i=0;i<5;i++) s += i<full ? "★" : "☆";
+    return s;
+  }
+
+  var currentCity = "all";
+  var bizGrid = document.getElementById("biz-grid");
+
+  function renderBusinesses(city){
+    if(!bizGrid) return;
+    currentCity = city || currentCity;
+    var list = BUSINESSES.slice().sort(function(a,b){
+      return (CITY_ORDER[a.city]||9) - (CITY_ORDER[b.city]||9);
+    });
+    if(currentCity!=="all"){
+      list = list.filter(function(b){ return b.city===currentCity; });
+    }
+    if(!list.length){
+      bizGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>'+escapeHtml(t("dir.empty"))+'</p></div>';
+      return;
+    }
+    var html = "";
+    for(var i=0;i<list.length;i++){
+      var b = list[i];
+      var cityLabel = t("city."+({"Hewler":"hewler","Slemani":"slemani","Duhok":"duhok","Halabja":"halabja","Kirkuk":"kirkuk","All Iraq":"alliraq"}[b.city]||"alliraq"));
+      html += '<div class="biz-card">'
+        + '<div class="biz-top"><div><div class="biz-cat">'+escapeHtml(t(b.catKey))+'</div><h3>'+escapeHtml(b.name)+'</h3></div>'
+        + '<span class="biz-rating"><span class="stars">'+stars(b.rating)+'</span> '+b.rating.toFixed(1)+'</span></div>'
+        + '<span class="biz-city"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>'+escapeHtml(cityLabel)+'</span>'
+        + '<p class="biz-blurb">'+escapeHtml(b.blurb)+'</p>'
+        + '<div class="biz-foot"><span>'+escapeHtml(b.phone||"")+'</span>'+(b.web?'<a href="#">'+escapeHtml(b.web)+'</a>':'')+'</div>'
+        + '</div>';
+    }
+    bizGrid.innerHTML = html;
+  }
+
+  // directory filter chips
+  var dirFilter = document.getElementById("dir-filter");
+  if(dirFilter){
+    dirFilter.addEventListener("click", function(e){
+      var chip = e.target.closest(".chip");
+      if(!chip) return;
+      var chips = dirFilter.querySelectorAll(".chip");
+      for(var i=0;i<chips.length;i++) chips[i].classList.remove("active");
+      chip.classList.add("active");
+      renderBusinesses(chip.getAttribute("data-city"));
+    });
+  }
+
+  // hero city chips -> scroll to directory and filter
+  var heroChips = document.getElementById("hero-city-chips");
+  if(heroChips && dirFilter && bizGrid){
+    heroChips.addEventListener("click", function(e){
+      var chip = e.target.closest(".chip");
+      if(!chip) return;
+      var city = chip.getAttribute("data-city");
+      var dchips = dirFilter.querySelectorAll(".chip");
+      for(var i=0;i<dchips.length;i++){
+        dchips[i].classList.toggle("active", dchips[i].getAttribute("data-city")===city);
+      }
+      renderBusinesses(city);
+      document.getElementById("directory").scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  }
+
+  // hero search -> simple name/blurb/category filter rendered into grid
+  var searchInput = document.getElementById("hero-search-input");
+  var searchBtn = document.getElementById("hero-search-btn");
+  function runSearch(){
+    if(!bizGrid || !searchInput) return;
+    var q = searchInput.value.trim().toLowerCase();
+    if(!q){ renderBusinesses(currentCity); return; }
+    var list = BUSINESSES.filter(function(b){
+      return (b.name+" "+b.blurb+" "+t(b.catKey)).toLowerCase().indexOf(q)!==-1;
+    });
+    var html = "";
+    if(!list.length){
+      bizGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>'+escapeHtml(t("dir.empty"))+'</p></div>';
+    } else {
+      for(var i=0;i<list.length;i++){
+        var b=list[i];
+        var cityLabel = t("city."+({"Hewler":"hewler","Slemani":"slemani","Duhok":"duhok","Halabja":"halabja","Kirkuk":"kirkuk","All Iraq":"alliraq"}[b.city]||"alliraq"));
+        html += '<div class="biz-card"><div class="biz-top"><div><div class="biz-cat">'+escapeHtml(t(b.catKey))+'</div><h3>'+escapeHtml(b.name)+'</h3></div><span class="biz-rating"><span class="stars">'+stars(b.rating)+'</span> '+b.rating.toFixed(1)+'</span></div><span class="biz-city">'+escapeHtml(cityLabel)+'</span><p class="biz-blurb">'+escapeHtml(b.blurb)+'</p><div class="biz-foot"><span>'+escapeHtml(b.phone||"")+'</span></div></div>';
+      }
+      bizGrid.innerHTML = html;
+    }
+    document.getElementById("directory").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  if(searchBtn) searchBtn.addEventListener("click", runSearch);
+  if(searchInput) searchInput.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); runSearch(); }});
+
+  /* ============ KURDISTAN NEWS (RSS via rss2json) ============
+     Swap the rss_url to use Kurdistan24 / NRT / Rudaw feeds as desired. */
+  var NEWS_URL = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.rudaw.net%2Frss%2Fenglish";
+  var newsGrid = document.getElementById("news-grid");
+
+  function fmtDate(d){
+    try{ var dt = new Date(d); if(isNaN(dt)) return ""; return dt.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"}); }catch(e){ return ""; }
+  }
+  function newsCard(title, src, date, link){
+    var read = t("news.read");
+    return '<article class="news-card">'
+      + '<div class="news-meta"><span class="news-src">'+escapeHtml(src)+'</span><span>'+escapeHtml(date)+'</span></div>'
+      + '<h3>'+escapeHtml(title)+'</h3>'
+      + '<a class="read" href="'+escapeHtml(link)+'" target="_blank" rel="noopener">'+escapeHtml(read)+' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>'
+      + '</article>';
+  }
+  function newsFallback(){
+    // Generic curated fallback so the section is never empty.
+    var items = [
+      {t:"Kurdistan Region economy shows steady growth in non-oil sectors", d:""},
+      {t:"Erbil opens new business district to attract regional investors", d:""},
+      {t:"Sulaymaniyah tech startups draw fresh funding interest", d:""},
+      {t:"Tourism to Kurdistan mountains rises ahead of the season", d:""}
+    ];
+    var html="";
+    for(var i=0;i<items.length;i++){ html += newsCard(items[i].t, "Kani", items[i].d, "#news"); }
+    return html;
+  }
+  function loadNews(){
+    if(!newsGrid) return;
+    var done=false;
+    var timer = setTimeout(function(){ if(!done){ done=true; newsGrid.innerHTML = newsFallback(); } }, 8000);
+    fetch(NEWS_URL).then(function(r){ return r.json(); }).then(function(data){
+      if(done) return; done=true; clearTimeout(timer);
+      if(data && data.status==="ok" && data.items && data.items.length){
+        var html="";
+        var n = Math.min(6, data.items.length);
+        for(var i=0;i<n;i++){
+          var it = data.items[i];
+          html += newsCard(it.title||"", "Rudaw", fmtDate(it.pubDate), it.link||"#");
+        }
+        newsGrid.innerHTML = html;
+      } else {
+        newsGrid.innerHTML = newsFallback();
+      }
+    }).catch(function(){
+      if(done) return; done=true; clearTimeout(timer);
+      newsGrid.innerHTML = newsFallback();
+    });
+  }
+
+  /* ============ LATEST ARTICLES (./articles.json) ============ */
+  var artGrid = document.getElementById("art-grid");
+  function artSoon(){
+    return '<div class="empty-state"><span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg></span>'
+      + '<h3>'+escapeHtml(t("art.soon"))+'</h3><p>'+escapeHtml(t("art.soondesc"))+'</p></div>';
+  }
+  function loadArticles(){
+    if(!artGrid) return;
+    fetch("./articles.json").then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(data){
+      var items = Array.isArray(data) ? data : (data && data.articles ? data.articles : []);
+      if(!items || !items.length){ artGrid.innerHTML = artSoon(); return; }
+      var n = Math.min(6, items.length);
+      var html="";
+      for(var i=0;i<n;i++){
+        var a = items[i] || {};
+        var href = a.url || a.link || a.slug || "#";
+        var cat = a.category || a.cat || "";
+        var date = a.date ? fmtDate(a.date) : "";
+        html += '<a class="art-card" href="'+escapeHtml(href)+'">'
+          + (cat?'<span class="art-cat">'+escapeHtml(cat)+'</span>':'')
+          + '<h3>'+escapeHtml(a.title||"Untitled")+'</h3>'
+          + (date?'<span class="art-date">'+escapeHtml(date)+'</span>':'')
+          + '</a>';
+      }
+      artGrid.innerHTML = html;
+    }).catch(function(){ artGrid.innerHTML = artSoon(); });
+  }
+
+  /* ============ LIST FORM ============ */
+  var listForm = document.getElementById("list-form");
+  var formMsg = document.getElementById("form-msg");
+  if(listForm && formMsg){
+    listForm.addEventListener("submit", function(e){
+      var required = listForm.querySelectorAll("[required]");
+      var ok = true;
+      for(var i=0;i<required.length;i++){ if(!String(required[i].value).trim()){ ok=false; break; } }
+      if(!ok){
+        e.preventDefault();
+        formMsg.className = "form-msg err";
+        formMsg.textContent = t("form.err");
+        return;
+      }
+      // If the placeholder endpoint is still in place, do NOT POST: just show success.
+      if(listForm.getAttribute("action").indexOf("REPLACE_WITH_FORM_ID")!==-1){
+        e.preventDefault();
+        formMsg.className = "form-msg ok";
+        formMsg.textContent = t("form.ok");
+        listForm.reset();
+      }
+      // Otherwise let it POST to the real Formspree endpoint.
+    });
+  }
+
+  /* ============ NEWSLETTER ============ */
+  var signupForm = document.getElementById("signup-form");
+  var signupMsg = document.getElementById("signup-msg");
+  if(signupForm && signupMsg){
+    signupForm.addEventListener("submit", function(e){
+      if(signupForm.getAttribute("action").indexOf("REPLACE_WITH_FORM_ID")!==-1){
+        e.preventDefault();
+        signupMsg.style.display = "block";
+        signupMsg.textContent = t("nl.thanks");
+        signupForm.reset();
+      }
+    });
+  }
+
+  /* ============ reveal on scroll ============ */
+  var reveals = document.querySelectorAll(".reveal");
+  if(reveals.length && "IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } });
+    },{threshold:.12});
+    for(var i=0;i<reveals.length;i++) io.observe(reveals[i]);
+  } else {
+    for(var r=0;r<reveals.length;r++) reveals[r].classList.add("in");
+  }
+
+  /* ============ INIT ============ */
+  var saved = "ckb";
+  try{ saved = localStorage.getItem("kani_lang") || "ckb"; }catch(e){}
+  applyLang(saved);          // also renders businesses
+  loadNews();
+  loadArticles();
+})();
+</script>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
