@@ -78,7 +78,7 @@ CONFIG_FILE = BASE_DIR / "network-config.json"
 WRAPPERS = ("ap", "art-grid", "art-min", "mag-hero", "imm-hero", "art", "wrap", "hero", "body",
             # distinct + bespoke builder wrappers, so their pages can be re-extracted
             "bs", "tb", "lf", "sw", "ob", "kn",
-            "ttr", "aimp", "ece", "obz", "cpa", "pwa", "mpa", "sva", "dha", "spq")
+            "ttr", "aimp", "ece", "obz", "cpa", "pwa", "mpa", "sva", "dha", "spq", "cvg")
 
 
 def _headers(token):
