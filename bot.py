@@ -6138,12 +6138,22 @@ def article_onlinebiz(article, site, image_url, photographer, t):
     category = (article.get("category") or site.get("category") or "Playbook").upper()
     read_time = max(3, _count_words(_wrap_block(article.get("intro",""),"p")+sections)//220)
 
-    hero_img = ""
-    if image_url:
-        hero_img = (f'<figure class="ob-hero-fig">'
-                    f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager">'
-                    f'<figcaption>Photo: {photographer} / Pexels</figcaption>'
-                    f'</figure>')
+    kicker_html = (f'<div class="ob-kicker"><span class="ob-chip">{category}</span>'
+                   f'<span class="ob-dot"></span><span>{article.get("date","")}</span>'
+                   f'<span class="ob-dot"></span><span>{read_time} min read</span></div>')
+    has_img = bool(image_url)
+    if has_img:
+        _credit = (f'<figcaption class="ob-banner-credit">Photograph: {photographer} / Pexels</figcaption>'
+                   if photographer else '')
+        banner = (f'<figure class="ob-banner">'
+                  f'<img class="ob-banner-img" src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager" onerror="this.style.display=\'none\'">'
+                  f'<div class="ob-banner-shade"></div>'
+                  f'<div class="ob-banner-cap">{kicker_html}<h1>{article["title"]}</h1></div>'
+                  f'{_credit}</figure>')
+        head_block = ''
+    else:
+        banner = ''
+        head_block = f'{kicker_html}<div class="ob-bar"></div><h1>{article["title"]}</h1>'
 
     css = f"""
 .ob{{--ob-bg:#070708;--ob-bg2:#0d0d10;--ob-surface:#131318;--ob-accent:#6c5ce7;--ob-accent2:#a78bfa;--ob-cyan:#22d3ee;--ob-lime:#bef264;--ob-text:#f4f4f6;--ob-muted:#8b8b97;--ob-dim:#5c5c68;--ob-border:#222229;background:var(--ob-bg);color:var(--ob-text);font-family:'Inter',system-ui,sans-serif;position:relative;overflow:hidden}}
@@ -6158,6 +6168,14 @@ def article_onlinebiz(article, site, image_url, photographer, t):
 .ob-hero-fig{{margin:0 0 40px}}
 .ob-hero-fig img{{width:100%;border-radius:16px;border:1px solid var(--ob-border);box-shadow:0 30px 80px -40px rgba(108,92,231,.6);display:block}}
 .ob-hero-fig figcaption{{font-size:11px;color:var(--ob-dim);letter-spacing:.08em;text-transform:uppercase;margin-top:10px;text-align:right}}
+.ob-banner{{margin:0;position:relative;width:100%;height:clamp(300px,52vh,520px);overflow:hidden;border-bottom:1px solid var(--ob-border)}}
+.ob-banner-img{{width:100%;height:100%;object-fit:cover;display:block}}
+.ob-banner-shade{{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,7,8,.2),rgba(7,7,8,.55) 55%,rgba(7,7,8,.96))}}
+.ob-banner-cap{{position:absolute;left:0;right:0;bottom:0;max-width:760px;margin:0 auto;padding:0 24px 38px;width:100%;box-sizing:border-box}}
+.ob-banner-cap .ob-kicker{{margin-bottom:16px}}
+.ob-banner-cap h1{{margin:0;color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.55)}}
+.ob-banner-credit{{position:absolute;top:14px;right:16px;font-size:10px;color:rgba(255,255,255,.72);letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.32);padding:4px 11px;border-radius:999px}}
+@media(max-width:600px){{.ob-banner{{height:clamp(240px,46vh,360px)}}.ob-banner-cap{{padding:0 20px 26px}}}}
 .ob-body{{font-size:17px;line-height:1.78;color:#d9d9e0}}
 .ob-body p{{margin:0 0 22px}}
 .ob-body .intro{{font-size:21px;line-height:1.6;font-weight:500;color:var(--ob-text);border-left:3px solid;border-image:linear-gradient(180deg,var(--ob-accent2),var(--ob-lime)) 1;padding-left:22px;margin:0 0 30px}}
@@ -6210,12 +6228,10 @@ body[data-page-depth="1"] .ob-concl .ob-concl-label{{color:#bef264 !important}}"
                   + '</div></div>')
 
     body = f"""<div class="ob">
+  {banner}
   <div class="ob-wrap">
-    <div class="ob-kicker"><span class="ob-chip">{category}</span><span class="ob-dot"></span><span>{article.get("date","")}</span><span class="ob-dot"></span><span>{read_time} min read</span></div>
-    <div class="ob-bar"></div>
-    <h1>{article["title"]}</h1>
+    {head_block}
     {f'<p class="ob-dek">{article.get("meta_description","")}</p>' if article.get("meta_description") else ''}
-    {hero_img}
     <div class="ob-body">
       {_wrap_block(article["intro"], "p", "intro")}
       {_wrap_block(article.get("intro2",""), "p")}
