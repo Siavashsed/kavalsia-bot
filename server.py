@@ -5,7 +5,7 @@
 # Required: pip install flask requests
 # ANTHROPIC_API_KEY env var is used for AI commands (or enter key in hub settings)
 
-import os, json, hashlib, webbrowser, threading, time, subprocess
+import os, json, hashlib, webbrowser, threading, time, subprocess, re
 from pathlib import Path
 from datetime import datetime, timedelta
 import requests
@@ -642,11 +642,15 @@ def delete_claude_session(session_id):
 # ── Daily report ──────────────────────────────────────────────────────────────
 @app.route("/api/daily-report", methods=["POST"])
 def daily_report():
+    """Pull recent articles from each site's articles.json index (the source of
+    truth populated by bot.py on push). The previous implementation queried a
+    Jekyll-style /_posts directory that the bot doesn't write, which is why
+    this panel showed nothing."""
+    import base64 as _b64
     body     = request.json or {}
     token    = body.get("token", "")
     days     = int(body.get("days", 1))
-    cutoff   = datetime.utcnow() - timedelta(days=days)
-    cutoff_s = cutoff.strftime("%Y-%m-%d")
+    cutoff_s = (datetime.utcnow() - timedelta(days=days)).strftime("%Y-%m-%d")
 
     try:
         cfg   = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
@@ -654,46 +658,137 @@ def daily_report():
     except Exception:
         return jsonify({"error": "Could not read config"}), 500
 
-    articles = []
+    hdrs = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"} if token else {}
+
+    articles    = []
+    per_site    = {}
+    failed_sites = []
+
     for site in sites:
         repo = site.get("repo", "")
-        if not repo or "YOUR_" in repo:
+        sid  = site.get("id") or repo
+        if not repo or "YOUR_" in repo or sid == "nexus":
             continue
-        hdrs = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
         try:
-            r = requests.get(f"https://api.github.com/repos/{repo}/contents/_posts",
-                             headers=hdrs, timeout=10)
+            r = requests.get(f"https://api.github.com/repos/{repo}/contents/articles.json",
+                             headers=hdrs, timeout=12)
             if r.status_code != 200:
+                failed_sites.append({"site_id": sid, "reason": f"http {r.status_code}"})
                 continue
-            posts = r.json()
-            if not isinstance(posts, list):
+            data = r.json()
+            content_b64 = data.get("content") or ""
+            if not content_b64:
                 continue
-            for p in posts:
-                name = p.get("name", "")
-                m = __import__("re").match(r"^(\d{4}-\d{2}-\d{2})-(.+)\.md$", name)
-                if not m:
+            idx = json.loads(_b64.b64decode(content_b64.replace("\n", "")).decode("utf-8"))
+            if not isinstance(idx, list):
+                continue
+            domain = site.get("domain", "")
+            site_name = site.get("name") or site.get("category") or sid
+            count_for_site = 0
+            for a in idx:
+                # Filter by publish date (was this posted in the cutoff window?)
+                published_s = a.get("posted_iso") or a.get("date_iso") or a.get("date") or ""
+                if not published_s or published_s < cutoff_s:
                     continue
-                date_s, slug = m.group(1), m.group(2)
-                if date_s < cutoff_s:
-                    continue
-                title = slug.replace("-", " ").capitalize()
-                domain = site.get("domain", "")
-                url = f"https://{domain}/{date_s.replace('-','/')}/{slug}/" if domain else ""
+                # Display the CONTENT date (e.g. 2019 for a historical retrospective),
+                # not the publish date. Sort uses this too.
+                content_s = a.get("date_iso") or a.get("posted_iso") or a.get("date") or ""
+                slug = a.get("slug", "")
+                url = f"https://{domain}/{slug}/" if (domain and slug) else ""
                 articles.append({
-                    "site_id":   site["id"],
-                    "site_name": site.get("category", site["id"]),
+                    "site_id":   sid,
+                    "site_name": site_name,
                     "domain":    domain,
-                    "title":     title,
-                    "date":      date_s,
+                    "title":     a.get("title", slug.replace("-", " ").title()),
+                    "date":      content_s,
+                    "posted_iso": published_s,
                     "url":       url,
                     "repo":      repo,
+                    "category":  a.get("category", ""),
+                    "author":    a.get("author", ""),
                 })
-        except Exception:
-            continue
+                count_for_site += 1
+            if count_for_site:
+                per_site[sid] = count_for_site
+        except Exception as e:
+            failed_sites.append({"site_id": sid, "reason": str(e)[:80]})
 
-    articles.sort(key=lambda x: x["date"], reverse=True)
-    return jsonify({"articles": articles, "days": days, "total": len(articles),
-                    "generated_at": datetime.utcnow().isoformat()})
+    articles.sort(key=lambda x: (x.get("date") or "", x.get("posted_iso") or ""), reverse=True)
+    return jsonify({
+        "articles":     articles,
+        "days":         days,
+        "total":        len(articles),
+        "per_site":     per_site,
+        "failed_sites": failed_sites,
+        "generated_at": datetime.utcnow().isoformat(),
+    })
+
+
+@app.route("/api/gemini-summary", methods=["POST"])
+def gemini_summary():
+    """Summarize the daily-report payload with Gemini free tier.
+    Hard-fails on quota/network errors instead of falling back to paid models
+    or other providers, per [[feedback-gemini-free-tier-only]]."""
+    import os as _os, pathlib as _pl
+    body = request.json or {}
+    payload_text = (body.get("text") or "").strip()
+    style = body.get("style", "executive")  # executive | bullet | terse
+
+    # Fallback chain: process env -> ~/.claude/settings.json env block
+    def _settings_env(key):
+        try:
+            sp = _pl.Path.home() / ".claude" / "settings.json"
+            if not sp.exists(): return ""
+            data = json.loads(sp.read_text(encoding="utf-8"))
+            return (data.get("env") or {}).get(key, "") or ""
+        except Exception:
+            return ""
+
+    api_key = _os.environ.get("GEMINI_API_KEY") or _settings_env("GEMINI_API_KEY")
+    if not api_key:
+        return jsonify({"error": "GEMINI_API_KEY missing (set in env or ~/.claude/settings.json env block)"}), 503
+    tier = (_os.environ.get("GEMINI_TIER") or _settings_env("GEMINI_TIER") or "free").lower()
+    if tier != "free":
+        return jsonify({"error": "GEMINI_TIER is not 'free'; refusing to call paid models per free-tier-only rule"}), 503
+    allowed = ((_os.environ.get("GEMINI_ALLOWED_MODELS") or _settings_env("GEMINI_ALLOWED_MODELS") or
+                "gemini-2.0-flash,gemini-2.0-flash-lite,gemini-1.5-flash").split(","))
+    model = allowed[0].strip()
+
+    if not payload_text:
+        return jsonify({"error": "empty text"}), 400
+    if len(payload_text) > 30000:
+        payload_text = payload_text[:30000]
+
+    style_prompt = {
+        "executive": "Write a 3 sentence executive summary of yesterday's Spider Web network activity. Lead with the headline number. Note any failures. End with the most interesting article.",
+        "bullet":    "Write 4 to 6 bullet points summarizing yesterday's Spider Web network activity. Each bullet under 18 words.",
+        "terse":     "Write one 25 word line summarizing yesterday's Spider Web network activity. Include the article count.",
+    }.get(style, "Summarize the activity in 3 sentences.")
+
+    prompt = f"{style_prompt}\n\nDo not use em dashes. Use plain hyphens or rewrite.\n\nDATA:\n{payload_text}"
+
+    try:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+        r = requests.post(url, json={
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.4, "maxOutputTokens": 400},
+        }, timeout=20)
+    except Exception as e:
+        return jsonify({"error": f"network: {e}"}), 502
+
+    if r.status_code == 429:
+        return jsonify({"error": "Gemini free tier quota exhausted; try again later"}), 429
+    if r.status_code != 200:
+        return jsonify({"error": f"gemini http {r.status_code}: {r.text[:300]}"}), 502
+
+    try:
+        out = r.json()
+        text = out["candidates"][0]["content"]["parts"][0]["text"].strip()
+        # Strip any em dashes that slipped past the prompt instruction.
+        text = text.replace("—", "-").replace("–", "-")
+        return jsonify({"summary": text, "model": model, "tier": "free"})
+    except Exception as e:
+        return jsonify({"error": f"parse: {e}", "raw": str(out)[:300]}), 502
 
 @app.route("/api/push-sites", methods=["POST"])
 def push_sites():
@@ -1036,6 +1131,18 @@ def ai_fix_articles():
             "Authorization": f"token {token}",
             "Accept": "application/vnd.github.v3+json",
         }
+        # Capture pre-fix commit SHA for reversibility (one-click undo).
+        repo_meta = requests.get(f"https://api.github.com/repos/{repo}", headers=headers, timeout=10)
+        default_branch = "main"
+        if repo_meta.ok:
+            default_branch = repo_meta.json().get("default_branch") or "main"
+        ref_r = requests.get(f"https://api.github.com/repos/{repo}/git/refs/heads/{default_branch}", headers=headers, timeout=10)
+        pre_sha = ""
+        if ref_r.ok:
+            pre_sha = ref_r.json().get("object", {}).get("sha", "")
+        if pre_sha:
+            yield f"__UNDO_SHA__{pre_sha}__{default_branch}\n"
+            yield f"Snapshot taken at {pre_sha[:7]} on {default_branch} (undo available)\n"
         r = requests.get(f"https://api.github.com/repos/{repo}/contents/articles.json", headers=headers, timeout=10)
         if not r.ok:
             yield f"Could not fetch articles.json: {r.status_code}\n"
@@ -1086,23 +1193,187 @@ def ai_fix_articles():
                     headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"})
 
 
+@app.route("/api/ai-fix-undo", methods=["POST"])
+def ai_fix_undo():
+    """Force the repo default branch back to a pre-fix SHA. Used by the AI Custom Fix Undo button."""
+    data   = request.get_json(force=True, silent=True) or {}
+    token  = (data.get("token") or "").strip() or request.headers.get("X-GH-Token", "").strip() or os.environ.get("GITHUB_TOKEN", "").strip()
+    repo   = (data.get("repo") or "").strip()
+    sha    = (data.get("sha") or "").strip()
+    branch = (data.get("branch") or "main").strip()
+    if not token or not repo or not sha:
+        return jsonify({"error": "token, repo, sha required"}), 400
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+    }
+    # Sanity: confirm the SHA exists on this repo before forcing.
+    chk = requests.get(f"https://api.github.com/repos/{repo}/commits/{sha}", headers=headers, timeout=10)
+    if chk.status_code == 404:
+        return jsonify({"error": f"Commit {sha[:7]} not found on {repo}. Undo expired or repo changed."}), 404
+    if not chk.ok:
+        return jsonify({"error": f"GitHub returned {chk.status_code} verifying SHA"}), 502
+    # PATCH the ref with force=true to reset the branch.
+    r = requests.patch(
+        f"https://api.github.com/repos/{repo}/git/refs/heads/{branch}",
+        headers=headers,
+        json={"sha": sha, "force": True},
+        timeout=15,
+    )
+    if r.status_code in (200, 201):
+        return jsonify({"ok": True, "repo": repo, "branch": branch, "reverted_to": sha[:7]})
+    return jsonify({"error": f"GitHub refused undo: {r.status_code} {r.text[:200]}"}), 502
+
+
+@app.route("/api/customize-apply", methods=["POST"])
+def customize_apply():
+    """Real customize push with per-site SHA snapshot for undo.
+
+    Body:
+      { token, items: [{repo, path, html, label?}], prompt? }
+    items can target any path on any repo. For each item:
+      1. Read the current branch HEAD SHA (the snapshot target)
+      2. Read the file's current blob SHA
+      3. PUT the new content with the blob SHA so the write is atomic
+      4. Record {repo, branch, pre_sha, path, file_sha_before, commit_sha_after}
+
+    Returns:
+      { ok, results: [{...}], undo_token: <uuid> }
+    The caller persists undo_token + the per-item results in localStorage.
+    """
+    import base64 as _b64
+    data = request.get_json(force=True, silent=True) or {}
+    token = (data.get("token") or "").strip() or request.headers.get("X-GH-Token", "").strip() or os.environ.get("GITHUB_TOKEN", "").strip()
+    items = data.get("items") or []
+    prompt = (data.get("prompt") or "").strip()
+    label  = (data.get("label") or "Customize Site").strip()
+    if not token:
+        return jsonify({"error": "GitHub token required"}), 400
+    if not items or not isinstance(items, list):
+        return jsonify({"error": "items required (list of {repo, path, html})"}), 400
+
+    headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
+    results = []
+    for item in items:
+        repo = (item.get("repo") or "").strip()
+        path = (item.get("path") or "index.html").strip()
+        html = item.get("html") or ""
+        # Validate the model output BEFORE touching the repo - rejects refusals,
+        # truncated responses, and obvious quota errors that would otherwise
+        # overwrite a live page.
+        v = _validate_customize_html(html, path)
+        if not v["ok"]:
+            results.append({"repo": repo, "path": path, "ok": False, "error": v["reason"]})
+            continue
+
+        # 1. Get default branch + head SHA (the rollback target)
+        meta = requests.get(f"https://api.github.com/repos/{repo}", headers=headers, timeout=10)
+        default_branch = "main"
+        if meta.ok:
+            default_branch = meta.json().get("default_branch") or "main"
+        ref = requests.get(f"https://api.github.com/repos/{repo}/git/refs/heads/{default_branch}", headers=headers, timeout=10)
+        pre_sha = ""
+        if ref.ok:
+            pre_sha = ref.json().get("object", {}).get("sha", "")
+
+        # 2. Get the file's current blob SHA so the PUT is atomic
+        file_sha = None
+        fr = requests.get(f"https://api.github.com/repos/{repo}/contents/{path}", headers=headers, timeout=10)
+        if fr.ok:
+            file_sha = fr.json().get("sha")
+
+        # 3. PUT the new content
+        body = {
+            "message": f"Customize: {label} [{datetime.now().strftime('%Y-%m-%d %H:%M')}]",
+            "content": _b64.b64encode(html.encode("utf-8")).decode(),
+        }
+        if file_sha:
+            body["sha"] = file_sha
+        pr = requests.put(f"https://api.github.com/repos/{repo}/contents/{path}",
+                          headers=headers, json=body, timeout=15)
+        if pr.status_code in (200, 201):
+            commit_sha = pr.json().get("commit", {}).get("sha", "")
+            results.append({
+                "repo": repo, "path": path, "ok": True,
+                "pre_sha": pre_sha, "branch": default_branch,
+                "commit_sha": commit_sha,
+                "url": f"https://{repo.split('/')[0].lower()}.github.io/{repo.split('/')[1]}/" + (path if path != "index.html" else ""),
+            })
+        else:
+            results.append({"repo": repo, "path": path, "ok": False,
+                            "error": f"{pr.status_code}: {pr.text[:200]}"})
+
+    ok_count = sum(1 for r in results if r.get("ok"))
+    return jsonify({
+        "ok": ok_count > 0,
+        "ok_count": ok_count,
+        "fail_count": len(results) - ok_count,
+        "results": results,
+        "prompt": prompt[:300],
+        "applied_at": datetime.now().isoformat(),
+    })
+
+
+def _validate_customize_html(html, path):
+    """Reject obviously-broken model output before it overwrites a live page.
+
+    Catches: empty / very short responses, plain refusals ("I cannot..."),
+    raw model errors, missing <html> on full-page paths. Pages that look like
+    fragments (e.g., a single widget) are allowed when they target a non-
+    homepage path.
+    """
+    if not isinstance(html, str):
+        return {"ok": False, "reason": "html must be a string"}
+    s = html.strip()
+    if len(s) < 200:
+        return {"ok": False, "reason": f"response too short ({len(s)} chars) - likely a refusal or error"}
+    lower = s.lower()
+    refusal_markers = (
+        "i cannot ", "i can't ", "i'm sorry", "i am sorry",
+        "as an ai language model", "i'm unable to", "i am unable to",
+        "i don't have the ability", "as a language model",
+    )
+    head = lower[:400]
+    if any(m in head for m in refusal_markers):
+        return {"ok": False, "reason": "model returned a refusal instead of HTML"}
+    if path.endswith("index.html") or path == "":
+        if "<html" not in lower and "<!doctype" not in lower:
+            return {"ok": False, "reason": "missing <html> tag - not a complete page"}
+    if "rate limit" in lower[:600] and "exceeded" in lower[:600]:
+        return {"ok": False, "reason": "rate-limit error fragment, not real HTML"}
+    return {"ok": True}
+
+
+@app.route("/api/customize-undo", methods=["POST"])
+def customize_undo():
+    """Rollback alias for /api/ai-fix-undo. Kept under a separate name so the
+    Customize Site UI has a discoverable endpoint without coupling to the
+    AI-Fix internals. Same body: { token, repo, sha, branch }."""
+    return ai_fix_undo()
+
+
 # ── Broadcast / post queue ────────────────────────────────────────────────────
 BROADCAST_PATH = BASE_DIR / "broadcast.json"
 
 @app.route("/api/write-broadcast", methods=["POST"])
 def write_broadcast():
+    """Queue a Customize-Post payload for the next bot run. Now persists the
+    previewed HTML so bot.py can publish the exact article the user saw -
+    fixing the long-standing bug where the post preview was a lie."""
     body = request.json or {}
     topic    = body.get("topic", "").strip()
     site_ids = body.get("site_ids", [])
+    generated_html = body.get("_generated_html") or body.get("generated_html") or ""
     if not topic:
         return jsonify({"error": "topic required"}), 400
     payload = {
-        "topic":    topic,
-        "site_ids": site_ids,
-        "created_at": datetime.now().isoformat(),
+        "topic":          topic,
+        "site_ids":       site_ids,
+        "generated_html": generated_html,
+        "created_at":     datetime.now().isoformat(),
     }
     BROADCAST_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return jsonify({"ok": True, "file": str(BROADCAST_PATH)})
+    return jsonify({"ok": True, "file": str(BROADCAST_PATH), "has_html": bool(generated_html)})
 
 # ── Telegram ──────────────────────────────────────────────────────────────────
 @app.route("/api/telegram/send", methods=["POST"])
@@ -2244,16 +2515,21 @@ ALLOWED_SITE_FIELDS = {
     # Identity & Persona
     "name", "default_author", "author_names", "persona", "tone",
     "custom_prompt", "custom_css",
+    "tagline", "hero_sub", "footer_desc", "category",
     # Posting Schedule (canonical fields the bot reads)
     "posts_per_day_new", "posts_per_week", "historical_mode",
     "historical_per_week", "warming",
     # Pipeline on/off toggles. new_posts_enabled defaults to true if missing.
-    "new_posts_enabled",
+    "new_posts_enabled", "active",
     # UI round-trip fields so the unit dropdown reopens with the user's choice
     "posts_count", "posts_unit", "historical_count", "historical_unit",
     # Content Pipeline
     "topics", "categories", "default_category", "signup_url",
     "header_scripts", "footer_scripts",
+    # Layout + design - editable from the Site Editor panel
+    "article_layout", "schema_article_type", "editorial_archive",
+    "custom_domain", "github_pages_domain",
+    "accent_color",  # alias - some templates read this instead of primary
     # GHL (GoHighLevel) integration per-site overrides
     "ghl",
     # Meta Pixel + CAPI per-site overrides (added by Meta agent if missing)
@@ -2284,7 +2560,153 @@ SITE_FIELD_VALIDATORS = {
     "woocommerce":         lambda v: isinstance(v, dict),
     "shopify":             lambda v: isinstance(v, dict),
     "translation_mode":    lambda v: v in ("primary_only", "primary_plus_english", "auto_all"),
+    "editorial_archive":   lambda v: isinstance(v, bool),
+    "active":              lambda v: isinstance(v, bool),
+    "custom_domain":       lambda v: isinstance(v, str) and len(v) <= 253,
+    "github_pages_domain": lambda v: isinstance(v, str) and len(v) <= 253,
+    "schema_article_type": lambda v: isinstance(v, str) and len(v) <= 64,
+    "article_layout":      lambda v: isinstance(v, str) and len(v) <= 64,
+    "accent_color":        lambda v: isinstance(v, str) and (v.startswith("#") and len(v) in (4,7,9) or v == ""),
+    "tagline":             lambda v: isinstance(v, str) and len(v) <= 200,
+    "hero_sub":            lambda v: isinstance(v, str) and len(v) <= 400,
+    "footer_desc":         lambda v: isinstance(v, str) and len(v) <= 400,
+    "category":            lambda v: isinstance(v, str) and len(v) <= 100,
+    "name":                lambda v: isinstance(v, str) and 1 <= len(v) <= 80,
+    "persona":             lambda v: isinstance(v, str) and len(v) <= 500,
+    "tone":                lambda v: isinstance(v, str) and len(v) <= 300,
 }
+
+@app.route("/api/site-add", methods=["POST"])
+def add_new_site():
+    """Add a brand-new site to the Spider network in one call.
+
+    Steps:
+      1. Validate site_id is slug-style and unused.
+      2. Create the GitHub repo under the user's account (public).
+      3. Enable GitHub Pages on the repo (source: main branch root).
+      4. Append the site entry to network-config.json. push-sites.py will
+         pick it up at next module load via the merge that synthesizes a
+         SITES dict from the kit preset.
+      5. Caller can then POST /api/push-sites with site_ids=[new_id] to
+         publish the initial build.
+
+    Body:
+      { token, site_id, name, kit, tagline?, category?, persona?, custom_domain? }
+    """
+    data = request.get_json(force=True, silent=True) or {}
+    token       = (data.get("token") or "").strip() or os.environ.get("GITHUB_TOKEN","").strip()
+    site_id     = (data.get("site_id") or "").strip().lower()
+    name        = (data.get("name") or "").strip()
+    kit         = (data.get("kit") or "minimalist").strip().lower()
+    tagline     = (data.get("tagline") or "").strip()
+    category    = (data.get("category") or "General").strip()
+    persona     = (data.get("persona") or "").strip()
+    custom_dom  = (data.get("custom_domain") or "").strip().lower()
+    hero_sub    = (data.get("hero_sub") or tagline).strip()
+    footer_desc = (data.get("footer_desc") or tagline).strip()
+    accent      = (data.get("accent_color") or "").strip()
+
+    if not token:    return jsonify({"error": "GitHub token required"}), 400
+    if not site_id:  return jsonify({"error": "site_id required"}), 400
+    if not name:     return jsonify({"error": "name required"}), 400
+    if not re.match(r"^[a-z][a-z0-9-]{1,38}$", site_id):
+        return jsonify({"error": "site_id must be lowercase letters/digits/hyphens, 2-39 chars, starting with a letter"}), 400
+    valid_kits = {"editorial-luxury","tech-modern","news-magazine","broadsheet","minimalist"}
+    if kit not in valid_kits:
+        return jsonify({"error": f"kit must be one of {sorted(valid_kits)}"}), 400
+
+    # 1. Load network-config, refuse if site_id already exists
+    try:
+        cfg = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        return jsonify({"error": f"Could not read network-config.json: {e}"}), 500
+    existing = {s.get("id") for s in cfg.get("sites", [])}
+    if site_id in existing:
+        return jsonify({"error": f"site_id '{site_id}' already exists in network-config"}), 409
+
+    # 2. Resolve GitHub owner from token
+    headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"}
+    me_r = requests.get("https://api.github.com/user", headers=headers, timeout=15)
+    if not me_r.ok:
+        return jsonify({"error": f"Could not authenticate with GitHub: {me_r.status_code} {me_r.text[:200]}"}), 401
+    owner = me_r.json().get("login")
+    if not owner:
+        return jsonify({"error": "GitHub token returned no login"}), 401
+
+    log_lines = []
+    def log(msg): log_lines.append(msg)
+
+    # 3. Create the repo
+    repo_full = f"{owner}/{site_id}"
+    log(f"Creating repo {repo_full}...")
+    r = requests.post("https://api.github.com/user/repos", headers=headers, timeout=20,
+                      json={"name": site_id, "description": f"{name} - Spider network",
+                            "private": False, "has_issues": False, "has_projects": False,
+                            "has_wiki": False, "auto_init": True})
+    if r.status_code == 422:
+        # Already exists (rare race) - tolerate
+        log(f"  repo already exists at {repo_full}, continuing")
+    elif not r.ok:
+        return jsonify({"error": f"Repo create failed: {r.status_code} {r.text[:300]}",
+                        "log": log_lines}), 502
+    else:
+        log(f"  ok, created {repo_full}")
+
+    # 4. Enable GitHub Pages from main branch root
+    log("Enabling GitHub Pages...")
+    # Pages requires the repo to have at least one commit; auto_init satisfied that.
+    pr = requests.post(f"https://api.github.com/repos/{repo_full}/pages",
+                       headers={**headers, "Accept": "application/vnd.github.switcheroo-preview+json"},
+                       timeout=20,
+                       json={"source": {"branch": "main", "path": "/"}})
+    if pr.status_code in (201, 409):
+        log(f"  Pages enabled (status {pr.status_code})")
+    else:
+        log(f"  Pages enable returned {pr.status_code} - non-fatal, will retry on first push")
+
+    # 5. Append site entry to network-config.json
+    new_entry = {
+        "id":            site_id,
+        "name":          name,
+        "repo":          repo_full,
+        "domain":        custom_dom or f"{owner.lower()}.github.io/{site_id}",
+        "category":      category,
+        "tagline":       tagline,
+        "hero_sub":      hero_sub,
+        "footer_desc":   footer_desc,
+        "persona":       persona,
+        "kit":           kit,
+        "active":        True,
+        "new_posts_enabled": True,
+        "posts_per_day_new": 1,
+        "topics":        [],
+    }
+    if custom_dom:
+        new_entry["custom_domain"] = custom_dom
+    if accent and re.match(r"^#[0-9a-fA-F]{3,8}$", accent):
+        new_entry["accent_color"] = accent
+
+    cfg.setdefault("sites", []).append(new_entry)
+    try:
+        tmp = CONFIG_PATH.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+        os.replace(str(tmp), str(CONFIG_PATH))
+        log(f"Added '{site_id}' to network-config.json")
+    except Exception as e:
+        return jsonify({"error": f"Repo created but config write failed: {e}",
+                        "log": log_lines, "repo": repo_full}), 500
+
+    pages_url = f"https://{owner.lower()}.github.io/{site_id}/"
+    return jsonify({
+        "ok":         True,
+        "site_id":    site_id,
+        "repo":       repo_full,
+        "pages_url":  pages_url,
+        "custom_domain": custom_dom or None,
+        "log":        log_lines,
+        "next_step":  "POST /api/push-sites with site_ids=[\"{}\"] to publish the first build".format(site_id),
+    })
+
 
 @app.route("/api/site-settings", methods=["POST"])
 def update_site_settings():
