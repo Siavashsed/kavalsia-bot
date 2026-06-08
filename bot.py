@@ -1223,7 +1223,7 @@ STRUCTURE:
 
 Return ONLY valid JSON - no markdown, no extra text:
 {{
-  "title": "Full article title",
+  "title": "A punchy, press-style headline that stops the scroll. Write like a sharp magazine or news desk, not an SEO plugin. 6-12 words, front-load the hook, tension or the surprising specific. Be concrete (a number, a name, a stake) and confident. BAN generic openers like 'The Ultimate Guide to', 'Everything You Need to Know', 'How to', 'A Complete Guide', and colon-crutch titles. No clickbait lies, but make a reader stop.",
   "meta_description": "Under 155 characters - compelling summary with keyword",
   "slug": "url-friendly-slug-max-6-words",
   "author": "{author_name}",
@@ -1478,6 +1478,22 @@ def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, source
 # ─────────────────────────────────────────────────────────────────────────────
 # SHARED HTML HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
+
+def _author_avatar(author, t, size=42):
+    """Theme-agnostic monogram avatar for the author byline. Works for any
+    fictional persona without needing an image asset: a circular ring with the
+    author's initials in the theme accent colour."""
+    parts = [p for p in (author or "").split() if p and p[0].isalpha()]
+    initials = "".join(p[0] for p in parts[:2]).upper() or "K"
+    accent = t.get("accent", "#c4a05d")
+    return (
+        f'<span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;'
+        f'flex:none;width:{size}px;height:{size}px;border-radius:50%;'
+        f'border:1px solid {accent};background:rgba(127,127,127,.08);color:{accent};'
+        f'font-family:{t.get("heading_font","Georgia,serif")};font-weight:600;'
+        f'font-size:{int(size*0.4)}px;letter-spacing:.5px">{initials}</span>'
+    )
+
 
 def _head(title, description, t, extra_css="", canonical="", og_image="", author="", date_iso=""):
     canon_tag = f'<link rel="canonical" href="{canonical}">' if canonical else ""
@@ -4977,7 +4993,7 @@ def article_standard(article, site, image_url, photographer, t):
     body = f"""<div class="art">
   <div class="meta"><span style="color:{t["meta"]}">{article.get("date","")} &nbsp;·&nbsp; {site["category"]}</span></div>
   <h1>{article["title"]}</h1>
-  <div style="font-size:13px;color:{t["meta"]};margin-bottom:24px">By <strong style="color:{t["text2"]}">{author}</strong></div>
+  <div style="display:flex;align-items:center;gap:11px;font-size:13px;color:{t["meta"]};margin-bottom:24px">{_author_avatar(author, t)}<span>By <strong style="color:{t["text2"]}">{author}</strong></span></div>
   {img}
   {_wrap_block(article["intro"], "p", "intro")}
   {_wrap_block(article["intro2"], "p")}
@@ -5016,7 +5032,7 @@ def article_sidebar(article, site, image_url, photographer, t):
   <section class="article-content">
     <div style="font-size:12px;color:{t["meta"]};margin-bottom:20px">{article.get("date","")} &nbsp;·&nbsp; {site["category"]}</div>
     <h1>{article["title"]}</h1>
-    <div style="font-size:13px;color:{t["meta"]};margin-bottom:20px">By <strong style="color:{t["text2"]}">{author}</strong></div>
+    <div style="display:flex;align-items:center;gap:11px;font-size:13px;color:{t["meta"]};margin-bottom:20px">{_author_avatar(author, t)}<span>By <strong style="color:{t["text2"]}">{author}</strong></span></div>
     {img}
     {_wrap_block(article["intro"], "p", "intro")}
     {_wrap_block(article["intro2"], "p")}
@@ -5055,7 +5071,7 @@ def article_magazine(article, site, image_url, photographer, t):
   <div class="mag-hero-inner">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:16px">{site["category"]}</div>
     <h1>{article["title"]}</h1>
-    <div style="font-size:13px;color:{t["meta"]};margin:10px 0 20px">By <strong style="color:{t["text2"]}">{author}</strong></div>
+    <div style="display:flex;align-items:center;gap:11px;font-size:13px;color:{t["meta"]};margin:10px 0 20px">{_author_avatar(author, t)}<span>By <strong style="color:{t["text2"]}">{author}</strong></span></div>
     <div class="lead">{article["intro"]}</div>
   </div>
   {img}
@@ -5088,7 +5104,7 @@ def article_minimal(article, site, image_url, photographer, t):
     author = _resolve_author(site, article)["name"]
     body = (f"""<div class="art-min">
   <h1>{article["title"]}</h1>
-  <div class="byline">{author} &nbsp;·&nbsp; {article.get("date","")} &nbsp;·&nbsp; {site["category"]}</div>
+  <div class="byline" style="display:flex;align-items:center;gap:11px">{_author_avatar(author, t)}<span>{author} &nbsp;·&nbsp; {article.get("date","")} &nbsp;·&nbsp; {site["category"]}</span></div>
   {img}
   <div class="intro">{article["intro"]}</div>
   {_wrap_block(article["intro2"], "p")}
@@ -5122,7 +5138,7 @@ def article_immersive(article, site, image_url, photographer, t):
   <div class="imm-content">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:12px">{site["category"]}</div>
     <h1>{article["title"]}</h1>
-    <div class="meta">By {author} &nbsp;·&nbsp; {article.get("date","")} {'&nbsp;·&nbsp; Photo: ' + photographer + ' / Pexels' if photographer else ''}</div>
+    <div class="meta" style="display:flex;align-items:center;gap:11px">{_author_avatar(author, t)}<span>By {author} &nbsp;·&nbsp; {article.get("date","")} {'&nbsp;·&nbsp; Photo: ' + photographer + ' / Pexels' if photographer else ''}</span></div>
   </div>
 </div>
 <div class="imm-body">
@@ -5385,7 +5401,7 @@ def article_lesson(article, site, image_url, photographer, t):
   <div class="ls-meta"><span class="dot"></span><span>{cat} &middot; Lesson</span></div>
   <h1>{article["title"]}</h1>
   <p class="ls-deck">{article.get("meta_description","")}</p>
-  <div class="ls-byline"><span>By <strong>{author}</strong></span><span class="sep">/</span><span>{date}</span></div>
+  <div class="ls-byline">{_author_avatar(author, t)}<span>By <strong>{author}</strong></span><span class="sep">/</span><span>{date}</span></div>
   {img}
   <div class="ls-intro">{article.get("intro","")}</div>
   {_wrap_block(article.get("intro2",""), "p", "ls-intro2")}
@@ -5868,7 +5884,7 @@ body[data-page-depth="1"] .kn-body p.kn-lede::first-letter{{color:var(--gold,#c4
   .kn-deck{{font-size:17px}}
   .kn-body{{font-size:17px;line-height:1.78}}
   .kn-body p.kn-lede{{font-size:19px}}
-  .kn-body p.kn-lede::first-letter{{font-size:58px}}
+  .kn-body p.kn-lede::first-letter{{font-size:inherit}}
   .kn-body h2.kn-h2{{font-size:25px}}
   .kn-pull{{font-size:22px}}
 }}
@@ -6290,8 +6306,8 @@ def article_sidebar_wide(article, site, image_url, photographer, t):
 
     css = f"""
 .sw{{background:{bg};color:{text};font-family:{bf};position:relative}}
-.sw-grid{{max-width:1180px;margin:0 auto;padding:40px 28px 64px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:54px;align-items:start}}
-.sw-side-inner{{position:sticky;top:24px;display:flex;flex-direction:column;gap:22px}}
+.sw-grid{{max-width:1180px;margin:0 auto;padding:112px 28px 64px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:54px;align-items:start}}
+.sw-side-inner{{position:sticky;top:96px;display:flex;flex-direction:column;gap:22px}}
 .sw-kicker{{font-family:{hf};font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:{accent}}}
 .sw-metarow{{display:flex;flex-direction:column;gap:7px;font-size:12.5px;color:{meta};border-top:1px solid {border};border-bottom:1px solid {border};padding:14px 0}}
 .sw-metarow b{{color:{text};font-weight:600}}
@@ -6322,7 +6338,7 @@ def article_sidebar_wide(article, site, image_url, photographer, t):
 .sw-concl{{margin:44px 0 0;padding:26px 26px;background:{bg2};border:1px solid {border};border-radius:14px;position:relative;font-size:17px;line-height:1.65;color:{text}}}
 .sw-concl::before{{content:'The Verdict';position:absolute;top:-10px;left:20px;background:{accent};color:#0a0a0b;font-family:{hf};font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:3px 10px;border-radius:4px}}
 @media(max-width:900px){{
-  .sw-grid{{grid-template-columns:1fr;gap:28px;padding:28px 20px 52px}}
+  .sw-grid{{grid-template-columns:1fr;gap:28px;padding:100px 20px 52px}}
   .sw-side-inner{{position:static;gap:16px}}
   .sw-toc{{display:none}}
   .sw-byline{{display:none}}
@@ -6408,7 +6424,7 @@ def article_lifestyle(article, site, image_url, photographer, t):
 .lf-body{{max-width:680px;margin:0 auto;font-family:{t["heading_font"]};font-size:19px;line-height:1.75;color:{t["text"]}}}
 .lf-body p{{margin:0 0 22px;text-wrap:pretty}}
 .lf-body .intro{{font-size:22px;line-height:1.5;color:{t["text"]};font-weight:400;letter-spacing:-.005em;margin-bottom:30px}}
-.lf-body .intro::first-letter{{font-family:{t["heading_font"]};font-size:4em;float:left;line-height:.92;padding:8px 14px 0 0;color:{t["accent"]};font-weight:500}}
+.lf-body .intro::first-letter{{font-size:inherit;float:none;line-height:inherit;padding:0;color:inherit;font-weight:inherit}}
 .lf-section{{font-family:{t["heading_font"]};font-size:clamp(24px,2.8vw,34px);font-weight:500;line-height:1.15;letter-spacing:-.02em;margin:56px 0 22px;color:{t["text"]};text-align:center;max-width:24ch;margin-left:auto;margin-right:auto}}
 .lf-section::after{{content:"";display:block;width:36px;height:1px;background:{t["accent"]};margin:14px auto 0}}
 .lf-pull{{max-width:760px;margin:56px auto;font-family:{t["heading_font"]};font-style:italic;font-size:clamp(24px,3vw,36px);line-height:1.25;letter-spacing:-.015em;color:{t["accent"]};text-align:center;padding:0 24px;text-wrap:balance}}
