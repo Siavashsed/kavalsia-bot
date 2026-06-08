@@ -24,6 +24,10 @@ FILES = [
 # Plus every homepage template and every about-page body fragment.
 FILES += sorted(f"templates/{os.path.basename(p)}" for p in glob.glob(str(BASE / "templates" / "*-index.html")))
 FILES += sorted(f"about-bodies/{os.path.basename(p)}" for p in glob.glob(str(BASE / "about-bodies" / "*.html")))
+# Per-site bespoke article builders + bespoke /articles archive modules, so the
+# daily cron renders the same bespoke designs (not just local runs).
+FILES += sorted(f"bespoke_articles/{os.path.basename(p)}" for p in glob.glob(str(BASE / "bespoke_articles" / "*.py")))
+FILES += sorted(f"archive_modules/{os.path.basename(p)}" for p in glob.glob(str(BASE / "archive_modules" / "*")))
 
 
 def gh_put(token, path, content_bytes, msg):
