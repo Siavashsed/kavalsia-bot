@@ -199,7 +199,7 @@ textarea{resize:vertical;line-height:1.6}
 .pm-post-info{flex:1;min-width:0}
 .pm-post-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .post-link{color:inherit;text-decoration:none;cursor:pointer}
-.post-link:hover{color:var(--accent);text-decoration:underline}
+.post-link:hover{color:var(--accent);text-decoration:none}
 .pm-post-meta{font-size:11px;color:var(--text3)}
 .pm-post-btns{display:flex;gap:6px;flex-shrink:0}
 .pm-queue-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border2)}
@@ -573,6 +573,12 @@ textarea{resize:vertical;line-height:1.6}
       <button class="nav-btn" id="nav-guides" onclick="showGuides('ghl-guide')"
         data-tip="Setup guides for third-party integrations. Switch between GHL workflows and Meta Pixel via the sub-tabs at the top of the guide.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> Guides</button>
+      <button class="nav-btn" id="nav-addsite" onclick="showPanel('addsite')"
+        data-tip="Spin up a brand-new site in the network: brand name, design kit, and an optional custom domain. Creates the GitHub repo and adds it to the config in one go.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Add Site</button>
+      <button class="nav-btn" id="nav-kits" onclick="window.open('/template-kits/index.html','_blank')"
+        data-tip="Five design kits with live preview pages. Pick one when starting a new site so you do not have to redesign from scratch.">
+        <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span> Template Kits</button>
       <button class="nav-btn" id="nav-integrations" onclick="showPanel('integrations');if(typeof integrationsRender==='function')integrationsRender()"
         data-tip="One hub listing every third-party connection: GitHub, Anthropic, Pexels, Brevo, Cloudflare, GHL, Meta, WordPress, WooCommerce, Shopify, and more. Click any row to configure.">
         <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="9" y1="18" x2="15" y2="18"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/></svg></span> Integrations</button>
@@ -677,43 +683,30 @@ textarea{resize:vertical;line-height:1.6}
       <select id="ps-site" style="width:100%;font-size:12px;background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:6px 10px"></select>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-      <!-- Fix Article Links -->
-      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px">
-        <div style="font-size:10px;color:#60a5fa;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Fix Article Links</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">Rebuilds homepages from existing articles. Fixes 404s without generating new posts.</div>
-        <button class="btn" style="width:100%;font-size:12px;border-color:#60a5fa;color:#60a5fa" onclick="rebuildHomepages()">↻ Rebuild Homepages</button>
+    <!-- AI Custom Fix (does everything: rebuild homepages, fix nav, em dashes, sync authors, add disclaimers, etc.) -->
+    <div style="background:var(--bg3);border:1px solid #a78bfa30;border-radius:8px;padding:14px">
+      <div style="font-size:11px;color:#a78bfa;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">AI Custom Fix - does everything</div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.6">
+        Describe any fix in plain English. AI applies it to all articles on the selected site - and every fix is fully <b style="color:#a78bfa">reversible</b> for 7 days.
+        <span style="display:block;margin-top:6px;color:var(--text3);font-size:10px;line-height:1.5">
+          Examples: "remove duplicate navbars", "replace em dashes with hyphens", "rebuild homepage from current articles",
+          "sync authors so top 25% are Siavash Sadighi", "add a disclaimer paragraph before every footer".
+        </span>
       </div>
-
-      <!-- Fix Double Nav -->
-      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px">
-        <div style="font-size:10px;color:#f59e0b;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Fix Double Nav</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">Removes duplicate navbars from existing articles on the selected site.</div>
-        <select id="fixNavRepo" style="display:none"></select>
-        <button class="btn" style="width:100%;font-size:12px;border-color:#f59e0b;color:#f59e0b" onclick="fixDoubleNav()">Fix Double Nav</button>
+      <textarea id="ps-custom-prompt" rows="3" placeholder="e.g. Remove duplicate navbars from every article&#10;or: Add a disclaimer paragraph before every footer&#10;or: Rebuild the homepage from the current article set" style="width:100%;font-size:12px;background:var(--bg);color:var(--text);border:1px solid var(--border2);border-radius:6px;padding:8px 10px;resize:vertical;margin-bottom:10px;box-sizing:border-box;font-family:inherit"></textarea>
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;margin-bottom:10px;cursor:pointer;font-size:12px;color:var(--text2)">
+        <input type="checkbox" id="ps-apply-all" style="margin:0;accent-color:#a78bfa;cursor:pointer">
+        <span><b style="color:#a78bfa">Apply to all sites</b> &middot; ignores the Target Site picker and runs the fix on every site in the network. Each site gets its own undo entry.</span>
+      </label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn" id="ps-apply-btn" style="flex:1;font-size:12px;border-color:#a78bfa;color:#a78bfa;font-weight:700" onclick="fixWithAI()">Apply AI Fix</button>
+        <button class="btn" id="ps-undo-btn" style="display:none;font-size:11px;border-color:#f59e0b;color:#f59e0b" onclick="undoLastAIFix()" title="Revert the last AI fix on this site"></button>
       </div>
-
-      <!-- Remove Em Dashes -->
-      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px">
-        <div style="font-size:10px;color:#f472b6;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Remove Em Dashes</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">Scans all articles on the selected site and replaces em dashes with hyphens.</div>
-        <button class="btn" style="width:100%;font-size:12px;border-color:#f472b6;color:#f472b6" onclick="fixEmDashes()">Fix Em Dashes</button>
+      <div id="ps-history" style="display:none;margin-top:12px;padding-top:10px;border-top:1px solid var(--border2)">
+        <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Recent AI Fixes (click to undo)</div>
+        <div id="ps-history-list" style="display:flex;flex-direction:column;gap:4px"></div>
       </div>
-
-      <!-- Fix Authors -->
-      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px">
-        <div style="font-size:10px;color:#34d399;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">Sync Authors</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">Fixes homepage/article author mismatch. Top 25% of articles get Siavash Sadighi, rest get random names from the site pool.</div>
-        <button class="btn" style="width:100%;font-size:12px;border-color:#34d399;color:#34d399" onclick="patchAuthors()">Sync Authors</button>
-      </div>
-
-      <!-- AI Custom Fix -->
-      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px">
-        <div style="font-size:10px;color:#a78bfa;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">AI Custom Fix</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.5">Describe any fix - AI applies it to all articles on the selected site.</div>
-        <textarea id="ps-custom-prompt" rows="2" placeholder="e.g. Add a disclaimer paragraph before every footer..." style="width:100%;font-size:11px;background:var(--bg);color:var(--text);border:1px solid var(--border2);border-radius:5px;padding:6px 8px;resize:vertical;margin-bottom:8px;box-sizing:border-box"></textarea>
-        <button class="btn" style="width:100%;font-size:12px;border-color:#a78bfa;color:#a78bfa" onclick="fixWithAI()">Apply AI Fix</button>
-      </div>
+      <select id="fixNavRepo" style="display:none"></select>
     </div>
   </div>
 
@@ -789,7 +782,12 @@ textarea{resize:vertical;line-height:1.6}
 <!-- ════════ CUSTOMIZE SITE ════════ -->
 <div class="panel" id="panel-customize">
   <div class="pg-title">Customize Site</div>
-  <div class="pg-sub">Make any change  -  redesign the layout, add a new page, change colors, add widgets. AI generates complete HTML and pushes it live. A snapshot is saved before every apply.</div>
+  <div class="pg-sub">Make any change to any page on any site - redesign the layout, add a new page, change colors, add widgets, run find-and-replace, hyperlink keywords. AI generates complete HTML and pushes it live. <strong style="color:var(--green)">Every push captures the previous commit SHA so you can roll it back in one click.</strong></div>
+  <!-- Recent customizations - undo history mirrors the AI Fix panel -->
+  <div id="cust-history" style="display:none;margin-bottom:14px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
+    <div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Recent customizations (click to undo)</div>
+    <div id="cust-history-list" style="display:flex;flex-direction:column;gap:4px"></div>
+  </div>
 
   <!-- How-to guide -->
   <div class="card" style="margin-bottom:14px;border-left:3px solid var(--blue)">
@@ -1038,6 +1036,83 @@ textarea{resize:vertical;line-height:1.6}
   its own per-row Save (each row hits /api/article-author, since each article
   requires a separate GitHub commit).
 -->
+<!-- ════════ ADD SITE ════════
+  Wizard to spin up a brand-new site in the Spider network. Creates the GH
+  repo, enables Pages, appends the site to network-config.json, and (optionally)
+  triggers the initial push. Removes the need to hand-edit push-sites.py SITES
+  or run python from the terminal.
+-->
+<div class="panel" id="panel-addsite">
+  <div class="pg-title">Add a new site</div>
+  <div class="pg-sub">Pick a brand name, a design kit, and (optionally) a custom domain. The wizard creates the GitHub repo, enables Pages, and registers the site in <code>network-config.json</code>. You can edit any field later from Site Settings.</div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">Brand</div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Brand / site name</div>
+        <input type="text" id="as-name" placeholder="e.g. Atlas Audio">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Site ID <span style="color:var(--text3)">(slug, auto-fills from name)</span></div>
+        <input type="text" id="as-id" placeholder="atlas-audio" pattern="[a-z][a-z0-9-]*">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Tagline <span style="color:var(--text3)">(one-liner shown in the hero)</span></div>
+      <input type="text" id="as-tagline" placeholder="e.g. A serious record of sound and the people who shape it">
+    </div>
+    <div class="settings-row">
+      <div class="form-group">
+        <div class="form-label">Category <span style="color:var(--text3)">(default article category)</span></div>
+        <input type="text" id="as-category" placeholder="e.g. Audio Engineering">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Author persona <span style="color:var(--text3)">(short bio for AI to embody)</span></div>
+        <input type="text" id="as-persona" placeholder="e.g. Mastering engineer at a Berlin studio for 12 years">
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Design kit</span>
+      <a href="/template-kits/index.html" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none">Browse all kits &rarr;</a>
+    </div>
+    <div id="as-kit-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:6px">
+      <!-- Populated by initAddSiteKits() -->
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head">Optional custom domain</div>
+    <div class="form-group" style="margin-bottom:0">
+      <div class="form-label">Custom domain <span style="color:var(--text3)">(leave blank to use the free GitHub Pages URL)</span></div>
+      <input type="text" id="as-domain" placeholder="example.com">
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">If you set a custom domain, you'll need to also point its DNS at GitHub Pages. The Site Settings → Custom Domain card handles that after the site is created.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-head" style="display:flex;justify-content:space-between;align-items:center">
+      <span>Create site</span>
+      <span id="as-status" style="font-size:11px;color:var(--text3)"></span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-accent" id="as-create-btn" onclick="addSiteCreate()" style="font-weight:700">Create site</button>
+      <label style="display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);cursor:pointer">
+        <input type="checkbox" id="as-push-now" checked style="accent-color:var(--accent)">
+        <span>Push initial build to GitHub right after creating</span>
+      </label>
+    </div>
+    <div id="as-log" style="display:none;margin-top:12px;padding:12px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--text2);max-height:320px;overflow:auto;white-space:pre-wrap"></div>
+    <div id="as-success" style="display:none;margin-top:12px;padding:14px;background:var(--bg2);border:1px solid var(--green);border-radius:var(--r)">
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">Site created.</div>
+      <div id="as-success-body" style="font-size:12px;color:var(--text2);line-height:1.7"></div>
+    </div>
+  </div>
+</div>
+
 <div class="panel" id="panel-site">
   <div class="pg-title">Site Settings</div>
   <div class="pg-sub">Every per-site control in one place. Pick a site, edit any field, click Save All to persist to <code>network-config.json</code>. The Articles section saves each row individually.</div>
@@ -1093,6 +1168,100 @@ textarea{resize:vertical;line-height:1.6}
       <div class="form-group">
         <div class="form-label">Custom CSS <span style="color:var(--text3)">(injected into every page of this site)</span></div>
         <textarea id="ss-custom-css" rows="4" placeholder="/* optional CSS overrides */" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:ui-monospace,Menlo,monospace;resize:vertical"></textarea>
+      </div>
+    </div>
+
+    <!-- ── Design & Layout ── New card. Lets you edit the design knobs that
+         used to require code edits: brand copy lines, accent color, article
+         layout, editorial archive toggle, Schema.org @type. Saves through
+         the same /api/site-settings endpoint as the rest of the panel. -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="section-head">Design &amp; Layout</div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Tagline <span style="color:var(--text3)">(hero / header subhead)</span></div>
+          <input type="text" id="ss-tagline" placeholder="e.g. Where Fashion Design is Taken Seriously">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Category <span style="color:var(--text3)">(default article category label)</span></div>
+          <input type="text" id="ss-category" placeholder="e.g. Experiential Events">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Hero subhead <span style="color:var(--text3)">(longer copy below the title on homepage)</span></div>
+        <textarea id="ss-hero-sub" rows="2" placeholder="One or two sentences describing the publication" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Footer description <span style="color:var(--text3)">(shown in site footer)</span></div>
+        <textarea id="ss-footer-desc" rows="2" placeholder="Brief description used by the footer" style="width:100%;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-size:12px;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Accent color <span style="color:var(--text3)">(hex)</span></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="color" id="ss-accent-color" style="width:48px;height:36px;border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);cursor:pointer">
+            <input type="text" id="ss-accent-color-hex" placeholder="#c4a05d" maxlength="9" style="flex:1;font-family:ui-monospace,Menlo,monospace"
+                   oninput="if(/^#[0-9a-fA-F]{3,8}$/.test(this.value)){document.getElementById('ss-accent-color').value=this.value.length===4?'#'+this.value[1]+this.value[1]+this.value[2]+this.value[2]+this.value[3]+this.value[3]:this.value.slice(0,7);}">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Article layout</div>
+          <select id="ss-article-layout">
+            <option value="">(default)</option>
+            <option value="press">Press</option>
+            <option value="broadsheet">Broadsheet</option>
+            <option value="tabloid">Tabloid</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="kanona">Kanona (editorial luxury)</option>
+            <option value="standard">Standard</option>
+          </select>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Schema.org @type <span style="color:var(--text3)">(Google SERP hint)</span></div>
+          <select id="ss-schema-type">
+            <option value="">(default Article)</option>
+            <option value="NewsArticle">NewsArticle</option>
+            <option value="TechArticle">TechArticle</option>
+            <option value="BlogPosting">BlogPosting</option>
+            <option value="Review">Review</option>
+            <option value="HowTo">HowTo</option>
+            <option value="TravelGuide">TravelGuide</option>
+            <option value="MedicalScholarlyArticle">MedicalScholarlyArticle</option>
+            <option value="MedicalWebPage">MedicalWebPage</option>
+            <option value="AnalysisNewsArticle">AnalysisNewsArticle</option>
+            <option value="ReportageNewsArticle">ReportageNewsArticle</option>
+            <option value="LearningResource">LearningResource</option>
+            <option value="CreativeWork">CreativeWork</option>
+            <option value="Event">Event</option>
+            <option value="SportsEvent">SportsEvent</option>
+            <option value="TouristTrip">TouristTrip</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Editorial /articles archive <span style="color:var(--text3)">(premium dark layout)</span></div>
+          <label style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:13px">
+            <input type="checkbox" id="ss-editorial-archive" style="accent-color:var(--accent);cursor:pointer">
+            <span>Use editorial luxury archive at <code>/articles/</code></span>
+          </label>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="form-group">
+          <div class="form-label">Site active <span style="color:var(--text3)">(publish + render)</span></div>
+          <label style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:13px">
+            <input type="checkbox" id="ss-active" checked style="accent-color:var(--accent);cursor:pointer">
+            <span>Site is live (uncheck to pause)</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <div class="form-label">New posts pipeline</div>
+          <label style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:13px">
+            <input type="checkbox" id="ss-new-posts-enabled" checked style="accent-color:var(--accent);cursor:pointer">
+            <span>Auto-generate new posts on schedule</span>
+          </label>
+        </div>
       </div>
     </div>
 
@@ -2968,19 +3137,58 @@ textarea{resize:vertical;line-height:1.6}
 // ── Latest Posts panel ─────────────────────────────────────────────────────
 let _lpItems = [];
 let _lpEditingKey = null;
+let _lpAutoSyncTimer  = null;   // 2s cache poller
+let _lpAutoRefTimer   = null;   // 60s GitHub repuller
+let _lpLastSig        = '';     // change detector to avoid useless re-renders
 
 async function latestInit() {
+  await _lpFetchCache(true);    // initial load
+  _lpStartAutoSync();           // begin live updates
+}
+
+async function _lpFetchCache(forceRender) {
   try {
-    const r = await fetch('/api/latest-articles');
+    const r = await fetch('/api/latest-articles', { cache: 'no-store' });
     if (!r.ok) throw new Error('http ' + r.status);
     const data = await r.json();
-    _lpItems = data.items || [];
-    _lpUpdateMeta(data.last_refreshed, data.errors || []);
-    _lpPopulateSiteFilter();
-    lpRender();
+    const sig = `${data.last_refreshed || ''}|${(data.items || []).length}`;
+    if (forceRender || sig !== _lpLastSig) {
+      _lpItems = data.items || [];
+      _lpLastSig = sig;
+      _lpUpdateMeta(data.last_refreshed, data.errors || []);
+      _lpPopulateSiteFilter();
+      lpRender();
+    }
   } catch (e) {
-    document.getElementById('lp-meta').textContent = 'Load failed: ' + e.message;
+    const el = document.getElementById('lp-meta');
+    if (el) el.textContent = 'Load failed: ' + e.message;
   }
+}
+
+function _lpStartAutoSync() {
+  _lpStopAutoSync();
+  // 2s cache poll - instant view of any background-updated data
+  _lpAutoSyncTimer = setInterval(() => {
+    const panel = document.getElementById('panel-latest');
+    if (panel && panel.classList.contains('active')) _lpFetchCache(false);
+  }, 2000);
+  // 60s GitHub repull - keeps the cache itself current as the bot publishes
+  _lpAutoRefTimer = setInterval(() => {
+    const panel = document.getElementById('panel-latest');
+    if (!panel || !panel.classList.contains('active')) return;
+    const token = (typeof ls === 'function' ? ls('ghToken') : localStorage.getItem('ghToken')) || '';
+    if (!token) return;
+    fetch('/api/latest-articles/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-GH-Token': token },
+      body: JSON.stringify({ token })
+    }).catch(_ => {});
+  }, 60000);
+}
+
+function _lpStopAutoSync() {
+  if (_lpAutoSyncTimer) { clearInterval(_lpAutoSyncTimer); _lpAutoSyncTimer = null; }
+  if (_lpAutoRefTimer)  { clearInterval(_lpAutoRefTimer);  _lpAutoRefTimer  = null; }
 }
 
 function _lpUpdateMeta(ts, errors) {
@@ -4240,7 +4448,12 @@ function psSiteInit() {
     .join('');
   sel.innerHTML = opts;
   if (hidden) hidden.innerHTML = opts;
-  sel.onchange = () => { if (hidden) hidden.value = sel.value; };
+  sel.onchange = () => {
+    if (hidden) hidden.value = sel.value;
+    try { aiFixRenderHistory(); } catch(_) {}
+  };
+  // Initial render of undo history once the selector is populated.
+  try { aiFixRenderHistory(); } catch(_) {}
 }
 
 function fixNavRepoInit() { psSiteInit(); }
@@ -4388,33 +4601,130 @@ async function fixEmDashes() {
   } catch(e) { al('Network error: ' + e.message, 'mlog-err'); }
 }
 
-// ── AI Custom Fix ─────────────────────────────────────────────────────────
-async function fixWithAI() {
-  if (!serverMode) { alert('Start server.py first.'); return; }
+// ── AI Custom Fix (reversible) ────────────────────────────────────────────
+// Undo state lives in localStorage under 'aiFixHistory' as an array of:
+//   { repo, sha, branch, prompt, when_iso }
+// We keep the last 20 across all sites, expire entries older than 7 days.
+const AI_FIX_HISTORY_KEY = 'aiFixHistory';
+const AI_FIX_HISTORY_TTL_DAYS = 7;
+
+function aiFixLoadHistory() {
+  try {
+    const raw = ls(AI_FIX_HISTORY_KEY);
+    if (!raw) return [];
+    const list = JSON.parse(raw);
+    if (!Array.isArray(list)) return [];
+    const cutoff = Date.now() - AI_FIX_HISTORY_TTL_DAYS*24*3600*1000;
+    return list.filter(e => e && e.sha && e.repo && new Date(e.when_iso||0).getTime() > cutoff);
+  } catch(_) { return []; }
+}
+function aiFixSaveHistory(list) {
+  try { localStorage.setItem(AI_FIX_HISTORY_KEY, JSON.stringify(list.slice(0,20))); } catch(_) {}
+}
+function aiFixPushHistory(entry) {
+  const list = aiFixLoadHistory();
+  list.unshift(entry);
+  aiFixSaveHistory(list);
+  aiFixRenderHistory();
+}
+function aiFixRenderHistory() {
+  const repoSel = document.getElementById('ps-site');
+  const currentRepo = repoSel?.value || '';
+  const list = aiFixLoadHistory();
+  const wrap = document.getElementById('ps-history');
+  const listEl = document.getElementById('ps-history-list');
+  const undoBtn = document.getElementById('ps-undo-btn');
+  // Per-site quick-undo button (most recent entry on this repo)
+  const lastForSite = list.find(e => e.repo === currentRepo);
+  if (undoBtn) {
+    if (lastForSite) {
+      undoBtn.style.display = '';
+      undoBtn.textContent = `↶ Undo (${lastForSite.sha.slice(0,7)})`;
+      undoBtn.dataset.sha = lastForSite.sha;
+      undoBtn.dataset.repo = lastForSite.repo;
+      undoBtn.dataset.branch = lastForSite.branch || 'main';
+      undoBtn.title = `Revert last AI fix on ${lastForSite.repo}: "${(lastForSite.prompt||'').slice(0,80)}"`;
+    } else {
+      undoBtn.style.display = 'none';
+    }
+  }
+  if (!list.length) { if (wrap) wrap.style.display = 'none'; return; }
+  if (wrap) wrap.style.display = '';
+  if (listEl) {
+    listEl.innerHTML = list.map((e, i) => {
+      const when = e.when_iso ? new Date(e.when_iso) : null;
+      const ago = when ? Math.max(0, Math.round((Date.now() - when.getTime())/60000)) : 0;
+      const agoStr = ago < 60 ? `${ago}m ago` : ago < 1440 ? `${Math.round(ago/60)}h ago` : `${Math.round(ago/1440)}d ago`;
+      const shortPrompt = (e.prompt||'').replace(/\s+/g,' ').slice(0, 70);
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg);border:1px solid var(--border2);border-radius:5px;font-size:11px">
+        <div style="flex:1;min-width:0">
+          <div style="color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>${e.repo.replace('Siavashsed/','')}</b> &middot; ${shortPrompt}</div>
+          <div style="color:var(--text3);font-size:10px;margin-top:2px">${e.sha.slice(0,7)} &middot; ${agoStr}</div>
+        </div>
+        <button class="btn" style="padding:3px 8px;font-size:10px;border-color:#f59e0b;color:#f59e0b" onclick='undoAIFixEntry(${i})'>↶ Undo</button>
+      </div>`;
+    }).join('');
+  }
+}
+
+async function undoAIFixEntry(idx) {
+  const list = aiFixLoadHistory();
+  const e = list[idx];
+  if (!e) { alert('Undo entry not found.'); return; }
+  if (!confirm(`Revert ${e.repo} to commit ${e.sha.slice(0,7)}?\n\nThis force-resets the branch to before the AI fix "${(e.prompt||'').slice(0,80)}". Any commits made after the fix will be lost.`)) return;
+  await runUndo(e.repo, e.sha, e.branch || 'main', idx);
+}
+async function undoLastAIFix() {
+  const btn = document.getElementById('ps-undo-btn');
+  if (!btn || btn.style.display === 'none') return;
+  const { repo, sha, branch } = btn.dataset;
+  if (!confirm(`Revert ${repo} to commit ${sha.slice(0,7)}?\n\nThis undoes the most recent AI fix on this site.`)) return;
+  const list = aiFixLoadHistory();
+  const idx = list.findIndex(e => e.repo === repo && e.sha === sha);
+  await runUndo(repo, sha, branch || 'main', idx);
+}
+async function runUndo(repo, sha, branch, idx) {
   const token = ls('ghToken') || prompt('Enter your GitHub token (ghp_...):');
   if (!token) return;
-  const sel = document.getElementById('ps-site');
-  const repo = sel?.value;
-  if (!repo) { alert('Select a site first.'); return; }
-  const prompt_text = (document.getElementById('ps-custom-prompt')?.value || '').trim();
-  if (!prompt_text) { alert('Describe what you want to fix first.'); return; }
-
-  document.getElementById('modalTitle').textContent = 'AI Custom Fix';
-  document.getElementById('modalSub').textContent = `Applying AI fix to articles in ${repo}...`;
+  document.getElementById('modalTitle').textContent = 'Undo AI Fix';
+  document.getElementById('modalSub').textContent = `Reverting ${repo} to ${sha.slice(0,7)} on ${branch}…`;
   document.getElementById('modalLog').innerHTML = '';
   document.getElementById('publishModal').classList.add('open');
   const log = document.getElementById('modalLog');
-  function al(line, cls) {
-    const d = document.createElement('div'); d.className = cls||''; d.textContent = line;
-    log.appendChild(d); log.scrollTop = log.scrollHeight;
-  }
+  function al(line, cls){ const d=document.createElement('div'); d.className=cls||''; d.textContent=line; log.appendChild(d); log.scrollTop=log.scrollHeight; }
+  try {
+    const res = await fetch('/api/ai-fix-undo', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token, repo, sha, branch })
+    });
+    const j = await res.json().catch(()=>({}));
+    if (res.ok && j.ok) {
+      al(`✓ Reverted ${repo} to ${j.reverted_to}`, 'mlog-ok');
+      al('GitHub Pages will redeploy the old state within ~1 minute.', 'mlog-info');
+      if (idx >= 0) {
+        const list = aiFixLoadHistory();
+        list.splice(idx, 1);
+        aiFixSaveHistory(list);
+        aiFixRenderHistory();
+      }
+    } else {
+      al('Error: ' + (j.error || res.statusText), 'mlog-err');
+    }
+  } catch(e) { al('Network error: ' + e.message, 'mlog-err'); }
+}
+
+// Run the AI fix against a single repo. Streams progress into the modal log.
+// Returns { ok, sha } - sha is the captured pre-fix SHA (undo target).
+async function _aiFixOneRepo(repo, token, prompt_text, al, opts = {}) {
+  const labelPrefix = opts.labelPrefix || '';
+  let capturedSha = '', capturedBranch = 'main', capturedAtSaved = false, ok = false;
   try {
     const res = await fetch('/api/ai-fix-articles', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ token, repo, prompt: prompt_text, _api_key: ls('anthropicKey')||'' })
     });
-    if (!res.ok) { al('Error: ' + res.statusText, 'mlog-err'); return; }
+    if (!res.ok) { al(`${labelPrefix}Error: ` + res.statusText, 'mlog-err'); return { ok:false, sha:'' }; }
     const reader = res.body.getReader();
     const dec = new TextDecoder();
     let buf = '';
@@ -4424,15 +4734,86 @@ async function fixWithAI() {
       buf += dec.decode(value, {stream:true});
       const lines = buf.split('\n'); buf = lines.pop();
       for (const line of lines) {
-        if (line.startsWith('__EXIT__')) {
+        if (line.startsWith('__UNDO_SHA__')) {
+          const rest = line.replace('__UNDO_SHA__','');
+          const sep  = rest.lastIndexOf('__');
+          capturedSha    = sep > 0 ? rest.slice(0, sep) : rest;
+          capturedBranch = sep > 0 ? rest.slice(sep + 2) : 'main';
+          if (capturedSha && !capturedAtSaved) {
+            aiFixPushHistory({
+              repo, sha: capturedSha, branch: capturedBranch,
+              prompt: prompt_text, when_iso: new Date().toISOString()
+            });
+            capturedAtSaved = true;
+            al(`${labelPrefix}↶ Undo snapshot saved (${capturedSha.slice(0,7)})`, 'mlog-info');
+          }
+        } else if (line.startsWith('__EXIT__')) {
           const code = parseInt(line.replace('__EXIT__',''));
-          al(code===0 ? '✓ Done.' : `✗ Exited with code ${code}`, code===0?'mlog-ok':'mlog-err');
+          ok = (code === 0);
+          al(code===0 ? `${labelPrefix}✓ Done.` : `${labelPrefix}✗ Exited with code ${code}`, code===0?'mlog-ok':'mlog-err');
         } else if (line) {
-          al(line, line.includes('error')||line.includes('FAIL')?'mlog-err':line.includes('pushed')||line.includes('ok')?'mlog-ok':'mlog-info');
+          al(`${labelPrefix}${line}`, line.includes('error')||line.includes('FAIL')?'mlog-err':line.includes('pushed')||line.includes('ok')?'mlog-ok':'mlog-info');
         }
       }
     }
-  } catch(e) { al('Network error: ' + e.message, 'mlog-err'); }
+  } catch(e) { al(`${labelPrefix}Network error: ` + e.message, 'mlog-err'); }
+  return { ok, sha: capturedSha };
+}
+
+async function fixWithAI() {
+  if (!serverMode) { alert('Start server.py first.'); return; }
+  const token = ls('ghToken') || prompt('Enter your GitHub token (ghp_...):');
+  if (!token) return;
+  const sel = document.getElementById('ps-site');
+  const applyAll = !!document.getElementById('ps-apply-all')?.checked;
+  const prompt_text = (document.getElementById('ps-custom-prompt')?.value || '').trim();
+  if (!prompt_text) { alert('Describe what you want to fix first.'); return; }
+
+  // Build the target repo list.
+  let repos = [];
+  if (applyAll) {
+    const all = (cfg?.sites || []).filter(s => !s.is_mother_site && s.id !== 'nexus' && s.repo && !s.repo.includes('YOUR_'));
+    if (!all.length) { alert('No sites with valid repos found in network config.'); return; }
+    if (!confirm(`Apply this AI fix to ALL ${all.length} sites in the network?\n\n"${prompt_text.slice(0,160)}"\n\nEach site gets its own undo entry - you can revert any of them individually for 7 days.`)) return;
+    repos = all.map(s => ({ repo: s.repo, id: s.id }));
+  } else {
+    const repo = sel?.value;
+    if (!repo) { alert('Select a site first - or check "Apply to all sites".'); return; }
+    repos = [{ repo, id: sel.options[sel.selectedIndex]?.dataset?.id || '' }];
+  }
+
+  document.getElementById('modalTitle').textContent = applyAll ? `AI Custom Fix · ${repos.length} sites` : 'AI Custom Fix';
+  document.getElementById('modalSub').textContent = applyAll
+    ? `Applying fix to ${repos.length} sites sequentially. Each gets its own undo entry.`
+    : `Applying AI fix to articles in ${repos[0].repo}...`;
+  document.getElementById('modalLog').innerHTML = '';
+  document.getElementById('publishModal').classList.add('open');
+  const log = document.getElementById('modalLog');
+  function al(line, cls) {
+    const d = document.createElement('div'); d.className = cls||''; d.textContent = line;
+    log.appendChild(d); log.scrollTop = log.scrollHeight;
+  }
+
+  // Disable the Apply button while running.
+  const applyBtn = document.getElementById('ps-apply-btn');
+  if (applyBtn) { applyBtn.disabled = true; applyBtn.style.opacity = '0.6'; }
+
+  try {
+    let okCount = 0, failCount = 0;
+    for (let i = 0; i < repos.length; i++) {
+      const { repo } = repos[i];
+      const prefix = repos.length > 1 ? `[${i+1}/${repos.length}] ${repo.replace('Siavashsed/','')} · ` : '';
+      if (repos.length > 1) al(`── ${prefix.replace(' · ','')} ──`, 'mlog-info');
+      const { ok } = await _aiFixOneRepo(repo, token, prompt_text, al, { labelPrefix: prefix });
+      if (ok) okCount++; else failCount++;
+    }
+    if (repos.length > 1) {
+      al(`\n═══ All sites complete: ${okCount} ok, ${failCount} failed ═══`, failCount === 0 ? 'mlog-ok' : 'mlog-err');
+      al(`↶ Each site has its own undo entry in "Recent AI Fixes" - click Undo per site to revert.`, 'mlog-info');
+    }
+  } finally {
+    if (applyBtn) { applyBtn.disabled = false; applyBtn.style.opacity = '1'; }
+  }
 }
 
 // ── Rebuild Homepages (fix article 404s) ──────────────────────────────────
@@ -4663,6 +5044,156 @@ function updateHealthDot() {
   lbl.textContent = `${active}/${sites.length} sites active`;
 }
 
+// ── Add Site wizard ────────────────────────────────────────────────────────
+const ADD_SITE_KITS = [
+  {slug:'editorial-luxury', name:'Editorial Luxury', accent:'#c9a96e', desc:'Dark editorial monograph. Serif + gold.'},
+  {slug:'tech-modern',      name:'Tech Modern',      accent:'#3b82f6', desc:'Clean tech publication. Inter + blue.'},
+  {slug:'news-magazine',    name:'News Magazine',    accent:'#dc2626', desc:'Bold news typography. Playfair + red.'},
+  {slug:'broadsheet',       name:'Broadsheet',       accent:'#1a1812', desc:'Newspaper feel. Caslon + neutral.'},
+  {slug:'minimalist',       name:'Minimalist',       accent:'#0a0a0a', desc:'Generous whitespace. Fraunces.'}
+];
+let _addSiteKit = 'minimalist';
+
+function initAddSiteKits(){
+  const grid = document.getElementById('as-kit-grid');
+  if (!grid) return;
+  grid.innerHTML = ADD_SITE_KITS.map(k => `
+    <button type="button" data-kit="${k.slug}" onclick="addSitePickKit('${k.slug}')"
+      class="as-kit-card" style="text-align:left;cursor:pointer;padding:14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);transition:border-color .2s,transform .15s;color:inherit;font-family:inherit">
+      <div style="width:100%;height:6px;background:${k.accent};border-radius:2px;margin-bottom:10px"></div>
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">${k.name}</div>
+      <div style="font-size:11px;color:var(--text3);line-height:1.5">${k.desc}</div>
+    </button>`).join('');
+  addSitePickKit(_addSiteKit);
+  // Slug auto-fill from name
+  const nameEl = document.getElementById('as-name');
+  const idEl   = document.getElementById('as-id');
+  if (nameEl && idEl) {
+    nameEl.oninput = () => {
+      // Only auto-fill if the user hasn't manually typed a slug yet
+      if (idEl.dataset.userEdited === '1') return;
+      idEl.value = nameEl.value.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,39)
+        .replace(/^-+|-+$/g,'');
+    };
+    idEl.oninput = () => { idEl.dataset.userEdited = '1'; };
+  }
+}
+function addSitePickKit(slug){
+  _addSiteKit = slug;
+  document.querySelectorAll('.as-kit-card').forEach(btn => {
+    const isOn = btn.getAttribute('data-kit') === slug;
+    btn.style.borderColor = isOn ? 'var(--accent)' : 'var(--border)';
+    btn.style.transform   = isOn ? 'translateY(-2px)' : 'none';
+    btn.style.boxShadow   = isOn ? '0 8px 20px -10px var(--accent)' : 'none';
+  });
+}
+
+async function addSiteCreate(){
+  const btn   = document.getElementById('as-create-btn');
+  const stat  = document.getElementById('as-status');
+  const logEl = document.getElementById('as-log');
+  const sucEl = document.getElementById('as-success');
+  const sucBody = document.getElementById('as-success-body');
+
+  const name      = (document.getElementById('as-name').value || '').trim();
+  const siteId    = (document.getElementById('as-id').value || '').trim().toLowerCase();
+  const tagline   = (document.getElementById('as-tagline').value || '').trim();
+  const category  = (document.getElementById('as-category').value || '').trim();
+  const persona   = (document.getElementById('as-persona').value || '').trim();
+  const domain    = (document.getElementById('as-domain').value || '').trim().toLowerCase();
+  const pushNow   = !!document.getElementById('as-push-now').checked;
+
+  if (!name)   { stat.textContent = 'Brand name is required.'; stat.style.color = 'var(--red)'; return; }
+  if (!siteId) { stat.textContent = 'Site ID is required.';    stat.style.color = 'var(--red)'; return; }
+  if (!/^[a-z][a-z0-9-]{1,38}$/.test(siteId)) {
+    stat.textContent = 'Site ID must be lowercase letters/digits/hyphens, start with a letter, 2-39 chars.';
+    stat.style.color = 'var(--red)'; return;
+  }
+  const token = ls('ghToken') || prompt('Enter your GitHub token (ghp_...):');
+  if (!token) return;
+
+  btn.disabled = true; btn.style.opacity = '.6';
+  stat.textContent = 'Creating site...'; stat.style.color = 'var(--text2)';
+  logEl.style.display = 'block'; logEl.textContent = '';
+  sucEl.style.display = 'none';
+
+  function appendLog(line){
+    logEl.textContent += line + '\n';
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  try {
+    appendLog('POST /api/site-add ...');
+    const r = await fetch('/api/site-add', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        token, site_id: siteId, name, kit: _addSiteKit,
+        tagline, category, persona, custom_domain: domain || ''
+      })
+    });
+    const j = await r.json().catch(()=>({}));
+    if (j.log) j.log.forEach(appendLog);
+    if (!r.ok || !j.ok) {
+      appendLog('FAIL: ' + (j.error || r.statusText));
+      stat.textContent = j.error || 'Create failed';
+      stat.style.color = 'var(--red)';
+      btn.disabled = false; btn.style.opacity = '1';
+      return;
+    }
+    appendLog(`OK - repo ${j.repo} ready, Pages URL ${j.pages_url}`);
+
+    if (pushNow) {
+      appendLog('\nPushing initial build via /api/push-sites ...');
+      const pr = await fetch('/api/push-sites', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ token, site_ids: [siteId] })
+      });
+      if (!pr.ok) {
+        appendLog('Initial push failed: ' + pr.statusText);
+      } else {
+        const reader = pr.body.getReader();
+        const dec = new TextDecoder();
+        let buf = '';
+        while (true) {
+          const {done, value} = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, {stream:true});
+          const lines = buf.split('\n'); buf = lines.pop();
+          for (const line of lines) {
+            if (line.startsWith('__EXIT__')) {
+              appendLog(line.replace('__EXIT__','exit code '));
+            } else if (line.trim()) {
+              appendLog('  ' + line);
+            }
+          }
+        }
+      }
+    }
+
+    sucEl.style.display = 'block';
+    const liveLink = j.custom_domain ? `https://${j.custom_domain}/` : j.pages_url;
+    sucBody.innerHTML = `
+      <div><b>Site ID:</b> ${siteId}</div>
+      <div><b>Repo:</b> <a href="https://github.com/${j.repo}" target="_blank" style="color:var(--accent)">github.com/${j.repo}</a></div>
+      <div><b>Live URL:</b> <a href="${liveLink}" target="_blank" style="color:var(--accent)">${liveLink}</a></div>
+      <div style="margin-top:8px"><b>Next:</b> open Site Settings to add topics, adjust the schedule, and customize anything else.</div>
+    `;
+    stat.textContent = 'Site created.';
+    stat.style.color = 'var(--green)';
+
+    // Refresh the global SITES list everywhere it's cached so the new site
+    // shows up in dropdowns, status pings, latest feeds, etc.
+    if (typeof loadConfig === 'function') { try { await loadConfig(); } catch(_){} }
+    if (typeof renderDashboard === 'function') { try { renderDashboard(); } catch(_){} }
+  } catch(e) {
+    appendLog('Network error: ' + e.message);
+    stat.textContent = 'Network error.'; stat.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false; btn.style.opacity = '1';
+  }
+}
+
 // ── Site Status ────────────────────────────────────────────────────────────
 // Fallback site list used when server/cfg not available
 const FALLBACK_SITES = [
@@ -4693,6 +5224,22 @@ function getSites() {
   return (cfg && cfg.sites && cfg.sites.length) ? cfg.sites : FALLBACK_SITES;
 }
 
+// Health helpers - "behind" = no new post for > 1 day; "stale" > 3 days.
+const HEALTH_FRESH_DAYS = 1;
+const HEALTH_STALE_DAYS = 3;
+function _healthFromDays(d) {
+  if (d === null || d === undefined || isNaN(d)) return { tier:'unknown', color:'var(--text3)', label:'-' };
+  if (d <= HEALTH_FRESH_DAYS) return { tier:'fresh',  color:'#10b981', label: d < 1 ? 'today' : '1d ago' };
+  if (d <= HEALTH_STALE_DAYS) return { tier:'behind', color:'#f59e0b', label: `${d}d ago` };
+  return { tier:'stale', color:'#ef4444', label: `${d}d ago` };
+}
+function _daysSinceIso(iso) {
+  if (!iso) return null;
+  const t = new Date(iso).getTime();
+  if (isNaN(t)) return null;
+  return Math.max(0, Math.floor((Date.now() - t) / 86400000));
+}
+
 function renderStatusGrid() {
   const sites = getSites();
   const grid = document.getElementById('statusGrid');
@@ -4703,6 +5250,7 @@ function renderStatusGrid() {
         <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${site.domain}</div>
         <div style="font-size:11px;color:var(--text3);margin-top:1px" id="smeta-${site.id}">Agent pinging site…</div>
       </div>
+      <div style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);min-width:64px;text-align:center" id="shealth-${site.id}" title="Health: time since last published article">checking</div>
       <div style="font-size:11px;font-weight:700;color:var(--text3);min-width:60px;text-align:right" id="sarts-${site.id}">-</div>
       <a href="https://${site.domain}" target="_blank"
         style="padding:4px 10px;font-size:11px;font-weight:600;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text2);text-decoration:none;flex-shrink:0"
@@ -4718,10 +5266,19 @@ async function checkAllSites(silent = false) {
   }
   const tok = ls('ghToken') || '';
   let live = 0, withArticles = 0;
+  let fresh = 0, behind = 0, stale = 0;
+  // Per-site health stored so we can offer a "dismiss" override per site.
+  const dismissed = (() => { try { return JSON.parse(ls('siteHealthDismissed')||'{}'); } catch(_) { return {}; } })();
   await Promise.all(sites.map(async s => {
     const ok = await checkSiteSingle(s.domain, s.id, silent);
     if (ok) live++;
-    // Try to load article count from articles.json
+    const healthEl = document.getElementById(`shealth-${s.id}`);
+    // Nexus is a hub and doesn't publish - skip health classification.
+    if (s.id === 'nexus' || s.is_mother_site) {
+      if (healthEl) { healthEl.textContent = 'hub'; healthEl.style.color = 'var(--text3)'; healthEl.style.borderColor = 'var(--border2)'; }
+      return;
+    }
+    // Try to load article count + latest date from articles.json
     if (tok && s.repo) {
       try {
         const _ac1 = new AbortController(); setTimeout(()=>_ac1.abort(),5000);
@@ -4739,22 +5296,59 @@ async function checkAllSites(silent = false) {
             el.style.color = count > 0 ? 'var(--green)' : 'var(--text3)';
           }
           if (count > 0) withArticles++;
+          // Health: latest posted_iso (fallback date_iso) across the array.
+          let latestMs = 0;
+          for (const a of arts) {
+            const iso = a.posted_iso || a.date_iso || a.posted || a.date || '';
+            if (!iso) continue;
+            const t = new Date(iso).getTime();
+            if (!isNaN(t) && t > latestMs) latestMs = t;
+          }
+          const days = latestMs ? Math.max(0, Math.floor((Date.now() - latestMs) / 86400000)) : null;
+          const h = _healthFromDays(days);
+          const isDismissed = !!dismissed[s.id];
+          if (healthEl) {
+            if (isDismissed) {
+              healthEl.textContent = 'muted';
+              healthEl.style.color  = 'var(--text3)';
+              healthEl.style.borderColor = 'var(--border2)';
+              healthEl.title = `Health alerts muted for this site. Click to un-mute.\nLast post: ${h.label}`;
+            } else {
+              healthEl.textContent = h.label;
+              healthEl.style.color = h.color;
+              healthEl.style.borderColor = h.color + '60';
+              healthEl.title = `Last published article: ${h.label}\nClick to mute alerts for this site (e.g. seasonal/paused).`;
+            }
+            healthEl.style.cursor = 'pointer';
+            healthEl.onclick = () => toggleSiteHealthMute(s.id);
+          }
+          if (!isDismissed) {
+            if (h.tier === 'fresh') fresh++;
+            else if (h.tier === 'behind') behind++;
+            else if (h.tier === 'stale') stale++;
+          }
         } else {
           const el = document.getElementById(`sarts-${s.id}`);
           if (el) { el.textContent = 'Not published'; el.style.color = 'var(--amber)'; }
+          if (healthEl) { healthEl.textContent = 'no data'; healthEl.style.color = 'var(--text3)'; }
         }
       } catch(_) {
         const el = document.getElementById(`sarts-${s.id}`);
         if (el) el.textContent = tok ? 'Error' : 'Add token';
+        if (healthEl) { healthEl.textContent = 'error'; healthEl.style.color = 'var(--text3)'; }
       }
     } else if (!tok) {
       const el = document.getElementById(`sarts-${s.id}`);
       if (el) { el.textContent = 'Add GH token'; el.style.color = 'var(--text3)'; }
+      if (healthEl) { healthEl.textContent = 'add token'; healthEl.style.color = 'var(--text3)'; }
     }
   }));
   if (!silent) {
-    document.getElementById('statusSummary').textContent =
-      `${live}/${sites.length} responding · ${withArticles} with articles published`;
+    const parts = [`${live}/${sites.length} responding`, `${withArticles} publishing`];
+    if (behind > 0) parts.push(`<span style="color:#f59e0b">${behind} behind</span>`);
+    if (stale  > 0) parts.push(`<span style="color:#ef4444">${stale} stale</span>`);
+    if (fresh  > 0) parts.push(`<span style="color:#10b981">${fresh} fresh</span>`);
+    document.getElementById('statusSummary').innerHTML = parts.join(' &middot; ');
   }
   const dot = document.getElementById('healthDot');
   if (dot) dot.className = 'health-dot ' + (live === sites.length ? 'live' : live > 0 ? 'partial' : 'down');
@@ -4763,6 +5357,16 @@ async function checkAllSites(silent = false) {
     const cfgActive = (cfg?.sites||[]).filter(s=>s.active!==false).length;
     lbl.textContent = `${cfgActive}/${sites.length} active`;
   }
+}
+
+// Mute/un-mute health alerts for a single site (persisted to localStorage).
+function toggleSiteHealthMute(siteId) {
+  let map = {};
+  try { map = JSON.parse(ls('siteHealthDismissed')||'{}'); } catch(_) {}
+  if (map[siteId]) delete map[siteId]; else map[siteId] = new Date().toISOString();
+  localStorage.setItem('siteHealthDismissed', JSON.stringify(map));
+  // Re-check the panel to reflect the new state.
+  checkAllSites(false);
 }
 
 async function checkSiteSingle(domain, id, silent = false) {
@@ -5669,6 +6273,26 @@ function ssLoadSite() {
   ssSetVal('ss-custom-prompt', site.custom_prompt || '');
   ssSetVal('ss-custom-css', site.custom_css || '');
 
+  // Design & Layout - new card added to remove the need for code edits to
+  // change tagline / accent color / layout / archive style / Schema @type.
+  ssSetVal('ss-tagline', site.tagline || '');
+  ssSetVal('ss-category', site.category || '');
+  ssSetVal('ss-hero-sub', site.hero_sub || '');
+  ssSetVal('ss-footer-desc', site.footer_desc || '');
+  var _accent = site.accent_color || site.primary || '';
+  ssSetVal('ss-accent-color-hex', _accent);
+  if (_accent && /^#[0-9a-fA-F]{3,8}$/.test(_accent)) {
+    var _full = _accent.length === 4
+      ? '#' + _accent[1] + _accent[1] + _accent[2] + _accent[2] + _accent[3] + _accent[3]
+      : _accent.slice(0, 7);
+    ssSetVal('ss-accent-color', _full);
+  }
+  ssSetVal('ss-article-layout', site.article_layout || '');
+  ssSetVal('ss-schema-type', site.schema_article_type || '');
+  ssSetChk('ss-editorial-archive', site.editorial_archive === true);
+  ssSetChk('ss-active', site.active !== false);
+  ssSetChk('ss-new-posts-enabled', site.new_posts_enabled !== false);
+
   // Posting Schedule - single source of truth. Stored as posts_per_day_new
   // (daily-equivalent for the bot) + historical_per_week (weekly-equivalent),
   // plus optional posts_unit/posts_count + historical_unit/historical_count so
@@ -6151,6 +6775,29 @@ async function ssSaveAll() {
     tone:                ssVal('ss-tone').trim(),
     custom_prompt:       ssVal('ss-custom-prompt'),
     custom_css:          ssVal('ss-custom-css'),
+    // Design & Layout - new fields. Only include when non-empty so we don't
+    // wipe out existing values when the form leaves them blank.
+    ...(() => {
+      const out = {};
+      const tagline = ssVal('ss-tagline').trim();
+      const category = ssVal('ss-category').trim();
+      const heroSub = ssVal('ss-hero-sub');
+      const footerDesc = ssVal('ss-footer-desc');
+      const accentHex = ssVal('ss-accent-color-hex').trim();
+      const articleLayout = ssVal('ss-article-layout').trim();
+      const schemaType = ssVal('ss-schema-type').trim();
+      if (tagline)        out.tagline = tagline;
+      if (category)       out.category = category;
+      if (heroSub)        out.hero_sub = heroSub;
+      if (footerDesc)     out.footer_desc = footerDesc;
+      if (accentHex && /^#[0-9a-fA-F]{3,8}$/.test(accentHex)) out.accent_color = accentHex;
+      if (articleLayout)  out.article_layout = articleLayout;
+      if (schemaType)     out.schema_article_type = schemaType;
+      out.editorial_archive = !!document.getElementById('ss-editorial-archive').checked;
+      out.active            = !!document.getElementById('ss-active').checked;
+      out.new_posts_enabled = !!document.getElementById('ss-new-posts-enabled').checked;
+      return out;
+    })(),
     posts_per_day_new:   ppdn,
     posts_per_week:      ppw,
     historical_mode:     histMode,
@@ -6726,7 +7373,7 @@ function _showPublishNotification(siteName, postTitle, url) {
     bar.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--green,#22c55e);color:#000;border-radius:8px;padding:14px 18px;font-size:13px;font-weight:600;max-width:340px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.4);cursor:pointer;line-height:1.5';
     document.body.appendChild(bar);
   }
-  bar.innerHTML = `Post published on <b>${siteName}</b>:<br><span style="font-weight:400">${postTitle}</span><br><a href="${url}" target="_blank" style="color:#000;text-decoration:underline;font-size:12px">${url}</a><span style="float:right;margin-left:12px;opacity:.6" onclick="this.parentElement.style.display='none'">x</span>`;
+  bar.innerHTML = `Post published on <b>${siteName}</b>:<br><span style="font-weight:400">${postTitle}</span><br><a href="${url}" target="_blank" style="color:#000;text-decoration:none;font-size:12px">${url}</a><span style="float:right;margin-left:12px;opacity:.6" onclick="this.parentElement.style.display='none'">x</span>`;
   bar.style.display = 'block';
   setTimeout(() => { bar.style.display = 'none'; }, 30000);
 }
@@ -8847,6 +9494,8 @@ function showPanel(id) {
   if (id === 'tokens') tvLoad();
   if (id === 'meta-guide' && typeof metaGuideRenderEvents === 'function') metaGuideRenderEvents();
   if (id === 'integrations' && typeof integrationsRender === 'function') integrationsRender();
+  if (id === 'addsite' && typeof initAddSiteKits === 'function') initAddSiteKits();
+  if (id === 'customize' && typeof custRenderHistory === 'function') custRenderHistory();
 }
 
 function copyField(elId, btn) {
@@ -9105,31 +9754,51 @@ let custTmplIdx = 0;
 
 function setCustMode(mode) {
   custMode = mode;
-  const isPost   = mode === 'post';
-  const isTmpl   = mode === 'template';
-  const isDesign = mode === 'design';
-  ['design','post','tmpl'].forEach(m => {
-    const btn = document.getElementById(`cust-mode-${m}`);
-    if (btn) btn.className = (m === (isTmpl ? 'tmpl' : mode)) ? 'btn btn-accent' : 'btn';
+  const isPost    = mode === 'post';
+  const isTmpl    = mode === 'template';
+  const isDesign  = mode === 'design';
+  const isReplace = mode === 'replace';
+  const isLinkify = mode === 'linkify';
+  // Map mode -> button id segment used in the toolbar above. The HTML uses
+  // tmpl/replace/linkify; keep both keys so old call sites still highlight.
+  const btnMap = {design:'design', post:'post', template:'tmpl', replace:'replace', linkify:'linkify'};
+  Object.entries(btnMap).forEach(([m, key]) => {
+    const btn = document.getElementById(`cust-mode-${key}`);
+    if (btn) btn.className = (m === mode) ? 'btn btn-accent' : 'btn';
   });
   const heads = {
     design:   '🎨 Pick a Site + Describe the Change',
     post:     '📝 Pick a Site + Post Topic',
-    template: '🖼 Paste a Template + Pick Sites to Apply It'
+    template: '🖼 Paste a Template + Pick Sites to Apply It',
+    replace:  '🔁 Find & Replace Across Pages',
+    linkify:  '🔗 Hyperlink Keywords (keyword → URL)',
   };
   document.getElementById('cust-section-head').textContent = heads[mode] || heads.design;
-  document.getElementById('cust-page-wrap').style.display      = isDesign ? '' : 'none';
+  document.getElementById('cust-page-wrap').style.display      = (isDesign || isReplace || isLinkify) ? '' : 'none';
   document.getElementById('cust-prompt-wrap').style.display    = isTmpl   ? 'none' : '';
   document.getElementById('cust-template-wrap').style.display  = isTmpl   ? '' : 'none';
   document.getElementById('cust-examples').style.display       = isDesign ? '' : 'none';
   document.getElementById('cust-post-examples').style.display  = isPost   ? '' : 'none';
   if (!isTmpl) {
-    document.getElementById('cust-prompt-label').textContent = isPost ? 'Post topic / title idea' : 'Describe the change';
-    document.getElementById('cust-prompt').placeholder = isPost
-      ? 'e.g. Best protein sources for vegans\ne.g. How to start investing with $100\ne.g. 10-minute morning workout routine'
-      : 'Anything goes  -  describe exactly what you want:\n\ne.g. Completely redesign the homepage with a dark purple theme\ne.g. Add a Tools page listing 5 recommended resources\ne.g. Change article cards to a magazine-style 2-column grid';
+    const labels = {
+      design:'Describe the change', post:'Post topic / title idea',
+      replace:'Find / Replace pairs (one per line, separated by →)',
+      linkify:'Keyword → URL pairs (one per line, separated by →)'
+    };
+    const phs = {
+      design:'Anything goes - describe exactly what you want:\n\ne.g. Completely redesign the homepage with a dark purple theme\ne.g. Add a Tools page listing 5 recommended resources\ne.g. Change article cards to a magazine-style 2-column grid',
+      post:'e.g. Best protein sources for vegans\ne.g. How to start investing with $100\ne.g. 10-minute morning workout routine',
+      replace:'old text → new text\nThe Old Brand → The New Brand\nfooter copyright 2024 → footer copyright 2026',
+      linkify:'Nike → https://nike.com\nAnker → https://anker.com\nApple → https://apple.com',
+    };
+    document.getElementById('cust-prompt-label').textContent = labels[mode] || labels.design;
+    document.getElementById('cust-prompt').placeholder = phs[mode] || phs.design;
   }
-  document.getElementById('cust-gen-btn').textContent = isTmpl ? '✦ Generate Themed Sites →' : (isPost ? '✦ Generate Post →' : '✦ Generate Page →');
+  const btnLabels = {
+    design:'✦ Generate Page →', post:'✦ Generate Post →', template:'✦ Generate Themed Sites →',
+    replace:'✦ Preview Replacements →', linkify:'✦ Preview Links →'
+  };
+  document.getElementById('cust-gen-btn').textContent = btnLabels[mode] || btnLabels.design;
   document.getElementById('cust-preview').style.display = 'none';
   if (!isTmpl) document.getElementById('cust-prompt').value = '';
   showCustApplied();
@@ -9302,6 +9971,8 @@ function _renderCustPagesList(pages) {
 
 async function generateCustomization() {
   if (custMode === 'template') { await generateTemplate(); return; }
+  if (custMode === 'replace')  { await generateFindReplace(); return; }
+  if (custMode === 'linkify')  { await generateLinkify();     return; }
   const prompt = document.getElementById('cust-prompt').value.trim();
   if (!prompt) { alert('Describe the change first.'); return; }
   if (!cfg) { alert('Config not loaded.'); return; }
@@ -9316,7 +9987,10 @@ async function generateCustomization() {
   const btn      = document.getElementById('cust-gen-btn');
   const thinking = document.getElementById('cust-thinking');
   const prog     = document.getElementById('cust-tmpl-progress');
-  btn.style.display = 'none'; thinking.classList.add('show');
+  // Disable rather than hide so dev-tools cannot retrigger and the user
+  // sees the button stay in place during the run.
+  btn.disabled = true; btn.dataset.originalLabel = btn.textContent; btn.textContent = '… generating';
+  thinking.classList.add('show');
   document.getElementById('cust-preview').style.display = 'none';
 
   if (isPost) {
@@ -9349,7 +10023,7 @@ async function generateCustomization() {
     } catch(e) {
       addLog('err', 'customize', 'Post generation failed: ' + e.message);
       alert('Error: ' + e.message);
-    } finally { btn.style.display = ''; thinking.classList.remove('show'); }
+    } finally { btn.disabled = false; btn.textContent = btn.dataset.originalLabel || btn.textContent; thinking.classList.remove('show'); }
     return;
   }
 
@@ -9414,7 +10088,7 @@ Rules:
   }
 
   prog.style.display = 'none';
-  btn.style.display = ''; thinking.classList.remove('show');
+  btn.disabled = false; btn.textContent = btn.dataset.originalLabel || btn.textContent; thinking.classList.remove('show');
   if (!custGeneratedTemplates.length) return;
 
   custTmplIdx = 0;
@@ -9444,81 +10118,306 @@ function copyCustomCode() {
   });
 }
 
+// ── Customize Site undo history (per-push SHA snapshot in localStorage) ──
+// Same pattern as the AI Fix history: array of {repo, sha, branch, path,
+// prompt, when_iso}. Survives reload. TTL 7 days, max 30 entries.
+const CUST_HISTORY_KEY = 'customizeHistory';
+function custLoadHistory(){
+  try { const raw = ls(CUST_HISTORY_KEY); if (!raw) return [];
+    const list = JSON.parse(raw);
+    if (!Array.isArray(list)) return [];
+    const cutoff = Date.now() - 7*24*3600*1000;
+    return list.filter(e => e && e.sha && e.repo && new Date(e.when_iso||0).getTime() > cutoff);
+  } catch(_){ return []; }
+}
+function custSaveHistory(list){
+  try { localStorage.setItem(CUST_HISTORY_KEY, JSON.stringify(list.slice(0,30))); } catch(_){}
+}
+function custPushHistory(entries){
+  const list = custLoadHistory();
+  entries.forEach(e => list.unshift(e));
+  custSaveHistory(list);
+  custRenderHistory();
+}
+function custRenderHistory(){
+  const list = custLoadHistory();
+  const wrap = document.getElementById('cust-history');
+  const listEl = document.getElementById('cust-history-list');
+  if (!wrap || !listEl) return;
+  if (!list.length) { wrap.style.display='none'; return; }
+  wrap.style.display='';
+  listEl.innerHTML = list.map((e, i) => {
+    const when = e.when_iso ? new Date(e.when_iso) : null;
+    const ago = when ? Math.max(0, Math.round((Date.now() - when.getTime())/60000)) : 0;
+    const agoStr = ago < 60 ? `${ago}m ago` : ago < 1440 ? `${Math.round(ago/60)}h ago` : `${Math.round(ago/1440)}d ago`;
+    const repoStem = e.repo.replace('Siavashsed/','');
+    const promptShort = (e.prompt||'').replace(/\s+/g,' ').slice(0,60);
+    return `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:11px">
+      <div style="flex:1;min-width:0">
+        <div style="color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>${repoStem}</b>/${e.path||'index.html'} &middot; ${promptShort}</div>
+        <div style="color:var(--text3);font-size:10px;margin-top:2px">${e.sha.slice(0,7)} &middot; ${agoStr}</div>
+      </div>
+      <button class="btn" style="padding:3px 8px;font-size:10px;border-color:#f59e0b;color:#f59e0b" onclick='custUndoEntry(${i})'>↶ Undo</button>
+    </div>`;
+  }).join('');
+}
+async function custUndoEntry(idx){
+  const list = custLoadHistory();
+  const e = list[idx];
+  if (!e) { alert('Undo entry not found.'); return; }
+  if (!confirm(`Revert ${e.repo} to commit ${e.sha.slice(0,7)}?\n\nThis force-resets the branch to before this customization. Any commits made after will be lost.`)) return;
+  const token = ls('ghToken') || prompt('GitHub token (ghp_...):');
+  if (!token) return;
+  try {
+    const r = await fetch('/api/customize-undo', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token, repo:e.repo, sha:e.sha, branch:e.branch||'main' })
+    });
+    const j = await r.json().catch(()=>({}));
+    if (r.ok && j.ok) {
+      addLog('ok', 'customize', `Reverted ${e.repo} to ${j.reverted_to}`);
+      list.splice(idx,1); custSaveHistory(list); custRenderHistory();
+      const status = document.getElementById('cust-apply-status');
+      if (status) { status.textContent = `↶ Reverted ${e.repo} to ${j.reverted_to}. GitHub Pages will redeploy in ~1 min.`; status.style.color = 'var(--amber)'; }
+    } else {
+      alert('Undo failed: ' + (j.error || r.statusText));
+    }
+  } catch(err) { alert('Undo error: ' + err.message); }
+}
+
+// ── Find & Replace mode ─────────────────────────────────────────────────────
+// User pastes lines of "old → new" pairs. For each selected page on each
+// selected site, fetch the current HTML, do an exact string replace, and stage
+// the result as a custGeneratedTemplates entry (same shape as design mode).
+// Apply button then PUTs the staged HTML via the same SHA-snapshot endpoint.
+async function generateFindReplace(){
+  const raw = document.getElementById('cust-prompt').value.trim();
+  if (!raw) { alert('Add one or more "old → new" pairs.'); return; }
+  // Split on either → or -> as the separator
+  const pairs = raw.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+    const m = line.split(/\s*(?:→|->)\s*/);
+    return m.length >= 2 ? {find: m[0], replace: m.slice(1).join(' → ')} : null;
+  }).filter(Boolean);
+  if (!pairs.length) { alert('No valid pairs found. Use the form: old text → new text'); return; }
+  const selectedIds = getSelectedSiteIds();
+  if (!selectedIds.length) { alert('Select at least one site.'); return; }
+  const token = ls('ghToken');
+  if (!token) { alert('Set your GitHub token in Settings first.'); showPanel('settings'); return; }
+  const page = custPage === 'custom' ? (document.getElementById('cust-custom-page')?.value || 'index.html').trim() : (custPage || 'index.html');
+  const btn = document.getElementById('cust-gen-btn');
+  const thinking = document.getElementById('cust-thinking');
+  btn.disabled = true; btn.dataset.originalLabel = btn.textContent; btn.textContent = '… scanning';
+  thinking.classList.add('show');
+  custGeneratedTemplates = [];
+  custGeneratedSiteId = [];
+  let totalReplacements = 0;
+  for (const sid of selectedIds) {
+    const site = (cfg?.sites||[]).find(s => s.id === sid);
+    if (!site?.repo) continue;
+    try {
+      const gr = await fetch(`/api/github/repos/${site.repo}/contents/${page}`, {headers:{'X-GH-Token': token}});
+      if (!gr.ok) continue;
+      const fd = await gr.json();
+      const orig = decodeURIComponent(escape(atob(fd.content.replace(/\n/g,''))));
+      let modified = orig, count = 0;
+      pairs.forEach(p => {
+        const before = modified;
+        modified = modified.split(p.find).join(p.replace);
+        count += (before.length !== modified.length || before !== modified) ? (before.split(p.find).length - 1) : 0;
+      });
+      if (count > 0) {
+        custGeneratedTemplates.push({site_id: sid, domain: site.domain, page, html: modified});
+        custGeneratedSiteId.push(sid);
+        totalReplacements += count;
+      }
+    } catch(e){ console.warn('replace scan failed', sid, e); }
+  }
+  btn.disabled = false; btn.textContent = btn.dataset.originalLabel; thinking.classList.remove('show');
+  if (!custGeneratedTemplates.length) {
+    alert('No matches found in any selected site.');
+    return;
+  }
+  // Show preview iframe with the first site's modified content
+  const first = custGeneratedTemplates[0];
+  const iframe = document.getElementById('cust-post-iframe');
+  if (iframe) {
+    iframe.srcdoc = first.html;
+  }
+  document.getElementById('cust-preview').style.display = '';
+  const status = document.getElementById('cust-apply-status');
+  if (status) { status.textContent = `${totalReplacements} replacement(s) across ${custGeneratedTemplates.length} site(s). Push to apply with one-click undo.`; status.style.color = 'var(--text2)'; }
+  const applyBtn = document.getElementById('cust-apply-btn');
+  if (applyBtn) applyBtn.textContent = `✓ Apply ${totalReplacements} replacement(s)`;
+}
+
+// ── Hyperlink Keywords mode ────────────────────────────────────────────────
+// User pastes "keyword → url" pairs. For each page, on FIRST occurrence of
+// each keyword (outside existing links + attribute values), wrap it in an
+// <a> tag. Conservative regex: word-boundary match, skip if already inside
+// an <a>, skip if inside <head> / <script> / <style>.
+async function generateLinkify(){
+  const raw = document.getElementById('cust-prompt').value.trim();
+  if (!raw) { alert('Add one or more "keyword → url" pairs.'); return; }
+  const pairs = raw.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+    const m = line.split(/\s*(?:→|->)\s*/);
+    if (m.length < 2) return null;
+    const keyword = m[0].trim();
+    const url = m.slice(1).join(' → ').trim();
+    if (!/^https?:\/\//i.test(url)) return null;
+    return {keyword, url};
+  }).filter(Boolean);
+  if (!pairs.length) { alert('No valid pairs. Use: Keyword → https://example.com'); return; }
+  const selectedIds = getSelectedSiteIds();
+  if (!selectedIds.length) { alert('Select at least one site.'); return; }
+  const token = ls('ghToken');
+  if (!token) { alert('Set your GitHub token in Settings first.'); showPanel('settings'); return; }
+  const page = custPage === 'custom' ? (document.getElementById('cust-custom-page')?.value || 'index.html').trim() : (custPage || 'index.html');
+  const btn = document.getElementById('cust-gen-btn');
+  const thinking = document.getElementById('cust-thinking');
+  btn.disabled = true; btn.dataset.originalLabel = btn.textContent; btn.textContent = '… scanning';
+  thinking.classList.add('show');
+  custGeneratedTemplates = [];
+  custGeneratedSiteId = [];
+  let totalLinks = 0;
+  // Strip <head>, <script>, <style>, and existing <a>...</a> before searching so
+  // we don't double-link or hit non-rendered text.
+  function safeLinkify(html, pairs){
+    let added = 0;
+    // Split HTML into chunks: protected (head/script/style/a) vs editable (rest)
+    const protectedRe = /(<head[\s\S]*?<\/head>|<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<a\b[\s\S]*?<\/a>)/gi;
+    const parts = [];
+    let i = 0;
+    for (const m of html.matchAll(protectedRe)) {
+      if (m.index > i) parts.push({t:'edit', s:html.slice(i, m.index)});
+      parts.push({t:'keep', s:m[0]});
+      i = m.index + m[0].length;
+    }
+    if (i < html.length) parts.push({t:'edit', s:html.slice(i)});
+    const usedSet = new Set();
+    for (let p of parts) {
+      if (p.t !== 'edit') continue;
+      for (const pair of pairs) {
+        if (usedSet.has(pair.keyword)) continue;
+        const re = new RegExp(`(?<![A-Za-z0-9_\\-])(${pair.keyword.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})(?![A-Za-z0-9_\\-])`, '');
+        if (re.test(p.s)) {
+          p.s = p.s.replace(re, `<a href="${pair.url}" target="_blank" rel="noopener" class="cust-linkify">$1</a>`);
+          usedSet.add(pair.keyword);
+          added++;
+        }
+      }
+    }
+    return {html: parts.map(p => p.s).join(''), added};
+  }
+  for (const sid of selectedIds) {
+    const site = (cfg?.sites||[]).find(s => s.id === sid);
+    if (!site?.repo) continue;
+    try {
+      const gr = await fetch(`/api/github/repos/${site.repo}/contents/${page}`, {headers:{'X-GH-Token': token}});
+      if (!gr.ok) continue;
+      const fd = await gr.json();
+      const orig = decodeURIComponent(escape(atob(fd.content.replace(/\n/g,''))));
+      const {html: modified, added} = safeLinkify(orig, pairs);
+      if (added > 0) {
+        custGeneratedTemplates.push({site_id: sid, domain: site.domain, page, html: modified});
+        custGeneratedSiteId.push(sid);
+        totalLinks += added;
+      }
+    } catch(e){ console.warn('linkify failed', sid, e); }
+  }
+  btn.disabled = false; btn.textContent = btn.dataset.originalLabel; thinking.classList.remove('show');
+  if (!custGeneratedTemplates.length) { alert('No keywords found to link in any selected site.'); return; }
+  const first = custGeneratedTemplates[0];
+  const iframe = document.getElementById('cust-post-iframe');
+  if (iframe) iframe.srcdoc = first.html;
+  document.getElementById('cust-preview').style.display = '';
+  const status = document.getElementById('cust-apply-status');
+  if (status) { status.textContent = `${totalLinks} link(s) added across ${custGeneratedTemplates.length} site(s). Push to apply with one-click undo.`; status.style.color = 'var(--text2)'; }
+  const applyBtn = document.getElementById('cust-apply-btn');
+  if (applyBtn) applyBtn.textContent = `✓ Apply ${totalLinks} link(s)`;
+}
+
 async function applyCustomization() {
   if (!serverMode) { alert('Server not running. Start with: python server.py'); return; }
-  const ids    = custGeneratedSiteId;
-  const isPost = custMode === 'post';
+  const ids = custGeneratedSiteId;
   if (!ids || !ids.length) return;
 
+  const mode = custMode || 'design';
   const status = document.getElementById('cust-apply-status');
+  const btn    = document.getElementById('cust-apply-btn');
   const plural = ids.length > 1 ? `${ids.length} sites` : ids[0];
 
-  // Save snapshot first
-  status.textContent = 'Saving snapshot…'; status.style.color = 'var(--text3)';
-  try {
-    await fetch('/api/snapshot', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ label: `AI[S] ${isPost ? 'post' : 'design'}: ${plural}` }),
-    });
-  } catch {}
-
-  if (isPost) {
+  // Post mode: queue the previewed HTML so bot.py publishes it verbatim
+  if (mode === 'post') {
     if (!custGeneratedPostHtml) return;
     const topic = document.getElementById('cust-prompt').value.trim();
+    btn.disabled = true; btn.textContent = 'Queueing…';
     try {
-      await fetch('/api/write-broadcast', {
+      const r = await fetch('/api/write-broadcast', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic, site_ids: ids, _generated_html: custGeneratedPostHtml }),
       });
-      status.textContent = `✓ Post queued for ${plural}. Run bot.py to publish it.`;
-      status.style.color = 'var(--green)';
-      addLog('ok', 'customize', `AI[S] post queued for ${plural}: "${topic}"`);
-    } catch(e) { status.textContent = 'Error saving post: ' + e.message; status.style.color = '#c0392b'; }
+      const j = await r.json().catch(()=>({}));
+      if (r.ok && j.ok) {
+        status.textContent = j.has_html
+          ? `✓ Post queued for ${plural} with full HTML. Next bot run publishes the previewed article verbatim.`
+          : `✓ Topic queued for ${plural}. bot.py will write a fresh article on its next run.`;
+        status.style.color = 'var(--green)';
+        addLog('ok', 'customize', `Post queued for ${plural}: "${topic}"`);
+      } else { throw new Error(j.error || 'queue failed'); }
+    } catch(e) { status.textContent = 'Error: ' + e.message; status.style.color = '#c0392b'; }
+    finally { btn.disabled = false; btn.textContent = '✦ Publish Post'; }
     return;
   }
 
-  // ── Design mode: push generated HTML pages directly to GitHub ────────────
+  // Design / Replace / Linkify modes: real push with per-site SHA capture
   const token = ls('ghToken');
   if (!token) { alert('Set your GitHub token in Settings first.'); showPanel('settings'); return; }
   const valid = custGeneratedTemplates.filter(t => t.html);
-  if (!valid.length) { alert('Nothing to push  -  all generations failed.'); return; }
+  if (!valid.length) { alert('Nothing to push - all generations failed.'); return; }
 
-  const btn = document.getElementById('cust-apply-btn');
   btn.disabled = true; btn.textContent = 'Pushing…';
+  status.textContent = `Pushing ${valid.length} page(s) with SHA snapshot…`;
+  status.style.color = 'var(--text3)';
 
-  let ok = 0, fail = 0;
-  for (const t of valid) {
+  const promptText = (document.getElementById('cust-prompt')||{}).value || mode;
+  const items = valid.map(t => {
     const site = (cfg?.sites||[]).find(s => s.id === t.site_id);
-    if (!site?.repo) { fail++; continue; }
-    const filePath = t.page || 'index.html';
-    status.textContent = `Pushing ${filePath} → ${t.domain}…`; status.style.color = 'var(--text3)';
-    try {
-      const getR = await fetch(`/api/github/repos/${site.repo}/contents/${filePath}`, { headers: { 'X-GH-Token': token } });
-      let sha = null;
-      if (getR.ok) { const d = await getR.json(); sha = d.sha; }
-      const content = btoa(unescape(encodeURIComponent(t.html)));
-      const body = { message: `AI[S] design: ${filePath} [${new Date().toISOString().slice(0,10)}]`, content };
-      if (sha) body.sha = sha;
-      const putR = await fetch(`/api/github/repos/${site.repo}/contents/${filePath}`, {
-        method: 'PUT', headers: { 'X-GH-Token': token, 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      if (putR.ok) { ok++; addLog('ok','customize',`${filePath} pushed → ${t.domain}`); }
-      else { fail++; const e = await putR.json(); addLog('err','customize',`Push failed ${t.domain}: ${e.message}`); }
-    } catch(e) { fail++; addLog('err','customize',`Push error ${t.domain}: ${e.message}`); }
-  }
+    return site?.repo ? { repo: site.repo, path: t.page || 'index.html', html: t.html, label: mode } : null;
+  }).filter(Boolean);
 
-  btn.disabled = false;
-  const pageName = valid[0]?.page || 'index.html';
-  if (fail === 0) {
-    btn.textContent = `✓ All ${ok} pages pushed!`;
-    status.textContent = `✓ ${pageName} is live on GitHub Pages in ~30 seconds.`;
-    status.style.color = 'var(--green)';
-    markSitesDirty();
-  } else {
+  try {
+    const r = await fetch('/api/customize-apply', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token, items, prompt: promptText, label: mode })
+    });
+    const j = await r.json().catch(()=>({}));
+    const okItems = (j.results||[]).filter(x => x.ok);
+    const failItems = (j.results||[]).filter(x => !x.ok);
+    // Record undo entries for every successful push
+    if (okItems.length) {
+      custPushHistory(okItems.map(o => ({
+        repo: o.repo, sha: o.pre_sha, branch: o.branch || 'main',
+        path: o.path, prompt: promptText, when_iso: new Date().toISOString()
+      })));
+    }
+    okItems.forEach(o => addLog('ok','customize',`${o.path} pushed → ${o.repo} (undo:${o.pre_sha.slice(0,7)})`));
+    failItems.forEach(f => addLog('err','customize',`Failed ${f.repo}/${f.path}: ${f.error}`));
+    if (failItems.length === 0) {
+      btn.textContent = `✓ ${okItems.length} pushed`;
+      status.textContent = `✓ Pushed. Each entry has a one-click Undo in "Recent customizations" above for 7 days.`;
+      status.style.color = 'var(--green)';
+      markSitesDirty();
+    } else {
+      btn.textContent = '✓ Push to GitHub';
+      status.textContent = `${okItems.length} pushed, ${failItems.length} failed. Check logs.`;
+      status.style.color = okItems.length > 0 ? 'var(--amber)' : '#c0392b';
+    }
+  } catch(e) {
     btn.textContent = '✓ Push to GitHub';
-    status.textContent = `${ok} pushed, ${fail} failed. Check logs.`;
-    status.style.color = '#e74c3c';
+    status.textContent = 'Network error: ' + e.message;
+    status.style.color = '#c0392b';
+  } finally {
+    btn.disabled = false;
   }
   showCustApplied();
 }
@@ -9546,7 +10445,7 @@ async function generateTemplate() {
   const progSite = document.getElementById('cust-tmpl-site-name');
   const progN    = document.getElementById('cust-tmpl-n');
   const progT    = document.getElementById('cust-tmpl-total');
-  btn.style.display = 'none';
+  btn.disabled = true; btn.dataset.originalLabel = btn.textContent; btn.textContent = '… generating';
   thinking.classList.add('show');
   prog.style.display = '';
   progT.textContent = selectedIds.length;
@@ -9606,7 +10505,7 @@ ${templateHtml}`;
     }
   }
 
-  btn.style.display = ''; thinking.classList.remove('show'); prog.style.display = 'none';
+  btn.disabled = false; btn.textContent = btn.dataset.originalLabel || btn.textContent; thinking.classList.remove('show'); prog.style.display = 'none';
   if (!custGeneratedTemplates.length) return;
 
   custTmplIdx = 0;
@@ -9655,47 +10554,51 @@ async function applyTemplate() {
   const token = ls('ghToken');
   if (!token) { alert('Set your GitHub token in Settings first.'); showPanel('settings'); return; }
   const valid = custGeneratedTemplates.filter(t => t.html);
-  if (!valid.length) { alert('Nothing to push  -  all generations failed.'); return; }
+  if (!valid.length) { alert('Nothing to push - all generations failed.'); return; }
 
   const btn    = document.getElementById('cust-apply-btn');
   const status = document.getElementById('cust-apply-status');
   btn.disabled = true; btn.textContent = 'Pushing…';
+  status.textContent = `Pushing template to ${valid.length} site(s) with SHA snapshot…`;
   status.style.color = 'var(--text3)';
 
-  let ok = 0, fail = 0;
-  for (const t of valid) {
+  const items = valid.map(t => {
     const site = (cfg?.sites||[]).find(s => s.id === t.site_id);
-    if (!site?.repo) { fail++; continue; }
-    status.textContent = `Pushing ${t.domain}…`;
-    try {
-      const getR = await fetch(`/api/github/repos/${site.repo}/contents/index.html`, {
-        headers: { 'X-GH-Token': token }
-      });
-      let sha = null;
-      if (getR.ok) { const d = await getR.json(); sha = d.sha; }
-      const content = btoa(unescape(encodeURIComponent(t.html)));
-      const body = { message: `Apply template [${new Date().toISOString().slice(0,10)}]`, content };
-      if (sha) body.sha = sha;
-      const putR = await fetch(`/api/github/repos/${site.repo}/contents/index.html`, {
-        method: 'PUT',
-        headers: { 'X-GH-Token': token, 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      if (putR.ok) { ok++; addLog('ok','customize',`Template pushed → ${t.domain}`); }
-      else { fail++; const e = await putR.json(); addLog('err','customize',`Push failed ${t.domain}: ${e.message}`); }
-    } catch(e) { fail++; addLog('err','customize',`Push error ${t.domain}: ${e.message}`); }
-  }
+    return site?.repo ? { repo: site.repo, path: 'index.html', html: t.html, label: 'template' } : null;
+  }).filter(Boolean);
 
-  btn.disabled = false;
-  if (fail === 0) {
-    btn.textContent = `✓ All ${ok} sites pushed!`;
-    status.textContent = `✓ Live on GitHub Pages in ~30 seconds. Note: next Push Sites will overwrite  -  add this template to push-sites.py to make it permanent.`;
-    status.style.color = 'var(--green)';
-    markSitesDirty();
-  } else {
-    btn.textContent = '✓ Apply & Push to GitHub';
-    status.textContent = `${ok} pushed, ${fail} failed  -  check logs.`;
-    status.style.color = ok > 0 ? 'var(--amber)' : '#c0392b';
+  try {
+    const r = await fetch('/api/customize-apply', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token, items, prompt: 'Apply template', label: 'template' })
+    });
+    const j = await r.json().catch(()=>({}));
+    const okItems = (j.results||[]).filter(x => x.ok);
+    const failItems = (j.results||[]).filter(x => !x.ok);
+    if (okItems.length) {
+      custPushHistory(okItems.map(o => ({
+        repo: o.repo, sha: o.pre_sha, branch: o.branch || 'main',
+        path: o.path, prompt: 'Apply template', when_iso: new Date().toISOString()
+      })));
+    }
+    okItems.forEach(o => addLog('ok','customize',`Template pushed → ${o.repo} (undo:${o.pre_sha.slice(0,7)})`));
+    failItems.forEach(f => addLog('err','customize',`Failed ${f.repo}: ${f.error}`));
+    if (failItems.length === 0) {
+      btn.textContent = `✓ All ${okItems.length} sites pushed`;
+      status.textContent = `✓ Live in ~30s. Each site has its own Undo in "Recent customizations" above for 7 days. (Next Push Sites will overwrite - add this template to push-sites.py to make it permanent.)`;
+      status.style.color = 'var(--green)';
+      markSitesDirty();
+    } else {
+      btn.textContent = '✓ Apply & Push';
+      status.textContent = `${okItems.length} pushed, ${failItems.length} failed.`;
+      status.style.color = okItems.length > 0 ? 'var(--amber)' : '#c0392b';
+    }
+  } catch(e) {
+    btn.textContent = '✓ Apply & Push';
+    status.textContent = 'Network error: ' + e.message;
+    status.style.color = '#c0392b';
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -9926,7 +10829,7 @@ function _fillSlugDatalist(datalistId, slugs) {
   const dl = document.getElementById(datalistId);
   if (!dl) return;
   // Sort by date desc, then alpha
-  const sorted = [...slugs].sort((a,b) => (b.date||'').localeCompare(a.date||'') || a.slug.localeCompare(b.slug));
+  const sorted = [...slugs].sort((a,b) => (b.date_iso||b.posted_iso||b.date||'').localeCompare(a.date_iso||a.posted_iso||a.date||'') || a.slug.localeCompare(b.slug));
   dl.innerHTML = sorted.map(s => `<option value="${s.slug}">${s.title ? s.slug + '  -  ' + s.title : s.slug}</option>`).join('');
 }
 
@@ -9954,7 +10857,7 @@ function _pickArticleSlugs(siteId, mode, n, fromDate, toDate) {
   }
   if (!pool.length) pool = slugs; // fallback to all if filter is empty
   if (mode === 'recent') {
-    pool = pool.sort((a,b) => (b.date||'').localeCompare(a.date||'')).slice(0, n);
+    pool = pool.sort((a,b) => (b.date_iso||b.posted_iso||b.date||'').localeCompare(a.date_iso||a.posted_iso||a.date||'')).slice(0, n);
   } else if (mode === 'random') {
     pool = pool.sort(() => Math.random()-0.5).slice(0, n);
   } else if (mode === 'today' || mode === 'range') {
@@ -10543,10 +11446,17 @@ function termBuildDiffCard(jsonStr) {
       }
     });
     const uid = 'dp'+Date.now();
-    return `<div class="term-patch" id="${uid}"><div style="font-family:monospace;font-size:10px;font-weight:700;color:#00ff41;margin-bottom:8px;letter-spacing:1px">▸ CHANGE PREVIEW</div><table style="width:100%;border-collapse:collapse;border:1px solid var(--border2);border-radius:6px;overflow:hidden"><thead><tr style="background:var(--bg3)"><th style="padding:4px 8px;text-align:left;color:var(--text3);font-size:10px;font-weight:600">Field</th><th style="padding:4px 8px;text-align:left;color:#f87171;font-size:10px;font-weight:600">Before</th><th style="padding:4px 8px;text-align:left;color:#4ade80;font-size:10px;font-weight:600">After</th></tr></thead><tbody>${rows}</tbody></table><div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="term-apply" onclick="termApplyPatch(${JSON.stringify(jsonStr)},'${uid}')">✓ Apply</button><button class="btn btn-sm" onclick="document.getElementById('${uid}').style.opacity='.35';document.getElementById('${uid}').style.pointerEvents='none'">✕ Cancel</button><label style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);cursor:pointer"><input type="checkbox" class="term-auto-pub" style="width:auto"> Push to GitHub</label></div></div>`;
+    // HTML-encode the JSON string for safe use inside a data-* attribute.
+    // Embedding JSON.stringify(jsonStr) directly in onclick="..." broke the
+    // HTML attribute parsing as soon as jsonStr contained a double quote -
+    // which it always does. Routing through a data-attr + delegate handler
+    // fixes Apply + Cancel + downstream auto-publish.
+    const dpEsc = jsonStr.replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+    return `<div class="term-patch" id="${uid}"><div style="font-family:monospace;font-size:10px;font-weight:700;color:#00ff41;margin-bottom:8px;letter-spacing:1px">▸ CHANGE PREVIEW</div><table style="width:100%;border-collapse:collapse;border:1px solid var(--border2);border-radius:6px;overflow:hidden"><thead><tr style="background:var(--bg3)"><th style="padding:4px 8px;text-align:left;color:var(--text3);font-size:10px;font-weight:600">Field</th><th style="padding:4px 8px;text-align:left;color:#f87171;font-size:10px;font-weight:600">Before</th><th style="padding:4px 8px;text-align:left;color:#4ade80;font-size:10px;font-weight:600">After</th></tr></thead><tbody>${rows}</tbody></table><div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="term-apply" data-patch="${dpEsc}" data-uid="${uid}" onclick="termApplyFromBtn(this)">✓ Apply</button><button class="btn btn-sm" onclick="termCancelCard('${uid}')">✕ Cancel</button><label style="margin-left:auto;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);cursor:pointer"><input type="checkbox" class="term-auto-pub" style="width:auto"> Push to GitHub</label></div></div>`;
   } catch(e) {
     const esc2 = jsonStr.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return `<div class="term-patch"><span class="term-patch-lbl">Config Patch</span><pre class="term-patch-pre">${esc2}</pre><button class="term-apply" onclick="termApply(${JSON.stringify(jsonStr)})">▶ Apply</button></div>`;
+    const dpEsc2 = jsonStr.replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+    return `<div class="term-patch"><span class="term-patch-lbl">Config Patch</span><pre class="term-patch-pre">${esc2}</pre><button class="term-apply" data-patch="${dpEsc2}" onclick="termApplyFromBtn(this)">▶ Apply</button></div>`;
   }
 }
 
@@ -10581,6 +11491,18 @@ async function termApplyPatch(jsonStr, cardId) {
 
 async function termApply(jsonStr) {
   await termApplyPatch(jsonStr, null);
+}
+// Delegate handlers for the data-attribute-based Apply/Cancel buttons. These
+// replaced the inline onclick="termApplyPatch(JSON.stringify(...))" pattern
+// which broke whenever the patch JSON contained a double quote (i.e., always).
+function termApplyFromBtn(btn){
+  const patch = btn.getAttribute('data-patch') || '';
+  const uid   = btn.getAttribute('data-uid') || null;
+  termApplyPatch(patch, uid);
+}
+function termCancelCard(uid){
+  const el = document.getElementById(uid);
+  if (el) { el.style.opacity = '.35'; el.style.pointerEvents = 'none'; }
 }
 
 function termRenderHistory() {
@@ -11068,7 +11990,7 @@ function sponsorPreviewHTML(sp) {
   return (
     `<aside style="margin:0;padding:22px 24px;border:1px solid ${accent}59;border-radius:12px;background:linear-gradient(135deg,${accent}14,transparent);font-size:14px;line-height:1.7;color:#1a1a1a">`
     + `<div style="font-family:Georgia,serif;font-style:italic;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${accent};margin-bottom:6px">${esc(eyebrow)}</div>`
-    + `<div>${esc(blurb)} <a href="${esc(href)}" target="_blank" rel="noopener sponsored" style="color:${accent};font-weight:600;text-decoration:underline">${esc(cta)}</a>.</div>`
+    + `<div>${esc(blurb)} <a href="${esc(href)}" target="_blank" rel="noopener sponsored" style="color:${accent};font-weight:600;text-decoration:none">${esc(cta)}</a>.</div>`
     + `</aside>`
   );
 }
