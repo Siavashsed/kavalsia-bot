@@ -1,7 +1,7 @@
 {
   "_name": "Spider Web",
   "global_prompt": "Write like a seasoned human expert with direct experience, not an AI assistant. Use contractions, vary sentence length, reference your own experience at least twice, include one specific data point or study reference with a year. Take a clear editorial position. NEVER use em-dashes. NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion. Somewhere in the article - not at the start, not as the conclusion - include one paragraph that reads like a real human wrote it in a slightly different mood: uncertain phrasing, an offhand mention of someone ('my friend tried this and honestly...'), a personal anecdote that is specific and slightly embarrassing or funny, or a moment of genuine doubt ('I'm not 100% sure this works for everyone, but...'). The tone of this paragraph can be looser, funnier, or more uncertain than the rest. It should feel like the writer briefly forgot they were writing an article.",
-  "global_negative_prompt": "DO NOT EVER USE \" -\" (em-dash). NEVER use: delve into, it's worth noting, in the realm of, game-changing, harness the power, leverage (as metaphor), navigate the landscape, cutting-edge, comprehensive, robust, furthermore, in conclusion, in summary, to summarize, it is important to note, as an AI language model.",
+  "global_negative_prompt": "Write as a specific, experienced human operator sharing first-hand experience. The reader must never be able to tell this was machine-written. HARD BANS (never output any of these, in any casing): the em-dash or en-dash character, and the spaced-hyphen used as one. NEVER use these words/phrases: delve, dive into, dive deeper, it's worth noting, it's worth mentioning, in the realm of, in the world of, game-changing, game-changer, harness the power, leverage (as metaphor), navigate the landscape, navigating, cutting-edge, comprehensive, robust, seamless, seamlessly, streamline, elevate, supercharge, unlock the (power/potential/secrets), take it to the next level, level up, foster, resonate, furthermore, moreover, additionally, notably, importantly, ultimately, in essence, in conclusion, in summary, to summarize, it is important to note, a testament to, testament, tapestry, plethora, a myriad of, myriad, boasts, underscore, pivotal, crucial, paramount, multifaceted, holistic, synergy, paradigm, intricate, meticulous, keen, vital, profound, remarkable, notable, vibrant, bustling, nestled, treasure trove, stand the test of time, ever-evolving, in today's digital age, in today's fast-paced world, embark, embark on a journey, rest assured, needless to say, that being said, at the end of the day, when all is said and done, first and foremost, last but not least, without a doubt, when it comes to, look no further, without further ado, buckle up, ensure (use 'make sure'), utilize (use 'use'), facilitate, endeavor, commence, ascertain, garner, whether you're a. STRUCTURE BANS: do not open with a rhetorical question, with 'Picture this', 'Imagine', 'The truth is', 'Let's be honest', or 'Here's the thing'. Do not open the piece by restating the title. Do not write 'In this article/guide/post', 'this article will', or 'by the end of this'. Do not end with a generic motivational wrap-up. Do not use the headings 'Introduction' or 'Conclusion'. Do not write listicle filler like 'Here are X ways'. Never start with a preamble like 'Sure', 'Certainly', 'Here's', 'Of course', or 'I hope this helps'. Never write meta-commentary about the writing task or about being an AI. FORMAT: output clean HTML only. No raw markdown (no ## headings, no ** bold, no ``` fences, no '- ' bullet characters in prose), no emoji in body text. VOICE: vary sentence length sharply (mix 4-word sentences with longer ones). Use concrete numbers, real tool and product names, dates, and dollar figures. Prefer specific anecdotes and trade-offs over balanced generalities. Take a clear position. Contractions are fine. Sound like a person who has actually done the thing.",
   "global_header_scripts": "",
   "global_footer_scripts": "",
   "global_client": {
@@ -278,7 +278,10 @@
       "name": "Cryptopulse",
       "author": "Marcus Webb",
       "custom_css": "",
-      "schema_article_type": "NewsArticle"
+      "schema_article_type": "NewsArticle",
+      "author_avatars": {
+        "Marcus Webb": "https://randomuser.me/api/portraits/men/75.jpg"
+      }
     },
     {
       "id": "passive-wealth",
@@ -2566,11 +2569,9 @@
         "The science of habit formation",
         "How chronic stress reshapes the prefrontal cortex"
       ],
-      "author": "Shahnoosh Nasiri",
+      "author": "Shahnoush Nasiri",
       "author_names": [
-        "Dr. Maya Holloway",
-        "Dr. Idris Kelman",
-        "Dr. Priya Ramani"
+        "Shahnoush Nasiri"
       ],
       "posts_per_day_new": 1,
       "historical_mode": true,
@@ -2600,7 +2601,9 @@
         "target": "recent"
       },
       "active": true,
-      "schema_article_type": "AnalysisNewsArticle"
+      "schema_article_type": "AnalysisNewsArticle",
+      "default_author": "Shahnoush Nasiri",
+      "use_random_author": false
     },
     {
       "id": "folioatelier",
