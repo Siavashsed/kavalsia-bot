@@ -43,7 +43,7 @@ def render(article, site, image_url, photographer, t):
             f'<div class="ece-hero-frame"><img src="{image_url}" '
             f'alt="{article.get("image_alt","")}" loading="lazy"></div>'
             f'<figcaption><span class="ece-cap-dot"></span>'
-            f'Photograph: {photographer} / Pexels</figcaption></figure>')
+            f'Photograph: {photographer}</figcaption></figure>')
 
     sections = _inject_section_breaks(_article_sections(article["sections"], t), 'ece-h2')
 
