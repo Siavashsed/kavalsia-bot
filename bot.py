@@ -5023,7 +5023,7 @@ def _get_article_nav(site, t):
 def article_standard(article, site, image_url, photographer, t):
     """Classic centered blog post. No sidebar."""
     sections = _article_sections(article["sections"], t)
-    img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;height:400px;object-fit:cover;border-radius:8px;margin:28px 0"><p style="font-size:11px;color:{t["meta"]};margin:-16px 0 20px">Photo by {photographer} / Pexels</p>' if image_url else ""
+    img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;height:400px;object-fit:cover;border-radius:8px;margin:28px 0"><p style="font-size:11px;color:{t["meta"]};margin:-16px 0 20px">Photo by {photographer}</p>' if image_url else ""
 
     css = f"""
 .art{{max-width:760px;margin:48px auto;padding:0 24px 80px}}
@@ -5054,7 +5054,7 @@ def article_sidebar(article, site, image_url, photographer, t):
     sections    = article["sections"]
     toc_items   = "".join([f'<li class="art-side-li"><a href="#s{i}" class="art-side-a">{s["heading"]}</a></li>' for i, s in enumerate(sections)])
     body_html   = "".join([f'<h2 id="s{i}" class="art-h2">{s["heading"]}</h2><div>{s["content"]}</div>' for i, s in enumerate(sections)])
-    img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;height:380px;object-fit:cover;border-radius:8px;margin:24px 0"><p style="font-size:11px;color:{t["meta"]};margin-top:-12px">Photo: {photographer} / Pexels</p>' if image_url else ""
+    img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;height:380px;object-fit:cover;border-radius:8px;margin:24px 0"><p style="font-size:11px;color:{t["meta"]};margin-top:-12px">Photo: {photographer}</p>' if image_url else ""
 
     css = f"""
 .art-grid{{max-width:1060px;margin:48px auto;padding:0 24px;display:grid;grid-template-columns:1fr 260px;gap:48px;align-items:start}}
@@ -5096,7 +5096,7 @@ def article_sidebar(article, site, image_url, photographer, t):
 def article_magazine(article, site, image_url, photographer, t):
     """Magazine style: wide format with pull quotes and multi-column intro."""
     sections = _article_sections(article["sections"], t)
-    img = f'<div style="width:100%;height:480px;background:url({image_url}) center/cover;border-radius:0"></div><p style="font-size:11px;color:{t["meta"]};text-align:center;padding:8px">Photo: {photographer} / Pexels</p>' if image_url else ""
+    img = f'<div style="width:100%;height:480px;background:url({image_url}) center/cover;border-radius:0"></div><p style="font-size:11px;color:{t["meta"]};text-align:center;padding:8px">Photo: {photographer}</p>' if image_url else ""
 
     css = f"""
 .mag-hero{{background:{t["bg3"]};padding:60px 0 0;text-align:center}}
@@ -5134,7 +5134,7 @@ def article_magazine(article, site, image_url, photographer, t):
 def article_minimal(article, site, image_url, photographer, t):
     """Medium-style: maximum whitespace, typography focus, no distractions."""
     sections = _article_sections(article["sections"], t)
-    img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;max-height:500px;object-fit:cover;margin:40px 0 8px"><p style="font-size:11px;color:{t["meta"]};text-align:center;margin-bottom:40px">Photo: {photographer} / Pexels</p>' if image_url else ""
+    img = f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy" style="width:100%;max-height:500px;object-fit:cover;margin:40px 0 8px"><p style="font-size:11px;color:{t["meta"]};text-align:center;margin-bottom:40px">Photo: {photographer}</p>' if image_url else ""
 
     css = f"""
 .art-min{{max-width:680px;margin:0 auto;padding:48px 24px 100px;font-size:19px;line-height:1.8}}
@@ -5183,7 +5183,7 @@ def article_immersive(article, site, image_url, photographer, t):
   <div class="imm-content">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:12px">{site["category"]}</div>
     <h1>{article["title"]}</h1>
-    <div class="meta" style="display:flex;align-items:center;gap:11px">{_author_avatar(author, t)}<span>By {author} &nbsp;·&nbsp; {article.get("date","")} {'&nbsp;·&nbsp; Photo: ' + photographer + ' / Pexels' if photographer else ''}</span></div>
+    <div class="meta" style="display:flex;align-items:center;gap:11px">{_author_avatar(author, t)}<span>By {author} &nbsp;·&nbsp; {article.get("date","")} {'&nbsp;·&nbsp; Photo: ' + photographer + '' if photographer else ''}</span></div>
   </div>
 </div>
 <div class="imm-body">
@@ -5233,7 +5233,7 @@ def article_neuro(article, site, image_url, photographer, t):
 
     # Hero image
     img = (f'<figure class="art-neuro-hero"><img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy">'
-           f'<figcaption>Photograph by {photographer} / Pexels</figcaption></figure>') if image_url else ""
+           f'<figcaption>Photograph by {photographer}</figcaption></figure>') if image_url else ""
 
     # Margin TOC + takeaways
     toc_items = "".join(
@@ -5366,7 +5366,7 @@ def article_lesson(article, site, image_url, photographer, t):
         img = (
             f'<figure class="ls-hero-fig">'
             f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy">'
-            f'<figcaption>Photograph by {photographer} / Pexels</figcaption>'
+            f'<figcaption>Photograph by {photographer}</figcaption>'
             f'</figure>'
         )
     else:
@@ -5493,7 +5493,7 @@ def article_press(article, site, image_url, photographer, t):
         img_block = (
             f'<figure class="ap-hero">'
             f'  <img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager">'
-            f'  <figcaption>Photograph &middot; {photographer} / Pexels</figcaption>'
+            f'  <figcaption>Photograph &middot; {photographer}</figcaption>'
             f'</figure>'
         )
 
@@ -5812,7 +5812,7 @@ def article_kanona(article, site, image_url, photographer, t):
             f'<figure class="kn-hero">'
             f'  <img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager">'
             f'  <div class="kn-hero-fade"></div>'
-            f'  <figcaption>Photograph &middot; {photographer} / Pexels</figcaption>'
+            f'  <figcaption>Photograph &middot; {photographer}</figcaption>'
             f'</figure>'
         )
 
@@ -6051,7 +6051,7 @@ def article_broadsheet(article, site, image_url, photographer, t):
     if image_url:
         img = (f'<figure class="bs-fig">'
                f'<img src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="lazy">'
-               f'<figcaption>Photo by {photographer} / Pexels</figcaption>'
+               f'<figcaption>Photo by {photographer}</figcaption>'
                f'</figure>')
     author = _resolve_author(site, article)["name"]
     kicker = (site.get("category") or "Editorial").upper()
@@ -6130,7 +6130,7 @@ def article_tabloid(article, site, image_url, photographer, t):
                 f'<h1 class="tb-h1">{article["title"]}</h1>'
                 f'<p class="tb-dek">{article.get("meta_description","")}</p>'
                 f'</div>'
-                f'<div class="tb-credit">Photo: {photographer} / Pexels</div>'
+                f'<div class="tb-credit">Photo: {photographer}</div>'
                 f'</div>')
     else:
         hero = (f'<div class="tb-hero tb-hero-flat">'
@@ -6204,7 +6204,7 @@ def article_onlinebiz(article, site, image_url, photographer, t):
                    f'<span class="ob-dot"></span><span>{read_time} min read</span></div>')
     has_img = bool(image_url)
     if has_img:
-        _credit = (f'<figcaption class="ob-banner-credit">Photograph: {photographer} / Pexels</figcaption>'
+        _credit = (f'<figcaption class="ob-banner-credit">Photograph: {photographer}</figcaption>'
                    if photographer else '')
         banner = (f'<figure class="ob-banner">'
                   f'<img class="ob-banner-img" src="{image_url}" alt="{article.get("image_alt", article["title"])}" loading="eager" onerror="this.style.display=\'none\'">'
@@ -6347,7 +6347,7 @@ def article_sidebar_wide(article, site, image_url, photographer, t):
     if image_url:
         hero = (f'<figure class="sw-hero"><img src="{image_url}" '
                 f'alt="{article.get("image_alt", article["title"])}" loading="eager">'
-                f'<figcaption>Photo: {photographer} / Pexels</figcaption></figure>')
+                f'<figcaption>Photo: {photographer}</figcaption></figure>')
 
     css = f"""
 .sw{{background:{bg};color:{text};font-family:{bf};position:relative}}
@@ -6526,7 +6526,7 @@ def article_ttr_bespoke(article, site, image_url, photographer, t):
     hero = ""
     if image_url:
         hero = (f'<figure class="ttr-hero"><img src="{image_url}" alt="{article.get("image_alt","")}" loading="lazy">'
-                f'<figcaption>Illustration: {photographer} / Pexels</figcaption></figure>')
+                f'<figcaption>Illustration: {photographer}</figcaption></figure>')
     sections = _inject_section_breaks(_article_sections(article["sections"], t), 'ttr-h2')
     css = f"""
 .ttr{{background:{t['bg']};color:{ink};font-family:{bf}}}
