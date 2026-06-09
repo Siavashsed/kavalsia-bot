@@ -51,7 +51,7 @@ def render(article, site, image_url, photographer, t):
             f'<figure class="sva-hero">'
             f'<img src="{image_url}" alt="{article.get("image_alt","")}" loading="lazy">'
             f'<figcaption><span class="sva-fig-tag">FIG.</span>'
-            f'Image: {photographer} / Pexels</figcaption></figure>')
+            f'Image: {photographer}</figcaption></figure>')
 
     sections = _inject_section_breaks(_article_sections(article["sections"], t), 'sva-h2')
 
