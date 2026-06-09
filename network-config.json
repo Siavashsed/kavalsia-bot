@@ -264,24 +264,25 @@
         "Hiroshi Fujita"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "This site is where I publish the analysis that takes longer than 280 characters to explain: on-chain signals, bot logic, and the setups I'm actually watching.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Cryptopulse",
       "author": "Marcus Webb",
       "custom_css": "",
       "schema_article_type": "NewsArticle",
       "author_avatars": {
         "Marcus Webb": "https://randomuser.me/api/portraits/men/75.jpg"
-      }
+      },
+      "new_posts_count": 0
     },
     {
       "id": "passive-wealth",
@@ -355,21 +356,22 @@
         "Lucia Mendes"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Passive Wealth Guide is written for people who want the realistic version: how long it actually takes, what the taxes look like, and which strategies are worth the complexity.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Passivewealthguide",
       "author": "Ryan Mitchell",
       "schema_article_type": "AnalysisNewsArticle",
-      "compact_author_card": true
+      "compact_author_card": true,
+      "new_posts_count": 0
     },
     {
       "id": "trading-tech",
@@ -443,20 +445,21 @@
         "Idris Bello"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "TradingTech Review is where I cut through vendor marketing. If a tool doesn't hold up under real trading conditions, I'll say so.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Tradingtechreview",
       "author": "Alex Turner",
-      "schema_article_type": "TechArticle"
+      "schema_article_type": "TechArticle",
+      "new_posts_count": 0
     },
     {
       "id": "ai-marketing",
@@ -530,17 +533,17 @@
         "Rohan Mehta"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "AI Marketing Pro is the resource I wished existed when I started integrating AI into my campaigns. No hype about 'replacing marketers' - just what works, measured by actual results.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "ai-marketing",
       "default_author": "",
       "custom_prompt": "",
@@ -580,7 +583,8 @@
         "storefront_token": ""
       },
       "author": "Jordan Cole",
-      "schema_article_type": "TechArticle"
+      "schema_article_type": "TechArticle",
+      "new_posts_count": 0
     },
     {
       "id": "ecommerce-edge",
@@ -654,10 +658,10 @@
         "Pia Holzer"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "name": "ecommerce-edge",
       "default_author": "",
       "custom_prompt": "",
@@ -702,12 +706,13 @@
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "author": "Nina Patel",
       "schema_article_type": "TechArticle",
       "font_body": "'Inter',system-ui,sans-serif",
       "font_head": "'Inter Tight','Inter',system-ui,sans-serif",
-      "font_mono": "'JetBrains Mono',ui-monospace,monospace"
+      "font_mono": "'JetBrains Mono',ui-monospace,monospace",
+      "new_posts_count": 0
     },
     {
       "id": "mochapoo-pets",
@@ -787,17 +792,17 @@
         "Maya Torres"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "This site exists because most doodle breed content is written by breeders with a financial stake. I write it as a vet: what the health research shows, what nutrition actually matters, and what advice to ignore.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "MochaPoo Pets",
       "default_author": "",
       "custom_prompt": "Open with a small playful hook or observation about the pet (one line, max). Use light humor sparingly through the piece - one or two dry asides per article, never forced. Always pay the joke off with real, specific, owner-actionable advice. End every article with a quick 'TL;DR' style summary the reader can act on this week.",
@@ -856,7 +861,8 @@
         ]
       },
       "author": "Dr. Emily Ross",
-      "schema_article_type": "BlogPosting"
+      "schema_article_type": "BlogPosting",
+      "new_posts_count": 0
     },
     {
       "id": "supplement-verge",
@@ -930,20 +936,21 @@
         "Dr. Aki Maeda"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Supplement Verge cuts through the marketing. Every ingredient gets graded by the quality of human evidence behind it - not by how impressive the label looks.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Supplementverge",
       "author": "Dr. James Holloway",
-      "schema_article_type": "MedicalWebPage"
+      "schema_article_type": "MedicalWebPage",
+      "new_posts_count": 0
     },
     {
       "id": "sight-reading",
@@ -1017,20 +1024,21 @@
         "Henrik Nyborg"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "posts_per_week": 0,
       "author_bio": "Most students practice sight-reading wrong - they reinforce bad habits instead of building fluency. Sight Reading Academy is my attempt to fix that with structured, evidence-informed methodology.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Sightreadingacademy",
       "author": "Professor Laura Kim",
-      "schema_article_type": "LearningResource"
+      "schema_article_type": "LearningResource",
+      "new_posts_count": 0
     },
     {
       "id": "newborn-iq",
@@ -1104,20 +1112,21 @@
         "Cora Beauchamp"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Newborn IQ is built around what current pediatric evidence actually supports - not what worked for someone's grandmother, and not the anxiety-producing content that fills most parenting sites.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Newborniq",
       "author": "Melissa Torres",
-      "schema_article_type": "BlogPosting"
+      "schema_article_type": "BlogPosting",
+      "new_posts_count": 0
     },
     {
       "id": "dalmend-home",
@@ -1191,10 +1200,10 @@
         "Liesel Wolff"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "name": "dalmend-home",
       "default_author": "",
       "custom_prompt": "",
@@ -1214,9 +1223,10 @@
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "author": "Olivia Grant",
-      "schema_article_type": "BlogPosting"
+      "schema_article_type": "BlogPosting",
+      "new_posts_count": 0
     },
     {
       "id": "onlinebiz-pro",
@@ -1290,21 +1300,22 @@
         "Vesna Markovic"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Online Biz Pro is for founders who want straight talk on what actually works: acquisition, pricing, hiring, exits. Skip the guru content - this is operating experience.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Onlinebizpro",
       "author": "Ryan Cross",
       "schema_article_type": "BlogPosting",
-      "word_target": 1450
+      "word_target": 1450,
+      "new_posts_count": 0
     },
     {
       "id": "sportiq-pro",
@@ -1378,20 +1389,21 @@
         "Calder Whitfield"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "SportIQ Pro is my attempt to close that gap. Every programming decision, every recovery protocol, every piece of nutrition advice gets run against the actual evidence. No bro science.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Sportiqpro",
       "author": "Daniel Webb",
-      "schema_article_type": "SportsEvent"
+      "schema_article_type": "SportsEvent",
+      "new_posts_count": 0
     },
     {
       "id": "makeup-craft",
@@ -1465,20 +1477,21 @@
         "Selma Khoury"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Makeup Craft is technique-first. I'm not here to sell you a specific product - I'm here to help you understand application, so whatever products you use, you use them correctly.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Makeupcraft",
       "author": "Sofia Marino",
-      "schema_article_type": "BlogPosting"
+      "schema_article_type": "BlogPosting",
+      "new_posts_count": 0
     },
     {
       "id": "dating-edge",
@@ -1552,20 +1565,21 @@
         "Pippa Sennett"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "The Dating Edge is built around attachment theory, communication research, and the psychology of attraction - not pickup tactics or generic 'love yourself first' platitudes.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "The Dating Edge",
       "author": "Dr. Priya Sharma",
-      "schema_article_type": "BlogPosting"
+      "schema_article_type": "BlogPosting",
+      "new_posts_count": 0
     },
     {
       "id": "fitpulse-pro",
@@ -1639,17 +1653,17 @@
         "Petros Halas"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "FitPulse Pro is for people who want honest answers: what the research says, what my experience confirms, and what the fitness industry is quietly wrong about.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "fitpulse-pro",
       "default_author": "",
       "custom_prompt": "",
@@ -1695,7 +1709,8 @@
       "primary": "#d6ff3f",
       "bg": "#0c0e14",
       "text": "#f0f1f4",
-      "muted": "#9aa0aa"
+      "muted": "#9aa0aa",
+      "new_posts_count": 0
     },
     {
       "id": "sellit-ca",
@@ -1770,17 +1785,17 @@
         "Sellit.ca"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Sellit.ca is a practical guide to buying, selling, and growing home value, written by working Canadian real estate practitioners.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Sellit",
       "default_author": "Sellit.ca",
       "custom_prompt": "",
@@ -1839,7 +1854,8 @@
       "accent_color": "#c8a96a",
       "font_body": "'Inter',system-ui,sans-serif",
       "font_head": "'Inter Tight','Inter',system-ui,sans-serif",
-      "font_mono": "'JetBrains Mono',ui-monospace,monospace"
+      "font_mono": "'JetBrains Mono',ui-monospace,monospace",
+      "new_posts_count": 0
     },
     {
       "id": "kanona-events",
@@ -1914,17 +1930,17 @@
       ],
       "articles_per_day": 1,
       "nav_style": "dark",
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Kanona Projects is for curious minds who believe a gathering can be more than a social obligation. The people who show up wanting to feel something different - and leave carrying a memory they did not expect.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "author": "Kani Sedighi",
       "schema_article_type": "Event",
       "custom_domain": "kanonaprojects.com",
@@ -1936,7 +1952,8 @@
       "font_head": "'Cormorant Garamond',Georgia,serif",
       "font_mono": "'JetBrains Mono',ui-monospace,monospace",
       "compact_author_card": true,
-      "word_target": 1900
+      "word_target": 1900,
+      "new_posts_count": 0
     },
     {
       "id": "mashestate-construction",
@@ -2009,17 +2026,17 @@
         "Rachel Webb"
       ],
       "use_random_author": true,
-      "posts_per_run": 2,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Mash Construction is the resource I give to clients before they start a project. Better-informed owners make better decisions - and my job gets easier when they do.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "mashestate-construction",
       "default_author": "",
       "custom_prompt": "",
@@ -2066,7 +2083,8 @@
         "storefront_token": ""
       },
       "author": "Tom Mash",
-      "schema_article_type": "HowTo"
+      "schema_article_type": "HowTo",
+      "new_posts_count": 0
     },
     {
       "id": "insight-insure",
@@ -2139,17 +2157,17 @@
         "Cyrus Khorrami"
       ],
       "use_random_author": true,
-      "posts_per_run": 2,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Insight Insure exists because insurance is one of the most important financial products most people understand the least. I'm trying to fix that, one article at a time.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Insight Insure",
       "default_author": "",
       "custom_prompt": "",
@@ -2189,7 +2207,8 @@
         "storefront_token": ""
       },
       "author": "Patrick Lane",
-      "schema_article_type": "AnalysisNewsArticle"
+      "schema_article_type": "AnalysisNewsArticle",
+      "new_posts_count": 0
     },
     {
       "id": "carverge",
@@ -2264,17 +2283,17 @@
         "Daichi Murakami"
       ],
       "use_random_author": true,
-      "posts_per_run": 2,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "CarVerge exists because most car coverage is either hype or fear. I try to give you the engineering reality across buying, ownership costs, maintenance, reliability, and driving, and yes, the honest math on EVs too.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "carverge",
       "default_author": "",
       "custom_prompt": "",
@@ -2322,7 +2341,8 @@
         "storefront_token": ""
       },
       "author": "James Carr",
-      "schema_article_type": "Review"
+      "schema_article_type": "Review",
+      "new_posts_count": 0
     },
     {
       "id": "travelverge",
@@ -2333,7 +2353,7 @@
       "theme": "light",
       "layout": "magazine",
       "article_layout": "lifestyle",
-      "tone": "specific and experience-driven, like a travel writer who hates generic listicles and tells you what actually happened.",
+      "tone": "specific and experience-driven, like a travel journalist who has actually stayed in the place. Review real hotels, spas and destinations with a clear verdict, who it is for, and the real price. When featuring another travel writer or creator, name and link them generously. Use the property's own images and always credit the source. No generic listicle filler.",
       "persona": "Ana Verge, independent travel journalist with 60 countries visited",
       "brevo_list_id": 13,
       "signup_url": "",
@@ -2375,16 +2395,18 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
-        "Off-season travel: destinations that are better without the crowds",
-        "How to travel for 30 days on a $2,000 budget",
-        "Finding accommodation that locals actually use",
-        "The travel insurance claim I almost had to make in Lisbon",
-        "How to navigate a country where you don't speak the language",
-        "Slow travel vs fast travel - what you actually remember",
-        "The packing list I've settled on after 60 countries",
-        "How to find non-touristy food in a tourist city",
-        "Border crossings: what no travel blog prepares you for",
-        "The honest truth about digital nomad life after 2 years"
+        "The 5 best boutique hotels in Lisbon we actually stayed in, with what each costs",
+        "Top 5 spa and wellness hotels in Bali worth the splurge, honestly reviewed",
+        "A week in Marrakech: the riads we loved, the food, and what we would skip",
+        "The 7 best small hotels in Mexico City right now, ranked by neighbourhood",
+        "Five Caribbean island stays that are genuinely worth the flight",
+        "Tokyo on a mid-range budget: where we stayed and where to spend instead",
+        "The best design hotels in Portugal, from Porto to the Algarve, ranked",
+        "Patagonia lodges: the five we would book again and why",
+        "The travel writers and creators worth following for Southeast Asia, and what they get right",
+        "Top 5 wellness retreats in Thailand we tested, with the real cost of each",
+        "Reviewed: the most-hyped new hotels in Europe this year, are they worth it",
+        "Brand review: is this hotel group actually as good as the marketing says"
       ],
       "articles_per_day": 1,
       "nav_style": "dark",
@@ -2395,17 +2417,17 @@
         "Ronan Ferreira"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Travel Verge is the resource I wish had existed: specific, honest, and written by someone who went there on their own money. No sponsored stays, no destination board partnerships.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "travelverge",
       "default_author": "",
       "custom_prompt": "Find top hotels around the world and write article about them and use their own site's image in the article",
@@ -2454,7 +2476,8 @@
         "storefront_token": ""
       },
       "author": "Ana Verge",
-      "schema_article_type": "TravelGuide"
+      "schema_article_type": "TravelGuide",
+      "new_posts_count": 0
     },
     {
       "id": "topproduct",
@@ -2466,7 +2489,7 @@
       "theme": "light",
       "layout": "editorial",
       "article_layout": "standard",
-      "tone": "direct and trustworthy, like a friend who has already bought and tested the product and gives you the honest answer without brand partnerships clouding the advice.",
+      "tone": "direct and trustworthy, like a friend who has already bought and tested the product. Every pick gets a one-line verdict, a who-it-is-for, and a plain outbound link to the product page. Honest about downsides, never sponsored-sounding, no brand partnerships clouding the advice.",
       "persona": "Jamie Cole, product reviewer and consumer advocate",
       "author": "Jamie Cole",
       "brevo_list_id": 12,
@@ -2509,21 +2532,16 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
-        "The 7 products TikTok discovered that are actually worth buying",
-        "Best wireless earbuds under $60 - we tested 9 options",
-        "The compact air fryer that replaced our oven for 80 percent of meals",
-        "Skincare products that dermatologists actually use themselves",
-        "Best linen bedding brands ranked after 3 months of testing",
-        "Resistance bands vs dumbbells: which builds muscle faster at home",
-        "Complete home gym for a small apartment on a $300 budget",
-        "Are LED face masks actually worth $200 - 90 day test",
-        "Portable blenders ranked: 200 smoothies to find the best one",
-        "The kitchen gadgets that are worth the counter space",
-        "Best budget laptops for remote work in 2026",
-        "TikTok beauty dupes that actually work as well as the originals",
-        "Smart home devices that actually save time vs ones that waste it",
-        "The best running shoes for flat feet tested by a podiatrist",
-        "Coffee gear worth buying if you want to stop spending at cafes"
+        "The 7 best premium products we tested this month, ranked with what each is best for",
+        "Is it worth the money? An honest brand review of the products everyone is talking about",
+        "Best premium [category] you can actually buy right now, with where to get each",
+        "We tested the most-hyped products on the internet so you do not waste money",
+        "The 5 best-in-class products in their category, and the cheaper pick that nearly beat them",
+        "Brand deep-dive: what this company gets right, what it overcharges for, and what to buy",
+        "Top 10 products under $100 that punch far above their price",
+        "The premium upgrade that is genuinely worth it, and three that are not",
+        "Best gifts that feel expensive: tested picks across price ranges",
+        "The quiet best-seller outperforming the famous brand, with a side-by-side test"
       ],
       "articles_per_day": 2,
       "nav_style": "dark",
@@ -2535,19 +2553,20 @@
         "Marcus Engelhardt"
       ],
       "use_random_author": true,
-      "posts_per_run": 2,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "TopProduct exists because I got tired of buying things based on reviews written by people who had never touched them. Every pick here has been through real use - not a press preview, not a sponsored send.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Topproduct",
-      "schema_article_type": "Review"
+      "schema_article_type": "Review",
+      "new_posts_count": 0
     },
     {
       "id": "mindframe",
@@ -2573,7 +2592,7 @@
       "author_names": [
         "Shahnoush Nasiri"
       ],
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "historical_mode": true,
       "historical_per_week": 2,
       "warming": {
@@ -2588,7 +2607,7 @@
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2603,7 +2622,8 @@
       "active": true,
       "schema_article_type": "AnalysisNewsArticle",
       "default_author": "Shahnoush Nasiri",
-      "use_random_author": false
+      "use_random_author": false,
+      "new_posts_count": 0
     },
     {
       "id": "folioatelier",
@@ -2617,7 +2637,7 @@
       "nav_style": "default",
       "topics": [],
       "author": "Imogen Salinger",
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "historical_mode": true,
       "historical_per_week": 2,
       "warming": {
@@ -2632,7 +2652,7 @@
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2645,7 +2665,8 @@
         "target": "recent"
       },
       "active": true,
-      "schema_article_type": "CreativeWork"
+      "schema_article_type": "CreativeWork",
+      "new_posts_count": 0
     },
     {
       "id": "modeformstudio",
@@ -2659,7 +2680,7 @@
       "nav_style": "default",
       "topics": [],
       "author": "Lila Vandermeer",
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "historical_mode": true,
       "historical_per_week": 2,
       "warming": {
@@ -2674,7 +2695,7 @@
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2687,7 +2708,8 @@
         "target": "recent"
       },
       "active": true,
-      "schema_article_type": "CreativeWork"
+      "schema_article_type": "CreativeWork",
+      "new_posts_count": 0
     },
     {
       "id": "calibernotes",
@@ -2701,7 +2723,7 @@
       "nav_style": "default",
       "topics": [],
       "author": "Henrik Voss",
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "historical_mode": true,
       "historical_per_week": 2,
       "warming": {
@@ -2716,7 +2738,7 @@
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2729,7 +2751,8 @@
         "target": "recent"
       },
       "active": true,
-      "schema_article_type": "Review"
+      "schema_article_type": "Review",
+      "new_posts_count": 0
     },
     {
       "id": "crestcharter",
@@ -2743,7 +2766,7 @@
       "nav_style": "default",
       "topics": [],
       "author": "Adrien Marchetti",
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "historical_mode": true,
       "historical_per_week": 2,
       "warming": {
@@ -2758,7 +2781,7 @@
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2771,7 +2794,8 @@
         "target": "recent"
       },
       "active": true,
-      "schema_article_type": "TouristTrip"
+      "schema_article_type": "TouristTrip",
+      "new_posts_count": 0
     },
     {
       "id": "strobeatlas",
@@ -2801,7 +2825,7 @@
         "Noor Halabi",
         "Theo Marchetti-Vance"
       ],
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "historical_mode": true,
       "historical_per_week": 2,
       "warming": {
@@ -2816,7 +2840,7 @@
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2828,8 +2852,9 @@
         "delay_days": 1,
         "target": "recent"
       },
-      "active": true,
-      "schema_article_type": "Review"
+      "active": false,
+      "schema_article_type": "Review",
+      "new_posts_count": 0
     },
     {
       "id": "agyan",
@@ -2907,10 +2932,10 @@
         "Avin Dabaghchimokri"
       ],
       "use_random_author": false,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "name": "Agyan",
       "default_author": "Avin Dabaghchimokri",
       "custom_prompt": "",
@@ -2930,11 +2955,12 @@
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "author": "Avin Dabaghchimokri",
       "author_title": "Founder, Agyan Academy",
       "tagline": "An academy of breath, language, and cosmos",
-      "schema_article_type": "CreativeWork"
+      "schema_article_type": "CreativeWork",
+      "new_posts_count": 0
     },
     {
       "id": "apex",
@@ -3012,10 +3038,10 @@
         "Dr. Tofigh Sedighi"
       ],
       "use_random_author": false,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "name": "Apex Dental Journal",
       "default_author": "Dr. Tofigh Sedighi",
       "custom_prompt": "",
@@ -3035,11 +3061,12 @@
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "author": "Dr. Tofigh Sedighi",
       "author_title": "Editor-in-Chief, Apex Dental Journal",
       "tagline": "Peer-reviewed dental practice, distilled",
-      "schema_article_type": "MedicalScholarlyArticle"
+      "schema_article_type": "MedicalScholarlyArticle",
+      "new_posts_count": 0
     },
     {
       "id": "kani",
@@ -3115,17 +3142,17 @@
         "Lana Mahmud"
       ],
       "use_random_author": true,
-      "posts_per_run": 1,
+      "posts_per_run": 0,
       "historical_mode": true,
       "historical_per_week": 2,
-      "posts_per_day_new": 1,
+      "posts_per_day_new": 0,
       "author_bio": "Kani is a guide to doing business and living well across the Kurdistan Region, from Erbil and Slemani to the rest of Iraq. We cover the companies, the markets, the food and the news that matter locally.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 2,
       "historical_unit": "week",
       "posts_per_week": 0,
-      "new_posts_enabled": true,
+      "new_posts_enabled": false,
       "name": "Kani",
       "default_author": "",
       "custom_prompt": "",
@@ -3174,7 +3201,8 @@
         "storefront_token": ""
       },
       "author": "Karwan Aziz",
-      "schema_article_type": "Article"
+      "schema_article_type": "Article",
+      "new_posts_count": 0
     }
   ]
 }
