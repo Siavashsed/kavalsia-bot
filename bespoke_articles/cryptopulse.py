@@ -16,6 +16,17 @@ def render(article, site, image_url, photographer, t):
     ai = _resolve_author(site, article)
     author = ai["name"]
     initials = "".join(w[0] for w in author.split()[:2]).upper() or "CP"
+    # Optional real headshot: site.author_avatars[name] or article.author_avatar.
+    # Falls back to the monogram circle when no photo is configured.
+    avatar_url = (site.get("author_avatars") or {}).get(author) or article.get("author_avatar") or ""
+
+    def _av(cls):
+        if avatar_url:
+            return (f'<div class="{cls}" style="overflow:hidden;padding:0">'
+                    f'<img src="{avatar_url}" alt="{author}" loading="lazy" '
+                    f'style="width:100%;height:100%;object-fit:cover;display:block"></div>')
+        return f'<div class="{cls}">{initials}</div>'
+
     hf = t["heading_font"]
     bf = t.get("body_font") or t.get("font") or "'Space Grotesk',system-ui,sans-serif"
     acc, acc2 = t["accent"], t.get("accent2", t["accent"])
@@ -133,7 +144,7 @@ def render(article, site, image_url, photographer, t):
 
     author_card = (
         '<aside class="cpa-card">'
-        f'<div class="cpa-author-top"><div class="cpa-author-av">{initials}</div>'
+        f'<div class="cpa-author-top">{_av("cpa-author-av")}'
         f'<div><div class="cpa-author-k">Author</div>'
         f'<p class="cpa-author-n">{author}</p>'
         f'<p class="cpa-author-r">{ai.get("title","Markets Contributor")}</p></div></div>'
@@ -184,7 +195,7 @@ L.innerHTML=a.map(function(p){return '<a class="cpa-lat" href="../'+encodeURICom
   <div class="cpa-tag"><span class="cpa-pulse"></span>{cat}<span class="cpa-tag-sep">/</span>{read_min} min read</div>
   <h1 class="cpa-h1">{article["title"]}</h1>
   <p class="cpa-dek">{article.get("meta_description","")}</p>
-  <div class="cpa-byline"><div class="cpa-av">{initials}</div>
+  <div class="cpa-byline">{_av("cpa-av")}
     <div><span class="cpa-by-name">{author}</span>
     <span class="cpa-by-meta">{article.get("date","")} &middot; <b>Live coverage</b></span></div>
   </div>
