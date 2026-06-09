@@ -43,7 +43,7 @@ def render(article, site, image_url, photographer, t):
         hero = (
             f'<figure class="spq-hero">'
             f'<img src="{image_url}" alt="{article.get("image_alt","")}" loading="lazy">'
-            f'<figcaption>Photo: {photographer} / Pexels</figcaption>'
+            f'<figcaption>Photo: {photographer}</figcaption>'
             f'</figure>'
         )
 
