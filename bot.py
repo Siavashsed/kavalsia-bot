@@ -1242,6 +1242,11 @@ Return ONLY valid JSON - no markdown, no extra text:
   "sources": [
     {{"name": "Source Name", "url": "https://real-url.com"}},
     {{"name": "Another Source", "url": "https://another-real-url.com"}}
+  ],
+  "faq": [
+    {{"q": "A real question a reader would actually search, phrased in their words", "a": "A direct, specific answer in 2 to 3 sentences. Plain language, no filler, no restating the question."}},
+    {{"q": "Second common question about this topic", "a": "Direct, concrete answer."}},
+    {{"q": "Third common question about this topic", "a": "Direct, concrete answer."}}
   ]
 }}"""
 
@@ -1548,7 +1553,7 @@ def _seo_title_tag(full_title, site_name=""):
 
 def _seo_meta(title, description, canonical="", og_image="", author="", date_iso="",
               modified_iso="", category="", site_name="", site_url="", word_count=0,
-              keywords="", author_title="", author_bio="", schema_type="Article"):
+              keywords="", author_title="", author_bio="", schema_type="Article", faqs=None):
     """Build Google-grade SEO + Open Graph + JSON-LD tags for an article page.
 
     Emits: canonical, robots, keywords meta, full Open Graph + Twitter Card,
@@ -1654,7 +1659,47 @@ def _seo_meta(title, description, canonical="", og_image="", author="", date_iso
         breadcrumb_ld = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": crumbs}
         tags += f'<script type="application/ld+json">{_json.dumps(breadcrumb_ld, ensure_ascii=False)}</script>'
 
+    # FAQPage JSON-LD (only when the article supplies visible Q&A; Google requires
+    # the same Q&A to be rendered on the page, which _faq_block handles).
+    if faqs:
+        try:
+            entities = []
+            for f in faqs:
+                q = (f.get("q") or f.get("question") or "").strip()
+                a = (f.get("a") or f.get("answer") or "").strip()
+                if q and a:
+                    entities.append({"@type": "Question", "name": q,
+                                     "acceptedAnswer": {"@type": "Answer", "text": a}})
+            if entities:
+                faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": entities}
+                tags += f'<script type="application/ld+json">{_json.dumps(faq_ld, ensure_ascii=False)}</script>'
+        except Exception:
+            pass
+
     return tags
+
+
+def _faq_block(faqs, t):
+    """Render a visible, themed FAQ section. Required alongside FAQPage schema
+    (Google policy: the Q&A must be visible on the page). Returns '' if no faqs."""
+    if not faqs:
+        return ""
+    items = []
+    for f in faqs:
+        q = (f.get("q") or f.get("question") or "").strip()
+        a = (f.get("a") or f.get("answer") or "").strip()
+        if not q or not a:
+            continue
+        items.append(
+            f'<details style="border:1px solid {t["border"]};border-radius:10px;padding:2px 18px;margin-bottom:10px">'
+            f'<summary style="cursor:pointer;font-weight:700;color:{t["text"]};padding:15px 0;font-size:16px;list-style:none">{q}</summary>'
+            f'<p style="color:{t["meta"]};margin:0 0 16px;font-size:15px;line-height:1.65">{a}</p></details>'
+        )
+    if not items:
+        return ""
+    return (f'<section style="max-width:720px;margin:48px auto 0;padding:0 24px">'
+            f'<h2 style="font-size:24px;font-weight:700;color:{t["text"]};margin:0 0 18px">Frequently asked questions</h2>'
+            + "".join(items) + '</section>')
 
 
 def _foot(domain, category, t, signup_url="", depth=0):
@@ -6976,6 +7021,15 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
     builder = BESPOKE_ARTICLE_BUILDERS.get(site.get("id")) or ARTICLE_BUILDERS.get(layout, article_standard)
     css, body = builder(article, site, image_url, photographer, t)
 
+    # Visible FAQ section (paired with FAQPage schema below). Inject just before
+    # the comments block so it reads as part of the article, above discussion.
+    faq_html = _faq_block(article.get("faq"), t)
+    if faq_html:
+        if '<div id="comments-section"' in body:
+            body = body.replace('<div id="comments-section"', faq_html + '<div id="comments-section"', 1)
+        else:
+            body = body + faq_html
+
     # Replace the JS-only comments section with a server-rendered, schema.org
     # compliant block so Google can index every reader comment + author reply.
     # If no comments_data is available yet, emits a "Comments coming soon"
@@ -7025,6 +7079,7 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
         # TravelGuide / HowTo / MedicalScholarlyArticle / etc.) instead of every
         # site declaring "Article". Falls back to "Article" if unspecified.
         schema_type=site.get("schema_article_type") or "Article",
+        faqs=article.get("faq"),
     )
 
     # Semantic <time> for byline dates (Google reads it; helps date detection).
@@ -7542,7 +7597,16 @@ def run(topic_overrides=None, site_filter=None):
                 hist_due  = True
                 posts_per_run = bulk_hist
             else:
-                new_count = max(1, int(site.get("posts_per_day_new", site.get("posts_per_run", 1)) or 1)) if new_on else 0
+                # Honor an explicit 0 (dashboard "new posts = 0"): only default to
+                # 1 when the field is MISSING, never floor an intentional 0 up to 1.
+                if not new_on:
+                    new_count = 0
+                else:
+                    _raw_new = site.get("posts_per_day_new", site.get("posts_per_run", 1))
+                    try:
+                        new_count = max(0, int(_raw_new))
+                    except (TypeError, ValueError):
+                        new_count = 1
                 hist_due  = hist_on and is_historical_due(site, articles)
                 posts_per_run = new_count + (1 if hist_due else 0)
                 if posts_per_run == 0:
