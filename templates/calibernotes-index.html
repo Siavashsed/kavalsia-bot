@@ -1228,7 +1228,7 @@ document.getElementById('yr').textContent = new Date().getFullYear();
       var title = (a.title||'Untitled brief').replace(/[<>]/g,'');
       var cat = (a.category||'Brief').replace(/[<>]/g,'');
       var date = (a.date||'').replace(/[<>]/g,'');
-      var url = (a.url||'#').replace(/"/g,'&quot;');
+      var url = (a.url || (a.slug ? './'+a.slug+'/' : '#')).replace(/"/g,'&quot;');
       return '<a class="brief" href="'+url+'">'+
         '<div class="brief-img">'+
           '<div class="brief-num"><small>BRIEF</small>'+num+'</div>'+
