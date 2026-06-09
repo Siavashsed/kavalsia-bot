@@ -42,7 +42,7 @@ def render(article, site, image_url, photographer, t):
     if image_url:
         hero = (f'<figure class="aimp-hero"><img src="{image_url}" '
                 f'alt="{article.get("image_alt","")}" loading="lazy">'
-                f'<figcaption>Image: {photographer} / Pexels</figcaption></figure>')
+                f'<figcaption>Image: {photographer}</figcaption></figure>')
 
     sections = _inject_section_breaks(_article_sections(article["sections"], t), 'aimp-h2')
 
