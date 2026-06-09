@@ -108,7 +108,7 @@ SITES = [
     "repo":"Siavashsed/sportiqpro","id":"sportiqpro","tpl":"sportiqpro",
     "name":"SportIQ Pro","tagline":"Performance Science for Serious Athletes",
     "category":"Sports Performance",
-    "author":"Coach Daniel Webb","author_title":"CSCS-Certified Strength & Conditioning Coach",
+    "author":"Coach Daniel Webb","author_title":"Strength & Conditioning Coach",
     "bio1":"I've spent 14 years coaching strength and conditioning - from high school varsity teams to professional athletes. The gap between what coaches do and what the research shows is often embarrassingly wide.",
     "bio2":"SportIQ Pro is my attempt to close that gap. Every programming decision, every recovery protocol, every piece of nutrition advice gets run against the actual evidence. No bro science.",
     "hero_sub":"Evidence-based strength and conditioning for athletes who train seriously and want real results.",
@@ -136,7 +136,7 @@ SITES = [
     "repo":"Siavashsed/fitpulsepro","id":"fitpulsepro","tpl":"bloom",
     "name":"FitPulse Pro","tagline":"Training Science Without the Nonsense",
     "category":"Fitness & Training",
-    "author":"Coach Marcus Webb","author_title":"NASM-Certified Personal Trainer",
+    "author":"Coach Marcus Webb","author_title":"Personal Trainer",
     "bio1":"Twelve years on the gym floor teaching real people to train. I've heard every excuse, tried every trend, and tracked enough client results to know what actually drives fat loss and muscle gain.",
     "bio2":"FitPulse Pro is for people who want honest answers: what the research says, what my experience confirms, and what the fitness industry is quietly wrong about.",
     "hero_sub":"Training science that holds up in the real world - backed by research, confirmed by 12 years of coaching results.",
@@ -229,9 +229,9 @@ SITES = [
     "author":"Siavash Sadighi","author_title":"Investor & Financial Independence Strategist",
     "bio1":"I retired at 41 by building passive income streams over 15 years - dividend portfolios, REITs, a small rental, and eventually a digital product. None of it happened fast, and that's kind of the point.",
     "bio2":"Passive Wealth Guide is written for people who want the realistic version: how long it actually takes, what the taxes look like, and which strategies are worth the complexity.",
-    "hero_sub":"Realistic passive income strategies from a CFP who retired early building them. The math, the timeline, the real results.",
-    "nl_head":"The Wealth Letter","nl_sub":"Monthly passive income strategies and investing insights from a CFP who has lived it.",
-    "footer_desc":"Realistic passive income guidance from a certified financial planner.",
+    "hero_sub":"Realistic passive income strategies from someone who retired early building them. The math, the timeline, the real results.",
+    "nl_head":"The Wealth Letter","nl_sub":"Monthly passive income strategies and investing insights from someone who has lived it.",
+    "footer_desc":"Realistic passive income guidance from a personal finance writer.",
     "bg":"#faf8f2","bg2":"#f3f0e8","surface":"#ece8dc",
     "primary":"#1a4731","primary2":"#15803d","text":"#1c1a14","muted":"#7a7060","brd":"#d8d0bc",
     "font_head":"Georgia,serif","font_body":"system-ui,sans-serif","font_mono":"monospace",
@@ -614,10 +614,17 @@ def _merge_network_config_into_sites():
                         continue
                 site[k] = v
         # Append any network-config sites that aren't in the hardcoded list.
-        # Lets new sites added via the dashboard appear without editing source.
+        # Dedupe by REPO as well as id: a hardcoded entry and a network-config
+        # entry can share a repo under different ids (e.g. repo basename
+        # "passivewealthguide" vs config id "passive-wealth"). Without this the
+        # config-id site gets appended as a duplicate and crashes generate()
+        # because there is no templates/<config-id>-index.html.
+        existing_repos = {(s.get("repo") or "").rsplit("/", 1)[-1] for s in SITES}
         for nc_entry in cfg.get("sites", []):
             sid = nc_entry.get("id")
             if not sid or sid in existing_ids or sid == "nexus":
+                continue
+            if (nc_entry.get("repo") or "").rsplit("/", 1)[-1] in existing_repos:
                 continue
             if nc_entry.get("is_mother_site"):
                 continue
@@ -672,7 +679,7 @@ STORIES = {
     "Online Biz Pro is for operators who want the direct version: how to structure equity, price a service correctly, think about acquisition channels, and eventually exit on favorable terms. Everything published here comes from the experience of actually building and selling, not from theorizing about it.",
   ],
   "sportiqpro": [
-    "I played competitive football through college and knew before I graduated that my future was in coaching rather than playing. I got my CSCS certification immediately after my degree and started coaching at a university strength program while completing my graduate work in exercise science.",
+    "I played competitive football through college and knew before I graduated that my future was in coaching rather than playing. I started coaching at a university strength program right after my degree while completing my graduate work in exercise science.",
     "Fourteen years of coaching athletes across multiple sports and levels has given me a clear picture of the gap between sports science research and actual coaching practice. That gap is often embarrassingly wide. Published research on recovery says one thing, and most programs do the opposite.",
     "My coaching work eventually moved into professional settings. Working with athletes competing for contracts accelerated my education significantly - when the margin for programming errors shrinks to zero, you get clear on what the evidence actually supports versus what you assumed.",
     "What frustrates me most about online fitness content is the confident presentation of ideas that do not hold up to the evidence. Bro science is still everywhere. Recovery protocols are still promoted based on anecdote. Nutrition advice is still dominated by tribal allegiances rather than controlled trials.",
@@ -3088,7 +3095,7 @@ a{{color:var(--pri);text-decoration:none}}a:hover{{text-decoration:underline}}
   <h1 class="lh-h1">{s['tagline']}</h1>
   <p class="lh-sub">{s['hero_sub']}</p>
   <div class="lh-stats">
-    {"".join(f'<div class="lh-stat"><div class="lh-stat-num">{st[0]}</div><div class="lh-stat-lbl">{st[1]}</div></div>' for st in s.get("leaf_stats",[("15+","Yrs Investing"),("CFP","Certified"),("41","Retired At")]))}
+    {"".join(f'<div class="lh-stat"><div class="lh-stat-num">{st[0]}</div><div class="lh-stat-lbl">{st[1]}</div></div>' for st in s.get("leaf_stats",[("15+","Yrs Investing"),("4","Income Streams"),("41","Retired At")]))}
   </div>
 </div>
 
@@ -3304,7 +3311,7 @@ a{{color:var(--pri);text-decoration:none}}a:hover{{text-decoration:underline}}
     </div>
   </div>
   <div class="lah-stats">
-    {"".join(f'<div class="lah-stat"><div class="lah-stat-num">{st[0]}</div><div class="lah-stat-lbl">{st[1]}</div></div>' for st in s.get("leaf_stats",[("15+","Yrs Investing"),("CFP","Certified"),("Retired 41","Passive Income"),("4","Income Streams")]))}
+    {"".join(f'<div class="lah-stat"><div class="lah-stat-num">{st[0]}</div><div class="lah-stat-lbl">{st[1]}</div></div>' for st in s.get("leaf_stats",[("15+","Yrs Investing"),("4","Income Streams"),("Retired 41","Passive Income"),("4","Income Streams")]))}
   </div>
 </div>
 
@@ -3315,7 +3322,7 @@ a{{color:var(--pri);text-decoration:none}}a:hover{{text-decoration:underline}}
   <div class="laj-inner">
     <div class="laj-hd">The Journey</div>
     <div class="laj-items">
-      {"".join(f'<div class="laj-item"><div class="laj-dot"></div><div class="laj-year">{jt[0]}</div><div class="laj-text">{jt[1]}</div></div>' for jt in s.get("leaf_journey",[("Age 26","Opened first brokerage account. Started with index funds and small monthly contributions."),("Age 30","First dividend payment. Small, but proof the strategy was real."),("Age 35","CFP designation earned. Passive income crossed $1,000/month for the first time."),("Age 39","Launched a digital product. Added a fourth income stream without adding working hours."),("Age 41","Financial independence reached. Left traditional employment.")]))}
+      {"".join(f'<div class="laj-item"><div class="laj-dot"></div><div class="laj-year">{jt[0]}</div><div class="laj-text">{jt[1]}</div></div>' for jt in s.get("leaf_journey",[("Age 26","Opened first brokerage account. Started with index funds and small monthly contributions."),("Age 30","First dividend payment. Small, but proof the strategy was real."),("Age 35","Passive income crossed $1,000/month for the first time."),("Age 39","Launched a digital product. Added a fourth income stream without adding working hours."),("Age 41","Financial independence reached. Left traditional employment.")]))}
     </div>
   </div>
 </div>
@@ -4613,8 +4620,10 @@ _ARCHIVE_ENGINE_TEMPLATE = r'''(function(){
   function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];});}
   function href(p){return '../'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}
   window.__AA_HELP={esc:esc,fallback:FB,siteCat:SC};
-  function match(ac,fc){if(fc==='__all__')return true;if(!ac)return false;var a=(''+ac).toLowerCase(),f=(''+fc).toLowerCase();return a===f||a.indexOf(f)>-1||f.indexOf(a)>-1;}
-  function filt(){var s=q.trim().toLowerCase();return all.filter(function(p){if(!match(p.category||SC,cat))return false;if(s&&(''+(p.title||'')).toLowerCase().indexOf(s)===-1)return false;return true;});}
+  var GEO={europe:['europe','european','portugal','lisbon','porto','italy','italian','rome','spain','spanish','barcelona','france','french','paris','greece','greek','croatia','iceland','balkan','amsterdam','prague','vienna','scandinav'],asia:['asia','asian','japan','japanese','tokyo','kyoto','vietnam','thailand','thai','bangkok','bali','indonesia','india','indian','nepal','korea','korean','seoul','singapore','cambodia','laos','philippines','sri lanka'],americas:['americas','america','usa','united states','canada','mexico','mexican','patagonia','argentina','peru','peruvian','cusco','chile','brazil','colombia','costa rica','andes','california','new york'],africa:['africa','african','morocco','moroccan','marrakech','medina','safari','kenya','tanzania','egypt','egyptian','south africa','namibia','zanzibar'],caribbean:['caribbean','island','islands','coast','coastal','bahamas','jamaica','cuba','barbados','beach','tropical','reef']};
+  function _hay(p){return ((p.category||'')+' '+(p.title||'')+' '+(p.meta_description||'')+' '+(p.region||'')+' '+((p.tags||[]).join(' '))).toLowerCase();}
+  function match(p,fc){if(fc==='__all__')return true;var f=(''+fc).toLowerCase(),hay=_hay(p),g=GEO[f];if(g){for(var i=0;i<g.length;i++){if(hay.indexOf(g[i])>-1)return true;}return false;}var a=(''+(p.category||SC)).toLowerCase();return a===f||a.indexOf(f)>-1||f.indexOf(a)>-1||hay.indexOf(f)>-1;}
+  function filt(){var s=q.trim().toLowerCase();return all.filter(function(p){if(!match(p,cat))return false;if(s&&(''+(p.title||'')).toLowerCase().indexOf(s)===-1)return false;return true;});}
   function renderLatest(){if(!latestEl)return;if(!all.length){latestEl.style.display='none';return;}var f=all.slice(0,5);if(leadEl&&AA.lead){leadEl.setAttribute('href',href(f[0]));leadEl.innerHTML=AA.lead(f[0]);}if(secCol&&AA.sec){secCol.innerHTML=f.slice(1).map(function(p){return '<a class="'+secCls+'" href="'+href(p)+'">'+AA.sec(p)+'</a>';}).join('');}latestEl.style.display='';}
   function render(){var arr=filt(),tot=arr.length,pages=Math.max(1,Math.ceil(tot/PER));if(page>pages)page=pages;var sl=arr.slice((page-1)*PER,(page-1)*PER+PER);if(!tot){listEl.innerHTML='<div class="aa-empty">No articles match your filters.</div>';if(pagerEl)pagerEl.style.display='none';}else{listEl.innerHTML=sl.map(function(p){return '<a class="'+cardCls+'" href="'+href(p)+'">'+(AA.card?AA.card(p):esc(p.title||''))+'</a>';}).join('');if(pagerEl){pagerEl.style.display=pages>1?'':'none';if(pageN)pageN.textContent='Page '+page+' of '+pages;if(prevB)prevB.disabled=page<=1;if(nextB)nextB.disabled=page>=pages;}}if(metaEl)metaEl.textContent='Showing '+sl.length+' of '+all.length;}
   function setCat(c){cat=c;page=1;if(chipsEl)[].forEach.call(chipsEl.querySelectorAll('[data-cat]'),function(b){b.classList.toggle('active',b.getAttribute('data-cat')===c);});render();}
@@ -4817,18 +4826,23 @@ def _articles_body(s):
   if(_initialQ){{searchEl.value=_initialQ;}}
   function escapeHtml(t){{return String(t==null?'':t).replace(/[&<>"']/g,function(c){{return({{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}})[c];}});}}
   function slugHref(p){{return '../'+encodeURIComponent(p.slug||'').replace(/%2F/g,'/')+'/';}}
-  // Fuzzy match: a card category like "Europe" should match articles
-  // tagged "Europe", "European Travel", or any cat containing the token.
-  function catMatches(articleCat, filterCat){{
+  // Geographic destinations (Europe, Asia, Americas, Africa, Caribbean) are not
+  // article categories, so match them against the whole article (title, meta,
+  // category, region/tags) via a continent -> places map. Topic filters keep the
+  // simple fuzzy match. Stops destination tiles landing on empty pages.
+  var GEO={{europe:['europe','european','portugal','lisbon','porto','algarve','italy','italian','rome','spain','spanish','barcelona','france','french','paris','greece','greek','croatia','iceland','balkan','amsterdam','prague','vienna'],asia:['asia','asian','japan','japanese','tokyo','kyoto','vietnam','thailand','thai','bangkok','bali','indonesia','india','indian','nepal','korea','seoul','singapore','cambodia','laos','philippines','sri lanka'],americas:['americas','america','usa','united states','canada','mexico','mexican','patagonia','argentina','peru','cusco','chile','brazil','colombia','costa rica','andes','california','new york'],africa:['africa','african','morocco','moroccan','marrakech','medina','riad','safari','kenya','tanzania','egypt','south africa','namibia','zanzibar'],caribbean:['caribbean','island','islands','coast','coastal','bahamas','jamaica','cuba','barbados','beach','tropical','reef']}};
+  function _hay(p){{return ((p.category||'')+' '+(p.title||'')+' '+(p.meta_description||'')+' '+(p.region||'')+' '+((p.tags||[]).join(' '))).toLowerCase();}}
+  function catMatches(p, filterCat){{
     if(filterCat==='__all__')return true;
-    if(!articleCat)return false;
-    var a=String(articleCat).toLowerCase(), f=String(filterCat).toLowerCase();
-    return a===f||a.indexOf(f)!==-1||f.indexOf(a)!==-1;
+    var f=String(filterCat).toLowerCase(), hay=_hay(p), g=GEO[f];
+    if(g){{for(var i=0;i<g.length;i++){{if(hay.indexOf(g[i])!==-1)return true;}}return false;}}
+    var a=String(p.category||SITE_CAT).toLowerCase();
+    return a===f||a.indexOf(f)!==-1||f.indexOf(a)!==-1||hay.indexOf(f)!==-1;
   }}
   function filtered(){{
     var q=query.trim().toLowerCase();
     return all.filter(function(p){{
-      if(!catMatches(p.category||SITE_CAT, activeCat))return false;
+      if(!catMatches(p, activeCat))return false;
       if(q&&String(p.title||'').toLowerCase().indexOf(q)===-1)return false;
       return true;
     }});
@@ -6724,10 +6738,16 @@ def generate(site):
     """Index is the homepage template (the single source of truth for site chrome).
     The about page is built by gen_about(), wrapped in that same homepage shell."""
     s   = dict(site)
-    _tmpl = BASE / "templates" / f"{s['id']}-index.html"
+    # Templates are keyed by repo basename (the layout_shell stem), not the
+    # network-config id. Resolve by repo first, fall back to id.
+    stem = (s.get("repo") or "").rsplit("/", 1)[-1] or s.get("id", "")
+    _tmpl = BASE / "templates" / f"{stem}-index.html"
+    if not _tmpl.exists():
+        stem = s["id"]
+        _tmpl = BASE / "templates" / f"{stem}-index.html"
     if not _tmpl.exists():
         raise FileNotFoundError(f"Template not found: {_tmpl}")
-    layout_shell.validate_markers(s['id'])
+    layout_shell.validate_markers(stem)
     index_html = layout_shell.clean(_tmpl.read_text(encoding="utf-8"))
     about_html = gen_about(s)
     return index_html, about_html
@@ -7113,5 +7133,14 @@ if __name__ == "__main__":
         save_local(only=args.only, sites_filter=sites_filter)
 
     if args.push:
+        # Accept the token via env (GH_PUSH_TOKEN) so it is never a literal CLI
+        # arg in process listings / logs:  GH_PUSH_TOKEN=ghp_xxx push-sites.py --push env
+        token = args.push
+        if token in ("env", "ENV", ""):
+            import os as _os
+            token = _os.environ.get("GH_PUSH_TOKEN", "")
+            if not token:
+                print("Set GH_PUSH_TOKEN in the environment: GH_PUSH_TOKEN=<token> python3 push-sites.py --push env")
+                sys.exit(1)
         print("\nPushing to GitHub…")
-        push_github(args.push, only=args.only, sites_filter=sites_filter)
+        push_github(token, only=args.only, sites_filter=sites_filter)
