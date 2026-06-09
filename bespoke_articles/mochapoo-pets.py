@@ -43,7 +43,7 @@ def render(article, site, image_url, photographer, t):
     if image_url:
         hero = (f'<figure class="mpa-hero"><img src="{image_url}" '
                 f'alt="{article.get("image_alt","")}" loading="lazy">'
-                f'<figcaption>Photo: {photographer} / Pexels</figcaption></figure>')
+                f'<figcaption>Photo: {photographer}</figcaption></figure>')
 
     sections = _inject_section_breaks(_article_sections(article["sections"], t), 'mpa-h2')
 
