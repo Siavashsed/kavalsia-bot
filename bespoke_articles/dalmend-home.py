@@ -55,7 +55,7 @@ def render(article, site, image_url, photographer, t):
     if image_url:
         hero = (f'<figure class="dha-hero"><img src="{image_url}" '
                 f'alt="{article.get("image_alt","")}" loading="lazy">'
-                f'<figcaption>Photograph: {photographer} / Pexels</figcaption></figure>')
+                f'<figcaption>Photograph: {photographer}</figcaption></figure>')
 
     sections = _inject_section_breaks(_article_sections(article["sections"], t), 'dha-h2')
 
