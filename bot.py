@@ -4192,6 +4192,19 @@ def _balance_divs(html):
     return "".join(out) + ("</div>" * depth)
 
 
+# Extra in-context body images (url, photographer) to interleave into the NEXT article
+# body. Set by the daily-run orchestration just before build_article_page, then cleared.
+# Empty during rebuilds, so rebuild never injects images (future-posts only).
+_BODY_IMAGES = []
+
+def _body_figure(url, photographer, t):
+    meta = t.get("meta", "#8a8a8a")
+    cap = (f'<figcaption style="font-size:11px;color:{meta};text-align:center;margin-top:6px">'
+           f'Photo by {photographer}</figcaption>') if photographer else ''
+    return (f'<figure style="margin:30px 0"><img src="{url}" alt="" loading="lazy" '
+            f'style="width:100%;height:auto;max-height:520px;object-fit:cover;border-radius:8px;display:block">'
+            f'{cap}</figure>')
+
 def _article_sections(sections, t):
     # Defensive: drop any section whose heading is a re-extracted "Comments (N)"
     # pollutant from older rebuild passes, and scrub comment-form/list/script
@@ -4208,10 +4221,21 @@ def _article_sections(sections, t):
         if not re.sub(r'<[^>]+>|\s', '', body):
             continue
         clean.append({"heading": head, "content": body})
-    return "\n".join(
-        f'<h2 class="art-h2">{s["heading"]}</h2>\n<div>{s["content"]}</div>'
-        for s in clean
-    )
+    parts = [f'<h2 class="art-h2">{s["heading"]}</h2>\n<div>{s["content"]}</div>' for s in clean]
+    # interleave body images evenly between sections (never before the first / after the last)
+    imgs = list(_BODY_IMAGES)
+    n = len(parts)
+    if imgs and n >= 2:
+        slots = [min(max(round((k + 1) * n / (len(imgs) + 1)), 1), n - 1) for k in range(len(imgs))]
+        out, used = [], 0
+        for i, p in enumerate(parts):
+            out.append(p)
+            while used < len(imgs) and slots[used] == i + 1:
+                out.append(_body_figure(imgs[used][0], imgs[used][1], t)); used += 1
+        while used < len(imgs):   # safety: any leftover go just before the last section
+            out.insert(max(len(out) - 1, 0), _body_figure(imgs[used][0], imgs[used][1], t)); used += 1
+        return "\n".join(out)
+    return "\n".join(parts)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -7729,6 +7753,22 @@ def run(topic_overrides=None, site_filter=None):
                         article["image"] = image_url or ""
                         if image_url:
                             used_image_urls.add(image_url)  # prevent reuse in subsequent posts this run
+
+                        # extra in-context body images so each post has 2-6 images total (hero=#1). FUTURE posts only.
+                        _BODY_IMAGES.clear()
+                        try:
+                            _secs = article.get("sections") or []
+                            _want = max(2, min(6, 1 + len(_secs) // 2)) - 1
+                            _exclude = set(used_image_urls)
+                            _heads = [(_s.get("heading") or "").strip() for _s in _secs if (_s.get("heading") or "").strip()] or [_primary]
+                            for _k in range(_want):
+                                _iu, _ph = fetch_image(_heads[_k % len(_heads)], pexels_key,
+                                    unsplash_key=unsplash_key or None, replicate_key=replicate_key or None,
+                                    sources=site_sources, exclude_urls=_exclude, fallback_queries=_fallbacks)
+                                if _iu and _iu not in _exclude:
+                                    _BODY_IMAGES.append((_iu, _ph)); _exclude.add(_iu); used_image_urls.add(_iu)
+                        except Exception as _ie:
+                            print(f"  {tag} extra image fetch skipped: {_ie}"); _BODY_IMAGES.clear()
 
                         # Generate comments BEFORE building HTML so they can be
                         # inlined into the static page (Google-crawlable).
