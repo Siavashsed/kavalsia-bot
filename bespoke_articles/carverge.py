@@ -45,7 +45,7 @@ def render(article, site, image_url, photographer, t):
     hero = ""
     if image_url:
         credit = (f'<figcaption class="cvg-cap"><span class="cvg-cap-dot"></span>'
-                  f'Photograph: {photographer} / Pexels</figcaption>') if photographer else ""
+                  f'Photograph: {photographer}</figcaption>') if photographer else ""
         hero = (
             f'<figure class="cvg-hero"><div class="cvg-hero-frame">'
             f'<img src="{image_url}" alt="{article.get("image_alt","")}" loading="lazy" '
