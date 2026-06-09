@@ -264,7 +264,10 @@ body::before{
   text-transform:none;
   color:var(--text);
   line-height:1.12;
-  margin:16px 0 18px;
+  margin:16px auto 18px;
+  /* keep the display line clean: balanced wrapping prevents a single orphan
+     word from dropping onto a messy second row at in-between widths */
+  text-wrap:balance;
 }
 .hero-h1 span{
   display:block;
@@ -281,8 +284,9 @@ body::before{
   color:var(--text2);
   line-height:1.7;
   letter-spacing:.2px;
-  max-width:400px;
+  max-width:420px;
   margin:30px auto 48px;
+  text-wrap:balance;
 }
 .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 .btn-primary{
@@ -1256,7 +1260,7 @@ body::before{
 
 /* ── LINK UNDERLINE ELEGANCE ── */
 .story-body a,.creator-text a,.faq-a-inner a,.svc-p a,.proc-p a,.phi-p a{
-  text-decoration:underline;
+  text-decoration:none;
   text-decoration-thickness:1px;
   text-underline-offset:4px;
   text-decoration-color:rgba(196,160,93,.55);
@@ -1422,7 +1426,7 @@ body[data-page-depth="1"] article .concl,
 body[data-page-depth="1"] article strong{color:var(--text,#f2ede6) !important}
 body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
-body[data-page-depth="1"] article .intro a{color:var(--text,#c9a96e) !important;text-decoration:underline;text-underline-offset:3px}
+body[data-page-depth="1"] article .intro a{color:var(--text,#c9a96e) !important;text-decoration:none;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
 
 /* ── PREMIUM POLISH (Vestigare-inspired typographic tightening) ────────────
@@ -1678,7 +1682,15 @@ body[data-page-depth="1"] .ap-kicker{font-size:10px;letter-spacing:.28em;color:#
 <style>
 @media(max-width:760px){
   .hero::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(5,4,7,.35) 0%,rgba(5,4,7,.55) 45%,rgba(5,4,7,.85) 100%)}
-  .hero > *{position:relative;z-index:1}
+  /* Lift ONLY the content layer above the overlay. The previous ".hero > *"
+     selector also hit the absolutely-positioned corner frames and backdrops,
+     forcing them to position:relative and dropping them into the flex flow at
+     the top-left, which dragged the whole hero block off-centre on phones and
+     tablets. Scope it to the content so the centred flex layout is preserved. */
+  .hero > .hero-content{position:relative;z-index:1}
+  /* Keep the content block dead-centred across the full small-screen range,
+     not just below 600px, so the 600-760px band no longer leaks left. */
+  .hero-content{margin-left:auto;margin-right:auto;text-align:center}
   .hero .hero-sub{color:#e8e2d9;opacity:.95}
 }
 </style>
