@@ -157,7 +157,8 @@
         "exclude_sites": [],
         "utm_campaign": "homepage_products"
       }
-    ]
+    ],
+    "llm_engine": "max"
   },
   "affiliate_links": {},
   "sites": [
