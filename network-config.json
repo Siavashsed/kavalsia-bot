@@ -261,8 +261,8 @@
         "Marcus Webb",
         "Jordan Osei",
         "David Kim",
-        "Siavash Sadighi",
-        "Hiroshi Fujita"
+        "Hiroshi Fujita",
+        "Siavash Sadighi"
       ],
       "use_random_author": true,
       "posts_per_run": 0,
@@ -284,8 +284,8 @@
         "Marcus Webb": "https://api.dicebear.com/7.x/notionists/svg?seed=Marcus%20Webb",
         "Jordan Osei": "https://api.dicebear.com/7.x/notionists/svg?seed=Jordan%20Osei",
         "David Kim": "https://api.dicebear.com/7.x/notionists/svg?seed=David%20Kim",
-        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi",
-        "Hiroshi Fujita": "https://api.dicebear.com/7.x/notionists/svg?seed=Hiroshi%20Fujita"
+        "Hiroshi Fujita": "https://api.dicebear.com/7.x/notionists/svg?seed=Hiroshi%20Fujita",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
       },
       "new_posts_count": 0
     },
@@ -376,7 +376,14 @@
       "author": "Ryan Mitchell",
       "schema_article_type": "AnalysisNewsArticle",
       "compact_author_card": true,
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Ryan Mitchell": "https://api.dicebear.com/7.x/notionists/svg?seed=Ryan%20Mitchell",
+        "Sarah Chen": "https://api.dicebear.com/7.x/notionists/svg?seed=Sarah%20Chen",
+        "Tanya Kumar": "https://api.dicebear.com/7.x/notionists/svg?seed=Tanya%20Kumar",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi",
+        "Lucia Mendes": "https://api.dicebear.com/7.x/notionists/svg?seed=Lucia%20Mendes"
+      }
     },
     {
       "id": "trading-tech",
@@ -464,7 +471,14 @@
       "name": "Tradingtechreview",
       "author": "Alex Turner",
       "schema_article_type": "TechArticle",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Alex Turner": "https://api.dicebear.com/7.x/notionists/svg?seed=Alex%20Turner",
+        "Sam Nakamura": "https://api.dicebear.com/7.x/notionists/svg?seed=Sam%20Nakamura",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi",
+        "Bryce Donlan": "https://api.dicebear.com/7.x/notionists/svg?seed=Bryce%20Donlan",
+        "Idris Bello": "https://api.dicebear.com/7.x/notionists/svg?seed=Idris%20Bello"
+      }
     },
     {
       "id": "ai-marketing",
@@ -589,7 +603,14 @@
       },
       "author": "Jordan Cole",
       "schema_article_type": "TechArticle",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Jordan Cole": "https://api.dicebear.com/7.x/notionists/svg?seed=Jordan%20Cole",
+        "Alex Merritt": "https://api.dicebear.com/7.x/notionists/svg?seed=Alex%20Merritt",
+        "Priya Nair": "https://api.dicebear.com/7.x/notionists/svg?seed=Priya%20Nair",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi",
+        "Rohan Mehta": "https://api.dicebear.com/7.x/notionists/svg?seed=Rohan%20Mehta"
+      }
     },
     {
       "id": "ecommerce-edge",
@@ -717,7 +738,14 @@
       "font_body": "'Inter',system-ui,sans-serif",
       "font_head": "'Inter Tight','Inter',system-ui,sans-serif",
       "font_mono": "'JetBrains Mono',ui-monospace,monospace",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Jake Morrison": "https://api.dicebear.com/7.x/notionists/svg?seed=Jake%20Morrison",
+        "Aisha Williams": "https://api.dicebear.com/7.x/notionists/svg?seed=Aisha%20Williams",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi",
+        "Theo Bramhall": "https://api.dicebear.com/7.x/notionists/svg?seed=Theo%20Bramhall",
+        "Pia Holzer": "https://api.dicebear.com/7.x/notionists/svg?seed=Pia%20Holzer"
+      }
     },
     {
       "id": "mochapoo-pets",
@@ -867,7 +895,13 @@
       },
       "author": "Dr. Emily Ross",
       "schema_article_type": "BlogPosting",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Jamie Park": "https://api.dicebear.com/7.x/notionists/svg?seed=Jamie%20Park",
+        "Rachel Green": "https://api.dicebear.com/7.x/notionists/svg?seed=Rachel%20Green",
+        "Tom Hensley": "https://api.dicebear.com/7.x/notionists/svg?seed=Tom%20Hensley",
+        "Maya Torres": "https://api.dicebear.com/7.x/notionists/svg?seed=Maya%20Torres"
+      }
     },
     {
       "id": "supplement-verge",
@@ -955,7 +989,14 @@
       "name": "Supplementverge",
       "author": "Dr. James Holloway",
       "schema_article_type": "MedicalWebPage",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Ryan Ellis": "https://api.dicebear.com/7.x/notionists/svg?seed=Ryan%20Ellis",
+        "Sarah Cole": "https://api.dicebear.com/7.x/notionists/svg?seed=Sarah%20Cole",
+        "Nina Patel": "https://api.dicebear.com/7.x/notionists/svg?seed=Nina%20Patel",
+        "Dr. Yara Saito": "https://api.dicebear.com/7.x/notionists/svg?seed=Dr.%20Yara%20Saito",
+        "Dr. Aki Maeda": "https://api.dicebear.com/7.x/notionists/svg?seed=Dr.%20Aki%20Maeda"
+      }
     },
     {
       "id": "sight-reading",
@@ -1043,7 +1084,14 @@
       "name": "Sightreadingacademy",
       "author": "Professor Laura Kim",
       "schema_article_type": "LearningResource",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Tom Clarke": "https://api.dicebear.com/7.x/notionists/svg?seed=Tom%20Clarke",
+        "Rachel Kim": "https://api.dicebear.com/7.x/notionists/svg?seed=Rachel%20Kim",
+        "Jordan Webb": "https://api.dicebear.com/7.x/notionists/svg?seed=Jordan%20Webb",
+        "Jonas Eklund": "https://api.dicebear.com/7.x/notionists/svg?seed=Jonas%20Eklund",
+        "Henrik Nyborg": "https://api.dicebear.com/7.x/notionists/svg?seed=Henrik%20Nyborg"
+      }
     },
     {
       "id": "newborn-iq",
@@ -1131,7 +1179,14 @@
       "name": "Newborniq",
       "author": "Melissa Torres",
       "schema_article_type": "BlogPosting",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Sarah Mitchell": "https://api.dicebear.com/7.x/notionists/svg?seed=Sarah%20Mitchell",
+        "Amy Chen": "https://api.dicebear.com/7.x/notionists/svg?seed=Amy%20Chen",
+        "Emma Torres": "https://api.dicebear.com/7.x/notionists/svg?seed=Emma%20Torres",
+        "Ryan Park": "https://api.dicebear.com/7.x/notionists/svg?seed=Ryan%20Park",
+        "Cora Beauchamp": "https://api.dicebear.com/7.x/notionists/svg?seed=Cora%20Beauchamp"
+      }
     },
     {
       "id": "dalmend-home",
@@ -1231,7 +1286,14 @@
       "new_posts_enabled": false,
       "author": "Olivia Grant",
       "schema_article_type": "BlogPosting",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Nina Webb": "https://api.dicebear.com/7.x/notionists/svg?seed=Nina%20Webb",
+        "Sophie Reid": "https://api.dicebear.com/7.x/notionists/svg?seed=Sophie%20Reid",
+        "Halle Drummond": "https://api.dicebear.com/7.x/notionists/svg?seed=Halle%20Drummond",
+        "Ines Carvalho": "https://api.dicebear.com/7.x/notionists/svg?seed=Ines%20Carvalho",
+        "Liesel Wolff": "https://api.dicebear.com/7.x/notionists/svg?seed=Liesel%20Wolff"
+      }
     },
     {
       "id": "onlinebiz-pro",
@@ -1320,7 +1382,14 @@
       "author": "Ryan Cross",
       "schema_article_type": "BlogPosting",
       "word_target": 1450,
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Derek Sullivan": "https://api.dicebear.com/7.x/notionists/svg?seed=Derek%20Sullivan",
+        "Keiko Adams": "https://api.dicebear.com/7.x/notionists/svg?seed=Keiko%20Adams",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi",
+        "Adaeze Onyeka": "https://api.dicebear.com/7.x/notionists/svg?seed=Adaeze%20Onyeka",
+        "Vesna Markovic": "https://api.dicebear.com/7.x/notionists/svg?seed=Vesna%20Markovic"
+      }
     },
     {
       "id": "sportiq-pro",
@@ -1408,7 +1477,14 @@
       "name": "Sportiqpro",
       "author": "Daniel Webb",
       "schema_article_type": "SportsEvent",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Marcus Cole": "https://api.dicebear.com/7.x/notionists/svg?seed=Marcus%20Cole",
+        "Rachel Obi": "https://api.dicebear.com/7.x/notionists/svg?seed=Rachel%20Obi",
+        "Mikael Ronstad": "https://api.dicebear.com/7.x/notionists/svg?seed=Mikael%20Ronstad",
+        "Tasha Velasquez": "https://api.dicebear.com/7.x/notionists/svg?seed=Tasha%20Velasquez",
+        "Calder Whitfield": "https://api.dicebear.com/7.x/notionists/svg?seed=Calder%20Whitfield"
+      }
     },
     {
       "id": "makeup-craft",
@@ -1496,7 +1572,14 @@
       "name": "Makeupcraft",
       "author": "Sofia Marino",
       "schema_article_type": "BlogPosting",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Sofia Marino": "https://api.dicebear.com/7.x/notionists/svg?seed=Sofia%20Marino",
+        "Emma Clarke": "https://api.dicebear.com/7.x/notionists/svg?seed=Emma%20Clarke",
+        "Bibiana Russo": "https://api.dicebear.com/7.x/notionists/svg?seed=Bibiana%20Russo",
+        "Roxana Petrescu": "https://api.dicebear.com/7.x/notionists/svg?seed=Roxana%20Petrescu",
+        "Selma Khoury": "https://api.dicebear.com/7.x/notionists/svg?seed=Selma%20Khoury"
+      }
     },
     {
       "id": "dating-edge",
@@ -1584,7 +1667,14 @@
       "name": "The Dating Edge",
       "author": "Dr. Priya Sharma",
       "schema_article_type": "BlogPosting",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Ryan Cross": "https://api.dicebear.com/7.x/notionists/svg?seed=Ryan%20Cross",
+        "Jordan Lee": "https://api.dicebear.com/7.x/notionists/svg?seed=Jordan%20Lee",
+        "Alex Webb": "https://api.dicebear.com/7.x/notionists/svg?seed=Alex%20Webb",
+        "Sarah Kim": "https://api.dicebear.com/7.x/notionists/svg?seed=Sarah%20Kim",
+        "Pippa Sennett": "https://api.dicebear.com/7.x/notionists/svg?seed=Pippa%20Sennett"
+      }
     },
     {
       "id": "fitpulse-pro",
@@ -1715,7 +1805,14 @@
       "bg": "#0c0e14",
       "text": "#f0f1f4",
       "muted": "#9aa0aa",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Jake Cole": "https://api.dicebear.com/7.x/notionists/svg?seed=Jake%20Cole",
+        "Rachel Turner": "https://api.dicebear.com/7.x/notionists/svg?seed=Rachel%20Turner",
+        "Alex Nash": "https://api.dicebear.com/7.x/notionists/svg?seed=Alex%20Nash",
+        "Brendan Ahearn": "https://api.dicebear.com/7.x/notionists/svg?seed=Brendan%20Ahearn",
+        "Petros Halas": "https://api.dicebear.com/7.x/notionists/svg?seed=Petros%20Halas"
+      }
     },
     {
       "id": "sellit-ca",
@@ -1860,7 +1957,10 @@
       "font_body": "'Inter',system-ui,sans-serif",
       "font_head": "'Inter Tight','Inter',system-ui,sans-serif",
       "font_mono": "'JetBrains Mono',ui-monospace,monospace",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Sellit.ca": "https://api.dicebear.com/7.x/notionists/svg?seed=Sellit.ca"
+      }
     },
     {
       "id": "kanona-events",
@@ -1958,7 +2058,14 @@
       "font_mono": "'JetBrains Mono',ui-monospace,monospace",
       "compact_author_card": true,
       "word_target": 1900,
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Elena Vasquez": "https://api.dicebear.com/7.x/notionists/svg?seed=Elena%20Vasquez",
+        "Marcus Reid": "https://api.dicebear.com/7.x/notionists/svg?seed=Marcus%20Reid",
+        "Jordan Park": "https://api.dicebear.com/7.x/notionists/svg?seed=Jordan%20Park",
+        "Sophie Clarke": "https://api.dicebear.com/7.x/notionists/svg?seed=Sophie%20Clarke",
+        "Theo Halverson": "https://api.dicebear.com/7.x/notionists/svg?seed=Theo%20Halverson"
+      }
     },
     {
       "id": "mashestate-construction",
@@ -2089,7 +2196,13 @@
       },
       "author": "Tom Mash",
       "schema_article_type": "HowTo",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Tom Mash": "https://api.dicebear.com/7.x/notionists/svg?seed=Tom%20Mash",
+        "Alex Morrison": "https://api.dicebear.com/7.x/notionists/svg?seed=Alex%20Morrison",
+        "Jake Turner": "https://api.dicebear.com/7.x/notionists/svg?seed=Jake%20Turner",
+        "Rachel Webb": "https://api.dicebear.com/7.x/notionists/svg?seed=Rachel%20Webb"
+      }
     },
     {
       "id": "insight-insure",
@@ -2213,7 +2326,13 @@
       },
       "author": "Patrick Lane",
       "schema_article_type": "AnalysisNewsArticle",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Sarah Clarke": "https://api.dicebear.com/7.x/notionists/svg?seed=Sarah%20Clarke",
+        "Jordan Kim": "https://api.dicebear.com/7.x/notionists/svg?seed=Jordan%20Kim",
+        "Greta Holmstrom": "https://api.dicebear.com/7.x/notionists/svg?seed=Greta%20Holmstrom",
+        "Cyrus Khorrami": "https://api.dicebear.com/7.x/notionists/svg?seed=Cyrus%20Khorrami"
+      }
     },
     {
       "id": "carverge",
@@ -2282,10 +2401,11 @@
       "articles_per_day": 2,
       "nav_style": "carverge",
       "author_names": [
-        "Rachel Cole",
-        "Camillo Tessari",
-        "Tobias Larsen",
-        "Daichi Murakami"
+        "Jake Morrison",
+        "Aurora Bennett",
+        "Ryan Scott",
+        "Fiona Walsh",
+        "Siavash Sadighi"
       ],
       "use_random_author": true,
       "posts_per_run": 0,
@@ -2347,7 +2467,14 @@
       },
       "author": "James Carr",
       "schema_article_type": "Review",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Jake Morrison": "https://api.dicebear.com/7.x/notionists/svg?seed=Jake%20Morrison",
+        "Aurora Bennett": "https://api.dicebear.com/7.x/notionists/svg?seed=Aurora%20Bennett",
+        "Ryan Scott": "https://api.dicebear.com/7.x/notionists/svg?seed=Ryan%20Scott",
+        "Fiona Walsh": "https://api.dicebear.com/7.x/notionists/svg?seed=Fiona%20Walsh",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "travelverge",
@@ -2412,10 +2539,11 @@
       "articles_per_day": 1,
       "nav_style": "dark",
       "author_names": [
-        "Ana Verge",
-        "Jordan Clarke",
-        "Sophie Kim",
-        "Ronan Ferreira"
+        "Global Traveler Marco",
+        "Sasha Volkov",
+        "Ahmed Hassan",
+        "Nina Bergstrom",
+        "Siavash Sadighi"
       ],
       "use_random_author": true,
       "posts_per_run": 1,
@@ -2483,6 +2611,13 @@
         "title": "The 10 Most Stunning Spa Resorts in Bali",
         "status": "queued",
         "priority": "launch"
+      },
+      "author_avatars": {
+        "Global Traveler Marco": "https://api.dicebear.com/7.x/notionists/svg?seed=Global%20Traveler%20Marco",
+        "Sasha Volkov": "https://api.dicebear.com/7.x/notionists/svg?seed=Sasha%20Volkov",
+        "Ahmed Hassan": "https://api.dicebear.com/7.x/notionists/svg?seed=Ahmed%20Hassan",
+        "Nina Bergstrom": "https://api.dicebear.com/7.x/notionists/svg?seed=Nina%20Bergstrom",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
       }
     },
     {
@@ -2552,11 +2687,11 @@
       "articles_per_day": 2,
       "nav_style": "dark",
       "author_names": [
-        "Jamie Cole",
-        "Sophie Chen",
-        "Alex Torres",
-        "Tabitha Fellows",
-        "Marcus Engelhardt"
+        "Russell Kane",
+        "Gemma Lewis",
+        "Patrick O'Connor",
+        "Lucy Chen",
+        "Siavash Sadighi"
       ],
       "use_random_author": true,
       "posts_per_run": 0,
@@ -2572,7 +2707,14 @@
       "new_posts_enabled": false,
       "name": "Topproduct",
       "schema_article_type": "Review",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Russell Kane": "https://api.dicebear.com/7.x/notionists/svg?seed=Russell%20Kane",
+        "Gemma Lewis": "https://api.dicebear.com/7.x/notionists/svg?seed=Gemma%20Lewis",
+        "Patrick O'Connor": "https://api.dicebear.com/7.x/notionists/svg?seed=Patrick%20O%27Connor",
+        "Lucy Chen": "https://api.dicebear.com/7.x/notionists/svg?seed=Lucy%20Chen",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "mindframe",
@@ -2596,7 +2738,11 @@
       ],
       "author": "Shahnoush Nasiri",
       "author_names": [
-        "Shahnoush Nasiri"
+        "Dr. Jonathan Wise",
+        "Alexis Parker",
+        "Thomas Sterling",
+        "Rebecca Moon",
+        "Siavash Sadighi"
       ],
       "posts_per_day_new": 1,
       "historical_mode": true,
@@ -2629,7 +2775,14 @@
       "schema_article_type": "AnalysisNewsArticle",
       "default_author": "Shahnoush Nasiri",
       "use_random_author": false,
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Dr. Jonathan Wise": "https://api.dicebear.com/7.x/notionists/svg?seed=Dr.%20Jonathan%20Wise",
+        "Alexis Parker": "https://api.dicebear.com/7.x/notionists/svg?seed=Alexis%20Parker",
+        "Thomas Sterling": "https://api.dicebear.com/7.x/notionists/svg?seed=Thomas%20Sterling",
+        "Rebecca Moon": "https://api.dicebear.com/7.x/notionists/svg?seed=Rebecca%20Moon",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "folioatelier",
@@ -2672,7 +2825,21 @@
       },
       "active": true,
       "schema_article_type": "CreativeWork",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_names": [
+        "Adrian Bellamy",
+        "Vivienne March",
+        "Sebastian Price",
+        "Margot Leclerc",
+        "Siavash Sadighi"
+      ],
+      "author_avatars": {
+        "Adrian Bellamy": "https://api.dicebear.com/7.x/notionists/svg?seed=Adrian%20Bellamy",
+        "Vivienne March": "https://api.dicebear.com/7.x/notionists/svg?seed=Vivienne%20March",
+        "Sebastian Price": "https://api.dicebear.com/7.x/notionists/svg?seed=Sebastian%20Price",
+        "Margot Leclerc": "https://api.dicebear.com/7.x/notionists/svg?seed=Margot%20Leclerc",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "modeformstudio",
@@ -2715,7 +2882,21 @@
       },
       "active": true,
       "schema_article_type": "CreativeWork",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_names": [
+        "Dominique Beaumont",
+        "Lucian Delacroix",
+        "Amelie Fontaine",
+        "Olivier Renard",
+        "Siavash Sadighi"
+      ],
+      "author_avatars": {
+        "Dominique Beaumont": "https://api.dicebear.com/7.x/notionists/svg?seed=Dominique%20Beaumont",
+        "Lucian Delacroix": "https://api.dicebear.com/7.x/notionists/svg?seed=Lucian%20Delacroix",
+        "Amelie Fontaine": "https://api.dicebear.com/7.x/notionists/svg?seed=Amelie%20Fontaine",
+        "Olivier Renard": "https://api.dicebear.com/7.x/notionists/svg?seed=Olivier%20Renard",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "calibernotes",
@@ -2758,7 +2939,21 @@
       },
       "active": true,
       "schema_article_type": "Review",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_names": [
+        "Thom Sterling",
+        "Grace Whitmore",
+        "Victor Harmon",
+        "Lillian Cross",
+        "Siavash Sadighi"
+      ],
+      "author_avatars": {
+        "Thom Sterling": "https://api.dicebear.com/7.x/notionists/svg?seed=Thom%20Sterling",
+        "Grace Whitmore": "https://api.dicebear.com/7.x/notionists/svg?seed=Grace%20Whitmore",
+        "Victor Harmon": "https://api.dicebear.com/7.x/notionists/svg?seed=Victor%20Harmon",
+        "Lillian Cross": "https://api.dicebear.com/7.x/notionists/svg?seed=Lillian%20Cross",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "crestcharter",
@@ -2801,7 +2996,21 @@
       },
       "active": true,
       "schema_article_type": "TouristTrip",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_names": [
+        "Admiral Blake Morgan",
+        "Captain Elena Shore",
+        "Lieutenant Marcus Wade",
+        "Captain Sophie Rivers",
+        "Siavash Sadighi"
+      ],
+      "author_avatars": {
+        "Admiral Blake Morgan": "https://api.dicebear.com/7.x/notionists/svg?seed=Admiral%20Blake%20Morgan",
+        "Captain Elena Shore": "https://api.dicebear.com/7.x/notionists/svg?seed=Captain%20Elena%20Shore",
+        "Lieutenant Marcus Wade": "https://api.dicebear.com/7.x/notionists/svg?seed=Lieutenant%20Marcus%20Wade",
+        "Captain Sophie Rivers": "https://api.dicebear.com/7.x/notionists/svg?seed=Captain%20Sophie%20Rivers",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "strobeatlas",
@@ -2827,9 +3036,11 @@
       ],
       "author": "Riv Solano",
       "author_names": [
-        "Riv Solano",
-        "Noor Halabi",
-        "Theo Marchetti-Vance"
+        "Echo Turner",
+        "Rhythm Jackson",
+        "Harmony Wells",
+        "Pulse Anderson",
+        "Siavash Sadighi"
       ],
       "posts_per_day_new": 1,
       "historical_mode": true,
@@ -2860,7 +3071,14 @@
       },
       "active": false,
       "schema_article_type": "Review",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Echo Turner": "https://api.dicebear.com/7.x/notionists/svg?seed=Echo%20Turner",
+        "Rhythm Jackson": "https://api.dicebear.com/7.x/notionists/svg?seed=Rhythm%20Jackson",
+        "Harmony Wells": "https://api.dicebear.com/7.x/notionists/svg?seed=Harmony%20Wells",
+        "Pulse Anderson": "https://api.dicebear.com/7.x/notionists/svg?seed=Pulse%20Anderson",
+        "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
+      }
     },
     {
       "id": "agyan",
@@ -2966,7 +3184,10 @@
       "author_title": "Founder, Agyan Academy",
       "tagline": "An academy of breath, language, and cosmos",
       "schema_article_type": "CreativeWork",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Avin Dabaghchimokri": "https://api.dicebear.com/7.x/notionists/svg?seed=Avin%20Dabaghchimokri"
+      }
     },
     {
       "id": "apex",
@@ -3072,7 +3293,10 @@
       "author_title": "Editor-in-Chief, Apex Dental Journal",
       "tagline": "Peer-reviewed dental practice, distilled",
       "schema_article_type": "MedicalScholarlyArticle",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Dr. Tofigh Sedighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Dr.%20Tofigh%20Sedighi"
+      }
     },
     {
       "id": "kani",
@@ -3208,7 +3432,14 @@
       },
       "author": "Karwan Aziz",
       "schema_article_type": "Article",
-      "new_posts_count": 0
+      "new_posts_count": 0,
+      "author_avatars": {
+        "Karwan Aziz": "https://api.dicebear.com/7.x/notionists/svg?seed=Karwan%20Aziz",
+        "Hero Ahmad": "https://api.dicebear.com/7.x/notionists/svg?seed=Hero%20Ahmad",
+        "Dilan Brahim": "https://api.dicebear.com/7.x/notionists/svg?seed=Dilan%20Brahim",
+        "Rebin Salar": "https://api.dicebear.com/7.x/notionists/svg?seed=Rebin%20Salar",
+        "Lana Mahmud": "https://api.dicebear.com/7.x/notionists/svg?seed=Lana%20Mahmud"
+      }
     }
   ]
 }
