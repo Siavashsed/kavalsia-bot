@@ -85,7 +85,6 @@ def render(article, site, image_url, photographer, t):
 .cpa-body a{{color:{acc};text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}}
 .cpa-body strong{{color:{ink};font-weight:700}}
 .cpa-intro{{font-size:20px;line-height:1.62;font-weight:500;color:{ink};margin:0 0 26px}}
-.cpa-intro::first-letter{{float:left;font-family:{hf};font-weight:700;font-size:3.1em;line-height:.82;padding:6px 12px 0 0;color:{acc}}}
 
 /* section headings with thin index rule */
 .cpa-h2{{position:relative;font-family:{hf};font-size:clamp(20px,2.8vw,27px);font-weight:700;line-height:1.22;letter-spacing:-.01em;color:{ink};margin:46px 0 14px;padding-top:22px}}
