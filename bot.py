@@ -47,6 +47,72 @@ def _retry(fn, max_attempts=3, base_delay=5):
             print(f"  Retry {attempt+1}/{max_attempts} in {delay}s ({type(e).__name__})")
             time.sleep(delay)
 
+
+# ── LLM engine: Claude Max (local CLI, no API cost) with automatic API fallback ──
+# "max"  -> generate text through the signed-in Claude Code CLI (`claude -p`). This
+#           uses your Claude Max subscription, so there is NO per-token API charge.
+#           It only works on a machine where `claude` is logged in, so it is force-
+#           disabled on the GitHub Actions cron (which can never reach your local Max
+#           session) and falls back to the API per-call if the CLI is missing, not
+#           logged in, or rate-limited. Generation never breaks.
+# "api"  -> call the Anthropic API directly (billed per token). The cron always uses this.
+import shutil
+import subprocess as _sp
+
+_LLM_ENGINE = (os.environ.get("LLM_ENGINE") or "").strip().lower()  # "max" | "api" | ""
+
+def set_llm_engine(engine):
+    global _LLM_ENGINE
+    _LLM_ENGINE = (engine or "").strip().lower()
+
+def _engine():
+    # The cron runs in the cloud and can never reach the local Max session -> force API.
+    if os.environ.get("GITHUB_ACTIONS"):
+        return "api"
+    return _LLM_ENGINE or "api"
+
+def _claude_bin():
+    """Resolve the `claude` CLI even when PATH is minimal (launchd/cron)."""
+    b = shutil.which("claude")
+    if b:
+        return b
+    for p in (os.path.expanduser("~/.local/bin/claude"), "/opt/homebrew/bin/claude",
+              "/usr/local/bin/claude", os.path.expanduser("~/bin/claude")):
+        if os.path.exists(p):
+            return p
+    return None
+
+def _claude_code_complete(prompt, max_tokens=4000, timeout=240):
+    """Generate text via the local Claude Code CLI on the Max subscription (no API token cost).
+    Raises on any failure so the caller can fall back to the API."""
+    cb = _claude_bin()
+    if not cb:
+        raise RuntimeError("claude CLI not found (sign in to Claude Code with your Max plan)")
+    env = dict(os.environ)
+    env.pop("ANTHROPIC_API_KEY", None)    # force the signed-in Max session, not the API key
+    env.pop("ANTHROPIC_AUTH_TOKEN", None)
+    p = _sp.run([cb, "-p", prompt], capture_output=True, text=True,
+                env=env, timeout=timeout, stdin=_sp.DEVNULL)
+    out = (p.stdout or "").strip()
+    head = out[:200]
+    if not out or re.search(r"API Error|usage limit|rate limit|not logged in|Invalid API key", head, re.I):
+        raise RuntimeError("claude max: " + (head or (p.stderr or "").strip()[:140] or f"exit {p.returncode}"))
+    return out
+
+def _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000):
+    """One text completion routed by the active engine. 'max' tries Claude Max first
+    (local CLI, no API cost) then falls back to the API; 'api' uses the API directly.
+    Returns the raw text string."""
+    if _engine() == "max":
+        try:
+            return _claude_code_complete(prompt, max_tokens=max_tokens)
+        except Exception as e:
+            print(f"  [llm] Claude Max unavailable ({e}); using API", flush=True)
+    resp = _retry(lambda: client.messages.create(
+        model=model, max_tokens=max_tokens,
+        messages=[{"role": "user", "content": prompt}]))
+    return resp.content[0].text.strip()
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FEATURE FLAGS - all optional, enabled in network-config.json
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1013,12 +1079,7 @@ Existing topics to avoid repeating:
 Return ONLY a JSON array of strings, no markdown:
 ["Topic 1", "Topic 2", ...]"""
     try:
-        resp = _retry(lambda: client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=800,
-            messages=[{"role": "user", "content": prompt}]
-        ))
-        text = resp.content[0].text.strip()
+        text = _complete(client, prompt, model="claude-haiku-4-5-20251001", max_tokens=800)
         text = re.sub(r'^```json\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
         new_topics = json.loads(text)
@@ -1250,12 +1311,7 @@ Return ONLY valid JSON - no markdown, no extra text:
   ]
 }}"""
 
-    response = _retry(lambda: client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=3800,
-        messages=[{"role": "user", "content": prompt}]
-    ))
-    text = response.content[0].text.strip()
+    text = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=3800)
     text = re.sub(r'^```json\s*', '', text)
     text = re.sub(r'\s*```$', '', text)
     article = json.loads(text)
@@ -1350,12 +1406,7 @@ Return ONLY valid JSON, no markdown fences, no extra text:
   "image_alt": "translated image alt"
 }}"""
         try:
-            resp = _retry(lambda: client.messages.create(
-                model="claude-sonnet-4-6",
-                max_tokens=4000,
-                messages=[{"role": "user", "content": prompt}]
-            ))
-            raw = resp.content[0].text.strip()
+            raw = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000)
             raw = re.sub(r'^```json\s*', '', raw)
             raw = re.sub(r'\s*```$', '', raw)
             data = json.loads(raw)
@@ -6462,6 +6513,28 @@ body[data-page-depth="1"] .sw-body strong{{color:{accent} !important}}
     return css, body
 
 
+def _lf_pull_quote(article):
+    """A punchy 55-150 char sentence pulled from a MIDDLE body section, used for
+    the mid-article pull quote so the opening never repeats the dek/intro."""
+    secs = article.get("sections") or []
+    for s in (secs[1:] or secs):
+        txt = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', s.get("content", "") or "")).strip()
+        for sent in re.split(r'(?<=[.!?])\s+', txt):
+            sent = sent.strip().strip('"“”').strip()
+            if 55 <= len(sent) <= 150 and sent[:1].isupper():
+                return sent
+    return ""
+
+def _lf_inject_pull(sections_html, pull):
+    """Insert a pull quote just before a middle <h2 class="lf-section">."""
+    if not pull:
+        return sections_html
+    marks = [m.start() for m in re.finditer(r'<h2 class="lf-section"', sections_html)]
+    if len(marks) < 2:
+        return sections_html
+    pos = marks[len(marks) // 2]
+    return sections_html[:pos] + f'<aside class="lf-pull">{pull}</aside>\n' + sections_html[pos:]
+
 def article_lifestyle(article, site, image_url, photographer, t):
     """Lifestyle magazine feel: wide hero with caption rail, oversized serif
     headline, photo-led rhythm with pull quotes between sections, soft body
@@ -6475,10 +6548,9 @@ def article_lifestyle(article, site, image_url, photographer, t):
                 f'<figcaption><span>{(article.get("category") or site.get("category") or "Story")}</span><span>Photo by {photographer}</span></figcaption>'
                 f'</figure>')
     author = _resolve_author(site, article)["name"]
-    pullquote = (article.get("intro2") or article.get("conclusion") or "").strip()
-    if pullquote:
-        # Use first sentence of intro2/conclusion as pull quote
-        pullquote = pullquote.split('.')[0].strip()[:160]
+    # pull quote comes from a MIDDLE body section (not the dek/intro) and sits
+    # mid-article, so the opening never repeats the same line three times.
+    sections_marked = _lf_inject_pull(_inject_section_breaks(sections, 'lf-section'), _lf_pull_quote(article))
     css = f"""
 .lf{{max-width:1100px;margin:0 auto;padding:0 24px 96px;color:{t["text"]}}}
 .lf-eyebrow{{font-family:{t["body_font"]};font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:{t["accent"]};margin:48px 0 18px;font-weight:600;text-align:center}}
@@ -6502,7 +6574,10 @@ def article_lifestyle(article, site, image_url, photographer, t):
 @media(max-width:600px){{.lf-hero{{margin:0 -24px 40px}}.lf-h1{{font-size:clamp(34px,8vw,52px)}}}}
 {_article_section_css(t)}"""
 
-    pullquote_block = f'<aside class="lf-pull">{pullquote}</aside>' if pullquote else ""
+    # only show intro2 as a paragraph when it does not just restate the dek
+    _dek = (article.get("meta_description", "") or "").strip().lower()
+    _intro2 = (article.get("intro2", "") or "").strip()
+    _intro2_block = _wrap_block(_intro2, "p") if _intro2 and _intro2.lower()[:60] != _dek[:60] else ""
     body = f"""<div class="lf">
   <div class="lf-eyebrow">{site["category"]}</div>
   <h1 class="lf-h1">{article["title"]}</h1>
@@ -6511,9 +6586,8 @@ def article_lifestyle(article, site, image_url, photographer, t):
   {hero}
   <div class="lf-body">
     {_wrap_block(article["intro"], "p", "intro")}
-    {pullquote_block}
-    {_wrap_block(article.get("intro2",""), "p")}
-    {_inject_section_breaks(sections, 'lf-section')}
+    {_intro2_block}
+    {sections_marked}
     <div class="lf-concl">{article["conclusion"]}</div>
   </div>
   {_sources_block(article, t)}
@@ -7524,6 +7598,14 @@ def run(topic_overrides=None, site_filter=None):
     active_sites, global_prompt, settings, global_client, global_negative_prompt, global_header_scripts, global_footer_scripts = load_network_config()
     active_sites = [s for s in active_sites if s.get("active", True)]
 
+    # Persistent engine toggle from dashboard settings. A --llm flag or LLM_ENGINE env
+    # still wins; the cron always forces API via _engine().
+    if not _LLM_ENGINE:
+        cfg_engine = (settings.get("llm_engine") or "").strip().lower()
+        if cfg_engine:
+            set_llm_engine(cfg_engine)
+    print(f"  [llm] text engine = {_engine()}", flush=True)
+
     # Optionally restrict to a subset of sites (used by Telegram bot)
     if site_filter:
         sf = set(str(x).lower() for x in site_filter)
@@ -7758,7 +7840,7 @@ def run(topic_overrides=None, site_filter=None):
                         _BODY_IMAGES.clear()
                         try:
                             _secs = article.get("sections") or []
-                            _want = max(2, min(6, 1 + len(_secs) // 2)) - 1
+                            _want = max(2, min(3, 1 + len(_secs) // 2))  # hero + 2-3 => 3-4 images/post
                             _exclude = set(used_image_urls)
                             _heads = [(_s.get("heading") or "").strip() for _s in _secs if (_s.get("heading") or "").strip()] or [_primary]
                             for _k in range(_want):
@@ -7931,7 +8013,13 @@ if __name__ == "__main__":
     parser.add_argument("--gh-token", default="")
     parser.add_argument("--only", default="",
                         help="Comma-separated site stems (blank = all)")
+    parser.add_argument("--llm", default="", choices=["", "api", "max"],
+                        help="Text engine: 'max' = Claude Max via local Claude Code CLI (no API cost), "
+                             "'api' = Anthropic API (billed). Blank = use settings.llm_engine / LLM_ENGINE env.")
     args, _ = parser.parse_known_args()
+
+    if args.llm:
+        set_llm_engine(args.llm)
 
     if args.rebuild_homepages:
         token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
