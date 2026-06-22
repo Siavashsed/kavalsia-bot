@@ -1,0 +1,969 @@
+<style>
+/* -------- HERO -------- */
+.lab-hero{background:var(--ink);color:#fff;padding:clamp(48px,7vw,80px) 0 clamp(32px,5vw,52px);position:relative;overflow:hidden}
+.lab-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(232,121,168,.14),transparent 55%),radial-gradient(ellipse at 85% 95%,rgba(74,118,251,.09),transparent 50%);pointer-events:none}
+.lab-wrap{max-width:1000px;margin:0 auto;padding:0 clamp(20px,4vw,44px);position:relative;z-index:2}
+.lab-wrap-wide{max-width:1220px;margin:0 auto;padding:0 clamp(20px,4vw,44px)}
+.lab-badge{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#a78bfa;background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.25);padding:5px 14px;border-radius:100px;display:inline-block;margin-bottom:22px}
+.lab-h1{font-family:var(--serif);font-size:clamp(32px,5vw,62px);font-weight:500;letter-spacing:-0.032em;line-height:1.06;margin-bottom:14px}
+.lab-h1 em{font-style:italic;color:#a78bfa}
+.lab-sub{font-size:clamp(15px,1.5vw,18.5px);line-height:1.72;color:rgba(255,255,255,.68);max-width:620px;margin-bottom:24px;font-weight:300}
+.lab-jumps{display:flex;flex-wrap:wrap;gap:8px}
+.lab-jump{font-family:var(--mono);font-size:11.5px;letter-spacing:0.08em;color:rgba(255,255,255,.6);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);padding:8px 14px;border-radius:8px;text-decoration:none;transition:all .15s}
+.lab-jump:hover{color:#fff;background:rgba(255,90,78,.15);border-color:rgba(255,90,78,.3)}
+
+/* -------- INSTRUMENT PANEL -------- */
+.lab-instrument-row{display:flex;align-items:stretch;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;margin-bottom:28px;overflow-x:auto}
+.lab-instr{flex:1;min-width:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:16px 12px;border-right:1px solid rgba(255,255,255,.07);text-align:center}
+.lab-instr:last-child{border-right:none}
+.lab-instr svg{width:20px;height:20px;stroke:#a78bfa;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.lab-instr-v{font-family:var(--serif);font-size:22px;font-weight:600;color:#fff;line-height:1}
+.lab-instr-l{font-family:var(--mono);font-size:9px;letter-spacing:0.10em;text-transform:uppercase;color:rgba(255,255,255,.38);line-height:1.3}
+
+/* -------- TEST SECTIONS -------- */
+.lab-test-sec{background:var(--ink);color:#fff;padding:clamp(44px,6vw,68px) 0;border-top:1px solid rgba(255,255,255,.07)}
+.lab-test-sec:nth-child(even){background:var(--ink2)}
+.lab-test-header{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.lab-test-vis{width:52px;height:52px;border-radius:16px;background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.2);display:grid;place-items:center;flex-shrink:0}
+.lab-test-vis svg{width:24px;height:24px;stroke:#a78bfa;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.lab-test-num{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#a78bfa;background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.25);padding:5px 13px;border-radius:100px;flex-shrink:0;align-self:flex-start}
+.lab-test-name{font-family:var(--serif);font-size:clamp(26px,3.5vw,44px);font-weight:500;letter-spacing:-0.028em;line-height:1.08;color:#fff}
+.lab-test-meta{font-family:var(--mono);font-size:12px;letter-spacing:0.06em;color:rgba(255,255,255,.42);margin-top:6px}
+.lab-test-desc{font-family:var(--serif);font-size:18px;line-height:1.72;color:rgba(255,255,255,.68);max-width:700px;margin-bottom:20px}
+.lab-test-note{background:rgba(255,255,255,.04);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:20px;font-size:14px;color:rgba(255,255,255,.65);line-height:1.65;max-width:640px}
+.lab-test-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:clamp(22px,3vw,36px)}
+.lab-back{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;color:rgba(255,255,255,.5);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-top:28px;transition:color .15s}
+.lab-back:hover{color:#fff}
+.lab-disclaimer{padding:clamp(24px,4vw,40px) 0;font-size:13px;text-align:center;background:var(--ink3);color:rgba(255,255,255,.45);line-height:1.65}
+
+/* -------- PROGRESS INDICATOR -------- */
+.lab-progress{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0;border-top:1px solid rgba(255,255,255,.06);margin-bottom:0}
+.lab-prg-filled,.lab-prg-empty{font-family:var(--mono);font-size:10px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center}
+.lab-prg-filled{background:rgba(167,139,250,.2);color:#a78bfa;border:1px solid rgba(167,139,250,.3)}
+.lab-prg-empty{background:rgba(255,255,255,.04);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.08)}
+.lab-prg-line{width:24px;height:1px;background:rgba(255,255,255,.08)}
+
+/* -------- PREVIEW RESULT CHIPS -------- */
+.lab-preview-result{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.lab-preview-label{font-family:var(--mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.lab-preview-chip{font-family:var(--mono);font-size:10.5px;letter-spacing:0.06em;color:rgba(167,139,250,.9);background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.2);padding:3px 10px;border-radius:100px}
+
+/* -------- TEST UI -------- */
+.lab-test-card .q{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:15px;color:#fff}
+.lab-test-card .q:last-of-type{border-bottom:none}
+.lab-test-card .q-text{margin-bottom:14px;line-height:1.5;color:rgba(255,255,255,.88)}
+.lab-test-card .likert{display:flex;gap:6px;flex-wrap:wrap}
+.lab-test-card .likert label{flex:1;min-width:48px;text-align:center;padding:10px 4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:6px;cursor:pointer;font-size:11.5px;color:rgba(255,255,255,.6);transition:all .12s;display:block}
+.lab-test-card .likert label:hover{background:rgba(255,90,78,.10);border-color:rgba(255,90,78,.35);color:#fff}
+.lab-test-card .likert label:has(input:checked){background:var(--accent);border-color:var(--accent);color:#fff}
+.lab-test-card .likert input{display:none}
+.lab-test-card .choice{display:block;padding:13px 16px;margin:7px 0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.10);border-radius:8px;cursor:pointer;font-size:14px;color:rgba(255,255,255,.82);transition:all .12s}
+.lab-test-card .choice:hover{background:rgba(255,90,78,.10);border-color:rgba(255,90,78,.35);color:#fff}
+.lab-test-card .choice:has(input:checked){background:rgba(255,90,78,.12);border-color:var(--accent);color:#fff}
+.lab-test-card .choice input{display:none}
+.lab-test-card .t-actions{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.lab-test-card .t-submit{font-size:13.5px;font-weight:600;color:#fff;background:var(--accent);padding:11px 24px;border-radius:100px;border:none;cursor:pointer;font-family:var(--sans)}
+.lab-test-card .t-submit:hover{background:var(--accent2)}
+.lab-test-card .t-reset{font-size:13px;color:rgba(255,255,255,.5);padding:11px 16px;border-radius:100px;background:none;border:1px solid rgba(255,255,255,.12);cursor:pointer;font-family:var(--sans)}
+.lab-test-card .t-reset:hover{color:#fff;background:rgba(255,255,255,.06)}
+.lab-test-card .t-err{font-size:12.5px;color:var(--accent);font-style:italic}
+.lab-test-card .t-result{margin-top:24px;padding:24px;background:rgba(255,90,78,.07);border:1px solid rgba(255,90,78,.2);border-radius:12px;animation:labFadeUp .3s ease}
+@keyframes labFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.lab-test-card .t-result h4{font-family:var(--serif);font-size:24px;font-weight:600;color:#fff;margin-bottom:6px;letter-spacing:-0.018em}
+.lab-test-card .t-result .score{font-family:var(--mono);font-size:12.5px;color:var(--accent);margin-bottom:14px;letter-spacing:0.04em}
+.lab-test-card .t-result p{font-size:14.5px;color:rgba(255,255,255,.75);line-height:1.65;margin-bottom:10px}
+.lab-test-card .t-result table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.lab-test-card .t-result td{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.72);vertical-align:top}
+.lab-test-card .t-result td:last-child{text-align:right;font-family:var(--mono);color:#fff}
+.lab-test-card .t-result .share-btn{margin-top:16px;font-size:12px;color:var(--accent);cursor:pointer;display:inline-flex;align-items:center;gap:6px;background:none;border:none;font-family:var(--sans)}
+.lab-test-card .t-result .share-btn:hover{text-decoration:underline}
+.lab-test-card .t-result .share-copied{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.45);margin-left:8px;display:none}
+
+/* -------- RADAR -------- */
+.radar-wrap{display:flex;justify-content:center;margin:18px 0}
+.radar{width:100%;max-width:300px;height:auto}
+
+/* -------- REACTION TIME -------- */
+.rt-box{height:200px;border:1px solid rgba(255,255,255,.10);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(255,255,255,.03);font-size:15px;color:rgba(255,255,255,.7);text-align:center;padding:20px;transition:background .15s;user-select:none;-webkit-user-select:none}
+.rt-box.ready{background:rgba(255,90,78,.18);color:#fff}
+.rt-box.go{background:#22c55e;color:#fff;font-size:22px;font-weight:700}
+.rt-box.early{background:rgba(255,90,78,.4);color:#fff}
+.rt-trials{margin-top:12px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.5);text-align:center}
+
+/* -------- DIGIT SPAN -------- */
+.ds-display{height:110px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:52px;color:#fff;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.10);border-radius:12px;letter-spacing:8px;margin-bottom:12px;transition:all .2s}
+.ds-display.recall{font-size:16px;color:rgba(255,255,255,.5);letter-spacing:0}
+.ds-display.blank{color:transparent}
+.ds-input{width:100%;padding:13px;font-size:18px;text-align:center;letter-spacing:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;font-family:var(--mono);box-sizing:border-box}
+.ds-input:focus{outline:none;border-color:var(--accent)}
+.ds-status{margin-top:10px;text-align:center;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.5)}
+
+/* -------- CRT INPUTS -------- */
+.crt-text-input{width:100%;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;font-family:var(--sans);font-size:14px;box-sizing:border-box;margin-top:8px}
+.crt-text-input:focus{outline:none;border-color:var(--accent)}
+
+/* -------- RESULT BAR -------- */
+.lab-result-bar-wrap{margin:6px 0 10px;background:rgba(255,255,255,.08);border-radius:100px;height:6px;overflow:hidden}
+.lab-result-bar{height:100%;background:var(--accent);border-radius:100px;transition:width .5s ease}
+
+/* -------- DISCLAIMER -------- */
+.lab-disclaimer-inner{max-width:700px;margin:0 auto;padding:0 clamp(20px,4vw,44px)}
+
+@media(max-width:680px){
+  .lab-test-card .likert{gap:4px}
+  .lab-test-card .likert label{min-width:40px;font-size:10px;padding:8px 2px}
+  .lab-test-card .t-actions{flex-direction:column;align-items:flex-start}
+  .ds-display{font-size:36px;letter-spacing:4px}
+  .lab-instrument-row{border-radius:12px}
+  .lab-instr{min-width:70px;padding:12px 8px}
+}
+</style>
+
+<main>
+
+<!-- ===================== HERO ===================== -->
+<section class="lab-hero" role="banner">
+  <div class="lab-wrap">
+    <div class="lab-badge">The Lab &middot; MindFrame</div>
+    <h1 class="lab-h1">Five instruments. Real science. <em>Your</em> results.</h1>
+    <p class="lab-sub">Each test is a faithful implementation of a validated research paradigm. Results compute locally in your browser. Nothing is sent anywhere.</p>
+
+    <!-- Instrument panel -->
+    <div class="lab-instrument-row" aria-hidden="true">
+      <div class="lab-instr">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <div class="lab-instr-v">25</div>
+        <div class="lab-instr-l">Big Five items</div>
+      </div>
+      <div class="lab-instr">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <div class="lab-instr-v">12</div>
+        <div class="lab-instr-l">Attachment items</div>
+      </div>
+      <div class="lab-instr">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div class="lab-instr-v">7</div>
+        <div class="lab-instr-l">CRT questions</div>
+      </div>
+      <div class="lab-instr">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <div class="lab-instr-v">5</div>
+        <div class="lab-instr-l">RT trials</div>
+      </div>
+      <div class="lab-instr">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+        <div class="lab-instr-v">~7</div>
+        <div class="lab-instr-l">Digit span avg</div>
+      </div>
+    </div>
+
+    <nav class="lab-jumps" aria-label="Jump to test">
+      <a class="lab-jump" href="#test-1">01 Big Five</a>
+      <a class="lab-jump" href="#test-2">02 Attachment</a>
+      <a class="lab-jump" href="#test-3">03 CRT-7</a>
+      <a class="lab-jump" href="#test-4">04 Reaction</a>
+      <a class="lab-jump" href="#test-5">05 Memory</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ===================== TEST 1: BIG FIVE ===================== -->
+<section class="lab-test-sec" id="test-1">
+  <div class="lab-wrap">
+    <div class="lab-test-header">
+      <div class="lab-test-vis" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <span class="lab-test-num">Test 01</span>
+      <div>
+        <div class="lab-test-name">Big Five Personality</div>
+        <div class="lab-test-meta">25 items &middot; approx. 6 minutes &middot; TIPI-based short form</div>
+      </div>
+    </div>
+    <div class="lab-preview-result">
+      <span class="lab-preview-label">You will get</span>
+      <span class="lab-preview-chip">Personality profile</span>
+      <span class="lab-preview-chip">Radar chart</span>
+      <span class="lab-preview-chip">Shareable link</span>
+    </div>
+    <p class="lab-test-desc">The five-factor model is the most replicated structure in personality psychology. This 25-item short form measures each factor with five questions, reverse-scored where applicable, and renders a radar chart of your profile.</p>
+    <div class="lab-test-note">Openness to experience, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. These five factors account for roughly half of the variance in personality across cultures and age groups.</div>
+    <div class="lab-test-card" id="b5-card">
+      <div id="b5-body"></div>
+      <div class="t-actions">
+        <button class="t-submit" onclick="scoreBigFive(this)">Score my results</button>
+        <button class="t-reset" onclick="resetTest('b5-card','b5-body',function(){buildBigFive(document.getElementById('b5-body'))})">Reset</button>
+        <span class="t-err" id="b5-err" aria-live="polite"></span>
+      </div>
+      <div id="b5-result"></div>
+    </div>
+    <a class="lab-back" href="#test-2">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 19l7-7-7-7"/></svg>
+      Next test: Attachment Style
+    </a>
+  </div>
+</section>
+
+<!-- ===================== TEST 2: ATTACHMENT ===================== -->
+<section class="lab-test-sec" id="test-2">
+  <div class="lab-wrap">
+    <!-- Progress indicator -->
+    <div class="lab-progress" aria-hidden="true">
+      <span class="lab-prg-filled">01</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">02</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-empty">03</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-empty">04</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-empty">05</span>
+    </div>
+    <div class="lab-test-header" style="margin-top:24px">
+      <div class="lab-test-vis" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <span class="lab-test-num">Test 02</span>
+      <div>
+        <div class="lab-test-name">Attachment Style</div>
+        <div class="lab-test-meta">12 items &middot; approx. 5 minutes &middot; Bartholomew-Horowitz four-category model (1991)</div>
+      </div>
+    </div>
+    <div class="lab-preview-result">
+      <span class="lab-preview-label">You will get</span>
+      <span class="lab-preview-chip">Attachment type</span>
+      <span class="lab-preview-chip">Style description</span>
+      <span class="lab-preview-chip">Distribution table</span>
+    </div>
+    <p class="lab-test-desc">Adult attachment theory proposes that early caregiving experiences shape templates for close relationships. This 12-item forced-choice quiz maps your responses onto the four-category model developed by Bartholomew and Horowitz (1991).</p>
+    <div class="lab-test-note">Attachment style is not a fixed trait. It varies across relationships and can shift over time, particularly with therapy or consistent secure relationships.</div>
+    <div class="lab-test-card" id="att-card">
+      <div id="att-body"></div>
+      <div class="t-actions">
+        <button class="t-submit" onclick="scoreAttachment(this)">Score my results</button>
+        <button class="t-reset" onclick="resetTest('att-card','att-body',function(){buildAttachment(document.getElementById('att-body'))})">Reset</button>
+        <span class="t-err" id="att-err" aria-live="polite"></span>
+      </div>
+      <div id="att-result"></div>
+    </div>
+    <a class="lab-back" href="#test-3">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 19l7-7-7-7"/></svg>
+      Next test: Cognitive Reflection
+    </a>
+  </div>
+</section>
+
+<!-- ===================== TEST 3: CRT-7 ===================== -->
+<section class="lab-test-sec" id="test-3">
+  <div class="lab-wrap">
+    <!-- Progress indicator -->
+    <div class="lab-progress" aria-hidden="true">
+      <span class="lab-prg-filled">01</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">02</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">03</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-empty">04</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-empty">05</span>
+    </div>
+    <div class="lab-test-header" style="margin-top:24px">
+      <div class="lab-test-vis" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <span class="lab-test-num">Test 03</span>
+      <div>
+        <div class="lab-test-name">Cognitive Reflection Test (CRT-7)</div>
+        <div class="lab-test-meta">7 items &middot; approx. 5 minutes &middot; Frederick (2005), extended version</div>
+      </div>
+    </div>
+    <div class="lab-preview-result">
+      <span class="lab-preview-label">You will get</span>
+      <span class="lab-preview-chip">Reflection score</span>
+      <span class="lab-preview-chip">Per-question breakdown</span>
+      <span class="lab-preview-chip">Percentile</span>
+    </div>
+    <p class="lab-test-desc">The Cognitive Reflection Test measures the tendency to override a salient intuitive response with a deliberative, correct one. The original three-item version (Frederick, 2005) has been extended to seven items here.</p>
+    <div class="lab-test-note">Higher CRT scores predict resistance to cognitive biases in independent studies. They are not a measure of intelligence, though moderate correlations with working memory exist.</div>
+    <div class="lab-test-card" id="crt-card">
+      <div id="crt-body"></div>
+      <div class="t-actions">
+        <button class="t-submit" onclick="scoreCRT(this)">Score my results</button>
+        <button class="t-reset" onclick="resetTest('crt-card','crt-body',function(){buildCRT(document.getElementById('crt-body'))})">Reset</button>
+        <span class="t-err" id="crt-err" aria-live="polite"></span>
+      </div>
+      <div id="crt-result"></div>
+    </div>
+    <a class="lab-back" href="#test-4">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 19l7-7-7-7"/></svg>
+      Next test: Reaction Time
+    </a>
+  </div>
+</section>
+
+<!-- ===================== TEST 4: REACTION TIME ===================== -->
+<section class="lab-test-sec" id="test-4">
+  <div class="lab-wrap">
+    <!-- Progress indicator -->
+    <div class="lab-progress" aria-hidden="true">
+      <span class="lab-prg-filled">01</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">02</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">03</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">04</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-empty">05</span>
+    </div>
+    <div class="lab-test-header" style="margin-top:24px">
+      <div class="lab-test-vis" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <span class="lab-test-num">Test 04</span>
+      <div>
+        <div class="lab-test-name">Visual Reaction Time</div>
+        <div class="lab-test-meta">5 trials &middot; approx. 3 minutes &middot; variable foreperiod design</div>
+      </div>
+    </div>
+    <div class="lab-preview-result">
+      <span class="lab-preview-label">You will get</span>
+      <span class="lab-preview-chip">Avg response time</span>
+      <span class="lab-preview-chip">Percentile vs norms</span>
+      <span class="lab-preview-chip">Trial breakdown</span>
+    </div>
+    <p class="lab-test-desc">Visual reaction time measures the latency between perceiving a stimulus and producing a response. This task uses a variable foreperiod design to reduce anticipatory responses.</p>
+    <div class="lab-test-note">Typical reaction time in adults: 200-300 ms. Screen and touch latency adds 30-50 ms on mobile. Compare yourself across sessions, not across devices.</div>
+    <div class="lab-test-card" id="rt-card">
+      <div id="rt-body"></div>
+    </div>
+    <a class="lab-back" href="#test-5">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 19l7-7-7-7"/></svg>
+      Next test: Working Memory
+    </a>
+  </div>
+</section>
+
+<!-- ===================== TEST 5: DIGIT SPAN ===================== -->
+<section class="lab-test-sec" id="test-5">
+  <div class="lab-wrap">
+    <!-- Progress indicator -->
+    <div class="lab-progress" aria-hidden="true">
+      <span class="lab-prg-filled">01</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">02</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">03</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">04</span>
+      <span class="lab-prg-line"></span>
+      <span class="lab-prg-filled">05</span>
+    </div>
+    <div class="lab-test-header" style="margin-top:24px">
+      <div class="lab-test-vis" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+      </div>
+      <span class="lab-test-num">Test 05</span>
+      <div>
+        <div class="lab-test-name">Digit Span (Working Memory)</div>
+        <div class="lab-test-meta">Adaptive &middot; approx. 5 minutes &middot; WAIS-IV subtest paradigm</div>
+      </div>
+    </div>
+    <div class="lab-preview-result">
+      <span class="lab-preview-label">You will get</span>
+      <span class="lab-preview-chip">Digit span length</span>
+      <span class="lab-preview-chip">WAIS-IV comparison</span>
+      <span class="lab-preview-chip">Adaptive score</span>
+    </div>
+    <p class="lab-test-desc">The digit span subtest measures the phonological loop component of working memory. An adaptive procedure finds your maximum forward span, the longest sequence you can reliably reproduce.</p>
+    <div class="lab-test-note">Miller (1956) proposed 7 plus or minus 2 as the typical adult capacity. More recent work suggests 4 plus or minus 1 as the true capacity before chunking is factored out.</div>
+    <div class="lab-test-card" id="ds-card">
+      <div id="ds-body"></div>
+    </div>
+    <a class="lab-back" href="#test-1">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l-7 7 7 7"/></svg>
+      Back to the top
+    </a>
+  </div>
+</section>
+
+<!-- ===================== DISCLAIMER ===================== -->
+<section class="lab-disclaimer">
+  <div class="lab-disclaimer-inner">
+    These are educational self-assessments, not clinical diagnoses. The instruments are based on validated research paradigms but are shortened versions administered outside a clinical context. If any result prompts a real concern, use that as a reason to speak with a qualified professional.
+  </div>
+</section>
+
+</main>
+
+<script>
+(function(){
+'use strict';
+
+/* ====================================================
+   UTILITIES
+   ==================================================== */
+function shareLink(prefix, data){
+  try{
+    var encoded = btoa(JSON.stringify(data));
+    var url = location.href.split('#')[0]+'#'+prefix+'-'+encoded;
+    navigator.clipboard.writeText(url).then(function(){
+      var el=document.querySelector('.share-copied');
+      if(el){el.style.display='inline';setTimeout(function(){el.style.display='none'},2000);}
+    }).catch(function(){});
+  }catch(e){}
+}
+
+function resetTest(cardId, bodyId, buildFn){
+  var card=document.getElementById(cardId);
+  var res=card.querySelector('[id$="-result"]')||card.querySelector('.t-result');
+  if(res)res.innerHTML='';
+  var err=card.querySelector('.t-err');
+  if(err)err.textContent='';
+  buildFn();
+}
+
+/* ====================================================
+   BIG FIVE
+   ==================================================== */
+var BIG5=[
+  {t:'I have a vivid imagination and enjoy abstract ideas.',f:'O',r:false},
+  {t:'I am quick to spot artistic, emotional, or unconventional perspectives.',f:'O',r:false},
+  {t:'I prefer routine and familiar things over novelty.',f:'O',r:true},
+  {t:'I have a wide range of intellectual interests.',f:'O',r:false},
+  {t:'I rarely think about philosophical or abstract questions.',f:'O',r:true},
+  {t:'I finish what I start, even when it stops being fun.',f:'C',r:false},
+  {t:'I keep my workspace organized.',f:'C',r:false},
+  {t:'I tend to procrastinate on important tasks.',f:'C',r:true},
+  {t:'I follow through on commitments I make to others.',f:'C',r:false},
+  {t:'I often forget to put things back in their place.',f:'C',r:true},
+  {t:'I feel energized after spending time in a group.',f:'E',r:false},
+  {t:'I am usually the one who starts conversations.',f:'E',r:false},
+  {t:'I prefer quiet evenings alone to social gatherings.',f:'E',r:true},
+  {t:'I enjoy being the center of attention.',f:'E',r:false},
+  {t:'I find small talk draining.',f:'E',r:true},
+  {t:'I trust people until they give me a reason not to.',f:'A',r:false},
+  {t:'I go out of my way to help people, even strangers.',f:'A',r:false},
+  {t:'I find it hard to forgive when I have been wronged.',f:'A',r:true},
+  {t:'I try to see disagreements from the other side.',f:'A',r:false},
+  {t:'I can be sharp or sarcastic when I disagree with someone.',f:'A',r:true},
+  {t:'I worry about things more than most people I know.',f:'N',r:false},
+  {t:'Small setbacks can ruin my whole day.',f:'N',r:false},
+  {t:'I stay calm under pressure.',f:'N',r:true},
+  {t:'I often feel down for no clear reason.',f:'N',r:false},
+  {t:'I recover quickly from stressful events.',f:'N',r:true}
+];
+
+var B5_LABELS=['Strongly disagree','Disagree','Neutral','Agree','Strongly agree'];
+var B5_NAMES={O:'Openness',C:'Conscientiousness',E:'Extraversion',A:'Agreeableness',N:'Neuroticism'};
+var B5_DESC={
+  O:{hi:'You score high in Openness. You are drawn to novel ideas, imaginative thinking, and aesthetic experience. You tend to seek out unconventional perspectives and find variety stimulating.',lo:'You score lower in Openness. You are likely practical and grounded, preferring the familiar and concrete over the abstract. You may find highly abstract or unconventional ideas less engaging.'},
+  C:{hi:'You score high in Conscientiousness. You are organised, goal-directed, and reliable. You tend to follow through on plans and dislike leaving things unfinished.',lo:'You score lower in Conscientiousness. You may prefer flexibility over rigid routines, and can find detailed planning or long-term scheduling frustrating. You tend to be more spontaneous.'},
+  E:{hi:'You score high in Extraversion. You gain energy from social interaction and external stimulation. You are likely talkative, assertive, and comfortable in groups.',lo:'You score lower in Extraversion. You likely prefer quieter, more intimate settings and may find extended social engagement draining. This is introversion, not shyness; you process more internally.'},
+  A:{hi:'You score high in Agreeableness. You are cooperative, empathetic, and trusting. You tend to prioritise harmony and are sensitive to others\' needs.',lo:'You score lower in Agreeableness. You are likely more competitive, direct, and skeptical than average. You may challenge others\' views readily and are less motivated by social harmony.'},
+  N:{hi:'You score high in Neuroticism. You experience negative emotions more intensely and may find stress harder to shake. You are likely more self-reflective and emotionally reactive than average.',lo:'You score lower in Neuroticism, indicating high emotional stability. You tend to remain calm under pressure and recover from setbacks quickly. Emotional disruptions are less frequent and shorter-lived.'}
+};
+
+function buildBigFive(body){
+  if(!body)return;
+  var html='';
+  BIG5.forEach(function(item,i){
+    html+='<div class="q"><div class="q-text">'+(i+1)+'. '+item.t+'</div><div class="likert">';
+    B5_LABELS.forEach(function(lab,v){
+      html+='<label><input type="radio" name="b5_'+i+'" value="'+(v+1)+'">'+lab+'</label>';
+    });
+    html+='</div></div>';
+  });
+  body.innerHTML=html;
+}
+
+function scoreBigFive(btn){
+  var card=document.getElementById('b5-card');
+  var err=document.getElementById('b5-err');
+  err.textContent='';
+  var scores={O:0,C:0,E:0,A:0,N:0};
+  var counts={O:0,C:0,E:0,A:0,N:0};
+  var missing=0;
+  BIG5.forEach(function(item,i){
+    var sel=card.querySelector('input[name="b5_'+i+'"]:checked');
+    if(!sel){missing++;return;}
+    var val=parseInt(sel.value);
+    if(item.r)val=6-val;
+    scores[item.f]+=val;
+    counts[item.f]++;
+  });
+  if(missing>0){
+    err.textContent='Please answer all '+missing+' remaining question'+(missing>1?'s':'')+'.';
+    return;
+  }
+  var avg={};
+  ['O','C','E','A','N'].forEach(function(f){avg[f]=scores[f]/counts[f];});
+  var dom='O';
+  ['C','E','A','N'].forEach(function(f){if(avg[f]>avg[dom])dom=f;});
+  var isHi=avg[dom]>=3;
+  var resultEl=document.getElementById('b5-result');
+  var radarSVG=drawRadar(avg);
+  var rows='';
+  ['O','C','E','A','N'].forEach(function(f){
+    var pct=Math.round(((avg[f]-1)/4)*100);
+    rows+='<tr><td>'+B5_NAMES[f]+'</td><td>'+avg[f].toFixed(1)+' / 5 ('+pct+'th percentile range)</td></tr>';
+  });
+  resultEl.innerHTML='<div class="t-result">'+
+    '<h4>Your dominant factor: '+B5_NAMES[dom]+'</h4>'+
+    '<div class="score">RAW AVERAGES (1-5 SCALE)</div>'+
+    '<div class="radar-wrap">'+radarSVG+'</div>'+
+    '<table>'+rows+'</table>'+
+    '<p>'+B5_DESC[dom][avg[dom]>=3?'hi':'lo']+'</p>'+
+    '<p style="font-size:13px;color:rgba(255,255,255,.5)">Personality profiles are not boxes. These scores represent tendencies along five continuous dimensions, not categories. Context, culture, and mood all shift where you land.</p>'+
+    '<button class="share-btn" onclick="shareLink(\'b5\','+JSON.stringify(avg)+')">'+
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>'+
+      'Copy shareable link<span class="share-copied">Copied</span>'+
+    '</button>'+
+  '</div>';
+  resultEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function drawRadar(avg){
+  var labels=['O','C','E','A','N'];
+  var names=['Open','Consc.','Extra','Agree','Neuro'];
+  var cx=150,cy=150,r=110,n=5;
+  var pts=labels.map(function(f,i){
+    var angle=(Math.PI*2/n)*i-Math.PI/2;
+    var frac=(avg[f]-1)/4;
+    return{x:cx+Math.cos(angle)*r*frac,y:cy+Math.sin(angle)*r*frac,lx:cx+Math.cos(angle)*(r+26),ly:cy+Math.sin(angle)*(r+26)};
+  });
+  var poly=pts.map(function(p){return p.x+','+p.y}).join(' ');
+  var gridLines='';
+  [0.25,0.5,0.75,1].forEach(function(frac){
+    var gps=labels.map(function(_,i){
+      var angle=(Math.PI*2/n)*i-Math.PI/2;
+      return(cx+Math.cos(angle)*r*frac)+','+(cy+Math.sin(angle)*r*frac);
+    });
+    gridLines+='<polygon points="'+gps.join(' ')+'" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>';
+  });
+  var spokes=labels.map(function(_,i){
+    var angle=(Math.PI*2/n)*i-Math.PI/2;
+    return'<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(angle)*r)+'" y2="'+(cy+Math.sin(angle)*r)+'" stroke="rgba(255,255,255,.08)" stroke-width="1"/>';
+  }).join('');
+  var labelEls=pts.map(function(p,i){
+    var anchor=p.lx<cx-5?'end':(p.lx>cx+5?'start':'middle');
+    return'<text x="'+p.lx+'" y="'+(p.ly+5)+'" fill="rgba(255,255,255,.55)" font-family="var(--mono)" font-size="11" text-anchor="'+anchor+'">'+names[i]+'</text>';
+  }).join('');
+  return'<svg class="radar" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Radar chart of Big Five scores">'+
+    gridLines+spokes+
+    '<polygon points="'+poly+'" fill="rgba(255,90,78,.22)" stroke="var(--accent)" stroke-width="2"/>'+
+    pts.map(function(p){return'<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="var(--accent)"/>';}).join('')+
+    labelEls+'</svg>';
+}
+
+/* ====================================================
+   ATTACHMENT
+   ==================================================== */
+var ATT=[
+  {q:'When someone I care about feels distant, my first reaction is:',a:[['I assume something is going on with them and check in calmly.','S'],['I worry that I have done something wrong and want to talk it through right away.','Ax'],['I give them space and turn my attention elsewhere.','Av'],['I feel both pulled toward them and wary of being hurt.','D']]},
+  {q:'In a new relationship I tend to:',a:[['Open up gradually as trust builds.','S'],['Want closeness fast and worry about how much they want it back.','Ax'],['Stay reserved and keep important parts of myself private.','Av'],['Move between intense closeness and pulling away.','D']]},
+  {q:'When a partner asks for more emotional connection:',a:[['I find it easy to meet them there.','S'],['I worry I am not enough no matter what I give.','Ax'],['I feel pressured and want to step back.','Av'],['I want to and I do not, at the same time.','D']]},
+  {q:'When conflict arises:',a:[['I can stay engaged and try to repair it.','S'],['I get anxious and want to fix things immediately.','Ax'],['I shut down or change the subject.','Av'],['I oscillate between shutting down and reacting strongly.','D']]},
+  {q:'Asking for help feels:',a:[['Reasonable, when I need it.','S'],['Necessary, but I worry about being a burden.','Ax'],['Uncomfortable; I prefer to handle things myself.','Av'],['Risky; I am not sure how it will be received.','D']]},
+  {q:'When a partner is upset:',a:[['I try to listen and stay present.','S'],['I take it personally and try hard to make it right.','Ax'],['I find myself emotionally stepping away.','Av'],['I want to comfort them and protect myself at once.','D']]},
+  {q:'My past relationships have mostly felt:',a:[['Safe and balanced, on the whole.','S'],['Intense, with a lot of worry about losing the person.','Ax'],['Independent, with closeness on my own terms.','Av'],['Unpredictable and emotionally costly.','D']]},
+  {q:'Texting silence from someone close usually makes me:',a:[['Assume they are busy and get on with my day.','S'],['Replay the last conversation looking for what went wrong.','Ax'],['Barely notice unless something specific is pending.','Av'],['Feel anxious and tempted to test how they respond.','D']]},
+  {q:'When someone praises me sincerely:',a:[['I can accept it.','S'],['I doubt it but want to believe it.','Ax'],['I deflect or change the subject.','Av'],['It feels uncomfortable, even unsafe.','D']]},
+  {q:'Long-term commitment feels:',a:[['Like something I can work at and enjoy.','S'],['Wonderful and terrifying.','Ax'],['Hard to imagine without losing myself.','Av'],['Both deeply wanted and quietly feared.','D']]},
+  {q:'When I think about being truly seen:',a:[['I want it and trust it can happen.','S'],['I want it but worry it will not last.','Ax'],['I prefer to stay partly unseen.','Av'],['It feels desirable and dangerous.','D']]},
+  {q:'In hard moments my inner voice tends to say:',a:[['This is uncomfortable but I will be okay.','S'],['Do not let them leave.','Ax'],['Handle it alone.','Av'],['I cannot trust this either way.','D']]}
+];
+
+var ATT_INFO={
+  S:{name:'Secure',color:'#22c55e',
+    desc:'Secure attachment is associated with a positive model of self and others. You tend to be comfortable with intimacy and interdependence, and can regulate emotional distress without excessive reassurance-seeking or avoidance.',
+    note:'Security is not about having no needs. It is about being able to express them and trust they can be met.'},
+  Ax:{name:'Anxious (Preoccupied)',color:'#f59e0b',
+    desc:'Anxious attachment reflects high concern about the availability and responsiveness of close others. You may seek reassurance frequently and find separation distressing. The underlying model is: "I am not sure I am worth staying for."',
+    note:'Anxious patterns often develop from inconsistent caregiving. They are responsive to both secure relationships and therapeutic work.'},
+  Av:{name:'Avoidant (Dismissing)',color:'#60a5fa',
+    desc:'Avoidant attachment reflects discomfort with emotional closeness and a strong premium on self-reliance. You may minimise the importance of relationships and experience emotional intimacy as threatening rather than comforting.',
+    note:'Avoidance is often a learned solution to caregivers who were emotionally unavailable. The need for connection is present; the expectation of it being met is low.'},
+  D:{name:'Disorganised (Fearful)',color:'#a78bfa',
+    desc:'Disorganised attachment reflects contradictory impulses toward and away from closeness. The person who offers comfort is also the source of fear, creating an irresolvable dilemma. This pattern is more common in histories that include significant loss or fright.',
+    note:'Disorganised attachment is the most associated with relational difficulty and is the most responsive to trauma-informed therapy.'}
+};
+
+function buildAttachment(body){
+  if(!body)return;
+  var html='';
+  ATT.forEach(function(item,i){
+    html+='<div class="q"><div class="q-text">'+(i+1)+'. '+item.q+'</div>';
+    item.a.forEach(function(opt,j){
+      html+='<label class="choice"><input type="radio" name="att_'+i+'" value="'+opt[1]+'">'+opt[0]+'</label>';
+    });
+    html+='</div>';
+  });
+  body.innerHTML=html;
+}
+
+function scoreAttachment(btn){
+  var card=document.getElementById('att-card');
+  var err=document.getElementById('att-err');
+  err.textContent='';
+  var counts={S:0,Ax:0,Av:0,D:0};
+  var missing=0;
+  ATT.forEach(function(_,i){
+    var sel=card.querySelector('input[name="att_'+i+'"]:checked');
+    if(!sel){missing++;return;}
+    counts[sel.value]++;
+  });
+  if(missing>0){err.textContent='Please answer all '+missing+' remaining question'+(missing>1?'s':'')+'.';return;}
+  var dom='S';
+  Object.keys(counts).forEach(function(k){if(counts[k]>counts[dom])dom=k;});
+  var info=ATT_INFO[dom];
+  var rows='';
+  Object.keys(counts).forEach(function(k){
+    var pct=Math.round((counts[k]/ATT.length)*100);
+    rows+='<tr><td>'+ATT_INFO[k].name+'</td><td>'+counts[k]+' / '+ATT.length+' ('+pct+'%)</td></tr>';
+  });
+  var resultEl=document.getElementById('att-result');
+  resultEl.innerHTML='<div class="t-result">'+
+    '<h4 style="color:'+info.color+'">'+info.name+'</h4>'+
+    '<div class="score">RESPONSE DISTRIBUTION</div>'+
+    '<table>'+rows+'</table>'+
+    '<p>'+info.desc+'</p>'+
+    '<p style="background:rgba(255,255,255,.04);border-left:2px solid '+info.color+';padding:12px 14px;border-radius:0 8px 8px 0;font-size:13.5px">'+info.note+'</p>'+
+    '<p style="font-size:13px;color:rgba(255,255,255,.45)">Attachment patterns are tendencies, not destiny. They show up most strongly under stress, and most clearly in close relationships.</p>'+
+    '<button class="share-btn" onclick="shareLink(\'att\','+JSON.stringify({dom:dom,counts:counts})+')">'+
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>'+
+      'Copy shareable link<span class="share-copied">Copied</span>'+
+    '</button>'+
+  '</div>';
+  resultEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ====================================================
+   CRT-7
+   ==================================================== */
+var CRT=[
+  {q:'A bat and a ball cost $1.10 in total. The bat costs $1 more than the ball. How much does the ball cost (in cents)?',correct:5,intuitive:10},
+  {q:'If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets (in minutes)?',correct:5,intuitive:100},
+  {q:'In a lake there is a patch of lily pads. Every day the patch doubles. If it takes 48 days to cover the lake, how long to cover half the lake (in days)?',correct:47,intuitive:24},
+  {q:'If you are running a race and you pass the person in second place, what place are you in?',correct:2,intuitive:1},
+  {q:'A farmer had 15 sheep. All but 8 died. How many are left?',correct:8,intuitive:7},
+  {q:'Emily\'s father has three daughters. The first two are named April and May. What is the third one\'s name (type her name)?',correct:'emily',intuitive:'june',text:true},
+  {q:'How many cubic feet of dirt are in a hole 3 ft by 3 ft by 3 ft?',correct:0,intuitive:27}
+];
+
+var CRT_LEVELS=[
+  {min:7,label:'7 / 7',name:'Exceptional reflection',desc:'You override intuitive responses almost every time. This predicts strong resistance to a wide range of cognitive biases in the literature, including the conjunction fallacy, base-rate neglect, and sunk-cost reasoning.'},
+  {min:5,label:'5-6 / 7',name:'Strong reflective tendency',desc:'You caught most of the traps. The few misses are common; even highly analytical thinkers find them sticky. Your deliberative system engages reliably when it matters.'},
+  {min:3,label:'3-4 / 7',name:'Mixed intuitive and reflective',desc:'You show a balance between intuitive speed and deliberative checking. Some items triggered the override; others did not. Context and time pressure are likely to shift this.'},
+  {min:1,label:'1-2 / 7',name:'Strong intuitive tendency',desc:'Your System 1 is fast and confident. That is a genuine asset in many domains. In tasks that reward slowing down, there is room to practise the deliberate pause before answering.'},
+  {min:0,label:'0 / 7',name:'Fully intuitive responding',desc:'Every response followed the salient intuitive answer. The CRT is specifically designed to make those answers feel correct. Awareness that this pattern exists is itself a starting point for catching it.'}
+];
+
+function buildCRT(body){
+  if(!body)return;
+  var html='';
+  CRT.forEach(function(item,i){
+    html+='<div class="q"><div class="q-text">'+(i+1)+'. '+item.q+'</div>';
+    if(item.text){
+      html+='<input class="crt-text-input" type="text" id="crt_txt_'+i+'" placeholder="Type your answer" autocomplete="off" autocorrect="off" spellcheck="false">';
+    } else {
+      html+='<input class="crt-text-input" type="number" id="crt_num_'+i+'" placeholder="Your answer" min="0">';
+    }
+    html+='</div>';
+  });
+  body.innerHTML=html;
+}
+
+function scoreCRT(btn){
+  var card=document.getElementById('crt-card');
+  var err=document.getElementById('crt-err');
+  err.textContent='';
+  var correct=0;
+  var intuitive=0;
+  var missing=0;
+  var details=[];
+  CRT.forEach(function(item,i){
+    var inp;
+    if(item.text){inp=card.querySelector('#crt_txt_'+i);}
+    else{inp=card.querySelector('#crt_num_'+i);}
+    if(!inp||inp.value.trim()===''){missing++;details.push({q:i+1,got:'(blank)',status:'unanswered'});return;}
+    var raw=inp.value.trim().toLowerCase();
+    var userVal=item.text?raw:parseFloat(raw);
+    var isCorrect=item.text?(userVal===String(item.correct).toLowerCase()):(userVal===item.correct);
+    var isIntuitive=item.text?(userVal===String(item.intuitive).toLowerCase()):(userVal===item.intuitive);
+    if(isCorrect)correct++;
+    if(isIntuitive)intuitive++;
+    details.push({q:i+1,got:inp.value.trim(),status:isCorrect?'correct':isIntuitive?'intuitive':'other'});
+  });
+  if(missing>0){err.textContent='Please answer all '+missing+' remaining question'+(missing>1?'s':'')+'.';return;}
+  var level=CRT_LEVELS[CRT_LEVELS.length-1];
+  CRT_LEVELS.forEach(function(l){if(correct>=l.min)level=l;});
+  var statusColor={correct:'#22c55e',intuitive:'#f59e0b',other:'rgba(255,255,255,.45)',unanswered:'rgba(255,90,78,.6)'};
+  var rows=details.map(function(d){
+    return'<tr><td>Q'+d.q+'</td><td style="color:'+statusColor[d.status]+'">'+d.got+' &mdash; '+d.status+'</td></tr>';
+  }).join('');
+  var resultEl=document.getElementById('crt-result');
+  resultEl.innerHTML='<div class="t-result">'+
+    '<h4>'+correct+' / 7 correct</h4>'+
+    '<div class="score">'+level.name.toUpperCase()+' &middot; INTUITIVE PULLS: '+intuitive+'</div>'+
+    '<p>'+level.desc+'</p>'+
+    '<table>'+rows+'</table>'+
+    '<p style="font-size:13px;color:rgba(255,255,255,.45)">Correct answers: 5 cents (Q1), 5 minutes (Q2), 47 days (Q3), 2nd place (Q4), 8 sheep (Q5), Emily (Q6), 0 cubic feet (Q7 - a hole contains no dirt).</p>'+
+    '<button class="share-btn" onclick="shareLink(\'crt\',{score:'+correct+',intuitive:'+intuitive+'})">'+
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>'+
+      'Copy shareable link<span class="share-copied">Copied</span>'+
+    '</button>'+
+  '</div>';
+  resultEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ====================================================
+   REACTION TIME
+   ==================================================== */
+var RT={
+  state:'idle',
+  timer:null,
+  startTime:0,
+  trials:[],
+  TARGET_TRIALS:5
+};
+
+function buildReaction(body){
+  if(!body)return;
+  body.innerHTML=
+    '<div class="rt-box" id="rt-box" onclick="rtClick()" role="button" tabindex="0" aria-label="Reaction time test area">'+
+      '<span id="rt-msg">Click here to begin. Wait for the green flash, then click as fast as you can.</span>'+
+    '</div>'+
+    '<div class="rt-trials" id="rt-trials">Trial 0 / '+RT.TARGET_TRIALS+'</div>'+
+    '<div id="rt-result"></div>';
+  document.getElementById('rt-box').addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter')rtClick();});
+}
+
+function rtClick(){
+  var box=document.getElementById('rt-box');
+  var msg=document.getElementById('rt-msg');
+  if(!box)return;
+  if(RT.state==='idle'){
+    RT.trials=[];
+    RT.state='waiting';
+    box.className='rt-box ready';
+    msg.textContent='Get ready...';
+    rtTick();
+  } else if(RT.state==='waiting'){
+    RT.state='early';
+    clearTimeout(RT.timer);
+    box.className='rt-box early';
+    msg.textContent='Too early! Click to try again.';
+    RT.state='idle';
+  } else if(RT.state==='go'){
+    var rt=Date.now()-RT.startTime;
+    RT.trials.push(rt);
+    clearTimeout(RT.timer);
+    var trialEl=document.getElementById('rt-trials');
+    if(trialEl)trialEl.textContent='Trial '+RT.trials.length+' / '+RT.TARGET_TRIALS+' ('+rt+' ms)';
+    if(RT.trials.length>=RT.TARGET_TRIALS){
+      RT.state='done';
+      rtFinish();
+    } else {
+      RT.state='waiting';
+      box.className='rt-box ready';
+      msg.textContent='Good! Get ready for the next one...';
+      rtTick();
+    }
+  } else if(RT.state==='done'){
+    RT.state='idle';
+    document.getElementById('rt-result').innerHTML='';
+    buildReaction(document.getElementById('rt-body'));
+  }
+}
+
+function rtTick(){
+  var delay=1000+Math.random()*3000;
+  RT.timer=setTimeout(function(){
+    if(RT.state!=='waiting')return;
+    RT.state='go';
+    RT.startTime=Date.now();
+    var box=document.getElementById('rt-box');
+    var msg=document.getElementById('rt-msg');
+    if(box){box.className='rt-box go';}
+    if(msg){msg.textContent='CLICK NOW';}
+  },delay);
+}
+
+function erf(x){
+  var a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  var sign=x<0?-1:1;
+  x=Math.abs(x);
+  var t=1/(1+p*x);
+  var y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return sign*y;
+}
+
+function rtFinish(){
+  var box=document.getElementById('rt-box');
+  var msg=document.getElementById('rt-msg');
+  if(box){box.className='rt-box';box.style.cursor='pointer';}
+  if(msg){msg.textContent='Done! Click here to restart.';}
+  var sorted=RT.trials.slice().sort(function(a,b){return a-b;});
+  var mean=RT.trials.reduce(function(a,b){return a+b},0)/RT.trials.length;
+  var median=sorted[Math.floor(sorted.length/2)];
+  var best=sorted[0];
+  var worst=sorted[sorted.length-1];
+  var variance=RT.trials.reduce(function(acc,v){return acc+Math.pow(v-mean,2)},0)/RT.trials.length;
+  var sd=Math.sqrt(variance);
+  var popMean=250,popSD=40;
+  var z=(mean-popMean)/popSD;
+  var pct=Math.round(((1-((1+erf(-z/Math.sqrt(2)))/2))*100));
+  pct=Math.min(99,Math.max(1,pct));
+  var rows=RT.trials.map(function(v,i){return'<tr><td>Trial '+(i+1)+'</td><td>'+v+' ms</td></tr>';}).join('');
+  var resultEl=document.getElementById('rt-result');
+  resultEl.innerHTML='<div class="t-result" style="margin-top:20px">'+
+    '<h4>Mean: '+Math.round(mean)+' ms</h4>'+
+    '<div class="score">FASTER THAN APPROXIMATELY '+pct+'% OF ADULTS IN REFERENCE NORMS</div>'+
+    '<table>'+rows+
+      '<tr><td>Median</td><td>'+Math.round(median)+' ms</td></tr>'+
+      '<tr><td>Best</td><td>'+best+' ms</td></tr>'+
+      '<tr><td>Worst</td><td>'+worst+' ms</td></tr>'+
+      '<tr><td>Variability (SD)</td><td>'+Math.round(sd)+' ms</td></tr>'+
+    '</table>'+
+    '<p style="font-size:13px;color:rgba(255,255,255,.45)">Reference: average simple visual RT in adults is approximately 200-300 ms (Luce, 1986). Mobile screens add 30-50 ms of touch latency. High variability across trials often reflects divided attention rather than motor speed.</p>'+
+  '</div>';
+}
+
+/* ====================================================
+   DIGIT SPAN
+   ==================================================== */
+var DS={
+  state:'idle',
+  span:3,
+  trial:0,
+  maxTrials:3,
+  sequence:[],
+  correct:0,
+  highWater:2,
+  history:[],
+  timer:null,
+  idx:0
+};
+
+function buildDigitSpan(body){
+  if(!body)return;
+  body.innerHTML=
+    '<div class="ds-display" id="ds-display">Ready</div>'+
+    '<div id="ds-input-wrap" style="display:none">'+
+      '<input class="ds-input" id="ds-input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Enter digits in order" autocomplete="off" autocorrect="off">'+
+      '<div class="ds-status" id="ds-status"></div>'+
+    '</div>'+
+    '<div class="t-actions" id="ds-actions" style="margin-top:16px">'+
+      '<button class="t-submit" onclick="dsStart()">Start test</button>'+
+    '</div>'+
+    '<div id="ds-result"></div>';
+  DS.state='idle';DS.span=3;DS.trial=0;DS.correct=0;DS.highWater=2;DS.history=[];
+}
+
+function dsReset(){
+  buildDigitSpan(document.getElementById('ds-body'));
+}
+
+function dsStart(){
+  if(DS.state==='running')return;
+  DS.state='running';
+  DS.sequence=[];
+  for(var i=0;i<DS.span;i++){DS.sequence.push(Math.floor(Math.random()*9)+1);}
+  var disp=document.getElementById('ds-display');
+  var inputWrap=document.getElementById('ds-input-wrap');
+  var actions=document.getElementById('ds-actions');
+  if(inputWrap)inputWrap.style.display='none';
+  if(actions)actions.style.display='none';
+  if(disp){disp.className='ds-display blank';disp.textContent='';}
+  var idx=0;
+  function showNext(){
+    if(!disp)return;
+    if(idx>=DS.sequence.length){
+      disp.className='ds-display recall';
+      disp.textContent='Type the sequence';
+      if(inputWrap){
+        var inp=document.getElementById('ds-input');
+        inputWrap.style.display='block';
+        if(inp){inp.value='';inp.focus();}
+        inp.onkeydown=function(e){if(e.key==='Enter')dsCheck();};
+      }
+      if(actions){
+        actions.style.display='flex';
+        actions.innerHTML='<button class="t-submit" onclick="dsCheck()">Submit</button><button class="t-reset" onclick="dsReset()">Reset</button>';
+      }
+      return;
+    }
+    disp.className='ds-display';
+    disp.textContent=DS.sequence[idx];
+    idx++;
+    DS.timer=setTimeout(showNext,900);
+  }
+  setTimeout(showNext,600);
+}
+
+function dsCheck(){
+  var inp=document.getElementById('ds-input');
+  if(!inp)return;
+  var val=inp.value.trim().replace(/\s+/g,'').replace(/[^0-9]/g,'');
+  var expected=DS.sequence.join('');
+  var pass=val===expected;
+  DS.history.push({span:DS.span,sequence:expected,given:val,pass:pass});
+  var status=document.getElementById('ds-status');
+  if(pass){
+    DS.correct++;
+    if(DS.span>DS.highWater)DS.highWater=DS.span;
+    if(status){status.textContent='Correct. Sequence: '+expected;}
+    DS.trial=0;DS.span++;
+    setTimeout(dsStart,1200);
+  } else {
+    if(status){status.textContent='Incorrect. Sequence was: '+expected+'. You typed: '+val;}
+    DS.trial++;
+    if(DS.trial>=DS.maxTrials){
+      DS.span--;
+      if(DS.span<2){DS.span=2;}
+      dsFinish();
+      return;
+    }
+    setTimeout(dsStart,1500);
+  }
+}
+
+function dsFinish(){
+  DS.state='done';
+  var avg=DS.history.filter(function(h){return h.pass}).length;
+  var maxSpan=DS.highWater;
+  var normMap={2:'Below 2nd percentile',3:'Low average (10-25th)',4:'Average (25-75th)',5:'Average (25-75th)',6:'High average (75-90th)',7:'Superior (90-95th)',8:'Very superior (95th+)',9:'Exceptional (98th+)'};
+  var norm=normMap[maxSpan]||'Exceptional (99th+)';
+  var rows=DS.history.map(function(h){
+    return'<tr><td>Span '+h.span+'</td><td style="color:'+(h.pass?'#22c55e':'var(--accent)')+'">'+h.given+' '+(h.pass?'(correct)':'vs '+h.sequence)+'</td></tr>';
+  }).join('');
+  var resultEl=document.getElementById('ds-result');
+  resultEl.innerHTML='<div class="t-result" style="margin-top:20px">'+
+    '<h4>Maximum forward span: '+maxSpan+'</h4>'+
+    '<div class="score">'+norm.toUpperCase()+'</div>'+
+    '<table>'+rows+'</table>'+
+    '<p style="font-size:13px;color:rgba(255,255,255,.45)">The digit span measures your phonological loop capacity. Average adult span is 6-7 digits (WAIS-IV norms). The test uses an adaptive 3-down-1-up-style rule: three failures at the same length ends the session. Fatigue, distraction, and ambient noise all reduce scores.</p>'+
+    '<button class="t-reset" onclick="dsReset()" style="margin-top:8px">Take it again</button>'+
+  '</div>';
+  var actions=document.getElementById('ds-actions');
+  if(actions)actions.style.display='none';
+}
+
+/* ====================================================
+   INIT
+   ==================================================== */
+function init(){
+  buildBigFive(document.getElementById('b5-body'));
+  buildAttachment(document.getElementById('att-body'));
+  buildCRT(document.getElementById('crt-body'));
+  buildReaction(document.getElementById('rt-body'));
+  buildDigitSpan(document.getElementById('ds-body'));
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+else{init();}
+
+})();
+</script>
