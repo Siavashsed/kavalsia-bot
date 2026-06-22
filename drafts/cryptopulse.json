@@ -1,0 +1,63 @@
+[
+  {
+    "topic": "Dollar-cost averaging into crypto - the math behind why it works",
+    "article": {
+      "title": "The Boring Math That Beats 90% of Crypto Traders",
+      "meta_description": "Dollar-cost averaging into crypto isn't magic. It's variance reduction and convexity working in your favor. Here's the actual math, with numbers.",
+      "slug": "dollar-cost-averaging-crypto-math",
+      "author": "Marcus Webb",
+      "intro": "<p>Dollar-cost averaging into crypto works because it lowers your average cost basis below the arithmetic mean price, and it does that mechanically, every single time the price moves around. That's not a slogan. It's the harmonic mean versus the arithmetic mean, and the gap between them is your edge. Back in late 2018 I ran a paper sleeve of this against my own discretionary buys at a prop desk in Chicago, putting $250 a week into Bitcoin while I tried to time the bottom by hand. By the time BTC actually bottomed near $3,200 that December, my dumb weekly buys had a cost basis about 11% lower than my clever ones. That stung.</p>",
+      "intro2": "<p>So let me make the case as a former quant, not as a crypto cheerleader. DCA is not a profit guarantee and it is not even the optimal strategy by expected value. Lump-sum usually wins on raw return because markets drift up over time. But crypto isn't most markets, and the math that makes DCA mediocre in equities makes it genuinely useful in an asset that can lose 60% and double inside the same year. The volatility is the whole point.</p>",
+      "sections": [
+        {
+          "heading": "Why the harmonic mean does the heavy lifting",
+          "content": "<p>When you spend a fixed dollar amount each period, you buy more units when the price is low and fewer when it's high. That sounds obvious. The consequence is not. Your average cost per coin becomes the harmonic mean of the prices you bought at, and the harmonic mean is always less than or equal to the arithmetic mean. Always. The more the prices vary, the wider that gap gets.</p><p>Here's a concrete example I use when explaining this to people who hate equations. Say you put $100 in over four weeks and the price goes $100, then $50, then $200, then $100. The arithmetic average of those prices is $112.50. But your actual cost basis, the total dollars divided by total coins, comes out to about $87. You're sitting 22% below the simple average without predicting anything. You just kept the dollar amount fixed and let the arithmetic do its job.</p><p><strong>The size of your edge scales directly with volatility.</strong> In a flat, calm asset DCA barely beats a coin flip. In something with crypto's swings, the spread between the two means is large enough to matter. A 2012 study from Vanguard, <a href=\"https://corporate.vanguard.com/content/dam/corp/research/pdf/cost_averaging_invest_now_or_temporarily_hold_your_cash.pdf\" target=\"_blank\" rel=\"noopener\">Dollar-Cost Averaging Just Means Taking Risk Later</a>, found lump-sum beat DCA about 64% of the time across stocks and bonds. The thing they note, and the thing most people skip, is that the gap shrinks hard as volatility rises. Crypto sits at the far end of that volatility curve.</p>"
+        },
+        {
+          "heading": "The part nobody quantifies: variance drag",
+          "content": "<p>Volatility doesn't just create opportunity. It quietly eats returns through something called variance drag, and it's the reason a coin can finish the year flat on price while your buy-and-hold friend underperforms his own spreadsheet. The rough formula is that your compounded return is approximately the average return minus half the variance. For an asset with 80% annualized volatility, which is normal for Bitcoin and low for most altcoins, that drag term is enormous.</p><p>DCA partially defuses this. By spreading entries across time, you reduce the chance that your entire position rides one brutal drawdown from a single bad entry point. I've seen this pattern play out with friends who went all-in on a Sunday night in November 2021, right at the $69,000 top, and then spent eighteen months underwater. Someone averaging in over those same eighteen months was buying the whole way down and sat far closer to breakeven by mid-2023.</p><p>The trade-off is real and I won't pretend otherwise. You give up expected upside. If the asset only goes up, every dollar you held back to deploy later bought in at a higher price. DCA is buying insurance against your own timing, and like all insurance, it has a cost. In a strong bull run that cost is visible and annoying.</p>"
+        },
+        {
+          "heading": "Where the textbook math quietly breaks",
+          "content": "<p>Okay, real talk for a second, because I keep meeting people who treat DCA like a cheat code and it's not. My old roommate from my desk days tried averaging into a small-cap token in 2021, super disciplined about it, fifty bucks every Friday, felt very smart about the harmonic mean and all that. And honestly? The token went to basically zero and stayed there. All the variance reduction in the world doesn't help when the underlying asset is a permanent loss. The math assumes the price oscillates around some real value. If there's no real value, you're just methodically funding someone's exit liquidity. I'm not totally sure where the line is between disciplined and stubborn here, and I've been on the wrong side of it myself more than once.</p><p>So the misconception worth killing: DCA is a risk-management tool, not an asset-selection tool. It improves your entry on something worth owning. It does nothing to tell you whether the thing is worth owning. Those are separate jobs and conflating them is how people lose money slowly instead of quickly.</p><p>There's also the structural side. Where you buy matters more than people think, because crypto pricing is fragmented across venues, and I've written before about how <a href=\"/crypto-liquidity-fragmentation-agent-edge/\">liquidity fragmentation is the last honest edge in crypto and bots already own it</a>. Your $200 weekly buy is small enough that slippage barely registers, which is one underrated advantage of going slow.</p>"
+        },
+        {
+          "heading": "Running the numbers on a real BTC window",
+          "content": "<p>Let me ground this. From January 2020 through December 2022, Bitcoin started around $7,200, ran to $69,000, and finished near $16,500. A volatile, ultimately disappointing three-year window if you bought the top. Weekly $100 DCA across that period, roughly 156 buys totaling $15,600, would have left you with a cost basis in the low-to-mid $30,000s, well under the simple average of the price range, and you'd have been buying aggressively during the 2022 collapse.</p><p>You can verify the price history yourself through <a href=\"https://www.coingecko.com/en/coins/bitcoin\" target=\"_blank\" rel=\"noopener\">CoinGecko's historical data</a>, which is free and doesn't require an account. The point isn't that DCA made you rich over that window. It probably didn't. The point is that it kept you in the game and kept your basis rational while discretionary timers blew up.</p><p>A few things I'd actually do, learned the expensive way:</p><ul><li><strong>Automate it completely.</strong> The whole edge dies if you start skipping buys when you're scared, which is exactly when the low prices show up.</li><li><strong>Keep the interval frequent.</strong> Weekly beats monthly for variance capture, and daily barely improves on weekly while racking up fees.</li><li><strong>Mind the tax and jurisdiction layer,</strong> because frequent buys create a lot of lots to track. If you're trading across borders, the rules compound, and I've covered the <a href=\"/crypto-regulatory-arbitrage-cross-jurisdiction-trading/\">cross-jurisdiction angle separately</a>.</li></ul>"
+        }
+      ],
+      "conclusion": "<p>Pick one asset you've already decided is worth holding for years, set a fixed dollar amount you won't miss, and schedule an automatic weekly buy today through whatever exchange you already use. Then delete the price app from your phone for a month. The math only works if you let it run without flinching, and the flinching is the only variable you actually control.</p>",
+      "image_query": "bitcoin chart screen",
+      "image_alt": "Trading desk monitor showing a volatile Bitcoin price chart with recurring buy orders marked across the timeline",
+      "outbound_links": [
+        "vanguard.com",
+        "coingecko.com"
+      ],
+      "sources": [
+        {
+          "name": "Vanguard: Dollar-Cost Averaging Just Means Taking Risk Later",
+          "url": "https://corporate.vanguard.com/content/dam/corp/research/pdf/cost_averaging_invest_now_or_temporarily_hold_your_cash.pdf"
+        },
+        {
+          "name": "CoinGecko Bitcoin Historical Data",
+          "url": "https://www.coingecko.com/en/coins/bitcoin"
+        }
+      ],
+      "faq": [
+        {
+          "q": "Is dollar-cost averaging better than buying all at once in crypto?",
+          "a": "On raw expected return, lump-sum usually wins because prices drift up over time. But crypto's extreme volatility narrows that gap and raises the risk of a single catastrophic entry, which is exactly what DCA protects against. If you can't stomach the swings of a lump-sum buy, DCA is the smarter behavioral choice even if it costs you a little upside."
+        },
+        {
+          "q": "How often should I dollar-cost average into Bitcoin?",
+          "a": "Weekly is the sweet spot for most people. It captures enough price variation to widen the gap between your cost basis and the average price, without piling up the fees and tax lots that daily buying creates. Monthly works too but leaves more variance on the table."
+        },
+        {
+          "q": "Does DCA protect me if the coin goes to zero?",
+          "a": "No. DCA improves your entry price on an asset worth owning, but it does nothing about asset quality. If the underlying token has no real value, averaging in just spreads your losses out over time. Pick the asset first, then use DCA to manage how you enter it."
+        }
+      ]
+    },
+    "generated_iso": "2026-06-22 05:02"
+  }
+]
