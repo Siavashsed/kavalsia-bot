@@ -158,7 +158,44 @@
         "utm_campaign": "homepage_products"
       }
     ],
-    "llm_engine": "max"
+    "llm_engine": "max",
+    "social": {
+      "enabled": false,
+      "locationId": "E58akPh4PeDMJgvcJxw0",
+      "userId": "",
+      "hero": true,
+      "_note": "GHL Social Planner auto-post. Off until you add a ghlToken in secrets + enable a site. Per-site: site.social={enabled,accountIds:[]}."
+    },
+    "payments": {
+      "global": {
+        "stripe_public_key": "",
+        "stripe_secret_key_secret": "STRIPE_SECRET_KEY",
+        "paypal_client_id": "",
+        "paypal_client_secret_secret": "PAYPAL_CLIENT_SECRET",
+        "currency": "CAD",
+        "tax_rate": 0.13
+      },
+      "webhook_secret_stripe_secret": "STRIPE_WEBHOOK_SECRET",
+      "webhook_secret_paypal_secret": "PAYPAL_WEBHOOK_SECRET",
+      "mode": "test",
+      "test_keys": {
+        "stripe_public_key": "",
+        "stripe_secret_key_secret": "STRIPE_TEST_SECRET_KEY",
+        "paypal_client_id": ""
+      },
+      "live_keys": {
+        "stripe_public_key": "",
+        "stripe_secret_key_secret": "STRIPE_LIVE_SECRET_KEY",
+        "paypal_client_id": ""
+      }
+    },
+    "fulfillment": {
+      "enabled": false,
+      "cj_api_key_secret": "CJ_DROPSHIPPING_API_KEY",
+      "aliexpress_api_key_secret": "ALIEXPRESS_API_KEY",
+      "auto_create_orders": false,
+      "notification_email": "orders@example.com"
+    }
   },
   "affiliate_links": {},
   "sites": [
@@ -275,7 +312,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Cryptopulse",
       "author": "Marcus Webb",
       "custom_css": "",
@@ -371,7 +408,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Passivewealthguide",
       "author": "Ryan Mitchell",
       "schema_article_type": "AnalysisNewsArticle",
@@ -467,7 +504,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Tradingtechreview",
       "author": "Alex Turner",
       "schema_article_type": "TechArticle",
@@ -562,7 +599,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "ai-marketing",
       "default_author": "",
       "custom_prompt": "",
@@ -732,7 +769,7 @@
       "posts_unit": "day",
       "historical_count": 4,
       "historical_unit": "month",
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "author": "Nina Patel",
       "schema_article_type": "TechArticle",
       "font_body": "'Inter',system-ui,sans-serif",
@@ -835,7 +872,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "MochaPoo Pets",
       "default_author": "",
       "custom_prompt": "Open with a small playful hook or observation about the pet (one line, max). Use light humor sparingly through the piece - one or two dry asides per article, never forced. Always pay the joke off with real, specific, owner-actionable advice. End every article with a quick 'TL;DR' style summary the reader can act on this week.",
@@ -985,7 +1022,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Supplementverge",
       "author": "Dr. James Holloway",
       "schema_article_type": "MedicalWebPage",
@@ -1080,7 +1117,7 @@
       "posts_unit": "day",
       "historical_count": 4,
       "historical_unit": "month",
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Sightreadingacademy",
       "author": "Professor Laura Kim",
       "schema_article_type": "LearningResource",
@@ -1175,7 +1212,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Newborniq",
       "author": "Melissa Torres",
       "schema_article_type": "BlogPosting",
@@ -1283,7 +1320,7 @@
       "posts_unit": "day",
       "historical_count": 4,
       "historical_unit": "month",
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "author": "Olivia Grant",
       "schema_article_type": "BlogPosting",
       "new_posts_count": 0,
@@ -1293,7 +1330,25 @@
         "Halle Drummond": "https://api.dicebear.com/7.x/notionists/svg?seed=Halle%20Drummond",
         "Ines Carvalho": "https://api.dicebear.com/7.x/notionists/svg?seed=Ines%20Carvalho",
         "Liesel Wolff": "https://api.dicebear.com/7.x/notionists/svg?seed=Liesel%20Wolff"
-      }
+      },
+      "ecommerce": {
+        "enabled": false,
+        "currency": "CAD",
+        "shop_title": "Dalmend Store",
+        "shop_subtitle": "Premium candles & home fragrance",
+        "stripe_account_id": "",
+        "paypal_merchant_id": "",
+        "tax_rate": 0.13,
+        "shipping_enabled": true,
+        "default_shipping": 15.0,
+        "use_global_stripe": true,
+        "use_global_paypal": true,
+        "stripe_public_key": "",
+        "paypal_client_id": ""
+      },
+      "product_ids": [
+        "prod_demo_vish"
+      ]
     },
     {
       "id": "onlinebiz-pro",
@@ -1377,7 +1432,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Onlinebizpro",
       "author": "Ryan Cross",
       "schema_article_type": "BlogPosting",
@@ -1473,7 +1528,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Sportiqpro",
       "author": "Daniel Webb",
       "schema_article_type": "SportsEvent",
@@ -1568,7 +1623,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Makeupcraft",
       "author": "Sofia Marino",
       "schema_article_type": "BlogPosting",
@@ -1663,7 +1718,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "The Dating Edge",
       "author": "Dr. Priya Sharma",
       "schema_article_type": "BlogPosting",
@@ -1758,7 +1813,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "fitpulse-pro",
       "default_author": "",
       "custom_prompt": "",
@@ -1897,7 +1952,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Sellit",
       "default_author": "Sellit.ca",
       "custom_prompt": "",
@@ -2045,7 +2100,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "author": "Kani Sedighi",
       "schema_article_type": "Event",
       "custom_domain": "kanonaprojects.com",
@@ -2148,7 +2203,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "mashestate-construction",
       "default_author": "",
       "custom_prompt": "",
@@ -2285,7 +2340,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Insight Insure",
       "default_author": "",
       "custom_prompt": "",
@@ -2418,7 +2473,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "carverge",
       "default_author": "",
       "custom_prompt": "",
@@ -2556,7 +2611,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "travelverge",
       "default_author": "",
       "custom_prompt": "Find top hotels around the world and write article about them and use their own site's image in the article",
@@ -2704,7 +2759,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Topproduct",
       "schema_article_type": "Review",
       "new_posts_count": 0,
@@ -2746,7 +2801,7 @@
       ],
       "posts_per_day_new": 1,
       "historical_mode": true,
-      "historical_per_week": 1,
+      "historical_per_week": 7,
       "warming": {
         "enabled": false
       },
@@ -2759,7 +2814,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2782,7 +2837,9 @@
         "Thomas Sterling": "https://api.dicebear.com/7.x/notionists/svg?seed=Thomas%20Sterling",
         "Rebecca Moon": "https://api.dicebear.com/7.x/notionists/svg?seed=Rebecca%20Moon",
         "Siavash Sadighi": "https://api.dicebear.com/7.x/notionists/svg?seed=Siavash%20Sadighi"
-      }
+      },
+      "persona": "Shahnoush Nasiri, founder and editor of MindFrame and a psychology student at York University in Toronto who translates serious brain science into honest, readable writing",
+      "tone": "Warm, engaging and friendly, but genuinely smart and well read. Write in first person as Shahnoush, talking to one curious reader like a sharp friend who happens to know the research. Use vivid, concrete examples and a little dry humor. Explain the science accurately and point to real peer reviewed studies, but never lecture, never pile on jargon, and stay honest about what the data does and does not show. Never use em dashes or en dashes; use commas, periods, or parentheses instead."
     },
     {
       "id": "folioatelier",
@@ -2811,7 +2868,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2868,7 +2925,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2925,7 +2982,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -2982,7 +3039,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -3057,7 +3114,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "comment_schedule": {
         "enabled": true,
         "initial_count": 3,
@@ -3166,20 +3223,20 @@
       "custom_css": "",
       "posts_per_week": 0,
       "categories": [
-        "\u0645\u062f\u06cc\u062a\u06cc\u0634\u0646",
-        "\u062a\u062c\u0644\u06cc",
-        "\u06a9\u06cc\u0647\u0627\u0646\u200c\u0646\u06af\u0627\u0631\u06cc",
-        "\u0622\u06cc\u06cc\u0646 \u06a9\u0644\u0627\u0645",
-        "\u0641\u0644\u0633\u0641\u0647\u0654 \u062a\u0645\u0631\u06cc\u0646"
+        "مدیتیشن",
+        "تجلی",
+        "کیهان‌نگاری",
+        "آیین کلام",
+        "فلسفهٔ تمرین"
       ],
       "default_category": "",
-      "author_bio": "\u0628\u0646\u06cc\u0627\u0646\u200c\u06af\u0630\u0627\u0631 \u0622\u06a9\u0627\u062f\u0645\u06cc \u0622\u06af\u06cc\u0627\u0646\u061b \u0645\u0639\u0644\u0645 \u062a\u0645\u0631\u06cc\u0646\u060c \u0646\u0648\u06cc\u0633\u0646\u062f\u0647\u060c \u062e\u0648\u0627\u0646\u0646\u062f\u0647\u0654 \u0646\u0642\u0634\u0647\u0654 \u0632\u0627\u06cc\u0686\u0647. \u0632\u0627\u062f\u0647\u0654 \u06f1\u06f3\u06f5\u06f0 \u0645\u0647\u0627\u0628\u0627\u062f. \u067e\u0646\u062c \u0627\u0635\u0644\u0650 \u06a9\u0627\u0631\u06cc: \u0646\u064e\u0641\u064e\u0633\u060c \u0632\u0628\u0627\u0646\u060c \u0628\u062f\u0646\u060c \u06a9\u06cc\u0647\u0627\u0646\u060c \u0646\u06cc\u062a.",
-      "author_bio_fa": "\u0628\u0646\u06cc\u0627\u0646\u200c\u06af\u0630\u0627\u0631 \u0622\u06a9\u0627\u062f\u0645\u06cc \u0622\u06af\u06cc\u0627\u0646\u061b \u0645\u0639\u0644\u0645 \u062a\u0645\u0631\u06cc\u0646\u060c \u0646\u0648\u06cc\u0633\u0646\u062f\u0647\u060c \u062e\u0648\u0627\u0646\u0646\u062f\u0647\u0654 \u0646\u0642\u0634\u0647\u0654 \u0632\u0627\u06cc\u0686\u0647. \u0632\u0627\u062f\u0647\u0654 \u06f1\u06f3\u06f5\u06f0 \u0645\u0647\u0627\u0628\u0627\u062f. \u067e\u0646\u062c \u0627\u0635\u0644\u0650 \u06a9\u0627\u0631\u06cc: \u0646\u064e\u0641\u064e\u0633\u060c \u0632\u0628\u0627\u0646\u060c \u0628\u062f\u0646\u060c \u06a9\u06cc\u0647\u0627\u0646\u060c \u0646\u06cc\u062a.",
+      "author_bio": "بنیان‌گذار آکادمی آگیان؛ معلم تمرین، نویسنده، خوانندهٔ نقشهٔ زایچه. زادهٔ ۱۳۵۰ مهاباد. پنج اصلِ کاری: نَفَس، زبان، بدن، کیهان، نیت.",
+      "author_bio_fa": "بنیان‌گذار آکادمی آگیان؛ معلم تمرین، نویسنده، خوانندهٔ نقشهٔ زایچه. زادهٔ ۱۳۵۰ مهاباد. پنج اصلِ کاری: نَفَس، زبان، بدن، کیهان، نیت.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 4,
       "historical_unit": "month",
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "author": "Avin Dabaghchimokri",
       "author_title": "Founder, Agyan Academy",
       "tagline": "An academy of breath, language, and cosmos",
@@ -3275,20 +3332,20 @@
       "custom_css": "",
       "posts_per_week": 0,
       "categories": [
-        "\u067e\u06cc\u0634\u06af\u06cc\u0631\u06cc",
-        "\u06a9\u0648\u062f\u06a9\u0627\u0646",
-        "\u062a\u0631\u0645\u06cc\u0645\u06cc",
-        "\u0627\u0648\u0631\u0698\u0627\u0646\u0633",
-        "\u0633\u06cc\u0633\u062a\u0645\u06cc\u06a9"
+        "پیشگیری",
+        "کودکان",
+        "ترمیمی",
+        "اورژانس",
+        "سیستمیک"
       ],
       "default_category": "",
-      "author_bio": "\u0633\u0631\u062f\u0628\u06cc\u0631 \u0645\u062c\u0644\u0647\u0654 \u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0627\u067e\u06a9\u0633\u061b \u0632\u0627\u062f\u0647\u0654 \u06f1\u06f3\u06f4\u06f3 \u0645\u0647\u0627\u0628\u0627\u062f. \u062f.\u0645.\u062f. \u06f1\u06f3\u06f6\u06f5. \u067e\u0646\u062c \u062f\u0647\u0647 \u0637\u0628\u0627\u0628\u062a \u0628\u0627\u0644\u06cc\u0646\u06cc. \u062f\u0631\u0633\u200c\u06af\u0648 \u062f\u0631 \u067e\u0646\u062c \u0645\u062d\u0648\u0631: \u067e\u06cc\u0634\u06af\u06cc\u0631\u06cc\u060c \u06a9\u0648\u062f\u06a9\u0627\u0646\u060c \u062a\u0631\u0645\u06cc\u0645\u06cc\u060c \u0627\u0648\u0631\u0698\u0627\u0646\u0633 \u0648 \u0627\u0631\u062a\u0628\u0627\u0637\u0627\u062a \u0633\u06cc\u0633\u062a\u0645\u06cc\u06a9.",
-      "author_bio_fa": "\u0633\u0631\u062f\u0628\u06cc\u0631 \u0645\u062c\u0644\u0647\u0654 \u062f\u0646\u062f\u0627\u0646\u067e\u0632\u0634\u06a9\u06cc \u0627\u067e\u06a9\u0633\u061b \u0632\u0627\u062f\u0647\u0654 \u06f1\u06f3\u06f4\u06f3 \u0645\u0647\u0627\u0628\u0627\u062f. \u062f.\u0645.\u062f. \u06f1\u06f3\u06f6\u06f5. \u067e\u0646\u062c \u062f\u0647\u0647 \u0637\u0628\u0627\u0628\u062a \u0628\u0627\u0644\u06cc\u0646\u06cc. \u062f\u0631\u0633\u200c\u06af\u0648 \u062f\u0631 \u067e\u0646\u062c \u0645\u062d\u0648\u0631: \u067e\u06cc\u0634\u06af\u06cc\u0631\u06cc\u060c \u06a9\u0648\u062f\u06a9\u0627\u0646\u060c \u062a\u0631\u0645\u06cc\u0645\u06cc\u060c \u0627\u0648\u0631\u0698\u0627\u0646\u0633 \u0648 \u0627\u0631\u062a\u0628\u0627\u0637\u0627\u062a \u0633\u06cc\u0633\u062a\u0645\u06cc\u06a9.",
+      "author_bio": "سردبیر مجلهٔ دندانپزشکی اپکس؛ زادهٔ ۱۳۴۳ مهاباد. د.م.د. ۱۳۶۵. پنج دهه طبابت بالینی. درس‌گو در پنج محور: پیشگیری، کودکان، ترمیمی، اورژانس و ارتباطات سیستمیک.",
+      "author_bio_fa": "سردبیر مجلهٔ دندانپزشکی اپکس؛ زادهٔ ۱۳۴۳ مهاباد. د.م.د. ۱۳۶۵. پنج دهه طبابت بالینی. درس‌گو در پنج محور: پیشگیری، کودکان، ترمیمی، اورژانس و ارتباطات سیستمیک.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 4,
       "historical_unit": "month",
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "author": "Dr. Tofigh Sedighi",
       "author_title": "Editor-in-Chief, Apex Dental Journal",
       "tagline": "Peer-reviewed dental practice, distilled",
@@ -3382,7 +3439,7 @@
       "historical_count": 4,
       "historical_unit": "month",
       "posts_per_week": 0,
-      "new_posts_enabled": false,
+      "new_posts_enabled": true,
       "name": "Kani",
       "default_author": "",
       "custom_prompt": "",
@@ -3441,5 +3498,65 @@
         "Lana Mahmud": "https://api.dicebear.com/7.x/notionists/svg?seed=Lana%20Mahmud"
       }
     }
-  ]
+  ],
+  "products": [
+    {
+      "id": "prod_demo_vish",
+      "title": "Vish Body Candle - Large",
+      "description": "Premium soy blend candle with exotic scent. 400g, 45+ hour burn time.",
+      "type": "physical",
+      "price": 45.0,
+      "currency": "CAD",
+      "image": "https://dalmend.com/candles/vish-large.jpg",
+      "sku": "VISH-LG-001",
+      "inventory": 150,
+      "site_id": "dalmend-home",
+      "stripe_product_id": "",
+      "stripe_price_id": "",
+      "digital_url": null,
+      "digital_duration_days": null,
+      "variants": [
+        {
+          "name": "Size",
+          "options": [
+            "Small (200g)",
+            "Large (400g)"
+          ]
+        },
+        {
+          "name": "Scent",
+          "options": [
+            "Original",
+            "Lavender",
+            "Citrus"
+          ]
+        }
+      ],
+      "aliexpress_url": "",
+      "competitors_urls": [],
+      "ai_prompt": "",
+      "ai_generated_description": "",
+      "coupons": [],
+      "bundles": [],
+      "fulfillment": {
+        "enabled": false,
+        "supplier": "aliexpress",
+        "supplier_product_id": "",
+        "supplier_sku": "",
+        "api_key": ""
+      }
+    }
+  ],
+  "central_shop": {
+    "enabled": false,
+    "featured_products": [],
+    "featured_sites": [],
+    "category_tabs": [
+      "New",
+      "Best Sellers",
+      "Digital",
+      "Bundles"
+    ]
+  },
+  "bundles": []
 }
