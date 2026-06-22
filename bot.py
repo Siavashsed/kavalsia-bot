@@ -789,12 +789,12 @@ SITE_THEMES = {
         "heading_font":"'Playfair Display',serif",
     },
     "mindframe": {
-        "bg":"#fbf8f1","bg2":"#f3efe5","bg3":"#e8e1d2",
-        "text":"#1a1814","text2":"#4d4842",
-        "accent":"#ff5a4e","accent2":"#e74a3e",
-        "meta":"#7a6e62","border":"#e3dccd",
-        "font":"'Inter',system-ui,sans-serif",
-        "heading_font":"'Newsreader',Georgia,serif",
+        "bg":"#f8f6f2","bg2":"#f1edf6","bg3":"#e8e2f0",
+        "text":"#0e0c1e","text2":"#3a4560",
+        "accent":"#ff5a4e","accent2":"#e04438",
+        "meta":"#7a8296","border":"rgba(14,12,30,.10)",
+        "font":"'Inter',system-ui,-apple-system,sans-serif",
+        "heading_font":"'DM Serif Display',Georgia,serif",
     },
     "folioatelier": {
         "bg":"#f6f1ea","bg2":"#ede6d8","bg3":"#e0d6c3",
@@ -5276,8 +5276,14 @@ def article_neuro(article, site, image_url, photographer, t):
     sections_list = article.get("sections", []) or []
     sections_html = _article_sections(sections_list, t)
 
-    author = _resolve_author(site, article)["name"]
-    role = article.get("author_role", "Contributing writer")
+    _ainfo = _resolve_author(site, article)
+    author = _ainfo["name"]
+    # MindFrame is a one-founder publication: Shahnoush is the editor. Any other
+    # resolved name keeps its own title; Shahnoush always reads as the founder.
+    if author == (site.get("default_author") or "Shahnoush Nasiri"):
+        role = article.get("author_role", "Founder and Editor")
+    else:
+        role = article.get("author_role") or _ainfo.get("title") or "Contributing writer"
 
     # Initials avatar
     parts = [p for p in author.split() if p]
@@ -5326,61 +5332,93 @@ def article_neuro(article, site, image_url, photographer, t):
         )
     sections_html = "".join(sec_html_parts) if sec_html_parts else sections_html
 
+    # MindFrame brand palette (lavender to pink identity from the redesigned homepage)
+    LAV  = "#a78bfa"
+    PINK = "#e879a8"
+    GRAD = f"linear-gradient(90deg,{LAV},{PINK})"
+
     css = f"""
-.art-neuro-wrap{{max-width:1180px;margin:40px auto 0;padding:0 24px;display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:56px;align-items:start}}
-.art-neuro{{max-width:700px;margin:0;font-family:Georgia,'Iowan Old Style','Times New Roman',serif;color:{t["text2"]}}}
-.art-neuro .art-neuro-eyebrow{{display:flex;flex-wrap:wrap;align-items:center;gap:14px;font-family:{t["heading_font"]};font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:18px}}
+.art-neuro-wrap{{max-width:1180px;margin:0 auto;padding:48px 24px 0;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:60px;align-items:start;font-family:{t["font"]}}}
+.art-neuro{{max-width:720px;margin:0;color:{t["text2"]}}}
+.art-neuro .art-neuro-eyebrow{{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:{t["mono"]};font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.16em;color:{LAV};margin-bottom:20px}}
 .art-neuro .art-neuro-eyebrow .dot{{width:4px;height:4px;border-radius:50%;background:{t["border"]};display:inline-block}}
-.art-neuro .art-neuro-eyebrow .ref-badge{{font-size:10px;letter-spacing:1.5px;border:1px solid {t["accent"]};color:{t["accent"]};padding:3px 8px;border-radius:99px;font-weight:700}}
-.art-neuro h1.art-neuro-title{{font-family:{t["heading_font"]};font-weight:800;font-size:clamp(30px,4.6vw,52px);line-height:1.08;letter-spacing:-0.5px;color:{t["text"]};margin:0 0 20px}}
-.art-neuro .art-neuro-byline{{display:flex;align-items:center;gap:14px;border-top:1px solid {t["border"]};border-bottom:1px solid {t["border"]};padding:14px 0;margin:24px 0 32px}}
-.art-neuro .art-neuro-avatar{{width:42px;height:42px;border-radius:50%;background:{t["accent"]};color:#fff;display:flex;align-items:center;justify-content:center;font-family:{t["heading_font"]};font-weight:700;font-size:15px;letter-spacing:0.5px;flex-shrink:0}}
-.art-neuro .art-neuro-byline .who{{font-family:{t["heading_font"]};font-size:15px;color:{t["text"]};font-weight:600;line-height:1.3}}
-.art-neuro .art-neuro-byline .role{{font-size:12px;color:{t["meta"]};margin-top:2px}}
-.art-neuro .art-neuro-byline .when{{margin-left:auto;font-size:12px;color:{t["meta"]};text-align:right}}
-.art-neuro figure.art-neuro-hero{{margin:0 0 32px;width:100%}}
-.art-neuro figure.art-neuro-hero img{{width:100%;height:auto;max-height:520px;object-fit:cover;border-radius:4px;display:block}}
-.art-neuro figure.art-neuro-hero figcaption{{font-family:{t["heading_font"]};font-size:12px;color:{t["meta"]};margin-top:10px;letter-spacing:0.3px}}
-.art-neuro .art-neuro-tldr{{background:{t["bg2"]};border-left:3px solid {t["accent"]};padding:20px 24px;margin:0 0 36px;border-radius:0 6px 6px 0}}
-.art-neuro .art-neuro-tldr .lbl{{font-family:{t["heading_font"]};font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2.2px;color:{t["accent"]};margin-bottom:10px}}
+.art-neuro .art-neuro-eyebrow .ref-badge{{font-size:9.5px;letter-spacing:.14em;border:1px solid {PINK}66;color:{PINK};padding:3px 10px;border-radius:99px;font-weight:500}}
+.art-neuro .art-neuro-eyebrow .bfly{{width:15px;height:15px;opacity:.9}}
+.art-neuro h1.art-neuro-title{{font-family:{t["heading_font"]};font-weight:500;font-size:clamp(30px,4.6vw,50px);line-height:1.06;letter-spacing:-0.028em;color:{t["text"]};margin:0 0 18px}}
+.art-neuro .art-neuro-deck{{font-family:{t["heading_font"]};font-style:italic;font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:{t["text2"]};margin:0 0 6px;max-width:60ch}}
+.art-neuro .art-neuro-byline{{display:flex;align-items:center;gap:14px;border-top:1px solid {t["border"]};border-bottom:1px solid {t["border"]};padding:16px 0;margin:24px 0 32px}}
+.art-neuro .art-neuro-avatar{{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:{t["heading_font"]};font-weight:500;font-size:16px;color:#fff;flex-shrink:0;position:relative;background:{t["bg"]}}}
+.art-neuro .art-neuro-avatar::before{{content:"";position:absolute;inset:-2px;border-radius:50%;background:{GRAD};z-index:-1}}
+.art-neuro .art-neuro-avatar span{{width:42px;height:42px;border-radius:50%;background:{GRAD};display:flex;align-items:center;justify-content:center}}
+.art-neuro .art-neuro-byline .who{{font-family:{t["heading_font"]};font-size:16px;color:{t["text"]};font-weight:500;line-height:1.25}}
+.art-neuro .art-neuro-byline .role{{font-size:12px;color:{t["meta"]};margin-top:3px;font-family:{t["mono"]};letter-spacing:.03em}}
+.art-neuro .art-neuro-byline .when{{margin-left:auto;font-size:12px;color:{t["meta"]};text-align:right;font-family:{t["mono"]}}}
+.art-neuro figure.art-neuro-hero{{margin:0 0 34px;width:100%}}
+.art-neuro figure.art-neuro-hero img{{width:100%;height:auto;max-height:520px;object-fit:cover;border-radius:16px;display:block}}
+.art-neuro figure.art-neuro-hero figcaption{{font-family:{t["mono"]};font-size:11px;color:{t["meta"]};margin-top:10px;letter-spacing:.02em}}
+.art-neuro .art-neuro-tldr{{background:{t["bg2"]};border:1px solid {LAV}33;padding:22px 26px;margin:0 0 38px;border-radius:16px;position:relative;overflow:hidden}}
+.art-neuro .art-neuro-tldr::before{{content:"";position:absolute;top:0;left:0;bottom:0;width:3px;background:{GRAD}}}
+.art-neuro .art-neuro-tldr .lbl{{font-family:{t["mono"]};font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:{LAV};margin-bottom:12px}}
 .art-neuro .art-neuro-tldr ul{{margin:0;padding-left:20px}}
-.art-neuro .art-neuro-tldr li{{font-family:{t["heading_font"]};font-size:15px;line-height:1.55;color:{t["text"]};margin-bottom:6px}}
+.art-neuro .art-neuro-tldr li{{font-size:15px;line-height:1.6;color:{t["text"]};margin-bottom:7px}}
 .art-neuro p,.art-neuro .art-neuro-sec p{{font-size:18px;line-height:1.85;color:{t["text2"]};margin:0 0 22px;max-width:68ch}}
-.art-neuro .art-neuro-intro{{font-size:21px;line-height:1.6;color:{t["text"]};font-style:italic;margin-bottom:26px}}
-.art-neuro h2.art-neuro-h2{{font-family:{t["heading_font"]};font-weight:700;font-size:26px;line-height:1.25;color:{t["text"]};margin:48px 0 18px;padding-top:18px;position:relative;letter-spacing:-0.2px}}
-.art-neuro h2.art-neuro-h2::before{{content:"";position:absolute;top:0;left:0;width:48px;height:2px;background:{t["accent"]}}}
-.art-neuro .art-neuro-sec h3{{font-family:{t["heading_font"]};font-size:18px;font-weight:700;color:{t["text"]};margin:28px 0 12px}}
-.art-neuro blockquote{{border-left:3px solid {t["accent"]};padding:6px 0 6px 22px;margin:30px 0;font-family:{t["heading_font"]};font-style:italic;font-size:22px;line-height:1.45;color:{t["text"]}}}
-.art-neuro .art-neuro-final{{margin-top:48px;padding:24px 26px;background:{t["bg2"]};border-left:4px solid {t["accent"]};border-radius:0 8px 8px 0}}
-.art-neuro .art-neuro-final .lbl{{font-family:{t["heading_font"]};font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2.2px;color:{t["accent"]};margin-bottom:10px}}
-.art-neuro .art-neuro-final p{{font-size:17px;line-height:1.75;color:{t["text"]};margin:0}}
-.art-neuro-margin{{position:sticky;top:24px;font-family:{t["heading_font"]};border-left:1px solid {t["border"]};padding-left:24px}}
-.art-neuro-margin .block{{margin-bottom:28px}}
-.art-neuro-margin .lbl{{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:{t["accent"]};margin-bottom:10px}}
+.art-neuro a{{color:{PINK};text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}}
+.art-neuro a:hover{{color:{LAV}}}
+.art-neuro .art-neuro-intro{{font-size:21px;line-height:1.62;color:{t["text"]};margin-bottom:24px}}
+.art-neuro .art-neuro-intro::first-letter{{font-family:{t["heading_font"]};float:left;font-size:62px;line-height:.82;padding:6px 12px 0 0;color:{PINK}}}
+.art-neuro h2.art-neuro-h2{{font-family:{t["heading_font"]};font-weight:500;font-size:clamp(24px,3vw,30px);line-height:1.2;color:{t["text"]};margin:50px 0 18px;padding-top:22px;position:relative;letter-spacing:-0.02em}}
+.art-neuro h2.art-neuro-h2::before{{content:"";position:absolute;top:0;left:0;width:40px;height:3px;border-radius:3px;background:{GRAD}}}
+.art-neuro .art-neuro-sec h3{{font-family:{t["heading_font"]};font-size:20px;font-weight:500;color:{t["text"]};margin:30px 0 12px}}
+.art-neuro .art-neuro-sec strong{{color:{t["text"]};font-weight:600}}
+.art-neuro .art-neuro-sec ul,.art-neuro .art-neuro-sec ol{{margin:0 0 22px 22px}}
+.art-neuro .art-neuro-sec li{{font-size:17px;line-height:1.75;color:{t["text2"]};margin-bottom:8px}}
+.art-neuro blockquote{{border:none;padding:8px 0 8px 24px;margin:32px 0;font-family:{t["heading_font"]};font-style:italic;font-size:23px;line-height:1.45;color:{t["text"]};position:relative}}
+.art-neuro blockquote::before{{content:"";position:absolute;left:0;top:4px;bottom:4px;width:3px;border-radius:3px;background:{GRAD}}}
+.art-neuro .art-neuro-final{{margin-top:50px;padding:26px 28px;background:linear-gradient(135deg,{LAV}14,{PINK}10);border:1px solid {LAV}2e;border-radius:18px;position:relative}}
+.art-neuro .art-neuro-final .lbl{{display:flex;align-items:center;gap:9px;font-family:{t["mono"]};font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:{PINK};margin-bottom:12px}}
+.art-neuro .art-neuro-final .lbl .bfly{{width:16px;height:16px}}
+.art-neuro .art-neuro-final p{{font-size:17.5px;line-height:1.75;color:{t["text"]};margin:0}}
+.art-neuro-margin{{position:sticky;top:24px;font-family:{t["font"]};padding-left:26px;border-left:1px solid {t["border"]}}}
+.art-neuro-margin .block{{margin-bottom:30px}}
+.art-neuro-margin .lbl{{font-family:{t["mono"]};font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.18em;color:{LAV};margin-bottom:11px}}
 .art-neuro-margin .stat{{font-size:14px;color:{t["text2"]};line-height:1.6}}
-.art-neuro-margin .stat strong{{color:{t["text"]};font-weight:700}}
+.art-neuro-margin .stat strong{{color:{t["text"]};font-weight:600;font-family:{t["heading_font"]}}}
 .art-neuro-margin ul{{list-style:none;padding:0;margin:0}}
-.art-neuro-margin ul li{{margin-bottom:8px;font-size:13px;line-height:1.5}}
+.art-neuro-margin ul li{{margin-bottom:9px;font-size:13px;line-height:1.5}}
 .art-neuro-margin ul li a{{color:{t["text2"]};text-decoration:none;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}}
-.art-neuro-margin ul li a:hover{{color:{t["accent"]};border-bottom-color:{t["accent"]}}}
-.art-neuro-margin .take li{{font-size:13px;color:{t["text2"]};line-height:1.55;padding-left:14px;position:relative;margin-bottom:10px}}
-.art-neuro-margin .take li::before{{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;background:{t["accent"]};border-radius:50%}}
-@media(max-width:900px){{.art-neuro-wrap{{grid-template-columns:1fr;gap:0}}.art-neuro-margin{{display:none}}}}
-@media(max-width:600px){{.art-neuro-wrap{{padding:0 18px}}.art-neuro h1.art-neuro-title{{font-size:clamp(26px,7vw,38px);line-height:1.12}}.art-neuro p{{font-size:17px;line-height:1.8}}.art-neuro .art-neuro-byline .when{{display:none}}}}"""
+.art-neuro-margin ul li a:hover{{color:{PINK};border-bottom-color:{PINK}}}
+.art-neuro-margin .take li{{font-size:13px;color:{t["text2"]};line-height:1.55;padding-left:16px;position:relative;margin-bottom:11px}}
+.art-neuro-margin .take li::before{{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;background:{GRAD};border-radius:50%}}
+@media(max-width:900px){{.art-neuro-wrap{{grid-template-columns:1fr;gap:0;padding-top:32px}}.art-neuro-margin{{display:none}}}}
+@media(max-width:600px){{.art-neuro-wrap{{padding:28px 18px 0}}.art-neuro h1.art-neuro-title{{font-size:clamp(26px,7vw,38px);line-height:1.12}}.art-neuro p{{font-size:17px;line-height:1.8}}.art-neuro .art-neuro-byline .when{{display:none}}.art-neuro .art-neuro-intro::first-letter{{font-size:50px}}}}"""
 
     date_str = article.get("date", "")
+    _bfly = ('<svg class="bfly" viewBox="0 0 220 184" fill="none" aria-hidden="true">'
+             f'<g stroke="{PINK}" stroke-width="6" fill="{LAV}33">'
+             '<path d="M106 82 C84 50 46 40 30 58 C20 70 28 92 54 100 C82 108 100 100 106 94Z"/>'
+             '<path d="M106 102 C86 106 58 112 50 130 C46 142 58 154 76 148 C96 142 104 122 106 110Z"/>'
+             '<path d="M114 82 C136 50 174 40 190 58 C200 70 192 92 166 100 C138 108 120 100 114 94Z"/>'
+             '<path d="M114 102 C134 106 162 112 170 130 C174 142 162 154 144 148 C124 142 116 122 114 110Z"/>'
+             '</g>'
+             f'<path d="M110 64 C113 64 114 70 114 80 C114 100 112 126 110 138 C108 126 106 100 106 80 C106 70 107 64 110 64Z" fill="{PINK}"/>'
+             '</svg>')
+
+    deck = article.get("meta_description", "") or article.get("dek", "")
+    deck_html = f'<p class="art-neuro-deck">{deck}</p>' if deck else ""
 
     body = (f"""<div class="art-neuro-wrap">
   <section class="art-neuro article-content">
     <div class="art-neuro-eyebrow">
-      <span>{site.get("category","")}</span>
+      {_bfly}
+      <span>{site.get("category","Psychology")}</span>
       <span class="dot"></span>
       <span>{read_time} min read</span>
-      <span class="ref-badge">Peer-style references</span>
+      <span class="ref-badge">Sources cited</span>
     </div>
     <h1 class="art-neuro-title">{article["title"]}</h1>
+    {deck_html}
     <div class="art-neuro-byline">
-      <div class="art-neuro-avatar">{initials}</div>
+      <div class="art-neuro-avatar"><span>{initials}</span></div>
       <div>
         <div class="who">{author}</div>
         <div class="role">{role}</div>
@@ -5389,14 +5427,14 @@ def article_neuro(article, site, image_url, photographer, t):
     </div>
     {img}
     <div class="art-neuro-tldr">
-      <div class="lbl">TL;DR</div>
+      <div class="lbl">The short version</div>
       <ul>{tldr_html}</ul>
     </div>
     {_wrap_block(article["intro"], "p", "art-neuro-intro")}
     {_wrap_block(article["intro2"], "p")}
     {sections_html}
     <div class="art-neuro-final">
-      <div class="lbl">Final note</div>
+      <div class="lbl">{_bfly} From Shahnoush</div>
       <p>{article["conclusion"]}</p>
     </div>
     {_sources_block(article, t)}
@@ -6764,7 +6802,9 @@ ARTICLE_BUILDERS = {
     "magazine":   article_press,
     "minimal":    article_press,
     "immersive":  article_press,
-    "neuro":      article_press,
+    # MindFrame uses the redesigned neuro layout (matches the new homepage:
+    # DM Serif + Inter, lavender to pink brand, Shahnoush byline, butterfly motif).
+    "neuro":      article_neuro,
     "lesson":     article_press,
     "kanona":     article_kanona,
     "onlinebiz":  article_onlinebiz,
@@ -7095,6 +7135,7 @@ def normalize_theme(t):
     theme), so callers can override keys afterward safely."""
     t = dict(t)
     t.setdefault("body_font", t.get("font") or "'Inter',system-ui,-apple-system,sans-serif")
+    t.setdefault("mono", "'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace")
     return t
 
 
@@ -7216,6 +7257,47 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
 # ─────────────────────────────────────────────────────────────────────────────
 # GITHUB PUBLISHING
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Pre-generated draft queue. The expensive LLM step is generate_article(). To keep
+# the daily cron 100 percent API-free, articles are written AHEAD of time by Claude
+# Max (free, local) into a per-site queue at drafts/<site_id>.json in the cron repo.
+# The cron pops a ready article instead of generating; only an empty queue falls
+# back to a live (API) generation. Fill it with:
+#   python3 bot.py --pregenerate N --llm max --gh-token <tok>
+CRON_REPO = "Siavashsed/kavalsia-bot"
+
+def _load_drafts(sid, token):
+    """Authoritative pre-generated queue for a site (list of {topic, article, ...})."""
+    try:
+        url = f"https://api.github.com/repos/{CRON_REPO}/contents/drafts/{sid}.json"
+        r = requests.get(url, headers={"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"})
+        if r.status_code == 200:
+            data = r.json()
+            if data.get("content"):
+                raw = base64.b64decode(data["content"].replace("\n", "")).decode("utf-8")
+            elif data.get("git_url"):
+                br = requests.get(data["git_url"], headers={"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"})
+                raw = base64.b64decode(br.json().get("content", "").replace("\n", "")).decode("utf-8") if br.status_code == 200 else "[]"
+            else:
+                raw = "[]"
+            q = json.loads(raw)
+            return q if isinstance(q, list) else (q.get("queue", []) if isinstance(q, dict) else [])
+    except Exception as e:
+        print(f"  [drafts] load {sid} failed: {e}")
+    return []
+
+def _push_drafts(sid, queue, token):
+    """Persist a site's queue back to the cron repo, mirrored locally for inspection."""
+    body = json.dumps(queue, ensure_ascii=False, indent=2)
+    try:
+        d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "drafts")
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, f"{sid}.json"), "w", encoding="utf-8") as f:
+            f.write(body)
+    except Exception:
+        pass
+    return github_push(CRON_REPO, f"drafts/{sid}.json", body, f"drafts: {sid} queue ({len(queue)} left)", token)
+
 
 def github_push(repo, path, content, message, token):
     url = f"https://api.github.com/repos/{repo}/contents/{path}"
@@ -7693,6 +7775,13 @@ def run(topic_overrides=None, site_filter=None):
                 print(f"  {tag} ERROR loading article index for {site['domain']}: {e}")
                 return (sid, False, f"load_article_index: {e}")
 
+            # Pre-generated draft queue for this site (free Claude Max output). A plain
+            # daily post pops from this instead of calling the LLM in the cloud.
+            site_drafts = _load_drafts(sid, github_token)
+            drafts_dirty = False
+            if site_drafts:
+                print(f"  {tag} {len(site_drafts)} pre-generated draft(s) in queue")
+
             if bulk_hist > 0:
                 # Bulk backfill ignores new_posts_enabled (it is historical-only by intent)
                 # but still requires historical_mode so a site that opted out is not bulk-fed.
@@ -7729,7 +7818,7 @@ def run(topic_overrides=None, site_filter=None):
             try:
                 # Auto-expand topics when list is nearly exhausted
                 topics = site.get("topics", [])
-                if topics and len(articles) >= len(topics) - 2:
+                if topics and not site_drafts and len(articles) >= len(topics) - 2:
                     new_topics = expand_topics(site, client, 12)
                     if new_topics:
                         site["topics"] = topics + new_topics
@@ -7767,12 +7856,25 @@ def run(topic_overrides=None, site_filter=None):
                             print(f"  {tag} WEEKLY ROUNDUP: {topic}")
                         else:
                             topic = overrides.get(site["id"]) or get_today_topic(site, len(articles))
-                        print(f"  {tag} Topic: {topic}")
 
                         author_name = get_author_name(site, settings)
 
-                        web_context = search_web(topic, web_cfg)
-                        internal_link_candidates = get_internal_link_candidates(articles, topic)
+                        # A plain daily post pops a pre-generated draft (free Claude Max
+                        # output) instead of calling the LLM in the cloud. Special posts
+                        # (historical/client/roundup/override/broadcast-html) still generate.
+                        _plain_daily = (not is_historical and not is_client_post and not is_roundup
+                                        and not overrides.get(site["id"]) and sid not in html_overrides)
+                        _draft = site_drafts.pop(0) if (_plain_daily and site_drafts) else None
+                        if _draft:
+                            drafts_dirty = True
+                            topic = _draft.get("topic") or topic
+                            print(f"  {tag} Topic (pre-generated draft, {len(site_drafts)} left in queue): {topic}")
+                            web_context = ""
+                            internal_link_candidates = []
+                        else:
+                            print(f"  {tag} Topic: {topic}")
+                            web_context = search_web(topic, web_cfg)
+                            internal_link_candidates = get_internal_link_candidates(articles, topic)
 
                         date_mode = site.get("date_mode", "today")
                         if is_historical:
@@ -7786,13 +7888,16 @@ def run(topic_overrides=None, site_filter=None):
                         article_date     = pub_date.strftime("%B %d, %Y")
                         article_date_iso = pub_date.strftime("%Y-%m-%d")
 
-                        article = generate_article(
-                            topic, site, active_sites, client, global_prompt, author_name,
-                            client_context=effective_client if is_client_post else None,
-                            web_context=web_context,
-                            internal_links=internal_link_candidates,
-                            global_negative_prompt=global_negative_prompt,
-                        )
+                        if _draft:
+                            article = dict(_draft.get("article") or {})
+                        else:
+                            article = generate_article(
+                                topic, site, active_sites, client, global_prompt, author_name,
+                                client_context=effective_client if is_client_post else None,
+                                web_context=web_context,
+                                internal_links=internal_link_candidates,
+                                global_negative_prompt=global_negative_prompt,
+                            )
                         article["date"]     = article_date
                         article["date_iso"] = article_date_iso
                         article["author"]   = article.get("author") or author_name
@@ -7954,6 +8059,14 @@ def run(topic_overrides=None, site_filter=None):
                 if settings.get("comments_auto_seed_enabled", False):
                     maybe_add_scheduled_comments(site, articles, client, github_token)
 
+                # Persist the consumed draft queue so the same drafts are not re-posted.
+                if drafts_dirty:
+                    try:
+                        _push_drafts(sid, site_drafts, github_token)
+                        print(f"  {tag} Draft queue updated ({len(site_drafts)} left)")
+                    except Exception as _de:
+                        print(f"  {tag} Draft queue push failed: {_de}")
+
             except Exception as e:
                 print(f"  {tag} ERROR on {site['domain']}: {e}")
                 import traceback; traceback.print_exc()
@@ -8005,6 +8118,76 @@ def run(topic_overrides=None, site_filter=None):
     print("\n✓ All sites updated.")
 
 
+def pregenerate(count, github_token=None, only=None, log=print):
+    """Write `count` ready-to-publish article drafts PER SITE into the queue
+    (drafts/<site_id>.json in the cron repo), then push. Run locally with the Max
+    engine for $0 article generation:
+        python3 bot.py --pregenerate 4 --llm max --gh-token <tok>
+    The daily cron then publishes from the queue with no API calls.
+    """
+    github_token = github_token or os.environ.get("GITHUB_TOKEN", "")
+    if not github_token:
+        raise SystemExit("pregenerate: --gh-token or GITHUB_TOKEN required")
+    anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "")  # only used if the engine falls back to API
+
+    active_sites, global_prompt, settings, global_client, global_negative_prompt, _ghs, _gfs = load_network_config()
+    active_sites = [s for s in active_sites
+                    if s.get("active", True)
+                    and not (s.get("is_mother_site") or s.get("layout") == "nexus" or s.get("id") == "nexus")
+                    and s.get("new_posts_enabled", True) is not False]
+    if only:
+        of = set(str(x).lower() for x in only)
+        active_sites = [s for s in active_sites if s["id"].lower() in of or s.get("domain", "").lower() in of]
+
+    log(f"[pregenerate] engine={_engine()} | target {count}/site across {len(active_sites)} sites")
+    if _engine() != "max":
+        log("[pregenerate] WARNING: engine is not 'max' - this will BILL the API. Re-run with --llm max for free generation.")
+    client  = anthropic.Anthropic(api_key=anthropic_key or "unused")
+    web_cfg = settings.get("web_search", {})
+    total = 0
+    for site in active_sites:
+        sid = site["id"]
+        try:
+            articles = load_article_index(site["repo"], github_token)
+        except Exception as e:
+            log(f"  [{sid}] skip - article index load failed: {e}"); continue
+        queue = _load_drafts(sid, github_token)
+        used = {(a.get("title") or "").strip().lower() for a in articles}
+        used |= {(d.get("topic") or "").strip().lower() for d in queue}
+        author_name = get_author_name(site, settings)
+        made, attempts = 0, 0
+        while made < count and attempts < count * 4 + 4:
+            attempts += 1
+            topic = get_today_topic(site, len(articles) + len(queue) + made + attempts)
+            tkey = (topic or "").strip().lower()
+            if not topic or tkey in used:
+                nt = expand_topics(site, client, 12)
+                if nt:
+                    site["topics"] = site.get("topics", []) + nt
+                continue
+            used.add(tkey)
+            try:
+                web_context = search_web(topic, web_cfg)
+                ilc = get_internal_link_candidates(articles, topic)
+                article = generate_article(topic, site, active_sites, client, global_prompt, author_name,
+                                           web_context=web_context, internal_links=ilc,
+                                           global_negative_prompt=global_negative_prompt)
+            except Exception as e:
+                log(f"  [{sid}] generation failed for '{topic[:50]}': {e}"); continue
+            if not article or not article.get("title"):
+                continue
+            queue.append({"topic": topic, "article": article,
+                          "generated_iso": datetime.now().strftime("%Y-%m-%d %H:%M")})
+            made += 1; total += 1
+            log(f"  [{sid}] drafted {made}/{count}: {article.get('title','')[:60]}")
+        if made:
+            ok = _push_drafts(sid, queue, github_token)
+            log(f"  [{sid}] queue pushed -> {len(queue)} total (ok={ok})")
+        else:
+            log(f"  [{sid}] no new drafts")
+    log(f"[pregenerate] done: {total} new draft(s) across {len(active_sites)} sites")
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
@@ -8016,12 +8199,20 @@ if __name__ == "__main__":
     parser.add_argument("--llm", default="", choices=["", "api", "max"],
                         help="Text engine: 'max' = Claude Max via local Claude Code CLI (no API cost), "
                              "'api' = Anthropic API (billed). Blank = use settings.llm_engine / LLM_ENGINE env.")
+    parser.add_argument("--pregenerate", type=int, default=0,
+                        help="Write N article drafts PER SITE into the queue (use with --llm max), push to the cron repo, then exit.")
     args, _ = parser.parse_known_args()
 
     if args.llm:
         set_llm_engine(args.llm)
 
-    if args.rebuild_homepages:
+    if args.pregenerate > 0:
+        token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
+        if not token:
+            raise SystemExit("--gh-token or GITHUB_TOKEN required")
+        only_list = [x.strip() for x in (args.only or "").split(",") if x.strip()] or None
+        pregenerate(args.pregenerate, github_token=token, only=only_list)
+    elif args.rebuild_homepages:
         token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
         if not token:
             raise SystemExit("--gh-token or GITHUB_TOKEN required")
