@@ -1,0 +1,507 @@
+<style>
+/* All sections use --neural:#4a76fb as the primary accent on this page, not the coral red */
+
+/* PAGE HERO */
+.cf-hero { background:#050812; color:#fff; padding:clamp(80px,11vw,128px) 0 clamp(64px,9vw,100px); position:relative; overflow:hidden; }
+.cf-hero::before { content:''; position:absolute; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle,rgba(74,118,251,.14),transparent 70%); top:-250px; right:-150px; pointer-events:none; }
+.cf-hero::after { content:''; position:absolute; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle,rgba(232,121,168,.10),transparent 70%); bottom:-100px; left:-80px; pointer-events:none; }
+.cf-hero-grid { position:absolute; inset:0; background-image:linear-gradient(rgba(74,118,251,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(74,118,251,.04) 1px,transparent 1px); background-size:56px 56px; mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 40%,transparent 100%); pointer-events:none; }
+.cf-wrap { max-width:1220px; margin:0 auto; padding:0 clamp(20px,4vw,44px); position:relative; z-index:2; }
+.cf-hero-inner { display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(48px,7vw,88px); align-items:center; }
+.cf-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--neural); background:rgba(74,118,251,.12); border:1px solid rgba(74,118,251,.25); padding:6px 14px; border-radius:100px; display:inline-block; margin-bottom:24px; }
+.cf-h1 { font-family:var(--serif); font-size:clamp(30px,4.2vw,54px); font-weight:500; letter-spacing:-0.03em; line-height:1.07; margin-bottom:20px; }
+.cf-h1 em { font-style:italic; color:var(--neural); }
+.cf-lede { font-size:clamp(15px,1.5vw,18px); line-height:1.75; color:rgba(255,255,255,.65); margin-bottom:32px; max-width:540px; }
+.cf-hero-cta { display:inline-flex; align-items:center; gap:9px; background:var(--neural); color:#fff; padding:14px 26px; border-radius:100px; font-size:14.5px; font-weight:600; text-decoration:none; transition:background .15s,transform .15s; }
+.cf-hero-cta:hover { background:#2a56db; transform:translateY(-2px); }
+.cf-hero-note { font-family:var(--mono); font-size:12px; letter-spacing:0.06em; color:rgba(255,255,255,.38); margin-top:16px; }
+
+/* PHONE MOCKUPS (hero visual) */
+.cf-phones { display:grid; grid-template-columns:1fr 1fr; gap:12px; position:relative; }
+.cf-phone { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.10); border-radius:22px; padding:20px 16px 24px; display:flex; flex-direction:column; gap:9px; }
+.cf-phone-top { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.cf-phone-dot { width:8px; height:8px; border-radius:50%; }
+.cf-phone-dot.a { background:var(--neural); box-shadow:0 0 8px rgba(74,118,251,.5); }
+.cf-phone-dot.b { background:var(--accent); box-shadow:0 0 8px rgba(255,90,78,.4); }
+.cf-phone-label { font-family:var(--mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,.35); }
+.cf-bubble { border-radius:14px 14px 14px 4px; padding:10px 14px; font-size:13px; color:rgba(255,255,255,.8); line-height:1.55; }
+.cf-bubble.ai { background:rgba(74,118,251,.18); border:1px solid rgba(74,118,251,.2); }
+.cf-bubble.user { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:14px 14px 4px 14px; align-self:flex-end; }
+.cf-bubble.accent-ai { background:rgba(255,90,78,.15); border:1px solid rgba(255,90,78,.2); }
+.cf-merge-row { display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px 0; margin-top:4px; }
+.cf-merge-line { width:1px; height:28px; background:linear-gradient(to bottom,rgba(74,118,251,.0),rgba(74,118,251,.6)); }
+.cf-merge-icon { width:44px; height:44px; border-radius:50%; background:var(--neural); display:grid; place-items:center; box-shadow:0 0 24px rgba(74,118,251,.35); }
+.cf-merge-icon svg { width:20px; height:20px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.cf-merge-label { font-family:var(--mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--neural); }
+.cf-phones-caption { grid-column:1/-1; text-align:center; font-family:var(--mono); font-size:11px; letter-spacing:0.08em; color:rgba(255,255,255,.3); margin-top:4px; }
+
+/* WHAT IS CONFER section (paper bg) */
+.cf-what { background:var(--paper); color:var(--text); padding:clamp(72px,10vw,112px) 0; }
+.cf-sec-tag { font-family:var(--mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--neural); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+.cf-sec-tag::before { content:''; width:24px; height:1px; background:var(--neural); }
+.cf-sec-title { font-family:var(--serif); font-size:clamp(26px,3.2vw,42px); font-weight:500; letter-spacing:-0.028em; line-height:1.1; margin-bottom:14px; color:var(--text); }
+.cf-sec-sub { font-size:17px; color:var(--text2); line-height:1.72; max-width:640px; margin-bottom:48px; }
+.cf-feats { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.cf-feat { background:var(--cream); border:1px solid var(--cream3); border-radius:20px; padding:clamp(24px,3vw,32px); }
+.cf-feat-icon { width:48px; height:48px; border-radius:12px; background:var(--neural-soft); border:1px solid rgba(74,118,251,.2); display:grid; place-items:center; margin-bottom:18px; }
+.cf-feat-icon svg { width:22px; height:22px; stroke:var(--neural); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.cf-feat h3 { font-family:var(--serif); font-size:clamp(18px,2vw,22px); font-weight:600; letter-spacing:-0.018em; margin-bottom:8px; color:var(--text); }
+.cf-feat p { font-size:14.5px; color:var(--text2); line-height:1.65; }
+
+/* 15-DAY ARC section (dark) */
+.cf-arc { background:var(--ink); color:#fff; padding:clamp(72px,10vw,112px) 0; }
+.cf-arc .cf-sec-title { color:#fff; }
+.cf-arc .cf-sec-sub { color:rgba(255,255,255,.6); }
+.cf-timeline { margin-top:48px; position:relative; }
+.cf-tl-track { display:grid; grid-template-columns:1fr 60px 1fr; gap:0; }
+.cf-tl-col { display:flex; flex-direction:column; gap:0; }
+.cf-tl-center { display:flex; flex-direction:column; align-items:center; }
+.cf-tl-phase { padding:16px 20px; border-radius:14px; margin-bottom:8px; }
+.cf-tl-phase.a { background:rgba(74,118,251,.12); border:1px solid rgba(74,118,251,.2); }
+.cf-tl-phase.b { background:rgba(255,90,78,.10); border:1px solid rgba(255,90,78,.18); }
+.cf-tl-days { font-family:var(--mono); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px; }
+.cf-tl-phase.a .cf-tl-days { color:var(--neural); }
+.cf-tl-phase.b .cf-tl-days { color:var(--accent); }
+.cf-tl-phase h4 { font-family:var(--serif); font-size:16px; font-weight:600; color:#fff; letter-spacing:-0.015em; margin-bottom:4px; }
+.cf-tl-phase p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.55; }
+.cf-tl-line { width:2px; flex:1; min-height:8px; background:rgba(255,255,255,.08); }
+.cf-tl-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+.cf-tl-dot.a { background:var(--neural); box-shadow:0 0 10px rgba(74,118,251,.5); }
+.cf-tl-dot.b { background:var(--accent); box-shadow:0 0 10px rgba(255,90,78,.4); }
+.cf-tl-report { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.15); border-radius:20px; padding:24px 28px; margin-top:24px; text-align:center; position:relative; }
+.cf-tl-report::before { content:''; position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:2px; height:24px; background:linear-gradient(rgba(74,118,251,.5),rgba(255,90,78,.5)); }
+.cf-tl-report-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--neural); background:var(--neural-soft); border:1px solid rgba(74,118,251,.25); padding:5px 12px; border-radius:100px; display:inline-block; margin-bottom:14px; }
+.cf-tl-report h3 { font-family:var(--serif); font-size:clamp(20px,2.5vw,28px); font-weight:500; letter-spacing:-0.02em; color:#fff; margin-bottom:10px; }
+.cf-tl-report p { font-size:14.5px; color:rgba(255,255,255,.6); line-height:1.65; max-width:560px; margin:0 auto; }
+.cf-report-contents { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:32px; }
+.cf-report-item { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 16px; text-align:left; }
+.cf-report-item h5 { font-family:var(--mono); font-size:11px; letter-spacing:0.10em; text-transform:uppercase; color:var(--neural); margin-bottom:6px; }
+.cf-report-item p { font-size:13px; color:rgba(255,255,255,.55); line-height:1.55; }
+
+/* COMPARISON table section (cream) */
+.cf-compare { background:var(--cream); padding:clamp(72px,10vw,112px) 0; }
+.cf-compare .cf-sec-title { color:var(--text); }
+.cf-tbl-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.cf-tbl { width:100%; border-collapse:collapse; font-size:15px; min-width:540px; }
+.cf-tbl th { font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); font-weight:500; padding:14px 18px; text-align:left; border-bottom:2px solid var(--cream3); }
+.cf-tbl th:not(:first-child) { text-align:center; }
+.cf-tbl th.cf-tbl-highlight { color:var(--neural); }
+.cf-tbl td { padding:14px 18px; border-bottom:1px solid var(--cream3); color:var(--text2); vertical-align:middle; }
+.cf-tbl td:first-child { font-weight:500; color:var(--text); }
+.cf-tbl td:not(:first-child) { text-align:center; }
+.cf-tbl tr:hover td { background:rgba(74,118,251,.04); }
+.cf-tbl-yes { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:rgba(74,118,251,.12); }
+.cf-tbl-yes svg { width:13px; height:13px; stroke:var(--neural); fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+.cf-tbl-no { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:rgba(122,130,150,.08); }
+.cf-tbl-no svg { width:13px; height:13px; stroke:var(--muted); fill:none; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+.cf-tbl-maybe { font-size:13px; color:var(--muted); font-style:italic; }
+
+/* WAITLIST section (very dark) */
+.cf-waitlist { background:#050812; color:#fff; padding:clamp(80px,11vw,120px) 0; text-align:center; position:relative; overflow:hidden; }
+.cf-waitlist::before { content:''; position:absolute; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle,rgba(74,118,251,.10),transparent 70%); top:-150px; left:50%; transform:translateX(-50%); pointer-events:none; }
+.cf-waitlist-inner { position:relative; z-index:2; max-width:580px; margin:0 auto; padding:0 clamp(20px,4vw,44px); }
+.cf-waitlist .cf-sec-title { color:#fff; }
+.cf-waitlist-sub { font-size:17px; line-height:1.72; color:rgba(255,255,255,.6); margin-bottom:32px; }
+.cf-wl-form { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; }
+.cf-wl-input { flex:1; min-width:220px; padding:14px 18px; border-radius:100px; background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.12); color:#fff; font-size:15px; font-family:var(--sans); }
+.cf-wl-input::placeholder { color:rgba(255,255,255,.38); }
+.cf-wl-input:focus { outline:none; border-color:var(--neural); background:rgba(255,255,255,.09); }
+.cf-wl-btn { background:var(--neural); color:#fff; padding:14px 26px; border-radius:100px; font-weight:600; font-size:14.5px; border:none; cursor:pointer; font-family:var(--sans); transition:background .15s; white-space:nowrap; }
+.cf-wl-btn:hover { background:#2a56db; }
+.cf-wl-btn:disabled { background:rgba(74,118,251,.5); cursor:default; }
+.cf-wl-ok { color:#4ade80; font-size:15px; margin-top:16px; display:none; font-family:var(--mono); letter-spacing:0.04em; }
+.cf-wl-ok.show { display:block; }
+.cf-wl-note { font-family:var(--mono); font-size:11.5px; letter-spacing:0.06em; color:rgba(255,255,255,.38); }
+.cf-powered { margin-top:32px; padding-top:32px; border-top:1px solid rgba(255,255,255,.07); font-family:var(--mono); font-size:11px; letter-spacing:0.08em; color:rgba(255,255,255,.28); }
+
+/* Footer note */
+.cf-foot-note { background:var(--paper); padding:clamp(32px,5vw,56px) 0; text-align:center; }
+.cf-foot-note p { font-size:14px; color:var(--muted); line-height:1.65; }
+.cf-foot-note a { color:var(--accent); text-decoration:none; }
+.cf-foot-note a:hover { text-decoration:underline; }
+
+/* Mobile */
+@media(max-width:900px) { .cf-hero-inner{grid-template-columns:1fr} .cf-phones{display:none} }
+@media(max-width:820px) { .cf-feats{grid-template-columns:1fr 1fr} .cf-report-contents{grid-template-columns:1fr 1fr} }
+@media(max-width:600px) { .cf-feats{grid-template-columns:1fr} .cf-tl-track{grid-template-columns:1fr 40px 1fr} .cf-report-contents{grid-template-columns:1fr} }
+</style>
+
+<!-- ===================== HERO ===================== -->
+<section class="cf-hero">
+  <div class="cf-hero-grid"></div>
+  <div class="cf-wrap">
+    <div class="cf-hero-inner">
+      <div>
+        <span class="cf-badge">From the Nexus Lab &middot; In Development</span>
+        <h1 class="cf-h1">What if two AIs could talk to each other &mdash; <em>about you and your partner?</em></h1>
+        <p class="cf-lede">Confer is a 15-day structured couples program. Each partner works privately with a separate AI. On day 15, the two therapists confer and produce a single joint report on your relationship.</p>
+        <p class="cf-lede" style="margin-top:-16px;">We are actively building this.</p>
+        <a href="#cf-waitlist" class="cf-hero-cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Join the early access list
+        </a>
+        <p class="cf-hero-note">No subscription. No endless chat. A program with a beginning, a middle, and an end.</p>
+      </div>
+      <div class="cf-phones">
+        <!-- Partner A phone -->
+        <div class="cf-phone">
+          <div class="cf-phone-top">
+            <span class="cf-phone-dot a"></span>
+            <span class="cf-phone-label">Partner A</span>
+          </div>
+          <div class="cf-bubble ai">Tell me about the last conflict you had. Not what happened -- how it felt to you.</div>
+          <div class="cf-bubble user">I shut down. I always do.</div>
+          <div class="cf-bubble ai">When did shutting down first start working for you?</div>
+        </div>
+        <!-- Partner B phone -->
+        <div class="cf-phone">
+          <div class="cf-phone-top">
+            <span class="cf-phone-dot b"></span>
+            <span class="cf-phone-label">Partner B</span>
+          </div>
+          <div class="cf-bubble accent-ai">What do you want your partner to understand about you that they currently don't?</div>
+          <div class="cf-bubble user">That I'm not angry. I'm scared.</div>
+          <div class="cf-bubble accent-ai">What would change if they knew that?</div>
+        </div>
+        <!-- Merge row spanning both columns -->
+        <div style="grid-column:1/-1; display:flex; justify-content:center;">
+          <div class="cf-merge-row">
+            <div class="cf-merge-line"></div>
+            <div class="cf-merge-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="8" y1="13" x2="16" y2="13"/>
+                <line x1="8" y1="17" x2="16" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <span class="cf-merge-label">Day 15 Report</span>
+          </div>
+        </div>
+        <p class="cf-phones-caption">Two private sessions &middot; One shared outcome</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHAT IS CONFER ===================== -->
+<section class="cf-what">
+  <div class="cf-wrap">
+    <p class="cf-sec-tag">The Concept</p>
+    <h2 class="cf-sec-title">Two separate conversations. One shared understanding.</h2>
+    <p class="cf-sec-sub">Most couples therapy has one AI, one therapist, one shared space. Confer is different. Privacy allows honesty. Honesty produces better data. Better data produces a more useful report.</p>
+    <div class="cf-feats">
+      <!-- Card 1: Private by design -->
+      <div class="cf-feat">
+        <div class="cf-feat-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3>Private by design</h3>
+        <p>Your AI never communicates with your partner's AI until you both consent explicitly on day 15. Your sessions are yours alone.</p>
+      </div>
+      <!-- Card 2: Evidence-grounded -->
+      <div class="cf-feat">
+        <div class="cf-feat-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="5" rx="1"/>
+            <rect x="2" y="10" width="20" height="5" rx="1"/>
+            <rect x="2" y="17" width="20" height="5" rx="1"/>
+          </svg>
+        </div>
+        <h3>Evidence-grounded</h3>
+        <p>The program structure draws on attachment theory, cognitive-behavioral principles, and the Gottman method. Not advice. Structured reflection.</p>
+      </div>
+      <!-- Card 3: A program, not a subscription -->
+      <div class="cf-feat">
+        <div class="cf-feat-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <h3>A program, not a subscription</h3>
+        <p>15 days. Then a joint report. Then an optional second season on a specific theme. You do not sign up for forever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 15-DAY ARC ===================== -->
+<section class="cf-arc">
+  <div class="cf-wrap">
+    <p class="cf-sec-tag">The Program</p>
+    <h2 class="cf-sec-title">Fifteen days. Two private streams. One joint picture.</h2>
+    <p class="cf-sec-sub">Both partners work through the same structured arc -- in parallel, with full privacy.</p>
+
+    <div class="cf-timeline">
+      <div class="cf-tl-track">
+        <!-- Partner A column -->
+        <div class="cf-tl-col">
+          <div class="cf-tl-phase a">
+            <div class="cf-tl-days">Days 1-2</div>
+            <h4>Intake</h4>
+            <p>Initial session, relationship history, communication style profile</p>
+          </div>
+          <div class="cf-tl-phase a">
+            <div class="cf-tl-days">Days 3-6</div>
+            <h4>Pattern Work</h4>
+            <p>Identifying recurring conflict patterns and triggers</p>
+          </div>
+          <div class="cf-tl-phase a">
+            <div class="cf-tl-days">Days 7-10</div>
+            <h4>Deepening</h4>
+            <p>Attachment history, emotional needs, what you rarely say out loud</p>
+          </div>
+          <div class="cf-tl-phase a">
+            <div class="cf-tl-days">Days 11-14</div>
+            <h4>Reflection</h4>
+            <p>What you have learned about yourself, what you want to say</p>
+          </div>
+        </div>
+
+        <!-- Center connector -->
+        <div class="cf-tl-center">
+          <div class="cf-tl-line"></div>
+          <div class="cf-tl-dot a"></div>
+          <div class="cf-tl-line"></div>
+          <div class="cf-tl-dot a"></div>
+          <div class="cf-tl-line"></div>
+          <div class="cf-tl-dot a"></div>
+          <div class="cf-tl-line"></div>
+          <div class="cf-tl-dot a"></div>
+          <div class="cf-tl-line"></div>
+        </div>
+
+        <!-- Partner B column -->
+        <div class="cf-tl-col">
+          <div class="cf-tl-phase b">
+            <div class="cf-tl-days">Days 1-2</div>
+            <h4>Intake</h4>
+            <p>Initial session, relationship history, communication style profile</p>
+          </div>
+          <div class="cf-tl-phase b">
+            <div class="cf-tl-days">Days 3-6</div>
+            <h4>Pattern Work</h4>
+            <p>Identifying recurring conflict patterns and triggers</p>
+          </div>
+          <div class="cf-tl-phase b">
+            <div class="cf-tl-days">Days 7-10</div>
+            <h4>Deepening</h4>
+            <p>Attachment history, emotional needs, what you rarely say out loud</p>
+          </div>
+          <div class="cf-tl-phase b">
+            <div class="cf-tl-days">Days 11-14</div>
+            <h4>Reflection</h4>
+            <p>What you have learned about yourself, what you want to say</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Joint report box -->
+      <div class="cf-tl-report">
+        <span class="cf-tl-report-badge">The Confer Report</span>
+        <h3>Day 15: both streams converge.</h3>
+        <p>The two AI therapists -- having worked with each partner separately -- compare notes, identify patterns, contradictions, and areas of potential growth, and produce a single joint report delivered to you both simultaneously.</p>
+        <div class="cf-report-contents">
+          <div class="cf-report-item">
+            <h5>Relationship strengths</h5>
+            <p>Areas where both partners independently reported feeling seen, safe, or aligned</p>
+          </div>
+          <div class="cf-report-item">
+            <h5>Conflict patterns</h5>
+            <p>Recurring dynamics identified from both perspectives, with the other side's view attached</p>
+          </div>
+          <div class="cf-report-item">
+            <h5>Communication gaps</h5>
+            <p>Topics one partner raised frequently that the other never mentioned</p>
+          </div>
+          <div class="cf-report-item">
+            <h5>Attachment dynamics</h5>
+            <p>How each partner's style interacts with the other's in specific situations</p>
+          </div>
+          <div class="cf-report-item">
+            <h5>3 exercises</h5>
+            <p>Specific, research-backed activities to work on together in the next 30 days</p>
+          </div>
+          <div class="cf-report-item">
+            <h5>Season 2 options</h5>
+            <p>If you want to go deeper: themed arcs on intimacy, co-parenting, or communication</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMPARISON TABLE ===================== -->
+<section class="cf-compare">
+  <div class="cf-wrap">
+    <p class="cf-sec-tag">How It Compares</p>
+    <h2 class="cf-sec-title">Not a chatbot. Not a therapist. Something else.</h2>
+    <div class="cf-tbl-wrap">
+      <table class="cf-tbl">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="cf-tbl-highlight">Confer</th>
+            <th>Generic AI chatbot</th>
+            <th>Couples therapy app</th>
+            <th>Human couples therapy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Time-bounded program</td>
+            <td>
+              <span class="cf-tbl-yes">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </td>
+            <td>
+              <span class="cf-tbl-no">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </span>
+            </td>
+            <td><span class="cf-tbl-maybe">Sometimes</span></td>
+            <td>
+              <span class="cf-tbl-no">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Privacy per partner</td>
+            <td>
+              <span class="cf-tbl-yes">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </td>
+            <td><span class="cf-tbl-maybe">Varies</span></td>
+            <td>
+              <span class="cf-tbl-no">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </span>
+            </td>
+            <td>
+              <span class="cf-tbl-no">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Evidence-grounded structure</td>
+            <td>
+              <span class="cf-tbl-yes">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </td>
+            <td><span class="cf-tbl-maybe">Varies</span></td>
+            <td><span class="cf-tbl-maybe">Sometimes</span></td>
+            <td>
+              <span class="cf-tbl-yes">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Joint synthesis report</td>
+            <td>
+              <span class="cf-tbl-yes">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </td>
+            <td>
+              <span class="cf-tbl-no">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </span>
+            </td>
+            <td>
+              <span class="cf-tbl-no">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </span>
+            </td>
+            <td><span class="cf-tbl-maybe">Depends</span></td>
+          </tr>
+          <tr>
+            <td>One-time cost</td>
+            <td style="color:var(--neural); font-weight:600;">$180</td>
+            <td style="color:var(--text2);">Free</td>
+            <td style="color:var(--text2);">$9-29/mo</td>
+            <td style="color:var(--text2);">$200+/session</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WAITLIST ===================== -->
+<section class="cf-waitlist" id="cf-waitlist">
+  <div class="cf-waitlist-inner">
+    <p class="cf-sec-tag" style="justify-content:center;">Early Access</p>
+    <h2 class="cf-sec-title">Be first.</h2>
+    <p class="cf-waitlist-sub">We are launching to a small cohort. Leave your email and we will contact you before the public launch. No spam, no obligation.</p>
+    <form class="cf-wl-form" id="cf-waitlist-form">
+      <input class="cf-wl-input" type="email" placeholder="your@email.com" required autocomplete="email" />
+      <button class="cf-wl-btn" type="submit">Join the list</button>
+    </form>
+    <p id="cf-wl-ok" class="cf-wl-ok">You are on the list. We will be in touch.</p>
+    <p class="cf-wl-note">Confer is a product of Kavalsia Inc., powered by Nexus V22 AI.</p>
+    <div class="cf-powered">
+      Built with Nexus V22 &middot; Kavalsia Inc. &middot; hello@kavalsia.com
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER NOTE ===================== -->
+<div class="cf-foot-note">
+  <div class="cf-wrap">
+    <p>MindFrame is an editorial publication covering psychology and neurobiology. Confer is a separate product being developed by Kavalsia Inc. with Nexus V22 AI infrastructure. Questions about Confer: <a href="mailto:hello@kavalsia.com">hello@kavalsia.com</a></p>
+    <p style="margin-top:10px;"><a href="/">Back to MindFrame</a></p>
+  </div>
+</div>
+
+<script>
+// Waitlist form
+document.getElementById('cf-waitlist-form')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  var email = this.querySelector('input[type=email]').value.trim();
+  if(!email) return;
+  var ok = document.getElementById('cf-wl-ok');
+  var btn = this.querySelector('.cf-wl-btn');
+  if(ok) { ok.classList.add('show'); }
+  if(btn) { btn.disabled = true; btn.textContent = 'You are on the list'; }
+});
+
+// GSAP scroll reveals if available
+if(window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('.cf-feat, .cf-tl-phase, .cf-report-item').forEach(function(el) {
+    gsap.fromTo(el, {opacity:0, y:18}, {
+      opacity:1, y:0, duration:0.6, ease:'power2.out',
+      scrollTrigger:{trigger:el, start:'top 88%', once:true}
+    });
+  });
+}
+
+// Animate the timeline lines on scroll
+document.querySelectorAll('.cf-tl-line').forEach(function(line) {
+  line.style.height = '0';
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if(entry.isIntersecting) {
+        entry.target.style.transition = 'height 0.8s ease';
+        entry.target.style.height = '100%';
+        obs.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.2});
+  obs.observe(line);
+});
+</script>
