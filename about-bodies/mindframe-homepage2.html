@@ -1,0 +1,1040 @@
+<style>
+/* ============================================================
+   MindFrame Homepage v2 - Smart Editorial Design
+   All classes prefixed .h2- to avoid shell conflicts
+   ============================================================ */
+
+:root {
+  --h2-bg: #0d0b1a;
+  --h2-surface: #13102a;
+  --h2-border: rgba(255,255,255,.07);
+  --h2-white: #f0eeeb;
+  --h2-body: rgba(240,238,235,.7);
+  --h2-muted: rgba(240,238,235,.38);
+
+  --h2-pink: #e879a8;
+  --h2-lavender: #a78bfa;
+  --h2-teal: #2dd4bf;
+  --h2-amber: #fbbf24;
+
+  --h2-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --h2-font-serif: 'Fraunces', 'Georgia', serif;
+  --h2-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Reset + base */
+.h2-wrap * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.h2-wrap {
+  font-family: var(--h2-font-sans);
+  background: var(--h2-bg);
+  color: var(--h2-body);
+  font-size: 15.5px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.h2-hero {
+  position: relative;
+  background: var(--h2-bg);
+  overflow: hidden;
+  padding: clamp(64px, 10vw, 100px) 24px clamp(64px, 8vw, 88px);
+}
+
+/* Aurora blobs */
+.h2-hero::before,
+.h2-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+}
+
+.h2-hero::before {
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(232,121,168,.12) 0%, transparent 70%);
+  top: -120px;
+  left: -100px;
+}
+
+.h2-hero::after {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(167,139,250,.09) 0%, transparent 70%);
+  top: -80px;
+  right: -80px;
+}
+
+.h2-hero-blob3 {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(45,212,191,.07) 0%, transparent 70%);
+  border-radius: 50%;
+  bottom: -160px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.h2-hero-inner {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.h2-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--h2-pink);
+  background: rgba(232,121,168,.10);
+  border: 1px solid rgba(232,121,168,.2);
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+}
+
+.h2-live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--h2-pink);
+  animation: h2-pulse 2s ease-in-out infinite;
+}
+
+@keyframes h2-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.h2-hero h1 {
+  font-family: var(--h2-font-sans);
+  font-weight: 600;
+  font-size: clamp(32px, 5vw, 42px);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--h2-white);
+  margin-bottom: 18px;
+}
+
+.h2-hero-tagline {
+  font-family: var(--h2-font-serif);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--h2-body);
+  max-width: 560px;
+  margin-bottom: 36px;
+}
+
+.h2-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.h2-btn-fill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, var(--h2-pink), var(--h2-lavender));
+  color: #fff;
+  font-family: var(--h2-font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 100px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.h2-btn-fill:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.h2-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--h2-body);
+  font-family: var(--h2-font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 100px;
+  border: 1px solid var(--h2-border);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.h2-btn-ghost:hover {
+  border-color: rgba(255,255,255,.18);
+  color: var(--h2-white);
+  transform: translateY(-1px);
+}
+
+.h2-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.h2-stat-chip {
+  background: var(--h2-surface);
+  border: 1px solid var(--h2-border);
+  border-radius: 100px;
+  padding: 8px 14px;
+  font-family: var(--h2-font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--h2-muted);
+}
+
+/* ============================================================
+   SECTION SHARED
+   ============================================================ */
+
+.h2-section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.h2-section-label {
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--h2-muted);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.h2-section-heading {
+  font-family: var(--h2-font-sans);
+  font-weight: 500;
+  font-size: clamp(22px, 3vw, 28px);
+  letter-spacing: -0.02em;
+  color: var(--h2-white);
+  line-height: 1.25;
+}
+
+/* ============================================================
+   SECTION 1: LATELY
+   ============================================================ */
+
+.h2-lately {
+  background: var(--h2-bg);
+  padding: clamp(56px, 8vw, 88px) 0;
+}
+
+.h2-lately-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.h2-reload-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--h2-muted);
+  background: transparent;
+  border: 1px solid var(--h2-border);
+  padding: 7px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  font-family: var(--h2-font-mono);
+}
+
+.h2-reload-pill:hover {
+  border-color: rgba(255,255,255,.18);
+  color: var(--h2-body);
+}
+
+.h2-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.h2-card {
+  background: var(--h2-surface);
+  border: 1px solid var(--h2-border);
+  border-radius: 20px;
+  padding: 22px 24px;
+  transition: transform 0.2s, border-color 0.2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.h2-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(232,121,168,.3);
+}
+
+.h2-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.h2-source-pill {
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.h2-source-neuro {
+  background: rgba(167,139,250,.12);
+  color: var(--h2-lavender);
+}
+
+.h2-source-psych {
+  background: rgba(232,121,168,.10);
+  color: var(--h2-pink);
+}
+
+.h2-card-score {
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  color: var(--h2-muted);
+  letter-spacing: 0.04em;
+}
+
+.h2-card-title {
+  font-family: var(--h2-font-sans);
+  font-size: 15.5px;
+  font-weight: 400;
+  color: var(--h2-white);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.h2-score-bar-track {
+  height: 3px;
+  background: rgba(255,255,255,.06);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.h2-score-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--h2-pink), var(--h2-lavender));
+  transition: width 0.6s ease;
+}
+
+/* ============================================================
+   SECTION 2: THE LAB
+   ============================================================ */
+
+.h2-lab {
+  background: linear-gradient(180deg, var(--h2-bg), #0f1224);
+  padding: clamp(56px, 8vw, 88px) 0;
+}
+
+.h2-lab-header {
+  margin-bottom: 40px;
+}
+
+.h2-lab-sub {
+  font-size: 14.5px;
+  color: var(--h2-muted);
+  max-width: 480px;
+  line-height: 1.65;
+  margin-top: 10px;
+}
+
+.h2-tests-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.h2-test-card {
+  background: var(--h2-surface);
+  border: 1px solid var(--h2-border);
+  border-radius: 20px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 210px;
+}
+
+.h2-test-card:hover {
+  border-color: rgba(167,139,250,.35);
+  box-shadow: 0 8px 28px rgba(167,139,250,.08);
+}
+
+.h2-test-num {
+  display: inline-block;
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--h2-lavender);
+  background: rgba(167,139,250,.12);
+  padding: 3px 9px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+.h2-test-name {
+  font-family: var(--h2-font-sans);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--h2-white);
+  margin-top: 14px;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+}
+
+.h2-test-desc {
+  font-size: 14px;
+  color: var(--h2-muted);
+  line-height: 1.6;
+  margin-top: 8px;
+  flex: 1;
+}
+
+.h2-test-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.h2-duration-chip {
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--h2-muted);
+  background: rgba(255,255,255,.05);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--h2-border);
+}
+
+.h2-take-link {
+  font-family: var(--h2-font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--h2-pink);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.h2-take-link:hover {
+  opacity: 0.75;
+}
+
+.h2-view-all-wrap {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.h2-view-all {
+  font-family: var(--h2-font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--h2-muted);
+  text-decoration: none;
+  border: 1px solid var(--h2-border);
+  padding: 10px 22px;
+  border-radius: 100px;
+  display: inline-block;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.h2-view-all:hover {
+  border-color: rgba(255,255,255,.18);
+  color: var(--h2-body);
+}
+
+/* ============================================================
+   SECTION 3: CONFER
+   ============================================================ */
+
+.h2-confer {
+  background: var(--h2-surface);
+  border-top: 1px solid var(--h2-border);
+  padding: clamp(56px, 8vw, 88px) 0;
+}
+
+.h2-confer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: clamp(40px, 6vw, 72px);
+  align-items: start;
+}
+
+.h2-dev-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--h2-lavender);
+  background: rgba(167,139,250,.10);
+  border: 1px solid rgba(167,139,250,.2);
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 22px;
+}
+
+.h2-confer-heading {
+  font-family: var(--h2-font-sans);
+  font-weight: 500;
+  font-size: clamp(20px, 2.6vw, 26px);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--h2-white);
+  margin-bottom: 16px;
+}
+
+.h2-confer-body {
+  font-size: 15.5px;
+  color: var(--h2-body);
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+
+.h2-feature-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.h2-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14.5px;
+  color: var(--h2-body);
+  line-height: 1.55;
+}
+
+.h2-feature-dot {
+  color: var(--h2-pink);
+  font-size: 16px;
+  line-height: 1.55;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.h2-confer-cta {
+  font-family: var(--h2-font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--h2-lavender);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.h2-confer-cta:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+/* Chat preview card */
+.h2-chat-card {
+  background: #0a0c1a;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.h2-bubble {
+  max-width: 82%;
+  padding: 11px 15px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.h2-bubble-ai {
+  background: rgba(167,139,250,.12);
+  color: rgba(167,139,250,.9);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.h2-bubble-user {
+  background: var(--h2-surface);
+  color: var(--h2-body);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.h2-chat-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.h2-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.07);
+}
+
+.h2-divider-label {
+  font-family: var(--h2-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--h2-muted);
+  white-space: nowrap;
+}
+
+.h2-synthesis-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.h2-green-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--h2-teal);
+  flex-shrink: 0;
+}
+
+.h2-synthesis-label {
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--h2-teal);
+}
+
+/* ============================================================
+   SECTION 4: CTA BANNER
+   ============================================================ */
+
+.h2-cta-banner {
+  background: var(--h2-bg);
+  border-top: 1px solid var(--h2-border);
+  padding: clamp(48px, 7vw, 80px) 0;
+}
+
+.h2-cta-inner {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.h2-open-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--h2-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--h2-teal);
+  background: rgba(45,212,191,.08);
+  border: 1px solid rgba(45,212,191,.18);
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+.h2-cta-heading {
+  font-family: var(--h2-font-sans);
+  font-weight: 500;
+  font-size: clamp(22px, 3.5vw, 30px);
+  letter-spacing: -0.025em;
+  color: var(--h2-white);
+  line-height: 1.25;
+  margin-bottom: 28px;
+}
+
+.h2-cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 720px) {
+  .h2-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .h2-tests-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .h2-confer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .h2-lately-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .h2-hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .h2-hero-stats {
+    gap: 8px;
+  }
+
+  .h2-test-card {
+    min-height: auto;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 900px) {
+  .h2-tests-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .h2-confer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<div class="h2-wrap">
+
+  <!-- ===========================
+       HERO
+       =========================== -->
+  <section class="h2-hero">
+    <div class="h2-hero-blob3"></div>
+    <div class="h2-hero-inner">
+      <div class="h2-live-pill">
+        <span class="h2-live-dot"></span>
+        Live &middot; Psychology + Neurobiology
+      </div>
+      <h1>The science of how you actually think.</h1>
+      <p class="h2-hero-tagline">
+        Evidence-based research on memory, attention, emotion, and behavior without the clickbait.
+      </p>
+      <div class="h2-hero-actions">
+        <a href="lab.html" class="h2-btn-fill">Take a lab test</a>
+        <a href="articles.html" class="h2-btn-ghost">Read the latest</a>
+      </div>
+      <div class="h2-hero-stats">
+        <span class="h2-stat-chip">127 articles</span>
+        <span class="h2-stat-chip">5 lab tests</span>
+        <span class="h2-stat-chip">3 tools</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       SECTION 1: LATELY
+       =========================== -->
+  <section class="h2-lately">
+    <div class="h2-section-inner">
+      <div class="h2-lately-header">
+        <div>
+          <span class="h2-section-label">lately</span>
+          <h2 class="h2-section-heading">What the research is saying.</h2>
+        </div>
+        <button class="h2-reload-pill" onclick="h2LoadReddit()" type="button">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 5A4 4 0 1 1 5.5 1.1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M5 1l1.5 1.5L5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Reload
+        </button>
+      </div>
+      <div class="h2-cards-grid" id="h2-feed-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       SECTION 2: THE LAB
+       =========================== -->
+  <section class="h2-lab">
+    <div class="h2-section-inner">
+      <div class="h2-lab-header">
+        <span class="h2-section-label">the lab</span>
+        <h2 class="h2-section-heading">Five tests. Your results.</h2>
+        <p class="h2-lab-sub">Each is a faithful implementation of a published research paradigm. Results compute in your browser. Nothing leaves your device.</p>
+      </div>
+      <div class="h2-tests-grid">
+
+        <a href="lab.html" class="h2-test-card">
+          <span class="h2-test-num">01</span>
+          <div class="h2-test-name">Big Five Personality</div>
+          <div class="h2-test-desc">The gold-standard model in personality research. Openness, conscientiousness, extraversion, agreeableness, and neuroticism scored across 25 items.</div>
+          <div class="h2-test-footer">
+            <span class="h2-duration-chip">25 items &middot; 4 min</span>
+            <span class="h2-take-link">Take test &rarr;</span>
+          </div>
+        </a>
+
+        <a href="lab.html" class="h2-test-card">
+          <span class="h2-test-num">02</span>
+          <div class="h2-test-name">Adult Attachment Style</div>
+          <div class="h2-test-desc">Based on Hazan and Shaver's foundational framework. Identifies your attachment pattern in close relationships across 12 items.</div>
+          <div class="h2-test-footer">
+            <span class="h2-duration-chip">12 items &middot; 3 min</span>
+            <span class="h2-take-link">Take test &rarr;</span>
+          </div>
+        </a>
+
+        <a href="lab.html" class="h2-test-card">
+          <span class="h2-test-num">03</span>
+          <div class="h2-test-name">Cognitive Reflection (CRT-7)</div>
+          <div class="h2-test-desc">The extended Cognitive Reflection Test. Measures your tendency to override intuitive responses with deliberate reasoning. 7 carefully designed items.</div>
+          <div class="h2-test-footer">
+            <span class="h2-duration-chip">7 items &middot; 3 min</span>
+            <span class="h2-take-link">Take test &rarr;</span>
+          </div>
+        </a>
+
+        <a href="lab.html" class="h2-test-card">
+          <span class="h2-test-num">04</span>
+          <div class="h2-test-name">Visual Reaction Time</div>
+          <div class="h2-test-desc">A browser-accurate measurement of your simple visual reaction time. 5 trials, averaged and compared against population norms.</div>
+          <div class="h2-test-footer">
+            <span class="h2-duration-chip">5 trials &middot; 1 min</span>
+            <span class="h2-take-link">Take test &rarr;</span>
+          </div>
+        </a>
+
+        <a href="lab.html" class="h2-test-card">
+          <span class="h2-test-num">05</span>
+          <div class="h2-test-name">Digit Span Memory</div>
+          <div class="h2-test-desc">An adaptive working memory test modeled after the Wechsler scale. Sequences increase until you miss one, yielding your personal memory span.</div>
+          <div class="h2-test-footer">
+            <span class="h2-duration-chip">Adaptive &middot; 3 min</span>
+            <span class="h2-take-link">Take test &rarr;</span>
+          </div>
+        </a>
+
+      </div>
+      <div class="h2-view-all-wrap">
+        <a href="lab.html" class="h2-view-all">View all tests in the lab &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       SECTION 3: CONFER
+       =========================== -->
+  <section class="h2-confer">
+    <div class="h2-section-inner">
+      <div class="h2-confer-grid">
+
+        <!-- Left: description -->
+        <div>
+          <div class="h2-dev-pill">From the nexus lab &middot; in development</div>
+          <h2 class="h2-confer-heading">What if your partner had their own AI therapist and yours had one too?</h2>
+          <p class="h2-confer-body">Confer is a 15-day couples program. Each partner works with a private AI. On day 15, the systems compare notes. You both get a joint report.</p>
+          <ul class="h2-feature-list">
+            <li class="h2-feature-item">
+              <span class="h2-feature-dot">&middot;</span>
+              <span>15 days, then done. Not a subscription.</span>
+            </li>
+            <li class="h2-feature-item">
+              <span class="h2-feature-dot">&middot;</span>
+              <span>Each partner's sessions are completely private.</span>
+            </li>
+            <li class="h2-feature-item">
+              <span class="h2-feature-dot">&middot;</span>
+              <span>A joint report on day 15, built from both perspectives.</span>
+            </li>
+          </ul>
+          <a href="confer.html" class="h2-confer-cta">Learn more and join early &rarr;</a>
+        </div>
+
+        <!-- Right: chat preview -->
+        <div class="h2-chat-card">
+
+          <div class="h2-bubble h2-bubble-ai">Tell me about the last conflict you had. Not what happened &mdash; how it felt.</div>
+
+          <div class="h2-bubble h2-bubble-user">I shut down. I always do.</div>
+
+          <div class="h2-bubble h2-bubble-ai">When did shutting down start working for you?</div>
+
+          <div class="h2-bubble h2-bubble-user">I guess... when I was about 12.</div>
+
+          <div class="h2-chat-divider">
+            <div class="h2-divider-line"></div>
+            <span class="h2-divider-label">Day 15</span>
+            <div class="h2-divider-line"></div>
+          </div>
+
+          <div class="h2-synthesis-row">
+            <span class="h2-green-dot"></span>
+            <span class="h2-synthesis-label">Joint report synthesized</span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       SECTION 4: CTA BANNER
+       =========================== -->
+  <section class="h2-cta-banner">
+    <div class="h2-cta-inner">
+      <div class="h2-open-pill">the lab is open</div>
+      <h2 class="h2-cta-heading">Start with one test. It takes three minutes.</h2>
+      <div class="h2-cta-actions">
+        <a href="lab.html" class="h2-btn-fill">Go to the lab</a>
+        <a href="tools.html" class="h2-btn-ghost">Explore the tools</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var H2_FALLBACK = [
+    {title:'How memory consolidation happens during slow-wave sleep', sub:'neuroscience', score:847, url:'#'},
+    {title:'Dopamine is not the pleasure chemical - here is what it actually does', sub:'neuroscience', score:2841, url:'#'},
+    {title:'New meta-analysis: mindfulness reduces cortisol by 23%', sub:'psychology', score:654, url:'#'},
+    {title:'The neuroscience of why habits are hard to break', sub:'neuroscience', score:1203, url:'#'},
+    {title:'Why your brain confuses familiarity with truth', sub:'psychology', score:1124, url:'#'},
+    {title:'Attachment styles in adulthood: what 30 years of research actually says', sub:'psychology', score:893, url:'#'}
+  ];
+
+  function h2RenderFeed(posts) {
+    var grid = document.getElementById('h2-feed-grid');
+    if (!grid) return;
+    var maxScore = Math.max.apply(null, posts.map(function(p) { return p.score; }));
+    var html = '';
+    posts.forEach(function(post) {
+      var isNeuro = post.sub === 'neuroscience';
+      var pillClass = isNeuro ? 'h2-source-neuro' : 'h2-source-psych';
+      var subLabel = 'r/' + post.sub;
+      var barWidth = Math.round((post.score / maxScore) * 100);
+      var scoreDisplay = post.score >= 1000
+        ? (post.score / 1000).toFixed(1) + 'k'
+        : post.score.toString();
+      html += '<a href="' + (post.url || '#') + '" class="h2-card" target="_blank" rel="noopener">';
+      html += '<div class="h2-card-top">';
+      html += '<span class="h2-source-pill ' + pillClass + '">' + subLabel + '</span>';
+      html += '<span class="h2-card-score">' + scoreDisplay + ' points</span>';
+      html += '</div>';
+      html += '<div class="h2-card-title">' + post.title + '</div>';
+      html += '<div class="h2-score-bar-track"><div class="h2-score-bar-fill" style="width:' + barWidth + '%"></div></div>';
+      html += '</a>';
+    });
+    grid.innerHTML = html;
+  }
+
+  function h2LoadReddit() {
+    var subs = ['neuroscience', 'psychology'];
+    var allPosts = [];
+    var done = 0;
+    subs.forEach(function(sub) {
+      fetch('https://www.reddit.com/r/' + sub + '/top.json?limit=3&t=week', {
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.data && data.data.children) {
+          data.data.children.forEach(function(child) {
+            allPosts.push({
+              title: child.data.title,
+              sub: sub,
+              score: child.data.score,
+              url: 'https://www.reddit.com' + child.data.permalink
+            });
+          });
+        }
+      })
+      .catch(function() {})
+      .finally(function() {
+        done++;
+        if (done === subs.length) {
+          if (allPosts.length >= 4) {
+            h2RenderFeed(allPosts.slice(0, 6));
+          } else {
+            h2RenderFeed(H2_FALLBACK);
+          }
+        }
+      });
+    });
+  }
+
+  window.h2LoadReddit = h2LoadReddit;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', h2LoadReddit);
+  } else {
+    h2LoadReddit();
+  }
+
+})();
+</script>
