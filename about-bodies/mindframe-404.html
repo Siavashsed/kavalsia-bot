@@ -1,0 +1,56 @@
+<style>
+.nf-wrap { min-height:60vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:clamp(64px,10vw,100px) clamp(20px,4vw,44px); background:var(--ink); color:#fff; position:relative; overflow:hidden; }
+.nf-wrap::before { content:''; position:absolute; inset:0; background:
+  radial-gradient(ellipse 500px 400px at 30% 20%, rgba(167,139,250,.10), transparent 65%),
+  radial-gradient(ellipse 400px 300px at 75% 80%, rgba(232,121,168,.09), transparent 60%);
+  pointer-events:none; }
+.nf-inner { position:relative; z-index:2; max-width:560px; width:100%; }
+.nf-code { font-family:var(--mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--lavender); background:rgba(167,139,250,.10); border:1px solid rgba(167,139,250,.25); padding:6px 14px; border-radius:100px; display:inline-block; margin-bottom:28px; }
+.nf-num { font-family:var(--serif); font-size:clamp(72px,12vw,120px); font-weight:300; font-style:italic; letter-spacing:-0.04em; line-height:1; color:rgba(255,255,255,.12); margin-bottom:0; display:block; }
+.nf-heading { font-family:var(--serif); font-size:clamp(24px,3vw,36px); font-weight:400; letter-spacing:-0.022em; line-height:1.2; color:#fff; margin-bottom:14px; margin-top:-8px; }
+.nf-sub { font-size:16px; color:rgba(255,255,255,.55); line-height:1.7; margin-bottom:32px; max-width:420px; margin-left:auto; margin-right:auto; }
+.nf-fact { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:20px 24px; margin-bottom:32px; text-align:left; }
+.nf-fact-label { font-family:var(--mono); font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--pink); margin-bottom:10px; }
+.nf-fact-text { font-family:var(--serif); font-style:italic; font-size:17px; line-height:1.65; color:rgba(255,255,255,.78); margin:0; }
+.nf-btns { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+.nf-btn-home { display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:#fff; background:var(--lavender); padding:13px 26px; border-radius:100px; text-decoration:none; transition:opacity .15s, transform .15s; }
+.nf-btn-home:hover { opacity:.9; transform:translateY(-1px); }
+.nf-btn-lab { display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:rgba(255,255,255,.85); background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); padding:13px 26px; border-radius:100px; text-decoration:none; transition:background .15s; }
+.nf-btn-lab:hover { background:rgba(255,255,255,.11); }
+.nf-btn-home svg,
+.nf-btn-lab svg { width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+</style>
+
+<section class="nf-wrap">
+  <div class="nf-inner">
+    <span class="nf-code">404 &middot; Page Not Found</span>
+    <span class="nf-num">404</span>
+    <h1 class="nf-heading">Your brain predicted this page. It was wrong.</h1>
+    <p class="nf-sub">The predictive processing model says the brain is constantly generating predictions about the world. This one missed. The page you are looking for does not exist.</p>
+    <div class="nf-fact">
+      <div class="nf-fact-label">while you are here, a fact</div>
+      <p class="nf-fact-text"></p>
+    </div>
+    <div class="nf-btns">
+      <a href="/" class="nf-btn-home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Back to MindFrame
+      </a>
+      <a href="lab.html" class="nf-btn-lab">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M9 3h6"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M3 9v6a2 2 0 0 0 2 2h4"/><path d="M21 9v6a2 2 0 0 1-2 2h-4"/><path d="M9 21h6"/><circle cx="12" cy="12" r="3"/></svg>
+        Try the lab
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var NF_FACTS = [
+    "The brain cannot actually multitask. What feels like multitasking is rapid task-switching, which costs roughly 40% efficiency per switch.",
+    "You have approximately 6,000 thoughts per day, according to a 2020 study using a 'thought probe' methodology at McGill University.",
+    "The brain's default mode network -- active when you are not focused on a task -- may be essential for creativity, future planning, and social cognition."
+  ];
+  document.querySelector('.nf-fact-text').textContent = NF_FACTS[Math.floor(Math.random() * NF_FACTS.length)];
+})();
+</script>
