@@ -3790,10 +3790,10 @@ def _author_card(site, author_name, t, article=None):
   <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:{t["meta"]};margin-bottom:14px">About the author</div>
   <div style="border:1px solid {t["border"]};border-radius:12px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start;background:{t["bg2"]}">
     <div style="width:54px;height:54px;border-radius:50%;background:{accent};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0;letter-spacing:-1px">{initials}</div>
-    <div style="flex:1">
+    <div style="flex:1;min-width:0">
       <div style="font-size:14px;font-weight:700;color:{t["text"]};margin-bottom:2px">{author_name}</div>
       <div style="font-size:12px;color:{accent};margin-bottom:8px;font-weight:600">{author_title}</div>
-      <p style="font-size:13px;color:{t["text2"]};line-height:1.65;margin:0">{bio}</p>
+      <p style="font-size:13px;color:{t["text2"]};line-height:1.65;margin:0;overflow-wrap:break-word">{bio}</p>
     </div>
   </div>
 </div>"""
