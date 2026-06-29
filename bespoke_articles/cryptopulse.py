@@ -123,6 +123,7 @@ def render(article, site, image_url, photographer, t):
 .cpa-disc-head{{display:flex;align-items:center;gap:10px;margin:0 0 6px}}
 .cpa-disc-k{{font-family:{hf};font-size:19px;font-weight:700;color:{ink}}}
 .cpa-disc-c{{font-size:12px;color:{meta};background:{bg2};border:1px solid {brd};border-radius:20px;padding:3px 11px}}
+.cpa-disc-c:empty{{display:none}}
 .cpa-disc-sub{{font-size:13px;color:{meta};margin:0 0 22px}}
 .cpa-cm{{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid {brd}}}
 .cpa-cm-av{{width:34px;height:34px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-family:{hf};font-weight:700;font-size:12px;color:{bg};background:{acc2}}}
