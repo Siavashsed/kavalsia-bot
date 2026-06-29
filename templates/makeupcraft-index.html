@@ -12,18 +12,19 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --paper:#fbf6f2;
-  --cream:#f4ebe2;
-  --blush:#f3dcd2;
-  --blush-deep:#e5b8a8;
-  --rose:#c98577;
-  --mocha:#7a5247;
-  --espresso:#2f2018;
-  --ink:#1c130f;
-  --muted:#8a7a72;
-  --line:#e7d9cc;
-  --champagne:#c6a47c;
-  --champagne-soft:#dec5a3;
+  /* rhode-inspired warm-neutral sand palette - quiet, premium, minimal */
+  --paper:#efe9df;
+  --cream:#e7ddd0;
+  --blush:#e3d8c9;
+  --blush-deep:#cdbba9;
+  --rose:#9c8472;        /* muted taupe accent (was loud terracotta) */
+  --mocha:#6f6358;
+  --espresso:#332c24;
+  --ink:#241f18;
+  --muted:#8c8075;
+  --line:#ddd2c2;
+  --champagne:#b29c7f;
+  --champagne-soft:#ccb89a;
   --display:'Fraunces',Georgia,serif;
   --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
 }
@@ -375,6 +376,44 @@ body[data-page-depth="1"] article a,
 body[data-page-depth="1"] article p a,
 body[data-page-depth="1"] article .intro a{color:var(--text,#0a0a0a) !important;text-decoration:none;text-underline-offset:3px}
 /* /CONTRAST-AUDIT */
+
+/* ===== rhode-minimal refinement + responsive hardening (premium, quiet) ===== */
+/* calmer, flatter, more air - drop the loud editorial tells */
+.hero-h1 .accent::after{opacity:.38;background:var(--blush-deep)}
+.hero-issue .pulse{animation:none}
+.philo-imgs .pi-badge{animation:none}
+.hero-issue{background:transparent;border:1px solid var(--line);color:var(--mocha)}
+/* subtle radii + squared minimal buttons = rhode, not pill-magazine */
+.hero-img,.philo-imgs .pi-a,.philo-imgs .pi-b,.topic,.feat-img,.hero-tag{border-radius:10px;box-shadow:0 16px 46px -30px rgba(50,40,32,.22)}
+.btn-primary,.btn-ghost{border-radius:4px}
+.nav-cta,.mp-cta{border-radius:4px;text-transform:none;letter-spacing:.04em}
+.topic-num,.hero-chip{border-radius:4px}
+.section{padding:clamp(76px,11vw,150px) 0}
+.section.tight{padding:clamp(60px,8vw,100px) 0}
+/* universal overflow / wrap safety so nothing breaks on any width */
+*{min-width:0}
+h1,h2,h3,p,a,span,li{overflow-wrap:break-word}
+img,canvas,video{height:auto;max-width:100%}
+.hero-deck,.sec-head p,.philo-text p{max-width:54ch}
+/* mid tablet */
+@media(max-width:1080px) and (min-width:681px){
+  .hero-visual{min-height:420px}
+  .topics-grid,.art-grid{grid-template-columns:repeat(2,1fr)}
+}
+/* phone: stack the collage cleanly, calm the type, no overlap */
+@media(max-width:680px){
+  .hero-h1{font-size:clamp(40px,11.5vw,62px);line-height:1.05}
+  .sec-head h2,.philo-text h2,.feed-head h2{font-size:clamp(31px,8.6vw,48px);line-height:1.08}
+  .philo-imgs{position:static;height:auto;min-height:0;display:grid;grid-template-columns:1fr;gap:14px}
+  .philo-imgs .pi-a,.philo-imgs .pi-b{position:static;width:100%;height:auto;aspect-ratio:4/5;border:none}
+  .philo-imgs .pi-badge,.philo-imgs .pi-cap{display:none}
+  .trust-in{flex-wrap:wrap;row-gap:12px}
+  .hero-tag{position:static;margin-top:14px;max-width:none}
+  .hero-chip{display:none}
+}
+@media(max-width:380px){
+  .wrap,.nav-in,.hero-in,.trust-in{padding-left:16px;padding-right:16px}
+}
 </style>
 </head>
 <body>
