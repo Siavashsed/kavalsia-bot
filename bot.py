@@ -1565,7 +1565,24 @@ def verify_article_image(image_url, article_title, query, client=None):
             '"alt"=honest alt text describing exactly and only what the photo shows, under 120 chars; never name a '
             'brand or model in alt unless it is clearly identifiable in the photo.'
         )
-        out = None
+        def _parse(raw):
+            # The verdict is a FLAT json object; scan brace blobs, take the first
+            # that parses and carries "ok". A reply saying the file could not be
+            # read is an ENGINE failure, not a verdict - return None for those.
+            for blob in re.findall(r"\{[^{}]*\}", raw or "", re.S):
+                try:
+                    d = json.loads(blob)
+                except Exception:
+                    continue
+                if "ok" not in d:
+                    continue
+                blob_l = (str(d.get("reason", "")) + " " + str(d.get("alt", ""))).lower()
+                if re.search(r"could not be (read|accessed|inspected)|unable to (read|access|inspect|verify)|unavailable for inspection|cannot (see|view|access)", blob_l):
+                    return None
+                return d
+            return None
+
+        data = None
         if _engine() == "max":
             import tempfile
             tmp = None
@@ -1575,7 +1592,9 @@ def verify_article_image(image_url, article_title, query, client=None):
                     tf.write(r.content)
                     tmp = tf.name
                 out = _claude_code_complete("Look at the image file " + tmp + " then follow these instructions. " + instr,
-                                            max_tokens=300, timeout=120)
+                                            max_tokens=300, timeout=120,
+                                            extra_args=["--allowedTools", "Read"])
+                data = _parse(out)
             except Exception as e:
                 print(f"  [vision] Claude Max check unavailable ({e}); trying API", flush=True)
             finally:
@@ -1584,7 +1603,7 @@ def verify_article_image(image_url, article_title, query, client=None):
                         os.unlink(tmp)
                     except OSError:
                         pass
-        if out is None and client is not None:
+        if data is None and client is not None:
             img_b64 = base64.b64encode(r.content).decode()
             resp = _retry(lambda: client.messages.create(
                 model=_VISION_MODEL, max_tokens=300,
@@ -1592,11 +1611,9 @@ def verify_article_image(image_url, article_title, query, client=None):
                     {"type": "image", "source": {"type": "base64", "media_type": media, "data": img_b64}},
                     {"type": "text", "text": instr},
                 ]}]))
-            out = resp.content[0].text.strip()
-        if not out:
-            return True, None, "no vision engine available"
-        m = re.search(r"\{.*\}", out, re.S)
-        data = json.loads(m.group(0)) if m else {}
+            data = _parse(resp.content[0].text.strip())
+        if data is None:
+            return True, None, "vision verdict unavailable"
         ok = bool(data.get("ok", True))
         alt = (data.get("alt") or "").strip()[:160].replace('"', "'") or None
         reason = (data.get("reason") or data.get("brand") or "").strip()[:120]
