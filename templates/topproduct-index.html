@@ -422,6 +422,72 @@ body[data-page-depth] #potw-banner{display:none}
   </div>
 </div>
 
+<!-- ===== VIDEO WALL: real product-review clips, auto-scroll, force-play, never-black ===== -->
+<style>
+  #tpPre{position:fixed;inset:0;z-index:99999;background:#0b0b0d;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity .55s ease}
+  #tpPre.hide{opacity:0;pointer-events:none}
+  #tpPre .pl-mark{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#dc2626,#fbbf24);box-shadow:0 12px 32px -8px rgba(220,38,38,.6);animation:plpulse 1.3s ease-in-out infinite}
+  #tpPre .pl-bar{width:158px;height:3px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;position:relative}
+  #tpPre .pl-bar i{position:absolute;left:0;top:0;height:100%;width:42%;background:linear-gradient(90deg,#dc2626,#fbbf24);border-radius:99px;animation:plslide 1.05s ease-in-out infinite}
+  #tpPre .pl-txt{font-family:'Inter',system-ui,sans-serif;font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  @keyframes plpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.86);opacity:.65}}
+  @keyframes plslide{0%{transform:translateX(-130%)}100%{transform:translateX(330%)}}
+  .vidwall{position:relative;overflow:hidden;background:#0b0b0d;padding:30px 0}
+  .vidwall-track{display:flex;gap:16px;width:max-content;animation:vidscroll 95s linear infinite;will-change:transform}
+  .vtile{position:relative;flex:0 0 auto;width:300px;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#111 center/cover no-repeat;box-shadow:0 12px 34px -18px rgba(0,0,0,.6)}
+  .vtile::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0) 60%,rgba(0,0,0,.32))}
+  .vtile iframe{position:absolute;top:50%;left:50%;width:174%;height:174%;transform:translate(-50%,-50%);border:0;pointer-events:none;z-index:2;opacity:0;transition:opacity .7s ease}
+  .vtile iframe.on{opacity:1}
+  .vidwall-fade{position:absolute;top:0;bottom:0;width:clamp(56px,12vw,190px);z-index:4;pointer-events:none}
+  .vidwall-fade.l{left:0;background:linear-gradient(90deg,#0b0b0d 8%,transparent)}
+  .vidwall-fade.r{right:0;background:linear-gradient(270deg,#0b0b0d 8%,transparent)}
+  @keyframes vidscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media(max-width:680px){.vtile{width:230px}}
+  @media(prefers-reduced-motion:reduce){.vidwall-track{animation:none}}
+</style>
+<div id="tpPre"><div class="pl-mark"></div><div class="pl-bar"><i></i></div><div class="pl-txt">Loading reviews</div></div>
+<section class="vidwall" aria-label="Product reviews on video">
+  <div class="vidwall-fade l"></div>
+  <div class="vidwall-fade r"></div>
+  <div class="vidwall-track" id="vidwallTrack"></div>
+</section>
+<script>
+(function(){
+  var V=['h359LRmMZMU','HMX0vrJj5nM','bmIVWe3Cux8','J7FzKL5xkRg','4g7ah0PfMGY','2C5NKMM7DZA','h0HjktaeEpA','FPzi2OIR82s','hLRJs75gqXg','E4S7SY9DkQE'];
+  var track=document.getElementById('vidwallTrack'); if(!track) return;
+  var ids=V.concat(V);                                  // duplicated once for a seamless loop
+  ids.forEach(function(id){
+    var t=document.createElement('div'); t.className='vtile';
+    t.style.backgroundImage="url('https://i.ytimg.com/vi/"+id+"/hqdefault.jpg')";   // thumbnail base = never black
+    var p=document.createElement('div'); p.className='vplayer'; p.setAttribute('data-vid',id);
+    t.appendChild(p); track.appendChild(t);
+  });
+  function hidePre(){ var pre=document.getElementById('tpPre'); if(pre&&!pre.classList.contains('hide')){ pre.classList.add('hide'); setTimeout(function(){ if(pre.parentNode) pre.parentNode.removeChild(pre); },600); } }
+  window._vw=[]; var rc=0, need=Math.min(ids.length,8);
+  function seek23(t){ try{ var d=t.getDuration()||0; if(d>20) t.seekTo(d*0.66,true); else t.seekTo(2,true); }catch(x){} }
+  window.onYouTubeIframeAPIReady=function(){
+    track.querySelectorAll('.vplayer').forEach(function(el){
+      var id=el.getAttribute('data-vid');
+      window._vw.push(new YT.Player(el,{
+        host:'https://www.youtube-nocookie.com', videoId:id,
+        playerVars:{autoplay:1,mute:1,controls:0,loop:1,playlist:id,modestbranding:1,rel:0,playsinline:1,disablekb:1,fs:0,iv_load_policy:3},
+        events:{
+          onReady:function(e){ try{ e.target.mute(); seek23(e.target); e.target.playVideo(); }catch(x){}
+            rc++; if(rc>=need) hidePre(); },
+          onStateChange:function(e){
+            if(e.data===1){ try{ e.target.getIframe().classList.add('on'); }catch(x){} }   // PLAYING -> fade video in
+            if(e.data===0){ try{ seek23(e.target); e.target.playVideo(); }catch(x){} }       // ENDED -> loop back to 2/3
+          }
+        }
+      }));
+    });
+    setTimeout(hidePre, 6500);                          // safety: enough loaded or not, reveal the site
+  };
+  setTimeout(hidePre, 9000);                            // hard safety: never trap behind the preloader
+  var tag=document.createElement('script'); tag.src='https://www.youtube.com/iframe_api'; document.head.appendChild(tag);
+})();
+</script>
+
 <!-- SCORECARD TOOL -->
 <section class="section tool-section" id="scorecard">
   <div class="section-inner">
