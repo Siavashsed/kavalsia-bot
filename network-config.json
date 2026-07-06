@@ -195,7 +195,10 @@
       "aliexpress_api_key_secret": "ALIEXPRESS_API_KEY",
       "auto_create_orders": false,
       "notification_email": "orders@example.com"
-    }
+    },
+    "self_extending_enabled": false,
+    "self_extending_started_at": "2026-07-03T00:00:00.000Z",
+    "self_extending_learn_count": 0
   },
   "affiliate_links": {},
   "sites": [
@@ -1234,8 +1237,8 @@
       "theme": "dark",
       "layout": "magazine",
       "article_layout": "lifestyle",
-      "tone": "design-forward and practical, like an interior designer who also flips houses for profit.",
-      "persona": "Olivia Grant, interior designer and property investor",
+      "tone": "elevated, tactile and quietly confident, like a premium decor editor who styles beautiful rooms for a living and writes for people who care about how a home feels",
+      "persona": "Olivia Grant, decor editor and stylist for premium homes",
       "brevo_list_id": 25,
       "signup_url": "",
       "adsense_publisher_id": "",
@@ -1276,16 +1279,16 @@
       "header_scripts": "",
       "footer_scripts": "",
       "topics": [
-        "How to stage a home for sale without hiring a stager",
-        "The renovation projects that add the most resale value",
-        "Open floor plans: the downsides nobody mentions",
-        "How to choose paint colors that photograph well for listings",
-        "Kitchen updates under $5,000 that buyers actually notice",
-        "Lighting changes that transform how a room feels",
-        "How to make a small bathroom look expensive on a budget",
-        "The furniture layout mistake that makes rooms look smaller",
-        "Landscaping ROI: what actually increases curb appeal",
-        "How to declutter a home before selling without regrets"
+        "sculptural decor objects and how to style them",
+        "the quiet luxury of candlelight at home",
+        "building a considered, collected home",
+        "natural materials and craft in decor",
+        "tablescaping for an elevated everyday",
+        "slow living and a calmer home",
+        "statement pieces that anchor a room",
+        "scent and atmosphere as part of a room",
+        "premium decor on an intentional budget",
+        "mixing heritage and modern in decor"
       ],
       "articles_per_day": 1,
       "nav_style": "leaf",
@@ -1301,21 +1304,21 @@
       "historical_mode": true,
       "historical_per_week": 1,
       "posts_per_day_new": 1,
-      "name": "dalmend-home",
+      "name": "Maison Dalmend",
       "default_author": "",
       "custom_prompt": "",
       "custom_css": "",
       "posts_per_week": 0,
       "categories": [
-        "Statement Rooms",
-        "Materials and Light",
-        "Estate Interiors",
-        "Heritage Restoration",
-        "Art and Collecting",
-        "Bespoke Joinery"
+        "Sculptural Objects",
+        "Candles and Light",
+        "The Considered Home",
+        "Materials and Craft",
+        "Tablescapes",
+        "Slow Living at Home"
       ],
       "default_category": "",
-      "author_bio": "Dalmend Home is where design meets ROI. If a renovation or styling decision doesn't improve livability or resale value, I'll tell you to skip it.",
+      "author_bio": "Maison Dalmend is a quiet study of how a home feels. I write about sculptural objects, candlelight and the small, considered details that turn a house into a place you never quite want to leave.",
       "posts_count": 0,
       "posts_unit": "day",
       "historical_count": 4,
@@ -1340,7 +1343,7 @@
         "paypal_merchant_id": "",
         "tax_rate": 0.13,
         "shipping_enabled": true,
-        "default_shipping": 15.0,
+        "default_shipping": 15,
         "use_global_stripe": true,
         "use_global_paypal": true,
         "stripe_public_key": "",
@@ -1348,7 +1351,9 @@
       },
       "product_ids": [
         "prod_demo_vish"
-      ]
+      ],
+      "tagline": "Premium decor for the considered home",
+      "author_title": "decor editor and stylist for premium homes"
     },
     {
       "id": "onlinebiz-pro",
@@ -3497,6 +3502,28 @@
         "Rebin Salar": "https://api.dicebear.com/7.x/notionists/svg?seed=Rebin%20Salar",
         "Lana Mahmud": "https://api.dicebear.com/7.x/notionists/svg?seed=Lana%20Mahmud"
       }
+    },
+    {
+      "id": "orgup-verify-wizard-co-the-kiln-diary",
+      "active": false,
+      "domain": "",
+      "repo": "",
+      "category": "slow-craft studio life",
+      "theme": "dark",
+      "layout": "editorial",
+      "tone": "editorial",
+      "persona": "The Kiln Diary",
+      "articles_per_day": 0.43,
+      "name": "The Kiln Diary",
+      "author": "The Kiln Diary",
+      "author_bio": "A working potter sharing studio process. Calm, tactile, never salesy.",
+      "is_mother_site": false,
+      "nav_style": "dark",
+      "orgup": {
+        "projectId": "verify-wizard-co",
+        "affiliateId": "the-kiln-diary",
+        "prompt": ""
+      }
     }
   ],
   "products": [
@@ -3505,7 +3532,7 @@
       "title": "Vish Body Candle - Large",
       "description": "Premium soy blend candle with exotic scent. 400g, 45+ hour burn time.",
       "type": "physical",
-      "price": 45.0,
+      "price": 45,
       "currency": "CAD",
       "image": "https://dalmend.com/candles/vish-large.jpg",
       "sku": "VISH-LG-001",
