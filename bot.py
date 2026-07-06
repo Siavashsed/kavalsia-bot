@@ -82,16 +82,17 @@ def _claude_bin():
             return p
     return None
 
-def _claude_code_complete(prompt, max_tokens=4000, timeout=240):
+def _claude_code_complete(prompt, max_tokens=4000, timeout=240, extra_args=None):
     """Generate text via the local Claude Code CLI on the Max subscription (no API token cost).
-    Raises on any failure so the caller can fall back to the API."""
+    Raises on any failure so the caller can fall back to the API.
+    extra_args: optional list appended to the command (e.g. ["--allowedTools", "Read"])."""
     cb = _claude_bin()
     if not cb:
         raise RuntimeError("claude CLI not found (sign in to Claude Code with your Max plan)")
     env = dict(os.environ)
     env.pop("ANTHROPIC_API_KEY", None)    # force the signed-in Max session, not the API key
     env.pop("ANTHROPIC_AUTH_TOKEN", None)
-    p = _sp.run([cb, "-p", prompt], capture_output=True, text=True,
+    p = _sp.run([cb, "-p", prompt] + list(extra_args or []), capture_output=True, text=True,
                 env=env, timeout=timeout, stdin=_sp.DEVNULL)
     out = (p.stdout or "").strip()
     head = out[:200]
