@@ -1298,7 +1298,7 @@ Return ONLY valid JSON - no markdown, no extra text:
   ],
   "conclusion": "<p>One concrete actionable takeaway the reader can apply today. No summary of what was already said.</p>",
   "image_query": "3-word Pexels search term",
-  "image_alt": "Descriptive alt text that describes what the image shows - NOT the article title. Be specific (e.g. 'trader watching multiple monitor screens showing crypto charts'). Under 120 chars.",
+  "image_alt": "Descriptive alt text that describes what the image shows - NOT the article title. Be specific (e.g. 'trader watching multiple monitor screens showing crypto charts'). Under 120 chars. NEVER name a specific brand, model or product in the alt: the stock photo is fetched separately and usually shows a generic scene, so a branded claim would be false.",
   "outbound_links": ["domain.com"],
   "sources": [
     {{"name": "Source Name", "url": "https://real-url.com"}},
