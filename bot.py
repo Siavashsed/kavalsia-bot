@@ -1532,6 +1532,79 @@ def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, source
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# IMAGE VISION CHECK - stock search returns wrong-brand photos (a "rolex" query
+# can return a Timex; a "mach-e" query can return a gas Mach 1). Every candidate
+# image is shown to Claude BEFORE publish; wrong-brand / off-topic photos are
+# rejected and the alt text is rewritten from what the photo actually shows.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_VISION_MODEL = "claude-haiku-4-5"
+
+def verify_article_image(image_url, article_title, query, client=None):
+    """Look at a candidate image with Claude vision before it is published.
+    Returns (ok, honest_alt_or_None, reason). Rejects when a recognizable
+    brand/logo/product identity is visible that is not the article's subject,
+    or when the photo is clearly unrelated to the topic. Fails OPEN (ok=True)
+    on any engine/network error so publishing never blocks."""
+    try:
+        u = image_url or ""
+        if "images.pexels.com" in u:
+            u = u.split("?")[0] + "?auto=compress&cs=tinysrgb&h=400"
+        r = requests.get(u, timeout=25, headers={"User-Agent": "Mozilla/5.0"})
+        r.raise_for_status()
+        media = "image/png" if u.split("?")[0].lower().endswith(".png") else "image/jpeg"
+        instr = (
+            'You are an image fact-checker for a publisher. Article title: "' + (article_title or "") + '". '
+            'Image search query used: "' + (query or "") + '". Inspect the attached photo and reply with STRICT JSON only: '
+            '{"ok": true, "brand": "", "reason": "", "alt": ""} '
+            'ok=false if any readable or recognizable brand, logo, product identity or vehicle make is visible that is '
+            'NOT the subject of the article title. ok=false if the photo has no plausible connection to the article '
+            'topic. Generic on-topic photos with no visible branding are ok=true. '
+            '"brand"=the visible brand name if any. "reason"=under 15 words. '
+            '"alt"=honest alt text describing exactly and only what the photo shows, under 120 chars; never name a '
+            'brand or model in alt unless it is clearly identifiable in the photo.'
+        )
+        out = None
+        if _engine() == "max":
+            import tempfile
+            tmp = None
+            try:
+                with tempfile.NamedTemporaryFile(suffix=".png" if media.endswith("png") else ".jpg",
+                                                 delete=False) as tf:
+                    tf.write(r.content)
+                    tmp = tf.name
+                out = _claude_code_complete("Look at the image file " + tmp + " then follow these instructions. " + instr,
+                                            max_tokens=300, timeout=120)
+            except Exception as e:
+                print(f"  [vision] Claude Max check unavailable ({e}); trying API", flush=True)
+            finally:
+                if tmp:
+                    try:
+                        os.unlink(tmp)
+                    except OSError:
+                        pass
+        if out is None and client is not None:
+            img_b64 = base64.b64encode(r.content).decode()
+            resp = _retry(lambda: client.messages.create(
+                model=_VISION_MODEL, max_tokens=300,
+                messages=[{"role": "user", "content": [
+                    {"type": "image", "source": {"type": "base64", "media_type": media, "data": img_b64}},
+                    {"type": "text", "text": instr},
+                ]}]))
+            out = resp.content[0].text.strip()
+        if not out:
+            return True, None, "no vision engine available"
+        m = re.search(r"\{.*\}", out, re.S)
+        data = json.loads(m.group(0)) if m else {}
+        ok = bool(data.get("ok", True))
+        alt = (data.get("alt") or "").strip()[:160].replace('"', "'") or None
+        reason = (data.get("reason") or data.get("brand") or "").strip()[:120]
+        return ok, alt, reason
+    except Exception as e:
+        return True, None, f"verify skipped: {e}"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # SHARED HTML HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -7929,17 +8002,36 @@ def run(topic_overrides=None, site_filter=None):
                             site.get("image_fallback_query", ""),
                             f"{site.get('category','')} editorial photography",
                         ]
-                        image_url, photographer = fetch_image(
-                            _primary,
-                            pexels_key, unsplash_key=unsplash_key or None,
-                            replicate_key=replicate_key or None,
-                            sources=site_sources,
-                            exclude_urls=used_image_urls,
-                            fallback_queries=_fallbacks,
-                        )
+                        # Vision-checked hero: fetch a candidate, show it to Claude,
+                        # reject wrong-brand / off-topic photos and try again (max 3).
+                        # Rejected candidates join the exclude set so they never come back.
+                        _vision_on = settings.get("image_vision_check", True)
+                        image_url = photographer = None
+                        for _attempt in range(3):
+                            _iu, _ph = fetch_image(
+                                _primary,
+                                pexels_key, unsplash_key=unsplash_key or None,
+                                replicate_key=replicate_key or None,
+                                sources=site_sources,
+                                exclude_urls=used_image_urls,
+                                fallback_queries=_fallbacks,
+                            )
+                            if not _iu:
+                                break
+                            used_image_urls.add(_iu)  # accepted or rejected, never offer it again this run
+                            if not _vision_on:
+                                image_url, photographer = _iu, _ph
+                                break
+                            _vok, _valt, _vwhy = verify_article_image(_iu, article.get("title", ""), _primary, client)
+                            if _vok:
+                                image_url, photographer = _iu, _ph
+                                if _valt:
+                                    article["image_alt"] = _valt  # honest alt from the actual photo
+                                break
+                            print(f"  {tag} hero image rejected by vision check ({_vwhy}); retrying", flush=True)
+                        if not image_url:
+                            print(f"  {tag} no hero image passed the vision check; publishing without hero", flush=True)
                         article["image"] = image_url or ""
-                        if image_url:
-                            used_image_urls.add(image_url)  # prevent reuse in subsequent posts this run
 
                         # extra in-context body images so each post has 2-6 images total (hero=#1). FUTURE posts only.
                         _BODY_IMAGES.clear()
@@ -7949,11 +8041,21 @@ def run(topic_overrides=None, site_filter=None):
                             _exclude = set(used_image_urls)
                             _heads = [(_s.get("heading") or "").strip() for _s in _secs if (_s.get("heading") or "").strip()] or [_primary]
                             for _k in range(_want):
-                                _iu, _ph = fetch_image(_heads[_k % len(_heads)], pexels_key,
-                                    unsplash_key=unsplash_key or None, replicate_key=replicate_key or None,
-                                    sources=site_sources, exclude_urls=_exclude, fallback_queries=_fallbacks)
-                                if _iu and _iu not in _exclude:
-                                    _BODY_IMAGES.append((_iu, _ph)); _exclude.add(_iu); used_image_urls.add(_iu)
+                                _q = _heads[_k % len(_heads)]
+                                for _bt in range(2):  # 1 retry per slot if vision rejects
+                                    _iu, _ph = fetch_image(_q, pexels_key,
+                                        unsplash_key=unsplash_key or None, replicate_key=replicate_key or None,
+                                        sources=site_sources, exclude_urls=_exclude, fallback_queries=_fallbacks)
+                                    if not _iu or _iu in _exclude:
+                                        break
+                                    _exclude.add(_iu); used_image_urls.add(_iu)
+                                    if _vision_on:
+                                        _vok, _valt, _vwhy = verify_article_image(_iu, article.get("title", ""), _q, client)
+                                        if not _vok:
+                                            print(f"  {tag} body image rejected by vision check ({_vwhy})", flush=True)
+                                            continue
+                                    _BODY_IMAGES.append((_iu, _ph))
+                                    break
                         except Exception as _ie:
                             print(f"  {tag} extra image fetch skipped: {_ie}"); _BODY_IMAGES.clear()
 
