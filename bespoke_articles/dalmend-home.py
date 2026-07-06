@@ -60,7 +60,7 @@ def render(article, site, image_url, photographer, t):
     sections = _inject_section_breaks(_article_sections(article["sections"], t), 'dha-h2')
 
     css = f"""
-.dha{{background:{paper};color:{body_ink};font-family:{bf};-webkit-font-smoothing:antialiased}}
+.dha{{background:{paper};color:{body_ink};--text:{ink};--text2:{body_ink};--accent:{acc_deep};font-family:{bf};-webkit-font-smoothing:antialiased}}
 .dha *,.dha *::before,.dha *::after{{box-sizing:border-box}}
 .dha-wrap{{max-width:1080px;margin:0 auto;padding:clamp(32px,6vw,68px) clamp(20px,6vw,40px) 96px}}
 .dha-grid{{display:grid;grid-template-columns:280px minmax(0,1fr);gap:clamp(34px,5vw,66px);align-items:start}}
