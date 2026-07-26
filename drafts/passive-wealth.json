@@ -1,0 +1,361 @@
+[
+  {
+    "topic": "How dividend stocks build passive income over time",
+    "article": {
+      "title": "Nine Years of Dividend Stocks, and My First $412 Month",
+      "meta_description": "How dividend stocks build passive income over time, with real numbers from nine years of reinvesting, plus the yield traps I fell for.",
+      "slug": "nine-years-dividend-stocks-412-month",
+      "author": "Ryan Mitchell",
+      "intro": "<p>Dividend stocks build passive income through one plain mechanism: a company sends you cash on a schedule, you buy more shares with that cash, and those new shares start sending you cash too. I opened a Schwab account in March 2016 with $3,200 because a coworker at my old agency would not stop talking about Realty Income's monthly checks. My first payment was $4.31, which felt almost insulting. That same account, fed roughly $180 a month since, paid me $412 last month, and I did nothing to earn it except leave it alone. My position is simple and slightly unpopular: <strong>the length of time you reinvest matters far more than which dividend stocks you pick.</strong></p>",
+      "intro2": "<p>Most people meet this idea backwards. They go hunting for the highest yield on a screener, find something paying 9%, and get a dividend cut instead of an income stream. The S&P 500 currently yields somewhere around 1.2% to 1.4%, which sounds pathetic until you understand that yield is only the starting rate, not the return. Growth of the payment, and the compounding of reinvested payments, is where the money actually shows up.</p>",
+      "sections": [
+        {
+          "heading": "The compounding is invisible for about four years, then it isn't",
+          "content": "<p>Here is the part that trips up almost everyone I talk to. Say you hold $100,000 in a portfolio yielding 3.5%, and those companies raise their payouts about 6% a year. Year one pays you $3,500. Reinvest it, and year two pays roughly $3,930. Nothing dramatic. But around year ten you're collecting close to $8,000 on the same original stake, and around year twenty you're past $18,000 in annual income without adding a dollar. Two forces are stacking: the payment per share rises, and your share count rises. They multiply each other.</p><p>The historical evidence for this is stronger than most people expect. Research from Ned Davis, published by <a href=\"https://www.hartfordfunds.com/insights/market-perspectives/equity/the-power-of-dividends.html\" target=\"_blank\" rel=\"noopener\">Hartford Funds</a>, found that dividends contributed roughly 85% of the S&P 500's cumulative total return since 1960 once reinvestment is counted. That figure gets thrown around loosely, so be precise about what it means: it does not mean dividends beat price growth. It means reinvested dividends compounding on top of price growth accounted for most of the final dollar amount.</p><p>I've seen this pattern hold in real accounts I've helped people set up, and the emotional shape of it is always the same. Years one through four feel like watching paint dry. Somewhere in year five or six the quarterly deposits get large enough that people stop checking whether it's working and start checking when the next one lands. If you want a slower, more structured version of this argument, I wrote about <a href=\"/dividend-stocks-passive-income-over-time/\">why I eventually trusted dividend stocks with my retirement money</a> and it goes deeper into the allocation side.</p>"
+        },
+        {
+          "heading": "High yield is usually a warning label, not a bargain",
+          "content": "<p>My worst mistake was buying a 9.2% yielder in late 2018 because the math on paper looked incredible. It cut the payout eight months later, the share price fell 40%, and I sold at a loss so I could stop thinking about it. That single position cost me about $2,700 and taught me more than any book did.</p><p>The uncomfortable truth is that <strong>the market usually knows something before you do.</strong> A yield far above its peers is generally the market pricing in a cut. AT&T reduced its dividend by roughly 47% in 2022. Kraft Heinz cut about 36% in 2019. Both were popular with income investors right up until they weren't. What I look at now, in rough order of how much I care:</p><ul><li>Payout ratio under about 60% for regular companies, so there's room for a bad year</li><li>A record of raising the payment through 2008 and 2020, which is a stress test you cannot fake</li><li>Free cash flow that actually covers the dividend, not just reported earnings</li><li>Debt that isn't quietly funding the payout</li></ul><p>The <a href=\"https://www.spglobal.com/spdji/en/indices/dividends-factors/sp-500-dividend-aristocrats/\" target=\"_blank\" rel=\"noopener\">S&P 500 Dividend Aristocrats</a> index screens for 25 straight years of increases, and it's a reasonable shortcut for beginners. Not a magic list. Just a filter that removes most of the disasters. And there's real academic disagreement here worth knowing about: Arnott and Asness argued in a 2003 <a href=\"https://www.researchaffiliates.com/publications/journal-papers/surprise-higher-dividends-higher-earnings-growth\" target=\"_blank\" rel=\"noopener\">Financial Analysts Journal paper</a> that higher payout ratios actually predicted faster earnings growth, which contradicts the old assumption that retained earnings always compound better inside the business.</p>"
+        },
+        {
+          "heading": "What the boring middle years actually feel like",
+          "content": "<p>So my friend Dan tried to copy my account in 2021 and honestly it went sideways in a way I still feel a bit responsible for. He put about $14,000 in, watched it drop through 2022, decided dividends were \"a boomer thing,\" sold most of it, and bought a leveraged ETF instead. He's fine now, financially. But he missed roughly three years of the exact stretch where this strategy stops being theoretical, and I don't think I explained the timeline clearly enough to him. I'm not totally sure this approach suits everyone's temperament, and I've stopped pretending it does. If checking a balance makes your stomach hurt, the mechanism works but you probably won't stay in the seat long enough to see it.</p><p>The other thing nobody mentions: dividend income is deeply unexciting to talk about at dinner. There's no story. Nothing happens. A deposit appears, you buy 1.8 shares of something, and that's the whole event, repeated 40 times a year for a decade.</p>"
+        },
+        {
+          "heading": "Taxes quietly decide how much of this you keep",
+          "content": "<p>A taxable brokerage account changes the arithmetic more than most people budget for. Qualified dividends get taxed at 0%, 15%, or 20% depending on income, and per <a href=\"https://www.irs.gov/taxtopics/tc409\" target=\"_blank\" rel=\"noopener\">IRS Topic 409</a> the 0% band covers a genuinely useful chunk of middle income filers. Non-qualified dividends, including most REIT distributions, get taxed as ordinary income. That's a spread of up to 37% versus 15% on the same dollar.</p><p>Which is why I keep REITs and high-payout holdings inside a Roth IRA and let broad dividend growers sit in the taxable account. Same stocks, different envelopes, meaningfully different after-tax income. I go through the specific traps in <a href=\"/hidden-tax-trap-passive-income/\">the hidden tax trap in passive income</a>, and the account-placement piece is the single cheapest optimization available to a small investor.</p><p>One caveat I'll defend: dividend investing is a bad fit if you need income within five years. The compounding hasn't happened yet, and you're taking equity risk for a 3% payout. For faster cash flow, a mixed approach like <a href=\"/1000-month-passive-income-scratch/\">building toward $1,000 a month from scratch</a> makes more sense than waiting on share count to grow.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today: log into your brokerage and turn on automatic dividend reinvestment on every eligible holding. It's usually one toggle, buried under account settings or labeled DRIP, and most accounts ship with it off by default. Mine sat off for the first fourteen months of 2016, which means roughly $60 in payments went to cash and just sat there. Small money, but it was fourteen months of compounding I bought back for free with one click.</p>",
+      "image_query": "reviewing investment statements",
+      "image_alt": "Person at a kitchen table reviewing printed brokerage statements next to a laptop showing a rising stock chart",
+      "outbound_links": [
+        "hartfordfunds.com",
+        "spglobal.com",
+        "researchaffiliates.com",
+        "irs.gov"
+      ],
+      "sources": [
+        {
+          "name": "Hartford Funds, The Power of Dividends (Ned Davis Research data)",
+          "url": "https://www.hartfordfunds.com/insights/market-perspectives/equity/the-power-of-dividends.html"
+        },
+        {
+          "name": "S&P Dow Jones Indices, S&P 500 Dividend Aristocrats",
+          "url": "https://www.spglobal.com/spdji/en/indices/dividends-factors/sp-500-dividend-aristocrats/"
+        },
+        {
+          "name": "Arnott & Asness, Surprise! Higher Dividends = Higher Earnings Growth, Financial Analysts Journal 2003",
+          "url": "https://www.researchaffiliates.com/publications/journal-papers/surprise-higher-dividends-higher-earnings-growth"
+        },
+        {
+          "name": "IRS Topic No. 409, Capital Gains and Losses and Dividend Tax Rates",
+          "url": "https://www.irs.gov/taxtopics/tc409"
+        }
+      ],
+      "faq": [
+        {
+          "q": "How much money do I need to live off dividends?",
+          "a": "At a 3.5% average yield you'd need roughly $685,000 to generate $2,000 a month before tax. That number drops if you hold the portfolio for a decade first and let the payments grow, since income rises without new contributions."
+        },
+        {
+          "q": "Is it better to reinvest dividends or take the cash?",
+          "a": "Reinvest while you're still building, take cash once you actually need the income. Reinvestment is the entire compounding engine, and switching it off in year three removes most of the long-term benefit."
+        },
+        {
+          "q": "Do dividend stocks beat index funds?",
+          "a": "Not reliably. Dividend-focused portfolios have periods of outperformance and long stretches of lagging, especially during growth-led markets. Pick them for predictable cash flow and behavioral staying power, not for beating the S&P 500."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/4968397/pexels-photo-4968397.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "www.kaboompics.com",
+      "image_alt": "Overhead view of US twenty dollar bills on a notebook atop a wooden table with pencils, coffee and a receipt",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/4167977/pexels-photo-4167977.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Auto Photographer"
+        ],
+        [
+          "https://images.pexels.com/photos/6927557/pexels-photo-6927557.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Polina Tankilevitch"
+        ]
+      ],
+      "ids": [
+        "4968397",
+        "4167977",
+        "6927557"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:37"
+  },
+  {
+    "topic": "Why index funds beat 90% of active fund managers",
+    "article": {
+      "title": "Nine in Ten Fund Managers Lose to a Boring Index Fund",
+      "meta_description": "Index funds beat about 90% of active fund managers over 15 years. Here is the real math, the honest exceptions, and what I hold myself.",
+      "slug": "boring-index-fund-beats-managers",
+      "author": "Ryan Mitchell",
+      "intro": "<p>Around 90% of active fund managers lose to their benchmark over a 15 year stretch, and the reason is unglamorous: costs compound against them every single trading day. I learned this the expensive way. In early 2016 I put about $42,000 into a five star actively managed US equity fund my old advisor was in love with, and when I finally ran the numbers properly in 2021, it had trailed a plain S&P 500 index fund by roughly 11 percentage points cumulative, after I'd paid 1.04% a year for the pleasure. That wasn't bad luck. That was arithmetic doing exactly what arithmetic does.</p>",
+      "intro2": "<p>The part most people miss is that this isn't a claim about manager intelligence. Some of the smartest people I've met in finance run active funds and genuinely know their companies cold. They're still fighting a headwind of fees, taxes, and trading costs that starts every year at negative one percent or worse. Beating the market by enough to cover that gap, repeatedly, for a decade, is a much taller order than beating it once.</p>",
+      "sections": [
+        {
+          "heading": "The Math Was Settled Before Anyone Picked a Stock",
+          "content": "<p>Bill Sharpe wrote this up in 1991 and it still hasn't been refuted, because it can't be. All the investors in a market collectively own the market. So the average actively managed dollar must earn the market return before costs, and less than the market return after costs. His paper, <a href=\"https://web.stanford.edu/~wfsharpe/art/active/active.htm\" target=\"_blank\" rel=\"noopener\">The Arithmetic of Active Management</a>, calls it a law, not a theory. It doesn't depend on markets being efficient or investors being rational.</p><p><strong>Costs are the whole story, and they're bigger than the sticker price.</strong> A 0.65% expense ratio is only the visible piece. Add turnover costs, bid ask spreads, cash drag from holding 3% in reserve for redemptions, and short term capital gains distributions in a taxable account, and the real hurdle is often closer to 1.2% a year. Your index fund's hurdle is 0.03%.</p><p>Compound that gap over 25 years on a $200,000 balance and you're talking about a difference in the low six figures. Not a rounding error. If you want the version with the numbers laid out step by step, I broke it down in <a href=\"/index-funds-beat-fund-managers/\">the ugly math behind why the pros keep losing</a>.</p>"
+        },
+        {
+          "heading": "What the Scorecards Say Once You Stop Cherry Picking",
+          "content": "<p>The S&P Dow Jones <a href=\"https://www.spglobal.com/spdji/en/research-insights/spiva/\" target=\"_blank\" rel=\"noopener\">SPIVA Scorecard</a> has tracked this since 2002, and the long horizon numbers barely move. Over 15 year periods, roughly 88% to 93% of US large cap active funds underperform the S&P 500, depending on the vintage. Mid cap and small cap managers do no better once you measure them against the right benchmark rather than a convenient one.</p><p><strong>Survivorship bias makes the published numbers look kinder than reality.</strong> Something like 60% of the funds that existed 15 years ago have been merged away or closed. Those weren't the winners. When a fund has a rough five years, the fund company quietly folds it into a healthier sibling and the track record disappears. Morningstar's <a href=\"https://www.morningstar.com/lp/active-passive-barometer\" target=\"_blank\" rel=\"noopener\">Active/Passive Barometer</a> accounts for this, and it's why their long run success rates for US large blend managers sit in the single digits to low teens.</p><p>Here's what I look at before anyone tries to sell me a manager:</p><ul><li>Success rate over 15 years, not 3 or 5</li><li>Whether dead funds are included in the sample</li><li>The benchmark used, and whether it matches the fund's actual holdings</li></ul>"
+        },
+        {
+          "heading": "Where I Think the Index Argument Gets Oversold",
+          "content": "<p>I'm going to argue against my own side for a minute, because the honest version matters more than the tidy one. Active management does win in a few corners. High yield bonds, certain emerging market segments, and small cap value have all produced managers who beat their benchmark net of fees across full cycles. SPIVA's own data on some bond categories is far less lopsided than the equity numbers.</p><p>And my friend Dev, who trades for a living and is smarter than me about this, keeps needling me about concentration. He's not wrong that a cap weighted S&P 500 fund now has something like a third of its weight in ten companies, which is not the diversification most people think they bought. I don't have a clean answer. I've thought about tilting toward equal weight for about two years and haven't actually done it, partly out of inertia and partly because I've watched too many people wreck good portfolios by fiddling. So... take my confidence here with a pinch of salt. The 90% figure is solid. Whether cap weighting stays optimal from here is genuinely arguable.</p><p><strong>The common misconception is that indexing means you can't lose money.</strong> You can lose 37% in a year, as index holders did in 2008. Indexing solves the cost problem and the manager selection problem. It does not solve the risk problem, and anyone telling you otherwise is selling something.</p>"
+        },
+        {
+          "heading": "What I Actually Hold, and the Two Mistakes I Made",
+          "content": "<p>My equity money sits in two funds. A total US market index at 0.03% and a total international index at 0.06%. That's it for stocks. In my work with readers who send me their statements, the single most common problem isn't picking bad funds, it's owning eleven funds that all hold Apple and Microsoft while paying four different management layers for the overlap.</p><p>Mistake one: I chased performance in 2016, as covered above. Mistake two, and this one cost me more, I sold that actively managed fund in a taxable account in a year I already had gains, and triggered a tax bill I could have avoided by donating the shares or waiting a year. <strong>Fixing a portfolio badly can cost as much as the bad portfolio did.</strong> If you're unwinding active funds, check the cost basis and the calendar first.</p><p>If you want the broader case with the manager side of the argument fleshed out, I covered it in <a href=\"/why-index-funds-beat-active-managers/\">what the 90% failure rate means for your own money</a>.</p>"
+        }
+      ],
+      "conclusion": "<p>Pull up every fund you own today and write down the expense ratio next to each one. If any of them charge over 0.20% and hold large US companies, look up their 10 year return against the S&P 500 total return on Morningstar, right now, in about six minutes. If they've lost, you now have a specific decision to make instead of a vague worry, and in a tax advantaged account like an IRA or 401k you can make the switch this week with no tax consequence at all.</p>",
+      "image_query": "stock market charts",
+      "image_alt": "Person reviewing long term stock market performance charts on a laptop beside printed fund statements",
+      "outbound_links": [
+        "spglobal.com",
+        "morningstar.com",
+        "stanford.edu"
+      ],
+      "sources": [
+        {
+          "name": "S&P Dow Jones Indices SPIVA Scorecard",
+          "url": "https://www.spglobal.com/spdji/en/research-insights/spiva/"
+        },
+        {
+          "name": "Morningstar Active/Passive Barometer",
+          "url": "https://www.morningstar.com/lp/active-passive-barometer"
+        },
+        {
+          "name": "William F. Sharpe, The Arithmetic of Active Management (1991)",
+          "url": "https://web.stanford.edu/~wfsharpe/art/active/active.htm"
+        }
+      ],
+      "faq": [
+        {
+          "q": "If index funds win, why do active funds still exist?",
+          "a": "Because a small share of managers do beat their benchmark in any given year, and that's enough to market on. Fund companies also earn far more revenue on a 0.70% fund than a 0.03% one, so the incentive to keep launching them never goes away."
+        },
+        {
+          "q": "Which index fund should I actually buy?",
+          "a": "A total US market or S&P 500 fund from Vanguard, Fidelity, Schwab, or iShares, with an expense ratio under 0.10%. At that level the products are close to interchangeable, so pick whichever your brokerage offers commission free and stop shopping."
+        },
+        {
+          "q": "Does the 90% failure rate apply to bond funds too?",
+          "a": "Not as strongly. Active managers in high yield and some intermediate bond categories have beaten their benchmarks more often than equity managers, partly because bond indexes are harder to replicate cheaply. The gap is real but much narrower than in US large cap stocks."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/26832402/pexels-photo-26832402.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Jakub Zerdzicki",
+      "image_alt": "Hand holding euro banknotes above a desk with a phone calculator and blurred stock charts on screens behind",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/31726665/pexels-photo-31726665.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Alpha En"
+        ],
+        [
+          "https://images.pexels.com/photos/11905375/pexels-photo-11905375.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Илья Иванов"
+        ],
+        [
+          "https://images.pexels.com/photos/19996230/pexels-photo-19996230.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Engin Akyurt"
+        ]
+      ],
+      "ids": [
+        "26832402",
+        "31726665",
+        "11905375",
+        "19996230"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:39"
+  },
+  {
+    "topic": "Passive income with digital products - realistic expectations",
+    "article": {
+      "title": "My First Digital Product Made $18 in Four Months",
+      "meta_description": "Honest numbers on passive income with digital products: what really sells, how long it takes, and the maintenance nobody mentions.",
+      "slug": "digital-products-realistic-passive-income",
+      "author": "Ryan Mitchell",
+      "intro": "<p>Passive income from digital products is real, but the honest version looks like a small business with a slow start, not money that shows up while you sleep. Expect 12 to 24 months before anything resembles steady income, and expect most of your products to earn close to nothing. I priced my first one, a budgeting spreadsheet, at $19 on Gumroad and hit publish at about 11pm on a Tuesday in February 2021. Four months later it had sold once. Eighteen dollars and change after fees, and I'd spent maybe 40 hours building it.</p>",
+      "intro2": "<p>That spreadsheet wasn't bad. It was invisible, which is a different problem with a different fix. The people posting screenshots of $8,000 months usually built an audience first and the product second, and that ordering detail gets left out of almost every case study I read. So let's talk about the actual numbers you should plan around.</p>",
+      "sections": [
+        {
+          "heading": "The Math Nobody Puts on the Sales Page",
+          "content": "<p>Run the arithmetic before you build anything. A $29 product selling to an engaged email list of 500 people might convert at 2%. That's 10 sales, $290, one time. Cold traffic from social or search usually lands closer to 0.5%, sometimes worse, so those same 10 sales need roughly 2,000 visitors who actually came looking for what you made. <strong>Your audience size is the ceiling on your revenue, and no amount of product polish raises it.</strong></p><p>This is why I've come around to a slightly unpopular position: a digital product is a business, and you should hold it to business odds. <a href=\"https://www.bls.gov/bdm/\" target=\"_blank\" rel=\"noopener\">U.S. Bureau of Labor Statistics data</a> has shown for years that roughly half of new establishments make it to five years. Nothing about selling a PDF exempts you from that. The failure is just quieter and cheaper.</p><p>A realistic first year, based on what I've watched across my own products and a few dozen readers who've sent me their dashboards:</p><ul><li>Months 1 to 3: single-digit sales, mostly friends and the two strangers who found you</li><li>Months 4 to 9: $50 to $300 a month if you're publishing consistently and collecting emails</li><li>Months 10 to 18: the first month that covers a real bill, usually driven by one product, not five</li></ul>"
+        },
+        {
+          "heading": "Passive Income Comes With a Maintenance Bill",
+          "content": "<p>Nobody warns you about the upkeep. Notion changed a database feature and broke the template I sold to 300 people. Canva updated its editor and half my screenshots went stale. Then there are refund requests, the guy who wants tech support at midnight, and the payment processor that decides your account needs a review.</p><p>I track my hours, and across three active products I average <strong>about four hours a month per product</strong> in pure maintenance. Not marketing. Not new content. Just keeping the thing from rotting. On a product earning $200 a month, that's a decent hourly rate. On a product earning $40, you're working for free and calling it passive.</p><p>Compare that with income streams that genuinely require nothing from you. I've written before about <a href=\"/dividend-stocks-passive-income-over-time/\">how dividend stocks build passive income over time</a>, and the contrast is stark: a dividend hits your account whether or not you open your laptop. Digital products don't behave that way, and pretending otherwise is how people burn out in month seven.</p>"
+        },
+        {
+          "heading": "What Sold, What Died, and the One I Deleted",
+          "content": "<p>My best seller is boring. It's a 14-page PDF that walks freelancers through setting up a quarterly tax reserve account, priced at $24, and it's brought in somewhere between $180 and $400 a month for two years now. My worst was a 90-page \"financial freedom workbook\" that took four months to write and sold nine copies. Same audience, same list. The difference was that one solved a narrow, annoying, specific problem, and the other solved a vibe.</p><p>Honestly though, I'm not totally sure that rule holds for everyone. My friend Dev runs a photography newsletter and sells this weirdly broad Lightroom preset bundle that by my logic should flop, and it clears about $1,100 some months. When I asked him why, he shrugged and said people trust him. Which is annoyingly hard to put in a framework. I also once launched a product with a typo in the checkout headline, spelled my own product name wrong, left it up for eleven days, and it still outsold the workbook. So take my confident theories with some salt... the pattern is real, but it isn't a law.</p><p>The lesson I'd actually stand behind: <strong>build the smallest thing that removes a specific headache, and test it before you invest a season of your life.</strong> I go deeper on this in my breakdown of <a href=\"/digital-products-passive-income-expectations/\">what nobody tells you about the first 18 months</a>.</p>"
+        },
+        {
+          "heading": "Budget Two Years and a Surprise Tax Bill",
+          "content": "<p>Side income is normal now. <a href=\"https://www.bankrate.com\" target=\"_blank\" rel=\"noopener\">Bankrate's side hustle research</a> has consistently found that around four in ten American adults have one, and the typical monthly take is in the hundreds rather than the thousands. That's the realistic bracket for a digital product in year one. Plan for it and you'll stay in the game long enough to get good.</p><p>Then there's the part that ambushes people every April. Product income is self-employment income, and the <a href=\"https://www.irs.gov/taxtopics/tc554\" target=\"_blank\" rel=\"noopener\">IRS applies a 15.3% self-employment tax</a> on top of your regular income tax. I got hit with a $2,900 bill in my second year because I'd mentally counted gross Gumroad revenue as profit. Set aside 30% from sale one. I've since written a fuller guide to <a href=\"/hidden-tax-trap-passive-income/\">the tax trap in passive income and how to legally avoid it</a>, and every deduction in there is one I use.</p><p>My editorial position, stated plainly: treat a digital product as an asset you're building, not as income you're replacing. Don't quit anything. Don't count on it. And if it's still under $100 a month at month 18, that's information, not failure.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today, before you build anything else. Write the sales page first, one page, with the exact problem, the exact buyer, and the price. Then send it to ten people who fit that description and ask if they'd pay. If fewer than three say yes, you just saved yourself 40 hours and an $18 payday.</p>",
+      "image_query": "laptop notebook desk",
+      "image_alt": "Person working at a wooden desk with an open laptop, notebook and coffee cup in soft daylight",
+      "outbound_links": [
+        "bls.gov",
+        "bankrate.com",
+        "irs.gov"
+      ],
+      "sources": [
+        {
+          "name": "U.S. Bureau of Labor Statistics, Business Employment Dynamics",
+          "url": "https://www.bls.gov/bdm/"
+        },
+        {
+          "name": "Bankrate Side Hustle Survey",
+          "url": "https://www.bankrate.com"
+        },
+        {
+          "name": "IRS Topic No. 554, Self-Employment Tax",
+          "url": "https://www.irs.gov/taxtopics/tc554"
+        }
+      ],
+      "faq": [
+        {
+          "q": "How much can you realistically make selling digital products in the first year?",
+          "a": "For most people starting without an audience, somewhere between $0 and $300 a month by the end of year one. The sellers hitting four figures monthly almost always had an email list or following before launch."
+        },
+        {
+          "q": "Are digital products actually passive income?",
+          "a": "Not really. Expect around four hours of maintenance per product per month for updates, refunds and buyer questions. The income keeps arriving without you selling each unit, but the product itself needs upkeep to stay sellable."
+        },
+        {
+          "q": "Do I have to pay tax on digital product sales?",
+          "a": "Yes. Sales are self-employment income, which carries a 15.3% self-employment tax on top of income tax in the US. Set aside about 30% of every sale from day one and track your platform fees and software costs as deductions."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/6958505/pexels-photo-6958505.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "www.kaboompics.com",
+      "image_alt": "Hands holding a small green calculator showing 5633 above a silver laptop keyboard on a desk",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/6829522/pexels-photo-6829522.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Kampus Production"
+        ],
+        [
+          "https://images.pexels.com/photos/35601510/pexels-photo-35601510.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Phoebe Buffay"
+        ],
+        [
+          "https://images.pexels.com/photos/17175670/pexels-photo-17175670.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Marta Nogueira"
+        ]
+      ],
+      "ids": [
+        "6958505",
+        "6829522",
+        "35601510",
+        "17175670"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:41"
+  },
+  {
+    "topic": "Side hustles that become passive income streams",
+    "article": {
+      "title": "Most Side Hustles Never Go Passive. These Four Actually Do",
+      "meta_description": "Which side hustles turn into passive income, which stay jobs in disguise, and the one test I use to tell them apart before I invest a weekend.",
+      "slug": "side-hustles-that-go-passive",
+      "author": "Ryan Mitchell",
+      "intro": "<p>A side hustle only becomes passive income when the thing you made keeps getting sold after you stop making it. That's the whole test, and most hustles fail it. In 2021 I built a 14 tab rental property spreadsheet in Google Sheets for a client who paid me $600 for it. On a Sunday night, mostly out of spite at how long it had taken, I stripped his numbers out and listed the same file on Gumroad for $39. It has sold a little over 1,100 copies since, and it still moves four or five a week while I'm asleep. Same work. Sold once, then sold forever.</p>",
+      "intro2": "<p>Here's my position, and it's not a popular one in the hustle corners of the internet: <strong>the platform doesn't matter, the asset does.</strong> Nobody gets to passive income by picking the right app. You get there by making something once that a stranger can buy without you being in the room. Everything else is a job you gave yourself, and some of those jobs are genuinely great. They're just not going to pay you in five years for work you did today.</p>",
+      "sections": [
+        {
+          "heading": "The Test: Can You Sell the Same Hour Twice?",
+          "content": "<p>Ask it before you commit a single weekend. Can this be sold more than once? If no, stop calling it passive income and start calling it what it is.</p><p>Dog walking, rideshare driving, freelance design, virtual assistant work, consulting. Real businesses, all of them. Also strictly linear: hours in, dollars out, and the money stops the day you do. The Federal Reserve's <a href=\"https://www.federalreserve.gov/publications/report-economic-well-being-us-households.htm\" target=\"_blank\" rel=\"noopener\">Survey of Household Economics and Decisionmaking</a> has found that roughly a third of US adults earned money from gig or side work in the previous month, and the overwhelming share of that was time traded for cash. That's not a failure. It's a ceiling, and it's a hard one.</p><p>So the useful question isn't which hustle pays best right now. It's which one leaves something behind. In my work with maybe 40 freelancers over the last six years, the ones who got to real recurring income all did the same unglamorous thing: they noticed they'd built the same deliverable three times for three clients, and then they sold version four to everyone.</p>"
+        },
+        {
+          "heading": "Four Hustles With a Real Escape Hatch",
+          "content": "<p>These are the ones I've watched actually make the jump, ranked roughly by how fast the income decouples from your calendar.</p><ul><li><strong>Templates, tools, and digital products.</strong> Spreadsheets, Notion systems, Lightroom presets, contract packs. Cheapest to build, fastest to list, and brutally slow to gain traction. If you want the honest timeline, I wrote about <a href=\"/digital-products-passive-income-expectations/\">what the first 18 months of selling digital products actually looks like</a>, and it's not the screenshot you saw on X.</li><li><strong>Licensable creative work.</strong> Stock audio, illustration sets, fonts, sample packs. Sell the license, keep the file. This edges into <a href=\"/royalty-investments-passive-income-music-books-patents/\">royalty income from music, books, and patents</a>, where the same asset pays out for decades if you own the rights cleanly.</li><li><strong>A productized service with an asset at its core.</strong> You still deliver, but 80% of it is a system you built once. This is where most consultants should start, because you already have the raw material.</li><li><strong>Niche content with search demand behind it.</strong> Slowest of the four by a wide margin, and the one people quit at month five.</li></ul><p>What all four share: a buyer can complete the transaction with no input from you. That's the line.</p>"
+        },
+        {
+          "heading": "The Maintenance Tax Nobody Budgets For",
+          "content": "<p>Passive is a spectrum, not a switch. My spreadsheet takes about two hours a quarter: a formula breaks when Google changes something, someone emails asking why the depreciation tab won't calculate, a refund needs processing. Call it eight hours a year against a few thousand in revenue. Good trade. But it isn't zero, and anyone telling you it's zero is selling a course.</p><p>The tax side surprises people harder than the maintenance. Digital product income is usually ordinary self-employment income, not the sheltered kind, and the IRS is specific about what counts as a <a href=\"https://www.irs.gov/taxtopics/tc425\" target=\"_blank\" rel=\"noopener\">passive activity</a> versus material participation. Most side hustlers get this backwards in year one. I've pulled apart the mechanics in <a href=\"/hidden-tax-trap-passive-income/\">the hidden tax trap in passive income</a>, and I'd read it before your first quarter of real sales, not after.</p><p>Okay, small confession here. My friend Dev tried the licensing route with a set of 200 UI icons and honestly... I'm still not sure why it flopped. Same quality as stuff I've seen do $2k a month. He priced at $18, redesigned the landing page four times, and cleared $340 in a year before he shelved it. I've since told maybe a dozen people to try icon packs, which in hindsight feels a bit rich given the only data point I have up close is a guy who lost money and now refuses to open Figma on weekends. So take the category list as a map, not a promise. Some of this is genuinely luck and timing, and I'd rather say that than pretend otherwise.</p>"
+        },
+        {
+          "heading": "How the Conversion Actually Happens",
+          "content": "<p>You don't quit the hustle to build the asset. You mine the hustle for the asset while it's still paying you. Bankrate's ongoing <a href=\"https://www.bankrate.com/\" target=\"_blank\" rel=\"noopener\">side hustle research</a> has repeatedly put the share of US adults running one somewhere in the high thirties, and the money is real but thin, often a few hundred a month. That income buys you the runway. Use it.</p><p>The mechanic is simple. Every time you deliver client work, save the reusable core somewhere separate. The onboarding checklist. The pricing calculator. The three email templates you rewrite every single time. After ten clients you'll have a product hiding in a folder, already tested on paying humans, which is more validation than 99% of first products ever get.</p><p>And price it higher than feels comfortable. My spreadsheet sold better at $39 than at $19, which makes no sense until you accept that a cheap tool reads as a cheap tool. At least in my experience, the $9 tier attracts refund requests and the $39 tier attracts people who actually use the thing.</p>"
+        }
+      ],
+      "conclusion": "<p>Open your last ten invoices tonight and find the deliverable you rebuilt from scratch more than twice. That's your product. Strip the client names out, save it as a clean template, write four honest sentences about who it's for, and put it on Gumroad or Lemon Squeezy this week at a price that makes you flinch a little. You can polish it after the first sale tells you it's worth polishing.</p>",
+      "image_query": "laptop spreadsheet desk",
+      "image_alt": "Person working at a home desk with a laptop showing a spreadsheet, notebook and coffee cup beside it",
+      "outbound_links": [
+        "federalreserve.gov",
+        "irs.gov",
+        "bankrate.com"
+      ],
+      "sources": [
+        {
+          "name": "Federal Reserve Survey of Household Economics and Decisionmaking",
+          "url": "https://www.federalreserve.gov/publications/report-economic-well-being-us-households.htm"
+        },
+        {
+          "name": "IRS Topic No. 425, Passive Activities",
+          "url": "https://www.irs.gov/taxtopics/tc425"
+        },
+        {
+          "name": "Bankrate",
+          "url": "https://www.bankrate.com/"
+        }
+      ],
+      "faq": [
+        {
+          "q": "How long before a side hustle actually starts earning without me working on it?",
+          "a": "For digital products, plan on 12 to 18 months before sales happen without active promotion, and expect the first six months to look like nothing. Licensing and royalty assets can take longer but pay out for years. Anything that pays you in week one is almost certainly still a job."
+        },
+        {
+          "q": "Can a service business ever become passive income?",
+          "a": "Not the service itself, but the system underneath it can. Package the checklists, calculators, and templates you rebuild for every client into a product other people buy directly. That is the only reliable path I have seen from freelance work to income that keeps arriving."
+        },
+        {
+          "q": "Do I owe self-employment tax on digital product sales?",
+          "a": "In most cases yes, because the IRS treats income from a trade or business you materially participate in as ordinary self-employment income, not passive. True passive treatment has a narrow definition. Set aside roughly 25 to 30 percent from your first sale and talk to a preparer before your first big quarter."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/7309306/pexels-photo-7309306.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "RDNE Stock project",
+      "image_alt": "Woman packing a polka dot gift box marked Special Delivery beside mugs and a paper bag on a table",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/36094761/pexels-photo-36094761.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Hassan Bouamoud"
+        ],
+        [
+          "https://images.pexels.com/photos/6476251/pexels-photo-6476251.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Mikael Blomkvist"
+        ]
+      ],
+      "ids": [
+        "7309306",
+        "36094761",
+        "6476251"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:45"
+  }
+]
