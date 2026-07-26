@@ -1633,6 +1633,142 @@ def verify_article_image(image_url, article_title, query, client=None):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# IMAGE SELECTION. Body images used to be searched with the raw section heading
+# ("Why this matters", "The bottom line"), which is not a visual subject at all,
+# so Pexels fell back to the site category and returned the same generic stock
+# genre for every article. These helpers ask the model for CONCRETE, visually
+# distinct search terms per slot, then resolve them against the network-wide
+# used-image ledger.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_IMG_CLAIM_LOCK = threading.Lock()
+
+_GENERIC_HEADINGS = re.compile(
+    r"^(why|what|how|the)?\s*(this|it|that)?\s*(matters|works|means|happens|to know|bottom line|takeaway|"
+    r"conclusion|summary|final thoughts|key points|overview|introduction|next steps|in short|tl;?dr)\b",
+    re.I)
+
+def _image_queries(article, site, n, client=None):
+    """N concrete, visually distinct Pexels search terms for one article.
+    Slot 0 is the hero. Runs on whatever engine is active (Max locally = free)
+    and degrades to a heuristic chain if the model is unavailable."""
+    n = max(1, int(n))
+    title    = (article.get("title") or "").strip()
+    headings = [(s.get("heading") or "").strip() for s in (article.get("sections") or [])]
+    headings = [h for h in headings if h]
+    prompt = (
+        'Pick ' + str(n) + ' stock-photo search terms for this article.\n'
+        'Title: "' + title + '"\n'
+        'Section headings: ' + json.dumps(headings[:8], ensure_ascii=False) + '\n'
+        'Site topic: ' + str(site.get("category", "")) + '\n\n'
+        'Rules: each term is 2 to 4 words naming a CONCRETE, PHOTOGRAPHABLE subject '
+        '(a person doing a specific thing, an object, a place, a material). Never an '
+        'abstract noun (growth, strategy, success, mindset), never a section heading, '
+        'never a brand name. The ' + str(n) + ' terms must be visually different from '
+        'each other so the photos do not look like a set. Term 1 is the hero image and '
+        'must match the headline subject.\n'
+        'Reply with STRICT JSON only: {"queries": ["term one", "term two"]}'
+    )
+    try:
+        raw = _complete(client, prompt, model=_VISION_MODEL, max_tokens=400)
+        m = re.search(r'\{.*\}', raw or "", re.S)
+        qs = json.loads(m.group(0))["queries"] if m else []
+        qs = [str(q).strip() for q in qs if str(q).strip()]
+        # dedupe while preserving order
+        qs = list(dict.fromkeys(qs))
+        if qs:
+            return (qs + qs * n)[:n]
+    except Exception as e:
+        print(f"  [images] query generation failed ({e}); using heuristic terms")
+    # Heuristic fallback: article's own image_query, then non-generic headings.
+    base = (article.get("image_query") or site.get("category") or "editorial photography").strip()
+    out  = [base]
+    for h in headings:
+        if len(out) >= n:
+            break
+        if _GENERIC_HEADINGS.match(h) or len(h.split()) > 6:
+            continue
+        out.append(h)
+    while len(out) < n:
+        out.append(f"{base} {['workspace','close up','detail','people'][len(out) % 4]}")
+    return out[:n]
+
+
+def resolve_article_images(article, site, settings, keys, exclude_ids=None, client=None,
+                           tag="", log=print):
+    """Choose a hero plus 2-3 body images for one article.
+
+    Every candidate is checked against `exclude_ids` (the network-wide ledger) and,
+    when enabled, shown to the vision check. Returns a dict:
+        {"image", "photographer", "image_alt", "body_images": [(url, photographer)],
+         "ids": [photo ids chosen]}
+    Nothing here writes to GitHub, so it is safe to call from both the daily run
+    and the local pregenerate pass.
+    """
+    pexels_key    = keys.get("pexels", "")
+    unsplash_key  = keys.get("unsplash", "") or None
+    replicate_key = keys.get("replicate", "") or None
+    sources   = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
+    vision_on = settings.get("image_vision_check", True)
+
+    # Claim into the CALLER's set when one is passed. The daily run processes sites
+    # on 6 threads; a private copy would let two sites claim the same photo in the
+    # same second, which is exactly the duplicate we are removing.
+    seen = exclude_ids if isinstance(exclude_ids, set) else {str(x) for x in (exclude_ids or [])}
+    chosen_ids = []
+    n_sections = len(article.get("sections") or [])
+    want_body  = max(2, min(3, 1 + n_sections // 2))
+    queries    = _image_queries(article, site, 1 + want_body, client)
+    # Broad-but-still-relevant safety net; deliberately NOT the bare site category.
+    fallbacks  = [q for q in (article.get("image_query"),
+                              article.get("category"),
+                              f"{site.get('category','')} photography") if q]
+
+    def _take(query, is_hero):
+        """One vetted photo for `query`, or (None, None, None)."""
+        for _ in range(3):
+            url, ph = fetch_image(query, pexels_key, unsplash_key=unsplash_key,
+                                  replicate_key=replicate_key, sources=sources,
+                                  exclude_ids=seen, fallback_queries=fallbacks,
+                                  allow_reuse=False)
+            if not url:
+                return None, None, None
+            pid = _pexels_photo_id(url)
+            with _IMG_CLAIM_LOCK:  # test-and-claim so parallel sites cannot collide
+                if pid in seen:
+                    continue
+                seen.add(pid)      # accepted or rejected, never offered again
+            if not vision_on:
+                return url, ph, None
+            ok, alt, why = verify_article_image(url, article.get("title", ""), query, client)
+            if ok:
+                return url, ph, alt
+            log(f"  {tag} {'hero' if is_hero else 'body'} image rejected by vision check ({why}); retrying")
+        return None, None, None
+
+    hero_url, hero_ph, hero_alt = _take(queries[0], True)
+    if not hero_url:
+        for fb in fallbacks:
+            hero_url, hero_ph, hero_alt = _take(fb, True)
+            if hero_url:
+                break
+    if hero_url:
+        chosen_ids.append(_pexels_photo_id(hero_url))
+    else:
+        log(f"  {tag} no hero image passed the vision check; publishing without hero")
+
+    body = []
+    for q in queries[1:]:
+        url, ph, _alt = _take(q, False)
+        if url:
+            body.append((url, ph))
+            chosen_ids.append(_pexels_photo_id(url))
+
+    return {"image": hero_url or "", "photographer": hero_ph or "",
+            "image_alt": hero_alt or "", "body_images": body, "ids": chosen_ids}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # SHARED HTML HELPERS
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -7824,6 +7960,12 @@ def run(topic_overrides=None, site_filter=None):
     if not anthropic_key or not github_token:
         raise SystemExit("Missing ANTHROPIC_API_KEY or GITHUB_TOKEN")
 
+    # Network-wide used-image ledger, loaded once and pushed back at the end of the
+    # run. Shared across every site so the same stock photo is never published twice.
+    used_image_ids = _load_used_image_ids(github_token)
+    _ledger_at_start = len(used_image_ids)
+    print(f"[images] used-photo ledger loaded: {_ledger_at_start} ids")
+
     # Load config from network-config.json (generated by editor.html)
     active_sites, global_prompt, settings, global_client, global_negative_prompt, global_header_scripts, global_footer_scripts = load_network_config()
     active_sites = [s for s in active_sites if s.get("active", True)]
@@ -7982,6 +8124,11 @@ def run(topic_overrides=None, site_filter=None):
 
                 # Build set of already-used image URLs for this site (dedup across runs)
                 used_image_urls = {a.get("image", "") for a in articles if a.get("image")}
+                # Seed this site's exclusions from the network ledger plus every photo
+                # id this site has already published (hero and, where recorded, body).
+                used_image_ids.update(_pexels_photo_id(u) for u in used_image_urls if u)
+                for _a in articles:
+                    used_image_ids.update(str(x) for x in (_a.get("image_ids") or []) if x)
 
                 for post_num in range(posts_per_run):
                     print(f"  {tag} Post {post_num+1}/{posts_per_run}")
@@ -8065,74 +8212,43 @@ def run(topic_overrides=None, site_filter=None):
 
                         article["slug"] = slug  # apply deduplicated slug
 
-                        site_sources = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
-                        # Build a fallback-query chain so we never reuse the same photo
-                        # across articles in the same site. Order: primary image_query,
-                        # then the article's category, then the site category, then a
-                        # generic visual hook tied to the site theme.
-                        _primary  = article.get("image_query", site.get("category", "lifestyle"))
-                        _fallbacks = [
-                            article.get("category", ""),
-                            site.get("category", ""),
-                            site.get("image_fallback_query", ""),
-                            f"{site.get('category','')} editorial photography",
-                        ]
-                        # Vision-checked hero: fetch a candidate, show it to Claude,
-                        # reject wrong-brand / off-topic photos and try again (max 3).
-                        # Rejected candidates join the exclude set so they never come back.
-                        _vision_on = settings.get("image_vision_check", True)
-                        image_url = photographer = None
-                        for _attempt in range(3):
-                            _iu, _ph = fetch_image(
-                                _primary,
-                                pexels_key, unsplash_key=unsplash_key or None,
-                                replicate_key=replicate_key or None,
-                                sources=site_sources,
-                                exclude_urls=used_image_urls,
-                                fallback_queries=_fallbacks,
-                            )
-                            if not _iu:
-                                break
-                            used_image_urls.add(_iu)  # accepted or rejected, never offer it again this run
-                            if not _vision_on:
-                                image_url, photographer = _iu, _ph
-                                break
-                            _vok, _valt, _vwhy = verify_article_image(_iu, article.get("title", ""), _primary, client)
-                            if _vok:
-                                image_url, photographer = _iu, _ph
-                                if _valt:
-                                    article["image_alt"] = _valt  # honest alt from the actual photo
-                                break
-                            print(f"  {tag} hero image rejected by vision check ({_vwhy}); retrying", flush=True)
-                        if not image_url:
-                            print(f"  {tag} no hero image passed the vision check; publishing without hero", flush=True)
-                        article["image"] = image_url or ""
-
-                        # extra in-context body images so each post has 2-6 images total (hero=#1). FUTURE posts only.
+                        # Images. A pre-generated draft already carries a hero plus
+                        # body images that were picked AND vision-checked locally on
+                        # Claude Max, so the cron reuses them verbatim and makes no
+                        # image calls at all. Anything else resolves them here.
                         _BODY_IMAGES.clear()
-                        try:
-                            _secs = article.get("sections") or []
-                            _want = max(2, min(3, 1 + len(_secs) // 2))  # hero + 2-3 => 3-4 images/post
-                            _exclude = set(used_image_urls)
-                            _heads = [(_s.get("heading") or "").strip() for _s in _secs if (_s.get("heading") or "").strip()] or [_primary]
-                            for _k in range(_want):
-                                _q = _heads[_k % len(_heads)]
-                                for _bt in range(2):  # 1 retry per slot if vision rejects
-                                    _iu, _ph = fetch_image(_q, pexels_key,
-                                        unsplash_key=unsplash_key or None, replicate_key=replicate_key or None,
-                                        sources=site_sources, exclude_urls=_exclude, fallback_queries=_fallbacks)
-                                    if not _iu or _iu in _exclude:
-                                        break
-                                    _exclude.add(_iu); used_image_urls.add(_iu)
-                                    if _vision_on:
-                                        _vok, _valt, _vwhy = verify_article_image(_iu, article.get("title", ""), _q, client)
-                                        if not _vok:
-                                            print(f"  {tag} body image rejected by vision check ({_vwhy})", flush=True)
-                                            continue
-                                    _BODY_IMAGES.append((_iu, _ph))
-                                    break
-                        except Exception as _ie:
-                            print(f"  {tag} extra image fetch skipped: {_ie}"); _BODY_IMAGES.clear()
+                        _drafted_imgs = (_draft or {}).get("images") or {}
+                        if _drafted_imgs.get("image"):
+                            article["image"] = _drafted_imgs["image"]
+                            if _drafted_imgs.get("image_alt"):
+                                article["image_alt"] = _drafted_imgs["image_alt"]
+                            photographer = _drafted_imgs.get("photographer", "")
+                            _BODY_IMAGES.extend([tuple(x) for x in _drafted_imgs.get("body_images", [])])
+                            _img_ids = list(_drafted_imgs.get("ids", []))
+                            print(f"  {tag} images from draft ({1 + len(_BODY_IMAGES)} vetted, no API)", flush=True)
+                        else:
+                            try:
+                                _res = resolve_article_images(
+                                    article, site, settings,
+                                    {"pexels": pexels_key, "unsplash": unsplash_key,
+                                     "replicate": replicate_key},
+                                    exclude_ids=used_image_ids, client=client, tag=tag,
+                                    log=lambda m: print(m, flush=True))
+                            except Exception as _ie:
+                                print(f"  {tag} image resolve failed: {_ie}", flush=True)
+                                _res = {"image": "", "photographer": "", "image_alt": "",
+                                        "body_images": [], "ids": []}
+                            article["image"] = _res["image"]
+                            if _res.get("image_alt"):
+                                article["image_alt"] = _res["image_alt"]
+                            photographer = _res.get("photographer", "")
+                            _BODY_IMAGES.extend(_res["body_images"])
+                            _img_ids = _res["ids"]
+                        # Every photo used anywhere in this post joins the network ledger
+                        # so no other site or future article can pick it up again.
+                        used_image_ids.update(_img_ids)
+                        if article.get("image"):
+                            used_image_urls.add(article["image"])
 
                         # Generate comments BEFORE building HTML so they can be
                         # inlined into the static page (Google-crawlable).
@@ -8162,6 +8278,8 @@ def run(topic_overrides=None, site_filter=None):
                             token   = github_token,
                         ))
                         print(f"  {tag} Article pushed: {pushed} → /{slug}/")
+                        with _PUBLISHED_LOCK:
+                            _PUBLISHED["count"] += 1
 
                         _idx_entry = {
                             "title":            article["title"],
@@ -8174,6 +8292,10 @@ def run(topic_overrides=None, site_filter=None):
                             "outbound_links":   article.get("outbound_links", []),
                             "posted_iso":       datetime.now().strftime("%Y-%m-%d"),
                         }
+                        # Hero AND body photo ids, so a rebuilt ledger knows every
+                        # photo this article consumed, not just the hero.
+                        if _img_ids:
+                            _idx_entry["image_ids"] = _img_ids
                         if article.get("category"):
                             _idx_entry["category"] = article["category"]
                         if is_historical:
