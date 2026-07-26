@@ -8098,9 +8098,11 @@ def run(topic_overrides=None, site_filter=None):
             # Pre-generated draft queue for this site (free Claude Max output). A plain
             # daily post pops from this instead of calling the LLM in the cloud.
             site_drafts = _load_drafts(sid, github_token)
+            hist_drafts = _load_drafts(sid, github_token, kind="historical")
             drafts_dirty = False
-            if site_drafts:
-                print(f"  {tag} {len(site_drafts)} pre-generated draft(s) in queue")
+            hist_dirty   = False
+            if site_drafts or hist_drafts:
+                print(f"  {tag} {len(site_drafts)} daily + {len(hist_drafts)} historical draft(s) in queue")
 
             if bulk_hist > 0:
                 # Bulk backfill ignores new_posts_enabled (it is historical-only by intent)
@@ -8185,15 +8187,27 @@ def run(topic_overrides=None, site_filter=None):
                         author_name = get_author_name(site, settings)
 
                         # A plain daily post pops a pre-generated draft (free Claude Max
-                        # output) instead of calling the LLM in the cloud. Special posts
-                        # (historical/client/roundup/override/broadcast-html) still generate.
-                        _plain_daily = (not is_historical and not is_client_post and not is_roundup
-                                        and not overrides.get(site["id"]) and sid not in html_overrides)
-                        _draft = site_drafts.pop(0) if (_plain_daily and site_drafts) else None
-                        if _draft:
+                        # output) instead of calling the LLM in the cloud. Weekly
+                        # retrospectives pop from their own queue. Only client posts,
+                        # roundups, overrides and broadcast HTML still generate live.
+                        _special  = (is_client_post or is_roundup
+                                     or overrides.get(site["id"]) or sid in html_overrides)
+                        _plain_daily = not is_historical and not _special
+                        _draft = None
+                        if _plain_daily and site_drafts:
+                            _draft = site_drafts.pop(0)
                             drafts_dirty = True
+                        elif is_historical and not _special and hist_drafts:
+                            _draft = hist_drafts.pop(0)
+                            hist_dirty = True
+                            # pub_date is derived from hist_year further down.
+                            if _draft.get("hist_year"):
+                                hist_year = _draft["hist_year"]
+                        if _draft:
                             topic = _draft.get("topic") or topic
-                            print(f"  {tag} Topic (pre-generated draft, {len(site_drafts)} left in queue): {topic}")
+                            _kind = "historical" if is_historical else "daily"
+                            _left = len(hist_drafts) if is_historical else len(site_drafts)
+                            print(f"  {tag} Topic (pre-generated {_kind} draft, {_left} left in queue): {topic}")
                             web_context = ""
                             internal_link_candidates = []
                         else:
@@ -8395,6 +8409,12 @@ def run(topic_overrides=None, site_filter=None):
                         print(f"  {tag} Draft queue updated ({len(site_drafts)} left)")
                     except Exception as _de:
                         print(f"  {tag} Draft queue push failed: {_de}")
+                if hist_dirty:
+                    try:
+                        _push_drafts(sid, hist_drafts, github_token, kind="historical")
+                        print(f"  {tag} Historical queue updated ({len(hist_drafts)} left)")
+                    except Exception as _de:
+                        print(f"  {tag} Historical queue push failed: {_de}")
 
             except Exception as e:
                 print(f"  {tag} ERROR on {site['domain']}: {e}")
@@ -8524,8 +8544,7 @@ def pregenerate(count, github_token=None, only=None, log=print, target=None):
         author_name = get_author_name(site, settings)
         want = max(0, int(target) - len(queue)) if target is not None else count
         if want <= 0:
-            log(f"  [{sid}] queue already at {len(queue)}/{target} - nothing to do")
-            continue
+            log(f"  [{sid}] daily queue already at {len(queue)}/{target} - nothing to do")
         made, attempts = 0, 0
         while made < want and attempts < want * 4 + 4:
             attempts += 1
@@ -8567,6 +8586,48 @@ def pregenerate(count, github_token=None, only=None, log=print, target=None):
             log(f"  [{sid}] queue pushed -> {len(queue)} total (ok={ok})")
         else:
             log(f"  [{sid}] no new drafts")
+
+        # Weekly retrospective queue. Without it the cron would still have to
+        # generate historical posts live, which is exactly the API call we are
+        # removing. Sized off the site's own historical_per_week cadence.
+        if not (site.get("historical_mode", True) and int(site.get("historical_per_week", 0) or 0) > 0):
+            continue
+        hq = _load_drafts(sid, github_token, kind="historical")
+        for d in hq:
+            used_image_ids.update(str(x) for x in ((d.get("images") or {}).get("ids") or []) if x)
+        per_week   = int(site.get("historical_per_week", 1) or 1)
+        hist_want  = (max(1, round((int(target) * per_week) / 7.0)) - len(hq)) if target is not None else count
+        if hist_want <= 0:
+            log(f"  [{sid}] historical queue already at {len(hq)} - nothing to do")
+            continue
+        hmade = 0
+        for _ in range(hist_want):
+            try:
+                hist_year, htopic = historical_topic_year(site)
+                harticle = generate_article(htopic, site, active_sites, client, global_prompt,
+                                            get_author_name(site, settings),
+                                            global_negative_prompt=global_negative_prompt)
+            except Exception as e:
+                log(f"  [{sid}] historical generation failed: {e}"); continue
+            if not harticle or not harticle.get("title"):
+                continue
+            himages = {}
+            if img_keys["pexels"]:
+                try:
+                    himages = resolve_article_images(harticle, site, settings, img_keys,
+                                                     exclude_ids=used_image_ids, client=client,
+                                                     tag=f"[{sid}]", log=log)
+                except Exception as e:
+                    log(f"  [{sid}] historical image resolve failed: {e}")
+            hq.append({"topic": htopic, "article": harticle, "images": himages,
+                       "hist_year": hist_year, "kind": "historical",
+                       "generated_iso": datetime.now().strftime("%Y-%m-%d %H:%M")})
+            hmade += 1; total += 1
+            log(f"  [{sid}] drafted historical {hmade}/{hist_want} ({hist_year}): "
+                f"{harticle.get('title','')[:50]}")
+        if hmade:
+            ok = _push_drafts(sid, hq, github_token, kind="historical")
+            log(f"  [{sid}] historical queue pushed -> {len(hq)} total (ok={ok})")
     if len(used_image_ids) > _ledger_at_start:
         _push_used_image_ids(sorted(used_image_ids), github_token,
                              note=f" +{len(used_image_ids) - _ledger_at_start} from pregenerate")
