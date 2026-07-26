@@ -1436,13 +1436,19 @@ def _pexels_photo_id(url):
     return m.group(1) if m else url
 
 
-def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, sources=None, exclude_urls=None, fallback_queries=None):
+def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, sources=None, exclude_urls=None,
+                fallback_queries=None, exclude_ids=None, allow_reuse=False):
     """Fetch image from configured sources in order: pexels → unsplash → none.
     exclude_urls: set of already-used image URLs - will skip photos matching those IDs.
+    exclude_ids:  set of already-used photo IDs (the network-wide ledger).
     fallback_queries: list of broader queries to try if the primary is exhausted.
+    allow_reuse: when False (default) return (None, None) rather than handing back a
+        photo that is already in the exclude set. Reusing a photo is worse than
+        shipping the post with one image fewer.
     """
     sources = sources or (["pexels", "unsplash"] if unsplash_key else ["pexels"])
     excluded_ids = {_pexels_photo_id(u) for u in (exclude_urls or set())} if exclude_urls else set()
+    excluded_ids |= {str(x) for x in (exclude_ids or set())}
 
     # Build the query attempt list: primary first, then fallbacks. Each query
     # gets up to 6 random pages of 20 photos = 120 candidates filtered against
@@ -1482,11 +1488,15 @@ def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, source
                 except Exception as e:
                     print(f"  Pexels fetch failed ('{q}'): {e}")
 
-            # All queries exhausted - last resort: pick any from last successful fetch.
-            if last_photos:
+            # All queries exhausted. Only hand back an already-used photo when the
+            # caller explicitly allows it; a repeated stock photo across the network
+            # is the exact footprint we are trying to avoid.
+            if last_photos and allow_reuse:
                 photo = random.choice(last_photos)
                 print(f"  Image dedup: every query exhausted for '{query}', reusing best available")
                 return photo["src"]["large2x"], photo["photographer"]
+            if last_photos:
+                print(f"  Image dedup: every query exhausted for '{query}', all candidates already used - skipping")
 
         elif source == "unsplash" and unsplash_key:
             try:
@@ -7388,6 +7398,53 @@ def _push_drafts(sid, queue, token):
     except Exception:
         pass
     return github_push(CRON_REPO, f"drafts/{sid}.json", body, f"drafts: {sid} queue ({len(queue)} left)", token)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NETWORK-WIDE used-image ledger. Per-site dedup only ever looked at that site's
+# HERO images, so body images repeated freely and two sites querying similar
+# terms got the SAME Pexels top hits in the same order. This ledger is one flat
+# set of photo IDs for the WHOLE network (hero + body, every site) so no photo
+# is ever published twice anywhere.
+# ─────────────────────────────────────────────────────────────────────────────
+_USED_IMAGES_PATH = "drafts/_used_images.json"
+_USED_IMAGES_CAP  = 20000
+
+def _load_used_image_ids(token):
+    """Flat set of every Pexels/Unsplash photo ID already published network-wide."""
+    try:
+        url = f"https://api.github.com/repos/{CRON_REPO}/contents/{_USED_IMAGES_PATH}"
+        r = requests.get(url, headers={"Authorization": f"token {token}",
+                                       "Accept": "application/vnd.github.v3+json"}, timeout=20)
+        if r.status_code == 200:
+            raw = base64.b64decode(r.json().get("content", "").replace("\n", "")).decode("utf-8")
+            d = json.loads(raw)
+            ids = d.get("ids", []) if isinstance(d, dict) else d
+            return set(str(x) for x in ids if x)
+    except Exception as e:
+        print(f"  [images] ledger load failed: {e}")
+    return set()
+
+def _push_used_image_ids(ids, token, note=""):
+    """Persist the ledger. Newest IDs win when the cap trims the tail."""
+    try:
+        ordered = list(dict.fromkeys(str(x) for x in ids if x))[-_USED_IMAGES_CAP:]
+        body = json.dumps({"ids": ordered,
+                           "count": len(ordered),
+                           "updated": datetime.now().strftime("%Y-%m-%d %H:%M")},
+                          ensure_ascii=False, indent=1)
+        try:
+            d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "drafts")
+            os.makedirs(d, exist_ok=True)
+            with open(os.path.join(d, "_used_images.json"), "w", encoding="utf-8") as f:
+                f.write(body)
+        except Exception:
+            pass
+        return github_push(CRON_REPO, _USED_IMAGES_PATH, body,
+                           f"images: used ledger ({len(ordered)} ids){note}", token)
+    except Exception as e:
+        print(f"  [images] ledger push failed: {e}")
+        return False
 
 
 def github_push(repo, path, content, message, token):
