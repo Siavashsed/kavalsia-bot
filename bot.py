@@ -1643,6 +1643,12 @@ def verify_article_image(image_url, article_title, query, client=None):
 
 _IMG_CLAIM_LOCK = threading.Lock()
 
+# Articles actually pushed this run. A run that generates nothing used to print
+# "All sites updated" and exit 0, so 24 days of a dead API key looked green in
+# GitHub Actions. run() now exits non-zero when this stays at 0.
+_PUBLISHED       = {"count": 0}
+_PUBLISHED_LOCK  = threading.Lock()
+
 _GENERIC_HEADINGS = re.compile(
     r"^(why|what|how|the)?\s*(this|it|that)?\s*(matters|works|means|happens|to know|bottom line|takeaway|"
     r"conclusion|summary|final thoughts|key points|overview|introduction|next steps|in short|tl;?dr)\b",
@@ -8414,7 +8420,23 @@ def run(topic_overrides=None, site_filter=None):
         print(f"{'='*62}")
         send_nexus_digest(nexus_site, nexus_digest_articles, active_sites, brevo_key)
 
-    print("\n✓ All sites updated.")
+    # Persist the network-wide image ledger so tomorrow's run (and the local
+    # pregenerate pass) know every photo this run consumed.
+    if len(used_image_ids) > _ledger_at_start:
+        _push_used_image_ids(sorted(used_image_ids), github_token,
+                             note=f" +{len(used_image_ids) - _ledger_at_start}")
+
+    published = _PUBLISHED["count"]
+    print(f"\n✓ All sites updated. Articles published: {published}")
+    if published == 0:
+        print("\n" + "=" * 62)
+        print("PUBLISH FAILURE: zero articles were published in this run.")
+        print("Housekeeping (sitemaps, indexes) still ran, so the sites look alive")
+        print("while no new content shipped. Usual causes:")
+        print("  - ANTHROPIC_API_KEY invalid/expired and the draft queues are empty")
+        print("  - every site's queue is empty (run: bot.py --pregenerate N --llm max)")
+        print("=" * 62)
+        raise SystemExit(1)
 
 
 def pregenerate(count, github_token=None, only=None, log=print):
@@ -8443,6 +8465,17 @@ def pregenerate(count, github_token=None, only=None, log=print):
         log("[pregenerate] WARNING: engine is not 'max' - this will BILL the API. Re-run with --llm max for free generation.")
     client  = anthropic.Anthropic(api_key=anthropic_key or "unused")
     web_cfg = settings.get("web_search", {})
+    # Images are picked and vision-checked HERE, on Max, so the draft ships with a
+    # vetted hero + body set and the cron never has to touch the vision model.
+    img_keys = {"pexels":    os.environ.get("PEXELS_API_KEY", ""),
+                "unsplash":  os.environ.get("UNSPLASH_API_KEY", ""),
+                "replicate": os.environ.get("REPLICATE_API_KEY", "")}
+    used_image_ids = _load_used_image_ids(github_token)
+    _ledger_at_start = len(used_image_ids)
+    log(f"[pregenerate] used-photo ledger: {_ledger_at_start} ids")
+    if not img_keys["pexels"]:
+        log("[pregenerate] WARNING: PEXELS_API_KEY not set locally - drafts will carry no images "
+            "and the cron will fall back to fetching them itself.")
     total = 0
     for site in active_sites:
         sid = site["id"]
@@ -8453,6 +8486,12 @@ def pregenerate(count, github_token=None, only=None, log=print):
         queue = _load_drafts(sid, github_token)
         used = {(a.get("title") or "").strip().lower() for a in articles}
         used |= {(d.get("topic") or "").strip().lower() for d in queue}
+        # This site's own history and anything already reserved by a queued draft.
+        used_image_ids.update(_pexels_photo_id(a["image"]) for a in articles if a.get("image"))
+        for a in articles:
+            used_image_ids.update(str(x) for x in (a.get("image_ids") or []) if x)
+        for d in queue:
+            used_image_ids.update(str(x) for x in ((d.get("images") or {}).get("ids") or []) if x)
         author_name = get_author_name(site, settings)
         made, attempts = 0, 0
         while made < count and attempts < count * 4 + 4:
@@ -8475,15 +8514,29 @@ def pregenerate(count, github_token=None, only=None, log=print):
                 log(f"  [{sid}] generation failed for '{topic[:50]}': {e}"); continue
             if not article or not article.get("title"):
                 continue
-            queue.append({"topic": topic, "article": article,
+            images = {}
+            if img_keys["pexels"]:
+                try:
+                    images = resolve_article_images(article, site, settings, img_keys,
+                                                    exclude_ids=used_image_ids, client=client,
+                                                    tag=f"[{sid}]", log=log)
+                except Exception as e:
+                    log(f"  [{sid}] image resolve failed for '{topic[:40]}': {e}")
+                    images = {}
+            queue.append({"topic": topic, "article": article, "images": images,
                           "generated_iso": datetime.now().strftime("%Y-%m-%d %H:%M")})
             made += 1; total += 1
-            log(f"  [{sid}] drafted {made}/{count}: {article.get('title','')[:60]}")
+            log(f"  [{sid}] drafted {made}/{count} "
+                f"({1 + len(images.get('body_images', [])) if images.get('image') else 0} images): "
+                f"{article.get('title','')[:56]}")
         if made:
             ok = _push_drafts(sid, queue, github_token)
             log(f"  [{sid}] queue pushed -> {len(queue)} total (ok={ok})")
         else:
             log(f"  [{sid}] no new drafts")
+    if len(used_image_ids) > _ledger_at_start:
+        _push_used_image_ids(sorted(used_image_ids), github_token,
+                             note=f" +{len(used_image_ids) - _ledger_at_start} from pregenerate")
     log(f"[pregenerate] done: {total} new draft(s) across {len(active_sites)} sites")
 
 
