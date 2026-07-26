@@ -993,6 +993,89 @@ def historical_topic_year(site):
     return year, topic
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# WEEKLY PUBLISH SCHEDULE. The network used to post 1 article per site PER DAY,
+# which meant all 28 sites published on the same day, every day - a loud
+# footprint and far more volume than wanted. Each site now gets a small number
+# of assigned weekdays, and those days are spread across the network so roughly
+# the same handful of sites publish each day instead of all of them at once.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def site_publish_days(site, per_week, all_ids=None):
+    """The weekdays (0=Monday .. 6=Sunday) this site publishes on.
+
+    Explicit `publish_days` in network-config always wins. Otherwise the days are
+    derived from the site's position in the network so the assignment is stable
+    across runs (no randomness, no state to store) and evenly spread: sites are
+    dealt one starting day each, round-robin over the 7 days, and the second and
+    later days of the week are pushed roughly half a week apart.
+    """
+    explicit = site.get("publish_days")
+    if isinstance(explicit, list) and explicit:
+        return sorted({int(d) % 7 for d in explicit})[:max(1, per_week)]
+    per_week = max(1, min(7, int(per_week)))
+    ids = sorted(all_ids) if all_ids else [site.get("id", "")]
+    try:
+        idx = ids.index(site.get("id", ""))
+    except ValueError:
+        idx = abs(hash(site.get("id", ""))) % 7
+    start = idx % 7
+    # Alternate the gap between a site's own days so two sites sharing a start
+    # day do not also share their second day.
+    gap = 3 if (idx // 7) % 2 == 0 else 4
+    days = {(start + k * gap) % 7 for k in range(per_week)}
+    # Collisions inside one site (possible when per_week is large) are filled in.
+    d = start
+    while len(days) < per_week:
+        d = (d + 1) % 7
+        days.add(d)
+    return sorted(days)
+
+
+def new_posts_due(site, articles, all_ids=None, today=None):
+    """How many NEW (non-historical) articles this site should publish right now.
+
+    Two independent gates:
+      1. today must be one of the site's assigned weekdays, OR the site is overdue
+         (nothing new in 5+ days) so a missed cron does not silently cost a post;
+      2. the site must be under its weekly budget, counted from what actually
+         shipped in the last 7 days. This is the hard cap, so a double run, a
+         catch-up and a manual trigger can never push a site over quota.
+    """
+    if site.get("new_posts_enabled", True) is False:
+        return 0
+    per_week = site.get("posts_per_week", site.get("posts_per_day_new"))
+    try:
+        per_week = int(per_week)
+    except (TypeError, ValueError):
+        per_week = 2
+    if per_week <= 0:
+        return 0
+
+    now = today or datetime.now()
+    cutoff = now - timedelta(days=7)
+    recent, last_new = 0, None
+    for a in articles:
+        if a.get("historical"):
+            continue
+        try:
+            posted = datetime.strptime(a.get("posted_iso") or a.get("date_iso", ""), "%Y-%m-%d")
+        except (ValueError, TypeError):
+            continue
+        if posted >= cutoff:
+            recent += 1
+        if last_new is None or posted > last_new:
+            last_new = posted
+    if recent >= per_week:
+        return 0
+
+    days = site_publish_days(site, per_week, all_ids)
+    if now.weekday() in days:
+        return 1
+    overdue = last_new is None or (now - last_new).days >= 5
+    return 1 if overdue else 0
+
+
 def is_historical_due(site, articles):
     """True if this site should publish a historical article on this run, based on the
     historical_mode toggle and the per-week budget vs. how many historical articles
