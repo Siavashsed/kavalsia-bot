@@ -30,8 +30,13 @@ def render(article, site, image_url, photographer, t):
 
     cat = (article.get("category") or site.get("category") or "Travel & Destinations")
     date = article.get("date", "")
-    read_min = max(3, _count_words(article.get("intro", "") + " ".join(
-        s.get("content", "") for s in article.get("sections", []))) // 220)
+    # Word count inline: _count_words lives in bot.py but is defined AFTER the
+    # bespoke loader runs, so it is not in this module's namespace. Strip tags
+    # and count, matching the sibling bespoke modules.
+    import re as _re_wc
+    _plain_wc = _re_wc.sub(r"<[^>]+>", " ", article.get("intro", "") + " " + " ".join(
+        s.get("content", "") for s in article.get("sections", [])))
+    read_min = max(3, len(_plain_wc.split()) // 220)
 
     # ---- premium light press palette (independent of the dark site theme) ----
     INK = "#15201d"; SUB = "#5d6b66"; DIM = "#8a958f"
