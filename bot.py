@@ -22,6 +22,22 @@ import requests
 import anthropic
 from datetime import datetime, timedelta
 
+# Default timeout on EVERY outbound HTTP call. Most GitHub calls in this file
+# passed no timeout, and on 2026-07-20 one of them blocked on a socket read
+# forever: the local daily run sat there for six days and, because launchd will
+# not start a second copy while the first is alive, every run after it was
+# silently skipped. requests has no global default, so patch Session.request
+# (get/post/put all funnel through it).
+_HTTP_TIMEOUT = float(os.environ.get("HTTP_TIMEOUT", "45"))
+_requests_request = requests.sessions.Session.request
+
+def _request_with_timeout(self, method, url, **kw):
+    if kw.get("timeout") is None:
+        kw["timeout"] = _HTTP_TIMEOUT
+    return _requests_request(self, method, url, **kw)
+
+requests.sessions.Session.request = _request_with_timeout
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import layout_shell
 
