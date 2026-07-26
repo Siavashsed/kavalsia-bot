@@ -1,0 +1,95 @@
+[
+  {
+    "topic": "A 2022 retrospective article about a notable Crypto & Algorithmic Trading event, product launch, news story, regulation, or tool that mattered in 2022 - written as if reporting on it at the time it happened in 2022, with the context, the reaction, and what it meant for the field",
+    "article": {
+      "title": "Terra's Death Spiral Was Coded In From Day One",
+      "meta_description": "UST lost its dollar peg in 96 hours and took $40B with it. A quant's read on the Terra LUNA collapse, the arbitrage that failed, and what it means.",
+      "slug": "terra-luna-death-spiral-2022",
+      "author": "Marcus Webb",
+      "intro": "<p>UST didn't break because a whale attacked it. It broke because the arbitrage holding it at a dollar needed someone, anyone, willing to absorb LUNA at size, and by the morning of May 9 that bid had evaporated. I'd been running a small mint-and-burn arb bot on Terra since late January, about $40,000 of working capital, nothing clever, and for four months it clipped somewhere between 30 and 80 basis points a day while I mostly ignored it. That Monday the spread blew through 4 percent and my fills stopped confirming. I flattened, shut the bot down, and spent the next four days watching the thing I'd been quietly farming eat itself. The failure sat in the design, not in the market's mood.</p>",
+      "intro2": "<p>Scale matters here, so take the numbers plainly. On May 7, UST was the third-largest stablecoin with roughly $18.7 billion in circulation, and close to $14 billion of that was parked in Anchor Protocol earning 19.5 percent, a rate with no external revenue behind it. LUNA had printed an all-time high of $119.18 on April 5. By May 13 the supply had gone from around 346 million tokens to more than 6.5 trillion, and the quote had four zeros after the decimal point. Nothing in regulated markets unwinds that fast, and the speed is the whole lesson.</p>",
+      "sections": [
+        {
+          "heading": "The arbitrage was clean, and it had a hard ceiling",
+          "content": "<p>Here's the machine, stripped of the marketing. If UST traded below a dollar, you could burn one UST on-chain and mint a dollar's worth of LUNA, then sell that LUNA into the market and pocket the gap. If UST traded above a dollar, you ran it in reverse, burning LUNA to mint UST. Supply contracted or expanded until the deviation closed. As a trade it was genuinely good, and in my experience the fills were more reliable than most cross-exchange stablecoin arbs I've run.</p><p>The catch is that every dollar of UST redeemed became a dollar of LUNA sell pressure. <strong>The peg was only ever as strong as LUNA's capacity to absorb that pressure without repricing.</strong> The on-chain swap module also carried a daily throughput limit and a spread that widened as the pool skewed, sitting somewhere near $293 million a day before governance pushed it toward $1.2 billion earlier in the spring. So the redemption path was capped precisely when it needed to be unlimited.</p><p>Four conditions had to hold at once for the design to work:</p><ul><li>LUNA's market cap needed to stay comfortably above UST's float, ideally by a multiple, not a margin</li><li>Redemption capacity had to exceed the size of any single day's exit</li><li>Enough external demand for LUNA to clear the newly minted supply without gapping</li><li>Anchor's 19.5 percent had to stay funded, because it was the only real reason most of that $14 billion was there</li></ul><p>By early May, condition one was already marginal and condition four was being openly debated in Terra governance. That's not a stable system under stress. That's a system waiting for a big enough Monday.</p>"
+        },
+        {
+          "heading": "What the tape showed between May 9 and May 12",
+          "content": "<p>The mechanics of the break were visible on-chain before they were visible in the price. On May 7, roughly $150 million of UST came out of the Curve 3pool ahead of the planned 4pool migration, thinning the deepest venue for size. An $85 million UST to USDC swap followed and skewed the pool badly. UST slipped to about $0.985, which sounds trivial until you remember Anchor depositors were sitting on leveraged carry and watching the same screen. On-chain flow work published by <a href=\"https://www.nansen.ai\" target=\"_blank\" rel=\"noopener\">Nansen Research</a> later traced the sequencing in detail, and the pattern is a liquidity drain followed by a reflexive exit, not a single clean exploit.</p><p>By May 11 UST printed in the sixties. Perpetual funding on LUNA went sharply negative as shorts crowded in, borrow got expensive, and bid-ask on the major UST pairs widened to a point where market-making was pointless. Exchange microstructure data from firms like <a href=\"https://www.kaiko.com\" target=\"_blank\" rel=\"noopener\">Kaiko</a> showed depth collapsing faster than the mid price fell, which is the tell every quant should recognise. When depth vanishes before price does, your backtested slippage assumptions are already fiction. I tried a $50,000 clip on the burn path that Wednesday out of pure curiosity and got filled at a level that would have made the arb a loss before fees.</p><p>And honestly, the part I still think about isn't the numbers. My friend Dev, who is a better systems engineer than I'll ever be, kept his redemption bot running the whole way down because his model said the spread had to close eventually. It did close, technically. He just got paid in a token that had diluted itself into oblivion by the time it settled, which we both found funnier than we should have about three weeks later over terrible coffee. I'm not fully sure what the right call was in real time. I got out early on instinct and a bad feeling about Anchor's funding, not because my risk model told me to, and pretending otherwise would be revisionism.</p>"
+        },
+        {
+          "heading": "The bitcoin reserve turned a Terra problem into everyone's problem",
+          "content": "<p>Luna Foundation Guard had spent months accumulating bitcoin as a peg defence, reaching roughly 80,394 BTC, something in the region of $3.5 billion at purchase. The theory was that in a de-peg you'd sell reserve BTC to buy UST and restore confidence. In practice, LFG became the marginal seller of bitcoin during the exact week bitcoin was already breaking down, sliding from around $39,000 on May 5 to an intraday low near $26,700 on May 12.</p><p>That's not a reserve. That's a second short position wearing a reserve's costume. Correlation between your backstop asset and your own token goes to one under stress, which is the only moment the backstop is needed. Across May, roughly $400 billion came out of total crypto market value, and Terra's unwind was a meaningful part of the transmission. <strong>A hedge that only works when you don't need it is not a hedge.</strong></p><p>Regulators had flagged this shape of risk before it happened, which is worth sitting with. The <a href=\"https://www.federalreserve.gov/publications/financial-stability-report.htm\" target=\"_blank\" rel=\"noopener\">Federal Reserve Financial Stability Report</a> had already named stablecoin run dynamics as a structural vulnerability, and a 2020 working paper from the <a href=\"https://www.bis.org/publ/work905.htm\" target=\"_blank\" rel=\"noopener\">Bank for International Settlements</a> argued that stablecoins backed by their own volatile issuance carry a redemption problem that no amount of code removes. Reporting through the week from <a href=\"https://www.reuters.com\" target=\"_blank\" rel=\"noopener\">Reuters</a> tracked the retail damage as it landed. The warnings weren't obscure. They were simply less interesting than 19.5 percent.</p>"
+        },
+        {
+          "heading": "What systematic traders should actually change now",
+          "content": "<p>My position, and I'll defend it: this was not an attack, and framing it as one lets the design off the hook. You don't need a villain for a reflexive system to fail. You need a crowded carry trade, a capped exit, and one bad Monday. The popular misconception is that a well-capitalised adversary picked the lock. Somebody probably did press the advantage, sure, but pressing an advantage that exists is not the same as creating it.</p><p>Where there's real debate is whether any endogenously collateralised design can survive at all. Overcollateralised models like DAI took stress far better through the same week, though they carry capital inefficiency as the price of that safety, and partially collateralised designs sit in an uncomfortable middle. I lean toward the view that pure algorithmic pegs are structurally unsound, but I'll grant that's a judgement call rather than a proof.</p><p>One thing that genuinely doesn't work well, and I've been burned by it: naive peg-deviation kill switches. Set a rule that flattens every stablecoin position on a 1 percent deviation and you'll get whipsawed out of perfectly good positions during routine wobbles that mean revert within hours. <strong>Deviation is a symptom, not a signal.</strong> The signal is the ratio underneath it, and most desks still aren't monitoring that.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today, before the next one of these. For any algorithmic or partially backed stablecoin you touch, compute a single daily number: stablecoin float divided by the market cap of whatever asset backs the redemption path. Terra's ratio had drifted past roughly 0.4 by late April and was pushing higher into May, which meant the redemption mechanism was mathematically incapable of clearing a full exit. My own rule now is flat above 0.5, no discretion, no waiting for the price to confirm. You can pull both inputs from free public APIs in about twenty lines of Python, and it will tell you to leave days before the chart does.</p>",
+      "image_query": "trading screens charts",
+      "image_alt": "Trader at a desk watching multiple monitors showing sharply falling cryptocurrency price charts",
+      "outbound_links": [
+        "nansen.ai",
+        "kaiko.com",
+        "federalreserve.gov",
+        "bis.org",
+        "reuters.com"
+      ],
+      "sources": [
+        {
+          "name": "Nansen Research",
+          "url": "https://www.nansen.ai"
+        },
+        {
+          "name": "Kaiko Market Data",
+          "url": "https://www.kaiko.com"
+        },
+        {
+          "name": "Federal Reserve Financial Stability Report",
+          "url": "https://www.federalreserve.gov/publications/financial-stability-report.htm"
+        },
+        {
+          "name": "Bank for International Settlements Working Paper 905",
+          "url": "https://www.bis.org/publ/work905.htm"
+        },
+        {
+          "name": "Reuters",
+          "url": "https://www.reuters.com"
+        }
+      ],
+      "faq": [
+        {
+          "q": "What actually caused UST to lose its dollar peg?",
+          "a": "A liquidity drain on Curve left the deepest UST venue thin, and once holders started exiting, the burn-for-LUNA redemption path flooded the market with new LUNA supply. Selling that supply pushed LUNA down, which shrank the collateral value behind UST, which triggered more exits. The loop fed itself in under four days."
+        },
+        {
+          "q": "Could the bitcoin reserve ever have saved the peg?",
+          "a": "Not at that size. Around 80,394 BTC covered a fraction of an $18.7 billion float, and selling it into a falling bitcoin market meant LFG was pressuring the very asset it was relying on. A reserve correlated with your own token stops working at the exact moment you need it."
+        },
+        {
+          "q": "Are all algorithmic stablecoins doomed to fail this way?",
+          "a": "Any design whose collateral is its own issuance carries the same reflexive risk, so I'd treat those as unsound. Overcollateralised models backed by external assets handled the same week far better, at the cost of tying up more capital than a purely algorithmic peg needs."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/29592616/pexels-photo-29592616.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Qing Luo",
+      "image_alt": "Close-up of a weathered wall with peeling pale paint exposing rust-stained, crumbling surface beneath",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/4508748/pexels-photo-4508748.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Brett Sayles"
+        ]
+      ],
+      "ids": [
+        "29592616",
+        "4508748"
+      ]
+    },
+    "hist_year": 2022,
+    "kind": "historical",
+    "generated_iso": "2026-07-26 04:15"
+  }
+]
