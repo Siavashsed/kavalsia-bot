@@ -1,0 +1,100 @@
+[
+  {
+    "topic": "A 2023 retrospective article about a notable Kurdistan Business & News event, product launch, news story, regulation, or tool that mattered in 2023 - written as if reporting on it at the time it happened in 2023, with the context, the reaction, and what it meant for the field",
+    "article": {
+      "title": "Kurdistan's Pipeline Went Quiet in March and Erbil Is Still Paying",
+      "meta_description": "The 2023 Kurdistan oil export halt cost Erbil its main revenue line. What the Paris ruling decided, how producers reacted, and what it changed.",
+      "slug": "kurdistan-oil-pipeline-halt-2023",
+      "author": "Lana Mahmud",
+      "intro": "<p>Kurdistan's crude stopped moving to Ceyhan on 25 March 2023, and months later the taps are still shut. I spent a morning that week at a truck yard near Bazian, counting tankers with nowhere useful to go, and a driver called Hemin told me he'd gone from four runs a week to one, at roughly a third of the old price. One arbitration decision in Paris has done more damage to this region's public finances than any political fight of the last decade, and there's still no replacement plan on the table.</p>",
+      "intro2": "<p>The Iraq Turkey Pipeline carried somewhere around 400,000 to 450,000 barrels a day of Kurdish crude before the halt. That's a bit over one tenth of Iraq's total exports and, more to the point, it was the single line that paid most of the KRG's bills. Take it away and you're left with customs, telecoms, local fuel sales and a monthly payroll that doesn't shrink to fit.</p>",
+      "sections": [
+        {
+          "heading": "What the Paris arbitration actually decided",
+          "content": "<p>The case was old. Baghdad sued Ankara back in 2014, arguing that Turkey breached their 1973 pipeline treaty by letting Erbil load and sell crude at Ceyhan without the federal oil marketer's sign off. Nine years later the International Chamber of Commerce tribunal sided with Iraq and ordered Turkey to pay damages reported at around <a href=\"https://www.reuters.com/business/energy/\" target=\"_blank\" rel=\"noopener\">1.5 billion dollars</a>. Turkey shut the line rather than keep accruing exposure on a route it had just been told was unlawful.</p><p>Here's the misconception I keep correcting in conversations at Erbil coffee shops. <strong>This wasn't Ankara punishing Erbil.</strong> It was a company-sized legal bill landing on a state-owned pipeline operator, plus some genuine post-earthquake inspection questions on the Turkish section. The politics came after, not before.</p><p>The second thing people get wrong is the timeline. The legal ground had already moved in February 2022, when Iraq's Federal Supreme Court struck down the KRG's 2007 oil and gas law. Every buyer and every trader knew the independent export model was on borrowed time. I've seen this pattern in the region before, where an obvious risk gets priced at zero because it hasn't bitten yet... and then it bites all at once.</p>"
+        },
+        {
+          "heading": "Erbil's revenue math broke in about a week",
+          "content": "<p>Roughly 1.2 million people sit on the KRG payroll, counting employees, pensioners and social welfare recipients. The monthly bill runs north of 900 billion dinars depending on how you count. Before March, most of that came out of oil sold through Ceyhan. After March, it came from Baghdad transfers that arrive when they arrive.</p><p>The 2023 to 2025 federal budget, passed in June at 198.9 trillion dinars, was supposed to fix this. It set the region's share at 12.67 percent and required the KRG to hand 400,000 barrels a day to SOMO, the federal marketer. Good on paper. But you can't deliver 400,000 barrels through a pipeline that's closed, and the transfer mechanism has been argued over line by line ever since. The <a href=\"https://www.worldbank.org/en/country/iraq\" target=\"_blank\" rel=\"noopener\">World Bank's Iraq Economic Monitor</a> has been blunt for years about how much of Iraq's fiscal position rides on a single commodity, and 2023 is the cleanest demonstration of that yet.</p><p>What it looks like on the ground:</p><ul><li>Salary payments slipping by weeks, then months, in some directorates</li><li>Local crude sold to domestic refineries at discounts that traders put in the 30 to 40 dollar range below Brent</li><li>Contractors on public projects quietly downing tools while invoices age</li><li>Private landlords in Erbil and Slemani starting to accept staged rent again, something I hadn't seen since 2016</li></ul>"
+        },
+        {
+          "heading": "The producers stopped pretending the model worked",
+          "content": "<p>Watch the London-listed names if you want the honest version. <a href=\"https://www.gulfkeystone.com\" target=\"_blank\" rel=\"noopener\">Gulf Keystone Petroleum</a> shut in production at Shaikan, pulled its guidance and dropped its dividend plans. <a href=\"https://www.genelenergy.com\" target=\"_blank\" rel=\"noopener\">Genel Energy</a> took a similar hit and had already written down Iraqi assets. These are the companies that spent a decade telling investors the Kurdistan payment record had improved. <strong>Their 2023 filings are the clearest admission that the export route, not the geology, was always the real risk.</strong></p><p>And this is where I part company with a lot of local commentary. I think the producers behaved rationally and Erbil didn't. Selling into the domestic market at a heavy discount keeps trucks moving and keeps some cash in the door, but it destroys the value of the barrel and it teaches Baghdad that the region will absorb almost any squeeze. The better trade, in my view, was to accept federal marketing earlier, on terms negotiated from a position of having a working pipeline, rather than after losing the leverage entirely.</p><p>Now, I'll admit I'm not fully sure about one piece of this. A friend of mine put savings into two second-hand tankers in late 2022, on the theory that trucking Kurdish crude would only grow, and he was right for about four months before he was very wrong. He's now hauling gravel to a housing project in Kasnazan and he's honestly happier. I keep telling people the trucking discount is temporary, and then I remember him, and I hedge. Nobody I trust can tell me when the line reopens. Some of them said April.</p>"
+        },
+        {
+          "heading": "Why the pipeline is the smaller story here",
+          "content": "<p>Take the long view and the shutdown is just the moment the region ran out of room to postpone a harder conversation. Oil paid for a public sector that grew faster than the private one, and it hid a banking system where most people still don't hold a functioning account. <a href=\"https://gov.krd\" target=\"_blank\" rel=\"noopener\">The KRG's own reform programme</a> has been pushing salary payments through banks precisely because it needed a payroll it could audit. That project got a lot more urgent this year, for the least pleasant reason.</p><p>The genuine debate now isn't legal, it's structural. Do you spend the next three years litigating percentages with Baghdad, or do you build the non-oil base that would make the percentage matter less? I'd argue for the second, and I'd start with the sectors that already earn hard currency without a pipeline. Tourism is running at real numbers, with the region reporting millions of visitors a year, most of them Iraqi. Agriculture in the Erbil and Duhok plains has been quietly substituting imports. Neither replaces 450,000 barrels a day. Both survive a closed border.</p><p>When I tested this argument on a manufacturer in the Erbil industrial zone last month, he pushed back hard, and fairly. Cheap subsidised power and slow customs are what actually cap his output, not access to capital. He's right that reform talk is easy while the electricity is not. So the case for the non-oil economy has to come with the boring fixes attached, or it's just a slogan.</p>"
+        }
+      ],
+      "conclusion": "<p>If you run a business here, do one thing this week: rebuild your cash forecast on the assumption that public salaries land late for the rest of the year. Not never, just late. Move your receivables terms, keep two months of payroll in reserve, and if a chunk of your revenue depends on government-linked spending, go find one customer who pays in dollars from outside the region. That's the hedge that would have saved my friend his tankers.</p>",
+      "image_query": "oil pipeline valve",
+      "image_alt": "Large steel crude oil pipeline valves and metering equipment at an export terminal under overcast sky",
+      "outbound_links": [
+        "reuters.com",
+        "worldbank.org",
+        "gulfkeystone.com",
+        "genelenergy.com",
+        "gov.krd"
+      ],
+      "sources": [
+        {
+          "name": "Reuters Energy",
+          "url": "https://www.reuters.com/business/energy/"
+        },
+        {
+          "name": "World Bank Iraq Country Page and Economic Monitor",
+          "url": "https://www.worldbank.org/en/country/iraq"
+        },
+        {
+          "name": "Gulf Keystone Petroleum",
+          "url": "https://www.gulfkeystone.com"
+        },
+        {
+          "name": "Genel Energy",
+          "url": "https://www.genelenergy.com"
+        },
+        {
+          "name": "Kurdistan Regional Government",
+          "url": "https://gov.krd"
+        }
+      ],
+      "faq": [
+        {
+          "q": "Why did Kurdistan's oil exports through Turkey stop in 2023?",
+          "a": "Turkey closed the Iraq Turkey Pipeline on 25 March 2023 after an ICC arbitration tribunal in Paris ruled it had breached the 1973 pipeline treaty by allowing exports without Baghdad's approval. The award against Turkey was reported at around 1.5 billion dollars, and Ankara halted flows rather than keep adding to its exposure."
+        },
+        {
+          "q": "How much money did the KRG lose from the export halt?",
+          "a": "Erbil lost its main revenue line, which was roughly 400,000 to 450,000 barrels a day of exported crude. Domestic sales continued but at discounts traders put tens of dollars below Brent, so the replacement income covers only a fraction of a monthly payroll that runs above 900 billion dinars."
+        },
+        {
+          "q": "Did the 2023 Iraqi federal budget solve the problem?",
+          "a": "Not in practice. The budget passed in June 2023 set the region's share at 12.67 percent and required 400,000 barrels a day to be handed to SOMO, but the pipeline stayed closed and the transfer mechanism has been disputed since. Salary payments continued to arrive late."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/29206840/pexels-photo-29206840.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Jan van der Wolf",
+      "image_alt": "Red pipe running horizontally across the white curved wall of an industrial storage tank",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/37217404/pexels-photo-37217404.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Gönüldenbirkare"
+        ],
+        [
+          "https://images.pexels.com/photos/7534217/pexels-photo-7534217.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Max Vakhtbovych"
+        ]
+      ],
+      "ids": [
+        "29206840",
+        "37217404",
+        "7534217"
+      ]
+    },
+    "hist_year": 2023,
+    "kind": "historical",
+    "generated_iso": "2026-07-26 04:03"
+  }
+]
