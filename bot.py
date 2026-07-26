@@ -1001,6 +1001,8 @@ def historical_topic_year(site):
 # the same handful of sites publish each day instead of all of them at once.
 # ─────────────────────────────────────────────────────────────────────────────
 
+_WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
 def site_publish_days(site, per_week, all_ids=None):
     """The weekdays (0=Monday .. 6=Sunday) this site publishes on.
 
@@ -8201,6 +8203,14 @@ def run(topic_overrides=None, site_filter=None):
     # process_site() function below touches nexus_digest_articles concurrently.
     _digest_lock = threading.Lock()
 
+    # Stable id list that the weekly publish-day assignment is derived from, so
+    # every site keeps the same slots run after run. Publishing sites only, so
+    # adding a hub does not reshuffle the calendar.
+    all_site_ids = sorted(
+        s["id"] for s in active_sites
+        if not (s.get("is_mother_site") or s.get("layout") == "nexus" or s.get("id") == "nexus")
+    )
+
     def process_site(site):
         """Run the full daily pipeline for a single site.
         Returns (site_id, ok, error_str_or_none). Safe to invoke in parallel:
@@ -8256,20 +8266,15 @@ def run(topic_overrides=None, site_filter=None):
                 hist_due  = True
                 posts_per_run = bulk_hist
             else:
-                # Honor an explicit 0 (dashboard "new posts = 0"): only default to
-                # 1 when the field is MISSING, never floor an intentional 0 up to 1.
-                if not new_on:
-                    new_count = 0
-                else:
-                    _raw_new = site.get("posts_per_day_new", site.get("posts_per_run", 1))
-                    try:
-                        new_count = max(0, int(_raw_new))
-                    except (TypeError, ValueError):
-                        new_count = 1
+                # Weekly schedule: a site publishes only on its own assigned
+                # weekdays and only while under its weekly budget.
+                new_count = new_posts_due(site, articles, all_site_ids)
                 hist_due  = hist_on and is_historical_due(site, articles)
                 posts_per_run = new_count + (1 if hist_due else 0)
                 if posts_per_run == 0:
-                    print(f"  {tag} SKIPPED - both pipelines OFF (new_posts_enabled={new_on}, historical_mode={hist_on})")
+                    _pw = site.get("posts_per_week", 2)
+                    _days = ",".join(_WEEKDAY_NAMES[d] for d in site_publish_days(site, _pw, all_site_ids))
+                    print(f"  {tag} not scheduled today (publishes {_pw}x/week on {_days})")
                     return (sid, True, None)
 
             # Randomize publish time - scatter sites across a window to break cadence fingerprint
