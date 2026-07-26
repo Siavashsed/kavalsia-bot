@@ -1038,11 +1038,18 @@ def new_posts_due(site, articles, all_ids=None, today=None):
     """How many NEW (non-historical) articles this site should publish right now.
 
     Two independent gates:
-      1. today must be one of the site's assigned weekdays, OR the site is overdue
-         (nothing new in 5+ days) so a missed cron does not silently cost a post;
+      1. today must be one of the site's assigned weekdays, OR the site has been
+         dark long enough to count as a real outage;
       2. the site must be under its weekly budget, counted from what actually
          shipped in the last 7 days. This is the hard cap, so a double run, a
          catch-up and a manual trigger can never push a site over quota.
+
+    The outage threshold is deliberately long. A short one (say 5 days) looks
+    reasonable until the whole network goes dark for a week: every site then
+    reads as overdue on the first run back and all of them publish on the same
+    day, which is the bunching the weekday assignment exists to prevent. At 14
+    days a site that is merely between its assigned days never trips it, because
+    its next slot is at most 3 or 4 days out.
     """
     if site.get("new_posts_enabled", True) is False:
         return 0
@@ -1074,8 +1081,8 @@ def new_posts_due(site, articles, all_ids=None, today=None):
     days = site_publish_days(site, per_week, all_ids)
     if now.weekday() in days:
         return 1
-    overdue = last_new is None or (now - last_new).days >= 5
-    return 1 if overdue else 0
+    outage = last_new is not None and (now - last_new).days >= 14
+    return 1 if outage else 0
 
 
 def is_historical_due(site, articles):
