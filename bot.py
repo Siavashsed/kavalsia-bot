@@ -8439,12 +8439,17 @@ def run(topic_overrides=None, site_filter=None):
         raise SystemExit(1)
 
 
-def pregenerate(count, github_token=None, only=None, log=print):
-    """Write `count` ready-to-publish article drafts PER SITE into the queue
+def pregenerate(count, github_token=None, only=None, log=print, target=None):
+    """Write ready-to-publish article drafts PER SITE into the queue
     (drafts/<site_id>.json in the cron repo), then push. Run locally with the Max
     engine for $0 article generation:
-        python3 bot.py --pregenerate 4 --llm max --gh-token <tok>
+        python3 bot.py --pregenerate 4  --llm max --gh-token <tok>   # add 4 per site
+        python3 bot.py --queue-target 5 --llm max --gh-token <tok>   # top up TO 5 per site
     The daily cron then publishes from the queue with no API calls.
+
+    target: when set, each site is topped up to `target` drafts instead of having
+    `count` added. That is what the nightly local job uses, so a few days with the
+    Mac switched off are caught up automatically instead of draining the queue.
     """
     github_token = github_token or os.environ.get("GITHUB_TOKEN", "")
     if not github_token:
@@ -8493,8 +8498,12 @@ def pregenerate(count, github_token=None, only=None, log=print):
         for d in queue:
             used_image_ids.update(str(x) for x in ((d.get("images") or {}).get("ids") or []) if x)
         author_name = get_author_name(site, settings)
+        want = max(0, int(target) - len(queue)) if target is not None else count
+        if want <= 0:
+            log(f"  [{sid}] queue already at {len(queue)}/{target} - nothing to do")
+            continue
         made, attempts = 0, 0
-        while made < count and attempts < count * 4 + 4:
+        while made < want and attempts < want * 4 + 4:
             attempts += 1
             topic = get_today_topic(site, len(articles) + len(queue) + made + attempts)
             tkey = (topic or "").strip().lower()
@@ -8526,7 +8535,7 @@ def pregenerate(count, github_token=None, only=None, log=print):
             queue.append({"topic": topic, "article": article, "images": images,
                           "generated_iso": datetime.now().strftime("%Y-%m-%d %H:%M")})
             made += 1; total += 1
-            log(f"  [{sid}] drafted {made}/{count} "
+            log(f"  [{sid}] drafted {made}/{want} "
                 f"({1 + len(images.get('body_images', [])) if images.get('image') else 0} images): "
                 f"{article.get('title','')[:56]}")
         if made:
@@ -8553,17 +8562,21 @@ if __name__ == "__main__":
                              "'api' = Anthropic API (billed). Blank = use settings.llm_engine / LLM_ENGINE env.")
     parser.add_argument("--pregenerate", type=int, default=0,
                         help="Write N article drafts PER SITE into the queue (use with --llm max), push to the cron repo, then exit.")
+    parser.add_argument("--queue-target", type=int, default=0, dest="queue_target",
+                        help="Top each site's draft queue UP TO N (use with --llm max). Self-healing: "
+                             "makes only what is missing, so days with the Mac off are caught up.")
     args, _ = parser.parse_known_args()
 
     if args.llm:
         set_llm_engine(args.llm)
 
-    if args.pregenerate > 0:
+    if args.pregenerate > 0 or args.queue_target > 0:
         token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
         if not token:
             raise SystemExit("--gh-token or GITHUB_TOKEN required")
         only_list = [x.strip() for x in (args.only or "").split(",") if x.strip()] or None
-        pregenerate(args.pregenerate, github_token=token, only=only_list)
+        pregenerate(args.pregenerate or args.queue_target, github_token=token, only=only_list,
+                    target=args.queue_target or None)
     elif args.rebuild_homepages:
         token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
         if not token:
