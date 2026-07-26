@@ -7525,10 +7525,16 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
 #   python3 bot.py --pregenerate N --llm max --gh-token <tok>
 CRON_REPO = "Siavashsed/kavalsia-bot"
 
-def _load_drafts(sid, token):
+def _draft_path(sid, kind=""):
+    """Daily queue is drafts/<sid>.json; the weekly historical queue is a separate
+    file so a retrospective is never published as a plain daily post."""
+    return f"drafts/{sid}__{kind}.json" if kind else f"drafts/{sid}.json"
+
+
+def _load_drafts(sid, token, kind=""):
     """Authoritative pre-generated queue for a site (list of {topic, article, ...})."""
     try:
-        url = f"https://api.github.com/repos/{CRON_REPO}/contents/drafts/{sid}.json"
+        url = f"https://api.github.com/repos/{CRON_REPO}/contents/{_draft_path(sid, kind)}"
         r = requests.get(url, headers={"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"})
         if r.status_code == 200:
             data = r.json()
@@ -7545,17 +7551,19 @@ def _load_drafts(sid, token):
         print(f"  [drafts] load {sid} failed: {e}")
     return []
 
-def _push_drafts(sid, queue, token):
+def _push_drafts(sid, queue, token, kind=""):
     """Persist a site's queue back to the cron repo, mirrored locally for inspection."""
     body = json.dumps(queue, ensure_ascii=False, indent=2)
+    path = _draft_path(sid, kind)
     try:
         d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "drafts")
         os.makedirs(d, exist_ok=True)
-        with open(os.path.join(d, f"{sid}.json"), "w", encoding="utf-8") as f:
+        with open(os.path.join(d, os.path.basename(path)), "w", encoding="utf-8") as f:
             f.write(body)
     except Exception:
         pass
-    return github_push(CRON_REPO, f"drafts/{sid}.json", body, f"drafts: {sid} queue ({len(queue)} left)", token)
+    label = f"{sid} {kind}".strip()
+    return github_push(CRON_REPO, path, body, f"drafts: {label} queue ({len(queue)} left)", token)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
