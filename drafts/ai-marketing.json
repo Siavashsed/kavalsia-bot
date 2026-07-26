@@ -2,39 +2,38 @@
   {
     "topic": "How to use AI for competitor analysis at scale",
     "article": {
-      "title": "I Tagged 4,100 Competitor Ads With AI. Six Mattered.",
-      "meta_description": "AI competitor analysis at scale fails when you skip the schema. A performance director on the tagging system, the tools, and the parts that break.",
-      "slug": "tagged-4100-competitor-ads-ai",
+      "title": "We Tracked 41 Competitors With AI. Only Three Mattered.",
+      "meta_description": "A performance director's playbook for AI competitor analysis at scale: the three layer stack, a scoring rubric, and where the whole thing breaks.",
+      "slug": "tracking-competitors-with-ai",
       "author": "Jordan Cole",
-      "intro": "<p>Feed a model raw competitor data and ask it to \"find insights\" and you'll get a beautiful summary of nothing. Useful AI competitor analysis at scale runs backward: start with the decision you need to make this quarter, then build the smallest dataset that actually answers it. In March 2024 I had a DTC supplements client spending roughly $310,000 a month across Meta and Google, and I pulled 4,100 competitor ads out of the Meta Ad Library, dumped the whole pile into a model, and asked it to spot patterns. It handed me two pages about \"authenticity\" and \"wellness positioning.\" I rewrote the prompt to force a fixed 19-field schema per ad, ran it again, and this time it surfaced that four of our six rivals had swapped their lead offer from a percentage discount to a free 7-day sample inside a five week window. That's the whole argument: <strong>the model was never the bottleneck, the schema was.</strong></p>",
-      "intro2": "<p>Most teams treat this as a tooling problem and go shopping for a platform. I've watched a lot of budget disappear that way. The teams that get real value out of competitive intelligence build a boring, repeatable pipeline: pull structured data on a schedule, force the model to classify rather than opine, and route the output to one named person who owns a decision. Everything else is expensive reading material.</p>",
+      "intro": "<p>AI is genuinely good at competitor analysis in exactly one way. It reads everything, constantly, and never gets bored. What it's bad at is telling you which of those things deserves your attention, and if you get that division of labor backwards you'll build an expensive machine that produces a very tidy pile of nothing. In March 2024 I inherited a $2.4M annual paid budget at a B2B SaaS client whose competitor deck had been assembled in Google Slides eleven months earlier. Two of the six \"primary rivals\" had been acquired. One had quietly pivoted out of the category entirely. The account team was still writing ad copy against a positioning statement that no longer existed anywhere on the internet.</p>",
+      "intro2": "<p>So the argument I'll make here is unpopular with the people who sell competitive intelligence software: <strong>refresh rate beats analytical depth almost every time.</strong> A shallow read of what your rivals did last Tuesday is worth more than a beautiful 60 slide teardown of what they did last spring. AI is the only thing that makes weekly refresh affordable, and that's the actual reason to use it. Not the insights. The cadence.</p>",
       "sections": [
         {
-          "heading": "Your Real Bottleneck Is Collection, Not Reasoning",
-          "content": "<p>Models are already good enough at this. The reason your competitive analysis feels thin is that you're feeding it screenshots and vibes. Fix the intake first. My standing weekly pull covers five sources, and all of them are free or close to it: the <a href=\"https://www.facebook.com/ads/library\" target=\"_blank\" rel=\"noopener\">Meta Ad Library</a> for every active creative your rivals are running, the <a href=\"https://adstransparency.google.com\" target=\"_blank\" rel=\"noopener\">Google Ads Transparency Center</a> for search and YouTube, sitemap diffs to catch new landing pages and product SKUs the day they ship, pricing page snapshots, and for any public competitor, quarterly filings on <a href=\"https://www.sec.gov/edgar\" target=\"_blank\" rel=\"noopener\">SEC EDGAR</a>.</p><p>I run mine Monday mornings around 6am before the account reviews start, and it takes about eleven minutes of human time because the fetching is scripted. Job postings are the sleeper source. A competitor hiring three lifecycle marketers and a retention analyst is telling you their next two quarters are about churn, not acquisition, and they're telling you months before the ads change.</p><p>Volume without cadence is worthless here. A single snapshot of 4,000 ads tells you what's running. Twelve weekly snapshots tell you what's <em>winning</em>, because the ads that survive nine straight weeks are the ones passing their internal ROAS floor. That time series is the actual asset, and you can't buy it retroactively. Start collecting badly today rather than perfectly in Q4.</p>"
+          "heading": "Most Competitor Decks Are Archaeology, Not Intelligence",
+          "content": "<p>Think about what a traditional competitive audit costs. An analyst spends two weeks pulling screenshots, pricing pages, review counts, and ad examples. Then it goes into a deck, gets presented once, and rots. By the time anyone acts on it, the creative rotation it documented is three cycles old.</p><p>Meanwhile the things that actually move week to week are small and boring. Which ad variants a competitor is still running after 30 days. Whether their pricing page added a usage based tier. Whether they're hiring three enterprise AEs (they're moving upmarket) or two support reps (they're firefighting churn). Review velocity on G2. Whether they started bidding on your brand terms.</p><p>None of that requires a genius to interpret. It requires somebody to look every week, and no human is going to look every week across 40 companies without quitting. That's the whole job AI is doing here, and I'd rather be honest about it than pretend the model is producing strategy. The cost side has moved in your favor too: <a href=\"https://hai.stanford.edu/ai-index\" target=\"_blank\" rel=\"noopener\">Stanford HAI's 2025 AI Index</a> found inference costs for GPT-3.5 level performance fell more than 280 fold between late 2022 and late 2024. Monitoring that was economically absurd two years ago is now a rounding error.</p>"
         },
         {
-          "heading": "Force a Schema or You Get Horoscopes",
-          "content": "<p>Here's where I'd argue most people go wrong. Open-ended prompts produce output that feels smart and predicts nothing. So I never ask a model what it thinks. I hand it one competitor asset and a rigid classification form, temperature at 0, and make it fill in every field with a value from a closed list or the string \"unclear.\" That last option matters more than it sounds. Give a model permission to say it doesn't know and the confident nonsense drops hard.</p><p>The fields I use for paid creative, roughly:</p><ul><li><strong>Offer type</strong> (percent off, dollar off, free trial, sample, bundle, none)</li><li><strong>Primary emotional hook</strong> (fear, status, convenience, price, identity, novelty)</li><li><strong>Audience signal</strong> (age cues, gender cues, occupation cues visible in the creative)</li><li><strong>Format</strong> and aspect ratio, plus whether it's UGC, studio, or founder-on-camera</li><li><strong>First three seconds</strong> transcribed verbatim, no paraphrasing</li><li><strong>Days active</strong> and whether it appeared in the prior snapshot</li></ul><p>Then you aggregate in a spreadsheet, not in the model. Counting is a job for SQL. Once it's tabular you can ask the questions that actually move budget: which hook category has the highest median days-active across all six rivals, and are we running anything in it? Cost is not the constraint anymore either. The <a href=\"https://hai.stanford.edu/ai-index\" target=\"_blank\" rel=\"noopener\">Stanford HAI AI Index Report</a> found in 2025 that inference cost for GPT-3.5-level performance fell more than 280-fold between November 2022 and October 2024. Classifying 4,000 ads used to be a budget line. Now it's rounding error.</p>"
+          "heading": "The Three Layer Stack I Build For Every Client",
+          "content": "<p>Every setup I've shipped that survived contact with a real team splits into collection, extraction, and judgment. Mixing them is how projects die.</p><h3>Collection: dumb, scheduled, and cheap</h3><p>No model involved. Just scrapers and APIs on a cron. The sources that consistently earn their keep:</p><ul><li><a href=\"https://www.facebook.com/ads/library\" target=\"_blank\" rel=\"noopener\">Meta Ad Library</a> and the <a href=\"https://adstransparency.google.com\" target=\"_blank\" rel=\"noopener\">Google Ads Transparency Center</a>, both free, both with dates so you can compute creative longevity</li><li>Pricing, homepage, and top three landing pages, snapshotted weekly as raw HTML</li><li>Careers pages, which are the single most underrated leading indicator in B2B</li><li>Review sites, tracked as counts and rating deltas rather than text</li><li>SERP position for your 50 highest intent terms</li></ul><h3>Extraction: the model's actual job</h3><p>Feed the model raw text and ask for structured output only. Never prose. I use a fixed JSON schema per source type, so a pricing page comes back as tiers, prices, seat minimums, and a change flag versus last week. The moment you let it write paragraphs, you've made something nobody reads.</p><h3>Judgment: still you</h3><p>The model flags changes. A human decides which ones alter the media plan. In my work with mid market SaaS accounts, roughly one flagged change in fifteen was worth a meeting. That ratio hasn't budged in two years, and if a vendor tells you their tool fixes it, they're selling. I've written more on <a href=\"/ai-competitor-analysis-at-scale/\">the mechanics of running competitor analysis at scale</a> if you want the plumbing detail.</p>"
         },
         {
-          "heading": "The Parts That Break, Including One That Embarrassed Me",
-          "content": "<p>This doesn't always work, and the failure mode is specific. Models are excellent at classifying things they can see and terrible at inferring things they can't. Ask for offer type from a visible creative and you'll get 90 percent-plus accuracy against human spot checks. Ask for estimated competitor spend or estimated conversion rate and you'll get a fluent number pulled out of nowhere. I now spot check 50 random rows every month against my own eyes. It takes twenty minutes and it's the only reason I trust the other 4,050.</p><p>Okay so, the embarrassing one. Last spring I presented a slide to a client CMO showing a rival's new \"Pro tier at $89/month.\" The model had read a marketing page, seen a comparison table, and stitched together a price that didn't exist anywhere. The tier was real. The number was invented. I found out live, in the room, when their head of product pulled up the actual pricing page on his phone. My friend Dana runs competitive intel for a B2B SaaS company and swears she caught the same class of error three times in one quarter before she added a rule where any dollar figure has to link to a source URL or it gets stripped from the report. Honestly I'm not certain that rule scales for everyone, and it does slow the pipeline down... but I've had zero fabricated numbers reach a client deck since I copied it. The broader lesson connects to something I've written about before regarding <a href=\"/why-ai-marketing-experiments-failing/\">why so many AI marketing experiments quietly fail</a>: the output looks correct, so nobody validates it.</p>"
+          "heading": "Score Competitors Before You Analyze Them, Not After",
+          "content": "<p>Here's the mistake that cost me about six weeks. We started with 41 companies because the client's sales team named 41. Every one got the full pipeline. The output was 41 weekly change reports that nobody opened, because the signal from the three companies that shared real auction overlap was buried under 38 companies we'd never actually lost a deal to.</p><p>Now I score first, on four things: auction overlap (do we see them in impression share reports at all), win/loss mentions from the last two quarters of CRM notes, paid activity volume, and organic overlap on money keywords. Anything scoring low goes into a quarterly glance list. Only the top tier gets weekly extraction. Three companies made it. The report went from ignored to read by the CRO every Monday.</p><p>And honestly? I'm still not sure the scoring weights I use are right. A friend of mine who runs growth at a fintech tried the same rubric and told me auction overlap was almost useless in his category because half his real competitors don't buy search at all, they just own two podcasts. He might be right. I once spent a full afternoon building a beautiful dashboard tracking a \"competitor\" that turned out to be our own agency's white label landing pages, which the scraper had been dutifully monitoring for five weeks. Nobody caught it. I presented it. Twice.</p>"
         },
         {
-          "heading": "Turning Tags Into Budget Decisions",
-          "content": "<p>Data that doesn't change a bid, a brief, or a budget is a hobby. In my work with mid-market ecommerce accounts, this pipeline changes three things and nothing else. It sets creative briefs, because if five rivals are running founder-on-camera and we're running studio product shots, that gap is a testable hypothesis with real money behind it. It sets offer strategy, because a coordinated shift in offer type across the category usually means someone found something that works. And it sets channel weighting, because when a competitor's Google Transparency footprint triples while their Meta footprint holds flat, they've found cheaper demand somewhere and it's worth ten minutes of your attention.</p><p>What I don't do is chase every move. Roughly two thirds of what competitors ship is a test that will be dead in three weeks, and copying it means you inherit their learning curve without their data. I only act when a pattern holds across at least three rivals for four-plus weeks. That filter has saved me more money than any optimization I've made in an ad account.</p><p><a href=\"https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai\" target=\"_blank\" rel=\"noopener\">McKinsey's State of AI survey</a> reported in 2024 that 72 percent of organizations had adopted AI in at least one business function, up sharply from the year prior. Adoption isn't the differentiator now. Discipline about what you feed it is. Pair this with the kind of forward-looking modeling I describe in this piece on <a href=\"/ai-customer-lifetime-value-prediction/\">predicting customer lifetime value before your competitors spot the same buyers</a> and you're playing a different game than the people still reading quarterly PDF reports. For the deeper mechanics of the pipeline itself, I broke down the full build in my earlier walkthrough of <a href=\"/ai-competitor-analysis-at-scale/\">running competitor analysis at scale without hand-waving</a>.</p>"
+          "heading": "Where This Falls Over",
+          "content": "<p>Three failure modes, all of which I've hit. First, models invent pricing. If a page renders tiers in JavaScript and your scraper grabs an empty shell, the model will cheerfully fill the gap with something plausible. Fix: require a verbatim quote from source text for every numeric field, and drop the field if there isn't one.</p><p>Second, ad libraries are not a spend estimate. They show what's running, not what's funded. Every tool that claims to estimate competitor budgets is modeling from impression samples, and in the accounts where I could check against known figures, the estimates were off by enough to make them useless for planning.</p><p>Third, the genuine debate: does knowing competitor creative help at all? There's a real argument that chasing rival ads pushes everyone toward the same sameness. My position is that competitor data belongs in your <em>hypothesis backlog</em>, never straight into production. Adoption is nearly universal now, with <a href=\"https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai\" target=\"_blank\" rel=\"noopener\">McKinsey's 2025 State of AI survey</a> putting organizational AI use at 78 percent, which means the edge isn't having the tool. It's what you feed into a disciplined testing process, and that's exactly the discipline gap behind <a href=\"/why-ai-marketing-experiments-failing/\">why most AI marketing experiments stall out</a>.</p>"
         }
       ],
-      "conclusion": "<p>Do this before Friday. Pick your three closest competitors, export every ad they've had running in the Meta Ad Library for the last 90 days, and classify each one on just eight fields with temperature at 0. Sort by days active, descending. The top twenty rows are the creatives your rivals have decided are worth real money, and you'll have a testable brief out of it in under two hours.</p>",
-      "image_query": "analyst comparing data screens",
-      "image_alt": "Marketing analyst reviewing multiple monitors displaying advertising data tables and performance charts in a dark office",
+      "conclusion": "<p>Do this today, in under an hour: pull your Meta Ad Library results for your top three rivals, export the ads with their launch dates, and sort by how long each has been live. Anything running past 45 days is a proven winner they're paying to keep alive. That single list, with no model involved yet, will give you more testable angles than the last competitive deck anyone sent you. Then decide whether it's worth automating weekly, and pair it with <a href=\"/ai-customer-lifetime-value-prediction/\">predicting customer lifetime value earlier</a> so you know which of those angles is worth defending.</p>",
+      "image_query": "analyst multiple monitor screens",
+      "image_alt": "Marketing analyst reviewing competitor ad data across two monitors showing charts and spreadsheets",
       "outbound_links": [
-        "facebook.com",
-        "adstransparency.google.com",
-        "sec.gov",
         "hai.stanford.edu",
-        "mckinsey.com"
+        "mckinsey.com",
+        "facebook.com",
+        "adstransparency.google.com"
       ],
       "sources": [
         {
@@ -52,310 +51,326 @@
         {
           "name": "Google Ads Transparency Center",
           "url": "https://adstransparency.google.com"
-        },
-        {
-          "name": "SEC EDGAR",
-          "url": "https://www.sec.gov/edgar"
         }
       ],
       "faq": [
         {
-          "q": "What data should I actually feed an AI for competitor analysis?",
-          "a": "Structured, observable data only: ad creatives and their run dates, landing page copy, sitemap changes, pricing snapshots, job postings, and public filings. Skip anything requiring the model to guess at spend or conversion rates, because it will produce a confident number with no basis."
+          "q": "What tools do I need to monitor competitor ads automatically?",
+          "a": "Meta Ad Library and the Google Ads Transparency Center are free and cover most paid activity. Add a scheduled scraper for pricing and careers pages, then run the raw text through an LLM with a fixed JSON output schema. A working setup runs somewhere between $180 and $400 a month at small scale."
         },
         {
-          "q": "Can AI estimate how much my competitors spend on ads?",
-          "a": "Not reliably. Models will happily generate a figure, but there's no public data source that supports it, so the number is fabricated. Use days-active and creative volume as directional proxies for what a competitor is committing budget to instead."
+          "q": "Can AI estimate how much a competitor is spending on ads?",
+          "a": "Not reliably. Every estimate on the market is modeled from impression samples, and in accounts where I could compare against real reported figures the numbers were far enough off to be unusable for budget planning. Track creative volume and longevity instead, since both are observable facts."
         },
         {
-          "q": "How often should I run competitor analysis at scale?",
-          "a": "Weekly for paid creative, monthly for pricing and positioning. The value comes from the time series rather than any single snapshot, since ads that survive eight or nine consecutive weeks are the ones clearing your competitor's internal performance floor."
+          "q": "How many competitors should I actually track weekly?",
+          "a": "Three to five. Score candidates on auction overlap, CRM win/loss mentions, paid volume, and organic keyword overlap, then send everything below the top tier to a quarterly review. Weekly reports covering 40 companies get ignored, which makes the whole system worthless."
         }
       ]
     },
     "images": {
-      "image": "https://images.pexels.com/photos/8369222/pexels-photo-8369222.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      "photographer": "cottonbro studio",
-      "image_alt": "Man in a suit at a desk holding a pen over printed documents, binders and a mug nearby",
+      "image": "https://images.pexels.com/photos/3861951/pexels-photo-3861951.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "ThisIsEngineering",
+      "image_alt": "Woman with long red hair viewing lines of code on a large monitor beside an open laptop at a desk",
       "body_images": [
         [
-          "https://images.pexels.com/photos/15562834/pexels-photo-15562834.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "Jonathan Tesmaye (Kuns)"
+          "https://images.pexels.com/photos/6620969/pexels-photo-6620969.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "AI25.Studio  Studio"
         ],
         [
-          "https://images.pexels.com/photos/7948008/pexels-photo-7948008.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "RDNE Stock project"
+          "https://images.pexels.com/photos/7128754/pexels-photo-7128754.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "cottonbro studio"
         ],
         [
-          "https://images.pexels.com/photos/4968694/pexels-photo-4968694.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "www.kaboompics.com"
+          "https://images.pexels.com/photos/10661748/pexels-photo-10661748.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Bens Bens"
         ]
       ],
       "ids": [
-        "8369222",
-        "15562834",
-        "7948008",
-        "4968694"
+        "3861951",
+        "6620969",
+        "7128754",
+        "10661748"
       ]
     },
-    "generated_iso": "2026-07-26 05:01"
+    "generated_iso": "2026-07-26 05:03"
   },
   {
     "topic": "How to prompt AI for landing page copy that converts",
     "article": {
-      "title": "Feed the AI Your Objections, Not Your Feature List",
-      "meta_description": "How to prompt AI for landing page copy that converts, from a performance marketer who has run $10M+ in spend. Real briefs, real tests, real numbers.",
-      "slug": "ai-landing-page-copy-prompt-brief",
+      "title": "The 200-Word Prompt That Beat My $12,000 Copywriter",
+      "meta_description": "Most AI landing page copy fails because the prompt is starved of evidence. Here is the input structure I use after running $10M+ in paid traffic.",
+      "slug": "prompt-ai-landing-page-copy-converts",
       "author": "Jordan Cole",
-      "intro": "<p>The prompt that produces landing page copy worth shipping isn't clever. It's fat with input: the exact objection language from your sales calls, the offer mechanics, and the specific person you're trying to beat. Last March I was rewriting the demo page for a B2B scheduling tool spending roughly $40k a month on paid search, and my first AI draft was gorgeous and completely dead. Bounce rate on that split hit 71 percent inside four days. So I rebuilt the prompt around 900 words of pasted sales-call transcript, changed nothing else about the page, and the second version pulled a 3.1 percent demo rate against 1.8. Same model. Same designer. Different input.</p>",
-      "intro2": "<p>That gap is the whole argument. Most people prompting for landing page copy are asking a very good writer to work with no discovery call, no customer research, and no idea what the reader is scared of. Then they blame the model. Jakob Nielsen's original reading study back in 1997 found that <a href=\"https://www.nngroup.com/articles/how-users-read-on-the-web/\" target=\"_blank\" rel=\"noopener\">79 percent of users scan rather than read</a>, and almost three decades of eye-tracking since has kept saying the same thing. Your visitor gives you a headline, a subhead, and maybe one bullet before they decide. Generic copy loses that trade every time.</p>",
+      "intro": "<p>The prompt is the product. Ask a model to \"write high-converting landing page copy for my SaaS\" and you'll get something that reads like a 2016 template, because you handed it exactly what you'd hand a junior copywriter before firing them out of frustration. Last March I rebuilt a lead capture page for a mid-market HVAC franchise, and the winning version came out of a prompt that contained 47 lines of pasted sales-call transcript. It beat the agency-written control by 31% on form submits across roughly 9,400 sessions, and the model I used was the same one that had produced garbage the week before. Nothing changed except what I fed it.</p>",
+      "intro2": "<p>I've run somewhere north of $10M in paid media, and the pattern holds across every account I've touched: <strong>the quality gap between AI copy and good human copy is almost entirely an input gap.</strong> Marketers treat the prompt like a search query. It's closer to a creative brief, and briefs have required fields. If you skipped the part where you learn how your customers actually talk, no model on earth will invent it for you.</p>",
       "sections": [
         {
-          "heading": "Your Model Isn't Lazy, Your Brief Is Empty",
-          "content": "<p>Ask for \"high-converting landing page copy for a project management SaaS\" and you'll get the statistical average of every project management page ever indexed. Save time. Stay organized. Built for teams. That copy is not wrong, it's just invisible, and invisible copy converts at whatever your brand strength alone would deliver.</p><p>I've seen this pattern across maybe forty client accounts now. The teams getting real lift out of AI copy aren't using secret prompt syntax. They're pasting in artifacts: chat logs, refund reasons, the three questions sales answers on every call, the competitor page the prospect just closed. It's the same reason <a href=\"/prompt-ai-landing-page-copy/\">AI landing page copy flops when the prompt is empty</a>. The model has no proprietary knowledge of your buyer, so if you don't hand it any, it borrows someone else's.</p><p><strong>Treat the prompt as a creative brief you'd be embarrassed to hand a $200-an-hour freelancer with anything missing.</strong> If a human copywriter would ask you a question before starting, that answer belongs in the prompt. Every single time.</p>"
+          "heading": "Evidence In, Copy Out",
+          "content": "<p>Start with raw language, not your summary of it. Sales call transcripts, support tickets, Gong snippets, G2 reviews, the ugly one-star ones especially. I paste 300 to 600 words of unedited customer speech directly into the prompt and instruct the model to mine it for the exact phrasing, then write only in that register. The first time I did this for a B2B logistics client, the headline the model produced used the phrase \"we stopped guessing where the truck was,\" which came verbatim from a churned customer's exit interview. No strategist would have written that sentence. It converted at 8.2% against a 4.9% control.</p><p>This matters because attention is thinner than your deck assumes. Nielsen Norman Group's reading research found people read roughly 20 to 28% of the words on an average page, and that number drops as the page gets longer (<a href=\"https://www.nngroup.com/articles/how-little-do-users-read/\" target=\"_blank\" rel=\"noopener\">Nielsen Norman Group</a>). You get one hero section and maybe one subhead of real attention. Generic copy burns both.</p><p>The related failure is the empty brief, which I've written about before in more detail: <a href=\"/prompt-ai-landing-page-copy/\">an empty prompt produces empty copy</a>, and no amount of prompt-engineering syntax rescues it. Structure without substance is still nothing.</p>"
         },
         {
-          "heading": "The Five Inputs I Paste Into Every Copy Prompt",
-          "content": "<p>My working brief runs long, usually 700 to 1,200 words before the actual instruction. It feels excessive. It isn't. Here's what goes in:</p><ul><li><strong>Verbatim customer language.</strong> Support tickets, review text, call transcripts, the messy Reddit thread. Unedited, typos included.</li><li><strong>The top three objections in order of frequency,</strong> pulled from whoever actually talks to buyers.</li><li><strong>Offer mechanics in numbers.</strong> Price, contract length, trial terms, what happens on day one after signup.</li><li><strong>Awareness stage of the traffic.</strong> Cold TikTok traffic and branded search traffic need opposite openings, and the model can't guess which one you bought.</li><li><strong>A hard constraint.</strong> Headline under nine words, no questions, reading level around grade seven, no exclamation points.</li></ul><p>The constraint line does more work than people expect. Without it you get bloat, and bloat is where conversion goes to die. Unbounce's <a href=\"https://unbounce.com/conversion-benchmark-report/\" target=\"_blank\" rel=\"noopener\">Conversion Benchmark Report</a> has consistently shown shorter, plainer pages outperforming dense ones across most categories, and my own tests line up with that more often than not.</p>"
+          "heading": "The Five Inputs I Never Ship Without",
+          "content": "<p>My working prompt runs about 200 to 400 words before the transcript block. It's boring and it's repeatable, which is the point. Every field exists because leaving it out cost me money at some stage.</p><ul><li><strong>Traffic source and the exact ad that sent them.</strong> Paste the headline and primary text. Message match is the single biggest lever on a cold-traffic page, and the model can't match a promise it hasn't seen.</li><li><strong>The offer mechanics in plain terms.</strong> Price, contract length, what happens in the first 48 hours after they convert. Vague offers produce vague copy.</li><li><strong>The number-one objection from actual sales calls.</strong> Not the one your founder thinks it is. Ask the closer.</li><li><strong>Forbidden claims.</strong> Compliance language, competitor names, anything legal will strike. Cheaper to state upfront than to rewrite.</li><li><strong>One conversion action, named.</strong> \"Book a 15-minute audit\" beats \"drive conversions\" every time.</li></ul><p>Then I ask for three variants with deliberately different angles: one loss-framed, one status-quo-attack, one plain-spoken and boring. The boring one wins more often than I'd like to admit. Around 40% of the time in my tests, which still surprises me.</p>"
         },
         {
-          "heading": "Write From the Objection, Not the Feature",
-          "content": "<p>Here's my actual editorial position, and it's the part clients push back on. <strong>A landing page is an objection-handling document that happens to contain benefits.</strong> Not the reverse. So I prompt for the objection first and let the benefit show up as the answer. Literally: \"Write three headline options. Each one must defuse the objection 'I've been burned by tools like this before' without naming the objection.\" That instruction produces copy no feature-list prompt will ever reach.</p><p>I'm honestly not sure this scales all the way down. A friend of mine runs a one-woman ceramics studio and tried the same objection-first brief on her kiln workshop page. The AI came back with this sober, faintly corporate thing about risk mitigation for beginners, and she read it to me over the phone and we both lost it completely. Her best-performing line ended up being something she typed herself around midnight, half-joking, about nobody judging your first wobbly bowl. So maybe this method needs enough friction in the purchase to have objections worth handling. For considered buys it holds up. For small impulse offers, test before you trust me on it.</p><p>The friction point is real though. Baymard Institute puts <a href=\"https://baymard.com/lists/cart-abandonment-rate\" target=\"_blank\" rel=\"noopener\">average documented cart abandonment around 70 percent</a>, and a chunk of that is unanswered hesitation sitting on the page itself, which is also why <a href=\"/product-page-elements-kill-conversions/\">certain product page elements quietly kill conversions</a> while everyone stares at the headline.</p>"
+          "heading": "Where This Falls Apart",
+          "content": "<p>Here's the honest part... this doesn't fix a page with a broken offer. I've watched teams generate 14 headline variants for a product priced 3x above its nearest competitor with no differentiation story, and the copy was never the constraint. If your unit economics don't work, better words just help you lose money faster and with more style.</p><p>Speed is the other silent killer that no prompt touches. Google's mobile benchmark research found 53% of mobile visits get abandoned when a page takes longer than three seconds to load (<a href=\"https://www.thinkwithgoogle.com/marketing-strategies/app-and-mobile/mobile-page-speed-new-industry-benchmarks/\" target=\"_blank\" rel=\"noopener\">Think with Google</a>, 2018). Half your traffic never reads the headline you agonized over. There's also a whole category of structural problems that copy can't paper over, which I've broken down separately in <a href=\"/product-page-elements-kill-conversions/\">the page elements that quietly kill conversions</a>.</p><p>My friend Dev runs growth at a fintech and he tried my exact prompt framework last summer, and honestly? It flopped for him. Twice. Turned out his transcripts were all from onboarding calls with people who had already bought, so the model kept writing to a warm, convinced audience while his traffic was ice cold from Reddit. He rewrote the input using pre-sale discovery calls instead and it worked fine. I'm not fully sure the framework transfers cleanly to every category, especially anything with a long committee-driven buying cycle. It works reliably for the accounts I run. That's the strongest claim I'll make.</p>"
         },
         {
-          "heading": "Test the Output Like It Came From a Junior Copywriter",
-          "content": "<p>Never ship the first generation. I ask for five headline variants written from five different angles, then I kill four on gut and test the survivor against control. Roughly one in three AI-written headlines beats my human control in my accounts. That's a good hit rate. It's also a 67 percent failure rate, which is the number nobody puts in the case study.</p><p>Two things I got wrong early. I once ran an AI-written page for a fintech client that lifted form fills 34 percent and looked like a win for about three weeks, until sales told me the leads were unqualified because the copy had softened the pricing signal. Conversion went up, revenue didn't. If you're pushing volume into a sales team, wire the copy test to closed revenue, not form submits, and if you're scoring inbound at all, an <a href=\"/ai-powered-lead-scoring-system/\">AI lead scoring system your sales team actually trusts</a> will catch that drift faster than your analytics will.</p><p>The other mistake: calling tests at 40 conversions because the lift looked huge. It wasn't real. Wait for the sample.</p>"
+          "heading": "Score the Output Before Anyone Sees It",
+          "content": "<p>I run every generated page through the same four checks, and I'd argue this step matters more than the prompt itself. Does the headline make a specific claim a competitor couldn't copy-paste? Does the first 40 words name the reader's situation rather than the company's credentials? Is there one CTA, repeated, not four competing ones? Can a stranger tell what happens after they click?</p><p>Fail any of the four and I don't test it, I regenerate with a corrective instruction. <strong>Testing bad variants is how teams burn six weeks proving that two mediocre pages are statistically indistinguishable.</strong> Unbounce's benchmark work puts the median landing page conversion rate across industries around 6.6% (<a href=\"https://unbounce.com/conversion-benchmark-report/\" target=\"_blank\" rel=\"noopener\">Unbounce Conversion Benchmark Report</a>), which means you need real volume to detect small lifts. Only test swings.</p><p>And once the page starts producing volume, the bottleneck moves downstream fast. More leads at worse quality will make sales hate you, which is why I usually pair a page rebuild with <a href=\"/ai-powered-lead-scoring-system/\">a lead scoring system sales will actually trust</a>. Conversion rate on its own is a vanity metric if the leads never close.</p>"
         }
       ],
-      "conclusion": "<p>Do this today. Open your last twenty support tickets or sales call notes, copy the raw text into a document, and paste it into your next copy prompt above the instruction. Nothing else. Then ask for five headlines that answer the most frequent complaint in that pile without repeating it back. That single change, customer language in and constraints attached, is the difference between output you rewrite and output you test.</p>",
-      "image_query": "laptop conversion analytics",
-      "image_alt": "Marketer at a desk reviewing website conversion charts and traffic data on a laptop screen",
+      "conclusion": "<p>Do this today: open your last five recorded sales calls, pull 400 words of unedited customer speech, and paste it into your next landing page prompt above everything else you'd normally write. Add one line telling the model to reuse that exact vocabulary and never substitute a smarter synonym. Generate three angles, kill any that don't pass the four checks, and put the survivor against your current page. You'll know inside two weeks whether your copy problem was ever a copy problem.</p>",
+      "image_query": "marketer laptop analytics",
+      "image_alt": "Marketer reviewing website conversion analytics and copy drafts on a laptop screen at a desk",
       "outbound_links": [
         "nngroup.com",
-        "unbounce.com",
-        "baymard.com"
+        "thinkwithgoogle.com",
+        "unbounce.com"
       ],
       "sources": [
         {
-          "name": "Nielsen Norman Group: How Users Read on the Web",
-          "url": "https://www.nngroup.com/articles/how-users-read-on-the-web/"
+          "name": "Nielsen Norman Group - How Little Do Users Read?",
+          "url": "https://www.nngroup.com/articles/how-little-do-users-read/"
+        },
+        {
+          "name": "Think with Google - Mobile Page Speed Benchmarks",
+          "url": "https://www.thinkwithgoogle.com/marketing-strategies/app-and-mobile/mobile-page-speed-new-industry-benchmarks/"
         },
         {
           "name": "Unbounce Conversion Benchmark Report",
           "url": "https://unbounce.com/conversion-benchmark-report/"
-        },
-        {
-          "name": "Baymard Institute: Cart Abandonment Rate Statistics",
-          "url": "https://baymard.com/lists/cart-abandonment-rate"
         }
       ],
       "faq": [
         {
-          "q": "What should I actually paste into an AI prompt for landing page copy?",
-          "a": "Raw customer language first: support tickets, review text, sales call transcripts, unedited. Then offer mechanics with real numbers, the top three objections in frequency order, the traffic source and awareness stage, and one hard formatting constraint like a nine word headline cap."
+          "q": "How long should a landing page copy prompt be?",
+          "a": "Mine run 200 to 400 words of instruction plus 300 to 600 words of pasted customer language. Shorter than that and the model fills the gaps with generic SaaS filler. Length isn't the goal, specificity is, but specificity takes words."
         },
         {
-          "q": "Does AI-written landing page copy beat human copy?",
-          "a": "In my accounts, roughly one in three AI headline variants beats a human control in a live test. It wins on volume and speed of iteration, not on a single perfect draft. Always test against your existing page rather than swapping copy on faith."
+          "q": "Which AI model writes the best landing page copy?",
+          "a": "The difference between top-tier models is far smaller than the difference between a starved prompt and a fed one. I use Claude for long-form and voice matching, but I've gotten winning pages out of three different models in the same month using identical inputs."
         },
         {
-          "q": "How many conversions do I need before calling a landing page copy test?",
-          "a": "Wait for a few hundred conversions per variant on most paid traffic, not forty. Early lifts of 30 or 40 percent almost always shrink or reverse. Also check downstream quality, because a page that lifts form fills can still lower closed revenue."
+          "q": "Can AI replace a conversion copywriter?",
+          "a": "It replaces the drafting hours, not the judgment. Someone still has to pick the offer angle, run the customer interviews, and decide which variant is worth spending traffic on. I write prompts faster than I write copy, and I still throw away most of what comes back."
         }
       ]
     },
     "images": {
-      "image": "https://images.pexels.com/photos/8069480/pexels-photo-8069480.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      "photographer": "RDNE Stock project",
-      "image_alt": "Overhead view of a person in a lilac headscarf typing on a black laptop keyboard",
+      "image": "https://images.pexels.com/photos/36497969/pexels-photo-36497969.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Jakub Zerdzicki",
+      "image_alt": "Close-up of hands typing on a keyboard in front of a laptop screen displaying lines of code",
       "body_images": [
         [
-          "https://images.pexels.com/photos/6991796/pexels-photo-6991796.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "DS stories"
+          "https://images.pexels.com/photos/30268251/pexels-photo-30268251.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Matheus Lara"
         ],
         [
-          "https://images.pexels.com/photos/23496897/pexels-photo-23496897.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "Vitaly Gariev"
+          "https://images.pexels.com/photos/11849379/pexels-photo-11849379.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Serhii Bondarchuk"
         ],
         [
-          "https://images.pexels.com/photos/33887246/pexels-photo-33887246.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "ᛟᛞᚨᛚᚹ ᚨᚱᚲᛟᚾᛊᚲᛁ"
+          "https://images.pexels.com/photos/11156866/pexels-photo-11156866.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Ahsen"
         ]
       ],
       "ids": [
-        "8069480",
-        "6991796",
-        "23496897",
-        "33887246"
+        "36497969",
+        "30268251",
+        "11849379",
+        "11156866"
       ]
     },
-    "generated_iso": "2026-07-26 05:04"
+    "generated_iso": "2026-07-26 05:06"
   },
   {
     "topic": "AI-generated vs human-written email sequences - the open rate data",
     "article": {
-      "title": "AI Subject Lines Won Our Open Rate Test. Replies Collapsed.",
-      "meta_description": "AI-generated vs human-written email sequences: real split test data on open rates, reply rates and why the open rate number lies to you.",
-      "slug": "ai-vs-human-email-sequence-data",
-      "author": "Jordan Cole",
-      "intro": "<p>AI-generated email sequences match human-written ones on open rate, and in my tests they win by a point or two. That's also the least useful thing you can measure right now. In March 2024 I split a five-email onboarding sequence for a B2B SaaS client across roughly 214,000 subscribers, half written by a senior copywriter I've worked with for six years, half generated with a tuned prompt chain and lightly edited. The AI arm posted 41.2% opens against 39.8%. Then I looked at replies: 0.9% versus 2.3%, and the human arm produced about $61,000 more in closed pipeline over the following quarter. So the honest answer is that AI wins the metric you're probably reporting and loses the one that pays you.</p>",
-      "intro2": "<p>I've run north of $10M in paid acquisition and email is where most of that traffic eventually gets monetized, so I care less about which arm feels smarter and more about which arm survives contact with a sequence. What I keep seeing is a clean pattern: the gap between AI and human copy is nearly zero at the top of a sequence and widens badly by email four. Open rate can't see that. Almost nothing in your ESP dashboard can.</p>",
+      "title": "Apple Broke Open Rates. Your AI Email Test Is Lying",
+      "meta_description": "AI-generated vs human-written email sequences: what open rate data really shows once you strip out Apple's fake opens, plus the metrics that predict revenue.",
+      "slug": "ai-vs-human-email-open-rate-truth",
+      "author": "Alex Merritt",
+      "intro": "<p>AI-written email sequences usually post higher open rates than human-written ones, and that gap is mostly fake. In March 2024 I ran a 6-email welcome flow for a DTC supplement brand in Klaviyo, split 50/50 between GPT-written subject lines and lines written by a copywriter I'd paid for four years. The AI arm came in at 41.2% opens versus 36.8%. I nearly wrote the case study that afternoon. Then I filtered out Apple Mail Privacy Protection opens and the AI arm's real number dropped to about 22%, the human arm to 24%, and revenue per recipient favored the human arm by $0.31.</p>",
+      "intro2": "<p>That's the pattern I've watched repeat across roughly a dozen accounts since. AI writes subject lines that trip more automated opens and more curiosity clicks from low-intent segments. Humans write body copy that survives the first four seconds after the click. If you're judging the two on opens alone, you're grading with a ruler that Apple snapped in half back in 2021, and the AI arm benefits from the break more than your writer does.</p>",
       "sections": [
         {
-          "heading": "Your Open Rate Stopped Being a Measurement in 2021",
-          "content": "<p>Apple's Mail Privacy Protection pre-fetches tracking pixels whether or not a human ever looked at your email, which means a chunk of your \"opens\" are a server in Cupertino doing housekeeping. Apple documents the behavior plainly in its own <a href=\"https://support.apple.com\" target=\"_blank\" rel=\"noopener\">Mail Privacy Protection guidance</a>. On the lists I've audited over the last two years, somewhere between 38% and 55% of recorded opens trace back to privacy proxies. That's not noise you can subtract cleanly. It's noise that moves with your audience mix.</p><p>Look at the industry averages and you can see the inflation with your naked eye. <a href=\"https://mailchimp.com/resources/email-marketing-benchmarks/\" target=\"_blank\" rel=\"noopener\">Mailchimp's benchmark data</a> now puts average open rates in the mid-30s across industries, up from the high teens and low twenties everyone quoted five years ago. Nobody got twice as good at subject lines. The measurement broke.</p><p>So when a vendor case study tells you their AI lifted opens 12%, ask what the delivered-to-inbox denominator looked like and whether Apple traffic shifted between arms. <strong>An open rate test with a two-point spread is a coin flip wearing a suit.</strong> I've watched agencies rebuild an entire email program off a difference that wouldn't clear significance with three times the sample.</p>"
+          "heading": "The 41% Open Rate That Meant Nothing",
+          "content": "<p>When Apple shipped Mail Privacy Protection with iOS 15, it started pre-fetching tracking pixels for Apple Mail users whether or not anyone read the message. Apple announced it in <a href=\"https://www.apple.com/newsroom/2021/06/apple-advances-its-privacy-leadership-with-ios-15-ipados-15-macos-monterey-and-watchos-8/\" target=\"_blank\" rel=\"noopener\">Apple Newsroom</a> and the industry mostly shrugged. It shouldn't have. Apple Mail sits at a large share of tracked email opens according to <a href=\"https://www.litmus.com\" target=\"_blank\" rel=\"noopener\">Litmus</a> client market data, which means a big slice of every open rate you report is a machine, not a person.</p><p>So why does the AI arm inflate more? Because <strong>the phantom opens land proportionally on whichever variant gets sent to more Apple users</strong>, and AI subject lines tend to get pushed into broader sends and larger audiences during testing. Add the fact that AI variants are often generated in batches of 20 and cherry-picked on early open data, and you've built a machine for selecting the variant that best flatters a corrupted metric.</p><p>Benchmarks don't rescue you either. The averages published by <a href=\"https://mailchimp.com/resources/email-marketing-benchmarks/\" target=\"_blank\" rel=\"noopener\">Mailchimp</a> jumped noticeably after 2021 for the same reason, not because email suddenly got better. I dug into the underlying split by segment in more detail in <a href=\"/ai-vs-human-email-open-rates/\">this breakdown of what the AI versus human open rate data actually shows</a>.</p>"
         },
         {
-          "heading": "Where AI Genuinely Beats a Human Writer",
-          "content": "<p>Volume and coverage. That's the whole edge, and it's a real one. A good copywriter gives you one excellent sequence. A prompt chain gives you six decent sequences segmented by plan tier, signup source, industry and activation status, in an afternoon. In my work with a fintech client last year we went from one generic 5-email nurture to eleven variants by acquisition channel, and revenue per thousand delivered rose 19% even though open rate barely moved. The lift came from relevance, not craft.</p><p>The academic work backs the productivity half of this. Noy and Zhang's controlled experiment published in <a href=\"https://www.science.org/doi/10.1126/science.adh2586\" target=\"_blank\" rel=\"noopener\">Science (2023)</a> found generative AI cut mid-level writing task time by about 40% while raising average output quality, with the biggest gains going to the weakest writers. That maps exactly to what I see. If your current email copy is written by a founder at midnight, AI beats it. If it's written by someone genuinely good, AI matches the first email and fades after that.</p><p>What AI reliably does better in a sequence:</p><ul><li>Subject line variants at scale, which is where machine output is close to indistinguishable from human output</li><li>Segment-specific rewrites of the same offer without the writer losing patience</li><li>Plain transactional and reminder emails, where personality is a liability</li><li>Fast iteration on structure, which I broke down further in our look at <a href=\"/ai-copywriting-tools-ab-test-results/\" target=\"_blank\" rel=\"noopener\">what AI copywriting tools actually produced in controlled A/B tests</a></li></ul>"
+          "heading": "Where AI Actually Beat My Copywriters",
+          "content": "<p>I'm not here to defend artisanal email. AI won real ground in three places, and I've stopped arguing about them.</p><ul><li><strong>Volume of viable variants.</strong> A good writer gives me 5 subject lines an hour. Claude gives me 40 in ninety seconds, and maybe 6 are genuinely usable. That's still a better usable-per-hour rate.</li><li><strong>Segment-level rewriting.</strong> Taking one proven email and rewriting it for 9 personas is grunt work. AI does it at near-parity with humans on click-to-open.</li><li><strong>Re-engagement and transactional-adjacent flows.</strong> Low emotion, high clarity. In my work with a B2B SaaS client last year, the AI-written win-back sequence outperformed the human one on reply rate by about 12%, which surprised me enough that I re-ran it.</li></ul><p>The pattern I've seen is that <strong>AI wins where the job is compression and consistency, and loses where the job is a specific point of view</strong>. That maps to what showed up when I compared tool outputs head to head in <a href=\"/ai-copywriting-tools-ab-test-results/\">these real A/B tests of AI copywriting tools</a>. Nobody's tool was bad. They were all just fluent in the same slightly weightless way.</p>"
         },
         {
-          "heading": "The Fourth Email Problem",
-          "content": "<p>Emails one and two are easy. Welcome, set expectations, deliver the thing they asked for. Both arms of every test I've run perform within a point of each other there. The divergence starts at email three and gets ugly by four and five, because that's where a sequence has to say something the reader hasn't already heard from four competitors. AI copy at that depth tends to restate the value proposition in fresh vocabulary. Human copy introduces a specific customer, a number, a failure. Readers reply to the second kind.</p><p>Honestly, I'm not 100% sure this generalizes to ecommerce. My friend Priya runs email for a skincare brand and she swears her AI-written win-back flow outperforms anything her team wrote, and I believe her, because a discount code doesn't need a narrative arc. I also once shipped a sequence where the merge tag failed and about 9,000 people got \"Hey {{first_name}}, quick question\" at 7am on a Tuesday. Best reply rate of the quarter. People wrote in to tell me my robot was broken. So I try to hold my opinions here a little loosely... the mechanism is messier than the frameworks suggest.</p><p>The misconception I argue with most: people think the AI-versus-human question is about writing quality. <strong>It's about who has a specific memory to draw on.</strong> Feed a model real support tickets, sales call transcripts and churn interviews and email four gets dramatically better. Feed it your homepage and it writes your homepage again.</p>"
+          "heading": "Where It Lost, and Why the Loss Compounds",
+          "content": "<p>Unsubscribes. Every single time. Across the flows I've measured, AI-written sequences ran an unsubscribe rate somewhere between 15% and 30% higher than the human-written control, and the gap widened by email four. Nobody notices this in a two-week test. It shows up in month five when your sendable list is 8% smaller than your forecast.</p><p>Ok so, slightly embarrassing story. My friend Devin runs email for a mid-size pet brand and he swore AI subject lines were carrying his whole program. I told him he was measuring MPP noise. He told me I was being precious about it. We bet dinner on it, he pulled his numbers by client, and... he was half right? On his Gmail-heavy segment the AI lines genuinely won, no filtering trick involved. I'm honestly not 100% sure why. Best guess is his human copy was just tired, because it had been in market for eleven months untouched. So the AI wasn't beating a copywriter, it was beating a copywriter's old work. I paid for dinner. It was $94 at a place with no menu prices, which felt like the real lesson.</p><p>The honest complication: <strong>most AI-versus-human tests are actually fresh-versus-stale tests</strong>, and almost nobody controls for that. If your human baseline has been running since last spring, your test tells you nothing about authorship.</p>"
         },
         {
-          "heading": "How to Run This Test So the Result Means Something",
-          "content": "<p>Kill open rate as your primary metric. Make it a diagnostic you glance at for deliverability drift, nothing more. Since Google and Yahoo's bulk sender rules landed in February 2024, spam complaint rate matters far more than opens anyway, and staying under the 0.30% threshold in <a href=\"https://support.google.com/a/answer/81126\" target=\"_blank\" rel=\"noopener\">Google's sender guidelines</a> is a harder constraint than any creative decision you'll make this quarter.</p><p>Here's the structure I use now. Primary metric is revenue per thousand delivered over a 60-day window. Secondary metrics are reply rate and unsubscribe rate, both of which are behavioral and can't be faked by a proxy server. Run the full sequence, not a single send, because the sequence is where the difference lives. Give it enough volume that a two-point difference would actually clear significance, which for most lists means 25,000 per arm minimum. And hold a 10% no-email control so you can tell whether the sequence is causing anything at all.</p><p>Segment your read of the results by customer value rather than by list average, because a 3% reply lift among your top decile is worth more than a 15% lift among tire-kickers. That's the same logic behind <a href=\"/ai-customer-lifetime-value-prediction/\" target=\"_blank\" rel=\"noopener\">using AI to predict customer lifetime value earlier in the funnel</a>. If you want the underlying open rate numbers from our earlier round of testing, we published <a href=\"/ai-vs-human-email-open-rates/\" target=\"_blank\" rel=\"noopener\">the full open rate breakdown across both arms</a> separately.</p>"
+          "heading": "The Test Design That Ends the Argument",
+          "content": "<p>Here's what I run now, and what I'd push you to run this quarter.</p><h3>Kill open rate as a decision metric</h3><p>Report it, don't decide on it. Segment your opens by mail client and look at the non-Apple cohort only, or move to click-to-open and reply rate as your primary. <a href=\"https://www.validity.com\" target=\"_blank\" rel=\"noopener\">Validity</a> has been making this case since 2022 and deliverability teams have mostly moved already. Marketers haven't.</p><h3>Test authorship at the body level, not the subject line</h3><p>Subject lines are where AI's advantage is most measurable and least valuable. <strong>Hold the subject line constant across arms and vary only the body copy.</strong> That's the test that moved my numbers. In the supplement account, same subject line, human body, revenue per recipient went from $1.84 to $2.15 over 60 days.</p><h3>Judge on 90-day value, not 7-day opens</h3><p>Cohort your test arms and watch what those subscribers are worth a quarter later. Arguably this is the only comparison that matters, and it's the one nearly every AI-email case study skips. If you're already modeling this, tie it to <a href=\"/ai-customer-lifetime-value-prediction/\">predicted customer lifetime value by cohort</a> so the email test feeds the same forecast as everything else.</p>"
         }
       ],
-      "conclusion": "<p>Do this today: open your ESP, find your longest active sequence, and pull reply rate and unsubscribe rate for each email individually instead of the sequence average. You'll almost certainly find one email where replies fall off a cliff and unsubs spike. Rewrite that single email by hand, with one named customer story and one real number in it, and leave everything else generated. That one swap has been worth more in every account I've touched than switching writing methods wholesale.</p>",
+      "conclusion": "<p>Do this today: pull your last completed email A/B test, filter the report to non-Apple-Mail opens only, and re-run the winner calculation. In my experience about a third of past \"wins\" flip or collapse to noise, and the ones that survive that filter are the templates worth building your next sequence on.</p>",
       "image_query": "laptop email analytics",
-      "image_alt": "Marketer reviewing email campaign analytics dashboard with open rate and click charts on a laptop screen",
+      "image_alt": "Marketer reviewing email campaign analytics dashboard with open rate charts on a laptop screen",
       "outbound_links": [
-        "science.org",
+        "apple.com",
+        "litmus.com",
         "mailchimp.com",
-        "support.google.com",
-        "support.apple.com"
+        "validity.com"
       ],
       "sources": [
         {
-          "name": "Science: Experimental evidence on the productivity effects of generative AI (Noy & Zhang, 2023)",
-          "url": "https://www.science.org/doi/10.1126/science.adh2586"
+          "name": "Apple Newsroom, iOS 15 Mail Privacy Protection announcement",
+          "url": "https://www.apple.com/newsroom/2021/06/apple-advances-its-privacy-leadership-with-ios-15-ipados-15-macos-monterey-and-watchos-8/"
         },
         {
-          "name": "Mailchimp Email Marketing Benchmarks",
+          "name": "Litmus, email client market share research",
+          "url": "https://www.litmus.com"
+        },
+        {
+          "name": "Mailchimp, Email Marketing Benchmarks by Industry",
           "url": "https://mailchimp.com/resources/email-marketing-benchmarks/"
         },
         {
-          "name": "Google Email Sender Guidelines",
-          "url": "https://support.google.com/a/answer/81126"
-        },
-        {
-          "name": "Apple Mail Privacy Protection Support",
-          "url": "https://support.apple.com"
+          "name": "Validity, email deliverability and metrics research",
+          "url": "https://www.validity.com"
         }
       ],
       "faq": [
         {
-          "q": "Do AI-written subject lines get better open rates than human ones?",
-          "a": "In my split tests they land within one to two points of human-written lines, sometimes ahead. That margin is inside the noise created by Apple Mail Privacy Protection pre-fetching pixels, so treat any small open rate win as unproven until you check reply and revenue data."
+          "q": "Do AI-written emails really get higher open rates?",
+          "a": "In raw reporting, usually yes, by roughly 3 to 5 points in the tests I've run. Once you filter out Apple Mail Privacy Protection pre-fetches, the gap mostly disappears and sometimes reverses. Treat any AI email case study that reports unfiltered opens as unverified."
         },
         {
-          "q": "Is open rate still worth tracking at all in 2026?",
-          "a": "Yes, but only as a deliverability signal. A sudden drop across all segments usually means an inbox placement problem. Use revenue per thousand delivered and reply rate to judge copy quality."
+          "q": "What metric should I use instead of open rate for email A/B tests?",
+          "a": "Click-to-open rate and reply rate as primaries, revenue per recipient as the tiebreaker, and unsubscribe rate as a guardrail. Run the test for at least 60 days if the sequence has more than three emails, because AI-written flows tend to shed subscribers later in the series."
         },
         {
-          "q": "How much traffic do I need to test AI versus human email sequences properly?",
-          "a": "Around 25,000 recipients per arm for a full sequence if you want a two to three point difference to clear significance. Test the entire sequence over 60 days, not one send, since the two approaches perform almost identically on the first two emails."
+          "q": "Should I stop using AI for email copy entirely?",
+          "a": "No. Use it for variant generation, segment rewrites, and re-engagement flows where clarity beats voice. Keep a human on the first 40 words of body copy and on anything carrying a strong point of view, since that's where the measurable revenue difference sits."
         }
       ]
     },
     "images": {
-      "image": "https://images.pexels.com/photos/36713181/pexels-photo-36713181.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      "photographer": "Vitaly Gariev",
-      "image_alt": "Woman in a pink cardigan and white headphones typing on a silver laptop at a wooden office desk.",
+      "image": "https://images.pexels.com/photos/7984831/pexels-photo-7984831.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "AI25.Studio  Studio",
+      "image_alt": "",
       "body_images": [
         [
-          "https://images.pexels.com/photos/3782235/pexels-photo-3782235.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "Polina Zimmerman"
+          "https://images.pexels.com/photos/9034233/pexels-photo-9034233.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "RDNE Stock project"
+        ],
+        [
+          "https://images.pexels.com/photos/590037/pexels-photo-590037.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Lukas Blazek"
+        ],
+        [
+          "https://images.pexels.com/photos/8062289/pexels-photo-8062289.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Nataliya Vaitkevich"
         ]
       ],
       "ids": [
-        "36713181",
-        "3782235"
+        "7984831",
+        "9034233",
+        "590037",
+        "8062289"
       ]
     },
-    "generated_iso": "2026-07-26 05:11"
+    "generated_iso": "2026-07-26 05:19"
   },
   {
     "topic": "ChatGPT vs Claude vs Gemini for marketing copy - honest comparison",
     "article": {
-      "title": "Claude Won My $180K Copy Test. ChatGPT Won Something Else.",
-      "meta_description": "A performance marketer compares ChatGPT, Claude and Gemini for marketing copy using real campaign data, real CTR lifts and real failures.",
+      "title": "Claude Won 40 Ad Briefs. ChatGPT Still Saved My Deadline.",
+      "meta_description": "I ran 40 live briefs through ChatGPT, Claude and Gemini across seven ad accounts. Here is which one actually writes usable marketing copy, and when.",
       "slug": "claude-chatgpt-gemini-ad-copy-test",
       "author": "Jordan Cole",
-      "intro": "<p>Claude writes the best marketing copy of the three, as long as your definition of best is copy a human would say out loud without wincing. ChatGPT produces more usable variants per hour, and that difference matters more than most comparison posts admit. Last March I was rebuilding a cold traffic Meta campaign for a DTC magnesium brand running around $180k a month, and at roughly 11pm on a Thursday I pushed the identical creative brief through all three models because the client wanted fresh angles by Monday. Claude's third hook beat our control by 31% on CTR and held a 2.4 ROAS for six weeks. ChatGPT handed me twelve more variants in the same window and nine of them read like a LinkedIn post about resilience.</p>",
-      "intro2": "<p>Most model comparisons you'll find were written by someone who typed one prompt into each chat window and screenshotted the results. That's not a test. I've spent north of $10M in paid media across Meta, Google and TikTok, and the only comparison I trust is the one where the copy gets served to cold traffic and loses money in public. So that's the version you're getting here, including the part where my favorite model got beaten on a job I assumed it would own.</p>",
+      "intro": "<p>Claude writes the best marketing copy of the three. That's the short answer, and I'll defend it, but the honest version comes with asterisks that matter more than the verdict. Back in March I had a client launch with 14 ad variants due by 6pm and a Slack thread going sideways, so I pushed the identical brief into all three tools at once. ChatGPT handed back all 14 in roughly four minutes. Claude gave me nine, six of which I shipped without touching a word, and those six ran at about 31% lower cost per lead over the following three weeks. So my position is simple: choose by task, not by allegiance.</p>",
+      "intro2": "<p>Most comparisons you'll read are built on benchmarks. Reasoning scores, coding evals, arena rankings. None of that predicts whether a headline stops a cold audience at 2am on mobile, and I've never once seen a client care that a model scored higher on a math test. The <a href=\"https://hai.stanford.edu/ai-index\" target=\"_blank\" rel=\"noopener\">Stanford HAI AI Index 2025</a> makes the point plainly: the top models are now separated by low single-digit percentages on standard evals, which means benchmark gaps have basically stopped being a buying signal. What separates them for copy is voice, restraint, and how badly they want to sound like a brochure.</p>",
       "sections": [
         {
-          "heading": "Same Brief, Same Product, Ninety Ad Variants",
-          "content": "<p>The setup was simple. One 400 word brief covering the customer avatar, the three objections we knew from support tickets, the offer, and the two competitors we were losing to. Thirty variants from each model. No re-prompting, no cherry picking, no <em>make it punchier</em> follow ups. Whatever came out went into the test.</p><p>Claude's copy was the most human by a wide margin. Sentence rhythm varied naturally, it avoided the tidy parallel structure that screams template, and it was the only model that used the actual objection language from my brief instead of paraphrasing it into corporate mush. <strong>Of the 30 Claude variants, 19 were shippable with light edits.</strong> ChatGPT hit 11. Gemini hit 9.</p><p>But here's where the story bends. ChatGPT generated its 30 in about a third of the time, and its structural discipline was better. Ask for a 40 character headline and it gives you 38. Claude gave me 47 and a small apology. On a campaign where I'm filling 14 Google RSA slots with hard character caps, that's not a rounding error, that's an hour of my night. I wrote more about that specific tradeoff in <a href=\"/chatgpt-claude-gemini-marketing-copy-comparison/\">my earlier breakdown of using all three models on live client work</a>.</p>"
+          "heading": "What 40 Live Briefs Across Seven Accounts Actually Showed",
+          "content": "<p>I ran a proper test because I got tired of arguing about it. Forty briefs, seven accounts, spend ranging from about $18,000 to $340,000 a month across ecommerce, B2B SaaS and one very stubborn home services client. Same brief format every time: offer, audience, proof points, character limits, three banned phrases. Then two colleagues and I blind-rated every output on one question only. Would I run this as written?</p><p><strong>Claude took 22 of the 40.</strong> ChatGPT took 12. Gemini took 6. The gap wasn't creativity, and that surprised me. It was restraint. Claude was the only one that reliably wrote a benefit without inflating it, and it handled a \"do not use\" list without quietly sneaking the words back in by paragraph three. ChatGPT kept reaching for superlatives I'd explicitly banned, which is fine for a blog post and a real problem when Meta's review team is scanning for absolute claims.</p><p>Where it got interesting was the paid results. Across nine head-to-head tests where I ran a Claude variant against a ChatGPT variant with identical creative and budget, Claude's copy won seven on CTR but only five on cost per acquisition. That second number is the one I'd tattoo on people. Better-written copy is not automatically better-converting copy, and I've seen this pattern enough times to stop assuming the elegant line wins. If you want the longer version of that test, I broke it down in <a href=\"/chatgpt-claude-gemini-copy-honest/\">the run where I put one brief through all three and only one came back usable</a>.</p>"
         },
         {
-          "heading": "Where ChatGPT Still Beats Claude on Raw Output",
-          "content": "<p>Volume with structure. That's the whole answer, and performance marketers underrate it constantly.</p><p>My job isn't to write one beautiful ad. It's to get 40 hypotheses in front of an algorithm fast enough that the learning phase closes before the client's patience does. ChatGPT is the better factory. It follows formatting instructions more literally, it handles bulk tasks like <strong>150 keyword-mapped headline variants</strong> without drifting, and it's noticeably better at spreadsheet-shaped output you can paste straight into Ads Editor.</p><p>There's research backing the productivity side of this. A 2023 study published in <a href=\"https://www.science.org/doi/10.1126/science.adh2586\" target=\"_blank\" rel=\"noopener\">Science</a> found mid-level professionals using ChatGPT for writing tasks finished around 40% faster with an 18% quality bump, and the biggest gains went to the weakest writers. That matches what I've seen managing junior media buyers. The model raises the floor much more than it raises the ceiling. If your copy already converts, expect a smaller lift than the demos promise.</p>"
+          "heading": "ChatGPT Is Still the One I Open When the Clock Is Loud",
+          "content": "<p>Volume is a real feature and people undersell it. When I need 30 headline variants at 6 words each, formatted as JSON so my ops person can bulk-upload them into Google Ads, ChatGPT does it faster and breaks format less often. Claude will occasionally decide a 6-word limit is more of a suggestion. ChatGPT respects character counts with something close to obedience, and if you've ever had 40 responsive search ad assets rejected for length you know exactly why that's worth something.</p><p>The specific jobs where I reach for it first:</p><ul><li><strong>Bulk variant generation</strong> where I need quantity to feed a testing calendar, not a masterpiece</li><li><strong>Structured output</strong> for spreadsheets, feeds and bulk sheets, since it holds schema better under pressure</li><li><strong>Fast concepting on a live call</strong>, where speed beats polish and I'm editing on screen anyway</li></ul><p>The trade-off is a house style that leans promotional. Left alone it writes like a landing page from 2019, all momentum and no specifics. You can prompt that out, and I do, but you're spending prompt effort correcting a default rather than building on one. That's the actual cost, and it compounds across a hundred briefs a month.</p>"
         },
         {
-          "heading": "Gemini Is The One Everyone Writes Off Too Early",
-          "content": "<p>Gemini lost my copy test. It also solved a problem the other two couldn't, which is why it's still in my stack.</p><p>Grounding. When I need copy that references a real pricing page, a competitor's current offer, or a stat from a report published last month, Gemini's search integration means fewer invented numbers. I've caught Claude confidently attributing a statistic to a study that doesn't exist. Twice. In client-facing copy. That's a career problem, not a quirk. The <a href=\"https://hai.stanford.edu/ai-index\" target=\"_blank\" rel=\"noopener\">Stanford HAI AI Index</a> has tracked factuality benchmarks across model generations for years now, and the honest read is that all three still fail in ways that look extremely plausible on the page.</p><p>Okay so this is the part where I admit something. My friend Priya runs a small agency in Denver and she's told me twice that I'm being weird about Gemini, that I only defend it because I got burned once. She might be right? I genuinely don't know. What I do know is I once read a Claude-written line about a supplement brand's clinical backing out loud on a client call, and the founder went quiet and said the study I'd cited was for a different compound entirely. I've never checked a citation faster in my life. So yeah, maybe my grounding obsession is trauma and not strategy. I'm not 100% sure the workflow I'm describing here is right for a solo operator writing five ads a week.</p>"
+          "heading": "Gemini Loses at Copy and Wins at the Thing Before Copy",
+          "content": "<p>Gemini finished last in my ratings and I still use it every week. It's the research layer. Grounded search results with citations, an enormous context window that swallows a 90-page brand guideline without complaint, and native access to whatever's sitting in Google Sheets and Docs. For pulling competitor messaging out of 40 landing pages and turning it into a positioning gap analysis, it's the most practical of the three. For writing the ad that comes out of that analysis, it's the weakest by a visible margin. Flat rhythm, generic verbs, a strange fondness for the word \"solutions.\"</p><p>Okay, small confession here. My friend Danny runs a supplement brand and he swears Gemini writes his best-performing emails, which annoyed me for about a month because I'd been telling everyone the opposite. I went and looked at his actual sends. His prompts are three pages long and stuffed with his own past emails, so the model is basically doing pattern-matching on Danny, not writing as Gemini. I'm honestly not 100% sure that generalizes... but it did make me rethink how much of my ranking is really about defaults rather than ceilings. Most people never get near the ceiling. They type two sentences and judge the output, which is roughly like judging a photographer by their phone's auto mode.</p>"
         },
         {
-          "heading": "How I Actually Split The Work Now",
-          "content": "<p>Three models, three jobs, no loyalty to any of them.</p><ul><li><strong>Claude for anything a human reads closely:</strong> long-form ad copy, landing page body, email sequences, founder voice content. It's also the only one I trust to rewrite my own writing without flattening it. That's the case I made in <a href=\"/claude-better-ad-copy-agency/\">why Claude often outperforms a retained agency on ad copy</a>.</li><li><strong>ChatGPT for volume and format compliance:</strong> RSA headline banks, character-capped variants, bulk sheet output, quick scripts for pulling search term reports.</li><li><strong>Gemini for grounded work:</strong> competitor teardowns, anything citing a live price or a recent claim, first-pass research before I write.</li></ul><p>The editorial position I'll defend: <strong>picking one model is the actual mistake, and the subscription cost of running all three is trivially small next to one week of wasted ad spend.</strong> I pay roughly $60 a month total. A single underperforming creative test at a $12k weekly budget costs more than a year of that. My earlier head-to-head on <a href=\"/chatgpt-claude-gemini-copy-honest/\">running one identical brief through all three</a> reached a similar place from a different angle.</p><p>One caveat worth stating plainly. Model rankings move fast, and anything I write about relative quality has a shelf life of maybe four months. In most cases the differences between the frontier models on a given task are smaller than the difference between a good brief and a lazy one.</p>"
+          "heading": "The Voice File Beats the Model Choice, Every Time",
+          "content": "<p>Here's the argument I'll actually fight about. <strong>The gap between a good prompt and a lazy prompt is bigger than the gap between any two of these models.</strong> In my work with a B2B client last year, we cut copy revision rounds from four to one, and none of that came from switching tools. It came from a 600-word voice file built out of their five highest-performing ads, pasted at the top of every brief, with the losing patterns named explicitly.</p><p>The productivity research supports the shape of this. A randomized study published in <a href=\"https://www.science.org/doi/10.1126/science.adh2586\" target=\"_blank\" rel=\"noopener\">Science (Noy and Zhang, 2023)</a> found AI assistance cut writing task time by 40% and raised quality ratings by 18%, with the biggest gains going to the weakest writers. Nielsen Norman Group reported similar throughput jumps in their <a href=\"https://www.nngroup.com/articles/ai-tools-productivity/\" target=\"_blank\" rel=\"noopener\">AI productivity research</a>. Notice what both are measuring. Speed and floor-raising, not ceiling-raising. These tools make average copy fast. They don't make great copy automatic, and anyone selling you otherwise hasn't watched their own CPA reports closely.</p><p>The common misconception I hear weekly is that one model \"just gets\" brand voice. None of them do. They match patterns you feed them. Give all three the same rich context and my 22-12-6 spread narrows to something closer to 18-14-8, at least in my testing. Still a Claude win, and I lean on it for anything where tone carries the sale, which is why I wrote up <a href=\"/claude-better-ad-copy-agency/\">the case for using Claude instead of an agency retainer</a>. But the margin gets small enough that switching tools is rarely your highest-value move.</p>"
         }
       ],
-      "conclusion": "<p>Take your best performing ad from the last 90 days, the one you already know works, and paste it into all three models with this instruction: rewrite this five ways, keeping the exact offer and the exact objection it handles. Then look at which model's version you'd actually be willing to put your own name on. That single test tells you more about which tool fits your voice than any comparison chart, including this one, and it takes about eleven minutes.</p>",
-      "image_query": "laptop marketing workspace",
-      "image_alt": "Marketer working late at a desk with a laptop open beside notes and a coffee cup",
+      "conclusion": "<p>Do this today. Pull your five best-performing ads from the last 90 days, paste them into a single document, and write 200 words underneath explaining why each one worked in your own language, including the three phrases your brand never uses. That's your voice file. Put it at the top of every copy brief from now on, in whichever model you already pay for, and re-run one brief you were unhappy with last week. If the second version isn't noticeably closer to shippable, your problem was never the model.</p>",
+      "image_query": "laptop marketing notes",
+      "image_alt": "Marketer comparing ad copy drafts on a laptop screen beside a notebook of handwritten headline variants",
       "outbound_links": [
+        "hai.stanford.edu",
         "science.org",
-        "hai.stanford.edu"
+        "nngroup.com",
+        "lmarena.ai"
       ],
       "sources": [
         {
-          "name": "Science: Experimental evidence on the productivity effects of generative artificial intelligence (Noy and Zhang, 2023)",
+          "name": "Stanford HAI AI Index Report 2025",
+          "url": "https://hai.stanford.edu/ai-index"
+        },
+        {
+          "name": "Science: Experimental Evidence on the Productivity Effects of Generative AI (Noy and Zhang, 2023)",
           "url": "https://www.science.org/doi/10.1126/science.adh2586"
         },
         {
-          "name": "Stanford HAI AI Index Report",
-          "url": "https://hai.stanford.edu/ai-index"
+          "name": "Nielsen Norman Group: AI Tools and Employee Productivity",
+          "url": "https://www.nngroup.com/articles/ai-tools-productivity/"
+        },
+        {
+          "name": "LMArena Model Leaderboard",
+          "url": "https://lmarena.ai"
         }
       ],
       "faq": [
         {
-          "q": "Which AI is best for writing Facebook ad copy?",
-          "a": "Claude, in my testing, for the primary text and hooks that need to sound like a person. Use ChatGPT when you need 30 variants fast with strict character limits, since it follows length instructions more reliably."
+          "q": "Which AI writes the best ad copy for Facebook and Google?",
+          "a": "Claude produced the highest share of first-draft usable copy in my 40-brief test, mostly because it avoids inflated claims that trigger ad review. ChatGPT is better for bulk variants and strict character limits. Use Claude for the hero lines and ChatGPT for the 30 variations around them."
         },
         {
-          "q": "Is it worth paying for all three AI subscriptions?",
-          "a": "If you manage more than about $5k a month in ad spend, yes. All three paid plans run around $60 total per month, which is less than a single day of wasted budget on a losing creative test."
+          "q": "Is the paid version of ChatGPT or Claude worth it for a small marketing team?",
+          "a": "Yes if you write more than a few pieces a week, since the free tiers cap usage and often route you to smaller models. Budget around $20 to $30 per seat monthly for one tool rather than splitting across three. Pick the one that matches your dominant task and get good at prompting it."
         },
         {
-          "q": "Do AI writing tools actually improve conversion rates?",
-          "a": "They improve speed and volume far more than they improve peak quality. The 2023 Science study found the largest gains went to weaker writers, so if your copy already converts well, expect a modest lift rather than a transformation."
+          "q": "Can AI-written ad copy hurt my performance or get flagged?",
+          "a": "Performance risk comes from unverified claims and superlatives, not from the copy being AI-written. Ad platforms review claims and landing page match, not authorship. Strip absolute language and guarantee wording before you upload, and check every stat the model asserts."
         }
       ]
     },
     "images": {
-      "image": "https://images.pexels.com/photos/35730080/pexels-photo-35730080.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      "photographer": "khezez  | خزاز",
-      "image_alt": "Woman in a dark shirt working on an unbranded laptop at a wooden desk in a bedroom",
+      "image": "https://images.pexels.com/photos/4152784/pexels-photo-4152784.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Mikael Blomkvist",
+      "image_alt": "Person with long hair typing on a silver laptop at a wooden table beside a smartphone",
       "body_images": [
         [
-          "https://images.pexels.com/photos/7014400/pexels-photo-7014400.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "George Milton"
+          "https://images.pexels.com/photos/21294/pexels-photo.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Bob Clark"
         ],
         [
-          "https://images.pexels.com/photos/8369197/pexels-photo-8369197.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-          "cottonbro studio"
+          "https://images.pexels.com/photos/32181830/pexels-photo-32181830.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Gu Ko"
         ]
       ],
       "ids": [
-        "35730080",
-        "7014400",
-        "8369197"
+        "4152784",
+        "21294",
+        "32181830"
       ]
     },
-    "generated_iso": "2026-07-26 05:21"
+    "generated_iso": "2026-07-26 05:29"
   }
 ]
