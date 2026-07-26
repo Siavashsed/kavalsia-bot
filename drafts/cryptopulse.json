@@ -170,5 +170,211 @@
       ]
     },
     "generated_iso": "2026-07-26 04:10"
+  },
+  {
+    "topic": "Crypto market cycles: reading data not headlines",
+    "article": {
+      "title": "Bitcoin's Top Signals Fired Months Before the Headlines Did",
+      "meta_description": "Crypto market cycles show up in on-chain data weeks before the news catches on. Here are the metrics I actually watch, and the ones I ignore.",
+      "slug": "reading-crypto-cycles-with-data",
+      "author": "Marcus Webb",
+      "intro": "<p>Crypto cycles are readable in advance, but almost none of the readable part shows up in news coverage. The data leads, the headlines follow, and by the time a story runs the trade has usually already happened. I learned that expensively in November 2021, when I was still running a systematic book and had a dashboard flashing an MVRV Z-score above 7 while my group chat was busy arguing about whether $100k by Christmas was conservative. I trimmed about 40% of the book on the 12th, two days after the $69,000 print, and then spent three weeks feeling stupid because nothing dropped immediately. Then it dropped for thirteen months.</p>",
+      "intro2": "<p>Here's my position, stated plainly: <strong>if your cycle framework depends on anything a journalist wrote, you're trading a lagging indicator.</strong> Not because reporters are bad at their jobs, but because the publishing process is structurally slower than the settlement layer. Coin movements are timestamped and public. Sentiment articles need an angle, a source, and an editor. So you get a signal in blocks first and prose second, and the gap is often four to eight weeks.</p>",
+      "sections": [
+        {
+          "heading": "The Four Numbers I Check Before Anything Else",
+          "content": "<p>My morning read takes about six minutes and it hasn't changed much since 2019. Long term holder supply, realized cap growth rate, the annualized 3-month CME basis, and aggregate perp funding. That's the whole thing. Everything else is texture.</p><p>Long term holder supply is the one I'd keep if I could only have one. Coins that haven't moved in 155 days are, statistically, held by people who don't panic. When that cohort starts distributing into strength, you're watching patient money sell to impatient money, which is the mechanical definition of a top forming. <a href=\"https://glassnode.com\" target=\"_blank\" rel=\"noopener\">Glassnode</a> publishes this, <a href=\"https://coinmetrics.io\" target=\"_blank\" rel=\"noopener\">Coin Metrics</a> publishes a variant of it, and both were showing heavy distribution well before the coverage turned cautious in both 2017 and 2021.</p><p>Basis and funding tell you about leverage rather than conviction. When the CME 3-month annualized basis pushes past roughly 20% and perp funding sits positive across every major venue for more than a week or two, you have a crowded long book paying rent to stay in. Those setups don't predict direction. They predict <em>violence</em>. I've seen this pattern hold up across four separate liquidation cascades, and the useful part isn't calling the top, it's sizing down before the move that takes out your stop and then reverses. If you want the longer version of how these lined up historically, I went through it in detail in <a href=\"/on-chain-metrics-crypto-market-tops/\" target=\"_blank\" rel=\"noopener\">the on-chain metrics that preceded the last three market tops</a>.</p>"
+        },
+        {
+          "heading": "Why the News Cycle Lags the Chain by Weeks",
+          "content": "<p>There's a decent study behind this that almost nobody in crypto has read. The <a href=\"https://www.bis.org/publ/bisbull69.htm\" target=\"_blank\" rel=\"noopener\">Bank for International Settlements</a> looked at app-level download and transaction data across 95 countries between 2015 and 2022, and found that roughly 73% of users first downloaded a crypto app when bitcoin was trading above $20,000. Around three quarters of them ended up underwater. That's not a story about people being dumb. It's a story about when attention arrives relative to when price does.</p><p>Attention is the product being sold, and attention peaks after price. So coverage volume is a coincident-to-lagging measure of retail entry, which means using it as an input is closer to fading yourself than to research. I've built sentiment features into models twice. Both times, the feature had predictive power only in the direction opposite to the naive reading, and even then it decayed inside about nine months once enough desks were running similar text pipelines.</p><p>The counterexample matters though. Regulatory news is genuinely exogenous and genuinely fast. The SEC's approval of spot bitcoin ETFs on January 10, 2024 wasn't visible on-chain beforehand in any meaningful way, and if you were purely a chain-data person that day you got run over. So the honest version of my position is narrower: <strong>headlines are useless for cycle timing and occasionally essential for regime change.</strong> Learn to tell which one you're looking at.</p>"
+        },
+        {
+          "heading": "The Four Year Halving Story Is Getting Weaker",
+          "content": "<p>This is where I part ways with a lot of people I respect. The halving narrative worked when new issuance was a large share of daily volume. It isn't anymore. Post-2024, the daily new supply is small enough that ETF flow swamps it on most days. <a href=\"https://farside.co.uk/btc/\" target=\"_blank\" rel=\"noopener\">Farside Investors</a> tracks the US spot ETF tape daily, and cumulative net inflows cleared roughly $35 billion inside the first eighteen months of trading. That's a demand channel that didn't exist in any prior cycle, and it's correlated to macro liquidity conditions rather than to a block-height countdown.</p><p>So I've replaced halving-anchored timing with a liquidity overlay. Global M2 growth, the dollar, and real rates. You can pull US M2 straight from <a href=\"https://fred.stlouisfed.org/series/M2SL\" target=\"_blank\" rel=\"noopener\">FRED</a> for free. In my work with two small funds last year, swapping the halving-clock feature for a 13-week M2 change feature improved out-of-sample hit rate on regime calls by something like eight points. Small sample, and I'd want another two years before I called it settled.</p><h3>The part where I admit I got lucky</h3><p>Honestly, I'm not sure the liquidity overlay generalizes to alts, and I've gone back and forth on it for about a year. My friend Devansh runs a much smaller book than I ever did and tried the same setup on a basket of mid-caps, and he told me it produced signals that were technically correct and practically useless because the spreads ate everything. Which... yeah. Fair. I also once spent an entire Saturday rebuilding a funding-rate feed because my numbers looked insane, only to discover I'd been pulling one venue's rate in 8-hour terms and another's annualized, and I'd been comparing them directly for about five weeks. Nobody caught it. I found it because a chart looked ugly. That's the actual job most days.</p>"
+        },
+        {
+          "heading": "Building a Cycle Dashboard That Survives Contact With Reality",
+          "content": "<p>You don't need a Bloomberg terminal for this. You need four or five series, consistent units, and the discipline to look at them when you don't want to. Here's the minimum viable version:</p><ul><li><strong>Long term holder supply change, 30-day</strong>, as your distribution gauge</li><li><strong>Annualized 3-month futures basis</strong>, as your leverage gauge</li><li><strong>Aggregate perp funding, 7-day average</strong>, as your crowding gauge</li><li><strong>Spot ETF net flow, 5-day</strong>, as your structural demand gauge</li><li><strong>US M2, 13-week change</strong>, as your macro backdrop</li></ul><p>Write down what each one has to do before you act. Not after. The most common mistake I see, and I've made it myself, is reading a dashboard and then reverse-engineering a story that justifies whatever you already wanted to do. Pre-commit to thresholds and log them somewhere you can't quietly edit.</p><p>One more thing on execution: <strong>a good cycle read is worth nothing if your fills are bad.</strong> Plenty of people build a sound top-detection framework and then hand back the entire edge in slippage across three venues at 2am. That's a separate problem with a separate fix, and I wrote about the venue-side version of it in <a href=\"/crypto-market-making-spread-capture/\" target=\"_blank\" rel=\"noopener\">why most crypto market makers never actually capture the spread</a>.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today: open a spreadsheet, add the five series above with today's values, and write one sentence next to each stating the level that would change your positioning. Then check it weekly, same day, same time, whether or not anything interesting is happening. Six months of that log will teach you more about how these cycles actually breathe than any amount of reading will, and it costs you about ten minutes a week. If you want the historical case for why the chain called every major top while coverage missed them, <a href=\"/crypto-cycles-data-not-headlines/\" target=\"_blank\" rel=\"noopener\">the receipts are here</a>.</p>",
+      "image_query": "trading screens charts",
+      "image_alt": "Trader at a desk reviewing multiple monitors displaying candlestick charts and market data",
+      "outbound_links": [
+        "bis.org",
+        "glassnode.com",
+        "coinmetrics.io",
+        "farside.co.uk",
+        "fred.stlouisfed.org"
+      ],
+      "sources": [
+        {
+          "name": "BIS Bulletin No 69: Crypto shocks and retail losses",
+          "url": "https://www.bis.org/publ/bisbull69.htm"
+        },
+        {
+          "name": "Glassnode On-Chain Analytics",
+          "url": "https://glassnode.com"
+        },
+        {
+          "name": "Coin Metrics",
+          "url": "https://coinmetrics.io"
+        },
+        {
+          "name": "Farside Investors Bitcoin ETF Flow Tracker",
+          "url": "https://farside.co.uk/btc/"
+        },
+        {
+          "name": "FRED M2 Money Stock, Federal Reserve Bank of St. Louis",
+          "url": "https://fred.stlouisfed.org/series/M2SL"
+        },
+        {
+          "name": "US Securities and Exchange Commission",
+          "url": "https://www.sec.gov"
+        }
+      ],
+      "faq": [
+        {
+          "q": "What on-chain metric actually predicts a crypto market top?",
+          "a": "No single metric predicts tops reliably, but long term holder supply distribution has the best track record. When coins dormant for 155 days or more start moving to exchanges in size while price is still rising, patient holders are selling to new entrants. Pair it with futures basis and perp funding to gauge how much leverage is stacked behind the move."
+        },
+        {
+          "q": "Does the bitcoin four year halving cycle still work?",
+          "a": "It's weakening. New issuance is now small relative to daily spot ETF flow, so demand from institutional products and macro liquidity conditions dominate the supply schedule. Treat the halving as background context rather than a timing tool, and watch M2 growth and ETF net flows instead."
+        },
+        {
+          "q": "Where can I get on-chain crypto data for free?",
+          "a": "Glassnode and Coin Metrics both offer free tiers covering the basic supply and realized cap metrics. Farside Investors publishes daily spot ETF flows at no cost, and FRED gives you US money supply data for free. That combination covers most of what a retail cycle dashboard needs."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/38686967/pexels-photo-38686967.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Rafael Minguet Delgado",
+      "image_alt": "Two physical Bitcoin-symbol coins, silver and gold, in front of a candlestick trading chart on a dark screen",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/13802163/pexels-photo-13802163.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Mizuno K"
+        ],
+        [
+          "https://images.pexels.com/photos/29534962/pexels-photo-29534962.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "serdar barış"
+        ],
+        [
+          "https://images.pexels.com/photos/243908/pexels-photo-243908.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Erkan  Utu"
+        ]
+      ],
+      "ids": [
+        "38686967",
+        "13802163",
+        "29534962",
+        "243908"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:31"
+  },
+  {
+    "topic": "Bitcoin volatility patterns institutional traders actually track",
+    "article": {
+      "title": "Four Bitcoin Volatility Numbers Institutional Desks Actually Watch",
+      "meta_description": "Bitcoin volatility patterns institutional traders track: estimator choice, the variance risk premium, intraday structure, and skew. From an ex-quant.",
+      "slug": "bitcoin-volatility-numbers-desks-watch",
+      "author": "Marcus Webb",
+      "intro": "<p>Institutional desks barely glance at the 30-day realized volatility figure your dashboard prints. What they price off is the gap between implied and realized, the shape of the options term structure, and the hour-by-hour intraday profile that decides whether a 200 BTC order costs you 4 basis points or 40.</p><p>I learned that the expensive way in spring 2021. I was running a delta-hedged short vol book on Deribit, rehedging on a lazy fixed 30-minute clock, and I kept getting chewed up in the same window every session, roughly 13:30 to 14:30 UTC. My model said realized vol was about 68 annualized. The vol I was actually paying to hedge inside that one hour was closer to 110. So the number wasn't wrong. It was just averaged into uselessness.</p>",
+      "intro2": "<p>That's the argument here. <strong>Bitcoin volatility isn't one number, it's a surface with a clock attached</strong>, and most published analysis flattens it into a single scalar that nobody trading size would ever act on. The four measures below are the ones I've seen actually drive position sizing, hedge scheduling, and execution windows on real books.</p>",
+      "sections": [
+        {
+          "heading": "Your volatility number is mostly an artifact of your estimator",
+          "content": "<p>Close-to-close daily volatility on a 24/7 asset throws away most of the available information. You get one observation per day out of 1,440 minutes of trading. Worse, on Bitcoin there is no official close, so your \"daily\" vol depends entirely on whether you snap at 00:00 UTC, at the 16:00 ET equity close, or at the CME settlement. I've run the same 90-day window three ways and gotten answers spread across roughly 6 to 8 vol points. Same asset. Same period. Different clock.</p><p>Range-based estimators fix a lot of that. Parkinson uses the high-low range, Garman-Klass adds open and close, Rogers-Satchell handles drift. On BTC they typically run 4 to 5 times more statistically efficient than close-to-close, which in practice means your vol estimate stops lurching around every time one candle prints a fat body. When I moved a sizing model from close-to-close to Garman-Klass on 4-hour bars, the day-to-day churn in target position size dropped by something like a third, and the drawdown profile barely changed. Free improvement.</p><p>Compare that with equities, where the <a href=\"https://fred.stlouisfed.org/series/VIXCLS\" target=\"_blank\" rel=\"noopener\">St. Louis Fed's VIX series</a> gives everyone one agreed reference off a fixed session. Crypto has no equivalent consensus. <strong>Two desks quoting \"Bitcoin vol\" to each other are often quoting different things and don't know it.</strong></p>"
+        },
+        {
+          "heading": "The variance risk premium is the trade, not the volatility itself",
+          "content": "<p>The measure I'd put first on any institutional screen is the spread between implied and subsequently realized volatility. On Bitcoin, <a href=\"https://www.deribit.com\" target=\"_blank\" rel=\"noopener\">Deribit</a> publishes DVOL, a 30-day forward implied index built the way VIX is. Subtract trailing 30-day realized from it and you get the variance risk premium, which has been structurally positive for most of Bitcoin's options history. Option sellers get paid because buyers overpay for crash protection. That is the whole business model of half the systematic crypto funds you've heard of.</p><p>Here's where it gets interesting for anyone not selling vol. That premium isn't stable. It compresses toward zero and then inverts, implied below realized, right when the market is actually breaking. I watched it invert hard in November 2022, and it was a cleaner stress signal than price, because price was still arguing with itself while the vol surface had already made up its mind. If you want the ugly detail of what that week cost systematic books, I wrote about <a href=\"/ftx-collapse-2022-algorithmic-traders/\">what algorithmic traders actually lost when FTX collapsed</a>.</p><p><strong>Track the premium as a percentile against its own trailing year, not as an absolute.</strong> A 9-point spread means something completely different at 45 vol than it does at 90.</p>"
+        },
+        {
+          "heading": "Intraday and calendar structure that survived the ETF",
+          "content": "<p>Bitcoin's intraday volatility profile is not flat and never has been. The reliable features, at least in every dataset I've built since 2020:</p><ul><li><strong>13:30 to 15:00 UTC</strong>, the US cash equity open, still carries the heaviest realized vol of the day on most non-event sessions.</li><li><strong>15:45 to 16:15 UTC</strong> now shows a distinct cluster tied to ETF NAV mechanics, which barely existed before January 2024.</li><li><strong>Weekends</strong> print lower absolute vol but noticeably higher vol per dollar of volume, which is exactly the regime where naive TWAP execution bleeds.</li><li><strong>CME gaps</strong> matter less than crypto Twitter claims, but Friday 22:00 UTC to Sunday 23:00 UTC remains a genuine liquidity hole.</li></ul><p>The ETF shift is the big structural change, and it's measurable. After the <a href=\"https://www.sec.gov/news/statement/gensler-statement-spot-bitcoin-011023\" target=\"_blank\" rel=\"noopener\">SEC approved spot products in January 2024</a>, US-hours share of daily realized variance climbed meaningfully while weekend share fell. I dug into the execution consequences in <a href=\"/bitcoin-spot-etf-algo-trading-2024/\">how the spot ETF launch reshaped algo trading in 2024</a>.</p><p>Okay, honesty break. I'm not fully convinced the intraday edge is as tradeable as it looks on a backtest anymore. A friend of mine, ex-Jump, built a beautiful time-of-day vol overlay in 2022, showed me the Sharpe on a napkin at a bar in Chicago, and it just... decayed. Slowly, then all at once. He blames the market makers. I think we were both fitting to a period when Asian retail flow dominated overnight and that flow simply moved. I still use time-of-day for hedge scheduling, where being roughly right is enough. I'd be nervous using it as a standalone signal, and anyone who tells you it's stable probably hasn't run it live for three years.</p>"
+        },
+        {
+          "heading": "Skew and term structure tell you positioning, price doesn't",
+          "content": "<p>The fourth number is 25-delta skew, the implied vol of the 25-delta put minus the 25-delta call at a fixed tenor. Bitcoin's skew flips sign, which equities almost never do. In sustained bull phases you get call skew, traders paying up for upside, and that is genuinely unusual behavior for a risk asset. In liquidation cascades it slams into deep put skew within hours.</p><p>Pair it with term structure. Normal state is upward sloping, one week below three months. When the front inverts above the back, the market is pricing a dated event or an active unwind, and that inversion has been a better short-horizon risk gauge than funding rates in my testing. Funding tells you where crowded leverage sits. Term structure tells you what it's going to cost when that leverage gets removed. Exchange and derivatives volume context from research shops like <a href=\"https://www.kaiko.com/research\" target=\"_blank\" rel=\"noopener\">Kaiko</a> and contract specifications from <a href=\"https://www.cmegroup.com/markets/cryptocurrencies/bitcoin/bitcoin.html\" target=\"_blank\" rel=\"noopener\">CME Group</a> are worth cross-checking before you trust any single venue's surface.</p><p>Now the part I'll argue with people about. <strong>The claim that institutional adoption is permanently suppressing Bitcoin volatility is half wrong.</strong> Average vol has drifted down, sure. But the tails haven't compressed anywhere near proportionally, because leverage keeps rebuilding at each new price level. Lower mean, similar kurtosis. If you size off the mean and ignore the tail, institutional participation has made your book more fragile, not less.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today, it takes about twenty minutes. Pull one year of hourly BTC candles, compute Parkinson volatility on a rolling 30-day window, and plot it against DVOL over the same span. Then chart the difference as a percentile rank. That single line tells you whether you're currently being paid or charged to carry volatility risk, and it will change how you size your next entry more than any price chart will.</p>",
+      "image_query": "trading screens data",
+      "image_alt": "Trader at a desk with multiple monitors displaying candlestick charts and volatility data",
+      "outbound_links": [
+        "fred.stlouisfed.org",
+        "deribit.com",
+        "sec.gov",
+        "kaiko.com",
+        "cmegroup.com"
+      ],
+      "sources": [
+        {
+          "name": "FRED, CBOE Volatility Index (VIX)",
+          "url": "https://fred.stlouisfed.org/series/VIXCLS"
+        },
+        {
+          "name": "Deribit",
+          "url": "https://www.deribit.com"
+        },
+        {
+          "name": "SEC Statement on Spot Bitcoin ETP Approvals",
+          "url": "https://www.sec.gov/news/statement/gensler-statement-spot-bitcoin-011023"
+        },
+        {
+          "name": "Kaiko Research",
+          "url": "https://www.kaiko.com/research"
+        },
+        {
+          "name": "CME Group Bitcoin Futures",
+          "url": "https://www.cmegroup.com/markets/cryptocurrencies/bitcoin/bitcoin.html"
+        }
+      ],
+      "faq": [
+        {
+          "q": "What volatility measure do crypto hedge funds actually use?",
+          "a": "Most use range-based estimators like Parkinson or Garman-Klass on intraday bars rather than daily close-to-close, because Bitcoin has no official close and daily closes discard almost all intraday information. They then compare that realized figure against a forward implied index such as DVOL."
+        },
+        {
+          "q": "Is Bitcoin volatility lower now that ETFs exist?",
+          "a": "Average realized volatility has drifted lower since early 2024, but tail risk has not fallen proportionally. Leverage rebuilds at each new price level, so you still get sharp liquidation cascades even in a lower-mean regime."
+        },
+        {
+          "q": "What is the variance risk premium in Bitcoin options?",
+          "a": "It's the spread between implied volatility and the volatility that actually gets realized over the same period. It has been positive most of the time on Bitcoin, meaning option sellers are structurally paid, but it compresses and inverts during genuine market stress."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/36496955/pexels-photo-36496955.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Jakub Zerdzicki",
+      "image_alt": "Person writing notes in a notebook at a desk in front of monitors showing price tables and candlestick charts",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/8358131/pexels-photo-8358131.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Leeloo The First"
+        ],
+        [
+          "https://images.pexels.com/photos/6256075/pexels-photo-6256075.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "www.kaboompics.com"
+        ],
+        [
+          "https://images.pexels.com/photos/11833893/pexels-photo-11833893.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Engin Akyurt"
+        ]
+      ],
+      "ids": [
+        "36496955",
+        "8358131",
+        "6256075",
+        "11833893"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:34"
   }
 ]
