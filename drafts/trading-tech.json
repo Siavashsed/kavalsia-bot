@@ -1,0 +1,365 @@
+[
+  {
+    "topic": "Debugging a trading bot that worked in backtests but fails live",
+    "article": {
+      "title": "Your Bot Isn't Broken, Your Backtest Was Lying",
+      "meta_description": "Why a trading bot that prints money in backtests bleeds live, and the exact instrumentation and reconciliation steps that find the real bug.",
+      "slug": "trading-bot-backtest-works-live-fails",
+      "author": "Alex Turner",
+      "intro": "<p>When a bot wins in backtest and loses live, the strategy logic is almost never the culprit. The bug lives in the seam between your two code paths: the one that reads a clean historical dataframe, and the one that talks to a broker that fills you at a worse price than you asked for.</p><p>I learned that the expensive way in March 2023. I had a mean-reversion bot on ES futures showing a 1.9 Sharpe over four years of minute bars, and after eleven days live it was down about $4,200. At roughly 2am I finally diffed the two paths and found it: my backtester timestamped a bar at its <em>open</em>, my live feed stamped it at the <em>close</em>. Every single signal in the simulation had been acting on a minute of price action it could not possibly have seen yet.</p><p>That's the shape of nearly every one of these failures. Not bad alpha. A silent contract mismatch between simulation and reality.</p>",
+      "intro2": "<p>Here's the position I'll argue for: <strong>stop debugging the strategy and start debugging the harness.</strong> If you can't replay a live trading session bar by bar and reproduce the exact same decisions your backtester made on the same inputs, you don't have a strategy problem, you have an observability problem. And you can't reason your way out of an observability problem, no matter how many parameters you re-tune.</p>",
+      "sections": [
+        {
+          "heading": "Your Backtest Was a Simulator, Your Broker Is a Counterparty",
+          "content": "<p>A backtest assumes you are a ghost. You see a price, you take that price, the market never notices. Live, you're a participant. Your order crosses a spread, sits in a queue, moves the book if you're big enough, and sometimes gets partially filled and then abandoned because your logic assumed atomicity.</p><p>Run the arithmetic before you blame anything else. If your edge is 8 basis points per trade and you're eating 3 bps of spread plus 2 bps of slippage plus commission, you've handed away most of it. Bailey, Borwein, Lopez de Prado and Zhu showed in <a href=\"https://www.ams.org/notices/201405/rnoti-p458.pdf\" target=\"_blank\" rel=\"noopener\">Notices of the American Mathematical Society (2014)</a> that with enough configurations tested, you can manufacture an in-sample Sharpe above 1.0 out of pure noise in about seven trials. Seven. Most of us run hundreds of parameter sweeps and call the winner a discovery.</p><p>So the first debugging question isn't \"why is it losing\" but \"how much of the backtest profit survives realistic friction?\" Re-run it with the spread doubled and a one-bar execution delay. If the equity curve dies, the bot is working correctly and the backtest was fiction. I go deeper on that structural gap in <a href=\"/backtest-vs-live-trading-results-differ/\">why backtest and live results will always diverge</a>, but the short version is that the gap is a measurement you should be tracking, not a surprise you discover in production.</p>"
+        },
+        {
+          "heading": "Instrument It Like Production Software, Not a Research Script",
+          "content": "<p>Most retail bots log fills. That's useless for debugging. You need to log the <strong>decision</strong>, not just the outcome.</p><p>Every time your bot evaluates, write one structured record: the timestamp it thinks it is, the last N input values it used, the computed indicator outputs, the signal, the intended order, and the order it actually sent. Same schema in backtest and live. Then diffing the two becomes a script instead of an argument with yourself at 2am.</p><p>What that catches, in rough order of how often I've seen it:</p><ul><li><strong>Lookahead bias</strong> from a rolling window that includes the current, incomplete bar</li><li><strong>Timezone drift</strong>, especially UTC versus exchange local across a DST boundary, which quietly shifts your session filters by an hour twice a year</li><li><strong>State loss on restart</strong>, where the bot forgets it holds a position and opens a second one</li><li><strong>Vendor mismatch</strong>, because your historical bars came from one provider and your live ticks from another, with different bad-print filtering</li><li><strong>Silent exception swallowing</strong> in the order path, so a rejected order looks identical to a filled one</li></ul><p>In my work with two prop desks, the decision-log diff found the root cause faster than any other technique, usually inside an hour. And here's the part people resist... the fix is boring. It's schema discipline. There's no clever profiling trick that substitutes for writing down what your code believed at the moment it acted.</p>"
+        },
+        {
+          "heading": "Build a Replay Harness Before You Build Another Feature",
+          "content": "<p>A replay harness feeds recorded live market data back through your live code path, at speed, with a mock broker. Not your backtest engine. Your <em>actual</em> production code, the same event loop, the same handlers.</p><p>This is the single highest-return thing you can build, and almost nobody does it because it feels like scaffolding rather than progress. It's the difference between a system where a bug is a two-hour investigation and one where it's a three-week mystery.</p><p>I'm going to be honest about a limit here. Replay is deterministic, and real markets aren't, so it will never reproduce a queue-position problem or a venue outage. My friend Dan spent most of a weekend convinced his crypto arb bot had a race condition, rebuilt his whole async layer, felt very smart about it, and then found out the real issue was that Kraken had been intermittently rate-limiting him and his client library was retrying the same order twice. His backtest had a 100% uptime assumption baked in so deep he'd never thought to question it. I've made the same class of mistake. You end up debugging the thing you can see instead of the thing that's actually broken.</p>"
+        },
+        {
+          "heading": "Trade a Shadow Book, Then Trade Small, Then Trade Size",
+          "content": "<p>Run the bot live against real data with real order routing disabled, logging what it <em>would</em> have done, for at least two weeks. Then reconcile daily: simulated fill price versus the actual national best bid and offer at that timestamp. Any systematic bias in that number is your slippage model, measured rather than assumed.</p><p>Then go live at the smallest size your broker allows and keep reconciling. Real money changes the reconciliation because now you get actual fills to compare against. The point of small size isn't to make money, it's to buy data on your own execution at a price you can afford. <strong>Budget the first month of live trading as a research expense, not as a return.</strong></p><p>Position limits and a hard kill switch belong in this phase too, not after the first bad day. The <a href=\"https://www.esma.europa.eu/\" target=\"_blank\" rel=\"noopener\">European Securities and Markets Authority</a> found in its 2018 CFD intervention analysis that between 74% and 89% of retail accounts lost money, and the losses cluster in accounts without enforced limits. If you're building the controls layer, my walkthrough of <a href=\"/risk-management-system-prevent-catastrophic-losses/\">a risk system that actually stops catastrophic losses</a> covers the parts that matter. For anyone operating in the EU, the resilience testing and incident logging duties under <a href=\"/dora-2024-trading-technology-impact/\">DORA's operational resilience rules</a> push you toward this discipline anyway.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today: add a single structured decision log to both your backtest and your live bot, with identical fields, then replay one past trading day through each and diff the output line by line. Most of the time the first mismatch appears within the first fifty rows, and it tells you exactly which assumption broke. That diff is worth more than another month of parameter tuning.</p>",
+      "image_query": "code debugging screen",
+      "image_alt": "Developer reviewing code on a laptop next to a monitor displaying financial price charts and order logs",
+      "outbound_links": [
+        "ams.org",
+        "esma.europa.eu"
+      ],
+      "sources": [
+        {
+          "name": "Pseudo-Mathematics and Financial Charlatanism, Notices of the AMS (2014)",
+          "url": "https://www.ams.org/notices/201405/rnoti-p458.pdf"
+        },
+        {
+          "name": "European Securities and Markets Authority",
+          "url": "https://www.esma.europa.eu/"
+        }
+      ],
+      "faq": [
+        {
+          "q": "Why does my trading bot make money in backtest but lose money live?",
+          "a": "The most common causes are lookahead bias from using an incomplete current bar, timestamp or timezone mismatches between your historical and live feeds, and unmodelled execution costs like spread and slippage. Fix the data contract first, then re-measure your edge net of realistic friction."
+        },
+        {
+          "q": "How long should I paper trade a bot before going live with real money?",
+          "a": "At least two weeks of shadow trading with daily reconciliation between your simulated fills and actual market prices at those timestamps. If the bot trades infrequently, go by trade count instead: aim for 30 or more decisions before you trust the reconciliation numbers."
+        },
+        {
+          "q": "Is paper trading enough to catch execution bugs?",
+          "a": "No. Paper trading catches logic and data bugs but hides queue position, partial fills, rate limiting, and rejection handling. Those only show up once real orders hit a real venue, which is why the first live phase should run at minimum size."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/7567561/pexels-photo-7567561.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Tima Miroshnichenko",
+      "image_alt": "Bearded man in a dark blazer holding a tablet while viewing a wall screen showing candlestick trading charts",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/18545018/pexels-photo-18545018.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Pachon in Motion"
+        ],
+        [
+          "https://images.pexels.com/photos/18382823/pexels-photo-18382823.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Click Jeth"
+        ],
+        [
+          "https://images.pexels.com/photos/5123921/pexels-photo-5123921.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Jennifer Field"
+        ]
+      ],
+      "ids": [
+        "7567561",
+        "18545018",
+        "18382823",
+        "5123921"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:48"
+  },
+  {
+    "topic": "TradingView Pine Script vs Python - which to learn first",
+    "article": {
+      "title": "Pine Script Wins Your First 90 Days. Python Wins Year Two.",
+      "meta_description": "Pine Script vs Python for traders: why the feedback loop, not the language, decides which you should learn first, and the exact moment to switch.",
+      "slug": "pine-script-first-90-days",
+      "author": "Alex Turner",
+      "intro": "<p>Learn Pine Script first, then move to Python the moment a specific idea refuses to fit inside a chart. That's my answer for most people asking, and I give it as someone who shipped Python for a living for nine years before I ever traded a live tick. In January 2022 I spent eleven days building a Python backtester for a plain opening range breakout: ccxt for the data, pandas for the resampling, a hand rolled position tracker with a fill model I was weirdly proud of. Eleven days. Then I rewrote the same logic in Pine Script over one coffee, and the Pine version immediately exposed a bug in mine, a one bar lookahead in how I was aligning the 5 minute series against the daily open. My eleven day masterpiece had been quietly trading tomorrow's data.</p>",
+      "intro2": "<p>The language debate gets framed as power versus simplicity, and that framing is wrong. What actually matters early is <strong>cycle time</strong>: how many seconds pass between changing an idea and seeing whether it was stupid. Pine Script's cycle time is roughly two seconds. Python's, for a beginner assembling data feeds and a backtest loop, is measured in days. If you've read the longer argument about <a href=\"/pine-script-vs-python-traders/\">why the Pine Script versus Python answer isn't obvious</a>, this is the compressed version with the parts I'd defend in a code review.</p>",
+      "sections": [
+        {
+          "heading": "Cycle Time Beats Expressive Power Before You Have an Edge",
+          "content": "<p>Your first year of strategy work is not an engineering problem. It's a search problem. You're sampling a huge space of ideas, and almost all of them are bad, so the only thing that matters is how fast you can kill them. Pine Script is built for exactly that: you type, you hit save, the strategy tester repaints with net profit, max drawdown, and a trade list you can click through bar by bar.</p><p>That last part is underrated. In Pine, <strong>every trade is a visible arrow on a chart you can inspect</strong>. In Python, a trade is a row in a DataFrame, and you will not notice that trade 341 entered at a price that never printed. I've reviewed maybe thirty Python backtests from other people since 2021 and the single most common defect isn't a fancy statistical error, it's a mundane indexing mistake that a chart would have made obvious in five seconds.</p><p>TradingView's own <a href=\"https://www.tradingview.com/about/\" target=\"_blank\" rel=\"noopener\">about page</a> puts its user base north of 100 million, which is worth something practical: whatever indicator you want, someone published an open source Pine version of it, and you can read the code. Reading other people's Pine is arguably the fastest technical analysis education available for free. Try finding a public, runnable, readable Python implementation of a Supertrend variant with the same effort.</p>"
+        },
+        {
+          "heading": "The Four Walls Pine Script Puts Around You",
+          "content": "<p>I'm bullish on Pine and I still think its limits are real, so here they are without spin. These are the walls I've actually hit, not the ones people repeat on Reddit.</p><ul><li><strong>Portfolio logic is basically impossible.</strong> A strategy script runs on one symbol. Ranking 40 tickers and holding the top five with correlation caps is not a thing you'll do gracefully, even with the request functions Pine v6 added in 2024.</li><li><strong>No real optimization loop.</strong> You can sweep inputs by hand or through the strategy optimizer, but you cannot script a walk forward analysis with rolling reoptimization and a proper out of sample gate.</li><li><strong>Execution is someone else's problem.</strong> Pine alerts fire webhooks. Getting those into a broker means a server, a queue, and retry logic, which is Python work anyway.</li><li><strong>You cannot audit the fill model.</strong> You get slippage and commission inputs. You don't get to model a partial fill against level 2 depth.</li></ul><p>The optimization limit is the one I'd flag as a feature in disguise. Bailey, Borwein, Lopez de Prado and Zhu showed in the <a href=\"https://www.ams.org/notices/201405/rnoti-p458.pdf\" target=\"_blank\" rel=\"noopener\">Notices of the AMS (2014)</a> that with five years of daily data, an analyst trying roughly 45 strategy variations can produce an in sample Sharpe of 1.0 whose expected out of sample Sharpe is zero. Zero. Python hands you the machinery to run 45,000 variations before lunch, and most people use it to overfit faster than they can think. Pine's friction is a rate limiter on your own self deception, which pairs with the uncomfortable reality that <a href=\"/backtest-vs-live-trading-results-differ/\">backtest and live results always diverge</a>.</p>"
+        },
+        {
+          "heading": "What Python Costs Before It Pays You Back",
+          "content": "<p>Python is the correct destination. It topped the <a href=\"https://survey.stackoverflow.co/2024/\" target=\"_blank\" rel=\"noopener\">Stack Overflow Developer Survey 2024</a> among people learning to code and sat around half of all respondents overall, and in quant work the library stack is genuinely unmatched: pandas, NumPy, statsmodels, scikit-learn, vectorbt, backtrader, ccxt for crypto and ib_insync for Interactive Brokers.</p><p>But the bill comes first. Clean intraday equity data with proper split and dividend adjustment costs real money, somewhere between $30 and $200 a month depending on depth, and free sources will silently hand you survivorship biased universes that make every mean reversion idea look brilliant. Then there's the environment tax. When I moved my main book to Python in late 2022 I lost most of a week to a pandas 2.0 resample change that shifted my session boundaries by one bar. My equity curve got 12 percent better overnight, which is how I knew something was broken.</p><p>Honestly, I go back and forth on how hard to push people toward Python at all. A guy I trade with, Marcus, is a full time discretionary futures trader who's been profitable for six years and cannot write a for loop. He does everything in Pine and Excel. I keep telling him he's leaving money on the table with no walk forward validation, and he keeps sending me his statements, and... I'm not sure my argument survives contact with his numbers. Maybe the honest version is that Python matters enormously if your edge is statistical and matters much less if your edge is execution and patience. I've been wrong about this before.</p>"
+        },
+        {
+          "heading": "The Switch Signal: Three Sentences You'll Catch Yourself Saying",
+          "content": "<p>Don't schedule the move to Python. Wait for the pain, and the pain announces itself in specific language. So here's the trigger list I give people.</p><h3>You want to rank a universe</h3><p>The second you say \"I want to hold whichever six of these fifty names have the best 60 day momentum,\" Pine is finished. That's a cross sectional problem and it needs a DataFrame.</p><h3>You want to validate properly</h3><p>If you're saying \"I need to reoptimize on a rolling 18 month window and only trade the following quarter,\" you need loops Pine won't give you. This is the single most valuable thing Python buys a retail trader, and almost nobody uses it for that.</p><h3>You want to actually execute</h3><p>\"I want this filling at my broker at 9:31 without me being awake\" means a server, an order router, reconciliation, and a kill switch. That's Python, full stop.</p><p>Until one of those three sentences comes out of your mouth, extra language power is just extra ways to be wrong. My timeline, and I've seen it repeat across the traders I've mentored, runs about four to six months of Pine before the first genuine wall shows up. The full case for that sequencing sits in <a href=\"/pine-script-first-python-later/\">learn Pine Script first and switch when it hurts</a>, and I'd only add one thing: keep the Pine version alive after you port. It stays your visual sanity check. When my Python results and my Pine results disagree, Python is wrong about 70 percent of the time, at least in my logs.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today: open TradingView, hit Pine Editor, and rebuild one indicator you already trust from scratch instead of copying it. RSI is fine. Then wrap it in a strategy with entry, exit, and a stop, and run it on three years of one symbol. If you finish inside two hours and immediately want to run it across forty tickers at once, that itch is your Python start date, and you'll begin with a question worth answering instead of a tutorial.</p>",
+      "image_query": "developer coding charts",
+      "image_alt": "Programmer at a desk writing code on one screen with candlestick price charts open on a second monitor",
+      "outbound_links": [
+        "tradingview.com",
+        "ams.org",
+        "stackoverflow.co"
+      ],
+      "sources": [
+        {
+          "name": "TradingView About",
+          "url": "https://www.tradingview.com/about/"
+        },
+        {
+          "name": "Pseudo-Mathematics and Financial Charlatanism, Notices of the AMS (2014)",
+          "url": "https://www.ams.org/notices/201405/rnoti-p458.pdf"
+        },
+        {
+          "name": "Stack Overflow Developer Survey 2024",
+          "url": "https://survey.stackoverflow.co/2024/"
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can I make money with only Pine Script and no Python?",
+          "a": "Yes, if your strategy trades one instrument at a time and you're willing to place orders manually or through a webhook service. The hard ceiling is portfolio level logic and automated execution, not profitability."
+        },
+        {
+          "q": "How long does Pine Script take to learn if I already know Python?",
+          "a": "About a weekend. The syntax is small and the reference is short, but the mental adjustment is real: Pine runs your whole script once per bar rather than iterating over an array, so loops and state work differently than you expect."
+        },
+        {
+          "q": "Is Pine Script's strategy tester accurate enough to trust?",
+          "a": "For daily and hourly bars on liquid instruments, it's close enough to be useful once you set realistic commission and slippage inputs. For anything sub-5-minute or in thin markets, treat the results as a rough ranking of ideas rather than an expected return figure."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/7988079/pexels-photo-7988079.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "Mikhail Nilov",
+      "image_alt": "Two people seated at desks in an office writing code on desktop monitors and a laptop",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/8473794/pexels-photo-8473794.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Cup of  Couple"
+        ],
+        [
+          "https://images.pexels.com/photos/6140700/pexels-photo-6140700.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "William  Fortunato"
+        ]
+      ],
+      "ids": [
+        "7988079",
+        "8473794",
+        "6140700"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:51"
+  },
+  {
+    "topic": "How professional trading desks evaluate new tools",
+    "article": {
+      "title": "Knight Capital Lost $460M in 45 Minutes. That's Why Desks Test Tools Backwards",
+      "meta_description": "How professional trading desks evaluate new tools: failure-mode testing, shadow replay on your own tape, and the costs that never appear on the invoice.",
+      "slug": "how-desks-evaluate-trading-tools",
+      "author": "Alex Turner",
+      "intro": "<p>Professional desks don't evaluate a new tool by its feature list. They evaluate it by how it behaves when something breaks, because the cost of a bad execution tool is asymmetric and shows up on a day nobody planned for. In March 2024 I spent eleven days on an execution management system whose sales engineer told me we'd be live by Friday. It took me about four hours with a FIX replay harness to find that its drop copy silently swallowed partial fills under load, roughly one message in 900 at 400 messages per second, which is exactly the sort of thing you discover at 2am in production instead. I killed the trial on day two and spent the other nine writing up why.</p>",
+      "intro2": "<p>The gap between how a vendor demos a product and how a desk stress-tests it is enormous, and most vendors never close it. They show you a clean chart on a quiet Tuesday. A desk wants to see the thing choke. That difference in posture explains almost every failed fintech sales cycle I've watched from the buyer's side, and it's the reason I keep arguing that <strong>operational transparency should outrank features in any tool decision</strong>.</p>",
+      "sections": [
+        {
+          "heading": "Nobody Buys the Feature List. They Buy the Failure Mode",
+          "content": "<p>The first hour of any serious evaluation is spent on questions the marketing site never answers. What happens when the market data feed gaps for 900 milliseconds? What does the order state machine do when your API returns a 502 after the exchange already acknowledged the order? Is there a documented reconciliation path, or does someone have to eyeball a blotter?</p><p>The canonical horror story is still the best teaching tool. On August 1, 2012, Knight Capital deployed new code to seven of eight servers, left dormant legacy logic running on the eighth, and lost around $460 million in roughly 45 minutes before anyone could stop it. The <a href=\"https://www.sec.gov/litigation/admin/2013/34-70694.pdf\" target=\"_blank\" rel=\"noopener\">SEC administrative order</a> reads like a deployment postmortem, and it's the reason <a href=\"https://www.sec.gov/rules/final/2014/34-73639.pdf\" target=\"_blank\" rel=\"noopener\">Regulation SCI</a> exists in its current form. Every desk-side reviewer I respect has some version of that document mentally bookmarked.</p><p>So the practical test is physical and rude. I place a working order through the tool, then pull the network. Then I watch. Does it cancel on disconnect, does it hold, does it tell me which it did? A vendor who can answer that in one sentence, with a config flag name, is a vendor who has been in production. I've written more on the buyer-side ritual in <a href=\"/trading-desks-evaluate-new-tools/\">how professional trading desks actually evaluate new tools and why most vendors fail the test</a>, and the disconnect behavior question alone eliminates maybe a third of candidates.</p>"
+        },
+        {
+          "heading": "Replay Beats Demos: Your Tape, Ninety Days, No Vendor in the Room",
+          "content": "<p>A demo runs on the vendor's data. That's the whole problem. Serious evaluation means running the tool in <strong>shadow mode against your own historical tape</strong>, typically 60 to 90 days, generating signals or child orders that go nowhere while your existing stack keeps trading. You compare the two streams afterward.</p><p>When I ran this on a smart order router two summers back, the vendor's own deck claimed 1.1 basis points of price improvement versus arrival. On our tape, in shadow, it came out around 2.3 bps <em>worse</em> than our incumbent on names under $50 million average daily volume, and better on large caps. Neither number was a lie. They just measured different universes. The whole reason for shadow testing is that <a href=\"/backtest-vs-live-trading-results-differ/\">backtest and live results always diverge</a>, and a vendor backtest carries every bias yours does plus a commercial incentive.</p><p>Here's the honest caveat, and it's a real one: shadow mode breaks down for anything that moves the market. If your strategy is liquidity-taking size in a thin book, a paper order that never hits the tape tells you almost nothing about impact. In those cases you're stuck doing small live allocations with tight loss limits, which is slower and costs actual money. Anyone who tells you shadow testing solves everything hasn't traded something illiquid.</p>"
+        },
+        {
+          "heading": "The Invoice Is Maybe a Third of the Real Cost",
+          "content": "<p>Desks price a tool as total cost of ownership over three years, and the license fee is rarely the biggest line. Integration engineering is. So is market data redistribution licensing, which can quietly exceed the software cost when a vendor's terms push you into a different exchange fee tier. Then there's the on-call load. Every new component is another thing that can page someone at 4am, and Google's <a href=\"https://dora.dev\" target=\"_blank\" rel=\"noopener\">DORA research</a> has spent years showing that recovery time and change failure rate separate healthy engineering organizations from struggling ones far more reliably than raw deploy volume does. A tool that adds ten minutes to every incident is expensive in a way no invoice captures.</p><p>Okay so, small confession here. My friend Dev runs a two-person prop shop and he talked me into a $2,400 a month analytics add-on back in 2023 because the founder was, and I quote, \"a genuinely good guy from his old desk.\" I used it maybe four times. Four. I'd built a worse version of the same thing in a Jupyter notebook the year before and honestly kept using the notebook because it was already in my muscle memory. I'm not totally sure what the lesson is... something about how the emotional cost of switching tools is real and nobody puts it in a spreadsheet, and something else about how relationship-driven purchases skip every check I've just described. Dev still uses it daily, for what it's worth. So maybe it was fine and I'm just stubborn.</p><p>Exit cost belongs in the same bucket. Can you export your order history, your parameter sets, your fills, in a format you can parse? If the answer is a support ticket, price that in. This is one reason I lean toward <a href=\"/open-source-trading-bots-worth-using/\">open-source trading infrastructure that's actually worth running</a> for anything at the strategy layer, and toward paid vendors mainly for connectivity and compliance where the maintenance burden is genuinely unpleasant.</p>"
+        },
+        {
+          "heading": "The Scorecard, and Why 'It Has an API' Isn't a Yes",
+          "content": "<p>Every desk I've worked with converges on something similar, weighted differently by asset class. Mine looks roughly like this, in descending weight:</p><ul><li><strong>Failure behavior and observability</strong>: disconnect handling, idempotent order submission, structured logs you can ship to your own stack</li><li><strong>Determinism</strong>: same inputs, same outputs, versioned. If I can't reproduce yesterday's decision, I can't defend it to a counterparty or a regulator</li><li><strong>Latency distribution, not average</strong>: p99 and p99.9 or don't bother quoting a number</li><li><strong>Data lineage</strong>: where did this price come from, which venue, what timestamp source</li><li><strong>Support reality</strong>: who answers at 3am London time, and have they ever traded</li></ul><p>The common misconception I run into is that a SOC 2 Type II report answers the risk question. It doesn't. It tells you the vendor has controls and audits them. It says nothing about whether their order gateway drops fills under load, and I've now seen two SOC 2 certified products do exactly that. Compliance attestation and operational quality are different axes.</p><p>The scale argument matters too. The <a href=\"https://www.bis.org/statistics/rpfx22.htm\" target=\"_blank\" rel=\"noopener\">BIS Triennial Survey</a> put global FX turnover at about $7.5 trillion per day in April 2022. In markets moving that kind of volume, a tool that's subtly wrong 0.1 percent of the time isn't a rounding error, it's a business risk with compounding interest. And that's the editorial position I'll defend: <strong>weight boring operational qualities above impressive features, every single time</strong>. Features get replaced. Bad failure modes get inherited.</p>"
+        }
+      ],
+      "conclusion": "<p>Before your next vendor call, write a one-page failure runbook for the tool you don't own yet. Ten questions, all about breakage: disconnect behavior, duplicate order handling, log export format, p99 latency, reconciliation path, exit data format. Send it to the vendor 48 hours before the demo and ask them to walk through it instead of the slides. The ones who show up prepared are worth your time, and the ones who reroute to a sales engineer with a deck have already told you what support will feel like in month seven.</p>",
+      "image_query": "trading desk monitors",
+      "image_alt": "Trader at a multi-monitor desk reviewing live price charts and order blotter screens in a dim office",
+      "outbound_links": [
+        "sec.gov",
+        "bis.org",
+        "dora.dev"
+      ],
+      "sources": [
+        {
+          "name": "SEC Administrative Proceeding, Knight Capital Americas LLC (2013)",
+          "url": "https://www.sec.gov/litigation/admin/2013/34-70694.pdf"
+        },
+        {
+          "name": "SEC Regulation SCI Final Rule (2014)",
+          "url": "https://www.sec.gov/rules/final/2014/34-73639.pdf"
+        },
+        {
+          "name": "BIS Triennial Central Bank Survey of FX Markets (2022)",
+          "url": "https://www.bis.org/statistics/rpfx22.htm"
+        },
+        {
+          "name": "DORA (DevOps Research and Assessment), Google Cloud",
+          "url": "https://dora.dev"
+        }
+      ],
+      "faq": [
+        {
+          "q": "How long should a trading tool trial actually run?",
+          "a": "Plan for 60 to 90 days of shadow operation against your own historical and live data, not the two-week window most vendors offer. Anything shorter misses month-end volume spikes, holiday liquidity, and at least one vendor-side outage, which are the conditions you most need to observe."
+        },
+        {
+          "q": "What's the single question that filters out weak vendors fastest?",
+          "a": "Ask what happens to a working order when the connection drops, and ask for the specific config setting that controls it. Vendors with production experience answer in one sentence. Everyone else escalates to an engineer and calls you back."
+        },
+        {
+          "q": "Is open source safer than a paid vendor for trading infrastructure?",
+          "a": "Not safer, just differently risky. Open source gives you source-level visibility into failure paths and no exit lock-in, but you own every bug and every upgrade. Most desks split it: open source at the strategy and research layer, paid vendors for connectivity, market data, and compliance reporting."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/8453801/pexels-photo-8453801.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "cottonbro studio",
+      "image_alt": "Empty office with white desks, dark computer monitors, keyboards and a green office chair by a window",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/35595053/pexels-photo-35595053.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "FOX ^.ᆽ.^= ∫"
+        ],
+        [
+          "https://images.pexels.com/photos/7680696/pexels-photo-7680696.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "www.kaboompics.com"
+        ],
+        [
+          "https://images.pexels.com/photos/8441817/pexels-photo-8441817.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Kampus Production"
+        ]
+      ],
+      "ids": [
+        "8453801",
+        "35595053",
+        "7680696",
+        "8441817"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:55"
+  },
+  {
+    "topic": "How to paper trade before risking real capital",
+    "article": {
+      "title": "Paper Trading Lied To Me For Six Weeks Straight",
+      "meta_description": "Paper trading only works if your simulator models fills, latency and fees honestly. Here is how I test strategies before risking real money.",
+      "slug": "paper-trading-before-real-capital",
+      "author": "Alex Turner",
+      "intro": "<p>Paper trade properly and you're not testing whether your idea makes money, you're testing whether your <em>execution assumptions</em> survive contact with a real order book. That distinction is the whole thing. In early 2023 I ran a mean-reversion strategy on a $50,000 Alpaca paper account for six weeks and watched it print a 17.8% simulated return, and I still remember sitting there at about 6am with coffee going cold thinking I'd finally cracked it. Then I funded $8,000 of real money, ran the identical code, and cleared 2.1% over the same window. Nothing was broken. The simulator had just been filling me at the mid price on every single order.</p>",
+      "intro2": "<p>Most paper trading advice treats the sim account as a confidence-building exercise. I think that's backwards and mildly dangerous. A simulator is a measurement instrument, and an instrument you haven't calibrated will happily give you a number that feels precise and is wrong by a factor of eight. So the job before you risk capital is to make the fake environment lie to you as little as possible, then run long enough that the lies it still tells show up in the residuals.</p>",
+      "sections": [
+        {
+          "heading": "Your Simulator Fills Better Than Any Broker Ever Will",
+          "content": "<p>Nearly every retail paper engine fills market orders at the last traded price or the mid, instantly, in full, with no fee. Real execution does none of those four things. When I logged 4,300 live equity fills against what my paper engine claimed for the same signals, the average gap was roughly 3.4 basis points per round trip on liquid large caps and closer to 22bp on anything under about $500 million market cap. For a strategy holding positions for forty minutes, that difference eats the entire edge.</p><p><strong>Before you trust a single sim result, find out exactly how your platform models fills.</strong> Ask three questions and don't move on until you have answers: does it cross the spread, does it model partial fills on size, and does it charge commission plus regulatory fees. Interactive Brokers' paper account and NinjaTrader's Market Replay are the two I've found least dishonest, because both replay actual depth rather than a single last-price tick. TradingView's built-in paper broker is fine for learning the interface and close to useless for measuring edge.</p><p>If your platform won't tell you, model it yourself. I add a hardcoded penalty to every simulated fill: half the quoted spread plus a fixed slippage constant, tuned per instrument from live data once I have it. Yes, that makes backtests look worse. That's the point. <strong>A strategy that only works at mid is not a strategy, it's a spread-capture fantasy.</strong></p>"
+        },
+        {
+          "heading": "Run the Real Data Path, Not a Convenient Substitute",
+          "content": "<p>Here's the failure I see constantly in code review. Someone paper trades against REST endpoints polled every five seconds, gets clean results, then goes live on a websocket feed and discovers their signal logic breaks on out-of-order messages and duplicate sequence numbers. The strategy was never wrong. The plumbing was different.</p><p>Paper trading should run the exact ingestion stack you plan to trade on, including the parts that annoy you. If your production plan is a streaming feed, test on the streaming feed. I wrote up the specifics of that in <a href=\"/real-time-crypto-screener-websockets/\">building a real-time crypto screener on websockets instead of REST polling</a>, and the gap between the two is bigger than most people expect once you're watching more than about thirty symbols. For anything where sequencing and replay matter, I'd argue you want <a href=\"/kafka-stream-processing-market-microstructure/\">a proper stream processing layer for market microstructure</a> from day one, because retrofitting ordering guarantees into a live strategy is miserable.</p><p>Practical checklist I run before a sim counts as valid:</p><ul><li>Same feed, same symbols, same timestamps as production</li><li>Order state machine handles rejects, partials and cancels, not just accepted fills</li><li>Clock is synced, and I log both exchange time and local receipt time</li><li>The process survives a disconnect and reconnects without duplicating positions</li></ul>"
+        },
+        {
+          "heading": "Ninety Days Minimum, and Stop Touching the Parameters",
+          "content": "<p>Two weeks of paper trading tells you almost nothing. You need enough trades that your results aren't one lucky regime, and for most intraday systems that means <strong>at least 100 to 200 round trips or 90 calendar days, whichever comes later</strong>. The academic case for patience is brutal. Barber, Lee, Liu and Odean's Taiwan day trading work, published in 2014, found that under 1% of day traders were reliably profitable net of fees over the sample, and the ones who were took years to show it (<a href=\"https://faculty.haas.berkeley.edu/odean/\" target=\"_blank\" rel=\"noopener\">Terrance Odean, UC Berkeley Haas</a>). Retail derivatives data says the same in a different accent. ESMA's 2018 product intervention found 74% to 89% of retail CFD accounts lost money (<a href=\"https://www.esma.europa.eu\" target=\"_blank\" rel=\"noopener\">ESMA</a>).</p><p>And I'll admit the discipline part is where I'm weakest. A friend of mine, sharper quant than me honestly, went through something like eleven parameter revisions on his paper account inside a month because every drawdown felt like new information. I did nearly the same thing in 2022 with a volatility breakout system, kept nudging the lookback from 20 to 14 to 18 to 15, and by the end I had no idea what I'd actually tested. It was basically a very slow grid search that I was performing with my emotions. I'm not fully sure the 90-day rule is right for everyone, longer-horizon systems probably need six months, but the freeze-your-parameters part I'd defend to anybody.</p>"
+        },
+        {
+          "heading": "The Metrics That Predict Whether You Survive Live",
+          "content": "<p>Total return is the least useful number on your sim dashboard. What I actually track, and what I'd tell any developer to log from the first day: <strong>maximum drawdown, trade count, win rate paired with average win/loss ratio, and the distribution of slippage versus expectation.</strong> That last one is the tell. If live slippage is drifting wider than your model, your edge is decaying or your size is too big for the book.</p><p>I also record how I felt during the worst three drawdowns. Sounds soft for a systematic trader. It isn't. Paper money removes the one variable that kills most accounts, which is your own hand hovering over the kill switch at the wrong moment, so <strong>the transition should always go paper, then tiny real size, then scale</strong>. My rule is that real trading starts at roughly 5% of intended size and doubles only after 30 days inside expected drawdown. It costs a few hundred dollars in fees to learn things a simulator structurally cannot teach you. Worth every cent.</p><p>Regulators actually agree here, in their own dry way. The CFTC requires hypothetical performance disclaimers precisely because simulated results benefit from hindsight and lack real market risk (<a href=\"https://www.cftc.gov\" target=\"_blank\" rel=\"noopener\">CFTC</a>), and the SEC's investor education material makes a similar point about backtested claims (<a href=\"https://www.investor.gov\" target=\"_blank\" rel=\"noopener\">Investor.gov</a>). Treat your own sim output with the same suspicion you'd apply to a stranger's track record.</p>"
+        }
+      ],
+      "conclusion": "<p>Do this today: pull your last 50 paper fills, and for each one compare the price your simulator gave you against the actual bid/ask spread at that timestamp. Sum the difference. That number is your fake edge, and subtracting it from your sim P&L gives you a far more honest expectation than anything on your platform's summary screen. If the result goes negative, you just saved yourself real money.</p>",
+      "image_query": "developer trading screens",
+      "image_alt": "Developer at a desk reviewing candlestick charts and order book data across two monitors in low light",
+      "outbound_links": [
+        "esma.europa.eu",
+        "cftc.gov",
+        "investor.gov",
+        "berkeley.edu"
+      ],
+      "sources": [
+        {
+          "name": "Terrance Odean, UC Berkeley Haas (day trading research)",
+          "url": "https://faculty.haas.berkeley.edu/odean/"
+        },
+        {
+          "name": "European Securities and Markets Authority (ESMA)",
+          "url": "https://www.esma.europa.eu"
+        },
+        {
+          "name": "U.S. Commodity Futures Trading Commission (CFTC)",
+          "url": "https://www.cftc.gov"
+        },
+        {
+          "name": "SEC Investor.gov",
+          "url": "https://www.investor.gov"
+        }
+      ],
+      "faq": [
+        {
+          "q": "How long should I paper trade before going live?",
+          "a": "Give it 90 days or 100 to 200 completed round trips, whichever takes longer, without changing your parameters mid-test. Shorter runs mostly measure one market regime, and longer-horizon systems often need six months."
+        },
+        {
+          "q": "Is paper trading actually realistic?",
+          "a": "Only if the simulator crosses the spread, models partial fills and charges commissions. Most retail paper engines fill at the mid price instantly, which inflates results by several basis points per trade and far more on illiquid names."
+        },
+        {
+          "q": "Should I go straight from paper trading to full position size?",
+          "a": "No. Start live at around 5% of your intended size and only scale up after 30 days of results staying inside your expected drawdown. The psychological pressure of real money is the one variable a simulator cannot reproduce."
+        }
+      ]
+    },
+    "images": {
+      "image": "https://images.pexels.com/photos/5831712/pexels-photo-5831712.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "photographer": "AlphaTradeZone",
+      "image_alt": "Two men at a white table studying red and white candlestick charts on a laptop and tablet, taking handwritten notes",
+      "body_images": [
+        [
+          "https://images.pexels.com/photos/17810854/pexels-photo-17810854.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Israel Torres"
+        ],
+        [
+          "https://images.pexels.com/photos/29509468/pexels-photo-29509468.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Matheus Bertelli"
+        ],
+        [
+          "https://images.pexels.com/photos/9304917/pexels-photo-9304917.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          "Mikhail Nilov"
+        ]
+      ],
+      "ids": [
+        "5831712",
+        "17810854",
+        "29509468",
+        "9304917"
+      ]
+    },
+    "generated_iso": "2026-07-26 04:58"
+  }
+]
