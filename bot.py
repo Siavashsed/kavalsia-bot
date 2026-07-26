@@ -116,15 +116,74 @@ def _claude_code_complete(prompt, max_tokens=4000, timeout=240, extra_args=None)
         raise RuntimeError("claude max: " + (head or (p.stderr or "").strip()[:140] or f"exit {p.returncode}"))
     return out
 
-def _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000):
+def _extract_json_text(text):
+    """Pull the first balanced {...} or [...] out of a CLI reply.
+    `claude -p` sometimes prefixes a sentence or wraps the payload in a fence;
+    the API almost never does. Returns the input unchanged when there is no
+    balanced block, so a prose reply is never mangled."""
+    t = re.sub(r'\s*```$', '', re.sub(r'^```(?:json)?\s*', '', (text or "").strip())).strip()
+    try:
+        json.loads(t)
+        return t
+    except Exception:
+        pass
+    starts = [i for i in (t.find('{'), t.find('[')) if i != -1]
+    if not starts:
+        return t
+    start = min(starts)
+    open_ch  = t[start]
+    close_ch = '}' if open_ch == '{' else ']'
+    depth, instr, esc = 0, False, False
+    for i in range(start, len(t)):
+        c = t[i]
+        if esc:
+            esc = False; continue
+        if c == '\\':
+            esc = True; continue
+        if c == '"':
+            instr = not instr; continue
+        if instr:
+            continue
+        if c == open_ch:
+            depth += 1
+        elif c == close_ch:
+            depth -= 1
+            if depth == 0:
+                return t[start:i + 1]
+    return t[start:]
+
+
+def _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000, expect_json=False):
     """One text completion routed by the active engine. 'max' tries Claude Max first
     (local CLI, no API cost) then falls back to the API; 'api' uses the API directly.
-    Returns the raw text string."""
+    Returns the raw text string.
+
+    The Max path is a CLI subprocess and is intermittently empty, slow, or wrapped
+    in a preamble, and there is no working API to fall back to, so it retries and
+    (when expect_json) validates the payload parses before accepting it."""
     if _engine() == "max":
-        try:
-            return _claude_code_complete(prompt, max_tokens=max_tokens)
-        except Exception as e:
-            print(f"  [llm] Claude Max unavailable ({e}); using API", flush=True)
+        attempts = 5 if expect_json else 2
+        last = ""
+        for i in range(attempts):
+            try:
+                raw = _claude_code_complete(prompt, max_tokens=max_tokens)
+            except Exception as e:
+                print(f"  [llm] Claude Max attempt {i+1}/{attempts} failed ({str(e)[:80]})", flush=True)
+                time.sleep(min(3 + i * 2, 10))
+                continue
+            if not expect_json:
+                return raw
+            cleaned = _extract_json_text(raw)
+            try:
+                json.loads(cleaned)
+                return cleaned
+            except Exception:
+                last = cleaned
+                print(f"  [llm] Claude Max attempt {i+1}/{attempts} returned non-JSON; retrying", flush=True)
+                time.sleep(min(2 + i, 6))
+        if last:
+            return last
+        print("  [llm] Claude Max exhausted; using API", flush=True)
     resp = _retry(lambda: client.messages.create(
         model=model, max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}]))
@@ -1096,7 +1155,7 @@ Existing topics to avoid repeating:
 Return ONLY a JSON array of strings, no markdown:
 ["Topic 1", "Topic 2", ...]"""
     try:
-        text = _complete(client, prompt, model="claude-haiku-4-5-20251001", max_tokens=800)
+        text = _complete(client, prompt, model="claude-haiku-4-5-20251001", max_tokens=800, expect_json=True)
         text = re.sub(r'^```json\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
         new_topics = json.loads(text)
@@ -1328,7 +1387,7 @@ Return ONLY valid JSON - no markdown, no extra text:
   ]
 }}"""
 
-    text = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=3800)
+    text = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=3800, expect_json=True)
     text = re.sub(r'^```json\s*', '', text)
     text = re.sub(r'\s*```$', '', text)
     article = json.loads(text)
@@ -1423,7 +1482,7 @@ Return ONLY valid JSON, no markdown fences, no extra text:
   "image_alt": "translated image alt"
 }}"""
         try:
-            raw = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000)
+            raw = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000, expect_json=True)
             raw = re.sub(r'^```json\s*', '', raw)
             raw = re.sub(r'\s*```$', '', raw)
             data = json.loads(raw)
@@ -1692,7 +1751,7 @@ def _image_queries(article, site, n, client=None):
         'Reply with STRICT JSON only: {"queries": ["term one", "term two"]}'
     )
     try:
-        raw = _complete(client, prompt, model=_VISION_MODEL, max_tokens=400)
+        raw = _complete(client, prompt, model=_VISION_MODEL, max_tokens=400, expect_json=True)
         m = re.search(r'\{.*\}', raw or "", re.S)
         qs = json.loads(m.group(0))["queries"] if m else []
         qs = [str(q).strip() for q in qs if str(q).strip()]
