@@ -22,22 +22,6 @@ import requests
 import anthropic
 from datetime import datetime, timedelta
 
-# Default timeout on EVERY outbound HTTP call. Most GitHub calls in this file
-# passed no timeout, and on 2026-07-20 one of them blocked on a socket read
-# forever: the local daily run sat there for six days and, because launchd will
-# not start a second copy while the first is alive, every run after it was
-# silently skipped. requests has no global default, so patch Session.request
-# (get/post/put all funnel through it).
-_HTTP_TIMEOUT = float(os.environ.get("HTTP_TIMEOUT", "45"))
-_requests_request = requests.sessions.Session.request
-
-def _request_with_timeout(self, method, url, **kw):
-    if kw.get("timeout") is None:
-        kw["timeout"] = _HTTP_TIMEOUT
-    return _requests_request(self, method, url, **kw)
-
-requests.sessions.Session.request = _request_with_timeout
-
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import layout_shell
 
@@ -116,74 +100,15 @@ def _claude_code_complete(prompt, max_tokens=4000, timeout=240, extra_args=None)
         raise RuntimeError("claude max: " + (head or (p.stderr or "").strip()[:140] or f"exit {p.returncode}"))
     return out
 
-def _extract_json_text(text):
-    """Pull the first balanced {...} or [...] out of a CLI reply.
-    `claude -p` sometimes prefixes a sentence or wraps the payload in a fence;
-    the API almost never does. Returns the input unchanged when there is no
-    balanced block, so a prose reply is never mangled."""
-    t = re.sub(r'\s*```$', '', re.sub(r'^```(?:json)?\s*', '', (text or "").strip())).strip()
-    try:
-        json.loads(t)
-        return t
-    except Exception:
-        pass
-    starts = [i for i in (t.find('{'), t.find('[')) if i != -1]
-    if not starts:
-        return t
-    start = min(starts)
-    open_ch  = t[start]
-    close_ch = '}' if open_ch == '{' else ']'
-    depth, instr, esc = 0, False, False
-    for i in range(start, len(t)):
-        c = t[i]
-        if esc:
-            esc = False; continue
-        if c == '\\':
-            esc = True; continue
-        if c == '"':
-            instr = not instr; continue
-        if instr:
-            continue
-        if c == open_ch:
-            depth += 1
-        elif c == close_ch:
-            depth -= 1
-            if depth == 0:
-                return t[start:i + 1]
-    return t[start:]
-
-
-def _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000, expect_json=False):
+def _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000):
     """One text completion routed by the active engine. 'max' tries Claude Max first
     (local CLI, no API cost) then falls back to the API; 'api' uses the API directly.
-    Returns the raw text string.
-
-    The Max path is a CLI subprocess and is intermittently empty, slow, or wrapped
-    in a preamble, and there is no working API to fall back to, so it retries and
-    (when expect_json) validates the payload parses before accepting it."""
+    Returns the raw text string."""
     if _engine() == "max":
-        attempts = 5 if expect_json else 2
-        last = ""
-        for i in range(attempts):
-            try:
-                raw = _claude_code_complete(prompt, max_tokens=max_tokens)
-            except Exception as e:
-                print(f"  [llm] Claude Max attempt {i+1}/{attempts} failed ({str(e)[:80]})", flush=True)
-                time.sleep(min(3 + i * 2, 10))
-                continue
-            if not expect_json:
-                return raw
-            cleaned = _extract_json_text(raw)
-            try:
-                json.loads(cleaned)
-                return cleaned
-            except Exception:
-                last = cleaned
-                print(f"  [llm] Claude Max attempt {i+1}/{attempts} returned non-JSON; retrying", flush=True)
-                time.sleep(min(2 + i, 6))
-        if last:
-            return last
-        print("  [llm] Claude Max exhausted; using API", flush=True)
+        try:
+            return _claude_code_complete(prompt, max_tokens=max_tokens)
+        except Exception as e:
+            print(f"  [llm] Claude Max unavailable ({e}); using API", flush=True)
     resp = _retry(lambda: client.messages.create(
         model=model, max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}]))
@@ -993,98 +918,6 @@ def historical_topic_year(site):
     return year, topic
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# WEEKLY PUBLISH SCHEDULE. The network used to post 1 article per site PER DAY,
-# which meant all 28 sites published on the same day, every day - a loud
-# footprint and far more volume than wanted. Each site now gets a small number
-# of assigned weekdays, and those days are spread across the network so roughly
-# the same handful of sites publish each day instead of all of them at once.
-# ─────────────────────────────────────────────────────────────────────────────
-
-_WEEKDAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-
-def site_publish_days(site, per_week, all_ids=None):
-    """The weekdays (0=Monday .. 6=Sunday) this site publishes on.
-
-    Explicit `publish_days` in network-config always wins. Otherwise the days are
-    derived from the site's position in the network so the assignment is stable
-    across runs (no randomness, no state to store) and evenly spread: sites are
-    dealt one starting day each, round-robin over the 7 days, and the second and
-    later days of the week are pushed roughly half a week apart.
-    """
-    explicit = site.get("publish_days")
-    if isinstance(explicit, list) and explicit:
-        return sorted({int(d) % 7 for d in explicit})[:max(1, per_week)]
-    per_week = max(1, min(7, int(per_week)))
-    ids = sorted(all_ids) if all_ids else [site.get("id", "")]
-    try:
-        idx = ids.index(site.get("id", ""))
-    except ValueError:
-        idx = abs(hash(site.get("id", ""))) % 7
-    start = idx % 7
-    # Alternate the gap between a site's own days so two sites sharing a start
-    # day do not also share their second day.
-    gap = 3 if (idx // 7) % 2 == 0 else 4
-    days = {(start + k * gap) % 7 for k in range(per_week)}
-    # Collisions inside one site (possible when per_week is large) are filled in.
-    d = start
-    while len(days) < per_week:
-        d = (d + 1) % 7
-        days.add(d)
-    return sorted(days)
-
-
-def new_posts_due(site, articles, all_ids=None, today=None):
-    """How many NEW (non-historical) articles this site should publish right now.
-
-    Two independent gates:
-      1. today must be one of the site's assigned weekdays, OR the site has been
-         dark long enough to count as a real outage;
-      2. the site must be under its weekly budget, counted from what actually
-         shipped in the last 7 days. This is the hard cap, so a double run, a
-         catch-up and a manual trigger can never push a site over quota.
-
-    The outage threshold is deliberately long. A short one (say 5 days) looks
-    reasonable until the whole network goes dark for a week: every site then
-    reads as overdue on the first run back and all of them publish on the same
-    day, which is the bunching the weekday assignment exists to prevent. At 14
-    days a site that is merely between its assigned days never trips it, because
-    its next slot is at most 3 or 4 days out.
-    """
-    if site.get("new_posts_enabled", True) is False:
-        return 0
-    per_week = site.get("posts_per_week", site.get("posts_per_day_new"))
-    try:
-        per_week = int(per_week)
-    except (TypeError, ValueError):
-        per_week = 2
-    if per_week <= 0:
-        return 0
-
-    now = today or datetime.now()
-    cutoff = now - timedelta(days=7)
-    recent, last_new = 0, None
-    for a in articles:
-        if a.get("historical"):
-            continue
-        try:
-            posted = datetime.strptime(a.get("posted_iso") or a.get("date_iso", ""), "%Y-%m-%d")
-        except (ValueError, TypeError):
-            continue
-        if posted >= cutoff:
-            recent += 1
-        if last_new is None or posted > last_new:
-            last_new = posted
-    if recent >= per_week:
-        return 0
-
-    days = site_publish_days(site, per_week, all_ids)
-    if now.weekday() in days:
-        return 1
-    outage = last_new is not None and (now - last_new).days >= 14
-    return 1 if outage else 0
-
-
 def is_historical_due(site, articles):
     """True if this site should publish a historical article on this run, based on the
     historical_mode toggle and the per-week budget vs. how many historical articles
@@ -1217,10 +1050,7 @@ def generate_client_topic(site, client_cfg, claude_client):
     name = client_cfg.get("business_name", "the client")
     desc = client_cfg.get("description", "")
     try:
-        resp = _retry(lambda: claude_client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=200,
-            messages=[{"role": "user", "content": f"""Site: {site.get('domain')} - {site.get('category')}
+        text = _complete(claude_client, f"""Site: {site.get('domain')} - {site.get('category')}
 Persona: {site.get('persona', 'an expert')}
 
 Client to feature: {name}
@@ -1228,9 +1058,9 @@ Description: {desc}
 
 Write ONE compelling, SEO-friendly article title that naturally showcases this business.
 The article should genuinely help readers while featuring the client organically.
-Return ONLY the title, no quotes, no explanation."""}]
-        ))
-        return resp.content[0].text.strip().strip('"\'')
+Return ONLY the title, no quotes, no explanation.""",
+            model="claude-haiku-4-5-20251001", max_tokens=200)
+        return text.strip().strip('"\'')
     except Exception as e:
         print(f"  Client topic generation failed: {e}")
         return f"A closer look at {name}"
@@ -1247,7 +1077,7 @@ Existing topics to avoid repeating:
 Return ONLY a JSON array of strings, no markdown:
 ["Topic 1", "Topic 2", ...]"""
     try:
-        text = _complete(client, prompt, model="claude-haiku-4-5-20251001", max_tokens=800, expect_json=True)
+        text = _complete(client, prompt, model="claude-haiku-4-5-20251001", max_tokens=800)
         text = re.sub(r'^```json\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
         new_topics = json.loads(text)
@@ -1479,7 +1309,7 @@ Return ONLY valid JSON - no markdown, no extra text:
   ]
 }}"""
 
-    text = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=3800, expect_json=True)
+    text = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=3800)
     text = re.sub(r'^```json\s*', '', text)
     text = re.sub(r'\s*```$', '', text)
     article = json.loads(text)
@@ -1574,7 +1404,7 @@ Return ONLY valid JSON, no markdown fences, no extra text:
   "image_alt": "translated image alt"
 }}"""
         try:
-            raw = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000, expect_json=True)
+            raw = _complete(client, prompt, model="claude-sonnet-4-6", max_tokens=4000)
             raw = re.sub(r'^```json\s*', '', raw)
             raw = re.sub(r'\s*```$', '', raw)
             data = json.loads(raw)
@@ -1603,19 +1433,13 @@ def _pexels_photo_id(url):
     return m.group(1) if m else url
 
 
-def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, sources=None, exclude_urls=None,
-                fallback_queries=None, exclude_ids=None, allow_reuse=False):
+def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, sources=None, exclude_urls=None, fallback_queries=None):
     """Fetch image from configured sources in order: pexels → unsplash → none.
     exclude_urls: set of already-used image URLs - will skip photos matching those IDs.
-    exclude_ids:  set of already-used photo IDs (the network-wide ledger).
     fallback_queries: list of broader queries to try if the primary is exhausted.
-    allow_reuse: when False (default) return (None, None) rather than handing back a
-        photo that is already in the exclude set. Reusing a photo is worse than
-        shipping the post with one image fewer.
     """
     sources = sources or (["pexels", "unsplash"] if unsplash_key else ["pexels"])
     excluded_ids = {_pexels_photo_id(u) for u in (exclude_urls or set())} if exclude_urls else set()
-    excluded_ids |= {str(x) for x in (exclude_ids or set())}
 
     # Build the query attempt list: primary first, then fallbacks. Each query
     # gets up to 6 random pages of 20 photos = 120 candidates filtered against
@@ -1655,15 +1479,11 @@ def fetch_image(query, pexels_key, unsplash_key=None, replicate_key=None, source
                 except Exception as e:
                     print(f"  Pexels fetch failed ('{q}'): {e}")
 
-            # All queries exhausted. Only hand back an already-used photo when the
-            # caller explicitly allows it; a repeated stock photo across the network
-            # is the exact footprint we are trying to avoid.
-            if last_photos and allow_reuse:
+            # All queries exhausted - last resort: pick any from last successful fetch.
+            if last_photos:
                 photo = random.choice(last_photos)
                 print(f"  Image dedup: every query exhausted for '{query}', reusing best available")
                 return photo["src"]["large2x"], photo["photographer"]
-            if last_photos:
-                print(f"  Image dedup: every query exhausted for '{query}', all candidates already used - skipping")
 
         elif source == "unsplash" and unsplash_key:
             try:
@@ -1797,148 +1617,6 @@ def verify_article_image(image_url, article_title, query, client=None):
         return ok, alt, reason
     except Exception as e:
         return True, None, f"verify skipped: {e}"
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# IMAGE SELECTION. Body images used to be searched with the raw section heading
-# ("Why this matters", "The bottom line"), which is not a visual subject at all,
-# so Pexels fell back to the site category and returned the same generic stock
-# genre for every article. These helpers ask the model for CONCRETE, visually
-# distinct search terms per slot, then resolve them against the network-wide
-# used-image ledger.
-# ─────────────────────────────────────────────────────────────────────────────
-
-_IMG_CLAIM_LOCK = threading.Lock()
-
-# Articles actually pushed this run. A run that generates nothing used to print
-# "All sites updated" and exit 0, so 24 days of a dead API key looked green in
-# GitHub Actions. run() now exits non-zero when this stays at 0.
-_PUBLISHED       = {"count": 0}
-_PUBLISHED_LOCK  = threading.Lock()
-
-_GENERIC_HEADINGS = re.compile(
-    r"^(why|what|how|the)?\s*(this|it|that)?\s*(matters|works|means|happens|to know|bottom line|takeaway|"
-    r"conclusion|summary|final thoughts|key points|overview|introduction|next steps|in short|tl;?dr)\b",
-    re.I)
-
-def _image_queries(article, site, n, client=None):
-    """N concrete, visually distinct Pexels search terms for one article.
-    Slot 0 is the hero. Runs on whatever engine is active (Max locally = free)
-    and degrades to a heuristic chain if the model is unavailable."""
-    n = max(1, int(n))
-    title    = (article.get("title") or "").strip()
-    headings = [(s.get("heading") or "").strip() for s in (article.get("sections") or [])]
-    headings = [h for h in headings if h]
-    prompt = (
-        'Pick ' + str(n) + ' stock-photo search terms for this article.\n'
-        'Title: "' + title + '"\n'
-        'Section headings: ' + json.dumps(headings[:8], ensure_ascii=False) + '\n'
-        'Site topic: ' + str(site.get("category", "")) + '\n\n'
-        'Rules: each term is 2 to 4 words naming a CONCRETE, PHOTOGRAPHABLE subject '
-        '(a person doing a specific thing, an object, a place, a material). Never an '
-        'abstract noun (growth, strategy, success, mindset), never a section heading, '
-        'never a brand name. The ' + str(n) + ' terms must be visually different from '
-        'each other so the photos do not look like a set. Term 1 is the hero image and '
-        'must match the headline subject.\n'
-        'Reply with STRICT JSON only: {"queries": ["term one", "term two"]}'
-    )
-    try:
-        raw = _complete(client, prompt, model=_VISION_MODEL, max_tokens=400, expect_json=True)
-        m = re.search(r'\{.*\}', raw or "", re.S)
-        qs = json.loads(m.group(0))["queries"] if m else []
-        qs = [str(q).strip() for q in qs if str(q).strip()]
-        # dedupe while preserving order
-        qs = list(dict.fromkeys(qs))
-        if qs:
-            return (qs + qs * n)[:n]
-    except Exception as e:
-        print(f"  [images] query generation failed ({e}); using heuristic terms")
-    # Heuristic fallback: article's own image_query, then non-generic headings.
-    base = (article.get("image_query") or site.get("category") or "editorial photography").strip()
-    out  = [base]
-    for h in headings:
-        if len(out) >= n:
-            break
-        if _GENERIC_HEADINGS.match(h) or len(h.split()) > 6:
-            continue
-        out.append(h)
-    while len(out) < n:
-        out.append(f"{base} {['workspace','close up','detail','people'][len(out) % 4]}")
-    return out[:n]
-
-
-def resolve_article_images(article, site, settings, keys, exclude_ids=None, client=None,
-                           tag="", log=print):
-    """Choose a hero plus 2-3 body images for one article.
-
-    Every candidate is checked against `exclude_ids` (the network-wide ledger) and,
-    when enabled, shown to the vision check. Returns a dict:
-        {"image", "photographer", "image_alt", "body_images": [(url, photographer)],
-         "ids": [photo ids chosen]}
-    Nothing here writes to GitHub, so it is safe to call from both the daily run
-    and the local pregenerate pass.
-    """
-    pexels_key    = keys.get("pexels", "")
-    unsplash_key  = keys.get("unsplash", "") or None
-    replicate_key = keys.get("replicate", "") or None
-    sources   = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
-    vision_on = settings.get("image_vision_check", True)
-
-    # Claim into the CALLER's set when one is passed. The daily run processes sites
-    # on 6 threads; a private copy would let two sites claim the same photo in the
-    # same second, which is exactly the duplicate we are removing.
-    seen = exclude_ids if isinstance(exclude_ids, set) else {str(x) for x in (exclude_ids or [])}
-    chosen_ids = []
-    n_sections = len(article.get("sections") or [])
-    want_body  = max(2, min(3, 1 + n_sections // 2))
-    queries    = _image_queries(article, site, 1 + want_body, client)
-    # Broad-but-still-relevant safety net; deliberately NOT the bare site category.
-    fallbacks  = [q for q in (article.get("image_query"),
-                              article.get("category"),
-                              f"{site.get('category','')} photography") if q]
-
-    def _take(query, is_hero):
-        """One vetted photo for `query`, or (None, None, None)."""
-        for _ in range(3):
-            url, ph = fetch_image(query, pexels_key, unsplash_key=unsplash_key,
-                                  replicate_key=replicate_key, sources=sources,
-                                  exclude_ids=seen, fallback_queries=fallbacks,
-                                  allow_reuse=False)
-            if not url:
-                return None, None, None
-            pid = _pexels_photo_id(url)
-            with _IMG_CLAIM_LOCK:  # test-and-claim so parallel sites cannot collide
-                if pid in seen:
-                    continue
-                seen.add(pid)      # accepted or rejected, never offered again
-            if not vision_on:
-                return url, ph, None
-            ok, alt, why = verify_article_image(url, article.get("title", ""), query, client)
-            if ok:
-                return url, ph, alt
-            log(f"  {tag} {'hero' if is_hero else 'body'} image rejected by vision check ({why}); retrying")
-        return None, None, None
-
-    hero_url, hero_ph, hero_alt = _take(queries[0], True)
-    if not hero_url:
-        for fb in fallbacks:
-            hero_url, hero_ph, hero_alt = _take(fb, True)
-            if hero_url:
-                break
-    if hero_url:
-        chosen_ids.append(_pexels_photo_id(hero_url))
-    else:
-        log(f"  {tag} no hero image passed the vision check; publishing without hero")
-
-    body = []
-    for q in queries[1:]:
-        url, ph, _alt = _take(q, False)
-        if url:
-            body.append((url, ph))
-            chosen_ids.append(_pexels_photo_id(url))
-
-    return {"image": hero_url or "", "photographer": hero_ph or "",
-            "image_alt": hero_alt or "", "body_images": body, "ids": chosen_ids}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2627,12 +2305,7 @@ Return ONLY valid JSON - no markdown, no extra text:
 }}"""
 
     try:
-        response = _retry(lambda: client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=2000,
-            messages=[{"role": "user", "content": prompt}]
-        ))
-        text = response.content[0].text.strip()
+        text = _complete(client, prompt, model="claude-haiku-4-5-20251001", max_tokens=2000)
         text = re.sub(r'^```json\s*', '', text)
         text = re.sub(r'\s*```$', '', text)
         data = json.loads(text)
@@ -3456,12 +3129,7 @@ Return ONLY valid JSON  -  no markdown:
 }}"""
 
     def _call_haiku(prompt_text: str):
-        resp = _retry(lambda: client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=3500,
-            messages=[{"role": "user", "content": prompt_text}]
-        ))
-        raw = resp.content[0].text.strip()
+        raw = _complete(client, prompt_text, model="claude-haiku-4-5-20251001", max_tokens=3500)
         raw = re.sub(r'^```json\s*', '', raw)
         raw = re.sub(r'\s*```$', '', raw)
         data = json.loads(raw)
@@ -4709,28 +4377,28 @@ def _nav_terminal(site):
     name = _site_name(site)
     return (
         # CSS
-        """<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+        """<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 .a-tk{background:#020d06;border-bottom:1px solid #0d2b18;height:38px;display:flex;align-items:center;overflow:hidden;width:100%}
-.a-tk-lbl{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;color:#020d06;background:#00e676;padding:0 14px;height:100%;display:flex;align-items:center;flex-shrink:0;letter-spacing:2px;text-transform:uppercase;gap:5px}
+.a-tk-lbl{font-family:Inter,system-ui,sans-serif;font-size:9px;font-weight:700;color:#020d06;background:#00e676;padding:0 14px;height:100%;display:flex;align-items:center;flex-shrink:0;letter-spacing:2px;text-transform:uppercase;gap:5px}
 .a-tk-dot{width:7px;height:7px;border-radius:50%;background:#020d06;animation:atk-blink 1.2s ease-in-out infinite}
 @keyframes atk-blink{0%,100%{opacity:1}50%{opacity:.2}}
 .a-tk-vp{flex:1;overflow:hidden}
 .a-tk-tr{display:flex;white-space:nowrap;animation:atk-scroll 40s linear infinite}
 .a-tk-tr:hover{animation-play-state:paused}
 @keyframes atk-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.a-tk-it{font-family:'Space Mono',monospace;font-size:11px;color:#4a7a5a;display:inline-flex;gap:7px;align-items:center;padding:0 22px;border-right:1px solid #0d2b18}
+.a-tk-it{font-family:Inter,system-ui,sans-serif;font-size:11px;color:#4a7a5a;display:inline-flex;gap:7px;align-items:center;padding:0 22px;border-right:1px solid #0d2b18}
 .a-tk-sy{color:#a0cfb0;font-weight:700}.a-tk-up{color:#00e676;font-weight:700}.a-tk-dn{color:#ff5252;font-weight:700}
 .a-nav{background:#020d06;border-bottom:1px solid #0d2b18;position:sticky;top:0;z-index:100;font-family:'Space Grotesk',sans-serif}
 .a-nav-in{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;height:58px;gap:0}
 .a-nav-logo{font-size:20px;font-weight:700;color:#00e676;margin-right:40px;flex-shrink:0;letter-spacing:-0.5px;text-decoration:none}
-.a-nav-logo span{font-family:'Space Mono',monospace;font-size:10px;color:#2a5a38;font-weight:400;margin-left:6px;letter-spacing:1px;text-transform:uppercase}
+.a-nav-logo span{font-family:Inter,system-ui,sans-serif;font-size:10px;color:#2a5a38;font-weight:400;margin-left:6px;letter-spacing:1px;text-transform:uppercase}
 .a-nav-links{display:flex;gap:0;height:100%;flex:1}
-.a-nav-links a{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#3a6a48;text-transform:uppercase;letter-spacing:1px;padding:0 14px;height:58px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px;text-decoration:none}
+.a-nav-links a{font-family:Inter,system-ui,sans-serif;font-size:11px;font-weight:700;color:#3a6a48;text-transform:uppercase;letter-spacing:1px;padding:0 14px;height:58px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:all .2s;margin-bottom:-1px;text-decoration:none}
 .a-nav-links a:hover{color:#00e676;border-bottom-color:#00e676}
 .a-nav-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
-.a-nav-date{font-family:'Space Mono',monospace;font-size:10px;color:#2a5a38}
-.a-nav-sub{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#020d06;background:#00e676;padding:6px 14px;border-radius:2px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;text-decoration:none}
+.a-nav-date{font-family:Inter,system-ui,sans-serif;font-size:10px;color:#2a5a38}
+.a-nav-sub{font-family:Inter,system-ui,sans-serif;font-size:10px;font-weight:700;color:#020d06;background:#00e676;padding:6px 14px;border-radius:2px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;text-decoration:none}
 .a-nav-sub:hover{opacity:.85}
 @media(max-width:768px){.a-tk{display:none}.a-nav-links,.a-nav-date{display:none}}
 </style>""",
@@ -7458,10 +7126,22 @@ def _resolve_meta(site):
     return out
 
 def _meta_site_display_name(site):
-    return (site.get("name") or site.get("id") or "Site").strip() or "Site"
+    # Event names become Custom Conversion names in Events Manager, so never
+    # emit a raw hyphenated id ("ai-marketing"): title-case it instead.
+    n = (_site_name(site) or "").strip()
+    if not n or n == site.get("id") or ("-" in n and n == n.lower()):
+        n = (site.get("id") or "Site").replace("-", " ").replace("_", " ").title()
+    return n.replace("Ai ", "AI ")
 
 def build_meta_pixel_snippet(site):
-    """Return the Meta Pixel <script> block for this site, or '' if disabled."""
+    """Return the Meta Pixel <script> block for this site, or '' if disabled.
+
+    Events (all on the one Kavalsia pixel, split per site by name/params):
+      PageView                       standard, every page
+      "Viewed <Site Name>"           custom, every page; content_name = article slug or "home"
+      TimeSpent30s / 60s / 120s      custom, once each, visible-tab time only
+      "<Site Name> NewsletterSignup" custom, on email form submit (SHA-256 hashed)
+    """
     if not site:
         return ""
     r = _resolve_meta(site)
@@ -7472,7 +7152,7 @@ def build_meta_pixel_snippet(site):
         return ""
     site_name  = _meta_site_display_name(site)
     site_id    = site.get("id", "")
-    visit_evt  = f"{site_name} Visit"
+    view_evt   = f"Viewed {site_name}"
     signup_evt = f"{site_name} NewsletterSignup"
     fire_pv    = "true" if r["fire_pageview"] else "false"
     mirror_capi = "true" if (r["capi_token"] and r["capi_dataset_id"]) else "false"
@@ -7487,28 +7167,39 @@ def build_meta_pixel_snippet(site):
         "t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,"
         "document,'script','https://connect.facebook.net/en_US/fbevents.js');\n"
         f"fbq('init', {json.dumps(pixel_id)});\n"
-        f"var FIRE_PV={fire_pv},SITE_ID={json.dumps(site_id)},VISIT_EVT={json.dumps(visit_evt)},"
-        f"SIGNUP_EVT={json.dumps(signup_evt)},MIRROR_CAPI={mirror_capi};\n"
+        f"var FIRE_PV={fire_pv},SITE_ID={json.dumps(site_id)},SITE_NAME={json.dumps(site_name)},"
+        f"VIEW_EVT={json.dumps(view_evt)},SIGNUP_EVT={json.dumps(signup_evt)},MIRROR_CAPI={mirror_capi};\n"
+        "var segs=location.pathname.split('/').filter(Boolean);"
+        "var SLUG=segs.length?segs[segs.length-1].replace(/\\.html$/,''):'home';if(SLUG==='index')SLUG='home';\n"
+        "var BASE={site_id:SITE_ID,site_name:SITE_NAME,content_name:SLUG,page_path:location.pathname};\n"
+        "function P(x){var o={};for(var k in BASE)o[k]=BASE[k];for(var j in x)o[j]=x[j];return o;}\n"
         "if(FIRE_PV){try{fbq('track','PageView');}catch(e){}}\n"
-        "try{fbq('trackCustom',VISIT_EVT,{site_id:SITE_ID,page_path:location.pathname,"
-        "page_title:document.title,referrer:document.referrer||''});}catch(e){}\n"
-        "function sha256Hex(str){if(!window.crypto||!crypto.subtle)return Promise.resolve('');"
-        "var buf=new TextEncoder().encode(String(str||'').trim().toLowerCase());"
-        "return crypto.subtle.digest('SHA-256',buf).then(function(h){"
-        "return Array.prototype.map.call(new Uint8Array(h),function(b){"
-        "return ('00'+b.toString(16)).slice(-2);}).join('');});}\n"
+        "try{fbq('trackCustom',VIEW_EVT,P({page_title:document.title,referrer:document.referrer||''}));}catch(e){}\n"
         "function mirrorCAPI(evtName,payload){if(!MIRROR_CAPI)return;try{"
         "var hub=(window.KAVALSIA_HUB_URL||'').replace(/\\/$/,'');if(!hub)return;"
         "fetch(hub+'/api/meta-capi',{method:'POST',headers:{'Content-Type':'application/json'},"
         "body:JSON.stringify({site_id:SITE_ID,event_name:evtName,payload:payload})})"
         ".catch(function(){});}catch(e){}}\n"
-        "mirrorCAPI(VISIT_EVT,{page_path:location.pathname});\n"
+        "mirrorCAPI(VIEW_EVT,P({}));\n"
+        # Visible-tab time: accumulate only while document is visible, fire each mark once.
+        "var MARKS=[30,60,120],fired={},acc=0,last=document.hidden?0:Date.now();\n"
+        "function tick(){var now=Date.now();if(last){acc+=(now-last)/1000;}last=document.hidden?0:now;"
+        "for(var i=0;i<MARKS.length;i++){var m=MARKS[i];if(!fired[m]&&acc>=m){fired[m]=1;"
+        "var ev='TimeSpent'+m+'s';try{fbq('trackCustom',ev,P({seconds:m}));}catch(e){}mirrorCAPI(ev,P({seconds:m}));}}"
+        "if(fired[120])clearInterval(iv);}\n"
+        "var iv=setInterval(tick,1000);"
+        "document.addEventListener('visibilitychange',tick);\n"
+        "function sha256Hex(str){if(!window.crypto||!crypto.subtle)return Promise.resolve('');"
+        "var buf=new TextEncoder().encode(String(str||'').trim().toLowerCase());"
+        "return crypto.subtle.digest('SHA-256',buf).then(function(h){"
+        "return Array.prototype.map.call(new Uint8Array(h),function(b){"
+        "return ('00'+b.toString(16)).slice(-2);}).join('');});}\n"
         "document.addEventListener('submit',function(ev){try{var f=ev.target;"
         "if(!f||!f.tagName||f.tagName.toLowerCase()!=='form')return;"
         "var emailEl=f.querySelector('input[type=email], input[name*=email i]');"
         "if(!emailEl||!emailEl.value)return;var email=emailEl.value;"
-        "sha256Hex(email).then(function(h){try{fbq('trackCustom',SIGNUP_EVT,{email_hashed:h});}catch(e){}"
-        "mirrorCAPI(SIGNUP_EVT,{email_hashed:h});});}catch(e){}},true);\n"
+        "sha256Hex(email).then(function(h){try{fbq('trackCustom',SIGNUP_EVT,P({email_hashed:h}));}catch(e){}"
+        "mirrorCAPI(SIGNUP_EVT,P({email_hashed:h}));});}catch(e){}},true);\n"
         "})();\n"
         "</script>\n"
         f"<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" "
@@ -7676,16 +7367,10 @@ def build_article_page(article, site, image_url, photographer, themes, global_he
 #   python3 bot.py --pregenerate N --llm max --gh-token <tok>
 CRON_REPO = "Siavashsed/kavalsia-bot"
 
-def _draft_path(sid, kind=""):
-    """Daily queue is drafts/<sid>.json; the weekly historical queue is a separate
-    file so a retrospective is never published as a plain daily post."""
-    return f"drafts/{sid}__{kind}.json" if kind else f"drafts/{sid}.json"
-
-
-def _load_drafts(sid, token, kind=""):
+def _load_drafts(sid, token):
     """Authoritative pre-generated queue for a site (list of {topic, article, ...})."""
     try:
-        url = f"https://api.github.com/repos/{CRON_REPO}/contents/{_draft_path(sid, kind)}"
+        url = f"https://api.github.com/repos/{CRON_REPO}/contents/drafts/{sid}.json"
         r = requests.get(url, headers={"Authorization": f"token {token}", "Accept": "application/vnd.github.v3+json"})
         if r.status_code == 200:
             data = r.json()
@@ -7702,66 +7387,17 @@ def _load_drafts(sid, token, kind=""):
         print(f"  [drafts] load {sid} failed: {e}")
     return []
 
-def _push_drafts(sid, queue, token, kind=""):
+def _push_drafts(sid, queue, token):
     """Persist a site's queue back to the cron repo, mirrored locally for inspection."""
     body = json.dumps(queue, ensure_ascii=False, indent=2)
-    path = _draft_path(sid, kind)
     try:
         d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "drafts")
         os.makedirs(d, exist_ok=True)
-        with open(os.path.join(d, os.path.basename(path)), "w", encoding="utf-8") as f:
+        with open(os.path.join(d, f"{sid}.json"), "w", encoding="utf-8") as f:
             f.write(body)
     except Exception:
         pass
-    label = f"{sid} {kind}".strip()
-    return github_push(CRON_REPO, path, body, f"drafts: {label} queue ({len(queue)} left)", token)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# NETWORK-WIDE used-image ledger. Per-site dedup only ever looked at that site's
-# HERO images, so body images repeated freely and two sites querying similar
-# terms got the SAME Pexels top hits in the same order. This ledger is one flat
-# set of photo IDs for the WHOLE network (hero + body, every site) so no photo
-# is ever published twice anywhere.
-# ─────────────────────────────────────────────────────────────────────────────
-_USED_IMAGES_PATH = "drafts/_used_images.json"
-_USED_IMAGES_CAP  = 20000
-
-def _load_used_image_ids(token):
-    """Flat set of every Pexels/Unsplash photo ID already published network-wide."""
-    try:
-        url = f"https://api.github.com/repos/{CRON_REPO}/contents/{_USED_IMAGES_PATH}"
-        r = requests.get(url, headers={"Authorization": f"token {token}",
-                                       "Accept": "application/vnd.github.v3+json"}, timeout=20)
-        if r.status_code == 200:
-            raw = base64.b64decode(r.json().get("content", "").replace("\n", "")).decode("utf-8")
-            d = json.loads(raw)
-            ids = d.get("ids", []) if isinstance(d, dict) else d
-            return set(str(x) for x in ids if x)
-    except Exception as e:
-        print(f"  [images] ledger load failed: {e}")
-    return set()
-
-def _push_used_image_ids(ids, token, note=""):
-    """Persist the ledger. Newest IDs win when the cap trims the tail."""
-    try:
-        ordered = list(dict.fromkeys(str(x) for x in ids if x))[-_USED_IMAGES_CAP:]
-        body = json.dumps({"ids": ordered,
-                           "count": len(ordered),
-                           "updated": datetime.now().strftime("%Y-%m-%d %H:%M")},
-                          ensure_ascii=False, indent=1)
-        try:
-            d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "drafts")
-            os.makedirs(d, exist_ok=True)
-            with open(os.path.join(d, "_used_images.json"), "w", encoding="utf-8") as f:
-                f.write(body)
-        except Exception:
-            pass
-        return github_push(CRON_REPO, _USED_IMAGES_PATH, body,
-                           f"images: used ledger ({len(ordered)} ids){note}", token)
-    except Exception as e:
-        print(f"  [images] ledger push failed: {e}")
-        return False
+    return github_push(CRON_REPO, f"drafts/{sid}.json", body, f"drafts: {sid} queue ({len(queue)} left)", token)
 
 
 def github_push(repo, path, content, message, token):
@@ -8141,12 +7777,6 @@ def run(topic_overrides=None, site_filter=None):
     if not anthropic_key or not github_token:
         raise SystemExit("Missing ANTHROPIC_API_KEY or GITHUB_TOKEN")
 
-    # Network-wide used-image ledger, loaded once and pushed back at the end of the
-    # run. Shared across every site so the same stock photo is never published twice.
-    used_image_ids = _load_used_image_ids(github_token)
-    _ledger_at_start = len(used_image_ids)
-    print(f"[images] used-photo ledger loaded: {_ledger_at_start} ids")
-
     # Load config from network-config.json (generated by editor.html)
     active_sites, global_prompt, settings, global_client, global_negative_prompt, global_header_scripts, global_footer_scripts = load_network_config()
     active_sites = [s for s in active_sites if s.get("active", True)]
@@ -8210,14 +7840,6 @@ def run(topic_overrides=None, site_filter=None):
     # process_site() function below touches nexus_digest_articles concurrently.
     _digest_lock = threading.Lock()
 
-    # Stable id list that the weekly publish-day assignment is derived from, so
-    # every site keeps the same slots run after run. Publishing sites only, so
-    # adding a hub does not reshuffle the calendar.
-    all_site_ids = sorted(
-        s["id"] for s in active_sites
-        if not (s.get("is_mother_site") or s.get("layout") == "nexus" or s.get("id") == "nexus")
-    )
-
     def process_site(site):
         """Run the full daily pipeline for a single site.
         Returns (site_id, ok, error_str_or_none). Safe to invoke in parallel:
@@ -8257,11 +7879,9 @@ def run(topic_overrides=None, site_filter=None):
             # Pre-generated draft queue for this site (free Claude Max output). A plain
             # daily post pops from this instead of calling the LLM in the cloud.
             site_drafts = _load_drafts(sid, github_token)
-            hist_drafts = _load_drafts(sid, github_token, kind="historical")
             drafts_dirty = False
-            hist_dirty   = False
-            if site_drafts or hist_drafts:
-                print(f"  {tag} {len(site_drafts)} daily + {len(hist_drafts)} historical draft(s) in queue")
+            if site_drafts:
+                print(f"  {tag} {len(site_drafts)} pre-generated draft(s) in queue")
 
             if bulk_hist > 0:
                 # Bulk backfill ignores new_posts_enabled (it is historical-only by intent)
@@ -8273,15 +7893,20 @@ def run(topic_overrides=None, site_filter=None):
                 hist_due  = True
                 posts_per_run = bulk_hist
             else:
-                # Weekly schedule: a site publishes only on its own assigned
-                # weekdays and only while under its weekly budget.
-                new_count = new_posts_due(site, articles, all_site_ids)
+                # Honor an explicit 0 (dashboard "new posts = 0"): only default to
+                # 1 when the field is MISSING, never floor an intentional 0 up to 1.
+                if not new_on:
+                    new_count = 0
+                else:
+                    _raw_new = site.get("posts_per_day_new", site.get("posts_per_run", 1))
+                    try:
+                        new_count = max(0, int(_raw_new))
+                    except (TypeError, ValueError):
+                        new_count = 1
                 hist_due  = hist_on and is_historical_due(site, articles)
                 posts_per_run = new_count + (1 if hist_due else 0)
                 if posts_per_run == 0:
-                    _pw = site.get("posts_per_week", 2)
-                    _days = ",".join(_WEEKDAY_NAMES[d] for d in site_publish_days(site, _pw, all_site_ids))
-                    print(f"  {tag} not scheduled today (publishes {_pw}x/week on {_days})")
+                    print(f"  {tag} SKIPPED - both pipelines OFF (new_posts_enabled={new_on}, historical_mode={hist_on})")
                     return (sid, True, None)
 
             # Randomize publish time - scatter sites across a window to break cadence fingerprint
@@ -8310,11 +7935,6 @@ def run(topic_overrides=None, site_filter=None):
 
                 # Build set of already-used image URLs for this site (dedup across runs)
                 used_image_urls = {a.get("image", "") for a in articles if a.get("image")}
-                # Seed this site's exclusions from the network ledger plus every photo
-                # id this site has already published (hero and, where recorded, body).
-                used_image_ids.update(_pexels_photo_id(u) for u in used_image_urls if u)
-                for _a in articles:
-                    used_image_ids.update(str(x) for x in (_a.get("image_ids") or []) if x)
 
                 for post_num in range(posts_per_run):
                     print(f"  {tag} Post {post_num+1}/{posts_per_run}")
@@ -8341,27 +7961,15 @@ def run(topic_overrides=None, site_filter=None):
                         author_name = get_author_name(site, settings)
 
                         # A plain daily post pops a pre-generated draft (free Claude Max
-                        # output) instead of calling the LLM in the cloud. Weekly
-                        # retrospectives pop from their own queue. Only client posts,
-                        # roundups, overrides and broadcast HTML still generate live.
-                        _special  = (is_client_post or is_roundup
-                                     or overrides.get(site["id"]) or sid in html_overrides)
-                        _plain_daily = not is_historical and not _special
-                        _draft = None
-                        if _plain_daily and site_drafts:
-                            _draft = site_drafts.pop(0)
-                            drafts_dirty = True
-                        elif is_historical and not _special and hist_drafts:
-                            _draft = hist_drafts.pop(0)
-                            hist_dirty = True
-                            # pub_date is derived from hist_year further down.
-                            if _draft.get("hist_year"):
-                                hist_year = _draft["hist_year"]
+                        # output) instead of calling the LLM in the cloud. Special posts
+                        # (historical/client/roundup/override/broadcast-html) still generate.
+                        _plain_daily = (not is_historical and not is_client_post and not is_roundup
+                                        and not overrides.get(site["id"]) and sid not in html_overrides)
+                        _draft = site_drafts.pop(0) if (_plain_daily and site_drafts) else None
                         if _draft:
+                            drafts_dirty = True
                             topic = _draft.get("topic") or topic
-                            _kind = "historical" if is_historical else "daily"
-                            _left = len(hist_drafts) if is_historical else len(site_drafts)
-                            print(f"  {tag} Topic (pre-generated {_kind} draft, {_left} left in queue): {topic}")
+                            print(f"  {tag} Topic (pre-generated draft, {len(site_drafts)} left in queue): {topic}")
                             web_context = ""
                             internal_link_candidates = []
                         else:
@@ -8410,43 +8018,74 @@ def run(topic_overrides=None, site_filter=None):
 
                         article["slug"] = slug  # apply deduplicated slug
 
-                        # Images. A pre-generated draft already carries a hero plus
-                        # body images that were picked AND vision-checked locally on
-                        # Claude Max, so the cron reuses them verbatim and makes no
-                        # image calls at all. Anything else resolves them here.
+                        site_sources = site.get("image_sources", settings.get("image_sources", ["pexels", "unsplash"]))
+                        # Build a fallback-query chain so we never reuse the same photo
+                        # across articles in the same site. Order: primary image_query,
+                        # then the article's category, then the site category, then a
+                        # generic visual hook tied to the site theme.
+                        _primary  = article.get("image_query", site.get("category", "lifestyle"))
+                        _fallbacks = [
+                            article.get("category", ""),
+                            site.get("category", ""),
+                            site.get("image_fallback_query", ""),
+                            f"{site.get('category','')} editorial photography",
+                        ]
+                        # Vision-checked hero: fetch a candidate, show it to Claude,
+                        # reject wrong-brand / off-topic photos and try again (max 3).
+                        # Rejected candidates join the exclude set so they never come back.
+                        _vision_on = settings.get("image_vision_check", True)
+                        image_url = photographer = None
+                        for _attempt in range(3):
+                            _iu, _ph = fetch_image(
+                                _primary,
+                                pexels_key, unsplash_key=unsplash_key or None,
+                                replicate_key=replicate_key or None,
+                                sources=site_sources,
+                                exclude_urls=used_image_urls,
+                                fallback_queries=_fallbacks,
+                            )
+                            if not _iu:
+                                break
+                            used_image_urls.add(_iu)  # accepted or rejected, never offer it again this run
+                            if not _vision_on:
+                                image_url, photographer = _iu, _ph
+                                break
+                            _vok, _valt, _vwhy = verify_article_image(_iu, article.get("title", ""), _primary, client)
+                            if _vok:
+                                image_url, photographer = _iu, _ph
+                                if _valt:
+                                    article["image_alt"] = _valt  # honest alt from the actual photo
+                                break
+                            print(f"  {tag} hero image rejected by vision check ({_vwhy}); retrying", flush=True)
+                        if not image_url:
+                            print(f"  {tag} no hero image passed the vision check; publishing without hero", flush=True)
+                        article["image"] = image_url or ""
+
+                        # extra in-context body images so each post has 2-6 images total (hero=#1). FUTURE posts only.
                         _BODY_IMAGES.clear()
-                        _drafted_imgs = (_draft or {}).get("images") or {}
-                        if _drafted_imgs.get("image"):
-                            article["image"] = _drafted_imgs["image"]
-                            if _drafted_imgs.get("image_alt"):
-                                article["image_alt"] = _drafted_imgs["image_alt"]
-                            photographer = _drafted_imgs.get("photographer", "")
-                            _BODY_IMAGES.extend([tuple(x) for x in _drafted_imgs.get("body_images", [])])
-                            _img_ids = list(_drafted_imgs.get("ids", []))
-                            print(f"  {tag} images from draft ({1 + len(_BODY_IMAGES)} vetted, no API)", flush=True)
-                        else:
-                            try:
-                                _res = resolve_article_images(
-                                    article, site, settings,
-                                    {"pexels": pexels_key, "unsplash": unsplash_key,
-                                     "replicate": replicate_key},
-                                    exclude_ids=used_image_ids, client=client, tag=tag,
-                                    log=lambda m: print(m, flush=True))
-                            except Exception as _ie:
-                                print(f"  {tag} image resolve failed: {_ie}", flush=True)
-                                _res = {"image": "", "photographer": "", "image_alt": "",
-                                        "body_images": [], "ids": []}
-                            article["image"] = _res["image"]
-                            if _res.get("image_alt"):
-                                article["image_alt"] = _res["image_alt"]
-                            photographer = _res.get("photographer", "")
-                            _BODY_IMAGES.extend(_res["body_images"])
-                            _img_ids = _res["ids"]
-                        # Every photo used anywhere in this post joins the network ledger
-                        # so no other site or future article can pick it up again.
-                        used_image_ids.update(_img_ids)
-                        if article.get("image"):
-                            used_image_urls.add(article["image"])
+                        try:
+                            _secs = article.get("sections") or []
+                            _want = max(2, min(3, 1 + len(_secs) // 2))  # hero + 2-3 => 3-4 images/post
+                            _exclude = set(used_image_urls)
+                            _heads = [(_s.get("heading") or "").strip() for _s in _secs if (_s.get("heading") or "").strip()] or [_primary]
+                            for _k in range(_want):
+                                _q = _heads[_k % len(_heads)]
+                                for _bt in range(2):  # 1 retry per slot if vision rejects
+                                    _iu, _ph = fetch_image(_q, pexels_key,
+                                        unsplash_key=unsplash_key or None, replicate_key=replicate_key or None,
+                                        sources=site_sources, exclude_urls=_exclude, fallback_queries=_fallbacks)
+                                    if not _iu or _iu in _exclude:
+                                        break
+                                    _exclude.add(_iu); used_image_urls.add(_iu)
+                                    if _vision_on:
+                                        _vok, _valt, _vwhy = verify_article_image(_iu, article.get("title", ""), _q, client)
+                                        if not _vok:
+                                            print(f"  {tag} body image rejected by vision check ({_vwhy})", flush=True)
+                                            continue
+                                    _BODY_IMAGES.append((_iu, _ph))
+                                    break
+                        except Exception as _ie:
+                            print(f"  {tag} extra image fetch skipped: {_ie}"); _BODY_IMAGES.clear()
 
                         # Generate comments BEFORE building HTML so they can be
                         # inlined into the static page (Google-crawlable).
@@ -8476,8 +8115,6 @@ def run(topic_overrides=None, site_filter=None):
                             token   = github_token,
                         ))
                         print(f"  {tag} Article pushed: {pushed} → /{slug}/")
-                        with _PUBLISHED_LOCK:
-                            _PUBLISHED["count"] += 1
 
                         _idx_entry = {
                             "title":            article["title"],
@@ -8490,10 +8127,6 @@ def run(topic_overrides=None, site_filter=None):
                             "outbound_links":   article.get("outbound_links", []),
                             "posted_iso":       datetime.now().strftime("%Y-%m-%d"),
                         }
-                        # Hero AND body photo ids, so a rebuilt ledger knows every
-                        # photo this article consumed, not just the hero.
-                        if _img_ids:
-                            _idx_entry["image_ids"] = _img_ids
                         if article.get("category"):
                             _idx_entry["category"] = article["category"]
                         if is_historical:
@@ -8563,12 +8196,6 @@ def run(topic_overrides=None, site_filter=None):
                         print(f"  {tag} Draft queue updated ({len(site_drafts)} left)")
                     except Exception as _de:
                         print(f"  {tag} Draft queue push failed: {_de}")
-                if hist_dirty:
-                    try:
-                        _push_drafts(sid, hist_drafts, github_token, kind="historical")
-                        print(f"  {tag} Historical queue updated ({len(hist_drafts)} left)")
-                    except Exception as _de:
-                        print(f"  {tag} Historical queue push failed: {_de}")
 
             except Exception as e:
                 print(f"  {tag} ERROR on {site['domain']}: {e}")
@@ -8618,36 +8245,15 @@ def run(topic_overrides=None, site_filter=None):
         print(f"{'='*62}")
         send_nexus_digest(nexus_site, nexus_digest_articles, active_sites, brevo_key)
 
-    # Persist the network-wide image ledger so tomorrow's run (and the local
-    # pregenerate pass) know every photo this run consumed.
-    if len(used_image_ids) > _ledger_at_start:
-        _push_used_image_ids(sorted(used_image_ids), github_token,
-                             note=f" +{len(used_image_ids) - _ledger_at_start}")
-
-    published = _PUBLISHED["count"]
-    print(f"\n✓ All sites updated. Articles published: {published}")
-    if published == 0:
-        print("\n" + "=" * 62)
-        print("PUBLISH FAILURE: zero articles were published in this run.")
-        print("Housekeeping (sitemaps, indexes) still ran, so the sites look alive")
-        print("while no new content shipped. Usual causes:")
-        print("  - ANTHROPIC_API_KEY invalid/expired and the draft queues are empty")
-        print("  - every site's queue is empty (run: bot.py --pregenerate N --llm max)")
-        print("=" * 62)
-        raise SystemExit(1)
+    print("\n✓ All sites updated.")
 
 
-def pregenerate(count, github_token=None, only=None, log=print, target=None):
-    """Write ready-to-publish article drafts PER SITE into the queue
+def pregenerate(count, github_token=None, only=None, log=print):
+    """Write `count` ready-to-publish article drafts PER SITE into the queue
     (drafts/<site_id>.json in the cron repo), then push. Run locally with the Max
     engine for $0 article generation:
-        python3 bot.py --pregenerate 4  --llm max --gh-token <tok>   # add 4 per site
-        python3 bot.py --queue-target 5 --llm max --gh-token <tok>   # top up TO 5 per site
+        python3 bot.py --pregenerate 4 --llm max --gh-token <tok>
     The daily cron then publishes from the queue with no API calls.
-
-    target: when set, each site is topped up to `target` drafts instead of having
-    `count` added. That is what the nightly local job uses, so a few days with the
-    Mac switched off are caught up automatically instead of draining the queue.
     """
     github_token = github_token or os.environ.get("GITHUB_TOKEN", "")
     if not github_token:
@@ -8668,17 +8274,6 @@ def pregenerate(count, github_token=None, only=None, log=print, target=None):
         log("[pregenerate] WARNING: engine is not 'max' - this will BILL the API. Re-run with --llm max for free generation.")
     client  = anthropic.Anthropic(api_key=anthropic_key or "unused")
     web_cfg = settings.get("web_search", {})
-    # Images are picked and vision-checked HERE, on Max, so the draft ships with a
-    # vetted hero + body set and the cron never has to touch the vision model.
-    img_keys = {"pexels":    os.environ.get("PEXELS_API_KEY", ""),
-                "unsplash":  os.environ.get("UNSPLASH_API_KEY", ""),
-                "replicate": os.environ.get("REPLICATE_API_KEY", "")}
-    used_image_ids = _load_used_image_ids(github_token)
-    _ledger_at_start = len(used_image_ids)
-    log(f"[pregenerate] used-photo ledger: {_ledger_at_start} ids")
-    if not img_keys["pexels"]:
-        log("[pregenerate] WARNING: PEXELS_API_KEY not set locally - drafts will carry no images "
-            "and the cron will fall back to fetching them itself.")
     total = 0
     for site in active_sites:
         sid = site["id"]
@@ -8689,18 +8284,9 @@ def pregenerate(count, github_token=None, only=None, log=print, target=None):
         queue = _load_drafts(sid, github_token)
         used = {(a.get("title") or "").strip().lower() for a in articles}
         used |= {(d.get("topic") or "").strip().lower() for d in queue}
-        # This site's own history and anything already reserved by a queued draft.
-        used_image_ids.update(_pexels_photo_id(a["image"]) for a in articles if a.get("image"))
-        for a in articles:
-            used_image_ids.update(str(x) for x in (a.get("image_ids") or []) if x)
-        for d in queue:
-            used_image_ids.update(str(x) for x in ((d.get("images") or {}).get("ids") or []) if x)
         author_name = get_author_name(site, settings)
-        want = max(0, int(target) - len(queue)) if target is not None else count
-        if want <= 0:
-            log(f"  [{sid}] daily queue already at {len(queue)}/{target} - nothing to do")
         made, attempts = 0, 0
-        while made < want and attempts < want * 4 + 4:
+        while made < count and attempts < count * 4 + 4:
             attempts += 1
             topic = get_today_topic(site, len(articles) + len(queue) + made + attempts)
             tkey = (topic or "").strip().lower()
@@ -8720,71 +8306,15 @@ def pregenerate(count, github_token=None, only=None, log=print, target=None):
                 log(f"  [{sid}] generation failed for '{topic[:50]}': {e}"); continue
             if not article or not article.get("title"):
                 continue
-            images = {}
-            if img_keys["pexels"]:
-                try:
-                    images = resolve_article_images(article, site, settings, img_keys,
-                                                    exclude_ids=used_image_ids, client=client,
-                                                    tag=f"[{sid}]", log=log)
-                except Exception as e:
-                    log(f"  [{sid}] image resolve failed for '{topic[:40]}': {e}")
-                    images = {}
-            queue.append({"topic": topic, "article": article, "images": images,
+            queue.append({"topic": topic, "article": article,
                           "generated_iso": datetime.now().strftime("%Y-%m-%d %H:%M")})
             made += 1; total += 1
-            log(f"  [{sid}] drafted {made}/{want} "
-                f"({1 + len(images.get('body_images', [])) if images.get('image') else 0} images): "
-                f"{article.get('title','')[:56]}")
+            log(f"  [{sid}] drafted {made}/{count}: {article.get('title','')[:60]}")
         if made:
             ok = _push_drafts(sid, queue, github_token)
             log(f"  [{sid}] queue pushed -> {len(queue)} total (ok={ok})")
         else:
             log(f"  [{sid}] no new drafts")
-
-        # Weekly retrospective queue. Without it the cron would still have to
-        # generate historical posts live, which is exactly the API call we are
-        # removing. Sized off the site's own historical_per_week cadence.
-        if not (site.get("historical_mode", True) and int(site.get("historical_per_week", 0) or 0) > 0):
-            continue
-        hq = _load_drafts(sid, github_token, kind="historical")
-        for d in hq:
-            used_image_ids.update(str(x) for x in ((d.get("images") or {}).get("ids") or []) if x)
-        per_week   = int(site.get("historical_per_week", 1) or 1)
-        hist_want  = (max(1, round((int(target) * per_week) / 7.0)) - len(hq)) if target is not None else count
-        if hist_want <= 0:
-            log(f"  [{sid}] historical queue already at {len(hq)} - nothing to do")
-            continue
-        hmade = 0
-        for _ in range(hist_want):
-            try:
-                hist_year, htopic = historical_topic_year(site)
-                harticle = generate_article(htopic, site, active_sites, client, global_prompt,
-                                            get_author_name(site, settings),
-                                            global_negative_prompt=global_negative_prompt)
-            except Exception as e:
-                log(f"  [{sid}] historical generation failed: {e}"); continue
-            if not harticle or not harticle.get("title"):
-                continue
-            himages = {}
-            if img_keys["pexels"]:
-                try:
-                    himages = resolve_article_images(harticle, site, settings, img_keys,
-                                                     exclude_ids=used_image_ids, client=client,
-                                                     tag=f"[{sid}]", log=log)
-                except Exception as e:
-                    log(f"  [{sid}] historical image resolve failed: {e}")
-            hq.append({"topic": htopic, "article": harticle, "images": himages,
-                       "hist_year": hist_year, "kind": "historical",
-                       "generated_iso": datetime.now().strftime("%Y-%m-%d %H:%M")})
-            hmade += 1; total += 1
-            log(f"  [{sid}] drafted historical {hmade}/{hist_want} ({hist_year}): "
-                f"{harticle.get('title','')[:50]}")
-        if hmade:
-            ok = _push_drafts(sid, hq, github_token, kind="historical")
-            log(f"  [{sid}] historical queue pushed -> {len(hq)} total (ok={ok})")
-    if len(used_image_ids) > _ledger_at_start:
-        _push_used_image_ids(sorted(used_image_ids), github_token,
-                             note=f" +{len(used_image_ids) - _ledger_at_start} from pregenerate")
     log(f"[pregenerate] done: {total} new draft(s) across {len(active_sites)} sites")
 
 
@@ -8801,21 +8331,17 @@ if __name__ == "__main__":
                              "'api' = Anthropic API (billed). Blank = use settings.llm_engine / LLM_ENGINE env.")
     parser.add_argument("--pregenerate", type=int, default=0,
                         help="Write N article drafts PER SITE into the queue (use with --llm max), push to the cron repo, then exit.")
-    parser.add_argument("--queue-target", type=int, default=0, dest="queue_target",
-                        help="Top each site's draft queue UP TO N (use with --llm max). Self-healing: "
-                             "makes only what is missing, so days with the Mac off are caught up.")
     args, _ = parser.parse_known_args()
 
     if args.llm:
         set_llm_engine(args.llm)
 
-    if args.pregenerate > 0 or args.queue_target > 0:
+    if args.pregenerate > 0:
         token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
         if not token:
             raise SystemExit("--gh-token or GITHUB_TOKEN required")
         only_list = [x.strip() for x in (args.only or "").split(",") if x.strip()] or None
-        pregenerate(args.pregenerate or args.queue_target, github_token=token, only=only_list,
-                    target=args.queue_target or None)
+        pregenerate(args.pregenerate, github_token=token, only=only_list)
     elif args.rebuild_homepages:
         token = args.gh_token or os.environ.get("GITHUB_TOKEN", "")
         if not token:
