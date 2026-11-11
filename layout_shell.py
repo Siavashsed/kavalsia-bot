@@ -391,7 +391,12 @@ def _collapse_nested_articles(html):
     return "".join(parts)
 
 
-_NESTED_P_OPEN  = re.compile(r"<p([^>]*)>\s*<p([^>]*)>", flags=re.IGNORECASE)
+# The `p` must be followed by whitespace or the closing bracket, never by
+# another name character. Without that guard this matched two adjacent
+# <path> elements (also <picture>, <param>, <pre>, <progress>) and collapsed
+# them into one, silently DELETING the second. That destroyed authored SVG
+# icons on every site that had a multi-path mark.
+_NESTED_P_OPEN  = re.compile(r"<p(\s[^>]*)?>\s*<p(\s[^>]*)?>", flags=re.IGNORECASE)
 _NESTED_P_CLOSE = re.compile(r"</p>\s*</p>", flags=re.IGNORECASE)
 
 
