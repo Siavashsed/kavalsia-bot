@@ -257,22 +257,22 @@ SITES = [
   },
   {
     "repo":"Siavashsed/sightreadingacademy","id":"sightreadingacademy","tpl":"leaf",
-    "name":"Sight Reading Academy","tagline":"Build Real Musical Fluency",
+    "name":"Sight Reading Academy","tagline":"Drums, Piano and Violin, Taught by Working Musicians",
     "category":"Music Education",
-    "author":"Professor Laura Kim","author_title":"Juilliard-Trained Pianist & Music Educator",
-    "bio1":"Twenty years of teaching piano at the conservatory level, plus a concert performance career that required reading hundreds of new scores under pressure, gave me a very specific perspective on sight-reading.",
-    "bio2":"Most students practice sight-reading wrong - they reinforce bad habits instead of building fluency. Sight Reading Academy is my attempt to fix that with structured, evidence-informed methodology.",
-    "hero_sub":"Systematic sight-reading instruction from a Juilliard-trained concert pianist. Build real fluency, not just familiarity.",
-    "nl_head":"The Music Letter","nl_sub":"Monthly practice insights and sight-reading methodology for serious students.",
-    "footer_desc":"Evidence-based sight-reading instruction for piano and keyboard students.",
-    "bg":"#08080b","bg2":"#111116","surface":"#1a1a22",
-    "primary":"#f5b14d","primary2":"#e09a31","text":"#eef0f3","muted":"#9aa0a8","brd":"#232328",
-    "font_head":"'Cormorant Garamond',Georgia,serif","font_body":"'Inter',system-ui,sans-serif","font_mono":"monospace",
-    "leaf_stats":[("20","Yrs Teaching"),("Juilliard","Trained"),("Concert","Performer")],
-    "leaf_pillars":["Rhythm Training","Key Signatures","Score Reading","Practice Systems","Music Theory"],
-    "leaf_vp":[("Evidence-Based Methodology","Sight-reading fluency is built through specific practice structures - not just repetition. Learn what the research actually says."),("Conservatory-Level Technique","Methods developed through 20 years of teaching at the conservatory level and refined through performance under real pressure."),("Progressive Structured Curriculum","From basic pattern recognition to advanced score reading - a complete system that scales with your level."),("Pattern Recognition Training","Fluency comes from building a library of musical patterns. Learn to see familiar shapes, not decode note by note."),("Performance Pressure Skills","Techniques for maintaining fluency under audition and performance conditions - not just slow practice rooms."),("Independent Practice Design","How to structure your own practice sessions for maximum fluency gain per hour spent.")],
-    "leaf_journey":[("Age 5","Started piano lessons. By twelve, decided to pursue it seriously."),("Conservatory","Trained at conservatory level, then graduate study at Juilliard."),("15 Yrs Performing","Concert performance career across three continents requiring constant score reading."),("Transitioned to Teaching","Began conservatory teaching. Identified consistent patterns in how students practiced sight-reading wrong."),("Launched the Academy","Built a structured, research-backed methodology. Sight Reading Academy is that system, available to everyone.")],
-    "leaf_approach":[("Read at performance speed","Fluency is built at tempo, not slow practice. Slow reading reinforces hesitation - not skill."),("Use unfamiliar material","Familiarity masks weakness. Use new material constantly so you are reading, not remembering."),("Build pattern recognition","See chord shapes, interval patterns, and rhythmic figures as units - not individual notes."),("Practice the difficult moments","Identify and drill the specific transitions that trip you up, not the sections you already know."),("Track progress systematically","Measure fluency with unfamiliar repertoire at regular intervals. Feeling better is not the same as being better.")],
+    "author":"The Academy Faculty","author_title":"Working Musicians Who Teach",
+    "bio1":"Every instructor here is a performing musician. They teach the same week they play, which is why the lessons stay practical: what you are asked to do on Tuesday is what the room will ask of you on stage.",
+    "bio2":"Most students learn by copying, and it works until the page in front of them has something they have never heard. We teach reading and rhythm first, on drums, piano and violin, so the rest stops being guesswork.",
+    "hero_sub":"Drums, piano and violin taught by working musicians. First session free, in person or online.",
+    "nl_head":"The Practice Room","nl_sub":"Reading, rhythm and ear training notes from the faculty, sent monthly.",
+    "footer_desc":"Drums, piano and violin lessons built on reading, rhythm and daily practice.",
+    "bg":"#0b0a09","bg2":"#131110","surface":"#1b1817",
+    "primary":"#d8a75b","primary2":"#a87f3d","text":"#f2eee6","muted":"#8b8378","brd":"#2a2521",
+    "font_head":"'Bodoni Moda',Didot,Georgia,serif","font_body":"'Karla',system-ui,sans-serif","font_mono":"monospace",
+    "leaf_stats":[("3","Disciplines"),("1:1","Or Small Group"),("Online","And In Person")],
+    "leaf_pillars":["Rhythm","Score Reading","Ear Training","Technique","Ensemble Playing"],
+    "leaf_vp":[("Rhythm Before Pitch","Counting and subdivision come first, because rhythm is the thing that is hardest to repair once it has set badly."),("Reading by Shape","Intervals and contours instead of naming every note, so a phrase is read the way a reader reads a word."),("Three Disciplines, One Method","Drums, piano and violin run on the same sequence. The instrument changes, the way you learn to read does not."),("Technique on Demand","Scales, stick control and bowing are introduced where the repertoire needs them, not as an exercise for its own sake."),("Playing With People","Ensemble work and playing to a click, because reading alone in a practice room is only half the skill."),("No Term to Join","Single lessons are available all year. Start when you are ready rather than waiting for a cohort.")],
+    "leaf_journey":[("The Problem","Students arriving able to play by ear and unable to read a chart they had not heard before."),("A Fixed Sequence","Built a four term order that puts rhythm first and reading second, and stopped teaching around it."),("Three Instruments","Extended the same sequence to drums, piano and violin, with instructors who perform on each."),("Online Lessons","Added video lessons with a proper audio setup on our end, so students outside the city could take the same course."),("Today","In person and online, one to one and small group, from complete beginners upward.")],
+    "leaf_approach":[("Count out loud","If you cannot say it, you cannot play it. Counting aloud is the fastest correction available and the one most students skip."),("Read something new every week","Familiar material hides weakness. Fluency is built on pages you have not seen before."),("See shapes, not letters","Chord shapes, intervals and rhythmic figures are read as units. Naming every note is what slows a reader down."),("Drill the transition, not the piece","The bar that breaks down is the bar to practice. Playing the whole piece again mostly rehearses the parts that already work."),("Play with other people early","Time, feel and confidence come from playing with someone else, not from more hours alone.")],
   },
   {
     "repo":"Siavashsed/dalmend-home","id":"dalmend-home","tpl":"leaf",
@@ -1078,10 +1078,10 @@ def terminal_index(s):
 <title>{s['name']}: {s['tagline']}</title>
 <meta name="description" content="{s['hero_sub']}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
-:root{{{cv}--fh:'Space Grotesk',system-ui,sans-serif;--fm:'Space Mono',monospace;}}
+:root{{{cv}--fh:'Space Grotesk',system-ui,sans-serif;--fm:Inter,system-ui,sans-serif;}}
 html{{scroll-behavior:smooth}}
 body{{background:var(--bg);color:var(--txt);font-family:'Space Grotesk',system-ui,sans-serif;font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden}}
 a{{color:inherit;text-decoration:none}}
@@ -1749,10 +1749,10 @@ def terminal_about(s):
 <title>About {s['author']} · {s['name']}</title>
 <meta name="description" content="{s['footer_desc']}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{{box-sizing:border-box;margin:0;padding:0}}
-:root{{{cv}--fh:'Space Grotesk',system-ui,sans-serif;--fm:'Space Mono',monospace;}}
+:root{{{cv}--fh:'Space Grotesk',system-ui,sans-serif;--fm:Inter,system-ui,sans-serif;}}
 body{{background:#050908;color:#c0ddc8;font-family:'Space Grotesk',system-ui,sans-serif;font-size:15px;line-height:1.7;min-height:100vh;overflow-x:hidden}}
 a{{color:var(--pri);text-decoration:none}}
 
@@ -2128,9 +2128,6 @@ a{{color:var(--pri);text-decoration:none}}
 .stk-cta:hover{{transform:translateY(-2px);opacity:.9}}
 .stk-cta2{{border:1.5px solid rgba(255,255,255,.5);color:#fff;border-radius:4px;padding:13px 28px;font-size:15px;font-weight:600;transition:all .2s}}
 .stk-cta2:hover{{border-color:#fff;background:rgba(255,255,255,.1)}}
-.stk-scroll-hint{{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;color:rgba(255,255,255,.45);font-size:11px;letter-spacing:1px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:7px}}
-.stk-scroll-arr{{animation:sbarr 1.8s ease-in-out infinite}}
-@keyframes sbarr{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(7px)}}}}
 .stk-stats{{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border-bottom:1px solid var(--brd)}}
 .stk-stat{{padding:22px 16px;text-align:center;border-right:1px solid var(--brd)}}
 .stk-stat:last-child{{border-right:none}}
@@ -2218,10 +2215,6 @@ a{{color:var(--pri);text-decoration:none}}
       <a href="#latest" class="stk-cta">Read Articles →</a>
       <a href="about.html" class="stk-cta2">About the Author</a>
     </div>
-  </div>
-  <div class="stk-scroll-hint">
-    <span>Scroll</span>
-    <div class="stk-scroll-arr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
   </div>
 </div>
 
@@ -6882,54 +6875,13 @@ def _meta_resolve_for_site(site_obj_inline):
     return out
 
 def _meta_pixel_snippet(site_obj_inline):
-    r = _meta_resolve_for_site(site_obj_inline)
-    if not r["enabled"] or not r["pixel_id"]:
-        return ""
-    site_name  = r["_site_name"]
-    site_id    = r["_site_id"]
-    pixel_id   = r["pixel_id"]
-    visit_evt  = f"{site_name} Visit"
-    signup_evt = f"{site_name} NewsletterSignup"
-    fire_pv    = "true" if r["fire_pageview"] else "false"
-    mirror_capi = "true" if (r["capi_token"] and r["capi_dataset_id"]) else "false"
-    return (
-        "<!-- Meta Pixel (Kavalsia network) -->\n"
-        "<script>\n"
-        "(function(){if(window.__KAVALSIA_META_LOADED)return;window.__KAVALSIA_META_LOADED=true;"
-        "!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?"
-        "n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;"
-        "n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;"
-        "t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,"
-        "document,'script','https://connect.facebook.net/en_US/fbevents.js');"
-        f"fbq('init', {json.dumps(pixel_id)});"
-        f"var FIRE_PV={fire_pv},SITE_ID={json.dumps(site_id)},VISIT_EVT={json.dumps(visit_evt)},"
-        f"SIGNUP_EVT={json.dumps(signup_evt)},MIRROR_CAPI={mirror_capi};"
-        "if(FIRE_PV){try{fbq('track','PageView');}catch(e){}}"
-        "try{fbq('trackCustom',VISIT_EVT,{site_id:SITE_ID,page_path:location.pathname,"
-        "page_title:document.title,referrer:document.referrer||''});}catch(e){}"
-        "function sha256Hex(str){if(!window.crypto||!crypto.subtle)return Promise.resolve('');"
-        "var buf=new TextEncoder().encode(String(str||'').trim().toLowerCase());"
-        "return crypto.subtle.digest('SHA-256',buf).then(function(h){"
-        "return Array.prototype.map.call(new Uint8Array(h),function(b){"
-        "return ('00'+b.toString(16)).slice(-2);}).join('');});}"
-        "function mirrorCAPI(evtName,payload){if(!MIRROR_CAPI)return;try{"
-        "var hub=(window.KAVALSIA_HUB_URL||'').replace(/\\/$/,'');if(!hub)return;"
-        "fetch(hub+'/api/meta-capi',{method:'POST',headers:{'Content-Type':'application/json'},"
-        "body:JSON.stringify({site_id:SITE_ID,event_name:evtName,payload:payload})})"
-        ".catch(function(){});}catch(e){}}"
-        "mirrorCAPI(VISIT_EVT,{page_path:location.pathname});"
-        "document.addEventListener('submit',function(ev){try{var f=ev.target;"
-        "if(!f||!f.tagName||f.tagName.toLowerCase()!=='form')return;"
-        "var emailEl=f.querySelector('input[type=email], input[name*=email i]');"
-        "if(!emailEl||!emailEl.value)return;var email=emailEl.value;"
-        "sha256Hex(email).then(function(h){try{fbq('trackCustom',SIGNUP_EVT,{email_hashed:h});}catch(e){}"
-        "mirrorCAPI(SIGNUP_EVT,{email_hashed:h});});}catch(e){}},true);"
-        "})();\n"
-        "</script>\n"
-        f"<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" "
-        f"src=\"https://www.facebook.com/tr?id={pixel_id}&ev=PageView&noscript=1\"/></noscript>\n"
-        "<!-- End Meta Pixel -->\n"
-    )
+    """Single source of truth is bot.build_meta_pixel_snippet; resolve the
+    network-config site by id so per-site meta overrides and names apply."""
+    from bot import build_meta_pixel_snippet
+    cache = _meta_load_network_cfg()
+    nc_site = cache["sites_by_id"].get((site_obj_inline or {}).get("id"))
+    return build_meta_pixel_snippet(nc_site or site_obj_inline)
+
 
 def _meta_inject(html, site_obj_inline):
     """Prepend the Meta Pixel snippet into <head> of the given html. No-op
@@ -7134,7 +7086,7 @@ if __name__ == "__main__":
 
     if args.push:
         # Accept the token via env (GH_PUSH_TOKEN) so it is never a literal CLI
-        # arg in process listings / logs:  GH_PUSH_TOKEN=ghp_xxx push-sites.py --push env
+        # arg in process listings / logs:  GH_PUSH_TOKEN=<token> push-sites.py --push env
         token = args.push
         if token in ("env", "ENV", ""):
             import os as _os
