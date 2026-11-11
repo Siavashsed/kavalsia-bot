@@ -167,19 +167,6 @@ button{font-family:inherit}
   border:1px solid rgba(238,240,243,.1);background:rgba(255,255,255,.02);
   padding:7px 14px;border-radius:99px;backdrop-filter:blur(4px);
 }
-.c1-scroll-hint{
-  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
-  font-family:var(--cond2);font-size:11px;font-weight:700;
-  letter-spacing:.28em;text-transform:uppercase;color:var(--muted);
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  opacity:.75;
-}
-.c1-scroll-hint::after{
-  content:"";width:1px;height:46px;
-  background:linear-gradient(180deg,var(--muted),transparent);
-  animation:scrollLine 2.4s var(--ease) infinite;transform-origin:top;
-}
-@keyframes scrollLine{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
 
 /* ========================================================================
    CHAPTER 2 - DATA INTAKE
@@ -512,7 +499,6 @@ footer{
   .c6-nl{padding:48px 22px}
   .chapter{padding:64px 0}
   .chapter-1{padding-top:32px;min-height:96vh}
-  .c1-scroll-hint{display:none}
 }
 
 /* ========================================================================
@@ -624,7 +610,6 @@ body[data-page-depth="1"] article .intro a{color:#fa4a1e !important;text-decorat
         </div>
       </div>
     </div>
-    <div class="c1-scroll-hint" aria-hidden="true">Scroll</div>
   </section>
 
   <!-- ============== CHAPTER 2 - DATA INTAKE ============== -->
