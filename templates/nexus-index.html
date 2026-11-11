@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nexus - The Knowledge Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* Article shell for the Nexus hub. Chrome mirrors https://siavashsed.github.io/nexus/
+   (same tokens, nav and footer) minus the hub-only JS (search, niche filters). */
+:root{
+  --bg:#010a18; --bg2:#041020; --card:#080f20; --card2:#0a1525;
+  --blue:#4f8ef7; --blue2:#7aa8ff; --indigo:#818cf8; --green:#2ed9a0;
+  --text:#e2e8f0; --text2:#94a3b8; --text3:#6b7f9c;
+  --border:rgba(79,142,247,.09); --border2:rgba(79,142,247,.18);
+  --font:'Inter',system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.nx-nav{position:sticky;top:0;z-index:200;height:58px;background:rgba(1,10,24,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center}
+.nx-nav-inner{max-width:1360px;margin:0 auto;padding:0 28px;width:100%;display:flex;align-items:center;gap:20px}
+.nx-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nx-mark{width:30px;height:30px;background:linear-gradient(135deg,#4f8ef7,#818cf8);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff}
+.nx-name{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.3px;line-height:1.1}
+.nx-sub{font-size:9px;color:var(--text3);letter-spacing:.8px;text-transform:uppercase}
+.nx-links{margin-left:auto;display:flex;gap:4px}
+.nx-links a{font-size:13px;font-weight:500;color:var(--text2);padding:5px 12px;border-radius:20px;text-decoration:none;transition:background .2s,color .2s}
+.nx-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nx-foot{background:var(--bg2);border-top:1px solid var(--border);padding:44px 28px 28px;margin-top:64px}
+.nx-foot-inner{max-width:1360px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--text3)}
+.nx-foot-inner a{color:var(--text2);text-decoration:none;margin-left:18px}
+.nx-foot-inner a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+<!--SHELL:ACCENT:#4f8ef7-->
+<!--SHELL:HEADER-->
+<nav class="nx-nav">
+  <div class="nx-nav-inner">
+    <a class="nx-logo" href="https://siavashsed.github.io/nexus/" aria-label="Nexus home">
+      <span class="nx-mark">N</span>
+      <span><span class="nx-name">Nexus</span><br><span class="nx-sub">Knowledge Network</span></span>
+    </a>
+    <div class="nx-links">
+      <a href="https://siavashsed.github.io/nexus/">Feed</a>
+      <a href="https://siavashsed.github.io/nexus/about.html">About</a>
+    </div>
+  </div>
+</nav>
+<!--/SHELL:HEADER-->
+<main></main>
+<!--SHELL:FOOTER-->
+<footer class="nx-foot">
+  <div class="nx-foot-inner">
+    <span>&#169; 2026 Nexus Knowledge Network. Content belongs to respective publications.</span>
+    <span><a href="https://siavashsed.github.io/nexus/">Feed</a><a href="https://siavashsed.github.io/nexus/about.html">About Nexus</a></span>
+  </div>
+</footer>
+<!--/SHELL:FOOTER-->
+</body>
+</html>
