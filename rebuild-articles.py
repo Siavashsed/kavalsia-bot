@@ -28,7 +28,8 @@ from bot import (_seo_meta, _seo_title_tag, _comments_section_js,
                  _comments_section_inline, THEMES, SITE_THEMES,
                  assign_category, _count_words, _site_name, _resolve_author,
                  _article_section_css, article_press, ARTICLE_BUILDERS,
-                 normalize_theme, BESPOKE_ARTICLE_BUILDERS)
+                 normalize_theme, BESPOKE_ARTICLE_BUILDERS,
+                 build_meta_pixel_snippet)
 
 # Distinct-design rollout is now DATA-DRIVEN (2026-06-01): a site keeps its
 # bespoke per-layout article design through a rebuild whenever its configured
@@ -683,7 +684,7 @@ def patch_site(stem, site, token, log):
             tag_title = _seo_title_tag(title, _site_name(site))
             rebuilt = layout_shell.wrap_page(
                 stem, title=tag_title, description=desc, body_html=body,
-                extra_css=css, head_meta=seo, depth=1,
+                extra_css=css, head_meta=seo + "\n" + build_meta_pixel_snippet(site), depth=1,
             )
         except Exception as e:
             log(f"  [{i+1}] x {slug}  -  wrap error: {e}")
