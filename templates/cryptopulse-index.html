@@ -5,14 +5,14 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>CryptoPulse  -  Algorithmic Trading Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 :root{
   --pri:#00e676;--pri2:#00b85a;--bg:#050908;--bg2:#081009;--bg3:#0c1710;
   --txt:#d8f0e0;--mut:#5a8468;--brd:#122216;
-  --fh:'Space Grotesk',system-ui,sans-serif;--fm:'Space Mono',monospace;
+  --fh:'Space Grotesk',system-ui,sans-serif;--fm:Inter,system-ui,sans-serif;
 }
 body{background:var(--bg);color:var(--txt);font-family:var(--fh);font-size:15px;line-height:1.65;min-height:100vh;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
@@ -547,7 +547,7 @@ img{display:block;max-width:100%}
         <svg width="120" height="70" viewBox="0 0 120 70">
           <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="#0d2b18" stroke-width="8" stroke-linecap="round"/>
           <path id="fg-arc" d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="47" style="transition:stroke-dashoffset 1.5s ease,stroke 1.5s ease"/>
-          <text x="60" y="58" text-anchor="middle" font-family="Space Mono" font-size="18" font-weight="700" fill="#e8f5ec" id="fg-num">72</text>
+          <text x="60" y="58" text-anchor="middle" font-family=Inter font-size="18" font-weight="700" fill="#e8f5ec" id="fg-num">72</text>
         </svg>
         <div class="cmd-fg-val" style="margin-top:-4px;font-size:13px" id="fg-word">Greed</div>
         <div style="display:flex;gap:6px;margin-top:8px;font-family:var(--fm);font-size:9px;color:#2a5a38">
@@ -1229,11 +1229,11 @@ if(ocEl)ocIo.observe(ocEl);
     ctx.fillRect(0,hdr,W,1);
     // Header text
     ctx.fillStyle='#00e676';
-    ctx.font='bold 10px Space Mono,monospace';
+    ctx.font='bold 10px Inter,system-ui,sans-serif';
     ctx.textAlign='left';
     ctx.fillText('BTC / USD',pL+2,hdr-8);
     ctx.fillStyle='#2a5a38';
-    ctx.font='9px Space Mono,monospace';
+    ctx.font='9px Inter,system-ui,sans-serif';
     ctx.fillText('1m · LIVE',pL+76,hdr-8);
     // Blink dot
     var alpha=0.5+0.5*Math.sin(Date.now()/400);
@@ -1245,11 +1245,11 @@ if(ocEl)ocIo.observe(ocEl);
     var priceStr='$'+(Math.round(lastP)).toLocaleString();
     var chgStr=(lastChg>=0?'+':'')+lastChg.toFixed(2)+'%';
     ctx.fillStyle='#c0ddc8';
-    ctx.font='bold 11px Space Mono,monospace';
+    ctx.font='bold 11px Inter,system-ui,sans-serif';
     ctx.textAlign='right';
     ctx.fillText(priceStr,W-pR-4,hdr-8);
     ctx.fillStyle=lastChg>=0?'#00e676':'#ff5252';
-    ctx.font='9px Space Mono,monospace';
+    ctx.font='9px Inter,system-ui,sans-serif';
     ctx.fillText(chgStr,W-6,hdr-8);
 
     // Subtle radial glow
@@ -1269,7 +1269,7 @@ if(ocEl)ocIo.observe(ocEl);
       ctx.setLineDash([]);
       var lbl='$'+(Math.round((mn+(g/4)*range)/200)*200).toLocaleString();
       ctx.fillStyle='#1e4a2a';
-      ctx.font='8px Space Mono,monospace';
+      ctx.font='8px Inter,system-ui,sans-serif';
       ctx.textAlign='left';
       ctx.fillText(lbl,W-pR+5,gy+3);
     }
@@ -1329,7 +1329,7 @@ if(ocEl)ocIo.observe(ocEl);
     ctx.fillStyle='#00e676';
     ctx.beginPath();ctx.roundRect(W-pR+2,ly-9,pR-4,18,2);ctx.fill();
     ctx.fillStyle='#010a04';
-    ctx.font='bold 9px Space Mono,monospace';
+    ctx.font='bold 9px Inter,system-ui,sans-serif';
     ctx.textAlign='center';
     ctx.fillText('$'+(Math.round(lastP)).toLocaleString(),W-pR/2+1,ly+3);
 
@@ -1338,13 +1338,13 @@ if(ocEl)ocIo.observe(ocEl);
       var x2=pL+idx*slot+slot/2;
       var mins=data.length-1-idx;
       var lbl=mins===0?'now':'-'+mins+'m';
-      ctx.fillStyle='#1e3a26';ctx.font='8px Space Mono,monospace';ctx.textAlign='center';
+      ctx.fillStyle='#1e3a26';ctx.font='8px Inter,system-ui,sans-serif';ctx.textAlign='center';
       ctx.fillText(lbl,x2,H-8);
     });
 
     // MA legend (small, bottom-right of chart area)
     ctx.fillStyle='rgba(0,160,80,0.65)';ctx.fillRect(pL,pT+cH+vH+6,14,1.5);
-    ctx.fillStyle='#1e4a2a';ctx.font='7px Space Mono,monospace';ctx.textAlign='left';
+    ctx.fillStyle='#1e4a2a';ctx.font='7px Inter,system-ui,sans-serif';ctx.textAlign='left';
     ctx.fillText('MA20',pL+17,pT+cH+vH+9);
     ctx.fillStyle='rgba(15,55,28,0.95)';ctx.fillRect(pL+50,pT+cH+vH+6,14,1.5);
     ctx.fillText('MA50',pL+67,pT+cH+vH+9);
