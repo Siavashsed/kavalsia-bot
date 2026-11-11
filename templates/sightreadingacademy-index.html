@@ -4,320 +4,850 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="alternate icon" href="favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<title>Elyar Khosravi - Musician, Tutor, Composer</title>
-<meta name="description" content="Elyar Khosravi is a musician and educator. Daily practice tips, free resources, group and private classes, plus upcoming concerts and live events.">
+<title>Sight Reading Academy - Drums, Piano and Violin Lessons</title>
+<meta name="description" content="Sight Reading Academy teaches drums, piano and violin, in person and online. Rhythm first, reading second, repertoire after that. Working musicians, one student at a time.">
+<meta property="og:title" content="Sight Reading Academy - Drums, Piano and Violin Lessons">
+<meta property="og:description" content="Drums, piano and violin taught by working musicians. Rhythm first, reading second. In person and online, beginners welcome.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://assets.zyrosite.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital@0;1&family=Karla:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<!-- These two are owner decisions, not oversights, and the waivers have to
+     travel with the file: this template is published verbatim into a separate
+     GitHub Pages repo, so the project's .impeccable config never goes with it.
+     impeccable-disable bounce-easing -- Siavash asked for the button wobble: "more wobble nice style button"
+     impeccable-disable marquee -- Siavash asked for the ticker to auto-scroll -->
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#08080b;
-  --bg2:#111116;
-  --bg3:#1a1a22;
-  --panel:#13131a;
-  --gold:#f5b14d;
-  --gold2:#e09a31;
-  --gold-soft:#ffd693;
-  --emerald:#3fb59b;
-  --emerald-soft:#6fd5bb;
-  --burgundy:#a23a52;
-  --text:#f1efe9;
-  --text2:#c9c6bd;
-  --muted:#857f72;
-  --border:#26262f;
-  --border2:#3a3a48;
-  --serif:'Fraunces','Cormorant Garamond',serif;
-  --sans:'Inter',system-ui,sans-serif;
+  --ink:#0b0a09;
+  --ink2:#131110;
+  --ink3:#1b1817;
+  --brass:#d8a75b;
+  --brass-dim:#a87f3d;
+  --text:#f2eee6;
+  --text2:#bab2a6;
+  --muted:#8b8378;
+  --line:#2a2521;
+  --line2:#3a332c;
+  --serif:'Libre Caslon Display','Libre Caslon Text',Georgia,serif;
+  /* the italic of the same family, not a second typeface standing in for one */
+  --serif-it:'Libre Caslon Text',Georgia,serif;
+  --sans:'Karla','Work Sans',system-ui,-apple-system,sans-serif;
+  /* Reading copy gets a clean humanist sans. Karla stays on the interface. */
+  --prose:'Source Sans 3',system-ui,sans-serif;
+  --shadow:0 18px 44px -22px rgba(0,0,0,.9),0 2px 8px -4px rgba(0,0,0,.7);
+  --ease:cubic-bezier(.16,1,.3,1);
+  /* Film grain, laid over photographs at 40 percent. One tiling SVG turbulence
+     so nothing is fetched and it costs no request. */
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --track-label:.16em;
+  --z-nav:30;
+  --z-skip:60;
 }
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+/* The masthead is sticky, so anchor targets must clear it. */
+[id]{scroll-margin-top:96px}
+body{
+  background:var(--ink);color:var(--text);
+  font-family:var(--sans);font-size:17.5px;line-height:1.72;letter-spacing:.002em;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;caret-color:var(--brass);
+  font-feature-settings:"kern" 1,"liga" 1;text-rendering:optimizeLegibility;
+}
+/* Browser surfaces themed from the palette rather than left on defaults */
+::selection{background:var(--brass);color:var(--ink)}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:var(--line2);border:3px solid var(--ink);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--brass-dim)}
+html{scrollbar-color:var(--line2) var(--ink);scrollbar-width:thin}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
-.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px}
+/* Libre Caslon Display ships a single weight. Headings stay at 400 so
+   the browser never synthesises a fake bold; hierarchy comes from size. */
+/* Display tightens as it grows and small serif loosens. That relationship is
+   what separates set type from defaulted type. */
+h1,h2,h3{font-family:var(--serif);font-weight:400;text-wrap:balance;font-feature-settings:"kern" 1,"liga" 1}
+h1{line-height:0.95;letter-spacing:-.021em}
+h2{line-height:0.98;letter-spacing:-.016em}
+h3{line-height:1.10;letter-spacing:-.008em}
+p{text-wrap:pretty}
+.wrap{max-width:1240px;margin:0 auto;padding:0 30px}
+.num{font-variant-numeric:tabular-nums}
 
-/* reveal */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,.7,.3,1),transform .9s cubic-bezier(.16,.7,.3,1)}
-.reveal.in{opacity:1;transform:none}
+.skip{position:absolute;left:16px;top:-60px;z-index:var(--z-skip);background:var(--brass);color:var(--ink);
+  padding:10px 18px;font-weight:600;font-size:14px;
+  top:16px;transform:translateY(-260%);transition:transform .18s var(--ease)}
+.skip:focus{transform:translateY(0)}
 
-/* NAV */
-.site-nav{background:rgba(8,8,11,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200}
-.nav-in{max-width:1240px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:72px;gap:40px}
-.nav-logo{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:20px;font-weight:600;color:var(--text);letter-spacing:.01em}
-.nav-logo .mark{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--gold-soft),var(--gold) 60%,var(--gold2));display:flex;align-items:center;justify-content:center;font-size:18px;color:#1a1308;box-shadow:0 0 20px -4px rgba(245,177,77,.45)}
-.nav-logo em{color:var(--gold);font-style:italic;font-weight:600}
-.nav-links{display:flex;gap:2px;margin-left:auto}
-.nav-links a{font-family:var(--sans);font-size:12.5px;font-weight:500;letter-spacing:.02em;padding:9px 14px;color:var(--text2);border-radius:7px;transition:all .18s}
-.nav-links a:hover{color:var(--text);background:var(--bg3)}
-.nav-cta{margin-left:10px;background:var(--gold);color:#1a1308;font-family:var(--sans);font-size:12.5px;font-weight:600;padding:11px 20px;border-radius:7px;transition:all .18s;box-shadow:0 6px 22px -10px rgba(245,177,77,.6)}
-.nav-cta:hover{background:var(--gold-soft);transform:translateY(-1px);box-shadow:0 10px 28px -8px rgba(245,177,77,.7)}
+/* Word-level entrance. The mask clips, the span moves. No CSS ever sets
+   opacity 0 on content: GSAP authors the from-state at runtime, so a blocked
+   CDN or reduced motion leaves every word visible. */
+.ln{display:block;overflow:hidden}
+.wd{display:inline-block;will-change:transform}
 
-/* HERO - cinematic */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border);min-height:88vh;display:flex;align-items:center;
-  background:
-    radial-gradient(900px 540px at 80% 8%,rgba(245,177,77,.22),transparent 65%),
-    radial-gradient(800px 500px at 12% 92%,rgba(63,181,155,.12),transparent 60%),
-    var(--bg)}
-.hero-staff{position:absolute;inset:0;pointer-events:none}
-.hero-staff span{position:absolute;left:-2%;right:-2%;height:1px;background:linear-gradient(90deg,transparent,rgba(245,177,77,.18) 30%,rgba(245,177,77,.18) 70%,transparent);transform:skewY(-2deg)}
-.hero-glow{position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(245,177,77,.32),transparent 60%);top:-220px;right:-160px;pointer-events:none;animation:pulse 8s ease-in-out infinite}
-.hero-glow.b{background:radial-gradient(circle,rgba(63,181,155,.22),transparent 65%);top:auto;right:auto;left:-180px;bottom:-220px;animation-delay:-4s}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.12);opacity:1}}
-.hero-in{position:relative;max-width:1240px;margin:0 auto;padding:64px 32px 96px;display:grid;grid-template-columns:1.15fr .95fr;gap:80px;align-items:center;width:100%}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:32px;padding:7px 14px 7px 12px;border:1px solid rgba(245,177,77,.32);border-radius:999px;background:rgba(245,177,77,.06)}
-.hero-eyebrow .live{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(245,177,77,.22);animation:blink 1.6s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-.hero-h1{font-family:var(--serif);font-size:clamp(54px,8.4vw,128px);font-weight:600;line-height:.92;letter-spacing:-.022em;color:var(--text);margin-bottom:18px}
-.hero-h1 .row1{display:block}
-.hero-h1 .row2{display:block;font-style:italic;background:linear-gradient(105deg,var(--gold-soft),var(--gold) 40%,var(--emerald) 130%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:500}
-.hero-role{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--text2);margin-bottom:28px;display:flex;align-items:center;gap:14px}
-.hero-role::before,.hero-role::after{content:"";height:1px;background:var(--border2);flex:0 0 36px}
-.hero-desc{font-family:var(--serif);font-size:21px;font-weight:400;font-style:italic;color:var(--text2);max-width:540px;margin-bottom:40px;line-height:1.55}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px}
-.btn-gold{background:var(--gold);color:#1a1308;font-family:var(--sans);font-size:13.5px;font-weight:600;letter-spacing:.02em;padding:16px 30px;border-radius:8px;transition:all .22s;display:inline-flex;align-items:center;gap:10px;box-shadow:0 12px 30px -12px rgba(245,177,77,.55)}
-.btn-gold:hover{background:var(--gold-soft);transform:translateY(-2px);box-shadow:0 18px 40px -10px rgba(245,177,77,.7)}
-.btn-gold .arr{transition:transform .22s}
-.btn-gold:hover .arr{transform:translateX(4px)}
-.btn-outline{border:1px solid var(--border2);color:var(--text);font-family:var(--sans);font-size:13.5px;font-weight:500;padding:15px 28px;border-radius:8px;transition:all .22s;display:inline-flex;align-items:center;gap:10px}
-.btn-outline:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,177,77,.06)}
-.hero-meta{display:flex;gap:38px;flex-wrap:wrap}
-.hero-meta-item{display:flex;flex-direction:column;gap:4px}
-.hero-meta-num{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--text);line-height:1;letter-spacing:-.01em}
-.hero-meta-num em{color:var(--gold);font-style:normal}
-.hero-meta-label{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+/* -- Masthead ----------------------------------------------- */
+/* Header follows the ADATS pattern at Siavash's request: a thin fact strip,
+   then a nav that is transparent at rest and condenses into a floating glass
+   pill once you scroll. Structure and behaviour are ported; the palette and
+   type stay this project's own. */
+.topbar{position:relative;z-index:31;background:transparent}
+.topbar .inner{max-width:1240px;margin:0 auto;padding:9px 30px;display:flex;align-items:center;
+  justify-content:center;gap:22px;flex-wrap:nowrap;white-space:nowrap;
+  font-size:12.5px;letter-spacing:.012em;color:var(--muted)}
+.topbar b{color:var(--text2);font-weight:500}
+.topbar .sep{width:1px;height:11px;background:var(--line2);flex:none}
+.topbar a{color:var(--muted)}
+.topbar a:hover{color:var(--brass)}
+@media (max-width:900px){.topbar .sep,.topbar .hide-sm{display:none}}
+@media (max-width:620px){.topbar .inner{flex-direction:column;gap:3px;font-size:11.5px;padding:8px 20px}}
 
-/* hero portrait card */
-.hero-card{position:relative}
-.portrait{position:relative;aspect-ratio:4/5;border-radius:18px;overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 30%,rgba(245,177,77,.28),transparent 55%),
-    linear-gradient(150deg,#1c1c25,#0e0e14 80%);
-  border:1px solid var(--border2);
-  box-shadow:0 40px 90px -30px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.04)}
-.portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(8,8,11,.85));pointer-events:none}
-.portrait .silhouette{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:280px;color:var(--gold);opacity:.18;line-height:.8}
-.portrait .name-tag{position:absolute;left:24px;right:24px;bottom:24px;z-index:2}
-.portrait .name-tag .role{font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-.portrait .name-tag .who{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--text);line-height:1.1;letter-spacing:-.005em}
-.portrait .name-tag .where{font-size:13px;color:var(--text2);margin-top:6px}
-.portrait .badge{position:absolute;top:22px;right:22px;background:rgba(8,8,11,.62);backdrop-filter:blur(12px);border:1px solid rgba(245,177,77,.3);border-radius:999px;padding:7px 13px;font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);z-index:2;display:flex;align-items:center;gap:8px}
-.portrait .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(245,177,77,.22);animation:blink 1.6s ease-in-out infinite}
-.portrait .clef-bg{position:absolute;font-family:var(--serif);font-size:120px;color:var(--gold);opacity:.1;top:16%;right:8%;line-height:1}
-
-/* PULSE STRIP */
-.pulse{background:linear-gradient(180deg,var(--bg2),var(--bg3));border-bottom:1px solid var(--border);position:relative;overflow:hidden}
-.pulse::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4}
-.pulse-in{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
-.pulse-cell{background:var(--bg2);padding:32px 32px;display:flex;gap:20px;align-items:center;transition:background .22s;position:relative}
-.pulse-cell:hover{background:var(--bg3)}
-.pulse-icon{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:30px;flex-shrink:0;line-height:1}
-.pulse-cell.tip .pulse-icon{background:rgba(245,177,77,.12);color:var(--gold);border:1px solid rgba(245,177,77,.28)}
-.pulse-cell.class .pulse-icon{background:rgba(63,181,155,.12);color:var(--emerald);border:1px solid rgba(63,181,155,.28)}
-.pulse-cell.show .pulse-icon{background:rgba(162,58,82,.18);color:#e07c92;border:1px solid rgba(162,58,82,.4)}
-.pulse-cell .pulse-label{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.pulse-cell .pulse-title{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:4px}
-.pulse-cell .pulse-meta{font-size:13px;color:var(--text2)}
-
-/* SECTION SHELL */
-.section{padding:120px 0}
-.sec-head{max-width:720px;margin-bottom:64px}
-.sec-head.center{margin:0 auto 72px;text-align:center}
-.sec-label{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
-.sec-label::before{content:"";width:28px;height:1px;background:var(--gold)}
-.sec-head.center .sec-label::after{content:"";width:28px;height:1px;background:var(--gold)}
-.sec-title{font-family:var(--serif);font-size:clamp(36px,5vw,64px);font-weight:600;line-height:1.04;letter-spacing:-.012em;color:var(--text)}
-.sec-title em{color:var(--gold);font-style:italic;font-weight:500}
-.sec-title .grad{background:linear-gradient(105deg,var(--gold-soft),var(--gold) 50%,var(--emerald));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;font-weight:500}
-.sec-sub{font-size:17px;color:var(--text2);margin-top:18px;line-height:1.75;max-width:600px}
-.sec-head.center .sec-sub{margin-left:auto;margin-right:auto}
-
-/* DAILY TIP - editorial */
-.tipfeat{background:var(--bg);position:relative;overflow:hidden}
-.tipfeat::before{content:"";position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(245,177,77,.16),transparent 60%);top:-200px;right:-200px;pointer-events:none}
-.tip-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:80px;align-items:center}
-.tip-card{background:linear-gradient(165deg,var(--bg2),var(--bg) 90%);border:1px solid var(--border2);border-radius:22px;padding:48px 44px;position:relative;overflow:hidden}
-.tip-card::before{content:"\201C";position:absolute;top:-30px;right:30px;font-family:var(--serif);font-size:200px;line-height:1;color:var(--gold);opacity:.18;font-weight:600}
-.tip-stamp{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;padding:8px 14px;border:1px solid rgba(245,177,77,.32);border-radius:999px;background:rgba(245,177,77,.05)}
-.tip-stamp .pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(245,177,77,.22);animation:blink 1.6s ease-in-out infinite}
-.tip-title{font-family:var(--serif);font-size:clamp(28px,3vw,42px);font-weight:600;line-height:1.18;color:var(--text);margin-bottom:18px;letter-spacing:-.005em}
-.tip-body{font-family:var(--serif);font-size:18px;font-style:italic;color:var(--text2);line-height:1.65;margin-bottom:28px}
-.tip-cta{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--gold);letter-spacing:.04em}
-.tip-cta::after{content:"\2192";transition:transform .2s}
-.tip-card:hover .tip-cta::after{transform:translateX(5px)}
-.tip-list{display:flex;flex-direction:column;gap:0}
-.tip-list-head{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
-.tip-list-item{display:grid;grid-template-columns:64px 1fr;gap:20px;align-items:start;padding:22px 0;border-bottom:1px solid var(--border);transition:padding .22s}
-.tip-list-item:first-child{border-top:1px solid var(--border)}
-.tip-list-item:hover{padding-left:8px}
-.tip-list-item:hover .tip-list-title{color:var(--gold)}
-.tip-list-date{font-family:var(--serif);font-size:13px;font-weight:600;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;line-height:1.2;padding-top:3px}
-.tip-list-cat{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
-.tip-list-title{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--text);line-height:1.35;transition:color .2s}
-
-/* CLASSES */
-.classes{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.class-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.class-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:32px 26px;transition:all .25s;position:relative;overflow:hidden;display:flex;flex-direction:column}
-.class-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--emerald));transform:scaleX(0);transform-origin:left;transition:transform .35s ease}
-.class-card:hover{border-color:var(--border2);transform:translateY(-6px);box-shadow:0 24px 50px -20px rgba(0,0,0,.7)}
-.class-card:hover::before{transform:scaleX(1)}
-.class-tag{display:inline-flex;width:max-content;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);background:rgba(245,177,77,.08);border:1px solid rgba(245,177,77,.22);padding:5px 11px;border-radius:999px;margin-bottom:18px}
-.class-card h3{font-family:var(--serif);font-size:23px;font-weight:600;color:var(--text);margin-bottom:10px;letter-spacing:-.005em}
-.class-card p{font-size:14.5px;color:var(--text2);line-height:1.65;margin-bottom:22px;flex:1}
-.class-foot{display:flex;justify-content:space-between;align-items:center;padding-top:18px;border-top:1px solid var(--border);font-size:12.5px}
-.class-format{color:var(--muted);letter-spacing:.04em}
-.class-cta{color:var(--gold);font-weight:600;display:inline-flex;align-items:center;gap:6px}
-.class-cta::after{content:"\2192";transition:transform .2s}
-.class-card:hover .class-cta::after{transform:translateX(4px)}
-
-/* EVENTS / CONCERTS - ticket stub style */
-.events{position:relative;overflow:hidden}
-.events::before{content:"";position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(63,181,155,.14),transparent 60%);bottom:-150px;left:-150px;pointer-events:none}
-.event-list{display:flex;flex-direction:column;gap:14px}
-.event{display:grid;grid-template-columns:120px 1fr auto;gap:32px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:26px 30px;transition:all .25s;position:relative;overflow:hidden}
-.event:hover{border-color:var(--gold);background:var(--bg3);transform:translateX(6px)}
-.event:hover .ev-arrow{transform:translateX(0);opacity:1}
-.event::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold);opacity:0;transition:opacity .25s}
-.event:hover::before{opacity:1}
-.ev-date{text-align:center;padding-right:24px;border-right:1px dashed var(--border2);position:relative}
-.ev-date::after,.ev-date::before{content:"";position:absolute;right:-7px;width:14px;height:14px;border-radius:50%;background:var(--bg)}
-.ev-date::before{top:-13px}
-.ev-date::after{bottom:-13px}
-.ev-month{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-.ev-day{font-family:var(--serif);font-size:46px;font-weight:600;color:var(--text);line-height:1;letter-spacing:-.01em}
-.ev-year{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.1em}
-.ev-body{}
-.ev-kind{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--emerald);margin-bottom:8px}
-.ev-kind.concert{color:var(--gold)}
-.ev-kind.workshop{color:var(--emerald-soft)}
-.ev-title{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--text);line-height:1.25;margin-bottom:6px;letter-spacing:-.005em}
-.ev-meta{font-size:13.5px;color:var(--text2);display:flex;gap:14px;flex-wrap:wrap}
-.ev-meta span{display:inline-flex;align-items:center;gap:6px}
-.ev-meta span::before{content:"\2022";color:var(--muted)}
-.ev-meta span:first-child::before{display:none}
-.ev-cta{display:flex;align-items:center;gap:14px}
-.ev-status{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--emerald);padding:5px 11px;border:1px solid rgba(63,181,155,.32);border-radius:999px;background:rgba(63,181,155,.06)}
-.ev-status.few{color:#f0a050;border-color:rgba(240,160,80,.4);background:rgba(240,160,80,.08)}
-.ev-arrow{font-size:24px;color:var(--gold);transform:translateX(-8px);opacity:.5;transition:all .25s;font-family:var(--serif)}
-
-/* MARQUEE - moving text strip */
-.marquee{background:var(--gold);color:#1a1308;padding:18px 0;overflow:hidden;border-top:1px solid var(--gold2);border-bottom:1px solid var(--gold2)}
-.marquee-track{display:flex;gap:48px;animation:scroll 32s linear infinite;white-space:nowrap;font-family:var(--serif);font-size:22px;font-weight:600;font-style:italic;letter-spacing:-.005em}
-.marquee span{display:inline-flex;align-items:center;gap:48px}
-.marquee span::after{content:"\266B";font-style:normal;color:#1a1308;opacity:.6;font-size:20px}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* RESOURCES (article feed) */
-.resources{background:var(--bg)}
-.feed-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:42px}
-.cat-link{font-family:var(--sans);font-size:12.5px;font-weight:500;padding:10px 18px;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:999px;cursor:pointer;transition:all .22s}
-.cat-link:hover{border-color:var(--border2);color:var(--text)}
-.cat-link.active{background:var(--gold);border-color:var(--gold);color:#1a1308;font-weight:600;box-shadow:0 4px 16px -4px rgba(245,177,77,.5)}
-.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.art-card{display:flex;flex-direction:column;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .25s;overflow:hidden;position:relative}
-.art-thumb{position:relative;margin:-28px -28px 22px;aspect-ratio:16/10;overflow:hidden;background:var(--bg3)}
-.art-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s ease}
-.art-card:hover .art-thumb img{transform:scale(1.07)}
-.art-card:hover{border-color:var(--gold);transform:translateY(-6px);box-shadow:0 28px 50px -22px rgba(0,0,0,.8)}
-.art-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.art-cat{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
-.art-mins{font-size:11.5px;font-weight:500;color:var(--muted)}
-.art-title{font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.3;color:#f4f1e6;margin-bottom:12px;letter-spacing:-.005em;transition:color .2s}
-.art-card:hover .art-title{color:var(--gold-soft)}
-.art-excerpt{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px;flex:1}
-.art-more{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--gold);display:inline-flex;align-items:center;gap:6px}
-.art-more::after{content:"\2192";transition:transform .2s}
-.art-card:hover .art-more::after{transform:translateX(4px)}
-.feed-empty{grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-family:var(--serif);font-style:italic;font-size:18px}
-
-/* QUOTE */
-.quote{text-align:center;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
-.quote::before{content:"";position:absolute;left:50%;top:0;width:1px;height:48px;background:linear-gradient(180deg,var(--gold),transparent)}
-.quote-mark{font-family:var(--serif);font-size:140px;line-height:.4;color:var(--gold);opacity:.22;display:block;margin-bottom:24px;font-weight:600}
-.quote-text{font-family:var(--serif);font-size:clamp(26px,3.6vw,42px);font-style:italic;font-weight:500;color:var(--text);max-width:900px;margin:0 auto;line-height:1.4;letter-spacing:-.005em}
-.quote-attr{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-top:32px}
-
-/* ABOUT ELYAR */
-.about{position:relative;overflow:hidden}
-.about-in{display:grid;grid-template-columns:.95fr 1.05fr;gap:80px;align-items:center}
-.about-portrait{position:relative;aspect-ratio:4/5;border:1px solid var(--border2);border-radius:18px;overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 28%,rgba(245,177,77,.22),transparent 55%),
-    linear-gradient(160deg,var(--bg3),var(--bg) 80%);
-  display:flex;align-items:center;justify-content:center}
-.about-portrait .glyph{font-family:var(--serif);font-size:220px;color:var(--gold);opacity:.38;line-height:.9}
-.about-portrait::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(8,8,11,.7))}
-.about-portrait .stamp{position:absolute;left:24px;right:24px;bottom:24px;z-index:2;background:rgba(8,8,11,.7);backdrop-filter:blur(10px);border:1px solid var(--border2);border-radius:12px;padding:18px 22px}
-.about-portrait .stamp .role{font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
-.about-portrait .stamp .name{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--text);line-height:1.1}
-.about-body .lead{font-family:var(--serif);font-size:26px;font-style:italic;font-weight:500;color:var(--text);line-height:1.5;margin-bottom:22px;letter-spacing:-.005em}
-.about-body p{font-size:16.5px;color:var(--text2);line-height:1.85;margin-bottom:16px}
-.about-creds{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px}
-.about-cred{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center;transition:all .22s}
-.about-cred:hover{border-color:var(--gold);transform:translateY(-3px)}
-.about-cred b{display:block;font-family:var(--serif);font-size:30px;font-weight:600;color:var(--gold);line-height:1;margin-bottom:6px;letter-spacing:-.01em}
-.about-cred span{font-size:11.5px;color:var(--muted);letter-spacing:.04em}
-
-/* NEWSLETTER */
-.newsletter{position:relative;overflow:hidden;
-  background:
-    radial-gradient(700px 380px at 50% 110%,rgba(245,177,77,.22),transparent 60%),
-    radial-gradient(500px 300px at 0% 0%,rgba(63,181,155,.12),transparent 60%),
-    var(--bg)}
-.nl-in{max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:2}
-.nl-clef{font-family:var(--serif);font-size:64px;color:var(--gold);margin-bottom:10px;line-height:1;display:inline-block;background:linear-gradient(180deg,var(--gold-soft),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
-.nl-title{font-family:var(--serif);font-size:clamp(34px,5vw,54px);font-weight:600;color:var(--text);margin-bottom:14px;letter-spacing:-.012em;line-height:1.05}
-.nl-title em{color:var(--gold);font-style:italic;font-weight:500}
-.nl-sub{font-size:17px;color:var(--text2);margin-bottom:34px;line-height:1.7}
-.nl-form{display:flex;gap:10px;max-width:480px;margin:0 auto}
-.nl-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:14.5px;font-family:var(--sans);padding:16px 18px;outline:none;transition:all .2s}
-.nl-input::placeholder{color:var(--muted)}
-.nl-input:focus{border-color:var(--gold);background:var(--bg3)}
-.nl-btn{background:var(--gold);color:#1a1308;font-family:var(--sans);font-size:13.5px;font-weight:600;padding:16px 28px;border:none;border-radius:10px;cursor:pointer;transition:all .22s;white-space:nowrap;box-shadow:0 12px 30px -10px rgba(245,177,77,.55)}
-.nl-btn:hover{background:var(--gold-soft);transform:translateY(-2px)}
-.nl-fine{font-size:12px;color:var(--muted);margin-top:20px;letter-spacing:.02em}
-
-/* FOOTER */
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:72px 0 32px;position:relative}
-.footer-in{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:52px}
-.footer-logo{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:22px;font-weight:600;color:var(--text);margin-bottom:14px}
-.footer-logo .mark{width:32px;height:32px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--gold-soft),var(--gold) 60%,var(--gold2));display:flex;align-items:center;justify-content:center;font-size:16px;color:#1a1308}
-.footer-logo em{color:var(--gold);font-style:italic}
-.footer-desc{font-size:14px;color:var(--muted);line-height:1.75;max-width:330px}
-.footer-social{display:flex;gap:10px;margin-top:18px}
-.footer-social a{width:36px;height:36px;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:14px;transition:all .2s}
-.footer-social a:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,177,77,.06)}
-.footer-head{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--text2);margin-bottom:18px}
-.footer-links{display:flex;flex-direction:column;gap:12px}
-.footer-links a{font-size:14px;color:var(--muted);transition:color .2s}
-.footer-links a:hover{color:var(--gold)}
-.footer-bottom{border-top:1px solid var(--border);padding-top:28px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.footer-copy{font-size:12.5px;color:var(--muted)}
-
-@media(max-width:1080px){
-  .hero-in,.tip-grid,.about-in{grid-template-columns:1fr;gap:52px}
-  .hero-card{order:-1;max-width:380px;margin:0 auto}
-  .class-grid{grid-template-columns:1fr 1fr}
-  .pulse-in{grid-template-columns:1fr;gap:1px}
-  .feed-grid{grid-template-columns:1fr 1fr}
-  .footer-in{grid-template-columns:1fr 1fr}
+.site-nav{position:sticky;top:clamp(14px,2vw,24px);z-index:var(--z-nav);background:transparent;
+  padding:0 22px;margin-top:clamp(14px,2vw,22px)}
+.nav-in{max-width:1200px;margin:0 auto;padding:0 24px;min-height:66px;
+  display:flex;align-items:center;gap:clamp(12px,3vw,30px);flex-wrap:nowrap;
+  /* 18px, not a full pill: a softened rectangle reads as a card floating over the
+     page, where 999px reads as a capsule control. Kept off the CTA/tel pills
+     themselves, which stay full-round. */
+  border-radius:18px;
+  /* The bar is glass from the first frame, not only once scrolled: a floating
+     card, not a bar that appears out of nothing. Height and padding stay
+     constant (unlike ADATS, which animates min-height/padding here and
+     relayouts every frame); the condense is carried entirely by background,
+     shadow and blur, which stay on the compositor. */
+  background:linear-gradient(178deg,rgba(242,238,230,.05),rgba(242,238,230,.011) 42%,rgba(242,238,230,0) 78%),
+             rgba(19,17,15,.30);
+  backdrop-filter:saturate(1.5) blur(20px);-webkit-backdrop-filter:saturate(1.5) blur(20px);
+  box-shadow:inset 0 1px 0 rgba(242,238,230,.09),inset 0 0 0 1px rgba(242,238,230,.045),
+             0 18px 46px -26px rgba(0,0,0,.85);
+  transition:background 420ms var(--ease),box-shadow 420ms var(--ease),
+             backdrop-filter 420ms var(--ease)}
+.site-nav.stuck .nav-in{
+  background:linear-gradient(178deg,rgba(242,238,230,.055),rgba(242,238,230,.012) 42%,rgba(242,238,230,0) 78%),
+             rgba(19,17,15,.56);
+  backdrop-filter:saturate(1.4) blur(16px);-webkit-backdrop-filter:saturate(1.4) blur(16px);
+  box-shadow:inset 0 1px 0 rgba(242,238,230,.08),inset 0 0 0 1px rgba(242,238,230,.05),
+             0 24px 56px -28px rgba(0,0,0,.95)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .nav-in{background:rgba(19,17,15,.92)}
+  .site-nav.stuck .nav-in{background:rgba(19,17,15,.97)}
 }
-@media(max-width:640px){
-  .wrap{padding:0 20px}
+/* ---------------------------------------------------------------------------
+   ADATS header colour, 2026-08-12, at Siavash's explicit instruction, which
+   overrides the project isolation law for this component only. Scoped to the
+   header: declared on .topbar and .site-nav, never on :root, so the rest of the
+   site keeps its own ink and brass.
+   ONLY the colour is taken. This header's motion is deliberately NOT replaced:
+   it condenses on background, shadow and blur alone, while ADATS animates
+   min-height and padding, which its own REPO-MAP records as failing the
+   animate-transform-only rule. Taking that would be a regression.
+   Nexus V22 / Kavalsia Inc. / Siavash Sadighi
+   ------------------------------------------------------------------------ */
+.topbar,.site-nav{
+  --h-ink:#1a171f; --h-ink-deep:#141118;
+  --h-gold:#ffce85; --h-gold-soft:#f6dcb6;
+  --h-text:#f7f2ec;
+  --h-muted:rgba(246,240,232,.72); --h-muted-2:rgba(246,240,232,.56);
+}
+.topbar .inner{color:var(--h-muted-2)}
+.topbar b{color:var(--h-gold-soft)}
+.topbar .sep{background:rgba(255,255,255,.11)}
+.topbar a{color:var(--h-muted)}
+.topbar a:hover{color:var(--h-gold)}
+.nav-in{
+  background:linear-gradient(178deg,rgba(255,255,255,.075),rgba(255,255,255,.018) 42%,rgba(255,255,255,0) 78%),
+             rgba(23,19,28,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.11),inset 0 0 0 1px rgba(255,255,255,.05),
+             0 20px 50px -28px rgba(0,0,0,.92);
+}
+.site-nav.stuck .nav-in{
+  background:linear-gradient(178deg,rgba(255,255,255,.055),rgba(255,255,255,.012) 42%,rgba(255,255,255,0) 78%),
+             rgba(19,16,23,.56);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(255,255,255,.045),
+             0 24px 56px -28px rgba(0,0,0,.95);
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .nav-in{background:rgba(23,19,28,.95)}
+  .site-nav.stuck .nav-in{background:rgba(19,16,23,.97)}
+}
+.nav-logo{color:var(--h-text)}
+.nav-logo .seal{color:var(--h-gold)}
+.nav-links a{color:var(--h-muted)}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:var(--h-gold)}
+.nav-logo{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:20px;
+  letter-spacing:.01em;min-width:0;overflow:hidden}
+.nav-logo span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-logo .seal{width:30px;height:30px;flex-shrink:0;color:var(--brass)}
+.nav-logo b{font-weight:400}
+.nav-logo i{font-family:var(--serif-it);font-style:italic;color:var(--text2);font-weight:400}
+.nav-links{display:flex;gap:4px;margin-left:auto;font-size:14px}
+.nav-links a{position:relative;color:var(--text2);padding:9px 13px;border-radius:9px;
+  transition:color .2s,background .2s}
+.nav-links a::after{content:"";position:absolute;left:13px;right:13px;bottom:4px;height:1px;
+  background:var(--brass);transform:scaleX(0);transform-origin:0 50%;transition:transform .3s var(--ease)}
+.nav-links a:hover{color:var(--text);background:rgba(242,238,230,.05)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-acts{display:flex;align-items:center;gap:14px;margin-left:auto}
+.nav-links + .nav-acts{margin-left:0}
+.nav-cta{flex-shrink:0;background:var(--brass);color:var(--ink);font-weight:600;font-size:13px;
+  border-radius:999px;padding:9px 18px;letter-spacing:.012em;position:relative;
+  transition:background .2s,transform .3s cubic-bezier(.34,1.7,.5,1)}
+.nav-cta:hover{background:#e8bb74}
+.nav-cta:active{transform:translateY(1px)}
+
+/* -- 1. Title page: full bleed WebGL sound field ------------- */
+.title-page{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+  min-height:min(92dvh,900px);display:flex;align-items:center}
+#field{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+/* Static fallback painted underneath, so a failed WebGL context still has a ground */
+.title-page::before{content:"";position:absolute;inset:0;z-index:0;
+  background:radial-gradient(120% 90% at 78% 62%,rgba(216,167,91,.10),transparent 62%),var(--ink)}
+.tp-in{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:118px 30px;width:100%;
+  display:grid;grid-template-columns:1.08fr .92fr;gap:60px;align-items:center}
+.tp-h1{font-size:clamp(38px,4.8vw,72px);line-height:0.86;letter-spacing:-.022em;margin-bottom:28px;max-width:15ch}
+/* the closing line steps in, so the block reads as set type rather than a stack */
+.tp-h1 .ln:last-child{padding-left:.34em}
+.tp-h1 em,.sec-h em{font-family:var(--serif-it);font-style:italic;color:var(--brass)}
+.tp-lead{font-size:19.5px;line-height:1.66;color:var(--text2);max-width:52ch;margin-bottom:40px}
+.tp-acts{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--brass);color:var(--ink);
+  border-radius:999px;font-weight:600;font-size:15px;padding:16px 32px;letter-spacing:.012em;position:relative;
+  /* Neutral elevation, not a brass halo. A coloured glow under a coloured
+     button on near-black is the stock AI-UI look; real lift comes from a
+     shadow that reads as shadow. */
+  box-shadow:0 10px 22px -12px rgba(0,0,0,.85),0 2px 5px -2px rgba(0,0,0,.6);will-change:transform;
+  transition:background .2s,transform .36s cubic-bezier(.34,1.7,.5,1),box-shadow .3s}
+.btn:hover{background:#e8bb74;box-shadow:0 16px 30px -12px rgba(0,0,0,.9),0 3px 7px -2px rgba(0,0,0,.65)}
+.btn:active{transform:scale(.97)}
+.btn svg{width:16px;height:16px}
+.btn-quiet{background:none;color:var(--text);box-shadow:none;padding:14px 2px 12px;
+  border-bottom:1px solid var(--line2);font-weight:500;border-radius:0}
+.btn-quiet:active{transform:none}
+/* The default ring is a hard rectangle on a square-cornered link and reads as a
+   stray border. This one hugs the label instead. */
+.btn-quiet:focus-visible{outline:none;border-bottom-color:var(--brass);
+  box-shadow:0 2px 0 0 var(--brass)}
+.btn-quiet:hover{background:none;color:var(--brass);border-bottom-color:var(--brass)}
+.tp-plate{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:20px;
+  box-shadow:0 2px 0 rgba(242,238,230,.10) inset, 0 0 0 1px rgba(242,238,230,.09) inset,
+             0 46px 90px -44px rgba(0,0,0,.95), 0 14px 34px -20px rgba(0,0,0,.8)}
+.tp-plate::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:1;
+  background:linear-gradient(180deg,rgba(242,238,230,.07),transparent 26%,transparent 74%,rgba(11,10,9,.45))}
+.tp-plate::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:2;
+  background-image:var(--grain);background-size:160px 160px;opacity:.4;mix-blend-mode:overlay}
+.tp-plate img{position:absolute;inset:-8% 0;width:100%;height:116%;object-fit:cover;object-position:50% 40%;will-change:transform}
+.tp-cap{position:absolute;left:20px;bottom:20px;border-radius:999px;z-index:3;z-index:2;font-size:12px;color:var(--text);
+  letter-spacing:.07em;text-transform:uppercase;padding:8px 15px 8px 17px;
+  border-left:1px solid var(--brass);background:rgba(11,10,9,.72);backdrop-filter:blur(5px)}
+
+/* -- 2. Ribbon ---------------------------------------------- */
+/* Ticker. Auto-scrolling is a deliberate request from the owner. The premium
+   details that stop it reading as a cheap marquee: a mask that fades both
+   edges instead of hard-cutting, drawn icons rather than bullet dots, pause on
+   hover and on focus, and a full stop under prefers-reduced-motion. */
+.ribbon{overflow:hidden;padding:30px 0;position:relative;background:var(--ink);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 26%,#000 74%,transparent);
+  mask-image:linear-gradient(180deg,transparent,#000 26%,#000 74%,transparent)}
+.ribbon::before,.ribbon::after{content:"";position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.ribbon::before{left:0;background:linear-gradient(90deg,var(--ink) 22%,transparent)}
+.ribbon::after{right:0;background:linear-gradient(270deg,var(--ink) 22%,transparent)}
+.ribbon-track{display:flex;width:max-content;align-items:center}
+.tick{display:inline-flex;align-items:center;gap:14px;padding:0 38px;white-space:nowrap;
+  font-family:var(--serif);font-size:21px;line-height:1;color:var(--text2);letter-spacing:.004em}
+.tick::after{content:"";width:3px;height:3px;border-radius:50%;background:var(--brass);
+  opacity:.5;margin-left:38px}
+.tick svg{width:21px;height:21px;flex-shrink:0;color:var(--brass);
+  stroke-width:1.4;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:no-preference){
+  .ribbon-track{animation:tick 54s linear infinite}
+  .ribbon:hover .ribbon-track,.ribbon:focus-within .ribbon-track{animation-play-state:paused}
+}
+@keyframes tick{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+/* RTL lays the track from the right, so the loop has to run the other way */
+@keyframes tickRtl{from{transform:translate3d(0,0,0)}to{transform:translate3d(50%,0,0)}}
+@media (prefers-reduced-motion:no-preference){[dir="rtl"] .ribbon-track{animation-name:tickRtl}}
+
+/* -- 3. Disciplines ----------------------------------------- */
+/* Default: three stacked full-bleed plates, readable with no JS at all.
+   Script upgrades this to a pinned cross-fading stage by adding .is-stage. */
+.discs{position:relative}
+.disc{border-top:1px solid var(--line)}
+.disc-in{max-width:1240px;margin:0 auto;padding:0 30px;display:grid;
+  grid-template-columns:1fr 1fr;column-gap:72px;align-items:stretch}
+.disc-photo{position:relative;min-height:min(76vh,640px);overflow:hidden;border-radius:22px;
+  box-shadow:0 0 0 1px rgba(242,238,230,.08) inset,0 46px 96px -50px rgba(0,0,0,.95)}
+.disc-photo::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:1;
+  background:linear-gradient(180deg,rgba(11,10,9,.30),transparent 34%,transparent 62%,rgba(11,10,9,.55))}
+.disc-photo::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:2;
+  background-image:var(--grain);background-size:160px 160px;opacity:.4;mix-blend-mode:overlay}
+.disc-photo img{position:absolute;inset:-7% 0;width:100%;height:114%;object-fit:cover;will-change:transform}
+.disc-photo figcaption{position:absolute;left:22px;bottom:20px;border-radius:999px;z-index:2;font-size:11.5px;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--text);
+  background:rgba(11,10,9,.74);padding:7px 13px;backdrop-filter:blur(6px)}
+.disc-body{padding-block:88px;display:flex;flex-direction:column;justify-content:center}
+.disc.flip .disc-in{direction:rtl}
+.disc.flip .disc-in>*{direction:ltr}
+
+.disc-ix{display:flex;align-items:center;gap:14px;margin-bottom:18px;
+  font-size:11px;font-weight:500;letter-spacing:var(--track-label);text-transform:uppercase;color:var(--brass)}
+.disc-ix i{font-style:normal;font-family:var(--serif);font-size:26px;letter-spacing:0;opacity:.42}
+.disc-ix::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--brass),transparent);opacity:.4}
+.disc-name{font-family:var(--serif);font-size:clamp(36px,4.5vw,62px);line-height:0.94;letter-spacing:-.02em;margin-bottom:8px}
+.disc-for{font-size:14.5px;letter-spacing:.005em;text-transform:none;color:var(--muted);
+  font-family:var(--serif-it);font-style:italic;margin-bottom:26px}
+.disc-copy{color:var(--text2);margin-bottom:32px;max-width:48ch;line-height:1.7}
+.disc-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px 26px;margin-bottom:36px}
+@media (max-width:1200px){.disc-list{grid-template-columns:1fr}}
+.disc-list li{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.55;color:var(--text2)}
+.disc-list svg{width:15px;height:15px;flex-shrink:0;margin-top:6px;color:var(--brass)}
+.disc-foot{display:flex;align-items:center;justify-content:space-between;gap:18px 30px;flex-wrap:wrap;
+  padding:20px 22px;border-radius:18px;
+  background:linear-gradient(158deg,rgba(242,238,230,.06),rgba(242,238,230,.018) 52%,rgba(242,238,230,0))}
+.disc-rates{display:flex;align-items:flex-end;gap:30px;flex-wrap:wrap}
+.rate{display:flex;flex-direction:column;gap:4px;position:relative}
+/* a hairline between the two rates instead of a box around everything */
+.rate+.rate{padding-left:30px}
+.rate+.rate::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(242,238,230,.16),transparent)}
+.rate b{font-family:var(--serif);font-size:32px;line-height:.95;font-weight:400;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.rate span{font-size:12.5px;color:var(--muted);letter-spacing:.012em;white-space:nowrap}
+.rate.pack b{color:var(--brass)}
+.disc-cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-left:auto}
+@media (max-width:1500px){.disc-cta{margin-left:0;width:100%;justify-content:space-between}}
+/* plain type, not a bordered chip */
+.disc-free{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--brass);white-space:nowrap}
+.disc-free::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--brass);flex:none}
+@media (max-width:1240px){
+  .disc-foot{padding:20px 0;background:none;border-top:1px solid var(--line);border-radius:0}
+  .disc-cta{margin-left:0;width:100%;justify-content:space-between}
+}
+@media (max-width:520px){
+  .rate+.rate{padding-left:0}
+  .rate+.rate::before{display:none}
+  .disc-rates{gap:18px 26px}
+  .disc-cta{gap:14px}
+  .disc-link{flex:1;text-align:center}
+}
+.disc-price{font-family:var(--serif);font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.disc-price span{font-family:var(--sans);font-size:13px;color:var(--muted);letter-spacing:.02em}
+.disc-link{font-size:14px;font-weight:600;color:var(--ink);background:var(--brass);border-radius:999px;
+  padding:11px 22px;white-space:nowrap;transition:background .2s,transform .3s cubic-bezier(.34,1.7,.5,1)}
+.disc-link:hover{background:#e8bb74}
+.disc-link:active{transform:scale(.97)}
+.discs-rail{display:none}
+
+/* Upgraded pinned stage */
+.discs.is-stage{height:440vh}
+.discs.is-stage .discs-sticky{position:sticky;top:0;height:100dvh;overflow:hidden}
+/* Opaque, or the outgoing panel's text reads through the incoming one and the
+   dissolve looks like a rendering fault rather than a transition. */
+.discs.is-stage .disc{position:absolute;inset:0;border-top:0;display:flex;align-items:center;
+  background:var(--ink)}
+.discs.is-stage .disc-in{width:100%;height:100%;align-items:center;column-gap:66px;
+  padding-inline-start:132px;padding-inline-end:30px}
+
+.discs.is-stage .disc-photo{min-height:0;height:76vh;align-self:center}
+.discs.is-stage .disc-body{padding:0;max-height:82vh;overflow:hidden}
+
+/* The pinned stage is height bound, and the panel grew twice: first with the
+   two-column checklist, then with the package pricing. It now steps down in
+   two stages so nothing is ever cut off on a laptop. */
+@media (max-height:1000px){
+  .discs.is-stage .disc-name{font-size:clamp(32px,3.6vw,48px)}
+  .discs.is-stage .disc-ix{margin-bottom:12px}
+  .discs.is-stage .disc-for{margin-bottom:18px;font-size:14px}
+  .discs.is-stage .disc-copy{margin-bottom:22px;font-size:15.5px}
+  .discs.is-stage .disc-list{gap:11px 22px;margin-bottom:24px}
+  .discs.is-stage .disc-list li{font-size:14.5px}
+  .discs.is-stage .disc-foot{padding:15px 18px;gap:14px 20px}
+  .discs.is-stage .rate b{font-size:26px}
+}
+@media (max-height:820px){
+  .discs.is-stage .disc-name{font-size:clamp(28px,3vw,38px)}
+  .discs.is-stage .disc-for{display:none}
+  .discs.is-stage .disc-copy{margin-bottom:18px;font-size:14.5px;line-height:1.6}
+  .discs.is-stage .disc-list{gap:9px 20px;margin-bottom:18px}
+  .discs.is-stage .disc-list li{font-size:13.5px}
+  .discs.is-stage .disc-list svg{margin-top:4px}
+  .discs.is-stage .disc-foot{padding:13px 16px}
+  .discs.is-stage .rate b{font-size:23px}
+  .discs.is-stage .rate span{font-size:11.5px}
+  .discs.is-stage .disc-free{font-size:10.5px;padding:6px 11px}
+  .discs.is-stage .disc-link{font-size:13px;padding:10px 18px}
+  .discs.is-stage .disc-photo{height:66vh}
+}
+.discs.is-stage .discs-rail{display:flex;position:absolute;inset-inline-start:30px;top:50%;transform:translateY(-50%);
+  z-index:5;flex-direction:column;gap:26px}
+.rail-item{display:flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);transition:color .35s var(--ease)}
+.rail-item i{display:block;width:26px;height:1px;background:var(--line2);position:relative;transition:background .35s}
+.rail-item.on{color:var(--brass)}
+.rail-item.on i{background:var(--brass)}
+
+/* -- 4. Method: horizontal rail ------------------------------ */
+/* No overflow:hidden here. An ancestor with overflow:hidden disables
+   position:sticky on its descendants, which silently un-pins the rail below.
+   The horizontal track is clipped by .rail-pin instead, which is allowed
+   because the sticky element may clip its own overflow. */
+.method{background:var(--ink2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:120px 0 0}
+.sec-h{font-size:clamp(32px,4.1vw,53px);line-height:0.98;letter-spacing:-.016em;margin-bottom:22px}
+
+.sec-sub{color:var(--text2);max-width:58ch;font-size:18px;line-height:1.68}
+.sec-head{margin-bottom:70px}
+.rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:0 30px 120px}
+.term{padding:36px 34px 40px;position:relative;border-radius:18px;
+  background:linear-gradient(168deg,rgba(242,238,230,.055),rgba(242,238,230,.014) 46%,rgba(242,238,230,0));
+  box-shadow:0 0 0 1px rgba(242,238,230,.05) inset;
+  transition:background .5s var(--ease),box-shadow .5s var(--ease)}
+.term:hover{background:linear-gradient(168deg,rgba(216,167,91,.13),rgba(216,167,91,.03) 52%,rgba(242,238,230,0));
+  box-shadow:0 0 0 1px rgba(216,167,91,.22) inset}
+.term-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+.term-fig{font-family:var(--serif);font-size:clamp(40px,3.4vw,54px);line-height:.9;
+  color:var(--brass);opacity:.34;font-variant-numeric:tabular-nums}
+.term-ico{width:34px;height:34px;flex:none;color:var(--brass);opacity:.55;
+  transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.term:hover .term-ico{opacity:1;transform:translateY(-2px)}
+.term-n{font-size:10.5px;font-weight:500;color:var(--brass);letter-spacing:var(--track-label);
+  text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:11px}
+.term-n::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--brass),transparent);opacity:.45}
+.term-h{font-family:var(--serif);font-size:30px;line-height:1.0;letter-spacing:-.015em;margin-bottom:12px}
+.term-p{font-size:15.5px;color:var(--text2);line-height:1.6;max-width:34ch}
+/* Upgraded: the rail becomes a horizontal track scrubbed by vertical scroll */
+.method.is-rail{padding-bottom:0}
+/* height is set from the real track width in script so the vertical distance
+   matches the horizontal travel. A fixed 300vh leaves a dead scroll region. */
+.method.is-rail .rail-outer{position:relative}
+.method.is-rail .rail-pin{position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;
+  justify-content:center;gap:46px;overflow:hidden}
+.method.is-rail .sec-head{margin-bottom:0;flex:0 0 auto}
+.method.is-rail .term{height:auto;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-start}
+.method.is-rail .rail{display:flex;align-items:stretch;gap:18px;width:max-content;margin:0;will-change:transform}
+.method.is-rail .term{width:min(78vw,560px);flex-shrink:0;border-right:1px solid var(--line);
+  /* zero vertical padding put the numeral hard against the card edge */
+  padding:44px 40px 40px}
+.method.is-rail .rail{padding-inline:30px}
+.method.is-rail .term-fig{margin-bottom:16px}
+
+/* -- 5. Faculty: overlapping collage ------------------------- */
+.faculty{padding:130px 0;position:relative}
+.fac-in{display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:center;position:relative}
+.fac-copy{position:relative;z-index:2;padding-right:56px}
+.fac-copy p{color:var(--text2);margin-bottom:20px;max-width:46ch}
+.fac-copy p:first-of-type{font-size:19px;color:var(--text)}
+.fac-meta{margin-top:36px;padding-top:26px;border-top:1px solid var(--line);display:grid;gap:14px;font-size:15px}
+.fac-meta div{display:flex;gap:16px;color:var(--text2)}
+.fac-meta b{font-weight:500;color:var(--text);min-width:96px;flex-shrink:0}
+/* In normal flow. These were absolutely positioned and the photo escaped its
+   600px stack by 482px, painting over the section below. Offsets now come from
+   width and margin, which cannot overflow the parent. */
+.fac-stack{display:grid;gap:20px}
+.fac-photo{position:relative;width:88%;margin-left:auto;border-radius:18px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(242,238,230,.09) inset, 0 40px 84px -44px rgba(0,0,0,.95)}
+.fac-photo img{display:block;width:132%;max-width:none;aspect-ratio:4/3;object-fit:cover;will-change:transform}
+.fac-photo figcaption{position:absolute;left:16px;bottom:16px;border-radius:999px;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text);background:rgba(11,10,9,.78);padding:7px 14px;backdrop-filter:blur(5px)}
+.fac-film-wrap{width:74%}
+.film{position:relative;width:100%;cursor:pointer;border-radius:18px;background:var(--ink2);overflow:hidden;
+  box-shadow:0 0 0 1px rgba(242,238,230,.10) inset, 0 40px 84px -44px rgba(0,0,0,.95)}
+.film img{width:100%;aspect-ratio:4/3;object-fit:cover;transition:transform .7s var(--ease),opacity .3s}
+.film:hover img{transform:scale(1.05);opacity:.72}
+.film-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.film-play span{width:70px;height:70px;border-radius:50%;background:rgba(11,10,9,.74);border:1px solid var(--brass);
+  display:flex;align-items:center;justify-content:center;transition:transform .35s var(--ease),background .35s}
+.film:hover .film-play span{transform:scale(1.1);background:var(--brass)}
+.film-play svg{width:21px;height:21px;color:var(--brass);margin-left:3px;transition:color .35s}
+.film:hover .film-play svg{color:var(--ink)}
+.film-cap{padding:14px 18px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
+.film iframe{width:100%;aspect-ratio:4/3;border:0;display:block}
+
+/* -- 6. Equipment: sticky aside + rows ----------------------- */
+.shop{background:var(--ink2);border-top:1px solid var(--line);padding:130px 0}
+.shop-in{display:grid;grid-template-columns:370px 1fr;gap:86px;align-items:start}
+.shop-aside{position:sticky;top:112px}
+.shop-mark{margin-top:34px;color:var(--brass-dim);opacity:.5}
+.shop-mark svg{width:100%;height:auto;max-width:230px}
+.shop-list{border-top:0}
+.item{display:grid;grid-template-columns:1fr auto;gap:28px 34px;align-items:center;
+  padding:26px 28px;margin-bottom:14px;border-radius:16px;
+  background:rgba(242,238,230,.032);box-shadow:0 0 0 1px rgba(242,238,230,.05) inset;
+  transition:background .3s,box-shadow .3s}
+.item:hover{background:rgba(216,167,91,.06);box-shadow:0 0 0 1px rgba(216,167,91,.20) inset}
+.item-name{font-family:var(--serif);font-size:25px;margin-bottom:5px}
+.item-spec{font-size:14.5px;color:var(--muted);max-width:44ch}
+.item-buy{display:flex;align-items:center;gap:18px;flex-shrink:0}
+.item-price{font-family:var(--serif);font-size:24px;min-width:110px;text-align:right;font-variant-numeric:tabular-nums}
+.qty{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.045);
+  border-radius:999px;padding:4px}
+.qty-btn{width:44px;height:44px;border:0;border-radius:50%;cursor:pointer;color:var(--text2);
+  background:radial-gradient(circle at 50% 38%,rgba(255,255,255,.09),rgba(255,255,255,.02) 62%);
+  display:flex;align-items:center;justify-content:center;
+  transition:color .2s,background .25s,transform .32s cubic-bezier(.34,1.7,.5,1)}
+.qty-btn:hover{color:var(--ink);background:var(--brass);transform:scale(1.1)}
+.qty-btn:active{transform:scale(.92)}
+.qty-btn:disabled{opacity:.3;cursor:not-allowed}
+.qty-btn:disabled:hover{color:var(--text2);background:radial-gradient(circle at 50% 38%,rgba(255,255,255,.09),rgba(255,255,255,.02) 62%);transform:none}
+.qty-btn svg{width:13px;height:13px}
+.qty-num{width:48px;height:44px;text-align:center;background:none;border:0;
+  font-size:16px;font-variant-numeric:tabular-nums;-moz-appearance:textfield;color:var(--text)}
+.qty-num::-webkit-outer-spin-button,.qty-num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.buy{background:var(--brass);color:var(--ink);border:0;border-radius:999px;font-weight:600;
+  font-size:14.5px;padding:14px 30px;cursor:pointer;letter-spacing:.012em;white-space:nowrap;
+  box-shadow:0 9px 20px -12px rgba(0,0,0,.85),0 2px 5px -2px rgba(0,0,0,.6);
+  transition:background .2s,transform .36s cubic-bezier(.34,1.7,.5,1),box-shadow .3s}
+.buy:hover{background:#e8bb74;transform:translateY(-2px) scale(1.03);box-shadow:0 15px 28px -12px rgba(0,0,0,.9),0 3px 7px -2px rgba(0,0,0,.65)}
+.buy:active{transform:translateY(0) scale(.97)}
+.shop-note{margin-top:26px;font-size:14.5px;color:var(--muted)}
+.shop-note a{color:var(--brass);border-bottom:1px solid transparent;transition:border-color .2s}
+.shop-note a:hover{border-bottom-color:var(--brass)}
+.order-msg{margin-top:22px;padding:16px 20px;border:1px solid var(--line2);background:var(--ink3);
+  border-radius:12px;font-size:15px;color:var(--text2);display:none}
+.order-msg.on{display:block}
+.order-msg b{color:var(--text);font-weight:600}
+.order-msg a{color:var(--brass)}
+
+/* -- 7. Journal: asymmetric editorial ------------------------ */
+.journal{padding:130px 0}
+.feed-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:44px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.cat-link{font-size:13.5px;color:var(--muted);cursor:pointer;padding:8px 15px;
+  border:1px solid transparent;transition:color .2s,border-color .2s;letter-spacing:.02em}
+.cat-link:hover{color:var(--text)}
+.cat-link.active{color:var(--brass);border-color:var(--line2)}
+.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:44px 34px}
+.art-card{display:flex;flex-direction:column}
+.art-thumb{aspect-ratio:3/2;overflow:hidden;margin-bottom:20px;background:var(--ink3);border-radius:14px;
+  box-shadow:0 0 0 1px rgba(242,238,230,.07) inset}
+.art-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.art-card:hover .art-thumb img{transform:scale(1.055)}
+.art-top{display:flex;gap:14px;font-size:11px;font-weight:500;letter-spacing:var(--track-label);
+  text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.art-cat{color:var(--brass)}
+.art-title{font-family:var(--serif);font-size:24px;line-height:1.14;letter-spacing:-.008em;margin-bottom:11px;transition:color .25s}
+.art-card:hover .art-title{color:var(--brass)}
+.art-excerpt{font-size:15px;color:var(--text2);line-height:1.65;margin-bottom:16px}
+.art-more{font-size:13.5px;color:var(--brass);margin-top:auto}
+/* the lead story takes the full first row */
+.art-card.lead{grid-column:span 3;display:grid;grid-template-columns:1.15fr 1fr;gap:44px;align-items:center;
+  padding-bottom:44px;border-bottom:1px solid var(--line)}
+.art-card.lead .art-thumb{aspect-ratio:16/10;margin-bottom:0}
+.art-card.lead .art-title{font-size:clamp(28px,3.4vw,42px);line-height:1.08}
+.art-card.lead .art-excerpt{font-size:16.5px}
+.feed-empty{grid-column:1/-1;padding:56px 0;text-align:center;color:var(--muted);border:1px dashed var(--line2)}
+
+/* -- 8. Enrolment -------------------------------------------- */
+.enrol{border-top:1px solid var(--line);padding:130px 0;position:relative;overflow:hidden;
+  background:
+    radial-gradient(76% 62% at 88% 8%,rgba(216,167,91,.11),transparent 64%),
+    radial-gradient(60% 50% at 6% 96%,rgba(216,167,91,.05),transparent 62%),
+    var(--ink2)}
+/* Ruled staff lines. Regular and evenly spaced, so it reads as paper rather
+   than as decoration that wandered off. */
+.enrol::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(180deg,
+    transparent 0 15px, rgba(242,238,230,.045) 15px 16px,
+    transparent 16px 31px, rgba(242,238,230,.045) 31px 32px,
+    transparent 32px 47px, rgba(242,238,230,.045) 47px 48px,
+    transparent 48px 63px, rgba(242,238,230,.045) 63px 64px,
+    transparent 64px 132px);
+  mask-image:radial-gradient(120% 92% at 50% 50%,#000 26%,transparent 82%);
+  -webkit-mask-image:radial-gradient(120% 92% at 50% 50%,#000 26%,transparent 82%)}
+.enrol::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(115% 96% at 50% 50%,rgba(11,10,9,.58),rgba(11,10,9,.86) 66%)}
+.enrol-in{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.enrol h2{margin-bottom:18px}
+.enrol p{color:var(--text2);max-width:50ch}
+.form{display:grid;gap:16px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:620px){.field-row{grid-template-columns:1fr}}
+.field textarea{width:100%;background:rgba(242,238,230,.05);border:0;border-radius:12px;
+  padding:16px 17px;font-size:15.5px;font-family:inherit;resize:vertical;min-height:74px;
+  transition:background .25s,box-shadow .25s}
+.field textarea::placeholder{color:var(--muted);opacity:1}
+
+.field label{display:block;font-size:11.5px;font-weight:500;letter-spacing:var(--track-label);
+  text-transform:uppercase;color:var(--text2);margin-bottom:9px}
+.field input,.field select{width:100%;background:rgba(242,238,230,.05);border:0;
+  border-radius:12px;padding:16px 17px;font-size:15.5px;
+  transition:background .25s,box-shadow .25s}
+/* the native arrow sat hard against the label. This one has room around it. */
+.field select{appearance:none;-webkit-appearance:none;padding-inline-end:46px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' fill='none' stroke='%23bab2a6' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5 7 7.5l6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 18px center;background-size:13px}
+[dir="rtl"] .field select{background-position:left 18px center}
+.field input::placeholder{color:var(--muted);opacity:1}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;
+  background:rgba(242,238,230,.085);box-shadow:0 0 0 2px var(--brass)}
+.field.bad input{box-shadow:0 0 0 2px #c25a4e;background:rgba(194,90,78,.10)}
+.field-err{display:none;font-size:13.5px;color:#e08a7e;margin-top:7px}
+.field.bad .field-err{display:block}
+.form .btn{justify-content:center;width:100%;margin-top:6px;border:0;cursor:pointer}
+.form-ok{display:none;padding:16px 20px;border:1px solid var(--brass-dim);
+  background:rgba(216,167,91,.08);border-radius:12px;font-size:15px;color:var(--text)}
+.form-ok.on{display:block}
+.fine{font-size:13.5px;color:var(--text2);margin-top:4px}
+
+/* -- Colophon ------------------------------------------------ */
+/* The render sits behind the enrolment panel, blurred. Blurring the canvas
+   itself is the one approach that stays cheap: it diffuses the disc so the
+   copy stays readable, and it hides the noise, which buys a much lower step
+   count and render scale than a sharp version would need. */
+#void{position:absolute;inset:-6%;width:112%;height:112%;display:block;z-index:0;
+  filter:blur(30px) saturate(1.12);opacity:.52;transform:translateZ(0)}
+footer{padding:78px 0 48px;margin-top:70px;position:relative;background:var(--ink);border-top:1px solid var(--line)}
+@media (max-width:760px){#void{filter:blur(20px) saturate(1.1)}}
+.footer-in{display:grid;grid-template-columns:2fr 1fr 1fr;gap:56px;padding-bottom:44px}
+.footer-logo{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:20px;margin-bottom:16px}
+.footer-logo .seal{width:28px;height:28px;color:var(--brass)}
+.footer-desc{font-size:15px;color:var(--muted);max-width:42ch;margin-bottom:22px}
+.footer-mail{font-size:15px;color:var(--brass);border-bottom:1px solid transparent;transition:border-color .2s}
+.footer-mail:hover{border-bottom-color:var(--brass)}
+.footer-head{font-size:11.5px;font-weight:500;letter-spacing:var(--track-label);text-transform:uppercase;color:var(--text);margin-bottom:18px}
+.footer-links{display:grid;gap:11px;font-size:15px;color:var(--muted)}
+.footer-links a{transition:color .2s}
+.footer-links a:hover{color:var(--brass)}
+.footer-bottom a{color:var(--text2);border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.footer-bottom a:hover{color:var(--brass);border-bottom-color:var(--brass)}
+.footer-bottom{padding-top:26px;border-top:1px solid var(--line);display:flex;
+  justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13.5px;color:var(--muted)}
+
+/* -- Responsive ---------------------------------------------- */
+@media (max-width:1200px){
+  /* the description column was down to 78px before this */
+  .shop-in{grid-template-columns:1fr;gap:52px}
+  .shop-aside{position:static}
+  .shop-mark{display:none}
+}
+@media (max-width:1080px){
   .nav-links{display:none}
-  .nav-in{padding:0 20px}
-  .hero-in{padding:48px 20px 80px}
-  .section{padding:72px 0}
-  .class-grid,.feed-grid,.about-creds{grid-template-columns:1fr}
-  .footer-in{grid-template-columns:1fr 1fr}
-  .event{grid-template-columns:90px 1fr;gap:20px;padding:20px}
-  .ev-cta{grid-column:1/-1;justify-content:flex-end;padding-top:10px;border-top:1px solid var(--border)}
-  .about-creds{grid-template-columns:repeat(3,1fr);gap:8px}
-  .about-cred{padding:14px 8px}
-  .hero-meta{gap:24px}
-  .nl-form{flex-direction:column}
-  .marquee-track{font-size:16px;gap:32px}
+  .nav-acts{margin-left:auto}
+  .tp-in{grid-template-columns:1fr;gap:52px;padding:92px 30px 108px}
+  .tp-plate{aspect-ratio:16/10}
+  .disc-in{grid-template-columns:1fr}
+  .disc-photo{min-height:min(52vh,400px);margin:0 -30px}
+  .disc-body{padding:52px 0 72px}
+  .disc-in{column-gap:0}
+  .disc.flip .disc-in{direction:ltr}
+  .rail{grid-template-columns:1fr 1fr;margin-bottom:100px}
+  
+  .fac-in{grid-template-columns:1fr;gap:56px}
+  .fac-copy{padding-right:0}
+  .fac-photo,.fac-film-wrap{width:100%;margin-left:0}
+
+  .feed-grid{grid-template-columns:1fr 1fr}
+  .art-card.lead{grid-column:span 2;grid-template-columns:1fr;gap:24px}
+  .enrol-in{grid-template-columns:1fr;gap:52px}
+  .footer-in{grid-template-columns:1fr 1fr;gap:40px}
 }
+@media (max-width:760px){
+  body{font-size:15.5px;line-height:1.62}
+  .wrap,.nav-in,.tp-in,.disc-in{padding-left:20px;padding-right:20px}
+  .site-nav{padding:0 12px;margin-top:8px}
+  /* the language switcher took room the phone header did not have */
+  .nav-in{gap:8px;height:62px;padding-left:16px;padding-right:16px}
+  .nav-logo{font-size:14.5px;gap:8px}
+  .nav-logo .seal{width:21px;height:21px}
+  .nav-acts{gap:6px}
+  .nav-cta{padding:9px 13px;font-size:12.5px;flex-shrink:0}
+  .title-page{min-height:0}
+  /* The plate used to bleed past both edges and sat low. It is inset now, it
+     comes up the page, and the type steps down to match. */
+  .tp-in{padding:44px 20px 64px;gap:34px}
+  .tp-plate{margin:0;aspect-ratio:5/4;border-radius:16px}
+  .disc-photo{margin:0;border-radius:16px}
+  .tp-h1{font-size:clamp(30px,8.4vw,40px);line-height:0.92;letter-spacing:-.015em;margin-bottom:16px;max-width:18ch}
+  .tp-lead{font-size:16px;line-height:1.55;margin-bottom:26px;max-width:44ch}
+  .tp-acts{gap:14px}
+  .btn{width:100%;justify-content:center}
+  .btn-quiet{width:auto}
+  .method{padding-top:84px}
+  .sec-head{margin-bottom:48px}
+  .rail{grid-template-columns:1fr;margin:0 20px 84px;border-left:0}
+  .term{padding:30px 26px 34px}
+  .faculty,.shop,.journal,.enrol{padding:84px 0}
+  .feed-grid{grid-template-columns:1fr;gap:34px}
+  .art-card.lead{grid-column:span 1}
+  .item{grid-template-columns:1fr;gap:10px;padding:15px 16px;border-bottom:0;border-radius:14px;
+    background:rgba(242,238,230,.032);box-shadow:0 0 0 1px rgba(242,238,230,.05) inset;margin-bottom:10px}
+  .item:hover{background:rgba(242,238,230,.05)}
+  .item-name{font-size:20px;margin-bottom:2px}
+  .item-spec{font-size:13.5px;line-height:1.42}
+  .qty-num{width:42px}
+  .item-buy{gap:10px}
+  .item-buy{justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .item-price{min-width:0;text-align:left;font-size:22px}
+  .buy{padding:13px 20px;font-size:14px;flex:1 1 100%;order:3}
+  .shop-list{border-top:0}
+  .footer-in{grid-template-columns:1fr;gap:34px}
+  .tick{font-size:17px;padding:0 26px;gap:12px}
+  .tick svg{width:18px;height:18px}
+  .ribbon::before,.ribbon::after{width:56px}
+}
+
+
+/* -- Preloader, ADATS pattern at Siavash's request. Three hoops on genuinely
+   different 3D axes rather than flat circles faking depth, over a slow warm
+   bloom. Self-removing twice over: script drops it on load, and a CSS
+   animation retires it at 3.2s regardless, so a stalled asset or a script
+   error can never strand the page behind it. -- */
+.pre{position:fixed;inset:0;z-index:200;display:grid;place-items:center;
+  background:radial-gradient(120vw 90vh at 50% 38%,#17140f 0%,var(--ink) 62%);
+  animation:preFailSafe 0s linear 3.2s forwards}
+.pre.gone{opacity:0;visibility:hidden;transform:scale(1.015);
+  transition:opacity .62s var(--ease),transform .8s var(--ease),visibility .62s}
+@keyframes preFailSafe{to{opacity:0;visibility:hidden}}
+.pre-mark{position:relative;display:flex;flex-direction:column;align-items:center;gap:34px;padding:0 24px}
+.pre-mark::before{content:"";position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);
+  width:320px;height:320px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(216,167,91,.13),transparent 64%);
+  animation:preBloom 2.6s ease-in-out infinite}
+@keyframes preBloom{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.94)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+.gyro{position:relative;width:clamp(148px,34vw,196px);aspect-ratio:1;display:grid;place-items:center;
+  perspective:560px;transform-style:preserve-3d;opacity:0;animation:preIn .76s var(--ease) 60ms forwards}
+@keyframes preIn{to{opacity:1}}
+.gyro .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(216,167,91,.34);
+  transform-style:preserve-3d;backface-visibility:visible}
+.gyro .r1{animation:gyroA 5.4s linear infinite}
+.gyro .r2{inset:11%;border-color:rgba(216,167,91,.20);animation:gyroB 7.8s linear infinite}
+.gyro .r3{inset:22%;border-style:dashed;border-color:rgba(242,238,230,.13);animation:gyroC 13s linear infinite}
+@keyframes gyroA{from{transform:rotateZ(0deg) rotateX(72deg)}to{transform:rotateZ(360deg) rotateX(72deg)}}
+@keyframes gyroB{from{transform:rotateZ(360deg) rotateY(70deg)}to{transform:rotateZ(0deg) rotateY(70deg)}}
+@keyframes gyroC{from{transform:rotateX(58deg) rotateY(0deg)}to{transform:rotateX(58deg) rotateY(360deg)}}
+.pre-word{font-family:var(--serif);font-size:21px;letter-spacing:.02em;color:var(--text2)}
+.pre-bar{width:180px;height:1px;background:var(--line2);overflow:hidden}
+.pre-bar i{display:block;height:100%;width:100%;background:var(--brass);
+  transform:scaleX(0);transform-origin:0 50%;transition:transform .35s var(--ease)}
+@media (prefers-reduced-motion:reduce){.gyro .ring,.pre-mark::before{animation:none}}
+
+/* -- Persian. Vazirmatn for both faces, because a Latin display serif has no
+   Arabic-script glyphs and the browser would fall back to something arbitrary.
+   Persian text also sits differently on the line, so the leading opens up. -- */
+html[lang="fa"]{--serif:'Vazirmatn',Tahoma,sans-serif;--serif-it:'Vazirmatn',Tahoma,sans-serif;
+  --sans:'Vazirmatn',Tahoma,sans-serif;--prose:'Vazirmatn',Tahoma,sans-serif;--track-label:0}
+html[lang="fa"] body{line-height:1.9;letter-spacing:0}
+html[lang="fa"] h1,html[lang="fa"] h2,html[lang="fa"] h3{letter-spacing:0;line-height:1.45;font-weight:600}
+html[lang="fa"] .tp-h1{line-height:1.35;font-size:clamp(30px,3.6vw,52px);max-width:20ch}
+html[lang="fa"] .disc-name,html[lang="fa"] .sec-h{line-height:1.35}
+html[lang="fa"] .rate b,html[lang="fa"] .term-fig,html[lang="fa"] .disc-ix i{font-weight:600}
+html[lang="fa"] em,html[lang="fa"] .disc-for{font-style:normal}
+/* direction-sensitive bits that do not flip on their own */
+[dir="rtl"] .tp-h1 .ln:last-child{padding-left:0;padding-right:.34em}
+[dir="rtl"] .rate+.rate{padding-left:0;padding-right:30px}
+[dir="rtl"] .rate+.rate::before{left:auto;right:0}
+[dir="rtl"] .disc-in{direction:rtl}
+[dir="rtl"] .disc.flip .disc-in{direction:ltr}
+[dir="rtl"] .term-n::after{background:linear-gradient(270deg,var(--brass),transparent)}
+[dir="rtl"] .disc-ix::after{background:linear-gradient(270deg,var(--brass),transparent)}
+/* the field dims one side for the copy; in RTL the copy is on the other side */
+[dir="rtl"] #field{transform:scaleX(-1)}
+.lang{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.lang button{background:none;border:0;cursor:pointer;color:var(--muted);font:inherit;font-size:13px;
+  padding:7px 11px;border-radius:999px;transition:color .2s,background .2s}
+.lang button:hover{color:var(--text)}
+.lang button[aria-pressed="true"]{color:var(--brass);background:rgba(216,167,91,.10)}
+@media (max-width:760px){.lang button{padding:5px 7px;font-size:11.5px}}
+
+/* -- 40 percent film grain over every photograph -- */
+.fac-photo::after,.film::after,.art-thumb::after{
+  background-image:var(--grain);background-size:160px 160px;
+  opacity:.4;mix-blend-mode:overlay}
+.fac-photo::after,.film::after,.art-thumb::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:1}
+.fac-photo,.film,.art-thumb{position:relative}
+/* the film keeps its play control above the grain */
+.film-play{z-index:2}
+.fac-photo figcaption,.disc-photo figcaption,.tp-cap{z-index:3}
+
+.tp-lead,.sec-sub,.disc-copy,.fac-copy p,.term-p,.art-excerpt,.enrol p{
+  font-family:var(--prose);font-size:17.5px;line-height:1.66;letter-spacing:.001em}
+.tp-lead{font-size:19px;line-height:1.6}
+.sec-sub{font-size:18px}
+.term-p{font-size:16px;line-height:1.6}
+.disc-list li{font-family:var(--prose);font-size:15.5px}
+
+/* Placed after the prose override above, which also sets .disc-list li and
+   would otherwise win on source order at equal specificity. */
+
+/* Discipline card on a phone, 2026-08-12. It was set at desktop proportions:
+   a 36px display name, 15px feature lines and 1.7 leading on the body, which
+   on a 390px screen made one instrument fill more than a screen and a half.
+
+   The four feature lines each hold ONE line here. That is done with type, not
+   with shorter copy, because the Farsi dictionary at the foot of this file is
+   keyed by the exact English strings: editing any of these four sentences
+   silently breaks its own translation and the line stays English in FA mode.
+   The size is a clamp rather than a fixed px so "Grade preparation if you want
+   it, ignored if not", the longest of them at 47 characters, still fits on a
+   360px device without nowrap pushing it off the edge. */
+@media (max-width:760px){
+  .disc-ix{margin-bottom:12px;font-size:10px}
+  .disc-ix i{font-size:20px}
+  .disc-name{font-size:clamp(28px,7.6vw,34px);line-height:0.98;margin-bottom:6px}
+  .disc-for{font-size:11.5px;margin-bottom:18px;letter-spacing:.01em}
+  .disc-copy{font-size:14.5px;line-height:1.5;margin-bottom:22px;max-width:none}
+
+  .disc-list{gap:9px;margin-bottom:26px}
+  .disc-list li{
+    font-size:clamp(11.5px,3.4vw,14px);line-height:1.35;
+    letter-spacing:-.004em;gap:9px;align-items:center;
+    white-space:nowrap;min-width:0;
+  }
+  .disc-list svg{width:13px;height:13px;margin-top:0}
+}
+
+/* Below 340px the longest line would need about 10.7px to stay on one line,
+   which is past readable. One line is the goal, not the rule: under that width
+   it wraps at a size someone can actually read. */
+@media (max-width:339px){
+  .disc-list li{white-space:normal;font-size:12.5px;line-height:1.4;align-items:flex-start}
+  .disc-list svg{margin-top:3px}
+}
+.fac-copy p:first-of-type{font-size:19.5px;line-height:1.58;color:var(--text)}
+/* Phone: prose steps down and sets tighter. This has to sit after the base
+   block above, not in the earlier media query, or the cascade eats it. */
+@media (max-width:760px){
+  .tp-lead,.sec-sub,.disc-copy,.fac-copy p,.term-p,.art-excerpt,.enrol p{font-size:15.5px;line-height:1.54}
+  .tp-lead{font-size:16.5px;line-height:1.48}
+  .fac-copy p:first-of-type{font-size:17px;line-height:1.48}
+  .disc-list li{font-size:14.5px;line-height:1.44}
+}
+
+/* -- Phone: every tap target reaches 44px and nothing sits under 12.5px. --
+   Measured at 320, 375, 390, 414 and 430. Padding does the work where growing
+   the visible element would unbalance the layout. */
+@media (max-width:760px){
+  .nav-logo{min-height:44px;align-items:center}
+  .nav-cta{min-height:44px;display:inline-flex;align-items:center;padding:11px 15px}
+  .lang button{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center;padding:5px 9px}
+  .footer-mail{display:inline-flex;min-height:44px;align-items:center}
+  .footer-links a{min-height:40px;display:inline-flex;align-items:center}
+  .disc-link,.btn-quiet{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .cat-link{min-height:44px;display:inline-flex;align-items:center}
+  /* nothing under 12.5px on a phone */
+  .topbar .inner{font-size:12.5px}
+  .disc-for{font-size:14px}
+  .disc-free,.term-n,.field label,.footer-head,.art-top{font-size:12.5px}
+  .rate span{font-size:12.5px}
+  .item-spec{font-size:14px}
+  /* Links inside a sentence are exempt from the 44px rule (WCAG 2.5.8) and
+     forcing the height would break the line. Vertical padding on an inline
+     element grows the hit area without moving anything. */
+  .shop-note a,.footer-bottom a{padding-block:9px}
+}
+
+/* Journal, temporarily hidden. Delete this rule to bring it back. */
+.journal{display:none}
+.nav-links a[href$="#journal"],.footer-links a[href$="#journal"]{display:none}
 
 /* CONTRAST-AUDIT v2 - auto-derived from site theme so it adapts to each
    palette instead of forcing one fixed color (which broke white-on-white
@@ -347,347 +877,507 @@ body[data-page-depth="1"] article .intro a{color:var(--text,#0a0a0a) !important;
 </style>
 </head>
 <body>
-<!--SHELL:ACCENT:#f5b14d-->
+<!--SHELL:ACCENT:#d8a75b-->
 <!--SHELL:HEADER-->
-<nav class="site-nav">
+<a class="skip" href="#main">Skip to content</a>
+<div class="topbar">
+  <div class="inner">
+    <span>Drums, piano and violin</span><span class="sep"></span>
+    <span class="hide-sm">Studio and online</span><span class="sep hide-sm"></span>
+    <span>First session <b>free</b></span>
+  </div>
+</div>
+<nav class="site-nav" id="siteNav">
   <div class="nav-in">
-    <a href="./" class="nav-logo"><span class="mark">&#9839;</span>Elyar <em>Khosravi</em></a>
+    <a href="./" class="nav-logo" aria-label="Sight Reading Academy, home">
+      <svg class="seal" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+        <circle cx="16" cy="16" r="14.2"/>
+        <path d="M7.5 12.5h17M7.5 19.5h17" stroke-width=".85" opacity=".65"/>
+        <path d="M12 9v14M16 6.5v19M20 11.5v9" stroke-width="2.1" stroke-linecap="round"/>
+      </svg>
+      <span data-noi18n><b>Sight Reading</b> <i>Academy</i></span>
+    </a>
     <div class="nav-links">
-      <a href="./#tip">Daily Tips</a>
-      <a href="./#classes">Classes</a>
-      <a href="./#events">Concerts</a>
-      <a href="./#resources">Free Resources</a>
-      <a href="./#about">About</a>
+      <a href="./#disciplines">Disciplines</a>
+      <a href="./#method">Method</a>
+      <a href="./#faculty">Faculty</a>
+      <a href="./#equipment">Equipment</a>
+      <a href="./#journal">Journal</a>
     </div>
-    <a href="./#newsletter" class="nav-cta">Join Free</a>
+    <div class="nav-acts">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="fa" aria-pressed="false" lang="fa">فارسی</button>
+      </div>
+      <a href="./#enrol" class="nav-cta">Book a lesson</a>
+    </div>
   </div>
 </nav>
 <!--/SHELL:HEADER-->
 
-<section class="hero">
-  <div class="hero-staff">
-    <span style="top:30%"></span><span style="top:40%"></span><span style="top:50%"></span><span style="top:60%"></span><span style="top:70%"></span>
-  </div>
-  <div class="hero-glow"></div>
-  <div class="hero-glow b"></div>
-  <div class="hero-in">
-    <div class="hero-text reveal">
-      <div class="hero-eyebrow"><span class="live"></span>On tour &middot; Spring 2026</div>
-      <h1 class="hero-h1">
-        <span class="row1">Elyar</span>
-        <span class="row2">Khosravi</span>
-      </h1>
-      <div class="hero-role">Musician &middot; Educator &middot; Composer</div>
-      <p class="hero-desc">A daily place for the curious musician. Free practice tips every morning, group and private classes, plus live concerts and workshops across the season.</p>
-      <div class="hero-btns">
-        <a href="./#tip" class="btn-gold">Today's tip <span class="arr">&#8594;</span></a>
-        <a href="./#events" class="btn-outline">See upcoming shows</a>
-      </div>
-      <div class="hero-meta">
-        <div class="hero-meta-item"><div class="hero-meta-num"><em>365</em></div><div class="hero-meta-label">Tips a year, free</div></div>
-        <div class="hero-meta-item"><div class="hero-meta-num"><em>12</em></div><div class="hero-meta-label">Live dates booked</div></div>
-        <div class="hero-meta-item"><div class="hero-meta-num"><em>1,000s</em></div><div class="hero-meta-label">Students taught</div></div>
+<main id="main">
+
+<!-- 1. TITLE PAGE -->
+<section class="title-page">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="tp-in">
+    <div class="tp-text">
+      <h1 class="tp-h1" data-split data-fa="همان چیزی را بنواز<br>که روی نت نوشته شده.<br><em>همان بار اول.</em>">Play what is<br>on the page.<br><em>First time.</em></h1>
+      <p class="tp-lead" data-fade>Drums, piano and violin, taught by musicians who still perform. We start with rhythm, then reading, and the repertoire looks after itself. In the studio or online, from a standing start.</p>
+      <div class="tp-acts" data-fade>
+        <a href="./#enrol" class="btn">
+          Book a first lesson
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5"/></svg>
+        </a>
+        <a href="./#disciplines" class="btn btn-quiet">Choose an instrument</a>
       </div>
     </div>
-    <div class="hero-card reveal">
-      <div class="portrait">
-        <span class="clef-bg">&#119070;</span>
-        <span class="silhouette">&#9836;</span>
-        <div class="badge"><span class="dot"></span>Live</div>
-        <div class="name-tag">
-          <div class="role">Musician &middot; Tutor</div>
-          <div class="who">Elyar Khosravi</div>
-          <div class="where">Composer, performer, and music educator.</div>
-        </div>
-      </div>
-    </div>
+    <figure class="tp-plate" data-fade>
+      <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=1922,fit=crop/kKdCf340E7JbKUYD/img_8416-dtg2aFoHsEjR3Huo.jpg"
+           srcset="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,h=1024,fit=crop/kKdCf340E7JbKUYD/img_8416-dtg2aFoHsEjR3Huo.jpg 768w, https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=1922,fit=crop/kKdCf340E7JbKUYD/img_8416-dtg2aFoHsEjR3Huo.jpg 1440w"
+           sizes="(max-width:1080px) 100vw, 44vw" data-par="0.12"
+           alt="A drummer seated behind a five piece kit on a lit arena stage, looking back over his shoulder" width="1440" height="1922">
+      <figcaption class="tp-cap">Our drum faculty, on tour</figcaption>
+    </figure>
   </div>
 </section>
 
-<!-- PULSE: tonight + next class + today's tip -->
-<div class="pulse">
-  <div class="pulse-in">
-    <a href="./#events" class="pulse-cell show">
-      <div class="pulse-icon">&#9836;</div>
-      <div>
-        <div class="pulse-label">Next Concert</div>
-        <div class="pulse-title">An Evening of Persian Strings</div>
-        <div class="pulse-meta">Friday, June 14 &middot; Toronto</div>
-      </div>
-    </a>
-    <a href="./#classes" class="pulse-cell class">
-      <div class="pulse-icon">&#119070;</div>
-      <div>
-        <div class="pulse-label">Next Class</div>
-        <div class="pulse-title">Group Lesson: Reading at Tempo</div>
-        <div class="pulse-meta">Tuesdays &middot; 7pm online &middot; 6 seats left</div>
-      </div>
-    </a>
-    <a href="./#tip" class="pulse-cell tip">
-      <div class="pulse-icon">&#9834;</div>
-      <div>
-        <div class="pulse-label">Today's Free Tip</div>
-        <div class="pulse-title">Practice slow to play fast</div>
-        <div class="pulse-meta">3 min read &middot; New every morning</div>
-      </div>
-    </a>
+<!-- 2. RIBBON -->
+<div class="ribbon">
+  <div class="ribbon-track">
+    <span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Beginners welcome</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.4 6-5.4s6 2.1 6 5.4"/><path d="M16.5 6.6a3.2 3.2 0 0 1 0 6.3M18 14.9c2 .7 3.4 2.5 3.4 5.1"/></svg>One to one or small group</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Studio or online</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.6V4.6A1.6 1.6 0 0 1 4.6 3h7l9.4 9.4a1.6 1.6 0 0 1 0 2.3l-6.7 6.7a1.6 1.6 0 0 1-2.3 0Z"/><circle cx="7.8" cy="7.8" r="1.4"/></svg>First session free</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v7a4 4 0 0 0 8 0V3"/><path d="M12 14v7"/></svg>Ear training every term</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 3h5.2l4.4 18H5Z"/><path d="M6.6 15h10.8"/><path d="M12 19 16.5 6"/></svg>Playing to a click from week one</span>
+    <span aria-hidden="true" style="display:contents"><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Beginners welcome</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.4 6-5.4s6 2.1 6 5.4"/><path d="M16.5 6.6a3.2 3.2 0 0 1 0 6.3M18 14.9c2 .7 3.4 2.5 3.4 5.1"/></svg>One to one or small group</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Studio or online</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.6V4.6A1.6 1.6 0 0 1 4.6 3h7l9.4 9.4a1.6 1.6 0 0 1 0 2.3l-6.7 6.7a1.6 1.6 0 0 1-2.3 0Z"/><circle cx="7.8" cy="7.8" r="1.4"/></svg>First session free</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v7a4 4 0 0 0 8 0V3"/><path d="M12 14v7"/></svg>Ear training every term</span><span class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.4 3h5.2l4.4 18H5Z"/><path d="M6.6 15h10.8"/><path d="M12 19 16.5 6"/></svg>Playing to a click from week one</span></span>
   </div>
 </div>
 
-<!-- DAILY TIP FEATURE -->
-<section class="section tipfeat" id="tip">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-label">Daily Practice Tips</div>
-      <h2 class="sec-title">One small idea, <span class="grad">every morning.</span></h2>
-      <p class="sec-sub">A short, useful note from my own practice. Read it in three minutes, try it for a week, and let the small things compound.</p>
+<!-- 3. DISCIPLINES -->
+<section class="discs" id="disciplines">
+  <div class="discs-sticky">
+    <div class="discs-rail" aria-hidden="true">
+      <div class="rail-item on" data-rail="0"><i></i>Drums</div>
+      <div class="rail-item" data-rail="1"><i></i>Piano</div>
+      <div class="rail-item" data-rail="2"><i></i>Violin</div>
     </div>
-    <div class="tip-grid">
-      <a href="./#resources" class="tip-card reveal" id="featureTipCard">
-        <div class="tip-stamp"><span class="pulse-dot"></span>Today's tip</div>
-        <h3 class="tip-title" id="featureTipTitle">Practice slow enough to hear every note land.</h3>
-        <p class="tip-body" id="featureTipBody">Speed hides mistakes. When the tempo drops, your ear starts noticing the small things: a rushed sixteenth, a thumb that crosses too late, the moment a phrase wants to breathe. Fix those at half speed and full speed takes care of itself.</p>
-        <span class="tip-cta">Read the full tip</span>
-      </a>
-      <div class="reveal">
-        <div class="tip-list-head">This week</div>
-        <div class="tip-list" id="tipList"></div>
+
+    <article class="disc" id="drums">
+      <div class="disc-in">
+        <figure class="disc-photo">
+          <img src="https://images.unsplash.com/photo-1676912004492-0fa09f28fe2e?w=1400&q=80&auto=format&fit=crop"
+               srcset="https://images.unsplash.com/photo-1676912004492-0fa09f28fe2e?w=760&q=80&auto=format&fit=crop 760w, https://images.unsplash.com/photo-1676912004492-0fa09f28fe2e?w=1400&q=80&auto=format&fit=crop 1400w"
+               sizes="(max-width:1080px) 100vw, 50vw" data-par="0.1"
+               alt="A drum kit seen from above, snare and toms with a pair of sticks resting across the head" loading="lazy" width="1400" height="933">
+          <figcaption>Drums</figcaption>
+        </figure>
+        <div class="disc-body">
+          <div class="disc-ix"><i>01</i>Discipline</div>
+          <h2 class="disc-name">Drums</h2>
+          <div class="disc-for">From age 8 . no experience needed</div>
+          <p class="disc-copy">Most drummers learn by ear and get a long way on it. Then someone puts a chart in front of them and the room waits. We teach counting, subdivision and chart reading from the first lesson, so that moment never costs you the gig.</p>
+          <ul class="disc-list">
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Rudiments, stick control and hand technique</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Chart reading, counted out loud until it sticks</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Groove, feel, and holding time against a click</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Playing with a band as soon as you are ready</li>
+          </ul>
+          <div class="disc-foot">
+            <div class="disc-rates">
+              <div class="rate"><b>$54</b><span>per session, 45 min</span></div>
+              <div class="rate pack"><b>$479</b><span>10 sessions, save $61</span></div>
+            </div>
+            <div class="disc-cta">
+              <span class="disc-free">First session free</span>
+              <a href="./#enrol" class="disc-link">Book a drum lesson</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="disc flip" id="piano">
+      <div class="disc-in">
+        <figure class="disc-photo">
+          <img src="https://images.unsplash.com/photo-1724170710168-b332e27d7f3e?w=1400&q=80&auto=format&fit=crop"
+               srcset="https://images.unsplash.com/photo-1724170710168-b332e27d7f3e?w=760&q=80&auto=format&fit=crop 760w, https://images.unsplash.com/photo-1724170710168-b332e27d7f3e?w=1400&q=80&auto=format&fit=crop 1400w"
+               sizes="(max-width:1080px) 100vw, 50vw" data-par="0.1"
+               alt="A pianist at the keyboard reading from sheet music on the stand, in black and white" loading="lazy" width="1400" height="2100">
+          <figcaption>Piano</figcaption>
+        </figure>
+        <div class="disc-body">
+          <div class="disc-ix"><i>02</i>Discipline</div>
+          <h2 class="disc-name">Piano</h2>
+          <div class="disc-for">Classical and contemporary . any age</div>
+          <p class="disc-copy">Two hands, two clefs, and a page that does not wait for you. Piano is where reading pays back fastest, so we build it in order: intervals before note names, patterns before speed, and music you actually wanted to play in the first place.</p>
+          <ul class="disc-list">
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Both clefs, hands together, from early on</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Intervals and chord shapes read as one unit</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Scales and technique, only where the music asks</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Grade preparation if you want it, ignored if not</li>
+          </ul>
+          <div class="disc-foot">
+            <div class="disc-rates">
+              <div class="rate"><b>$52</b><span>per session, 45 min</span></div>
+              <div class="rate pack"><b>$459</b><span>10 sessions, save $61</span></div>
+            </div>
+            <div class="disc-cta">
+              <span class="disc-free">First session free</span>
+              <a href="./#enrol" class="disc-link">Book a piano lesson</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="disc" id="violin">
+      <div class="disc-in">
+        <figure class="disc-photo">
+          <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=2160,fit=crop/kKdCf340E7JbKUYD/photo_2020-01-06_17-02-54-blbwYlbsvgcKcck3.jpg"
+               srcset="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,h=1152,fit=crop/kKdCf340E7JbKUYD/photo_2020-01-06_17-02-54-blbwYlbsvgcKcck3.jpg 768w, https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=2160,fit=crop/kKdCf340E7JbKUYD/photo_2020-01-06_17-02-54-blbwYlbsvgcKcck3.jpg 1440w"
+               sizes="(max-width:1080px) 100vw, 50vw" data-par="0.1"
+               alt="A violinist playing under magenta and purple stage lighting" loading="lazy" width="1440" height="2160">
+          <figcaption>Violin</figcaption>
+        </figure>
+        <div class="disc-body">
+          <div class="disc-ix"><i>03</i>Discipline</div>
+          <h2 class="disc-name">Violin</h2>
+          <div class="disc-for">Classical grounding . any repertoire after that</div>
+          <p class="disc-copy">Intonation is a listening problem before it is a finger problem. We spend real time on the ear and on bow control, then put a page in front of you and let reading carry the rest. Classical foundation, and whatever you like once you have it.</p>
+          <ul class="disc-list">
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Posture, bow hold, and a tone worth listening to</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Ear training and intonation trained together</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Position work and shifting, introduced slowly</li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"/></svg>Ensemble playing, and the nerve to do it in public</li>
+          </ul>
+          <div class="disc-foot">
+            <div class="disc-rates">
+              <div class="rate"><b>$58</b><span>per session, 45 min</span></div>
+              <div class="rate pack"><b>$519</b><span>10 sessions, save $61</span></div>
+            </div>
+            <div class="disc-cta">
+              <span class="disc-free">First session free</span>
+              <a href="./#enrol" class="disc-link">Book a violin lesson</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- 4. METHOD -->
+<section class="method" id="method">
+  <div class="rail-outer">
+    <div class="rail-pin">
+      <div class="wrap sec-head">
+        <h2 class="sec-h" data-split data-fa="چهار ترم، و <em>ترتیب‌شان همان روش است.</em>">Four terms, and <em>the order is the method.</em></h2>
+        <p class="sec-sub" data-fade>Each term assumes the one before it. That sequence is the whole difference between a student who keeps improving and one who plateaus at the point where most self taught players quietly give up.</p>
+      </div>
+      <div class="rail" id="rail">
+        <div class="term">
+          <div class="term-top">
+            <div class="term-fig">01</div>
+            <svg class="term-ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M7 26V8l16-3v15"/><ellipse cx="4.6" cy="26" rx="3.4" ry="2.6"/><ellipse cx="20.6" cy="23" rx="3.4" ry="2.6"/><path d="M7 12l16-3"/></svg>
+          </div>
+          <div class="term-n">Term one</div>
+          <h3 class="term-h">Rhythm, out loud</h3>
+          <p class="term-p">Counting and subdivision until you can feel time without a metronome granting permission. Pitch can wait. Rhythm is the hardest thing to repair later, so it goes first.</p>
+        </div>
+        <div class="term">
+          <div class="term-top">
+            <div class="term-fig">02</div>
+            <svg class="term-ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h24M4 14h24M4 20h24M4 26h24" opacity=".45"/><path d="M12 5c-3 4-3 8 0 12s3 8 0 11" stroke-width="1.6"/><circle cx="21" cy="17" r="3" fill="currentColor" stroke="none"/><path d="M24 17V7" stroke-linecap="round"/></svg>
+          </div>
+          <div class="term-n">Term two</div>
+          <h3 class="term-h">Reading by shape</h3>
+          <p class="term-p">Intervals and contour instead of naming every note. You start reading a phrase the way you read a word, in one movement.</p>
+        </div>
+        <div class="term">
+          <div class="term-top">
+            <div class="term-fig">03</div>
+            <svg class="term-ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M6 26 26 6" stroke-linecap="round"/><path d="M6 26l-2 2M26 6l2-2" stroke-linecap="round"/><circle cx="10" cy="22" r="2.6"/><circle cx="22" cy="10" r="2.6"/><path d="M14.5 17.5h3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="term-n">Term three</div>
+          <h3 class="term-h">Technique on demand</h3>
+          <p class="term-p">Scales, stick control and bowing, introduced where the music needs them. Technique practised for its own sake gets dropped.</p>
+        </div>
+        <div class="term">
+          <div class="term-top">
+            <div class="term-fig">04</div>
+            <svg class="term-ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="12" r="4"/><path d="M3 27c0-3.9 3.1-6.4 7-6.4s7 2.5 7 6.4"/><circle cx="22" cy="14" r="3.4"/><path d="M17.5 27c0-3.4 2-5.6 4.5-5.6s4.5 2.2 4.5 5.6"/><path d="M27 5v7" stroke-linecap="round"/><circle cx="25.6" cy="12.4" r="1.6" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div class="term-n">Term four</div>
+          <h3 class="term-h">Other people</h3>
+          <p class="term-p">Playing with other people, holding time against a click, reading a page you have never seen. Everything before this was preparation.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee">
-  <div class="marquee-track">
-    <span>Free daily tips</span><span>Group &amp; private lessons</span><span>Masterclasses &amp; workshops</span><span>Live concerts &amp; events</span><span>Composing &amp; arranging</span><span>Free daily tips</span><span>Group &amp; private lessons</span><span>Masterclasses &amp; workshops</span><span>Live concerts &amp; events</span><span>Composing &amp; arranging</span>
-  </div>
-</div>
-
-<!-- CLASSES -->
-<section class="section classes" id="classes">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <div class="sec-label">Teaching &amp; Classes</div>
-      <h2 class="sec-title">Learn with me, <em>your way.</em></h2>
-      <p class="sec-sub">From one-on-one lessons to weekly group classes and seasonal masterclasses. Beginners welcome.</p>
+<!-- 5. FACULTY -->
+<section class="faculty" id="faculty">
+  <div class="wrap fac-in">
+    <div class="fac-copy">
+      <h2 class="sec-h" data-split data-fa="اساتیدی که <em>هنوز روی صحنه‌اند.</em>">Taught by people who <em>still have gigs.</em></h2>
+      <p data-fade>Every instructor here is a working musician. They teach in the same week they play, and it shows in what they ask of you.</p>
+      <p data-fade>Lessons are one to one, in the studio or online over video with a proper audio chain on our end rather than a laptop microphone. Group classes run in small cohorts, small enough that nobody gets to hide at the back.</p>
+      <p data-fade>If you are not sure which instrument is yours, book one lesson and find out. There is no package to commit to and no term you have to catch the start of.</p>
+      <div class="fac-meta" data-fade>
+        <div><b>Formats</b><span>One to one, small group, online</span></div>
+        <div><b>Ages</b><span>Children from 8, teenagers, adults</span></div>
+        <div><b>Levels</b><span>First lesson through advanced</span></div>
+        <div><b>Contact</b><span><a href="mailto:info@sightreadingacademy.com" class="footer-mail">info@sightreadingacademy.com</a></span></div>
+      </div>
     </div>
-    <div class="class-grid">
-      <div class="class-card reveal">
-        <span class="class-tag">Private</span>
-        <h3>1:1 Private Lessons</h3>
-        <p>Tailored sessions focused entirely on you. Technique, reading, repertoire, or audition prep. Online or in person.</p>
-        <div class="class-foot"><span class="class-format">60 min &middot; weekly</span><span class="class-cta">Book a slot</span></div>
-      </div>
-      <div class="class-card reveal">
-        <span class="class-tag">Group</span>
-        <h3>Weekly Group Classes</h3>
-        <p>Small online cohorts working through structured curriculums together. Affordable, social, and surprisingly fast.</p>
-        <div class="class-foot"><span class="class-format">90 min &middot; 8 wk term</span><span class="class-cta">Join cohort</span></div>
-      </div>
-      <div class="class-card reveal">
-        <span class="class-tag">Masterclass</span>
-        <h3>Monthly Masterclasses</h3>
-        <p>One topic, one evening, deep. Sight-reading, improvisation, or interpretation. Recorded for everyone enrolled.</p>
-        <div class="class-foot"><span class="class-format">2 hr &middot; monthly</span><span class="class-cta">Reserve seat</span></div>
-      </div>
-      <div class="class-card reveal">
-        <span class="class-tag">Workshop</span>
-        <h3>Weekend Workshops</h3>
-        <p>Immersive weekends for serious students. Ensemble playing, composing, or themed deep-dives, twice a year in studio.</p>
-        <div class="class-foot"><span class="class-format">2 days &middot; in person</span><span class="class-cta">Get on list</span></div>
+    <div class="fac-stack">
+      <figure class="fac-photo">
+        <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=1080,fit=crop/kKdCf340E7JbKUYD/92698830_10221684695123216_1831757823227199488_n-QY3pi4R7BX7h4MPG.jpg"
+             srcset="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=768,h=576,fit=crop/kKdCf340E7JbKUYD/92698830_10221684695123216_1831757823227199488_n-QY3pi4R7BX7h4MPG.jpg 768w, https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1440,h=1080,fit=crop/kKdCf340E7JbKUYD/92698830_10221684695123216_1831757823227199488_n-QY3pi4R7BX7h4MPG.jpg 1440w"
+             sizes="(max-width:1080px) 100vw, 52vw" data-parx="0.24"
+             alt="Two instructors working together in the studio, one at a keyboard in headphones and one on electric guitar" loading="lazy" width="1440" height="1080">
+        <figcaption>Instructors, in the studio</figcaption>
+      </figure>
+      <div class="fac-film-wrap">
+        <div class="film" id="film" role="button" tabindex="0" aria-label="Play the academy film">
+          <img src="https://i.ytimg.com/vi/ch940MvoJSI/hqdefault.jpg" alt="Still frame from the Sight Reading Academy film" loading="lazy" width="480" height="360">
+          <div class="film-play"><span>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6L19 12z"/></svg>
+          </span></div>
+        </div>
+        <div class="film-cap">Inside a lesson</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EVENTS / CONCERTS -->
-<section class="section events" id="events">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-label">Concerts &amp; Events</div>
-      <h2 class="sec-title">Where I'll be <em>playing next.</em></h2>
-      <p class="sec-sub">Live concerts, residencies, festivals, and the occasional pop-up performance. Tickets and details below.</p>
-    </div>
-    <div class="event-list">
-      <a href="./#newsletter" class="event reveal">
-        <div class="ev-date">
-          <div class="ev-month">Jun</div>
-          <div class="ev-day">14</div>
-          <div class="ev-year">2026</div>
+<!-- 6. EQUIPMENT -->
+<section class="shop" id="equipment">
+  <div class="wrap shop-in">
+    <aside class="shop-aside">
+      <h2 class="sec-h" data-split data-fa="تجهیزات، با <em>قیمت هنرجویی.</em>">Kit, at <em>student prices.</em></h2>
+      <p class="sec-sub" data-fade>What we actually put in front of beginners. It arrives tuned and set up rather than in a box of parts. Collect from the studio, or delivery inside the city.</p>
+      <div class="shop-mark" aria-hidden="true">
+        <svg viewBox="0 0 260 150" fill="none" stroke="currentColor" stroke-width="1.2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="130" cy="96" rx="46" ry="17"/>
+          <path d="M84 96v22c0 9.4 20.6 17 46 17s46-7.6 46-17V96"/>
+          <ellipse cx="72" cy="66" rx="27" ry="10"/><path d="M45 66v13c0 5.5 12.1 10 27 10s27-4.5 27-10V66"/>
+          <ellipse cx="188" cy="66" rx="27" ry="10"/><path d="M161 66v13c0 5.5 12.1 10 27 10s27-4.5 27-10V66"/>
+          <path d="M14 40h56M42 40v62" opacity=".85"/><ellipse cx="42" cy="40" rx="28" ry="4"/>
+          <path d="M190 34h56M218 34v40" opacity=".85"/><ellipse cx="218" cy="34" rx="28" ry="4"/>
+          <path d="M130 135v9M96 144h68"/>
+        </svg>
+      </div>
+    </aside>
+
+    <div>
+      <div class="shop-list">
+        <!-- TODO: wire .buy to a real checkout. Front end only for now, by decision.
+             Replace handleBuy() below with a Stripe Payment Link redirect or a cart POST. -->
+        <div class="item" data-name="Practice pad and sticks" data-price="64">
+          <div>
+            <h3 class="item-name">Practice pad and sticks</h3>
+            <p class="item-spec">A 12 inch two sided pad in natural gum rubber, with a pair of 5A hickory sticks. The first thing every drum student buys, and the one that gets used daily.</p>
+          </div>
+          <div class="item-buy">
+            <div class="item-price">$64.00</div>
+            <div class="qty" role="group" aria-label="Quantity, practice pad and sticks">
+              <button type="button" class="qty-btn" data-step="-1" aria-label="Decrease quantity">
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2.5 7h9"/></svg>
+              </button>
+              <input class="qty-num" type="number" value="1" min="1" max="99" inputmode="numeric" aria-label="Quantity, practice pad and sticks">
+              <button type="button" class="qty-btn" data-step="1" aria-label="Increase quantity">
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M7 2.5v9M2.5 7h9"/></svg>
+              </button>
+            </div>
+            <button type="button" class="buy">Buy now</button>
+          </div>
         </div>
-        <div class="ev-body">
-          <div class="ev-kind concert">Concert &middot; Headline</div>
-          <div class="ev-title">An Evening of Persian Strings</div>
-          <div class="ev-meta"><span>Toronto, ON</span><span>The Music Gallery</span><span>Doors 7pm</span></div>
+
+        <div class="item" data-name="Maple snare, 14 by 5.5" data-price="389">
+          <div>
+            <h3 class="item-name">Maple snare, 14 by 5.5</h3>
+            <p class="item-spec">An eight ply maple shell with a twenty strand wire. Tuned and the head properly seated before it leaves the studio, so it sounds like itself on day one.</p>
+          </div>
+          <div class="item-buy">
+            <div class="item-price">$389.00</div>
+            <div class="qty" role="group" aria-label="Quantity, maple snare">
+              <button type="button" class="qty-btn" data-step="-1" aria-label="Decrease quantity">
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2.5 7h9"/></svg>
+              </button>
+              <input class="qty-num" type="number" value="1" min="1" max="99" inputmode="numeric" aria-label="Quantity, maple snare">
+              <button type="button" class="qty-btn" data-step="1" aria-label="Increase quantity">
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M7 2.5v9M2.5 7h9"/></svg>
+              </button>
+            </div>
+            <button type="button" class="buy">Buy now</button>
+          </div>
         </div>
-        <div class="ev-cta"><span class="ev-status">Tickets open</span><span class="ev-arrow">&#8594;</span></div>
-      </a>
-      <a href="./#newsletter" class="event reveal">
-        <div class="ev-date">
-          <div class="ev-month">Jul</div>
-          <div class="ev-day">02</div>
-          <div class="ev-year">2026</div>
+
+        <div class="item" data-name="Five piece student kit" data-price="1240">
+          <div>
+            <h3 class="item-name">Five piece student kit</h3>
+            <p class="item-spec">Kick, snare, two rack toms and a floor tom, with hardware, cymbals and a throne. Assembled, tuned and played before collection.</p>
+          </div>
+          <div class="item-buy">
+            <div class="item-price">$1,240.00</div>
+            <div class="qty" role="group" aria-label="Quantity, five piece student kit">
+              <button type="button" class="qty-btn" data-step="-1" aria-label="Decrease quantity">
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2.5 7h9"/></svg>
+              </button>
+              <input class="qty-num" type="number" value="1" min="1" max="99" inputmode="numeric" aria-label="Quantity, five piece student kit">
+              <button type="button" class="qty-btn" data-step="1" aria-label="Increase quantity">
+                <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M7 2.5v9M2.5 7h9"/></svg>
+              </button>
+            </div>
+            <button type="button" class="buy">Buy now</button>
+          </div>
         </div>
-        <div class="ev-body">
-          <div class="ev-kind workshop">Masterclass &middot; Online</div>
-          <div class="ev-title">Sight-Reading Without Hesitation</div>
-          <div class="ev-meta"><span>Live on Zoom</span><span>Recording included</span><span>2 hours</span></div>
-        </div>
-        <div class="ev-cta"><span class="ev-status few">Few seats</span><span class="ev-arrow">&#8594;</span></div>
-      </a>
-      <a href="./#newsletter" class="event reveal">
-        <div class="ev-date">
-          <div class="ev-month">Aug</div>
-          <div class="ev-day">19</div>
-          <div class="ev-year">2026</div>
-        </div>
-        <div class="ev-body">
-          <div class="ev-kind concert">Festival</div>
-          <div class="ev-title">Summer Strings Festival</div>
-          <div class="ev-meta"><span>Stratford, ON</span><span>Outdoor Stage</span><span>Family friendly</span></div>
-        </div>
-        <div class="ev-cta"><span class="ev-status">Tickets open</span><span class="ev-arrow">&#8594;</span></div>
-      </a>
-      <a href="./#newsletter" class="event reveal">
-        <div class="ev-date">
-          <div class="ev-month">Sep</div>
-          <div class="ev-day">07</div>
-          <div class="ev-year">2026</div>
-        </div>
-        <div class="ev-body">
-          <div class="ev-kind">Workshop &middot; In Person</div>
-          <div class="ev-title">Weekend Composing Intensive</div>
-          <div class="ev-meta"><span>Toronto Studio</span><span>2 days</span><span>Intermediate+</span></div>
-        </div>
-        <div class="ev-cta"><span class="ev-status">Wait list</span><span class="ev-arrow">&#8594;</span></div>
-      </a>
-      <a href="./#newsletter" class="event reveal">
-        <div class="ev-date">
-          <div class="ev-month">Oct</div>
-          <div class="ev-day">25</div>
-          <div class="ev-year">2026</div>
-        </div>
-        <div class="ev-body">
-          <div class="ev-kind concert">Concert &middot; Duo</div>
-          <div class="ev-title">Voice &amp; Strings: A Conversation</div>
-          <div class="ev-meta"><span>Montreal, QC</span><span>Salle Bourgie</span><span>One night only</span></div>
-        </div>
-        <div class="ev-cta"><span class="ev-status">Tickets open</span><span class="ev-arrow">&#8594;</span></div>
-      </a>
+      </div>
+      <div class="order-msg" id="orderMsg" role="status" aria-live="polite"></div>
+      <p class="shop-note">Students on a term take 10 percent off. Questions about sizing or setup, <a href="mailto:info@sightreadingacademy.com">email the studio</a>.</p>
     </div>
   </div>
 </section>
 
-<!-- RESOURCES (article feed) -->
-<section class="section resources" id="resources">
+<!-- 7. JOURNAL -->
+<!-- Journal is hidden for now at Siavash's request. The markup and the
+     articles.json loader stay in place so the Spider feed keeps working and
+     it can come back by deleting one CSS rule. -->
+<section class="journal" id="journal">
   <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="sec-label">Free Resources</div>
-      <h2 class="sec-title">A growing library of <em>practice notes.</em></h2>
-      <p class="sec-sub">In-depth lessons on reading, technique, ear training, theory, and the daily habits that actually move the needle.</p>
+    <div class="sec-head">
+      <h2 class="sec-h" data-split data-fa="یادداشت‌هایی از <em>اتاق تمرین.</em>">Notes from <em>the practice room.</em></h2>
+      <p class="sec-sub" data-fade>Reading, rhythm, ear training, and the daily habits that move a student forward. Written by the faculty, free to read, no sign up.</p>
     </div>
-    <div class="feed-bar reveal">
-      <div class="cat-link active" data-filter="all">All</div>
-      <div class="cat-link" data-filter="sight-reading">Sight-Reading</div>
-      <div class="cat-link" data-filter="rhythm">Rhythm</div>
-      <div class="cat-link" data-filter="ear-training">Ear Training</div>
-      <div class="cat-link" data-filter="theory">Theory</div>
-      <div class="cat-link" data-filter="practice">Practice</div>
-      <div class="cat-link" data-filter="piano">Piano</div>
+    <div class="feed-bar">
+      <div class="cat-link active" data-filter="all" role="button" tabindex="0">All</div>
+      <div class="cat-link" data-filter="sight-reading" role="button" tabindex="0">Sight Reading</div>
+      <div class="cat-link" data-filter="rhythm" role="button" tabindex="0">Rhythm</div>
+      <div class="cat-link" data-filter="ear-training" role="button" tabindex="0">Ear Training</div>
+      <div class="cat-link" data-filter="theory" role="button" tabindex="0">Theory</div>
+      <div class="cat-link" data-filter="practice" role="button" tabindex="0">Practice</div>
+      <div class="cat-link" data-filter="piano" role="button" tabindex="0">Piano</div>
     </div>
     <div class="feed-grid" id="lessonGrid"></div>
   </div>
 </section>
 
-<!-- QUOTE -->
-<section class="section quote">
-  <div class="wrap reveal">
-    <span class="quote-mark">&#8220;</span>
-    <p class="quote-text">Music does not reward the talented. It rewards the curious who show up, quietly, every single day.</p>
-    <div class="quote-attr">Elyar Khosravi</div>
-  </div>
-</section>
-
-<!-- ABOUT ELYAR -->
-<section class="section about" id="about">
-  <div class="wrap about-in">
-    <div class="about-portrait reveal">
-      <span class="glyph">&#9836;</span>
-      <div class="stamp">
-        <div class="role">Musician &middot; Tutor</div>
-        <div class="name">Elyar Khosravi</div>
+<!-- 8. ENROLMENT -->
+<section class="enrol" id="enrol">
+  <canvas id="void" aria-hidden="true"></canvas>
+  <div class="wrap enrol-in">
+    <div>
+      <h2 class="sec-h" data-split data-fa="رزرو <em>جلسه اول.</em>">Book a <em>first lesson.</em></h2>
+      <p data-fade>Tell us the instrument and we come back with times, usually the same day. The first session is free, and nothing follows automatically after it.</p>
+      <div class="fac-meta" data-fade>
+        <div><b>Studio</b><span>In person, seven days</span></div>
+        <div><b>Online</b><span>Video lessons anywhere</span></div>
+        <div><b>Email</b><span><a href="mailto:info@sightreadingacademy.com" class="footer-mail">info@sightreadingacademy.com</a></span></div>
       </div>
     </div>
-    <div class="about-body reveal">
-      <div class="sec-label">About Elyar</div>
-      <h2 class="sec-title">A musician who loves <em>teaching almost as much.</em></h2>
-      <p class="lead">I play, I compose, I teach. The same curiosity drives all three.</p>
-      <p>For me, music has always lived in the small details. The shift of a phrase, the breath before a downbeat, the moment a student finally hears what they were missing. Whether on stage with collaborators or one-on-one with a beginner, I'm chasing the same thing: clarity, fluency, and a kind of quiet joy that only practice can earn.</p>
-      <p>This site is where it all comes together. Free tips for anyone who wants to grow. Classes for those who want a real curriculum. Concerts for nights when music belongs on a stage. I'm glad you stopped by.</p>
-      <div class="about-creds">
-        <div class="about-cred"><b>15+</b><span>Years on stage</span></div>
-        <div class="about-cred"><b>500+</b><span>Students taught</span></div>
-        <div class="about-cred"><b>3</b><span>Continents toured</span></div>
-      </div>
+    <div>
+      <form class="form" id="bookForm" novalidate>
+        <div class="field-row">
+          <div class="field" id="f-name">
+            <label for="in-name">Your name</label>
+            <input id="in-name" name="name" type="text" placeholder="First and last name" autocomplete="name" required>
+            <div class="field-err">Please tell us your name.</div>
+          </div>
+          <div class="field" id="f-email">
+            <label for="in-email">Email address</label>
+            <input id="in-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+            <div class="field-err">That email address does not look right.</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="in-inst">Instrument</label>
+            <select id="in-inst" name="instrument">
+              <option value="drums">Drums</option>
+              <option value="piano">Piano</option>
+              <option value="violin">Violin</option>
+              <option value="unsure">Not sure yet</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="in-exp">Playing experience</label>
+            <select id="in-exp" name="experience">
+              <option value="none">Complete beginner</option>
+              <option value="under1">Under a year</option>
+              <option value="1to3">One to three years</option>
+              <option value="over3">More than three years</option>
+              <option value="returning">Coming back after a break</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="in-age">Who is the lesson for</label>
+            <select id="in-age" name="age">
+              <option value="adult">Myself, an adult</option>
+              <option value="teen">A teenager</option>
+              <option value="child">A child, 8 to 12</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="in-format">Studio or online</label>
+            <select id="in-format" name="format">
+              <option value="studio">In the studio</option>
+              <option value="online">Online</option>
+              <option value="either">Either is fine</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="in-when">When suits you</label>
+          <input id="in-when" name="when" type="text" placeholder="Weekday evenings, weekend mornings, and so on">
+        </div>
+        <div class="field">
+          <label for="in-goal">What would you like to be able to play</label>
+          <textarea id="in-goal" name="goal" rows="2" placeholder="Optional. A piece, a style, an exam, or just where you are stuck."></textarea>
+        </div>
+        <button type="submit" class="btn">Request a time</button>
+        <p class="fine">We reply by email. Your details go nowhere else.</p>
+        <div class="form-ok" id="formOk" role="status" aria-live="polite"></div>
+      </form>
     </div>
   </div>
 </section>
 
-<!-- NEWSLETTER -->
-<section class="section newsletter" id="newsletter">
-  <div class="wrap nl-in reveal">
-    <div class="nl-clef">&#119070;</div>
-    <h2 class="nl-title">The <em>Morning Note</em></h2>
-    <p class="nl-sub">One practice tip, every weekday morning. Plus early access to new classes, workshops, and concert tickets.</p>
-    <form class="nl-form" onsubmit="return false">
-      <input class="nl-input" type="email" placeholder="your@email.com" aria-label="Email address">
-      <button class="nl-btn" type="submit">Subscribe Free</button>
-    </form>
-    <p class="nl-fine">No spam. Unsubscribe in one click. Free forever.</p>
-  </div>
-</section>
-
-
-
+</main>
 
 <!--SHELL:FOOTER-->
-<div style="text-align:center;padding:40px 24px 56px"><a href="./articles" style="color:currentColor;text-decoration:none;font-family:Georgia,serif;font-size:22px;font-style:italic;border-bottom:1px solid currentColor;padding-bottom:3px">The full archive</a></div>
 <footer>
   <div class="wrap">
     <div class="footer-in">
       <div>
-        <div class="footer-logo"><span class="mark">&#9839;</span>Elyar <em>Khosravi</em></div>
-        <p class="footer-desc">Musician, composer, and educator. Daily practice tips, group and private classes, live concerts and workshops.</p>
-        <div class="footer-social">
-          <a href="#" aria-label="Instagram">IG</a>
-          <a href="#" aria-label="YouTube">YT</a>
-          <a href="#" aria-label="Spotify">SP</a>
-          <a href="#" aria-label="Email">@</a>
+        <div class="footer-logo">
+          <svg class="seal" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <circle cx="16" cy="16" r="14.2"/>
+            <path d="M7.5 12.5h17M7.5 19.5h17" stroke-width=".85" opacity=".65"/>
+            <path d="M12 9v14M16 6.5v19M20 11.5v9" stroke-width="2.1" stroke-linecap="round"/>
+          </svg>
+          <span data-noi18n>Sight Reading Academy</span>
         </div>
+        <p class="footer-desc">Drums, piano and violin, taught by working musicians. In the studio and online, beginners welcome.</p>
+        <a class="footer-mail" href="mailto:info@sightreadingacademy.com">info@sightreadingacademy.com</a>
       </div>
       <div>
-        <div class="footer-head">Explore</div>
+        <div class="footer-head">Study</div>
         <div class="footer-links">
-          <a href="./#tip">Daily Tips</a>
-          <a href="./#classes">Classes</a>
-          <a href="./#events">Concerts &amp; Events</a>
-          <a href="./#resources">Free Resources</a>
+          <a href="./#drums">Drum lessons</a>
+          <a href="./#piano">Piano lessons</a>
+          <a href="./#violin">Violin lessons</a>
+          <a href="./#method">The method</a>
+          <a href="./#equipment">Equipment</a>
         </div>
       </div>
       <div>
-        <div class="footer-head">Learn</div>
-        <div class="footer-links">
-          <a href="./#classes">Private 1:1</a>
-          <a href="./#classes">Group Class</a>
-          <a href="./#classes">Masterclass</a>
-          <a href="./#classes">Workshops</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-head">Site</div>
+        <div class="footer-head">Academy</div>
         <div class="footer-links">
           <a href="./">Home</a>
+          <a href="./#faculty">Faculty</a>
+          <a href="./#journal">Journal</a>
           <a href="about">About</a>
           <a href="privacy">Privacy</a>
           <a href="terms">Terms</a>
@@ -695,90 +1385,758 @@ body[data-page-depth="1"] article .intro a{color:var(--text,#0a0a0a) !important;
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">&copy; 2026 Elyar Khosravi. All rights reserved.</div>
-      <div class="footer-copy">Music, methodically taught.</div>
+      <div>&copy; 2026 Sight Reading Academy. All rights reserved.</div>
+      <div>Powered by <a href="https://kavalsia.com" rel="noopener">Kavalsia</a></div>
     </div>
   </div>
 </footer>
 
 <script>
+/* ============================================================
+   Sight Reading Academy - homepage behaviour
+   Order of business: content first, motion second. Nothing below
+   is allowed to be the reason a visitor cannot read the page.
+   ============================================================ */
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- 0. Preloader ---------- */
+(function(){
+  if(REDUCED)return;
+  const el=document.createElement('div');
+  el.className='pre'; el.setAttribute('aria-hidden','true');
+  el.innerHTML='<div class="pre-mark">'+
+    '<div class="gyro"><span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span></div>'+
+    '<div class="pre-word">Sight Reading Academy</div>'+
+    '<div class="pre-bar"><i id="preBar"></i></div></div>';
+  document.documentElement.appendChild(el);
+  const bar=el.querySelector('#preBar');
+  let pct=0;
+  const tick=setInterval(function(){pct=Math.min(92,pct+Math.random()*13);bar.style.transform='scaleX('+(pct/100)+')';},170);
+  let done=false;
+  function finish(){
+    if(done)return; done=true;
+    clearInterval(tick); bar.style.transform='scaleX(1)';
+    el.classList.add('gone');
+    setTimeout(function(){el.remove();},700);
+  }
+  if(document.readyState==='complete')setTimeout(finish,260);
+  else addEventListener('load',function(){setTimeout(finish,260);});
+  setTimeout(finish,3000);
+})();
+
+/* ---------- 1. Article feed (Spider articles.json) ---------- */
 let arts=[];
 let activeFilter="all";
-
 function catLabel(c){return (c||"").replace(/-/g," ").replace(/\b\w/g,m=>m.toUpperCase());}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
 
-function renderFeatureTip(items){
-  const v=items.filter(a=>a&&a.slug);
-  if(!v.length)return;
-  const top=v[0];
-  const t=document.getElementById("featureTipTitle");
-  const b=document.getElementById("featureTipBody");
-  const c=document.getElementById("featureTipCard");
-  if(t)t.textContent=top.title;
-  if(b&&top.excerpt)b.textContent=top.excerpt;
-  if(c)c.setAttribute("href","./"+top.slug+"/");
+function card(a,lead){
+  return `<a href="./${esc(a.slug)}/" class="art-card${lead?' lead':''}">
+    ${a.image?`<div class="art-thumb"><img src="${esc(a.image)}" alt="" loading="lazy" onerror="this.closest('.art-thumb').remove()"></div>`:''}
+    <div>
+      <div class="art-top"><span class="art-cat">${esc(catLabel(a.cat))}</span><span class="num">${esc(a.mins)} min read</span></div>
+      <h3 class="art-title">${esc(a.title)}</h3>
+      <p class="art-excerpt">${esc(a.excerpt||"")}</p>
+      <span class="art-more">Read it</span>
+    </div>
+  </a>`;
 }
-
-function renderTipList(items){
-  const el=document.getElementById("tipList");
-  if(!el)return;
-  const v=items.filter(a=>a&&a.slug);
-  if(!v.length){
-    el.innerHTML='<div class="tip-list-item" style="opacity:.7"><span class="tip-list-date">Soon</span><span><div class="tip-list-title">New tips arriving shortly</div></span></div>';
-    return;
-  }
-  const days=["Mon","Tue","Wed","Thu","Fri"];
-  el.innerHTML=v.slice(1,6).map((a,i)=>`
-    <a href="./${a.slug}/" class="tip-list-item">
-      <span class="tip-list-date">${days[i]||""}</span>
-      <span><div class="tip-list-cat">${catLabel(a.cat)}</div><div class="tip-list-title">${a.title}</div></span>
-    </a>`).join("");
-}
-
 function renderLessons(){
   const g=document.getElementById("lessonGrid");
   if(!g)return;
   const valid=arts.filter(a=>a&&a.slug);
   const filtered=activeFilter==="all"?valid:valid.filter(a=>a.cat===activeFilter);
-  const items=filtered.slice(0,6);
-  if(!items.length){g.innerHTML='<div class="feed-empty">New resources coming soon.</div>';return;}
-  g.innerHTML=items.map(a=>`
-    <a href="./${a.slug}/" class="art-card">
-      ${a.image?`<div class="art-thumb"><img src="${a.image}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`:''}
-      <div class="art-top"><span class="art-cat">${catLabel(a.cat)}</span><span class="art-mins">${a.mins} min read</span></div>
-      <h3 class="art-title">${a.title}</h3>
-      <p class="art-excerpt">${a.excerpt||""}</p>
-      <span class="art-more">Read the tip</span>
-    </a>`).join("");
-  if(window.__revealScan)window.__revealScan();
+  const items=filtered.slice(0,7);
+  if(!items.length){g.innerHTML='<div class="feed-empty">Nothing filed under that heading yet. Try another.</div>';return;}
+  g.innerHTML=items.map((a,i)=>card(a,i===0)).join("");
 }
-
 function setFilter(f){
   activeFilter=f;
   document.querySelectorAll(".cat-link").forEach(c=>c.classList.toggle("active",c.dataset.filter===f));
   renderLessons();
+  if(window.ScrollTrigger)ScrollTrigger.refresh();
 }
-document.querySelectorAll(".cat-link").forEach(c=>{c.addEventListener("click",()=>setFilter(c.dataset.filter));});
-
-async function load(){
+document.querySelectorAll(".cat-link").forEach(c=>{
+  c.addEventListener("click",()=>setFilter(c.dataset.filter));
+  c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setFilter(c.dataset.filter);}});
+});
+(async function load(){
   if(!document.getElementById("lessonGrid"))return;
   try{
     const r=await fetch("./articles.json");
-    if(r.ok){const d=await r.json();arts=Array.isArray(d)?d:[];}
-    else{arts=[];}
+    arts=r.ok?await r.json():[];
+    if(!Array.isArray(arts))arts=[];
   }catch(e){arts=[];}
-  renderFeatureTip(arts);
-  renderTipList(arts);
   renderLessons();
-}
-load();
+  if(window.ScrollTrigger)ScrollTrigger.refresh();
+})();
 
-/* Scroll reveal */
-const io=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
-},{threshold:.1});
-window.__revealScan=function(){document.querySelectorAll(".reveal:not(.in)").forEach(el=>io.observe(el));};
-window.__revealScan();
+/* ---------- 2. Equipment ---------- */
+function money(n){return "$"+n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
+document.querySelectorAll(".item").forEach(item=>{
+  const input=item.querySelector(".qty-num");
+  const price=parseFloat(item.dataset.price);
+  const out=item.querySelector(".item-price");
+  const minus=item.querySelector('.qty-btn[data-step="-1"]');
+  function sync(){
+    let v=parseInt(input.value,10);
+    if(!isFinite(v)||v<1)v=1;
+    if(v>99)v=99;
+    input.value=v;
+    out.textContent=money(price*v);
+    minus.disabled=(v<=1);
+  }
+  item.querySelectorAll(".qty-btn").forEach(b=>{
+    b.addEventListener("click",()=>{
+      input.value=(parseInt(input.value,10)||1)+parseInt(b.dataset.step,10);
+      sync();
+    });
+  });
+  input.addEventListener("input",sync);
+  input.addEventListener("blur",sync);
+  item.querySelector(".buy").addEventListener("click",()=>handleBuy(item,parseInt(input.value,10)||1));
+  sync();
+});
+/* Checkout is not connected yet, by decision. Replace the body of this
+   function with a Stripe Payment Link redirect or a cart POST when it is. */
+function handleBuy(item,qty){
+  const box=document.getElementById("orderMsg");
+  if(!box)return;
+  const name=item.dataset.name;
+  const total=money(parseFloat(item.dataset.price)*qty);
+  const subject=encodeURIComponent("Order: "+qty+" x "+name);
+  const body=encodeURIComponent("I would like to order "+qty+" x "+name+" ("+total+").\n\nName:\nDelivery or collection:\n");
+  box.innerHTML='<b>'+qty+' x '+name+', '+total+'.</b> Card payment is not switched on yet. '+
+    '<a href="mailto:info@sightreadingacademy.com?subject='+subject+'&body='+body+'">Send this order by email</a> and we will confirm stock and take payment at the studio.';
+  box.classList.add("on");
+  box.scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"});
+}
+
+/* ---------- 3. Film facade ---------- */
+(function(){
+  const film=document.getElementById("film");
+  if(!film)return;
+  function play(){
+    const f=document.createElement("iframe");
+    f.src="https://www.youtube.com/embed/ch940MvoJSI?autoplay=1&rel=0";
+    f.title="Sight Reading Academy";
+    f.allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture";
+    f.allowFullscreen=true;
+    film.replaceChildren(f);
+  }
+  film.addEventListener("click",play);
+  film.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();play();}});
+})();
+
+/* ---------- 4. Booking form ---------- */
+(function(){
+  const form=document.getElementById("bookForm");
+  if(!form)return;
+  const nameF=document.getElementById("f-name");
+  const mailF=document.getElementById("f-email");
+  const ok=document.getElementById("formOk");
+  form.addEventListener("submit",e=>{
+    e.preventDefault();
+    const n=form.name.value.trim();
+    const m=form.email.value.trim();
+    let bad=false;
+    nameF.classList.toggle("bad",!n); if(!n)bad=true;
+    const mailOk=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m);
+    mailF.classList.toggle("bad",!mailOk); if(!mailOk)bad=true;
+    if(bad){(!n?form.name:form.email).focus();return;}
+    const pick=function(f){return form[f].options[form[f].selectedIndex].text;};
+    ok.textContent = (document.documentElement.lang==='fa')
+      ? "ممنون "+n+". درخواست شما برای «"+pick('instrument')+"» ثبت شد ("+pick('experience')+"، "+pick('format')+"). وقت‌های آزاد را به‌زودی ایمیل می‌کنیم."
+      : "Thank you, "+n+". We have your request for "+pick('instrument').toLowerCase()+" ("+pick('experience').toLowerCase()+", "+pick('format').toLowerCase()+") and will email you times shortly.";
+    ok.classList.add("on");
+    form.reset();
+  });
+  ["name","email"].forEach(k=>{
+    form[k].addEventListener("input",()=>{(k==="name"?nameF:mailF).classList.remove("bad");});
+  });
+})();
+
+/* ---------- 5. WebGL sound field ----------
+   Standing waves across a staff, drawn in brass on ink. Raw WebGL, no
+   library. If the context fails the CSS gradient underneath is the design,
+   not a hole. Paused whenever the hero is off screen or the tab is hidden. */
+(function(){
+  const cv=document.getElementById('field');
+  if(!cv)return;
+  let gl;
+  try{ gl=cv.getContext('webgl',{antialias:false,alpha:true,depth:false,powerPreference:'low-power'}); }catch(e){}
+  if(!gl){cv.remove();return;}
+
+  const VS='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  const FS=[
+  'precision mediump float;',
+  'uniform vec2 u_res;uniform float u_t;uniform vec2 u_m;uniform float u_energy;',
+  'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}',
+  // one waveform trace, fundamental plus two harmonics under a played envelope
+  'float trace(vec2 uv,float mid,float amp,float freq,float ph,float thick,out float dev){',
+  '  float env=0.26+0.74*pow(sin(uv.x*3.14159),1.3);',
+  '  float bump=exp(-pow((uv.x-u_m.x)*3.2,2.0))*u_energy;',
+  '  float a=amp*(env+bump*1.8);',
+  '  float y=mid+a*(sin(uv.x*freq+ph)*0.58',
+  '              +sin(uv.x*freq*2.03+ph*1.7)*0.27',
+  '              +sin(uv.x*freq*3.91-ph*0.8)*0.15);',
+  '  dev=y-mid;',
+  '  return thick/(abs(uv.y-y)+thick);',
+  '}',
+  'void main(){',
+  '  vec2 uv=gl_FragCoord.xy/u_res;',
+  '  float t=u_t*0.55;',
+  '  float gain=0.050+u_m.y*0.050;',
+  '  float acc=0.0,glow=0.0,d;',
+  // the signal: three channels through the centre, brightest first
+  '  acc+=trace(uv,0.50,gain*1.00,7.0, t      ,0.0016,d)*1.00;',
+  '  glow+=trace(uv,0.50,gain*1.00,7.0, t      ,0.030 ,d)*0.10;',
+  '  acc+=trace(uv,0.50,gain*0.62,9.4, t*1.31 ,0.0012,d)*0.55;',
+  '  acc+=trace(uv,0.50,gain*0.38,12.7,t*0.79 ,0.0010,d)*0.34;',
+  // depth: quieter staves above and below, drifting at their own rate
+  '  acc+=trace(uv,0.775,gain*0.50,8.2, t*0.91+1.7,0.0011,d)*0.30;',
+  '  acc+=trace(uv,0.225,gain*0.50,8.2,-t*0.91-1.7,0.0011,d)*0.30;',
+  '  acc+=trace(uv,0.900,gain*0.34,10.9,t*0.63+3.1,0.0009,d)*0.17;',
+  '  acc+=trace(uv,0.100,gain*0.34,10.9,-t*0.63-3.1,0.0009,d)*0.17;',
+  '  acc+=trace(uv,0.640,gain*0.26,14.3,t*1.12+5.0,0.0008,d)*0.12;',
+  '  acc+=trace(uv,0.360,gain*0.26,14.3,-t*1.12-5.0,0.0008,d)*0.12;',
+  // light riding the crest of the main trace, like a note sounding
+  '  float md; trace(uv,0.50,gain*1.00,7.0,t,0.0016,md);',
+  '  float crest=exp(-pow((uv.y-(0.50+md))*90.0,2.0));',
+  '  float spark=0.0;',
+  '  for(int i=0;i<3;i++){',
+  '    float fi=float(i);',
+  '    float sx=fract(0.17+fi*0.31+t*(0.055+fi*0.021));',
+  '    spark+=exp(-pow((uv.x-sx)*46.0,2.0))*crest;',
+  '  }',
+  // a slow warm field so the ground is not flat black
+  '  float neb=exp(-pow(distance(uv,vec2(0.30+0.05*sin(t*0.19),0.62))*1.5,2.0))*0.30',
+  '          +exp(-pow(distance(uv,vec2(0.78+0.06*cos(t*0.13),0.34))*1.7,2.0))*0.22;',
+  '  vec3 brass=vec3(0.847,0.655,0.357);',
+  '  vec3 warm=vec3(0.98,0.86,0.62);',
+  '  float prox=exp(-pow(distance(uv,u_m)*2.0,2.0));',
+  '  vec3 col=mix(brass,warm,clamp(acc*0.22,0.0,1.0))*acc*0.26;',
+  '  col+=brass*glow*0.26;',
+  '  col+=warm*spark*0.16;',
+  '  col+=brass*neb*0.018;',
+  '  col+=brass*prox*0.050*u_energy;',
+  // grain, or the long dark ramps band
+  '  col+=(hash(gl_FragCoord.xy)-0.5)*0.0055;',
+  // The copy lives on the left. Rather than lay a scrim over the whole canvas,
+  // the field itself stays quiet there and keeps its full range on the right.
+  '  float readable=0.13+0.87*smoothstep(0.05,0.62,uv.x);',
+  '  col*=readable;',
+  '  float edge=smoothstep(0.0,0.18,uv.x)*smoothstep(1.0,0.82,uv.x);',
+  '  float vert=smoothstep(0.0,0.09,uv.y)*smoothstep(1.0,0.91,uv.y);',
+  '  gl_FragColor=vec4(col*edge*vert,1.0);',
+  '}'].join('\n');
+
+  function sh(type,src){
+    const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn('shader',gl.getShaderInfoLog(s));return null;}
+    return s;
+  }
+  const vs=sh(gl.VERTEX_SHADER,VS),fs=sh(gl.FRAGMENT_SHADER,FS);
+  if(!vs||!fs){cv.remove();return;}
+  const pr=gl.createProgram();
+  gl.attachShader(pr,vs);gl.attachShader(pr,fs);gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){cv.remove();return;}
+  gl.useProgram(pr);
+
+  const buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(pr,'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const uRes=gl.getUniformLocation(pr,'u_res'),
+        uT=gl.getUniformLocation(pr,'u_t'),
+        uM=gl.getUniformLocation(pr,'u_m'),
+        uE=gl.getUniformLocation(pr,'u_energy');
+
+  let mouse=[0.5,0.5], target=[0.5,0.5], energy=0, targetEnergy=0;
+  function size(){
+    const dpr=Math.min(window.devicePixelRatio||1,1.5);
+    const w=cv.clientWidth,h=cv.clientHeight;
+    if(!w||!h)return;
+    cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+    gl.viewport(0,0,cv.width,cv.height);
+    gl.uniform2f(uRes,cv.width,cv.height);
+  }
+  window.addEventListener('resize',size,{passive:true});
+  size();
+
+  const hero=cv.parentElement;
+  hero.addEventListener('pointermove',e=>{
+    const r=hero.getBoundingClientRect();
+    target=[(e.clientX-r.left)/r.width,1-(e.clientY-r.top)/r.height];
+    targetEnergy=1;
+  },{passive:true});
+  hero.addEventListener('pointerleave',()=>{targetEnergy=0;},{passive:true});
+
+  function frame(t){
+    if(!onScreen||document.hidden){running=false;return;}
+    mouse[0]+=(target[0]-mouse[0])*0.075;
+    mouse[1]+=(target[1]-mouse[1])*0.075;
+    energy+=(targetEnergy-energy)*0.045;
+    gl.uniform1f(uT,t*0.001);
+    gl.uniform2f(uM,mouse[0],mouse[1]);
+    gl.uniform1f(uE,energy);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    requestAnimationFrame(frame);
+  }
+  function still(){
+    gl.uniform1f(uT,2.4);
+    gl.uniform2f(uM,0.5,0.5);
+    gl.uniform1f(uE,0.0);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+  }
+
+  let onScreen=true,running=false;
+  function start(){ if(running||REDUCED)return; running=true; requestAnimationFrame(frame); }
+  if(REDUCED){ still(); }
+  else{
+    new IntersectionObserver(es=>{
+      onScreen=es[0].isIntersecting;
+      if(onScreen)start();
+    },{threshold:0}).observe(hero);
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&onScreen)start(); });
+    start();
+  }
+})();
+
+/* ---------- 6. Motion ----------
+   Everything here is additive. Entrance states are authored at runtime with
+   gsap.from(), never in CSS, so a blocked CDN or reduced motion simply leaves
+   the finished page on screen. */
+/* nav condenses once you leave the top */
+(function(){
+  const nav=document.getElementById('siteNav');
+  if(!nav)return;
+  const sync=function(){nav.classList.toggle('stuck',window.scrollY>28);};
+  sync();addEventListener('scroll',sync,{passive:true});
+})();
+
+window.addEventListener('load',function(){
+  if(REDUCED||!window.gsap||!window.ScrollTrigger)return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* split headings into word spans inside line masks */
+  document.querySelectorAll('[data-split]').forEach(function(el){
+    const html=el.innerHTML.split('<br>');
+    el.innerHTML=html.map(function(line){
+      return '<span class="ln">'+line.trim().split(/\s+/).map(function(w){
+        return '<span class="wd">'+w+'</span>';
+      }).join(' ')+'</span>';
+    }).join('');
+  });
+
+  /* hero */
+  const heroWords=document.querySelectorAll('.tp-h1 .wd');
+  if(heroWords.length){
+    gsap.from(heroWords,{yPercent:118,duration:1.15,ease:'expo.out',stagger:0.035});
+  }
+  gsap.from('.title-page [data-fade]',{y:26,opacity:0,duration:.9,ease:'expo.out',stagger:.09,delay:.32});
+
+  /* section headings and copy */
+  gsap.utils.toArray('[data-split]').forEach(function(h){
+    if(h.classList.contains('tp-h1'))return;
+    gsap.from(h.querySelectorAll('.wd'),{
+      yPercent:112,duration:.95,ease:'expo.out',stagger:.028,
+      scrollTrigger:{trigger:h,start:'top 84%'}
+    });
+  });
+  gsap.utils.toArray('[data-fade]').forEach(function(el){
+    if(el.closest('.title-page'))return;
+    gsap.from(el,{y:22,opacity:0,duration:.8,ease:'expo.out',
+      scrollTrigger:{trigger:el,start:'top 88%'}});
+  });
+
+  /* the faculty frame is wider than its window, so it pans across instead of
+     being permanently cropped down the middle */
+  gsap.utils.toArray('[data-parx]').forEach(function(img){
+    const amt=parseFloat(img.dataset.parx)||0.2;
+    gsap.fromTo(img,{xPercent:0},{xPercent:-amt*100,ease:'none',
+      scrollTrigger:{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:.6}});
+  });
+
+  /* parallax on every plate */
+  gsap.utils.toArray('[data-par]').forEach(function(img){
+    const amt=parseFloat(img.dataset.par)||0.1;
+    gsap.fromTo(img,{yPercent:-amt*50},{yPercent:amt*50,ease:'none',
+      scrollTrigger:{trigger:img.parentElement,start:'top bottom',end:'bottom top',scrub:true}});
+  });
+
+  /* --- disciplines: pinned cross-fade stage (desktop only) --- */
+  const discs=document.querySelector('.discs');
+  const mm=gsap.matchMedia();
+  mm.add('(min-width: 1081px)',function(){
+    discs.classList.add('is-stage');
+    ScrollTrigger.refresh();
+    const panels=gsap.utils.toArray('.discs .disc');
+    const rails=gsap.utils.toArray('.rail-item');
+    gsap.set(panels,{autoAlpha:0});
+    gsap.set(panels[0],{autoAlpha:1});
+    panels.forEach(function(p,i){
+      gsap.set(p.querySelector('.disc-photo img'),{scale:1.06});
+    });
+    /* HOLD then hand off. Each panel gets real dwell time before it fades,
+       otherwise the first one starts disappearing at scroll progress zero. */
+    const HOLD=1.9, XF=0.62;
+    const tl=gsap.timeline({
+      scrollTrigger:{trigger:discs,start:'top top',end:'bottom bottom',scrub:.85,
+        onUpdate:function(self){
+          /* The hand-off from panel i-1 to i is centred at i*HOLD+(i-0.5)*XF.
+             Marking the rail on anything else leaves it out of step. */
+          const total=panels.length*HOLD+(panels.length-1)*XF;
+          const t=self.progress*total;
+          let idx=0;
+          for(let i=1;i<panels.length;i++){
+            if(t>=i*HOLD+(i-0.5)*XF)idx=i;
+          }
+          rails.forEach(function(r,i){r.classList.toggle('on',i===idx);});
+        }}
+    });
+    for(let i=1;i<panels.length;i++){
+      tl.to({},{duration:HOLD})
+        .to(panels[i-1],{autoAlpha:0,duration:XF},'>')
+        .to(panels[i],{autoAlpha:1,duration:XF},'<')
+        .fromTo(panels[i].querySelector('.disc-body'),{y:46},{y:0,duration:XF,ease:'expo.out'},'<');
+    }
+    tl.to({},{duration:HOLD});
+    return function(){
+      discs.classList.remove('is-stage');
+      gsap.set(panels,{clearProps:'all'});
+      gsap.set(panels.map(function(p){return p.querySelector('.disc-photo img');}),{clearProps:'scale'});
+    };
+  });
+
+  /* --- method: horizontal rail scrubbed by vertical scroll --- */
+  mm.add('(min-width: 761px)',function(){
+    const method=document.querySelector('.method');
+    const outer=document.querySelector('.rail-outer');
+    const rail=document.getElementById('rail');
+    method.classList.add('is-rail');
+    /* In RTL the flex track begins at the right edge, so it has to travel the
+       other way or the later cards never come into view. */
+    const sign=function(){return document.documentElement.dir==='rtl'?1:-1;};
+    const travel=function(){return Math.max(0,rail.scrollWidth-window.innerWidth+60);};
+    /* Scroll distance is stretched well past the horizontal travel so the first
+       card holds long enough to read, and scrubbing back feels symmetrical. */
+    const sizeOuter=function(){outer.style.height=(window.innerHeight+travel()*1.9)+'px';};
+    sizeOuter();
+    ScrollTrigger.refresh();
+    /* A plain scrub starts moving the instant you scroll, and card one sits at
+       the left edge, so it slid away immediately. Holds at both ends fix that
+       and make scrubbing back feel symmetrical. */
+    const st=gsap.timeline({
+      scrollTrigger:{trigger:outer,start:'top top',end:'bottom bottom',scrub:.5,
+        invalidateOnRefresh:true,onRefreshInit:sizeOuter}
+    });
+    st.to({},{duration:.34})
+      .to(rail,{x:function(){return sign()*travel();},ease:'none',duration:1})
+      .to({},{duration:.22});
+    return function(){ st.scrollTrigger&&st.scrollTrigger.kill(); st.kill();
+      method.classList.remove('is-rail'); outer.style.height=''; gsap.set(rail,{clearProps:'all'}); };
+  });
+
+  /* --- buttons lean toward the cursor --- */
+  document.querySelectorAll('.btn, .nav-cta, .buy').forEach(function(b){
+    const qx=gsap.quickTo(b,'x',{duration:.4,ease:'power3'});
+    const qy=gsap.quickTo(b,'y',{duration:.4,ease:'power3'});
+    b.addEventListener('pointermove',function(e){
+      const r=b.getBoundingClientRect();
+      qx((e.clientX-(r.left+r.width/2))*0.16);
+      qy((e.clientY-(r.top+r.height/2))*0.22);
+    });
+    b.addEventListener('pointerleave',function(){qx(0);qy(0);});
+  });
+
+  ScrollTrigger.refresh();
+});
+
+/* ---------- 7. Footer: a Schwarzschild black hole ----------
+   Ported from a React component to plain WebGL, because this project has no
+   React, no Tailwind and no build step: it is one static HTML file that a
+   Python script publishes to GitHub Pages.
+
+   Every pixel fires one ray and walks it backwards through curved space until
+   it crosses the horizon, escapes, or cuts the gas disc. The halo over the
+   shadow and the thin ring hugging it are the same disc seen again through
+   bent light. Nothing lines them up. r = 1 is the horizon, so the photon
+   sphere falls at 1.5 and the innermost stable orbit at 3.
+
+   It only runs while the footer is on screen. */
+(function(){
+  const cv=document.getElementById('void');
+  if(!cv)return;
+  let gl;
+  try{ gl=cv.getContext('webgl',{alpha:false,antialias:false,depth:false,stencil:false,powerPreference:'low-power'}); }catch(e){}
+  if(!gl){ cv.remove(); return; }
+
+  const VS='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+
+  const SCENE=[
+  'precision highp float;',
+  '#define MAX_STEPS 260',
+  'uniform vec2 uRes;uniform float uT;uniform vec3 uCam,uRight,uUp,uFwd;',
+  'uniform float uTan,uSteps;uniform vec2 uFocus,uJit;uniform float uSeed;',
+  'float hash13(vec3 p){p=fract(p*0.3183099+vec3(0.1,0.2,0.3));p*=17.0;',
+  '  return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}',
+  'float vnoise(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.0-2.0*f);',
+  '  float n000=hash13(i),n100=hash13(i+vec3(1,0,0)),n010=hash13(i+vec3(0,1,0)),n110=hash13(i+vec3(1,1,0));',
+  '  float n001=hash13(i+vec3(0,0,1)),n101=hash13(i+vec3(1,0,1)),n011=hash13(i+vec3(0,1,1)),n111=hash13(i+vec3(1,1,1));',
+  '  return mix(mix(mix(n000,n100,f.x),mix(n010,n110,f.x),f.y),',
+  '             mix(mix(n001,n101,f.x),mix(n011,n111,f.x),f.y),f.z);}',
+  'float fbm(vec3 p,float lod){float a=0.5,s=0.0;',
+  '  for(int i=0;i<4;i++){ s+=(i==3?a*lod:a)*vnoise(p); p=p*2.03+vec3(11.3,7.1,3.7); a*=0.5; } return s;}',
+  // gas
+  'const float DIN=3.0,DOUT=15.0,THICK=0.26,SPIN=1.30,GRAIN=0.48,WIND=26.0;',
+  'void gasAt(vec3 p,float rd,float dt,out float dens,out vec3 tint,out float heat){',
+  '  float rn=clamp((rd-DIN)/(DOUT-DIN),0.0,1.0);',
+  '  float tk=THICK*(0.35+1.25*rn);float v=p.y/tk;float sheet=exp(-v*v);',
+  '  float lod=clamp(1.0-dt*GRAIN*14.0,0.0,1.0);',
+  '  float phi=atan(p.z,p.x);',
+  '  float omega=SPIN*pow(DIN/rd,1.5);',       // Kepler: every radius turns at its own rate
+  '  float lr=log(rd)*1.1+SPIN*uT*0.05;',
+  // two copies of the wind, half a cycle apart, so the shear never winds to moire
+  '  float u=uT/WIND;float fA=fract(u),fB=fract(u+0.5);float w=abs(2.0*fA-1.0);',
+  '  float cA=fbm(vec3(vec2(cos(phi+omega*fA*WIND),sin(phi+omega*fA*WIND))*(rd*GRAIN),lr),lod);',
+  '  float cB=fbm(vec3(vec2(cos(phi+omega*fB*WIND),sin(phi+omega*fB*WIND))*(rd*GRAIN),lr+40.0),lod);',
+  '  float clouds=mix(cA,cB,w);',
+  '  float fil=clouds*clouds*1.75;',
+  '  float prof=smoothstep(0.0,0.07,rn)*(1.0-smoothstep(0.45,1.0,rn))*pow(DIN/rd,2.0);',
+  '  dens=max(0.0,fil*1.5-0.30)*sheet*prof*4.6;',
+  '  heat=pow(DIN/rd,0.8)*(0.72+0.55*clouds);',
+  // brass palette, so the footer belongs to this site
+  '  vec3 cool=vec3(0.171,0.070,0.011),mid=vec3(0.702,0.377,0.098),hot=vec3(1.0,0.902,0.741);',
+  '  tint=mix(cool,mid,smoothstep(0.10,0.52,heat));',
+  '  tint=mix(tint,hot,smoothstep(0.52,1.05,heat));}',
+  'void main(){',
+  '  vec2 uv=(gl_FragCoord.xy+uJit-uFocus*uRes)/uRes.y;',
+  '  vec3 dir=normalize(uFwd+(uv.x*uRight+uv.y*uUp)*2.0*uTan);',
+  '  vec3 pos=uCam,vel=dir;',
+  '  vec3 hv=cross(pos,vel);float h2=dot(hv,hv),h=sqrt(h2);float swept=0.0;',
+  '  vec3 col=vec3(0.0);float transmit=1.0;',
+  '  float jit=fract(sin(dot(gl_FragCoord.xy+uSeed,vec2(12.9898,78.233)))*43758.5453);',
+  '  for(int i=0;i<MAX_STEPS;i++){',
+  '    if(float(i)>=uSteps)break;',
+  '    float r2=dot(pos,pos),r=sqrt(r2);',
+  '    if(r<1.0)break;',                                   // through the horizon
+  '    if(r>46.0&&dot(pos,vel)>0.0)break;',                // gone, not coming back
+  '    if(transmit<0.004)break;',
+  '    float dt=clamp(0.14*(r-1.0),0.025,1.1);',
+  '    if(r<DOUT*1.25){float rn=clamp((r-DIN)/(DOUT-DIN),0.0,1.0);',
+  '      float tk=THICK*(0.35+1.25*rn);dt=min(dt,max(tk*0.38,abs(pos.y)*0.5));}',
+  '    swept+=h*dt/r2;',
+  '    float deep=exp(-1.3*max(0.0,swept-4.6));',          // each extra loop costs ~e^2pi
+  '    jit=fract(jit+0.6180339887);',
+  '    vec3 mid=pos+vel*(dt*jit);float rd=length(mid.xz);',
+  '    if(rd>DIN&&rd<DOUT&&abs(mid.y)<THICK*5.0){',
+  '      float dens,heat;vec3 tint;gasAt(mid,rd,dt,dens,tint,heat);',
+  '      if(dens>0.001){',
+  '        vec3 tang=normalize(cross(vec3(0.0,1.0,0.0),vec3(mid.x,0.0,mid.z)));',
+  '        float beta=min(0.85,sqrt(0.5/max(rd,1.5)));',
+  '        float gam=inversesqrt(max(1e-4,1.0-beta*beta));',
+  '        vec3 toObs=-normalize(vel);',
+  '        float g=1.0/(gam*(1.0-beta*dot(tang,toObs)));',
+  '        g*=sqrt(max(0.05,1.0-1.0/rd));',
+  '        float boost=pow(max(g,0.02),3.0*0.35);',
+  '        vec3 shift=mix(vec3(1.0),g>1.0?vec3(0.86,0.94,1.14):vec3(1.15,0.82,0.62),clamp(abs(g-1.0)*1.6,0.0,1.0)*0.35);',
+  '        float emit=0.26+2.0*heat*heat;',
+  '        col+=tint*shift*(emit*boost*dens*transmit*dt*deep);',
+  '        transmit*=exp(-dens*0.30*dt);}}',
+  '    vec3 acc=-1.5*h2*pos/(r2*r2*r);',                   // u\'\' + u = 3M u^2
+  '    vel+=acc*dt;pos+=vel*dt;}',
+  '  gl_FragColor=vec4(col,1.0);',
+  '}'].join('\n');
+
+  const BLEND=['precision mediump float;uniform sampler2D uCur,uPrev;uniform vec2 uRes;uniform float uA;',
+  'void main(){vec2 t=gl_FragCoord.xy/uRes;',
+  '  gl_FragColor=vec4(mix(texture2D(uPrev,t).rgb,texture2D(uCur,t).rgb,uA),1.0);}'].join('\n');
+
+  const COMP=['precision mediump float;uniform sampler2D uTex;uniform vec2 uRes;uniform float uSeed;',
+  'vec3 aces(vec3 x){return clamp((x*(2.51*x+0.03))/(x*(2.43*x+0.59)+0.14),0.0,1.0);}',
+  'void main(){vec2 t=gl_FragCoord.xy/uRes;vec3 c=texture2D(uTex,t).rgb;',
+  '  c=aces(c*0.92);c=pow(max(c,0.0),vec3(0.4545));',
+  '  vec2 d=t-0.5;c*=1.0-0.34*dot(d,d)*1.9;',
+  '  float n=fract(sin(dot(gl_FragCoord.xy+uSeed,vec2(12.9898,78.233)))*43758.5453);',
+  '  c+=(n-0.5)/255.0;',                                   // dither, or the ramps band
+  '  gl_FragColor=vec4(c,1.0);}'].join('\n');
+
+  function sh(ty,src){const s=gl.createShader(ty);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn('void shader:',gl.getShaderInfoLog(s));return null;}return s;}
+  function link(fs){const v=sh(gl.VERTEX_SHADER,VS),f=sh(gl.FRAGMENT_SHADER,fs);
+    if(!v||!f)return null;const p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);
+    gl.bindAttribLocation(p,0,'p');gl.linkProgram(p);
+    if(!gl.getProgramParameter(p,gl.LINK_STATUS)){console.warn(gl.getProgramInfoLog(p));return null;}
+    const u={};const n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);
+    for(let i=0;i<n;i++){const info=gl.getActiveUniform(p,i);u[info.name]=gl.getUniformLocation(p,info.name);}
+    return {p:p,u:u};}
+
+  const scene=link(SCENE),blend=link(BLEND),comp=link(COMP);
+  if(!scene||!blend||!comp){cv.remove();return;}
+
+  const vbo=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,vbo);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+  gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);
+
+  let W=0,H=0,sW=0,sH=0,targets=[],settled=0;
+  function mkT(w,h){const tex=gl.createTexture(),fb=gl.createFramebuffer();
+    gl.bindTexture(gl.TEXTURE_2D,tex);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,fb);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tex,0);
+    const ok=gl.checkFramebufferStatus(gl.FRAMEBUFFER)===gl.FRAMEBUFFER_COMPLETE;
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    return ok?{fb:fb,tex:tex,w:w,h:h}:null;}
+
+  function size(){
+    const r=cv.getBoundingClientRect();
+    if(!r.width||!r.height)return false;
+    const dpr=Math.min(window.devicePixelRatio||1,1.5);
+    const w=Math.max(2,Math.round(r.width*dpr)),h=Math.max(2,Math.round(r.height*dpr));
+    const scale=r.width<760?0.26:0.34;
+    const nw=Math.max(2,Math.round(w*scale)),nh=Math.max(2,Math.round(h*scale));
+    if(w===W&&h===H&&nw===sW&&nh===sH)return true;
+    W=w;H=h;sW=nw;sH=nh;cv.width=w;cv.height=h;
+    targets.forEach(function(t){gl.deleteTexture(t.tex);gl.deleteFramebuffer(t.fb);});
+    targets=[mkT(sW,sH),mkT(sW,sH),mkT(sW,sH)];
+    if(targets.some(function(x){return !x;})){cv.remove();return false;}
+    settled=0;return true;}
+
+  // Halton 2,3. Spreads the sub-pixel aim far more evenly than random draws.
+  const HAL=[[0.5,0.333],[0.25,0.667],[0.75,0.111],[0.125,0.444],
+             [0.625,0.778],[0.375,0.222],[0.875,0.556],[0.0625,0.889]];
+  const RAD=Math.PI/180, DIST=24, EL=-5.5*RAD, ROLL=-20*RAD, FOV=46, ORBIT=3.4;
+
+  function frame(clock){
+    if(!targets.length)return;
+    const az=ORBIT*clock*RAD;
+    const ce=Math.cos(EL);
+    const cx=DIST*ce*Math.cos(az), cy=DIST*Math.sin(EL), cz=DIST*ce*Math.sin(az);
+    const fx=-cx/DIST, fy=-cy/DIST, fz=-cz/DIST;
+    let rx=fz,ry=0,rz=-fx;const rl=Math.hypot(rx,ry,rz)||1;rx/=rl;ry/=rl;rz/=rl;
+    const ux=ry*fz-rz*fy, uy=rz*fx-rx*fz, uz=rx*fy-ry*fx;
+    const cr=Math.cos(ROLL), sr=Math.sin(ROLL);
+    const RX=rx*cr+ux*sr, RY=ry*cr+uy*sr, RZ=rz*cr+uz*sr;
+    const UX=-rx*sr+ux*cr, UY=-ry*sr+uy*cr, UZ=-rz*sr+uz*cr;
+
+    const S=targets[0],A=targets[1],B=targets[2];
+    gl.useProgram(scene.p);gl.bindFramebuffer(gl.FRAMEBUFFER,S.fb);gl.viewport(0,0,S.w,S.h);
+    const u=scene.u;
+    gl.uniform2f(u.uRes,S.w,S.h);gl.uniform1f(u.uT,clock);
+    gl.uniform3f(u.uCam,cx,cy,cz);gl.uniform3f(u.uRight,RX,RY,RZ);
+    gl.uniform3f(u.uUp,UX,UY,UZ);gl.uniform3f(u.uFwd,fx,fy,fz);
+    gl.uniform1f(u.uTan,Math.tan(FOV*0.5*RAD));
+    gl.uniform2f(u.uFocus,0.62,1-0.46);
+    gl.uniform1f(u.uSteps,S.w<620?96:124);
+    const hh=HAL[settled%HAL.length];
+    gl.uniform2f(u.uJit,hh[0]-0.5,hh[1]-0.5);
+    gl.uniform1f(u.uSeed,(settled%64)*17.13);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+
+    gl.useProgram(blend.p);gl.bindFramebuffer(gl.FRAMEBUFFER,B.fb);gl.viewport(0,0,B.w,B.h);
+    gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,S.tex);
+    gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,A.tex);
+    gl.uniform1i(blend.u.uCur,0);gl.uniform1i(blend.u.uPrev,1);
+    gl.uniform2f(blend.u.uRes,B.w,B.h);
+    gl.uniform1f(blend.u.uA,settled===0?1.0:0.34);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    targets[1]=B;targets[2]=A;settled++;
+
+    gl.useProgram(comp.p);gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.viewport(0,0,W,H);
+    gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,targets[1].tex);
+    gl.uniform1i(comp.u.uTex,0);gl.uniform2f(comp.u.uRes,W,H);
+    gl.uniform1f(comp.u.uSeed,(clock*60)%1000);
+    gl.drawArrays(gl.TRIANGLES,0,3);}
+
+  let clock=0,last=0,onScreen=false,running=false;
+  function loop(now){
+    if(!onScreen||document.hidden){running=false;return;}
+    const dt=last?Math.min(0.05,(now-last)/1000):0; last=now; clock+=dt;
+    frame(clock); requestAnimationFrame(loop);}
+  function start(){ if(running||REDUCED)return; running=true; last=0; requestAnimationFrame(loop); }
+
+  new IntersectionObserver(function(es){
+    onScreen=es[0].isIntersecting;
+    if(onScreen){ if(size()){ if(REDUCED){ for(let i=0;i<10;i++)frame(6); } else start(); } }
+  },{threshold:0,rootMargin:'200px'}).observe(cv.parentElement);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden&&onScreen)start(); });
+  window.addEventListener('resize',function(){ if(size()&&onScreen&&REDUCED){for(let i=0;i<10;i++)frame(6);} },{passive:true});
+})();
+
+/* ---------- 8. Persian ----------
+   Translation runs over text nodes rather than data-i18n attributes on 120
+   elements: fewer places to get out of step, and the English page stays intact
+   for anyone without script. English is the default, so nothing is lost. */
+const FA = {"Drums, piano and violin": "پیانو، ویولن و درامز", "Studio and online": "حضوری و آنلاین", "First session": "جلسه آزمایشی", "free": "رایگان", "Disciplines": "سازها", "Method": "روش آموزش", "Faculty": "اساتید", "Equipment": "فروشگاه", "Journal": "مقاله‌ها", "Book a lesson": "رزرو کلاس", "Skip to content": "رفتن به محتوا", "Play what is": "همان چیزی را بنواز", "on the page.": "که روی نت نوشته شده.", "First time.": "همان بار اول.", "Drums, piano and violin, taught by musicians who still perform. We start with rhythm, then reading, and the repertoire looks after itself. In the studio or online, from a standing start.": "پیانو، ویولن و درامز، با اساتیدی که هنوز روی صحنه می‌نوازند. از ریتم شروع می‌کنیم، بعد نت‌خوانی، و رپرتوار خودش جا می‌افتد. حضوری یا آنلاین، حتی اگر از صفر شروع کنید.", "Book a first lesson": "رزرو جلسه اول", "Choose an instrument": "ساز خود را انتخاب کنید", "Scroll": "اسکرول", "Our drum faculty, on tour": "استاد درامز ما، در تور اجرا", "Beginners welcome": "مبتدی‌ها خوش‌آمدند", "One to one or small group": "خصوصی یا گروه‌های کوچک", "Studio or online": "حضوری یا آنلاین", "First session free": "جلسه آزمایشی رایگان", "Ear training every term": "تربیت شنوایی در هر ترم", "Playing to a click from week one": "نواختن با مترونوم از هفته اول", "Discipline": "ساز", "Drums": "درامز", "Piano": "پیانو", "Violin": "ویولن", "From age 8 . no experience needed": "از ۸ سال به بالا . بدون نیاز به سابقه", "Classical and contemporary . any age": "کلاسیک و امروزی . هر سنی", "Classical grounding . any repertoire after that": "پایه کلاسیک . بعد از آن هر رپرتواری", "Most drummers learn by ear and get a long way on it. Then someone puts a chart in front of them and the room waits. We teach counting, subdivision and chart reading from the first lesson, so that moment never costs you the gig.": "بیشتر درامرها با گوش یاد می‌گیرند و تا جایی هم خوب پیش می‌روند. تا روزی که یک نت جلویشان می‌گذارند و همه منتظر می‌مانند. ما از جلسه اول شمارش، تقسیم‌بندی ریتم و نت‌خوانی درامز را کار می‌کنیم تا آن لحظه اجرا را از شما نگیرد.", "Two hands, two clefs, and a page that does not wait for you. Piano is where reading pays back fastest, so we build it in order: intervals before note names, patterns before speed, and music you actually wanted to play in the first place.": "دو دست، دو کلید، و صفحه‌ای که منتظر شما نمی‌ماند. پیانو جایی است که نت‌خوانی زودتر از هر ساز دیگری جواب می‌دهد؛ پس به ترتیب می‌سازیمش: فاصله‌ها پیش از نام نت‌ها، الگوها پیش از سرعت، و همان قطعه‌ای که از اول دوست داشتید بنوازید.", "Intonation is a listening problem before it is a finger problem. We spend real time on the ear and on bow control, then put a page in front of you and let reading carry the rest. Classical foundation, and whatever you like once you have it.": "کوک بودن، پیش از آنکه مسئله انگشت باشد مسئله گوش است. ما وقت واقعی روی تربیت شنوایی و کنترل آرشه می‌گذاریم، بعد نت را جلویتان می‌گذاریم و بقیه‌اش را نت‌خوانی پیش می‌برد. پایه کلاسیک، و بعد هر چه دوست داشتید.", "Rudiments, stick control and hand technique": "روديمنت‌ها، کنترل استیک و تکنیک دست", "Chart reading, counted out loud until it sticks": "نت‌خوانی، با شمارش بلند تا جا بیفتد", "Groove, feel, and holding time against a click": "گروو، حس، و نگه‌داشتن تمپو با مترونوم", "Playing with a band as soon as you are ready": "نواختن با گروه، به‌محض آماده شدن", "Both clefs, hands together, from early on": "هر دو کلید، دو دست با هم، از همان اوایل", "Intervals and chord shapes read as one unit": "فاصله‌ها و شکل آکوردها، خوانده‌شده به‌صورت یکجا", "Scales and technique, only where the music asks": "گام و تکنیک، فقط جایی که قطعه لازم دارد", "Grade preparation if you want it, ignored if not": "آمادگی آزمون اگر بخواهید، وگرنه اصلاً", "Posture, bow hold, and a tone worth listening to": "فرم بدن، گرفتن آرشه، و صدایی که ارزش شنیدن دارد", "Ear training and intonation trained together": "تربیت شنوایی و کوک، با هم تمرین می‌شوند", "Position work and shifting, introduced slowly": "کار روی پوزیسیون و شیفت، به‌آرامی", "Ensemble playing, and the nerve to do it in public": "نواختن گروهی، و جرئت اجرای عمومی", "per session, 45 min": "هر جلسه، ۴۵ دقیقه", "10 sessions, save $61": "۱۰ جلسه، ۶۱ دلار تخفیف", "Book a drum lesson": "رزرو کلاس درامز", "Book a piano lesson": "رزرو کلاس پیانو", "Book a violin lesson": "رزرو کلاس ویولن", "Term one": "ترم اول", "Term two": "ترم دوم", "Term three": "ترم سوم", "Term four": "ترم چهارم", "Rhythm, out loud": "ریتم، با شمارش بلند", "Reading by shape": "نت‌خوانی از روی شکل", "Technique on demand": "تکنیک، به‌اندازه نیاز", "Other people": "نواختن با دیگران", "Counting and subdivision until you can feel time without a metronome granting permission. Pitch can wait. Rhythm is the hardest thing to repair later, so it goes first.": "شمارش و تقسیم‌بندی، تا جایی که بدون اجازه مترونوم هم تمپو را حس کنید. زیر و بمی می‌تواند صبر کند. ریتم سخت‌ترین چیزی است که بعداً اصلاح می‌شود، پس اول می‌آید.", "Intervals and contour instead of naming every note. You start reading a phrase the way you read a word, in one movement.": "فاصله‌ها و خط سیر ملودی، به‌جای نام بردن تک‌تک نت‌ها. کم‌کم یک جمله موسیقایی را مثل یک کلمه می‌خوانید، یکجا.", "Scales, stick control and bowing, introduced where the music needs them. Technique practised for its own sake gets dropped.": "گام، کنترل استیک و آرشه‌کشی، همان جایی که قطعه لازمشان دارد. تکنیکِ صرفاً برای تکنیک، از برنامه حذف می‌شود.", "Playing with other people, holding time against a click, reading a page you have never seen. Everything before this was preparation.": "نواختن با دیگران، نگه‌داشتن تمپو با مترونوم، و خواندن نتی که تا حالا ندیده‌اید. هر چه پیش از این بود، مقدمه همین بود.", "Every instructor here is a working musician. They teach in the same week they play, and it shows in what they ask of you.": "همه اساتید اینجا نوازنده فعال‌اند. همان هفته‌ای که اجرا دارند تدریس هم می‌کنند، و این در انتظاری که از شما دارند پیداست.", "Lessons are one to one, in the studio or online over video with a proper audio chain on our end rather than a laptop microphone. Group classes run in small cohorts, small enough that nobody gets to hide at the back.": "کلاس‌ها خصوصی است، حضوری در استودیو یا آنلاین با تصویر و یک مسیر صدای درست از سمت ما، نه میکروفون لپ‌تاپ. کلاس‌های گروهی در گروه‌های کوچک برگزار می‌شود؛ آن‌قدر کوچک که کسی ته کلاس پنهان نشود.", "If you are not sure which instrument is yours, book one lesson and find out. There is no package to commit to and no term you have to catch the start of.": "اگر مطمئن نیستید کدام ساز مال شماست، یک جلسه رزرو کنید و ببینید. نه پکیجی هست که خودتان را به آن متعهد کنید، نه ترمی که مجبور باشید از ابتدایش برسید.", "Formats": "شکل کلاس", "Ages": "رده سنی", "Levels": "سطح", "Contact": "تماس", "One to one, small group, online": "خصوصی، گروه کوچک، آنلاین", "Children from 8, teenagers, adults": "کودکان از ۸ سال، نوجوانان، بزرگسالان", "First lesson through advanced": "از جلسه اول تا سطح پیشرفته", "Instructors, in the studio": "اساتید، در استودیو", "Inside a lesson": "داخل یک کلاس", "Practice pad and sticks": "پد تمرین و استیک", "Maple snare, 14 by 5.5": "اسنر افرا، ۱۴ در ۵٫۵", "Five piece student kit": "درام‌ست پنج‌تکه، مخصوص هنرجو", "Buy now": "خرید", "Decrease quantity": "کاهش تعداد", "Increase quantity": "افزایش تعداد", "All": "همه", "Sight Reading": "نت‌خوانی", "Rhythm": "ریتم", "Ear Training": "تربیت شنوایی", "Theory": "تئوری موسیقی", "Practice": "تمرین", "Read it": "خواندن", "Your name": "نام شما", "Email address": "ایمیل", "Instrument": "ساز", "Not sure yet": "هنوز مطمئن نیستم", "Request a time": "درخواست وقت", "First and last name": "نام و نام خانوادگی", "We reply by email. Your details go nowhere else.": "با ایمیل جواب می‌دهیم. اطلاعات شما جایی نمی‌رود.", "Studio": "استودیو", "Online": "آنلاین", "Email": "ایمیل", "In person, seven days": "حضوری، هفت روز هفته", "Video lessons anywhere": "کلاس آنلاین، از هر جا", "Study": "آموزش", "Academy": "آکادمی", "Home": "صفحه اصلی", "Drum lessons": "کلاس درامز", "Piano lessons": "کلاس پیانو", "Violin lessons": "کلاس ویولن", "The method": "روش آموزش", "About": "درباره ما", "Privacy": "حریم خصوصی", "Terms": "قوانین", "Rhythm first. Reading second.": "اول ریتم. بعد نت‌خوانی.", "Each term assumes the one before it. That sequence is the whole difference between a student who keeps improving and one who plateaus at the point where most self taught players quietly give up.": "هر ترم بر ترم پیش از خودش سوار است. همین ترتیب، تمام تفاوت میان هنرجویی است که پیوسته جلو می‌رود و هنرجویی که دقیقاً همان‌جا متوقف می‌شود که بیشتر خودآموزها بی‌صدا کنار می‌کشند.", "What we actually put in front of beginners. It arrives tuned and set up rather than in a box of parts. Collect from the studio, or delivery inside the city.": "همان چیزی که واقعاً جلوی هنرجوی مبتدی می‌گذاریم. کوک‌شده و آماده تحویل داده می‌شود، نه در جعبه‌ای پر از قطعات. تحویل از استودیو، یا ارسال داخل شهر.", "A 12 inch two sided pad in natural gum rubber, with a pair of 5A hickory sticks. The first thing every drum student buys, and the one that gets used daily.": "پد تمرین ۱۲ اینچی دو رو، از لاستیک طبیعی، همراه یک جفت استیک هیکوری ۵A. اولین چیزی که هر هنرجوی درامز می‌خرد و همانی که هر روز از آن استفاده می‌کند.", "An eight ply maple shell with a twenty strand wire. Tuned and the head properly seated before it leaves the studio, so it sounds like itself on day one.": "بدنه افرا هشت‌لایه با سیم بیست‌رشته‌ای. پیش از خروج از استودیو کوک می‌شود و پوستش درست جا می‌افتد، تا از همان روز اول صدای خودش را بدهد.", "Kick, snare, two rack toms and a floor tom, with hardware, cymbals and a throne. Assembled, tuned and played before collection.": "کیک، اسنر، دو تام رومیزی و یک فلور تام، همراه هاردور، سنج و صندلی. پیش از تحویل بسته، کوک و امتحان می‌شود.", "Students on a term take 10 percent off. Questions about sizing or setup,": "هنرجویان ثبت‌نام‌شده در ترم ۱۰ درصد تخفیف دارند. برای پرسش درباره سایز یا تنظیم،", "email the studio": "به استودیو ایمیل بزنید", "Reading, rhythm, ear training, and the daily habits that move a student forward. Written by the faculty, free to read, no sign up.": "نت‌خوانی، ریتم، تربیت شنوایی، و عادت‌های روزانه‌ای که هنرجو را جلو می‌برد. نوشته اساتید، رایگان، بدون نیاز به ثبت‌نام.", "min read": "دقیقه مطالعه", "Tell us the instrument and we come back with times, usually the same day. The first session is free, and nothing follows automatically after it.": "ساز مورد نظرتان را بگویید تا وقت‌های آزاد را برایتان بفرستیم، معمولاً همان روز. جلسه اول رایگان است و هیچ تعهدی هم پس از آن ایجاد نمی‌شود.", "Please tell us your name.": "لطفاً نامتان را بنویسید.", "That email address does not look right.": "این ایمیل درست به نظر نمی‌رسد.", "Drums, piano and violin, taught by working musicians. In the studio and online, beginners welcome.": "پیانو، ویولن و درامز، با تدریس نوازندگان فعال. حضوری و آنلاین، مبتدی‌ها خوش‌آمدند.", "Playing experience": "سابقه نوازندگی", "Complete beginner": "کاملاً مبتدی", "Under a year": "کمتر از یک سال", "One to three years": "یک تا سه سال", "More than three years": "بیش از سه سال", "Coming back after a break": "بعد از یک وقفه برگشته‌ام", "Who is the lesson for": "کلاس برای چه کسی است", "Myself, an adult": "خودم، بزرگسال", "A teenager": "یک نوجوان", "A child, 8 to 12": "یک کودک، ۸ تا ۱۲ سال", "In the studio": "حضوری در استودیو", "Either is fine": "هر کدام فرقی ندارد", "When suits you": "چه زمانی برایتان مناسب است", "Weekday evenings, weekend mornings, and so on": "عصرهای وسط هفته، صبح‌های آخر هفته، و مانند آن", "What would you like to be able to play": "دوست دارید بتوانید چه بنوازید", "Optional. A piece, a style, an exam, or just where you are stuck.": "اختیاری. یک قطعه، یک سبک، یک آزمون، یا همان‌جایی که گیر کرده‌اید.", "Powered by": "قدرت‌گرفته از"};
+(function(){
+  const btns=document.querySelectorAll('.lang button');
+  if(!btns.length)return;
+  const SKIP={SCRIPT:1,STYLE:1,NOSCRIPT:1,CANVAS:1};
+  let originals=null;
+
+  function collect(){
+    const out=[];
+    const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{
+      acceptNode:function(n){
+        if(SKIP[n.parentNode.nodeName])return NodeFilter.FILTER_REJECT;
+        if(n.parentElement.closest('[data-noi18n]'))return NodeFilter.FILTER_REJECT;
+        return n.nodeValue.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+      }});
+    let n; while((n=w.nextNode()))out.push(n);
+    return out;
+  }
+  function snapshot(){
+    if(originals)return;
+    originals=new Map();
+    collect().forEach(function(n){originals.set(n,n.nodeValue);});
+    document.querySelectorAll('[placeholder]').forEach(function(e){
+      originals.set(e,e.getAttribute('placeholder'));});
+    document.querySelectorAll('option').forEach(function(e){
+      originals.set(e,e.textContent);});
+  }
+  /* GSAP splits [data-split] headings into per-word spans, so their text nodes
+     are single words and no full-sentence lookup can match. Those headings carry
+     their Persian markup instead and get swapped whole. */
+  const splitEls=[...document.querySelectorAll('[data-fa]')];
+  splitEls.forEach(function(e){ e.dataset.en = e.innerHTML; });
+
+  function apply(lang){
+    snapshot();
+    const fa = lang==='fa';
+    splitEls.forEach(function(e){
+      e.innerHTML = fa ? e.dataset.fa : e.dataset.en;
+    });
+    document.documentElement.lang = fa?'fa':'en';
+    document.documentElement.dir  = fa?'rtl':'ltr';
+    originals.forEach(function(orig,node){
+      if(node.nodeType===3){
+        const key=orig.trim();
+        const hit=fa&&FA[key];
+        node.nodeValue = hit ? orig.replace(key,hit) : orig;
+      }else if(node.tagName==='OPTION'){
+        node.textContent = (fa&&FA[orig.trim()])||orig;
+      }else{
+        node.setAttribute('placeholder',(fa&&FA[orig.trim()])||orig);
+      }
+    });
+    btns.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===lang));});
+    try{localStorage.setItem('sra_lang',lang);}catch(e){}
+    if(window.ScrollTrigger)ScrollTrigger.refresh();
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){apply(b.dataset.lang);});});
+  let saved='en';
+  try{saved=localStorage.getItem('sra_lang')||'en';}catch(e){}
+  if(saved==='fa')apply('fa');
+})();
 </script>
 <!--/SHELL:FOOTER-->
 </body>
